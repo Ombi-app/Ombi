@@ -116,7 +116,6 @@ export interface IRadarrSettings extends IExternalSettings {
   addOnly: boolean;
   minimumAvailability: string;
   scanForAvailability: boolean;
-  v3: boolean;
 }
 
 export interface ILidarrSettings extends IExternalSettings {

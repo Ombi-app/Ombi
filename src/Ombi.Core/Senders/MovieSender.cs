@@ -125,7 +125,6 @@ namespace Ombi.Core.Senders
 
         private async Task<SenderResult> SendToRadarr(MovieRequests model, RadarrSettings settings)
         {
-            var v3 = settings.V3;
             var qualityToUse = int.Parse(settings.DefaultQualityProfile);
 
             var rootFolderPath = settings.DefaultRootPath;
@@ -159,30 +158,16 @@ namespace Ombi.Core.Senders
 
             List<MovieResponse> movies;
             // Check if the movie already exists? Since it could be unmonitored
-            if (settings.V3)
-            {
-                movies = await _radarrV3Api.GetMovies(settings.ApiKey, settings.FullUri);
-            }
-            else
-            {
-                movies = await _radarrV2Api.GetMovies(settings.ApiKey, settings.FullUri);
-            }
+
+            movies = await _radarrV3Api.GetMovies(settings.ApiKey, settings.FullUri);
+
             var existingMovie = movies.FirstOrDefault(x => x.tmdbId == model.TheMovieDbId);
             if (existingMovie == null)
             {
-                RadarrAddMovie result;
-                if (v3)
-                {
-                    result = await _radarrV3Api.AddMovie(model.TheMovieDbId, model.Title, model.ReleaseDate.Year,
-                        qualityToUse, rootFolderPath, settings.ApiKey, settings.FullUri, !settings.AddOnly,
-                        settings.MinimumAvailability);
-                }
-                else
-                {
-                    result = await _radarrV2Api.AddMovie(model.TheMovieDbId, model.Title, model.ReleaseDate.Year,
-                        qualityToUse, rootFolderPath, settings.ApiKey, settings.FullUri, !settings.AddOnly,
-                        settings.MinimumAvailability);
-                }
+                var result = await _radarrV3Api.AddMovie(model.TheMovieDbId, model.Title, model.ReleaseDate.Year,
+                    qualityToUse, rootFolderPath, settings.ApiKey, settings.FullUri, !settings.AddOnly,
+                    settings.MinimumAvailability);
+
                 if (!string.IsNullOrEmpty(result.Error?.message))
                 {
                     _log.LogError(LoggingEvents.RadarrCacher, result.Error.message);
@@ -199,23 +184,12 @@ namespace Ombi.Core.Senders
             {
                 // let's set it to monitored and search for it
                 existingMovie.monitored = true;
-                if (v3)
+
+                await _radarrV3Api.UpdateMovie(existingMovie, settings.ApiKey, settings.FullUri);
+                // Search for it
+                if (!settings.AddOnly)
                 {
-                    await _radarrV3Api.UpdateMovie(existingMovie, settings.ApiKey, settings.FullUri);
-                    // Search for it
-                    if (!settings.AddOnly)
-                    {
-                        await _radarrV3Api.MovieSearch(new[] { existingMovie.id }, settings.ApiKey, settings.FullUri);
-                    }
-                }
-                else
-                {
-                    await _radarrV2Api.UpdateMovie(existingMovie, settings.ApiKey, settings.FullUri);
-                    // Search for it
-                    if (!settings.AddOnly)
-                    {
-                        await _radarrV2Api.MovieSearch(new[] { existingMovie.id }, settings.ApiKey, settings.FullUri);
-                    }
+                    await _radarrV3Api.MovieSearch(new[] { existingMovie.id }, settings.ApiKey, settings.FullUri);
                 }
 
                 return new SenderResult { Success = true, Sent = true };
@@ -226,18 +200,9 @@ namespace Ombi.Core.Senders
 
         private async Task<string> RadarrRootPath(int overrideId, RadarrSettings settings)
         {
-            if (settings.V3)
-            {
-                var paths = await _radarrV3Api.GetRootFolders(settings.ApiKey, settings.FullUri);
-                var selectedPath = paths.FirstOrDefault(x => x.id == overrideId);
-                return selectedPath?.path ?? string.Empty;
-            }
-            else
-            {
-                var paths = await _radarrV2Api.GetRootFolders(settings.ApiKey, settings.FullUri);
-                var selectedPath = paths.FirstOrDefault(x => x.id == overrideId);
-                return selectedPath?.path ?? string.Empty;
-            }
+            var paths = await _radarrV3Api.GetRootFolders(settings.ApiKey, settings.FullUri);
+            var selectedPath = paths.FirstOrDefault(x => x.id == overrideId);
+            return selectedPath?.path ?? string.Empty;
         }
     }
 }

@@ -131,7 +131,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                 var lidarrContent = _lidarrAlbumRepository.GetAll().AsNoTracking().ToList().Where(x => x.FullyAvailable);
 
                 var addedLog = _recentlyAddedLog.GetAll();
-                var addedPlexMovieLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Plex && x.ContentType == ContentType.Parent).Select(x => x.ContentId).ToHashSet();
+
+                var addedPlexMovieLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Plex && x.ContentType == ContentType.Parent)?.Select(x => x.ContentId)?.ToHashSet() ?? new HashSet<int>();
                 var addedEmbyMoviesLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Emby && x.ContentType == ContentType.Parent).Select(x => x.ContentId).ToHashSet();
                 var addedJellyfinMoviesLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Jellyfin && x.ContentType == ContentType.Parent).Select(x => x.ContentId).ToHashSet();
                 var addedAlbumLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Lidarr && x.ContentType == ContentType.Album).Select(x => x.AlbumId).ToHashSet();
@@ -170,6 +171,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 plexContentMoviesToSend = plexContentMoviesToSend.DistinctBy(x => x.Id).ToHashSet();
                 embyContentMoviesToSend = embyContentMoviesToSend.DistinctBy(x => x.Id).ToHashSet();
+                jellyfinContentMoviesToSend = jellyfinContentMoviesToSend.DistinctBy(x => x.Id).ToHashSet();
 
                 var plexEpisodesToSend =
                     FilterPlexEpisodes(_plex.GetAllEpisodes().Include(x => x.Series).AsNoTracking(), addedPlexEpisodesLogIds);
@@ -537,7 +539,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             var plexMovies = plexContentToSend.Where(x => x.Type == PlexMediaTypeEntity.Movie);
             var embyMovies = embyContentToSend.Where(x => x.Type == EmbyMediaType.Movie);
             var jellyfinMovies = jellyfinContentToSend.Where(x => x.Type == JellyfinMediaType.Movie);
-            if ((plexMovies.Any() || embyMovies.Any()) && !settings.DisableMovies)
+            if ((plexMovies.Any() || embyMovies.Any()) || jellyfinMovies.Any() && !settings.DisableMovies)
             {
                 sb.Append("<h1 style=\"text-align: center; max-width: 1042px;\">New Movies</h1><br /><br />");
                 sb.Append(
