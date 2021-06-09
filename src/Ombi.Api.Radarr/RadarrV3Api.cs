@@ -41,7 +41,7 @@ namespace Ombi.Api.Radarr
 
         public async Task<SystemStatus> SystemStatus(string apiKey, string baseUrl)
         {
-            var request = new Request("/api/v3/status", baseUrl, HttpMethod.Get);
+            var request = new Request("/api/v3/system/status", baseUrl, HttpMethod.Get);
             AddHeaders(request, apiKey);
 
             return await Api.Request<SystemStatus>(request);
