@@ -105,6 +105,8 @@
    padding: 5px;
 }
 
-::ng-deep .p-carousel-item{
-  flex: 1 0 200px !important;
+@media (min-width:755px){
+  ::ng-deep .p-carousel-item{
+    flex: 1 0 200px !important;
+  }
 }
