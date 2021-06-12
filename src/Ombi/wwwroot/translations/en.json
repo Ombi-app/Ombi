@@ -54,7 +54,7 @@
         "Discover": "Discover",
         "Search": "Search",
         "Requests": "Requests",
-        "UserManagement": "User Management",
+        "UserManagement": "Users",
         "Issues": "Issues",
         "Vote": "Vote",
         "Donate": "Donate!",
@@ -70,7 +70,7 @@
         "ChangeTheme": "Change Theme",
         "Calendar": "Calendar",
         "UserPreferences": "Preferences",
-        "FeatureSuggestion":"Feature Suggestion",
+        "FeatureSuggestion":"Features",
         "FeatureSuggestionTooltip":"Have a great new idea? Suggest it here!",
         "Filter": {
             "Movies":"Movies",
