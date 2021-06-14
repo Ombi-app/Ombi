@@ -105,6 +105,17 @@ small {
   -ms-transform: translate(-50%, -50%);
 }
 
+.middle-show {
+  transition: .5s ease;
+  opacity: 1;
+  position: absolute;
+  top: 67%;
+  width: 90%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+
 
 .c {
   position: relative;
@@ -253,8 +264,23 @@ a.poster-overlay:hover{
   opacity:0;
   transition: .5s ease;
 }
+.ombi-card .button-request-container-show{
+  position: relative;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: -36px;
+  margin-bottom: 0px;
+  opacity:1;
+  transition: .5s ease;
+}
 
 ::ng-deep .ombi-card .button-request-container .button-request{
+  padding-right:0px;
+  padding-left:0px;
+  width:100%;
+}
+::ng-deep .ombi-card .button-request-container-show .button-request{
   padding-right:0px;
   padding-left:0px;
   width:100%;
