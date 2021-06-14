@@ -91,6 +91,7 @@ const routes: Routes = [
     { loadChildren: () => import("./vote/vote.module").then(m => m.VoteModule), path: "vote" },
     { loadChildren: () => import("./media-details/media-details.module").then(m => m.MediaDetailsModule), path: "details" },
     { loadChildren: () => import("./user-preferences/user-preferences.module").then(m => m.UserPreferencesModule), path: "user-preferences" },
+    { loadChildren: () => import("./unsubscribe/unsubscribe.module").then(m => m.UnsubscribeModule), path: "unsubscribe" },
 ];
 
 

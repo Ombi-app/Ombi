@@ -228,32 +228,33 @@ namespace Ombi.Schedule.Jobs.Ombi
                     var messageContent = ParseTemplate(template, customization);
                     var email = new NewsletterTemplate();
 
-                    var html = email.LoadTemplate(messageContent.Subject, messageContent.Message, body, customization.Logo);
-
-                    var bodyBuilder = new BodyBuilder
-                    {
-                        HtmlBody = html,
-                    };
-
-                    var message = new MimeMessage
-                    {
-                        Body = bodyBuilder.ToMessageBody(),
-                        Subject = messageContent.Subject
-                    };
-
                     foreach (var user in users)
                     {
+                        var url = GenerateUnsubscribeLink(customization.ApplicationUrl, user.Id);
+                        var html = email.LoadTemplate(messageContent.Subject, messageContent.Message, body, customization.Logo, url);
+
+                        var bodyBuilder = new BodyBuilder
+                        {
+                            HtmlBody = html,
+                        };
+
+                        var message = new MimeMessage
+                        {
+                            Body = bodyBuilder.ToMessageBody(),
+                            Subject = messageContent.Subject
+                        };
+
                         // Get the users to send it to
                         if (user.Email.IsNullOrEmpty())
                         {
                             continue;
                         }
-                        // BCC the messages
-                        message.Bcc.Add(new MailboxAddress(user.Email.Trim(), user.Email.Trim()));
-                    }
+                        // Send the message to the user
+                        message.To.Add(new MailboxAddress(user.Email.Trim(), user.Email.Trim()));
 
-                    // Send the email
-                    await _email.Send(message, emailSettings);
+                        // Send the email
+                        await _email.Send(message, emailSettings);
+                    }
 
                     // Now add all of this to the Recently Added log
                     var recentlyAddedLog = new HashSet<RecentlyAddedLog>();
@@ -346,11 +347,14 @@ namespace Ombi.Schedule.Jobs.Ombi
                         {
                             continue;
                         }
+
+                        var unsubscribeLink = GenerateUnsubscribeLink(customization.ApplicationUrl, a.Id);
+
                         var messageContent = ParseTemplate(template, customization);
 
                         var email = new NewsletterTemplate();
 
-                        var html = email.LoadTemplate(messageContent.Subject, messageContent.Message, body, customization.Logo);
+                        var html = email.LoadTemplate(messageContent.Subject, messageContent.Message, body, customization.Logo, unsubscribeLink);
 
                         await _email.Send(
                             new NotificationMessage { Message = html, Subject = messageContent.Subject, To = a.Email },
@@ -369,6 +373,21 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Newsletter Finished");
+        }
+
+        public static string GenerateUnsubscribeLink(string applicationUrl, string id)
+        {
+            if (!applicationUrl.HasValue())
+            {
+                return string.Empty;
+            }
+
+            if (!applicationUrl.EndsWith('/'))
+            {
+                applicationUrl += '/';
+            }
+            var b = new UriBuilder($"{applicationUrl}unsubscribe/{id}");
+            return b.ToString();
         }
 
         private async Task<HashSet<PlexServerContent>> GetMoviesWithoutId(HashSet<int> addedMovieLogIds, HashSet<PlexServerContent> needsMovieDbPlex)
