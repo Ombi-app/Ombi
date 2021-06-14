@@ -32,7 +32,7 @@ namespace Ombi.Mapping.Profiles
                 .ForMember(dest => dest.Images, opts => opts.MapFrom(src => src.Images))
                 .ForMember(dest => dest.Cast, opts => opts.MapFrom(src => src.Credits.cast))
                 .ForMember(dest => dest.Crew, opts => opts.MapFrom(src => src.Credits.crew))
-                .ForMember(dest => dest.Banner, opts => opts.MapFrom(src => GetBanner(src.Images)))
+                .ForMember(dest => dest.Banner, opts => opts.MapFrom(src => GetBanner(src.Images, src.backdrop_path)))
                 .ForMember(dest => dest.Genres, opts => opts.MapFrom(src => src.genres))
                 .ForMember(dest => dest.Keywords, opts => opts.MapFrom(src => src.Keywords))
                 .ForMember(dest => dest.Tagline, opts => opts.MapFrom(src => src.tagline))
@@ -78,20 +78,20 @@ namespace Ombi.Mapping.Profiles
             CreateMap<SearchTvShowViewModel, SearchFullInfoTvShowViewModel>().ReverseMap();
         }
 
-        private string GetBanner(Api.TheMovieDb.Models.Images images)
+        private string GetBanner(Api.TheMovieDb.Models.Images images, string backdropPath)
         {
             var hasBackdrop = images?.Backdrops?.Any();
             if (hasBackdrop ?? false)
             {
                 return images.Backdrops?.OrderBy(x => x.VoteCount).ThenBy(x => x.VoteAverage).Select(x => x.FilePath).FirstOrDefault();
             }
-            else if (images != null)
+            else if (images?.Posters?.Any() ?? false)
             {
                 return images.Posters?.OrderBy(x => x.VoteCount).ThenBy(x => x.VoteAverage).Select(x => x.FilePath).FirstOrDefault();
             }
             else
             {
-                return string.Empty;
+                return backdropPath;
             }
         }
 
