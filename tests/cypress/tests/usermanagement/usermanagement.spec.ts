@@ -16,7 +16,7 @@ describe('User Management Page', () => {
     });
 
     it('Loads users table', () => {
-      cy.contains("User Management");
+      cy.contains("Users");
       cy.contains("Add User To Ombi");
     });
 

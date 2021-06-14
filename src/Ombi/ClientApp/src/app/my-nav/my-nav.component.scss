@@ -124,8 +124,14 @@
     }
 }
 
+.profile-img{
+    display: flex;
+    justify-content: center;
+    align-self: center;
+}
+
 .profile-img img {
-    width: 50px;
+    width: 40px;
 }
 
 
@@ -154,9 +160,10 @@
         font-size:36px;
         padding:40px 20px;
         height:auto;
-        max-width: 350px;
+        max-width: 300px;
         display: flex;
         white-space: normal;
+        word-break: break-word;
     }
 
     .outer-profile {
@@ -171,7 +178,6 @@
         font-weight: 400;
         padding:10px 20px;
         height:auto;
-        width:20rem;
         margin-bottom:0.5rem;
     }
     
@@ -181,7 +187,6 @@
         border-radius:0px 30px 30px 0px;
         padding:10px 20px;
         height:auto;
-        width:20rem;
     }
 }
 
@@ -220,4 +225,9 @@
 
 ::ng-deep .mat-toolbar-row, .mat-toolbar-single-row{
     height:auto;
+}
+
+::ng-deep .mat-sidenav-fixed .mat-list-base .mat-list-item .mat-list-item-content, .mat-list-base .mat-list-option .mat-list-item-content{
+    padding:0;
+    margin: 0 4em 0 0.5em;
 }
