@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Rule.Interfaces;
@@ -41,15 +42,30 @@ namespace Ombi.Core.Rule.Rules.Request
                     {
                         continue;
                     }
+
+                    var episodesToRemove = new List<EpisodeRequests>();
                     foreach (var e in season.Episodes)
                     {
-                        var hasEpisode = currentSeasonRequest.Episodes.Any(x => x.EpisodeNumber == e.EpisodeNumber);
-                        if (hasEpisode)
+                        var existingEpRequest = currentSeasonRequest.Episodes.FirstOrDefault(x => x.EpisodeNumber == e.EpisodeNumber);
+                        if (existingEpRequest != null)
                         {
-                            return Fail($"We already have episodes requested from series {tv.Title}");
+                            episodesToRemove.Add(e);
                         }
                     }
+
+                    episodesToRemove.ForEach(x =>
+                    {
+                        season.Episodes.Remove(x);
+                    });
                 }
+
+                var anyEpisodes = tv.SeasonRequests.SelectMany(x => x.Episodes).Any();
+
+                if (!anyEpisodes)
+                {
+                    return Fail($"We already have episodes requested from series {tv.Title}");
+                }
+
             }
             return Success();
         }

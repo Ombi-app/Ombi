@@ -413,6 +413,9 @@ namespace Ombi.Store.Migrations.ExternalMySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int>("TheMovieDbId")
+                        .HasColumnType("int");
+
                     b.Property<int>("TvDbId")
                         .HasColumnType("int");
 
@@ -432,6 +435,9 @@ namespace Ombi.Store.Migrations.ExternalMySql
 
                     b.Property<bool>("HasFile")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("MovieDbId")
+                        .HasColumnType("int");
 
                     b.Property<int>("SeasonNumber")
                         .HasColumnType("int");

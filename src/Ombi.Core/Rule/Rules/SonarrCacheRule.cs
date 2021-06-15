@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Models.Search;
@@ -6,6 +7,7 @@ using Ombi.Helpers;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
+using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Core.Rule.Rules
 {
@@ -23,7 +25,7 @@ namespace Ombi.Core.Rule.Rules
             if (obj.RequestType == RequestType.TvShow)
             {
                 var vm = (ChildRequests) obj;
-                var result = await _ctx.SonarrCache.FirstOrDefaultAsync(x => x.TvDbId == vm.Id); // TODO lookup the external provider in the sonarr sync to use themoviedb
+                var result = await _ctx.SonarrCache.FirstOrDefaultAsync(x => x.TheMovieDbId == vm.Id);
                 if (result != null)
                 {
                     if (vm.SeasonRequests.Any())
@@ -31,17 +33,30 @@ namespace Ombi.Core.Rule.Rules
                         var sonarrEpisodes = _ctx.SonarrEpisodeCache;
                         foreach (var season in vm.SeasonRequests)
                         {
+                            var toRemove = new List<EpisodeRequests>();
                             foreach (var ep in season.Episodes)
                             {
                                 // Check if we have it
-                                var monitoredInSonarr = sonarrEpisodes.Any(x =>
+                                var monitoredInSonarr = sonarrEpisodes.FirstOrDefault(x =>
                                     x.EpisodeNumber == ep.EpisodeNumber && x.SeasonNumber == season.SeasonNumber
-                                    && x.TvDbId == vm.Id);
-                                if (monitoredInSonarr)
+                                    && x.MovieDbId == vm.Id);
+                                if (monitoredInSonarr != null)
                                 {
-                                    return new RuleResult{Message = "We already have this request, please choose the \"Select...\" option to refine your request"};
-                                }
+                                    toRemove.Add(ep);
+                                                                   }
                             }
+
+                            toRemove.ForEach(x =>
+                            {
+                                season.Episodes.Remove(x);
+                            });
+
+                        }
+                        var anyEpisodes = vm.SeasonRequests.SelectMany(x => x.Episodes).Any();
+
+                        if (!anyEpisodes)
+                        {
+                            return new RuleResult { Message = $"We already have episodes requested from series {vm.Title}" };
                         }
                     }
                 }
