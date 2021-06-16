@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.UI;
@@ -11,6 +12,7 @@ namespace Ombi.Core.Engine.Interfaces
         Task<RequestEngineResult> RequestMovie(MovieRequestViewModel model);
 
         Task<IEnumerable<MovieRequests>> SearchMovieRequest(string search);
+        Task<RequestEngineResult> RequestCollection(int collectionId, CancellationToken cancellationToken);
 
         Task RemoveMovieRequest(int requestId);
         Task RemoveAllMovieRequests();

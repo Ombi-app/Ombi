@@ -14,6 +14,27 @@
     margin-bottom: 28px;
 }
 
+.lightbox {
+    /* Default to hidden */
+  
+    /* Overlay entire screen */
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    
+    /* A bit of padding around image */
+    padding: 1em;
+  
+    /* Translucent background */
+    background: rgba(0, 0, 0, 0.8);
+  }
+
 .loading-spinner {
     margin: 10%;
+    position: absolute;
+    width: 100vh;
+    z-index: 10;
 }

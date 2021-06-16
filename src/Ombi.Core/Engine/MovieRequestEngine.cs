@@ -559,6 +559,30 @@ namespace Ombi.Core.Engine
             return await ProcessSendingMovie(request);
         }
 
+        public async Task<RequestEngineResult> RequestCollection(int collectionId, CancellationToken cancellationToken)
+        {
+            var langCode = await DefaultLanguageCode(null);
+            var collections = await Cache.GetOrAdd($"GetCollection{collectionId}{langCode}",
+                async () => await MovieApi.GetCollection(langCode, collectionId, cancellationToken), DateTime.Now.AddDays(1), cancellationToken);
+
+            var results = new List<RequestEngineResult>();
+            foreach (var collection in collections.parts)
+            {
+                results.Add(await RequestMovie(new MovieRequestViewModel
+                {
+                    TheMovieDbId = collection.id
+                }));
+            }
+
+
+            if (results.All(x => x.IsError))
+            {
+                new RequestEngineResult { Result = false, ErrorMessage = $"The whole collection {collections.name} Is already monitored or requested!" };
+            }
+
+            return new RequestEngineResult { Result = true, Message = $"The collection {collections.name} has been successfully added!", RequestId = results.FirstOrDefault().RequestId};
+        }
+
         private async Task<RequestEngineResult> ProcessSendingMovie(MovieRequests request)
         {
             if (request.Approved)
@@ -642,7 +666,7 @@ namespace Ombi.Core.Engine
 
         public async Task<RequestEngineResult> ReProcessRequest(int requestId, CancellationToken cancellationToken)
         {
-            var request = await MovieRepository.Find(requestId); 
+            var request = await MovieRepository.Find(requestId);
             if (request == null)
             {
                 return new RequestEngineResult

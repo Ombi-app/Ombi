@@ -216,6 +216,12 @@ namespace Ombi.Controllers.V2
             return BadRequest();
         }
 
+        [HttpPost("movie/collection/{collectionId}")]
+        public async Task<RequestEngineResult> RequestCollection(int collectionId)
+        {
+            return await _movieRequestEngine.RequestCollection(collectionId, HttpContext.RequestAborted);
+        }
+
         private string GetApiAlias()
         {
             // Make sure this only applies when using the API KEY
