@@ -1,7 +1,7 @@
 ﻿<div class="col" style="text-align: -webkit-right;">
     <div *ngIf="!text" class="col-md-4 ml-auto ">
         <a href="{{domain}}{{url}}" target="_blank">
-        <button mat-raised-button color="accent">
+        <button mat-raised-button type="button" color="accent">
             <span>Docs</span>
         </button>
     </a>
@@ -9,7 +9,7 @@
 
     <div *ngIf="text" class="col-md-4 ml-auto ">
             <a href="{{domain}}{{url}}" target="_blank">
-            <button mat-raised-button color="accent">
+            <button mat-raised-button type="button" color="accent">
                 <span>{{text}}</span>
             </button>
             </a>
