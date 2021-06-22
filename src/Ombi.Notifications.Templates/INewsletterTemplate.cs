@@ -2,6 +2,6 @@
 {
     public interface INewsletterTemplate
     {
-        string LoadTemplate(string subject, string intro, string tableHtml, string logo);
+        string LoadTemplate(string subject, string intro, string tableHtml, string logo, string unsubscribeLink);
     }
 }

@@ -240,9 +240,9 @@ namespace Ombi.Notifications.Agents
 
         private async Task SendToSubscribers(EmailNotificationSettings settings, NotificationMessage message)
         {
-            if (await SubsribedUsers.AnyAsync())
+            if (await Subscribed.AnyAsync())
             {
-                foreach (var user in SubsribedUsers)
+                foreach (var user in Subscribed)
                 {
                     if (user.Email.IsNullOrEmpty())
                     {

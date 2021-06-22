@@ -67,7 +67,7 @@ namespace Ombi.Core.Rule.Rules.Search
                 var s = await EmbySettings.GetSettingsAsync();
                 if (s.Enable)
                 {
-                    var server = s.Servers.FirstOrDefault(x => x.ServerHostname != null);
+                    var server = s.Servers.FirstOrDefault();
                     if ((server?.ServerHostname ?? string.Empty).HasValue())
                     {
                         obj.EmbyUrl = EmbyHelper.GetEmbyMediaUrl(item.EmbyId, server?.ServerId, server?.ServerHostname);

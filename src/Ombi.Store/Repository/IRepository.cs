@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
@@ -12,6 +13,7 @@ namespace Ombi.Store.Repository
     public interface IRepository<T> where T : Entity
     {
         Task<T> Find(object key);
+        Task<T> Find(object key, CancellationToken cancellationToken);
         IQueryable<T> GetAll();
         Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
         Task AddRange(IEnumerable<T> content, bool save = true);

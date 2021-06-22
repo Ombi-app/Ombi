@@ -7,5 +7,9 @@ namespace Ombi.Core.Settings.Models.External
         public bool ShowAdultMovies { get; set; }
 
         public List<int> ExcludedKeywordIds { get; set; }
+
+        public List<int> ExcludedMovieGenreIds { get; set; }
+
+        public List<int> ExcludedTvGenreIds { get; set; }
     }
 }

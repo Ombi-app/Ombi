@@ -146,6 +146,9 @@ export class LoginComponent implements OnDestroy, OnInit {
     }
 
     public oauth() {
+        if (this.oAuthWindow) {
+            this.oAuthWindow.close();
+        }
         this.oAuthWindow = window.open(window.location.toString(), "_blank", `toolbar=0,
         location=0,
         status=0,
@@ -159,16 +162,22 @@ export class LoginComponent implements OnDestroy, OnInit {
             this.authService.login({ usePlexOAuth: true, password: "", rememberMe: true, username: "", plexTvPin: pin }).subscribe(x => {
                 this.oAuthWindow!.location.replace(x.url);
 
-                this.pinTimer = setInterval(() => {
+                if (this.pinTimer) {
+                    clearInterval(this.pinTimer);
+                }
 
-                    this.oauthLoading = true;
-                    this.getPinResult(x.pinId);
-                }, 4000);
+                this.pinTimer = setInterval(() => {
+                    if(this.oAuthWindow.closed) {
+                        this.oauthLoading = true;
+                        this.getPinResult(x.pinId);
+                    }
+                }, 1000);
             });
         });
     }
 
     public getPinResult(pinId: number) {
+        clearInterval(this.pinTimer);
         this.authService.oAuth(pinId).subscribe(x => {
             if(x.access_token) {
               this.store.save("id_token", x.access_token);
@@ -176,7 +185,7 @@ export class LoginComponent implements OnDestroy, OnInit {
               if (this.authService.loggedIn()) {
                   this.ngOnDestroy();
 
-                  if(this.oAuthWindow) {
+                  if (this.oAuthWindow) {
                     this.oAuthWindow.close();
                   }
                   this.oauthLoading = false;
@@ -184,6 +193,10 @@ export class LoginComponent implements OnDestroy, OnInit {
                   return;
               }
           }
+          this.notify.open("Could not log you in!", "OK", {
+            duration: 3000
+        });
+          this.oauthLoading = false;
 
           }, err => {
               console.log(err);

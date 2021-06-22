@@ -17,7 +17,7 @@ namespace Ombi.Schedule.Jobs.Radarr
 {
     public class RadarrSync : IRadarrSync
     {
-        public RadarrSync(ISettingsService<RadarrSettings> radarr, IRadarrApi radarrApi, ILogger<RadarrSync> log, ExternalContext ctx)
+        public RadarrSync(ISettingsService<RadarrSettings> radarr, IRadarrV3Api radarrApi, ILogger<RadarrSync> log, ExternalContext ctx)
         {
             RadarrSettings = radarr;
             RadarrApi = radarrApi;
@@ -27,7 +27,7 @@ namespace Ombi.Schedule.Jobs.Radarr
         }
 
         private ISettingsService<RadarrSettings> RadarrSettings { get; }
-        private IRadarrApi RadarrApi { get; }
+        private IRadarrV3Api RadarrApi { get; }
         private ILogger<RadarrSync> Logger { get; }
         private readonly ExternalContext _ctx;
 

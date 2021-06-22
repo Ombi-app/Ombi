@@ -116,7 +116,6 @@ export interface IRadarrSettings extends IExternalSettings {
   addOnly: boolean;
   minimumAvailability: string;
   scanForAvailability: boolean;
-  v3: boolean;
 }
 
 export interface ILidarrSettings extends IExternalSettings {
@@ -284,6 +283,8 @@ export interface IVoteSettings extends ISettings {
 export interface ITheMovieDbSettings extends ISettings {
     showAdultMovies: boolean;
     excludedKeywordIds: number[];
+    excludedMovieGenreIds: number[];
+    excludedTvGenreIds: number[]
 }
 
 export interface IUpdateModel

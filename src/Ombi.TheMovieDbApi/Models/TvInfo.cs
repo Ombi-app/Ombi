@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Ombi.Api.TheMovieDb.Models
 {
@@ -26,7 +27,7 @@ namespace Ombi.Api.TheMovieDb.Models
         public float popularity { get; set; }
         public string poster_path { get; set; }
         public Production_Companies[] production_companies { get; set; }
-        public Season[] seasons { get; set; }
+        public List<Season> seasons { get; set; }
         public string status { get; set; }
         public string type { get; set; }
         public float vote_average { get; set; }

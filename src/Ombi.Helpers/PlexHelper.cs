@@ -107,7 +107,7 @@ namespace Ombi.Helpers
         public static string GetPlexMediaUrl(string machineId, int mediaId)
         {
             var url =
-                $"https://app.plex.tv/web/app#!/server/{machineId}/details?key=library%2Fmetadata%2F{mediaId}";
+                $"https://app.plex.tv/web/app#!/server/{machineId}/details?key=%2flibrary%2Fmetadata%2F{mediaId}";
             return url;
         }
 

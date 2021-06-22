@@ -8,6 +8,7 @@ namespace Ombi.Store.Entities
         public int SeasonNumber { get; set; }
         public int EpisodeNumber { get; set; }
         public int TvDbId { get; set; }
+        public int MovieDbId { get; set; }
         public bool HasFile { get; set; }
     }
 }

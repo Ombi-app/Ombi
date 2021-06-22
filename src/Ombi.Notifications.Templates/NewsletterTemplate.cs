@@ -13,7 +13,7 @@ namespace Ombi.Notifications.Templates
                 if (string.IsNullOrEmpty(_templateLocation))
                 {
 #if DEBUG
-                    _templateLocation = Path.Combine(Directory.GetCurrentDirectory(), "bin", "Debug", "netcoreapp3.0", "Templates", "NewsletterTemplate.html");
+                    _templateLocation = Path.Combine(Directory.GetCurrentDirectory(), "bin", "Debug", "net5.0", "Templates", "NewsletterTemplate.html");
 #else
                     _templateLocation = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "NewsletterTemplate.html");
 #endif
@@ -29,9 +29,10 @@ namespace Ombi.Notifications.Templates
         private const string Logo = "{@LOGO}";
         private const string TableLocation = "{@RECENTLYADDED}";
         private const string IntroText = "{@INTRO}";
+        private const string Unsubscribe = "{@UNSUBSCRIBE}";
 
 
-        public string LoadTemplate(string subject, string intro, string tableHtml, string logo)
+        public string LoadTemplate(string subject, string intro, string tableHtml, string logo, string unsubscribeLink)
         {
             var sb = new StringBuilder(File.ReadAllText(TemplateLocation));
             sb.Replace(SubjectKey, subject);
@@ -39,6 +40,7 @@ namespace Ombi.Notifications.Templates
             sb.Replace(IntroText, intro);
             sb.Replace(DateKey, DateTime.Now.ToString("f"));
             sb.Replace(Logo, string.IsNullOrEmpty(logo) ? OmbiLogo : logo);
+            sb.Replace(Unsubscribe, string.IsNullOrEmpty(unsubscribeLink) ? string.Empty : unsubscribeLink);
 
             return sb.ToString();
         }

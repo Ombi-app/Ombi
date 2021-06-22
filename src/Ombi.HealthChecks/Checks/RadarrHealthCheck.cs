@@ -21,7 +21,7 @@ namespace Ombi.HealthChecks.Checks
             using (var scope = CreateScope())
             {
                 var settingsProvider = scope.ServiceProvider.GetRequiredService<ISettingsService<RadarrSettings>>();
-                var api = scope.ServiceProvider.GetRequiredService<IRadarrApi>();
+                var api = scope.ServiceProvider.GetRequiredService<IRadarrV3Api>();
                 var settings = await settingsProvider.GetSettingsAsync();
                 if (!settings.Enabled)
                 {

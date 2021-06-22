@@ -1032,6 +1032,22 @@ namespace Ombi.Controllers.V1
             return Json(true);
         }
 
+
+        [HttpGet("newsletter/unsubscribe/{userId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> UnsubscribeUser(string userId)
+        {
+            // lookup user
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            if (user == null)
+            {
+                return Ok();
+            }
+
+            await UserManager.RemoveFromRoleAsync(user, OmbiRoles.ReceivesNewsletter);
+            return Ok();
+        }
+
         private async Task<List<IdentityResult>> AddRoles(IEnumerable<ClaimCheckboxes> roles, OmbiUser ombiUser)
         {
             var roleResult = new List<IdentityResult>();

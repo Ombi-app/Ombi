@@ -27,6 +27,7 @@ export class TvGridComponent implements OnInit, AfterViewInit {
     public currentFilter: RequestFilterType = RequestFilterType.All;
 
     public RequestFilter = RequestFilterType;
+    public manageOwnRequests: boolean;
 
     private storageKey = "Tv_DefaultRequestListSort";
     private storageKeyOrder = "Tv_DefaultRequestListSortOrder";
@@ -107,7 +108,8 @@ export class TvGridComponent implements OnInit, AfterViewInit {
             this.ref.detectChanges();
         };
 
-        this.onOpenOptions.emit({request: request, filter: filter, onChange});
+        const data = { request: request, filter: filter, onChange: onChange, manageOwnRequests: this.manageOwnRequests, isAdmin: this.isAdmin };
+        this.onOpenOptions.emit(data);
     }
 
     private loadData(): Observable<IRequestsViewModel<IChildRequests>> {

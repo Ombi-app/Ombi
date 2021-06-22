@@ -1,10 +1,14 @@
-﻿
-    .small-middle-container{
-        margin: auto;
-        width: 75%;
-        padding-top: 15%;
+﻿@import "~styles/variables.scss";
+.small-middle-container{
+        height:100vh;
     }
 
+.row{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    height:100vh;
+}
 
 @media only screen and (max-width: 992px) {
     div.centered {
@@ -32,12 +36,6 @@ div.bg {
     position: fixed;
 }
 
-.vcenter {
-    display: inline-block;
-    vertical-align: middle;
-    float: none;
-}
-
 .online{
     color:lightgreen;
 }
@@ -61,4 +59,41 @@ span, b, i, p {
 
 ::ng-deep body {
     background-color:#303030 !important;
+}
+
+.logo{
+    font:700 6em 'Montserrat', sans-serif;
+    text-align:center;
+    text-transform: uppercase;
+    color: $ombi-active;
+    padding:40px 20px;
+    white-space: normal;
+}
+
+@media (max-width: 1000px) {
+    .logo{
+        font:700 5em 'Montserrat', sans-serif;
+    }
+}
+
+@media (max-width: 800px) {
+    .logo{
+        font:700 4em 'Montserrat', sans-serif;
+    }
+}
+
+@media (max-width: 767px) {
+    .vcenter{
+        text-align:center;
+    }
+}
+
+.logo-img{
+    max-width:420px;
+    max-height:420px;
+}
+
+.logo-container{
+    display:flex;
+    justify-content: center;
 }

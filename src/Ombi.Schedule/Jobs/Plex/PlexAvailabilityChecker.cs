@@ -183,13 +183,13 @@ namespace Ombi.Schedule.Jobs.Plex
                 PlexServerContent item = null;
                 if (movie.ImdbId.HasValue())
                 {
-                    item = await _repo.Get(movie.ImdbId);
+                    item = await _repo.Get(movie.ImdbId, ProviderType.ImdbId);
                 }
                 if (item == null)
                 {
                     if (movie.TheMovieDbId.ToString().HasValue())
                     {
-                        item = await _repo.Get(movie.TheMovieDbId.ToString());
+                        item = await _repo.Get(movie.TheMovieDbId.ToString(), ProviderType.TheMovieDbId);
                     }
                 }
                 if (item == null)

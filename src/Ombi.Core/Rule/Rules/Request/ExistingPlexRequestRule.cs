@@ -7,6 +7,7 @@ using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
+using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Core.Rule.Rules.Request
 {
@@ -60,6 +61,7 @@ namespace Ombi.Core.Rule.Rules.Request
         {
             foreach (var season in child.SeasonRequests)
             {
+                var episodesToRemove = new List<EpisodeRequests>();
                 var currentSeasonRequest =
                     content.Episodes.Where(x => x.SeasonNumber == season.SeasonNumber).ToList();
                 if (!currentSeasonRequest.Any())
@@ -68,12 +70,24 @@ namespace Ombi.Core.Rule.Rules.Request
                 }
                 foreach (var e in season.Episodes)
                 {
-                    var hasEpisode = currentSeasonRequest.Any(x => x.EpisodeNumber == e.EpisodeNumber);
-                    if (hasEpisode)
+                    var existingEpRequest = currentSeasonRequest.FirstOrDefault(x => x.EpisodeNumber == e.EpisodeNumber);
+                    if (existingEpRequest != null)
                     {
-                        return Fail($"We already have episodes requested from series {child.Title}");
+                        episodesToRemove.Add(e);
                     }
                 }
+
+                episodesToRemove.ForEach(x =>
+                {
+                    season.Episodes.Remove(x);
+                });
+            }
+
+            var anyEpisodes = child.SeasonRequests.SelectMany(x => x.Episodes).Any();
+
+            if (!anyEpisodes)
+            {
+                return Fail($"We already have episodes requested from series {child.Title}");
             }
 
             return Success();

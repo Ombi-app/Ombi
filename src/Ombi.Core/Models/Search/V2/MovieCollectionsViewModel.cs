@@ -16,7 +16,7 @@ namespace Ombi.Core.Models.Search.V2
         public string Overview { get; set; }
         public string PosterPath { get; set; }
         public string Title { get; set; }
-        public DateTime ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
 
 
         public override RequestType Type => RequestType.Movie;

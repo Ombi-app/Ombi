@@ -13,12 +13,12 @@ namespace Ombi.Core.Rule.Rules.Search
     {
         public static void CheckForUnairedEpisodes(SearchTvShowViewModel search)
         {
-            foreach (var season in search.SeasonRequests)
+            foreach (var season in search.SeasonRequests.ToList())
             {
                 // If we have all the episodes for this season, then this season is available
                 if (season.Episodes.All(x => x.Available))
                 {
-                    season.SeasonAvailable = true; 
+                    season.SeasonAvailable = true;
                 }
             }
             if (search.SeasonRequests.All(x => x.Episodes.All(e => e.Available)))

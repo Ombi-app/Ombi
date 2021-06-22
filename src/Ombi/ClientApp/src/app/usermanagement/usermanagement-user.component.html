@@ -145,13 +145,14 @@
 
   <div class="row">
 
-<div class="col-md-3 col-sm-12">
+<div class="col-md-6 col-sm-12">
     <button *ngIf="!edit" type="button" mat-raised-button color="accent" data-test="createuserbtn"  (click)="create()">Create</button>
     <div *ngIf="edit">
       <button type="button" data-test="updatebtn" mat-raised-button color="accent" class="btn btn-primary-outline" (click)="update()">Update</button>
       <button type="button" data-test="deletebtn" mat-raised-button color="warn" class="btn btn-danger-outline" (click)="delete()">Delete</button>
-      <button type="button" style="float:right;" mat-raised-button color="primary" class="btn btn-info-outline" (click)="resetPassword()" pTooltip="You need your SMTP settings setup">Send
+      <button type="button" style="float:right;" mat-raised-button color="primary" class="btn btn-info-outline" (click)="resetPassword()" matTooltip="You need your SMTP settings setup">Send
         Reset Password Link</button>
+        <button *ngIf="customization.applicationUrl" type="button" mat-raised-button color="accent" class="btn btn-info-outline" (click)="appLink()" matTooltip="Send this link to the user and they can then open the app and directly login">Copy users App Link</button>
 
     </div>
 

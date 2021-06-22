@@ -22,11 +22,20 @@ namespace Ombi.Core.Rule.Rules.Specific
         private OmbiUserManager UserManager { get; }
         private ISettingsService<OmbiSettings> Settings { get; }
 
-        public async Task<RuleResult> Execute(object obj)
+        public async Task<RuleResult> Execute(object obj, string requestOnBehalf)
         {
             var req = (BaseRequest)obj;
+            var canRequestonBehalf = requestOnBehalf.HasValue();
             var settings = await Settings.GetSettingsAsync();
             var sendNotification = true;
+
+            if (settings.DoNotSendNotificationsForAutoApprove && canRequestonBehalf)
+            {
+                return new RuleResult
+                {
+                    Success = false
+                };
+            }
             var requestedUser = await UserManager.Users.FirstOrDefaultAsync(x => x.Id == req.RequestedUserId);
             if (req.RequestType == RequestType.Movie)
             {

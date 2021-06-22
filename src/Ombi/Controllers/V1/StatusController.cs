@@ -82,7 +82,17 @@ namespace Ombi.Controllers.V1
         {
             var settings = await Ombi.GetSettingsAsync();
 
-            return new { Result = settings?.Wizard ?? false};
+            return new { Result = settings?.Wizard ?? false };
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpGet("demo")]
+        public IActionResult Demo()
+        {
+            var instance = DemoSingleton.Instance;
+
+            instance.Demo = !instance.Demo;
+            return new OkResult();
         }
     }
 }

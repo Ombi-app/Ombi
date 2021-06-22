@@ -315,6 +315,12 @@ namespace Ombi.Core.Engine.V2
             foreach (var movie in movies)
             {
                 var result = await ProcessSingleMovie(movie);
+
+                if (DemoCheck(result.Title))
+                {
+                    continue;
+                }
+
                 if (settings.HideAvailableFromDiscover && result.Available)
                 {
                     continue;

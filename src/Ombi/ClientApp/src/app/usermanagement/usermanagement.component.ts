@@ -1,7 +1,7 @@
 ﻿import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
-
 import { ICheckbox, ICustomizationSettings, IEmailNotificationSettings, IUser } from "../interfaces";
 import { IdentityService, NotificationService, SettingsService } from "../services";
+
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { SelectionModel } from "@angular/cdk/collections";
@@ -90,6 +90,9 @@ export class UserManagementComponent implements OnInit {
             if (this.bulkMusicLimit) {
                 x.musicRequestLimit = this.bulkMusicLimit;
             }
+            if (this.bulkStreaming) {
+                x.streamingCountry = this.bulkStreaming;
+            }
             this.identityService.updateUser(x).subscribe(y => {
                 if (!y.successful) {
                     this.notificationService.error(`Could not update user ${x.userName}. Reason ${y.errors[0]}`);
@@ -102,6 +105,7 @@ export class UserManagementComponent implements OnInit {
         this.bulkMovieLimit = undefined;
         this.bulkEpisodeLimit = undefined;
         this.bulkMusicLimit = undefined;
+        this.bulkStreaming = undefined;
     }
 
     public isAllSelected() {

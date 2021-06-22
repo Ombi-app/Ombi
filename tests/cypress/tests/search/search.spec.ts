@@ -15,7 +15,7 @@ describe("Search Tests", () => {
 
     card.topLevelCard.realHover();
     card.title.should('have.text', "Dexter's Laboratory");
-    card.overview.contains('Cartoon Network');
+    card.overview.contains('Dexter');
     card.requestType.contains('TV Show');
     card.requestButton.should('exist');
   });

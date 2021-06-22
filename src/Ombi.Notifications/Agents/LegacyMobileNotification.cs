@@ -304,9 +304,9 @@ namespace Ombi.Notifications.Agents
 
         private async Task AddSubscribedUsers(List<string> playerIds)
         {
-            if (await SubsribedUsers.AnyAsync())
+            if (await Subscribed.AnyAsync())
             {
-                foreach (var user in SubsribedUsers)
+                foreach (var user in Subscribed)
                 {
                     var notificationId = user.NotificationUserIds;
                     if (notificationId.Any())

@@ -25,19 +25,22 @@ using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Core.Models;
+using System.Threading;
+using Microsoft.Extensions.Logging;
 
 namespace Ombi.Core.Engine
 {
     public class TvRequestEngine : BaseMediaEngine, ITvRequestEngine
     {
         public TvRequestEngine(ITvMazeApi tvApi, IMovieDbApi movApi, IRequestServiceMain requestService, IPrincipal user,
-            INotificationHelper helper, IRuleEvaluator rule, OmbiUserManager manager,
+            INotificationHelper helper, IRuleEvaluator rule, OmbiUserManager manager, ILogger<TvRequestEngine> logger,
             ITvSender sender, IRepository<RequestLog> rl, ISettingsService<OmbiSettings> settings, ICacheService cache,
             IRepository<RequestSubscription> sub) : base(user, requestService, rule, manager, cache, settings, sub)
         {
             TvApi = tvApi;
             MovieDbApi = movApi;
             NotificationHelper = helper;
+            _logger = logger;
             TvSender = sender;
             _requestLog = rl;
         }
@@ -46,6 +49,8 @@ namespace Ombi.Core.Engine
         private ITvMazeApi TvApi { get; }
         private IMovieDbApi MovieDbApi { get; }
         private ITvSender TvSender { get; }
+
+        private readonly ILogger<TvRequestEngine> _logger;
         private readonly IRepository<RequestLog> _requestLog;
 
         public async Task<RequestEngineResult> RequestTvShow(TvRequestViewModel tv)
@@ -68,7 +73,7 @@ namespace Ombi.Core.Engine
                 }
             }
 
-            var tvBuilder = new TvShowRequestBuilder(TvApi, MovieDbApi);
+            var tvBuilder = new TvShowRequestBuilder(TvApi, MovieDbApi, _logger);
             (await tvBuilder
                 .GetShowInfo(tv.TvDbId))
                 .CreateTvList(tv)
@@ -896,9 +901,25 @@ namespace Ombi.Core.Engine
         }
 
 
+        public async Task<RequestEngineResult> ReProcessRequest(int requestId, CancellationToken cancellationToken)
+        {
+            var request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == requestId, cancellationToken);
+            if (request == null)
+            {
+                return new RequestEngineResult
+                {
+                    Result = false,
+                    ErrorMessage = "Request does not exist"
+                };
+            }
+
+            return await ProcessSendingShow(request);
+        }
+
+
         private async Task<RequestEngineResult> AfterRequest(ChildRequests model, string requestOnBehalf)
         {
-            var sendRuleResult = await RunSpecificRule(model, SpecificRules.CanSendNotification);
+            var sendRuleResult = await RunSpecificRule(model, SpecificRules.CanSendNotification, requestOnBehalf);
             if (sendRuleResult.Success)
             {
                 await NotificationHelper.NewRequest(model);
@@ -913,6 +934,11 @@ namespace Ombi.Core.Engine
                 EpisodeCount = model.SeasonRequests.Select(m => m.Episodes.Count).Sum(),
             });
 
+            return await ProcessSendingShow(model);
+        }
+
+        private async Task<RequestEngineResult> ProcessSendingShow(ChildRequests model)
+        {
             if (model.Approved)
             {
                 // Autosend

@@ -50,17 +50,34 @@ namespace Ombi.Core.Engine.V2
         public async Task<SearchFullInfoTvShowViewModel> GetShowByRequest(int requestId, CancellationToken token)
         {
             var request = await RequestService.TvRequestService.Get().FirstOrDefaultAsync(x => x.Id == requestId);
-            return await GetShowInformation(request.ExternalProviderId.ToString(), token); // TODO
+            return await GetShowInformation(request.ExternalProviderId.ToString(), token);
         }
 
         public async Task<SearchFullInfoTvShowViewModel> GetShowInformation(string tvdbid, CancellationToken token)
         {
-            var show = await Cache.GetOrAdd(nameof(GetShowInformation) + tvdbid,
-              async () => await _movieApi.GetTVInfo(tvdbid), DateTime.Now.AddHours(12));
+            var langCode = await DefaultLanguageCode(null);
+            var show = await Cache.GetOrAdd(nameof(GetShowInformation) + langCode + tvdbid,
+              async () => await _movieApi.GetTVInfo(tvdbid, langCode), DateTime.Now.AddHours(12));
             if (show == null || show.name == null)
             {
                 // We don't have enough information
                 return null;
+            }
+
+            if (!show.Images?.Posters?.Any() ?? false && !string.Equals(langCode, "en", StringComparison.OrdinalIgnoreCase))
+            {
+                // There's no regional assets for this, so 
+                // lookup the en-us version to get them
+                var enShow = await Cache.GetOrAdd(nameof(GetShowInformation) + "en" + tvdbid,
+                    async () => await _movieApi.GetTVInfo(tvdbid, "en"), DateTime.Now.AddHours(12));
+
+                // For some of the more obsecure cases
+                if (!show.overview.HasValue())
+                {
+                    show.overview = enShow.overview;
+                }
+
+                show.Images = enShow.Images;
             }
 
             var mapped = _mapper.Map<SearchFullInfoTvShowViewModel>(show);
@@ -154,6 +171,10 @@ namespace Ombi.Core.Engine.V2
 
             foreach (var tvMazeSearch in items)
             {
+                if (DemoCheck(tvMazeSearch.Title))
+                {
+                    continue;
+                }
                 if (settings.HideAvailableFromDiscover)
                 {
                     // To hide, we need to know if it's fully available, the only way to do this is to lookup it's episodes to check if we have every episode

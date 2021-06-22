@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Sonarr;
 using Ombi.Api.Sonarr.Models;
+using Ombi.Api.TheMovieDb;
+using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Schedule.Jobs.Radarr;
@@ -21,12 +23,14 @@ namespace Ombi.Schedule.Jobs.Sonarr
 {
     public class SonarrSync : ISonarrSync
     {
-        public SonarrSync(ISettingsService<SonarrSettings> s, ISonarrApi api, ILogger<SonarrSync> l, ExternalContext ctx)
+        public SonarrSync(ISettingsService<SonarrSettings> s, ISonarrApi api, ILogger<SonarrSync> l, ExternalContext ctx,
+            IMovieDbApi movieDbApi)
         {
             _settings = s;
             _api = api;
             _log = l;
             _ctx = ctx;
+            _movieDbApi = movieDbApi;
             _settings.ClearCache();
         }
 
@@ -34,6 +38,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
         private readonly ISonarrApi _api;
         private readonly ILogger<SonarrSync> _log;
         private readonly ExternalContext _ctx;
+        private readonly IMovieDbApi _movieDbApi;
 
         public async Task Execute(IJobExecutionContext job)
         {
@@ -48,7 +53,17 @@ namespace Ombi.Schedule.Jobs.Sonarr
                 if (series != null)
                 {
                     var sonarrSeries = series as ImmutableHashSet<SonarrSeries> ?? series.ToImmutableHashSet();
-                    var ids = sonarrSeries.Select(x => x.tvdbId); 
+                    var ids = sonarrSeries.Select(x => new SonarrDto
+                    {
+                        TvDbId = x.tvdbId,
+                        ImdbId = x.imdbId,
+                        Title = x.title,
+                        MovieDbId = 0,
+                        Id = x.id,
+                        Monitored = x.monitored,
+                        EpisodeFileCount = x.episodeFileCount
+                    }).ToHashSet();
+
                     var strat = _ctx.Database.CreateExecutionStrategy();
                     await strat.ExecuteAsync(async () =>
                     {
@@ -60,12 +75,27 @@ namespace Ombi.Schedule.Jobs.Sonarr
                     });
 
                     var existingSeries = await _ctx.SonarrCache.Select(x => x.TvDbId).ToListAsync();
-                    
-                    //var entites = ids.Except(existingSeries).Select(id => new SonarrCache { TvDbId = id }).ToImmutableHashSet();
-                    var entites = ids.Select(id => new SonarrCache { TvDbId = id }).ToImmutableHashSet();
 
-                    await _ctx.SonarrCache.AddRangeAsync(entites);
-                    entites.Clear();
+                    var sonarrCacheToSave = new HashSet<SonarrCache>();
+                    foreach (var id in ids)
+                    {
+                        var cache = new SonarrCache
+                        {
+                            TvDbId = id.TvDbId
+                        };
+
+                        var findResult = await _movieDbApi.Find(id.TvDbId.ToString(), ExternalSource.tvdb_id);
+                        if (findResult.tv_results.Any())
+                        {
+                            cache.TheMovieDbId = findResult.tv_results.FirstOrDefault()?.id ?? -1;
+                            id.MovieDbId = cache.TheMovieDbId;
+                        }
+                        sonarrCacheToSave.Add(cache);
+                    }
+
+                    await _ctx.SonarrCache.AddRangeAsync(sonarrCacheToSave);
+                    await _ctx.SaveChangesAsync();
+                    sonarrCacheToSave.Clear();
                     strat = _ctx.Database.CreateExecutionStrategy();
                     await strat.ExecuteAsync(async () =>
                     {
@@ -76,15 +106,15 @@ namespace Ombi.Schedule.Jobs.Sonarr
                         }
                     });
 
-                    foreach (var s in sonarrSeries)
+                    foreach (var s in ids)
                     {
-                        if (!s.monitored || s.episodeFileCount == 0) // We have files
+                        if (!s.Monitored || s.EpisodeFileCount == 0) // We have files
                         {
                             continue;
                         }
 
-                        _log.LogDebug("Syncing series: {0}", s.title);
-                        var episodes = await _api.GetEpisodes(s.id, settings.ApiKey, settings.FullUri);
+                        _log.LogDebug("Syncing series: {0}", s.Title);
+                        var episodes = await _api.GetEpisodes(s.Id, settings.ApiKey, settings.FullUri);
                         var monitoredEpisodes = episodes.Where(x => x.monitored || x.hasFile);
 
                         //var allExistingEpisodes = await _ctx.SonarrEpisodeCache.Where(x => x.TvDbId == s.tvdbId).ToListAsync();
@@ -95,7 +125,8 @@ namespace Ombi.Schedule.Jobs.Sonarr
                                 {
                                     EpisodeNumber = episode.episodeNumber,
                                     SeasonNumber = episode.seasonNumber,
-                                    TvDbId = s.tvdbId,
+                                    TvDbId = s.TvDbId,
+                                    MovieDbId = s.MovieDbId,
                                     HasFile = episode.hasFile
                                 });
                         //var episodesToAdd = new List<SonarrEpisodeCache>();
@@ -165,6 +196,17 @@ namespace Ombi.Schedule.Jobs.Sonarr
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        private class SonarrDto
+        {
+            public int TvDbId { get; set; }
+            public string ImdbId { get; set; }
+            public string Title { get; set; }
+            public int MovieDbId { get; set; }
+            public int Id { get; set; }
+            public bool Monitored { get; set; }
+            public int EpisodeFileCount { get; set; }
         }
     }
 }
