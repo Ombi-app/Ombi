@@ -28,7 +28,6 @@ export class AppComponent implements OnInit {
     public showNav: boolean;
     public updateAvailable: boolean;
     public currentUrl: string;
-    public userAccessToken: string;
     public voteEnabled = false;
     public applicationName: string = "Ombi"
     public isAdmin: boolean;
