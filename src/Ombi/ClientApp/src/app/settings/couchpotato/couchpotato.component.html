@@ -1,4 +1,4 @@
-﻿<settings-menu>
+<settings-menu>
 </settings-menu>
 <div class="small-middle-container">
 <div *ngIf="form">
@@ -55,7 +55,7 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Quality Profiles</mat-label>
                                     <mat-select formControlName="defaultProfileId">
-                                      <mat-option *ngFor="let profile of profiles" value="{{profile._id}}">{{profile.label}}</mat-option>
+                                      <mat-option *ngFor="let profile of profiles.list" value="{{profile._id}}">{{profile.label}}</mat-option>
                                     </mat-select>
                                     <mat-error>A Default Quality Profile is required</mat-error>
                                   </mat-form-field>
