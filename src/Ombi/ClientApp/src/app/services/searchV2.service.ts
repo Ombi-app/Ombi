@@ -63,6 +63,10 @@ export class SearchV2Service extends ServiceHelpers {
         return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/requested/${currentlyLoaded}/${toLoad}`).toPromise();
     }
 
+    public recentlyRequestedTvByPage(currentlyLoaded: number, toLoad: number): Promise<ISearchTvResultV2[]> {
+        return this.http.get<ISearchTvResultV2[]>(`${this.url}/tv/requested/${currentlyLoaded}/${toLoad}`).toPromise();
+    }
+
     public seasonalMoviesByPage(currentlyLoaded: number, toLoad: number): Promise<ISearchMovieResult[]> {
         return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/seasonal/${currentlyLoaded}/${toLoad}`).toPromise();
     }

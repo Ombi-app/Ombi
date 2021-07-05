@@ -223,8 +223,10 @@ export class CarouselListComponent implements OnInit {
                 break
             case DiscoverType.RecentlyRequested:
                 this.movies = await this.searchService.recentlyRequestedMoviesByPage(this.currentlyLoaded, this.amountToLoad);
+                break;
             case DiscoverType.Seasonal:
                 this.movies = await this.searchService.seasonalMoviesByPage(this.currentlyLoaded, this.amountToLoad);
+                break;
         }
         this.movieCount.emit(this.movies.length);
         this.currentlyLoaded += this.amountToLoad;
@@ -241,6 +243,9 @@ export class CarouselListComponent implements OnInit {
             case DiscoverType.Upcoming:
                 this.tvShows = await this.searchService.anticipatedTvByPage(this.currentlyLoaded, this.amountToLoad);
                 break
+            case DiscoverType.RecentlyRequested:
+                // this.tvShows = await this.searchService.recentlyRequestedMoviesByPage(this.currentlyLoaded, this.amountToLoad); // TODO need to do some more mapping
+                break;
         }
         this.currentlyLoaded += this.amountToLoad;
     }

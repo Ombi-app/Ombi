@@ -200,7 +200,7 @@ namespace Ombi.Core.Engine.V2
             var result = await _client.GetAsync("https://raw.githubusercontent.com/Ombi-app/Ombi.News/main/Seasonal.md");
             var keyWordIds = await result.Content.ReadAsStringAsync();
 
-            if (string.IsNullOrEmpty(keyWordIds))
+            if (string.IsNullOrEmpty(keyWordIds) || keyWordIds.Equals("\n"))
             {
                 return new List<SearchMovieViewModel>();
             }

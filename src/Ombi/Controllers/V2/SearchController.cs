@@ -189,6 +189,18 @@ namespace Ombi.Controllers.V2
         {
             return await _movieEngineV2.RecentlyRequestedMovies(currentPosition, amountToLoad, Request.HttpContext.RequestAborted);
         }
+        /// <summary>
+        /// Returns Recently Requested Tv using Paging
+        /// </summary>
+        /// <remarks>We use TheMovieDb as the Movie Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("tv/requested/{currentPosition}/{amountToLoad}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<IEnumerable<SearchFullInfoTvShowViewModel>> RecentlyRequestedTv(int currentPosition, int amountToLoad)
+        {
+            return await _tvEngineV2.RecentlyRequestedShows(currentPosition, amountToLoad, Request.HttpContext.RequestAborted);
+        }
 
         /// <summary>
         /// Returns Now Playing Movies

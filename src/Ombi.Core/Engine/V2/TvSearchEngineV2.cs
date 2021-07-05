@@ -23,6 +23,8 @@ using System.Threading;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using System.Diagnostics;
+using Ombi.Core.Engine.Interfaces;
+using Ombi.Core.Models.UI;
 
 namespace Ombi.Core.Engine.V2
 {
@@ -33,10 +35,11 @@ namespace Ombi.Core.Engine.V2
         private readonly ITraktApi _traktApi;
         private readonly IMovieDbApi _movieApi;
         private readonly ISettingsService<CustomizationSettings> _customization;
+        private readonly ITvRequestEngine _requestEngine;
 
         public TvSearchEngineV2(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper,
             ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um, ICacheService memCache, ISettingsService<OmbiSettings> s,
-            IRepository<RequestSubscription> sub, IMovieDbApi movieApi, ISettingsService<CustomizationSettings> customization)
+            IRepository<RequestSubscription> sub, IMovieDbApi movieApi, ISettingsService<CustomizationSettings> customization, ITvRequestEngine requestEngine)
             : base(identity, service, r, um, memCache, s, sub)
         {
             _tvMaze = tvMaze;
@@ -44,6 +47,7 @@ namespace Ombi.Core.Engine.V2
             _traktApi = trakt;
             _movieApi = movieApi;
             _customization = customization;
+            _requestEngine = requestEngine;
         }
 
 
@@ -162,6 +166,43 @@ namespace Ombi.Core.Engine.V2
             }
 
             return data;
+        }
+
+
+        public async Task<IEnumerable<SearchFullInfoTvShowViewModel>> RecentlyRequestedShows(int currentlyLoaded, int toLoad, CancellationToken cancellationToken)
+        {
+            var langCode = await DefaultLanguageCode(null);
+
+            var results = new List<SearchFullInfoTvShowViewModel>();
+
+            var requestResult = await Cache.GetOrAdd(nameof(RecentlyRequestedShows) + "Requests" + toLoad + langCode,
+                async () =>
+                {
+                    return await _requestEngine.GetRequests(toLoad, currentlyLoaded, new Models.UI.OrderFilterModel
+                    {
+                        OrderType = OrderType.RequestedDateDesc
+                    });
+                }, DateTime.Now.AddMinutes(15), cancellationToken);
+
+            var movieDBResults = await Cache.GetOrAdd(nameof(RecentlyRequestedShows) + toLoad + langCode,
+                async () =>
+                {
+                    var responses = new List<TvInfo>();
+                    foreach (var movie in requestResult.Collection)
+                    {
+                        responses.Add(await _movieApi.GetTVInfo(movie.ExternalProviderId.ToString()));
+                    }
+                    return responses;
+                }, DateTime.Now.AddHours(12), cancellationToken);
+
+            var mapped = _mapper.Map<List<SearchFullInfoTvShowViewModel>>(movieDBResults);
+  
+            foreach(var map in mapped)
+            {
+                var processed = await ProcessResult(map);
+                results.Add(processed);
+            }
+            return results;
         }
 
         private async Task<IEnumerable<SearchTvShowViewModel>> ProcessResults(List<MovieDbSearchResult> items)
