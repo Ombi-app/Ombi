@@ -73,7 +73,7 @@ namespace Ombi.Api
                 }
 
                 // do something with the response
-                var receivedString = await httpResponseMessage.Content.ReadAsStringAsync();
+                var receivedString = await httpResponseMessage.Content.ReadAsStringAsync(cancellationToken);
                 LogDebugContent(receivedString);
                 if (request.ContentType == ContentType.Json)
                 {
