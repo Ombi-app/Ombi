@@ -331,6 +331,32 @@ namespace Ombi.Api.TheMovieDb
             return await Api.Request<SeasonDetails>(request, token);
         }
 
+        public async Task<List<MovieDbSearchResult>> GetMoviesViaKeywords(string keywordId, string langCode, CancellationToken cancellationToken, int? page = null)
+        {
+            var request = new Request($"discover/movie", BaseUri, HttpMethod.Get);
+            request.AddQueryString("api_key", ApiToken);
+            request.AddQueryString("language", langCode);
+            request.AddQueryString("sort_by", "vote_average.desc");
+
+            request.AddQueryString("with_keywords", keywordId);            
+            
+            // `vote_count` consideration isn't explicitly documented, but using only the `sort_by` filter
+            // does not provide the same results as `/movie/top_rated`. This appears to be adequate enough
+            // to filter out extremely high-rated movies due to very little votes
+            request.AddQueryString("vote_count.gte", "250");
+
+            if (page != null)
+            {
+                request.AddQueryString("page", page.ToString());
+            }
+
+            await AddDiscoverSettings(request);
+            await AddGenreFilter(request, "movie");
+            AddRetry(request);
+            var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request, cancellationToken);
+            return Mapper.Map<List<MovieDbSearchResult>>(result.results);
+        }
+
         public async Task<List<Keyword>> SearchKeyword(string searchTerm)
         {
             var request = new Request("search/keyword", BaseUri, HttpMethod.Get);

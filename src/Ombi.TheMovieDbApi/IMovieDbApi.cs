@@ -18,6 +18,7 @@ namespace Ombi.Api.TheMovieDb
         Task<List<MovieDbSearchResult>> PopularMovies(string languageCode, int? page = null, CancellationToken cancellationToken = default(CancellationToken));
         Task<List<MovieDbSearchResult>> PopularTv(string langCode, int? page = null, CancellationToken cancellationToken = default(CancellationToken));
         Task<List<MovieDbSearchResult>> SearchMovie(string searchTerm, int? year, string languageCode);
+        Task<List<MovieDbSearchResult>> GetMoviesViaKeywords(string keywordId, string langCode, CancellationToken cancellationToken, int? page = null);
         Task<List<TvSearchResult>> SearchTv(string searchTerm, string year = default);
         Task<List<MovieDbSearchResult>> TopRated(string languageCode, int? page = null);
         Task<List<MovieDbSearchResult>> Upcoming(string languageCode, int? page = null);

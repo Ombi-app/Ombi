@@ -165,6 +165,19 @@ namespace Ombi.Controllers.V2
         }
 
         /// <summary>
+        /// Returns Seasonal Movies
+        /// </summary>
+        /// <remarks>We use TheMovieDb as the Movie Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("movie/seasonal/{currentPosition}/{amountToLoad}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<IEnumerable<SearchMovieViewModel>> Seasonal(int currentPosition, int amountToLoad)
+        {
+            return await _movieEngineV2.SeasonalList(currentPosition, amountToLoad, Request.HttpContext.RequestAborted);
+        }
+
+        /// <summary>
         /// Returns Recently Requested Movies using Paging
         /// </summary>
         /// <remarks>We use TheMovieDb as the Movie Provider</remarks>

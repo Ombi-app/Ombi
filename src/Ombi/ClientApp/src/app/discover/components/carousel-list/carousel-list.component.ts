@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from "@angular/core";
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from "@angular/core";
 import { DiscoverOption, IDiscoverCardResult } from "../../interfaces";
 import { ISearchMovieResult, ISearchTvResult, RequestType } from "../../../interfaces";
 import { SearchV2Service } from "../../../services";
@@ -11,6 +11,7 @@ export enum DiscoverType {
     Trending,
     Popular,
     RecentlyRequested,
+    Seasonal,
 }
 
 @Component({
@@ -23,6 +24,7 @@ export class CarouselListComponent implements OnInit {
     @Input() public discoverType: DiscoverType;
     @Input() public id: string;
     @Input() public isAdmin: boolean;
+    @Output() public movieCount: EventEmitter<number> = new EventEmitter();
     @ViewChild('carousel', {static: false}) carousel: Carousel;
 
     public DiscoverOption = DiscoverOption;
@@ -33,6 +35,7 @@ export class CarouselListComponent implements OnInit {
     public responsiveOptions: any;
     public RequestType = RequestType;
     public loadingFlag: boolean;
+    public DiscoverType = DiscoverType;
 
     get mediaTypeStorageKey() {
         return "DiscoverOptions" + this.discoverType.toString();
@@ -220,7 +223,10 @@ export class CarouselListComponent implements OnInit {
                 break
             case DiscoverType.RecentlyRequested:
                 this.movies = await this.searchService.recentlyRequestedMoviesByPage(this.currentlyLoaded, this.amountToLoad);
+            case DiscoverType.Seasonal:
+                this.movies = await this.searchService.seasonalMoviesByPage(this.currentlyLoaded, this.amountToLoad);
         }
+        this.movieCount.emit(this.movies.length);
         this.currentlyLoaded += this.amountToLoad;
     }
 

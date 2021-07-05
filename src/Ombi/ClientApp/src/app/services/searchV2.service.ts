@@ -63,6 +63,10 @@ export class SearchV2Service extends ServiceHelpers {
         return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/requested/${currentlyLoaded}/${toLoad}`).toPromise();
     }
 
+    public seasonalMoviesByPage(currentlyLoaded: number, toLoad: number): Promise<ISearchMovieResult[]> {
+        return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/seasonal/${currentlyLoaded}/${toLoad}`).toPromise();
+    }
+
     public nowPlayingMovies(): Observable<ISearchMovieResult[]> {
         return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/nowplaying`);
     }
