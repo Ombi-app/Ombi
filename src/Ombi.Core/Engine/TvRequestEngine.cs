@@ -35,7 +35,7 @@ namespace Ombi.Core.Engine
         public TvRequestEngine(ITvMazeApi tvApi, IMovieDbApi movApi, IRequestServiceMain requestService, IPrincipal user,
             INotificationHelper helper, IRuleEvaluator rule, OmbiUserManager manager, ILogger<TvRequestEngine> logger,
             ITvSender sender, IRepository<RequestLog> rl, ISettingsService<OmbiSettings> settings, ICacheService cache,
-            IRepository<RequestSubscription> sub) : base(user, requestService, rule, manager, cache, settings, sub)
+            IRepository<RequestSubscription> sub, IMediaCacheService mediaCacheService) : base(user, requestService, rule, manager, cache, settings, sub)
         {
             TvApi = tvApi;
             MovieDbApi = movApi;
@@ -43,6 +43,7 @@ namespace Ombi.Core.Engine
             _logger = logger;
             TvSender = sender;
             _requestLog = rl;
+            _mediaCacheService = mediaCacheService;
         }
 
         private INotificationHelper NotificationHelper { get; }
@@ -52,6 +53,7 @@ namespace Ombi.Core.Engine
 
         private readonly ILogger<TvRequestEngine> _logger;
         private readonly IRepository<RequestLog> _requestLog;
+        private readonly IMediaCacheService _mediaCacheService;
 
         public async Task<RequestEngineResult> RequestTvShow(TvRequestViewModel tv)
         {
@@ -329,6 +331,7 @@ namespace Ombi.Core.Engine
                 Collection = allRequests
             };
         }
+
         public async Task<IEnumerable<TvRequests>> GetRequests()
         {
             var shouldHide = await HideFromOtherUsers();
@@ -347,7 +350,6 @@ namespace Ombi.Core.Engine
             await CheckForSubscription(shouldHide, allRequests);
             return allRequests;
         }
-
 
         public async Task<RequestsViewModel<ChildRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder)
         {
@@ -404,7 +406,7 @@ namespace Ombi.Core.Engine
             };
         }
 
-         public async Task<RequestsViewModel<ChildRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder, RequestStatus status)
+        public async Task<RequestsViewModel<ChildRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder, RequestStatus status)
         {
             var shouldHide = await HideFromOtherUsers();
             List<ChildRequests> allRequests;
@@ -476,6 +478,7 @@ namespace Ombi.Core.Engine
                 Total = total,
             };
         }
+
         public async Task<RequestsViewModel<ChildRequests>> GetUnavailableRequests(int count, int position, string sortProperty, string sortOrder)
         {
             var shouldHide = await HideFromOtherUsers();
@@ -528,7 +531,6 @@ namespace Ombi.Core.Engine
                 Total = total,
             };
         }
-
 
         public async Task<IEnumerable<TvRequests>> GetRequestsLite()
         {
@@ -699,6 +701,7 @@ namespace Ombi.Core.Engine
             }
 
             await TvRepository.UpdateChild(request);
+            await _mediaCacheService.Purge();
 
             if (request.Approved)
             {
@@ -725,6 +728,7 @@ namespace Ombi.Core.Engine
             request.Denied = true;
             request.DeniedReason = reason;
             await TvRepository.UpdateChild(request);
+            await _mediaCacheService.Purge();
             await NotificationHelper.Notify(request, NotificationType.RequestDeclined);
             return new RequestEngineResult
             {
@@ -735,6 +739,7 @@ namespace Ombi.Core.Engine
         public async Task<ChildRequests> UpdateChildRequest(ChildRequests request)
         {
             await TvRepository.UpdateChild(request);
+            await _mediaCacheService.Purge();
             return request;
         }
 
@@ -754,12 +759,14 @@ namespace Ombi.Core.Engine
             }
 
             await TvRepository.Db.SaveChangesAsync();
+            await _mediaCacheService.Purge();
         }
 
         public async Task RemoveTvRequest(int requestId)
         {
             var request = await TvRepository.Get().FirstOrDefaultAsync(x => x.Id == requestId);
             await TvRepository.Delete(request);
+            await _mediaCacheService.Purge();
         }
 
         public async Task<bool> UserHasRequest(string userId)
@@ -786,6 +793,7 @@ namespace Ombi.Core.Engine
                 }
             }
             await TvRepository.UpdateChild(request);
+            await _mediaCacheService.Purge();
             return new RequestEngineResult
             {
                 Result = true,
@@ -814,6 +822,7 @@ namespace Ombi.Core.Engine
             }
             await TvRepository.UpdateChild(request);
             await NotificationHelper.Notify(request, NotificationType.RequestAvailable);
+            await _mediaCacheService.Purge();
             return new RequestEngineResult
             {
                 Result = true,
@@ -888,19 +897,6 @@ namespace Ombi.Core.Engine
             return await AfterRequest(model.ChildRequests.FirstOrDefault(), requestOnBehalf);
         }
 
-        private static List<ChildRequests> SortEpisodes(List<ChildRequests> items)
-        {
-            foreach (var value in items)
-            {
-                foreach (var requests in value.SeasonRequests)
-                {
-                    requests.Episodes = requests.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
-                }
-            }
-            return items;
-        }
-
-
         public async Task<RequestEngineResult> ReProcessRequest(int requestId, CancellationToken cancellationToken)
         {
             var request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == requestId, cancellationToken);
@@ -933,6 +929,7 @@ namespace Ombi.Core.Engine
                 RequestType = RequestType.TvShow,
                 EpisodeCount = model.SeasonRequests.Select(m => m.Episodes.Count).Sum(),
             });
+            await _mediaCacheService.Purge();
 
             return await ProcessSendingShow(model);
         }

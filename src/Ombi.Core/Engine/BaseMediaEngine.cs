@@ -127,7 +127,7 @@ namespace Ombi.Core.Engine
                     UserId = user.Id
                 };
             }
-            var settings = await Cache.GetOrAdd(CacheKeys.OmbiSettings, async () => await OmbiSettings.GetSettingsAsync());
+            var settings = await Cache.GetOrAddAsync(CacheKeys.OmbiSettings, () => OmbiSettings.GetSettingsAsync());
             var result = new HideResult
             {
                 Hide = settings.HideRequestsUsers,

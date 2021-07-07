@@ -116,7 +116,7 @@ namespace Ombi
                         {
                             var userid = context.Principal?.Claims?.Where(x => x.Type.Equals("id", StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault()?.Value ?? default;
                             var cache = context.HttpContext.RequestServices.GetRequiredService<ICacheService>();
-                            var user = await cache.GetOrAdd(userid + "token", async () =>
+                            var user = await cache.GetOrAddAsync(userid + "token", async () =>
                             {
                                 var um = context.HttpContext.RequestServices.GetRequiredService<OmbiUserManager>();
                                 return await um.FindByIdAsync(userid);

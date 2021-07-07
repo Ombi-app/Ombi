@@ -66,7 +66,7 @@ namespace Ombi.Controllers.V1
         [HttpGet("updateCached")]
         public async Task<bool> CheckForUpdateCached()
         {
-            var val = await _memCache.GetOrAdd(CacheKeys.Update, async () =>
+            var val = await _memCache.GetOrAddAsync(CacheKeys.Update, async () =>
             {
                 var productArray = _updater.GetVersion();
 

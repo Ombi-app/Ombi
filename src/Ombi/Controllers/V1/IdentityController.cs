@@ -293,8 +293,8 @@ namespace Ombi.Controllers.V1
         [PowerUser]
         public async Task<IEnumerable<UserViewModelDropdown>> GetAllUsersDropdown()
         {
-            var users = await _cacheService.GetOrAdd(CacheKeys.UsersDropdown,
-                async () => await UserManager.Users.Where(x => x.UserType != UserType.SystemUser).ToListAsync());
+            var users = await _cacheService.GetOrAddAsync(CacheKeys.UsersDropdown,
+                () =>  UserManager.Users.Where(x => x.UserType != UserType.SystemUser).ToListAsync());
 
             var model = new List<UserViewModelDropdown>();
 

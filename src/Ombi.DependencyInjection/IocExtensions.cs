@@ -206,6 +206,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IEmailProvider, GenericEmailProvider>();
             services.AddTransient<INotificationHelper, NotificationHelper>();
             services.AddSingleton<ICacheService, CacheService>();
+            services.AddSingleton<IMediaCacheService, MediaCacheService>();
             services.AddScoped<IImageService, ImageService>();
 
             services.AddTransient<IDiscordNotification, DiscordNotification>();
