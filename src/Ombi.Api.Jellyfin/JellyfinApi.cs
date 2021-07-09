@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 using Ombi.Api.Jellyfin.Models;
 using Ombi.Api.Jellyfin.Models.Media.Tv;
 using Ombi.Api.Jellyfin.Models.Movie;
-using Ombi.Helpers;
 
 namespace Ombi.Api.Jellyfin
 {
@@ -87,19 +87,29 @@ namespace Ombi.Api.Jellyfin
             return await Api.Request<JellyfinItemContainer<JellyfinMovie>>(request);
         }
 
-        public async Task<JellyfinItemContainer<JellyfinMovie>> GetAllMovies(string apiKey, int startIndex, int count, string userId, string baseUri)
+        public async Task<JellyfinItemContainer<MediaFolders>> GetLibraries(string apiKey, string baseUrl)
         {
-            return await GetAll<JellyfinMovie>("Movie", apiKey, userId, baseUri, true, startIndex, count);
+            var request = new Request("library/mediafolders", baseUrl, HttpMethod.Get);
+            AddHeaders(request, apiKey);
+
+            var response = await Api.Request<JellyfinItemContainer<MediaFolders>>(request);
+            response.Items = response.Items.Where(x => !x.CollectionType.Equals("playlists", StringComparison.InvariantCultureIgnoreCase)).ToList();
+            return response;
         }
 
-        public async Task<JellyfinItemContainer<JellyfinEpisodes>> GetAllEpisodes(string apiKey, int startIndex, int count, string userId, string baseUri)
+        public async Task<JellyfinItemContainer<JellyfinMovie>> GetAllMovies(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri)
         {
-            return await GetAll<JellyfinEpisodes>("Episode", apiKey, userId, baseUri, false, startIndex, count);
+            return await GetAll<JellyfinMovie>("Movie", apiKey, userId, baseUri, true, startIndex, count, parentIdFilder);
         }
 
-        public async Task<JellyfinItemContainer<JellyfinSeries>> GetAllShows(string apiKey, int startIndex, int count, string userId, string baseUri)
+        public async Task<JellyfinItemContainer<JellyfinEpisodes>> GetAllEpisodes(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri)
         {
-            return await GetAll<JellyfinSeries>("Series", apiKey, userId, baseUri, false, startIndex, count);
+            return await GetAll<JellyfinEpisodes>("Episode", apiKey, userId, baseUri, false, startIndex, count, parentIdFilder);
+        }
+
+        public async Task<JellyfinItemContainer<JellyfinSeries>> GetAllShows(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri)
+        {
+            return await GetAll<JellyfinSeries>("Series", apiKey, userId, baseUri, false, startIndex, count, parentIdFilder);
         }
 
         public async Task<SeriesInformation> GetSeriesInformation(string mediaId, string apiKey, string userId, string baseUrl)
@@ -142,15 +152,19 @@ namespace Ombi.Api.Jellyfin
             var obj = await Api.Request<JellyfinItemContainer<T>>(request);
             return obj;
         }
-        private async Task<JellyfinItemContainer<T>> GetAll<T>(string type, string apiKey, string userId, string baseUri, bool includeOverview, int startIndex, int count)
+        private async Task<JellyfinItemContainer<T>> GetAll<T>(string type, string apiKey, string userId, string baseUri, bool includeOverview, int startIndex, int count, string parentIdFilder = default)
         {
             var request = new Request($"users/{userId}/items", baseUri, HttpMethod.Get);
 
             request.AddQueryString("Recursive", true.ToString());
             request.AddQueryString("IncludeItemTypes", type);
-            request.AddQueryString("Fields", includeOverview ? "ProviderIds,Overview" : "ProviderIds");
+            request.AddQueryString("Fields", includeOverview ? "ProviderIds,Overview,ParentId" : "ProviderIds,ParentId");
             request.AddQueryString("startIndex", startIndex.ToString());
             request.AddQueryString("limit", count.ToString());
+            if(!string.IsNullOrEmpty(parentIdFilder))
+            {
+                request.AddQueryString("ParentId", parentIdFilder);
+            }
 
             request.AddQueryString("IsVirtualItem", "False");
 

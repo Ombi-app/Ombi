@@ -1,9 +1,8 @@
 ﻿import { Component, OnInit } from "@angular/core";
 
 import { EmbyService } from "../../services";
-import { NotificationService } from "../../services";
-
 import { IEmbySettings } from "../../interfaces";
+import { NotificationService } from "../../services";
 
 @Component({
     selector: "wizard-emby",
@@ -35,7 +34,8 @@ export class EmbyComponent implements OnInit {
             ssl: false,
             subDir: "",
             serverHostname: "",
-            serverId: undefined
+            serverId: undefined,
+            embySelectedLibraries: []
         });
     }
 
@@ -45,7 +45,7 @@ export class EmbyComponent implements OnInit {
                 this.notificationService.error("Username or password was incorrect. Could not authenticate with Emby.");
                 return;
             }
-            
+
             this.notificationService.success("Done! Please press next");
         });
     }

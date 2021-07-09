@@ -13,13 +13,12 @@ namespace Ombi.Api.Jellyfin
         Task<List<JellyfinUser>> GetUsers(string baseUri, string apiKey);
         Task<JellyfinUser> LogIn(string username, string password, string apiKey, string baseUri);
 
-        Task<JellyfinItemContainer<JellyfinMovie>> GetAllMovies(string apiKey, int startIndex, int count, string userId,
+        Task<JellyfinItemContainer<JellyfinMovie>> GetAllMovies(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri);
+
+        Task<JellyfinItemContainer<JellyfinEpisodes>> GetAllEpisodes(string apiKey, string parentIdFilder, int startIndex, int count, string userId,
             string baseUri);
 
-        Task<JellyfinItemContainer<JellyfinEpisodes>> GetAllEpisodes(string apiKey, int startIndex, int count, string userId,
-            string baseUri);
-
-        Task<JellyfinItemContainer<JellyfinSeries>> GetAllShows(string apiKey, int startIndex, int count, string userId,
+        Task<JellyfinItemContainer<JellyfinSeries>> GetAllShows(string apiKey, string parentIdFilder, int startIndex, int count, string userId,
             string baseUri);
 
         Task<JellyfinItemContainer<JellyfinMovie>> GetCollection(string mediaId,

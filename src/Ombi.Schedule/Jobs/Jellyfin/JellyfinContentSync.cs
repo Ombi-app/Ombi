@@ -35,6 +35,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
         private readonly IJellyfinApiFactory _apiFactory;
         private readonly IJellyfinContentRepository _repo;
         private readonly IHubContext<NotificationHub> _notification;
+
         private IJellyfinApi Api { get; set; }
 
         public async Task Execute(IJobExecutionContext job)
@@ -52,7 +53,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
             {
                 try
                 {
-                    await StartServerCache(server, jellyfinSettings);
+                    await StartServerCache(server);
                 }
                 catch (Exception e)
                 {
@@ -61,7 +62,6 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                     _logger.LogError(e, "Exception when caching Jellyfin for server {0}", server.Name);
                 }
             }
-
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Jellyfin Content Sync Finished");
             // Episodes
@@ -70,55 +70,47 @@ namespace Ombi.Schedule.Jobs.Jellyfin
         }
 
 
-        private async Task StartServerCache(JellyfinServers server, JellyfinSettings settings)
+        private async Task StartServerCache(JellyfinServers server)
         {
             if (!ValidateSettings(server))
+            {
                 return;
+            }
 
             //await _repo.ExecuteSql("DELETE FROM JellyfinEpisode");
             //await _repo.ExecuteSql("DELETE FROM JellyfinContent");
 
-            var movies = await Api.GetAllMovies(server.ApiKey, 0, 200, server.AdministratorId, server.FullUri);
-            var totalCount = movies.TotalRecordCount;
-            var processed = 1;
-
-            var mediaToAdd = new HashSet<JellyfinContent>();
-
-            while (processed < totalCount)
+            if (server.JellyfinSelectedLibraries.Any() && server.JellyfinSelectedLibraries.Any(x => x.Enabled))
             {
-                foreach (var movie in movies.Items)
-                {
-                    if (movie.Type.Equals("boxset", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        var movieInfo =
-                            await Api.GetCollection(movie.Id, server.ApiKey, server.AdministratorId, server.FullUri);
-                        foreach (var item in movieInfo.Items)
-                        {
-                            await ProcessMovies(item, mediaToAdd, server);
-                        }
+                var movieLibsToFilter = server.JellyfinSelectedLibraries.Where(x => x.Enabled && x.CollectionType == "movies");
 
-                        processed++;
-                    }
-                    else
-                    {
-                        processed++;
-                        // Regular movie
-                        await ProcessMovies(movie, mediaToAdd, server);
-                    }
+                foreach (var movieParentIdFilder in movieLibsToFilter)
+                {
+                    _logger.LogInformation($"Scanning Lib '{movieParentIdFilder.Title}'");
+                    await ProcessMovies(server, movieParentIdFilder.Key);
                 }
 
-                // Get the next batch
-                movies = await Api.GetAllMovies(server.ApiKey, processed, 200, server.AdministratorId, server.FullUri);
-                await _repo.AddRange(mediaToAdd);
-                mediaToAdd.Clear();
-
+                var tvLibsToFilter = server.JellyfinSelectedLibraries.Where(x => x.Enabled && x.CollectionType == "tvshows");
+                foreach (var tvParentIdFilter in tvLibsToFilter)
+                {
+                    _logger.LogInformation($"Scanning Lib '{tvParentIdFilter.Title}'");
+                    await ProcessTv(server, tvParentIdFilter.Key);
+                }
             }
+            else
+            {
+                await ProcessMovies(server);
+                await ProcessTv(server);
+            }
+        }
 
-
+        private async Task ProcessTv(JellyfinServers server, string parentId = default)
+        {
             // TV Time
-            var tv = await Api.GetAllShows(server.ApiKey, 0, 200, server.AdministratorId, server.FullUri);
+            var mediaToAdd = new HashSet<JellyfinContent>();
+            var tv = await Api.GetAllShows(server.ApiKey, parentId, 0, 200, server.AdministratorId, server.FullUri);
             var totalTv = tv.TotalRecordCount;
-            processed = 1;
+            var processed = 1;
             while (processed < totalTv)
             {
                 foreach (var tvShow in tv.Items)
@@ -162,13 +154,52 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                     }
                 }
                 // Get the next batch
-                tv = await Api.GetAllShows(server.ApiKey, processed, 200, server.AdministratorId, server.FullUri);
+                tv = await Api.GetAllShows(server.ApiKey, parentId, processed, 200, server.AdministratorId, server.FullUri);
                 await _repo.AddRange(mediaToAdd);
                 mediaToAdd.Clear();
             }
 
             if (mediaToAdd.Any())
+            {
                 await _repo.AddRange(mediaToAdd);
+            }
+        }
+
+        private async Task ProcessMovies(JellyfinServers server, string parentId = default)
+        {
+            var movies = await Api.GetAllMovies(server.ApiKey, parentId, 0, 200, server.AdministratorId, server.FullUri);
+            var totalCount = movies.TotalRecordCount;
+            var processed = 1;
+            var mediaToAdd = new HashSet<JellyfinContent>();
+            while (processed < totalCount)
+            {
+                foreach (var movie in movies.Items)
+                {
+                    if (movie.Type.Equals("boxset", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        var movieInfo =
+                            await Api.GetCollection(movie.Id, server.ApiKey, server.AdministratorId, server.FullUri);
+                        foreach (var item in movieInfo.Items)
+                        {
+                            await ProcessMovies(item, mediaToAdd, server);
+                        }
+
+                        processed++;
+                    }
+                    else
+                    {
+                        processed++;
+                        // Regular movie
+                        await ProcessMovies(movie, mediaToAdd, server);
+                    }
+                }
+
+                // Get the next batch
+                movies = await Api.GetAllMovies(server.ApiKey, parentId, processed, 200, server.AdministratorId, server.FullUri);
+                await _repo.AddRange(mediaToAdd);
+                mediaToAdd.Clear();
+
+            }
         }
 
         private async Task ProcessMovies(JellyfinMovie movieInfo, ICollection<JellyfinContent> content, JellyfinServers server)

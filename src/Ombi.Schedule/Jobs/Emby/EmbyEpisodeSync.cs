@@ -60,6 +60,7 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly ILogger<EmbyEpisodeSync> _logger;
         private readonly IEmbyContentRepository _repo;
         private readonly IHubContext<NotificationHub> _notification;
+
         private IEmbyApi Api { get; set; }
 
 
@@ -72,7 +73,19 @@ namespace Ombi.Schedule.Jobs.Emby
                 .SendAsync(NotificationHub.NotificationEvent, "Emby Episode Sync Started");
             foreach (var server in settings.Servers)
             {
-                await CacheEpisodes(server);
+                if (server.EmbySelectedLibraries.Any() && server.EmbySelectedLibraries.Any(x => x.Enabled))
+                {
+                    var tvLibsToFilter = server.EmbySelectedLibraries.Where(x => x.Enabled && x.CollectionType == "tvshows");
+                    foreach (var tvParentIdFilter in tvLibsToFilter)
+                    {
+                        _logger.LogInformation($"Scanning Lib for episodes '{tvParentIdFilter.Title}'");
+                        await CacheEpisodes(server, tvParentIdFilter.Key);
+                    }
+                }
+                else
+                {
+                    await CacheEpisodes(server, string.Empty);
+                }
             }
 
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
@@ -81,9 +94,9 @@ namespace Ombi.Schedule.Jobs.Emby
             await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
         }
 
-        private async Task CacheEpisodes(EmbyServers server)
+        private async Task CacheEpisodes(EmbyServers server, string parentIdFilter)
         {
-            var allEpisodes = await Api.GetAllEpisodes(server.ApiKey, 0, 200, server.AdministratorId, server.FullUri);
+            var allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, 0, 200, server.AdministratorId, server.FullUri);
             var total = allEpisodes.TotalRecordCount;
             var processed = 1;
             var epToAdd = new HashSet<EmbyEpisode>();
@@ -150,7 +163,7 @@ namespace Ombi.Schedule.Jobs.Emby
 
                 await _repo.AddRange(epToAdd);
                 epToAdd.Clear();
-                allEpisodes = await Api.GetAllEpisodes(server.ApiKey, processed, 200, server.AdministratorId, server.FullUri);
+                allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, processed, 200, server.AdministratorId, server.FullUri);
             }
 
             if (epToAdd.Any())

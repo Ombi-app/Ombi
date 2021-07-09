@@ -1,9 +1,9 @@
 ﻿import { Component, OnInit } from "@angular/core";
-
-import { IEmbyServer, IEmbySettings } from "../../interfaces";
 import { EmbyService, JobService, NotificationService, SettingsService, TesterService } from "../../services";
-import { MatTabChangeEvent } from "@angular/material/tabs";
+import { IEmbyLibrariesSettings, IEmbyServer, IEmbySettings } from "../../interfaces";
+
 import {FormControl} from '@angular/forms';
+import { MatTabChangeEvent } from "@angular/material/tabs";
 
 @Component({
     templateUrl: "./emby.component.html",
@@ -99,5 +99,29 @@ export class EmbyComponent implements OnInit {
                 this.notificationService.success("Triggered the Clear MediaServer Resync");
             }
         });
+    }
+
+    public loadLibraries(server: IEmbyServer) {
+        if (server.ip == null) {
+            this.notificationService.error("Emby is not yet configured correctly");
+            return;
+        }
+        this.embyService.getLibraries(server).subscribe(x => {
+            server.embySelectedLibraries = [];
+            if (x.totalRecordCount > 0) {
+                x.items.forEach((item) => {
+                    const lib: IEmbyLibrariesSettings = {
+                        key: item.id,
+                        title: item.name,
+                        enabled: false,
+                        collectionType: item.collectionType
+                    };
+                    server.embySelectedLibraries.push(lib);
+                });
+            } else {
+                this.notificationService.error("Couldn't find any libraries");
+            }
+        },
+            err => { this.notificationService.error(err); });
     }
 }

@@ -72,7 +72,20 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                 .SendAsync(NotificationHub.NotificationEvent, "Jellyfin Episode Sync Started");
             foreach (var server in settings.Servers)
             {
-                await CacheEpisodes(server);
+
+                if (server.JellyfinSelectedLibraries.Any() && server.JellyfinSelectedLibraries.Any(x => x.Enabled))
+                {
+                    var tvLibsToFilter = server.JellyfinSelectedLibraries.Where(x => x.Enabled && x.CollectionType == "tvshows");
+                    foreach (var tvParentIdFilter in tvLibsToFilter)
+                    {
+                        _logger.LogInformation($"Scanning Lib for episodes '{tvParentIdFilter.Title}'");
+                        await CacheEpisodes(server, tvParentIdFilter.Key);
+                    }
+                }
+                else
+                {
+                    await CacheEpisodes(server, string.Empty);
+                }
             }
 
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
@@ -81,9 +94,9 @@ namespace Ombi.Schedule.Jobs.Jellyfin
             await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
         }
 
-        private async Task CacheEpisodes(JellyfinServers server)
+        private async Task CacheEpisodes(JellyfinServers server, string parentIdFilter)
         {
-            var allEpisodes = await Api.GetAllEpisodes(server.ApiKey, 0, 200, server.AdministratorId, server.FullUri);
+            var allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, 0, 200, server.AdministratorId, server.FullUri);
             var total = allEpisodes.TotalRecordCount;
             var processed = 1;
             var epToAdd = new HashSet<JellyfinEpisode>();
@@ -150,7 +163,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
 
                 await _repo.AddRange(epToAdd);
                 epToAdd.Clear();
-                allEpisodes = await Api.GetAllEpisodes(server.ApiKey, processed, 200, server.AdministratorId, server.FullUri);
+                allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, processed, 200, server.AdministratorId, server.FullUri);
             }
 
             if (epToAdd.Any())
