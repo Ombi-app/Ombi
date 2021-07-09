@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 
 import { ServiceHelpers } from "../service.helpers";
 
-import { IJellyfinServer, IJellyfinSettings, IPublicInfo, IUsersModel } from "../../interfaces";
+import { IEmbyServer, IJellyfinContainer, IJellyfinLibrary, IJellyfinServer, IJellyfinSettings, IPublicInfo, IUsersModel } from "../../interfaces";
 
 @Injectable()
 export class JellyfinService extends ServiceHelpers {
@@ -20,9 +20,12 @@ export class JellyfinService extends ServiceHelpers {
     public getUsers(): Observable<IUsersModel[]> {
         return this.http.get<IUsersModel[]>(`${this.url}users`, {headers: this.headers});
     }
-    
+
     public getPublicInfo(server: IJellyfinServer): Observable<IPublicInfo> {
         return this.http.post<IPublicInfo>(`${this.url}info`, JSON.stringify(server), {headers: this.headers});
     }
 
+    public getLibraries(settings: IJellyfinServer): Observable<IJellyfinContainer<IJellyfinLibrary>> {
+        return this.http.post<IJellyfinContainer<IJellyfinLibrary>>(`${this.url}Library`, JSON.stringify(settings),  {headers: this.headers});
+    }
 }

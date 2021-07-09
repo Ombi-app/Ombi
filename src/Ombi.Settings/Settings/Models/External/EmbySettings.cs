@@ -17,5 +17,13 @@ namespace Ombi.Core.Settings.Models.External
         public string AdministratorId { get; set; }
         public string ServerHostname { get; set; }
         public bool EnableEpisodeSearching { get; set; }
+        public List<EmbySelectedLibraries> EmbySelectedLibraries { get; set; } = new List<EmbySelectedLibraries>();
+    }
+
+    public class EmbySelectedLibraries
+    {
+        public int Key { get; set; }
+        public string Title { get; set; } // Name is for display purposes
+        public bool Enabled { get; set; }
     }
 }

@@ -97,19 +97,19 @@ namespace Ombi.Api.Jellyfin
             return response;
         }
 
-        public async Task<JellyfinItemContainer<JellyfinMovie>> GetAllMovies(string apiKey, int startIndex, int count, string userId, string baseUri)
+        public async Task<JellyfinItemContainer<JellyfinMovie>> GetAllMovies(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri)
         {
-            return await GetAll<JellyfinMovie>("Movie", apiKey, userId, baseUri, true, startIndex, count);
+            return await GetAll<JellyfinMovie>("Movie", apiKey, userId, baseUri, true, startIndex, count, parentIdFilder);
         }
 
-        public async Task<JellyfinItemContainer<JellyfinEpisodes>> GetAllEpisodes(string apiKey, int startIndex, int count, string userId, string baseUri)
+        public async Task<JellyfinItemContainer<JellyfinEpisodes>> GetAllEpisodes(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri)
         {
-            return await GetAll<JellyfinEpisodes>("Episode", apiKey, userId, baseUri, false, startIndex, count);
+            return await GetAll<JellyfinEpisodes>("Episode", apiKey, userId, baseUri, false, startIndex, count, parentIdFilder);
         }
 
-        public async Task<JellyfinItemContainer<JellyfinSeries>> GetAllShows(string apiKey, int startIndex, int count, string userId, string baseUri)
+        public async Task<JellyfinItemContainer<JellyfinSeries>> GetAllShows(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri)
         {
-            return await GetAll<JellyfinSeries>("Series", apiKey, userId, baseUri, false, startIndex, count);
+            return await GetAll<JellyfinSeries>("Series", apiKey, userId, baseUri, false, startIndex, count, parentIdFilder);
         }
 
         public async Task<SeriesInformation> GetSeriesInformation(string mediaId, string apiKey, string userId, string baseUrl)
@@ -152,15 +152,19 @@ namespace Ombi.Api.Jellyfin
             var obj = await Api.Request<JellyfinItemContainer<T>>(request);
             return obj;
         }
-        private async Task<JellyfinItemContainer<T>> GetAll<T>(string type, string apiKey, string userId, string baseUri, bool includeOverview, int startIndex, int count)
+        private async Task<JellyfinItemContainer<T>> GetAll<T>(string type, string apiKey, string userId, string baseUri, bool includeOverview, int startIndex, int count, string parentIdFilder = default)
         {
             var request = new Request($"users/{userId}/items", baseUri, HttpMethod.Get);
 
             request.AddQueryString("Recursive", true.ToString());
             request.AddQueryString("IncludeItemTypes", type);
-            request.AddQueryString("Fields", includeOverview ? "ProviderIds,Overview" : "ProviderIds");
+            request.AddQueryString("Fields", includeOverview ? "ProviderIds,Overview,ParentId" : "ProviderIds,ParentId");
             request.AddQueryString("startIndex", startIndex.ToString());
             request.AddQueryString("limit", count.ToString());
+            if(!string.IsNullOrEmpty(parentIdFilder))
+            {
+                request.AddQueryString("ParentId", parentIdFilder);
+            }
 
             request.AddQueryString("IsVirtualItem", "False");
 

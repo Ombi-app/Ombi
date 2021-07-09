@@ -64,6 +64,25 @@ export interface IJellyfinServer extends IExternalSettings {
   administratorId: string;
   enableEpisodeSearching: boolean;
   serverHostname: string;
+  jellyfinSelectedLibraries: IJellyfinLibrariesSettings[];
+}
+export interface IJellyfinLibrariesSettings {
+  key: string;
+  title: string;
+  enabled: boolean;
+  collectionType: string;
+}
+
+export interface IJellyfinContainer<T> {
+  items: T[];
+  totalRecordCount: number;
+}
+
+export interface IJellyfinLibrary {
+  name: string;
+  serverId: string;
+  id: string;
+  collectionType: string;
 }
 
 export interface IPublicInfo {

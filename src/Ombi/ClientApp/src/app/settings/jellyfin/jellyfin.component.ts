@@ -1,9 +1,9 @@
 ﻿import { Component, OnInit } from "@angular/core";
-
-import { IJellyfinServer, IJellyfinSettings } from "../../interfaces";
+import { IEmbyServer, IJellyfinLibrariesSettings, IJellyfinServer, IJellyfinSettings } from "../../interfaces";
 import { JellyfinService, JobService, NotificationService, SettingsService, TesterService } from "../../services";
-import { MatTabChangeEvent } from "@angular/material/tabs";
+
 import {FormControl} from '@angular/forms';
+import { MatTabChangeEvent } from "@angular/material/tabs";
 
 @Component({
     templateUrl: "./jellyfin.component.html",
@@ -100,5 +100,29 @@ export class JellyfinComponent implements OnInit {
                 this.notificationService.success("Triggered the Clear MediaServer Resync");
             }
         });
+    }
+
+    public loadLibraries(server: IJellyfinServer) {
+        if (server.ip == null) {
+            this.notificationService.error("Jellyfin is not yet configured correctly");
+            return;
+        }
+        this.jellyfinService.getLibraries(server).subscribe(x => {
+            server.jellyfinSelectedLibraries = [];
+            if (x.totalRecordCount > 0) {
+                x.items.forEach((item) => {
+                    const lib: IJellyfinLibrariesSettings = {
+                        key: item.id,
+                        title: item.name,
+                        enabled: false,
+                        collectionType: item.collectionType
+                    };
+                    server.jellyfinSelectedLibraries.push(lib);
+                });
+            } else {
+                this.notificationService.error("Couldn't find any libraries");
+            }
+        },
+            err => { this.notificationService.error(err); });
     }
 }
