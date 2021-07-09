@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Api.Emby;
 using Ombi.Api.Emby.Models;
-using Ombi.Api.Plex;
+using Ombi.Api.Emby.Models.Media;
 using Ombi.Attributes;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
@@ -91,6 +91,14 @@ namespace Ombi.Controllers.V1.External
 
             // Filter out any dupes
             return vm.DistinctBy(x => x.Id);
+        }
+
+        [HttpPost("Library")]
+        public async Task<EmbyItemContainer<MediaFolders>> GetLibaries([FromBody] EmbyServers server)
+        {
+            var client = await EmbyApi.CreateClient();
+            var result = await client.GetLibraries(server.ApiKey, server.FullUri);
+            return result;
         }
     }
 }

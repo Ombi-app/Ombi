@@ -16,21 +16,26 @@ namespace Ombi.Schedule.Jobs.Ombi
     public class MediaDatabaseRefresh : IMediaDatabaseRefresh
     {
         public MediaDatabaseRefresh(ISettingsService<PlexSettings> s, ILogger<MediaDatabaseRefresh> log,
-            IPlexContentRepository plexRepo, IEmbyContentRepository embyRepo, IJellyfinContentRepository jellyfinRepo)
+            IPlexContentRepository plexRepo, IEmbyContentRepository embyRepo, IJellyfinContentRepository jellyfinRepo,
+            ISettingsService<EmbySettings> embySettings, ISettingsService<JellyfinSettings> jellyfinSettings)
         {
-            _settings = s;
+            _plexSettings = s;
             _log = log;
             _plexRepo = plexRepo;
             _embyRepo = embyRepo;
             _jellyfinRepo = jellyfinRepo;
-            _settings.ClearCache();
+            _embySettings = embySettings;
+            _jellyfinSettings = jellyfinSettings;
+            _plexSettings.ClearCache();
         }
 
-        private readonly ISettingsService<PlexSettings> _settings;
+        private readonly ISettingsService<PlexSettings> _plexSettings;
         private readonly ILogger _log;
         private readonly IPlexContentRepository _plexRepo;
         private readonly IEmbyContentRepository _embyRepo;
         private readonly IJellyfinContentRepository _jellyfinRepo;
+        private readonly ISettingsService<EmbySettings> _embySettings;
+        private readonly ISettingsService<JellyfinSettings> _jellyfinSettings;
 
         public async Task Execute(IJobExecutionContext job)
         {
@@ -51,7 +56,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         {
             try
             {
-                var s = await _settings.GetSettingsAsync();
+                var s = await _embySettings.GetSettingsAsync();
                 if (!s.Enable)
                 {
                     return;
@@ -73,7 +78,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         {
             try
             {
-                var s = await _settings.GetSettingsAsync();
+                var s = await _jellyfinSettings.GetSettingsAsync();
                 if (!s.Enable)
                 {
                     return;
@@ -95,7 +100,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         {
             try
             {
-                var s = await _settings.GetSettingsAsync();
+                var s = await _plexSettings.GetSettingsAsync();
                 if (!s.Enable)
                 {
                     return;

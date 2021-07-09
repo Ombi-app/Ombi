@@ -51,6 +51,10 @@ namespace Ombi.Helpers
         public async Task Purge()
         {
             var keys = await _memoryCache.GetAsync<List<string>>(CacheKey);
+            if (keys == null)
+            {
+                return;
+            }
             foreach (var key in keys)
             {
                 base.Remove(key);

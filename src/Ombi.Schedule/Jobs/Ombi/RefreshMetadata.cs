@@ -30,7 +30,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             IMovieDbApi movieApi,
             ISettingsService<EmbySettings> embySettings, IEmbyApiFactory embyApi,
             ISettingsService<JellyfinSettings> jellyfinSettings, IJellyfinApiFactory jellyfinApi,
-            IHubContext<NotificationHub> notification)
+            IHubContext<NotificationHub> notification, IMediaCacheService mediaCacheService)
         {
             _plexRepo = plexRepo;
             _embyRepo = embyRepo;
@@ -44,6 +44,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             _jellyfinSettings = jellyfinSettings;
             _jellyfinApiFactory = jellyfinApi;
             _notification = notification;
+            _mediaCacheService = mediaCacheService;
         }
 
         private readonly IPlexContentRepository _plexRepo;
@@ -58,6 +59,8 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly IEmbyApiFactory _embyApiFactory;
         private readonly IJellyfinApiFactory _jellyfinApiFactory;
         private readonly IHubContext<NotificationHub> _notification;
+        private readonly IMediaCacheService _mediaCacheService;
+
         private IEmbyApi EmbyApi { get; set; }
         private IJellyfinApi JellyfinApi { get; set; }
 
@@ -101,6 +104,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                     .SendAsync(NotificationHub.NotificationEvent, "Metadata Refresh Failed");
                 return;
             }
+
+            await _mediaCacheService.Purge();
 
             _log.LogInformation("Metadata refresh finished");
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)

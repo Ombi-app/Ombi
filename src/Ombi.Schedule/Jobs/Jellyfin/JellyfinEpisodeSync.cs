@@ -73,7 +73,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
             foreach (var server in settings.Servers)
             {
 
-                if (server.JellyfinSelectedLibraries.Any())
+                if (server.JellyfinSelectedLibraries.Any() && server.JellyfinSelectedLibraries.Any(x => x.Enabled))
                 {
                     var tvLibsToFilter = server.JellyfinSelectedLibraries.Where(x => x.Enabled && x.CollectionType == "tvshows");
                     foreach (var tvParentIdFilter in tvLibsToFilter)

@@ -22,8 +22,9 @@ namespace Ombi.Core.Settings.Models.External
 
     public class EmbySelectedLibraries
     {
-        public int Key { get; set; }
+        public string Key { get; set; }
         public string Title { get; set; } // Name is for display purposes
+        public string CollectionType { get; set; }
         public bool Enabled { get; set; }
     }
 }

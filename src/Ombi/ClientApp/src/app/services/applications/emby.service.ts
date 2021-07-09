@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 
 import { ServiceHelpers } from "../service.helpers";
 
-import { IEmbyServer, IEmbySettings, IPublicInfo, IUsersModel } from "../../interfaces";
+import { IEmbyLibrary, IEmbyServer, IEmbySettings, IMediaServerMediaContainer, IPublicInfo, IUsersModel } from "../../interfaces";
 
 @Injectable()
 export class EmbyService extends ServiceHelpers {
@@ -20,9 +20,13 @@ export class EmbyService extends ServiceHelpers {
     public getUsers(): Observable<IUsersModel[]> {
         return this.http.get<IUsersModel[]>(`${this.url}users`, {headers: this.headers});
     }
-    
+
     public getPublicInfo(server: IEmbyServer): Observable<IPublicInfo> {
         return this.http.post<IPublicInfo>(`${this.url}info`, JSON.stringify(server), {headers: this.headers});
+    }
+
+    public getLibraries(settings: IEmbyServer): Observable<IMediaServerMediaContainer<IEmbyLibrary>> {
+        return this.http.post<IMediaServerMediaContainer<IEmbyLibrary>>(`${this.url}Library`, JSON.stringify(settings),  {headers: this.headers});
     }
 
 }

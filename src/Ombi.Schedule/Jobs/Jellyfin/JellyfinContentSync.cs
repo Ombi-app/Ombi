@@ -35,6 +35,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
         private readonly IJellyfinApiFactory _apiFactory;
         private readonly IJellyfinContentRepository _repo;
         private readonly IHubContext<NotificationHub> _notification;
+
         private IJellyfinApi Api { get; set; }
 
         public async Task Execute(IJobExecutionContext job)
@@ -61,7 +62,6 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                     _logger.LogError(e, "Exception when caching Jellyfin for server {0}", server.Name);
                 }
             }
-
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Jellyfin Content Sync Finished");
             // Episodes
@@ -80,7 +80,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
             //await _repo.ExecuteSql("DELETE FROM JellyfinEpisode");
             //await _repo.ExecuteSql("DELETE FROM JellyfinContent");
 
-            if (server.JellyfinSelectedLibraries.Any())
+            if (server.JellyfinSelectedLibraries.Any() && server.JellyfinSelectedLibraries.Any(x => x.Enabled))
             {
                 var movieLibsToFilter = server.JellyfinSelectedLibraries.Where(x => x.Enabled && x.CollectionType == "movies");
 

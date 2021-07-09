@@ -45,6 +45,7 @@ export interface IEmbyServer extends IExternalSettings {
   administratorId: string;
   enableEpisodeSearching: boolean;
   serverHostname: string;
+  embySelectedLibraries: IEmbyLibrariesSettings[];
 }
 
 export interface IPublicInfo {
@@ -72,13 +73,25 @@ export interface IJellyfinLibrariesSettings {
   enabled: boolean;
   collectionType: string;
 }
+export interface IEmbyLibrariesSettings {
+  key: string;
+  title: string;
+  enabled: boolean;
+  collectionType: string;
+}
 
-export interface IJellyfinContainer<T> {
+export interface IMediaServerMediaContainer<T> {
   items: T[];
   totalRecordCount: number;
 }
 
 export interface IJellyfinLibrary {
+  name: string;
+  serverId: string;
+  id: string;
+  collectionType: string;
+}
+export interface IEmbyLibrary {
   name: string;
   serverId: string;
   id: string;
