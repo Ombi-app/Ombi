@@ -40,11 +40,7 @@ namespace Ombi.Controllers.V1.External
         [PowerUser]
         public async Task<IActionResult> GetProfiles([FromBody] RadarrSettings settings)
         {
-            if (settings.V3)
-            {
-                return Ok(await _radarrV3Api.GetProfiles(settings.ApiKey, settings.FullUri));
-            }
-            return Ok(await _radarrApi.GetProfiles(settings.ApiKey, settings.FullUri));
+            return Ok(await _radarrV3Api.GetProfiles(settings.ApiKey, settings.FullUri));
         }
 
         [HttpGet("enabled")]
@@ -64,11 +60,7 @@ namespace Ombi.Controllers.V1.External
         [PowerUser]
         public async Task<IEnumerable<RadarrRootFolder>> GetRootFolders([FromBody] RadarrSettings settings)
         {
-            if (settings.V3)
-            {
-                return await _radarrV3Api.GetRootFolders(settings.ApiKey, settings.FullUri);
-            }
-            return await _radarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
+            return await _radarrV3Api.GetRootFolders(settings.ApiKey, settings.FullUri);
         }
 
         /// <summary>
@@ -83,11 +75,7 @@ namespace Ombi.Controllers.V1.External
             var settings = await _radarrSettings.GetSettingsAsync();
             if (settings.Enabled)
             {
-                if (settings.V3)
-                {
-                    return Ok(await _radarrV3Api.GetProfiles(settings.ApiKey, settings.FullUri));
-                }
-                return Ok(await _radarrApi.GetProfiles(settings.ApiKey, settings.FullUri));
+                return Ok(await _radarrV3Api.GetProfiles(settings.ApiKey, settings.FullUri));
             }
             return null;
         }
@@ -104,11 +92,7 @@ namespace Ombi.Controllers.V1.External
             var settings = await _radarrSettings.GetSettingsAsync();
             if (settings.Enabled)
             {
-                if (settings.V3)
-                {
-                    return await _radarrV3Api.GetRootFolders(settings.ApiKey, settings.FullUri);
-                }
-                return await _radarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
+                return await _radarrV3Api.GetRootFolders(settings.ApiKey, settings.FullUri);
             }
             return null;
         }

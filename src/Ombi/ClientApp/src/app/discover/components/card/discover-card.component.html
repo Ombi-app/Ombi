@@ -3,7 +3,7 @@
 <div id="result{{result.id}}" *ngIf="fullyLoaded" class="ombi-card dark-card c" [style.display]="hide ? 'none' : 'block'">
     <div class="card-top-info">
         <div class="top-left" id="type{{result.id}}">
-            {{RequestType[result.type] | humanize}}
+            {{ 'Common.' + RequestType[result.type] | translate }}
         </div>
         <div class="{{getStatusClass()}} top-right" id="status{{result.id}}">
             <span class="indicator"></span><span class="indicator-text" id="availabilityStatus{{result.id}}">{{getAvailbilityStatus()}}</span>
@@ -11,7 +11,7 @@
     </div>
         <img [routerLink]="generateDetailsLink()" id="cardImage" src="{{result.posterPath}}" class="image"
             alt="{{result.title}}">
-        <div class="middle">
+        <div [ngClass]="result.posterPath.includes('images/') ? 'middle-show' : 'middle'">
             <a class="poster-overlay" [routerLink]="generateDetailsLink()">
                 <div class="summary">
                     <div class="title" id="title{{result.id}}">{{result.title}}</div>
@@ -19,11 +19,12 @@
                 </div>
             </a>
         </div>
-        <div class="row button-request-container" *ngIf="!result.available && !result.approved && !result.requested">
+        <div [ngClass]="result.posterPath.includes('images/') ? 'button-request-container-show' : 'button-request-container'" class="row" *ngIf="!result.available && !result.approved && !result.requested">
             <div class="button-request poster-overlay">
-                <button id="requestButton{{result.id}}{{result.type}}{{discoverType}}" mat-raised-button class="btn-green full-width poster-request-btn" (click)="request($event)">
+                <button id="requestButton{{result.id}}{{result.type}}{{discoverType}}" *ngIf="requestable" mat-raised-button class="btn-ombi full-width poster-request-btn" (click)="request($event)">
                     <i *ngIf="!loading" class="fa-lg fas fa-cloud-download-alt"></i>
                     <i *ngIf="loading" class="fas fa-spinner fa-pulse fa-2x fa-fw" aria-hidden="true"></i>
+                    {{'Common.Request' | translate }}
                 </button>
             </div>
         </div>

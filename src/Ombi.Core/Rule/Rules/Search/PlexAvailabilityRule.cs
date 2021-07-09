@@ -25,10 +25,14 @@ namespace Ombi.Core.Rule.Rules.Search
             PlexServerContent item = null;
             var useImdb = false;
             var useTheMovieDb = false;
+            var useId = false;
             var useTvDb = false;
+
+            PlexMediaTypeEntity type = ConvertType(obj.Type);
+
             if (obj.ImdbId.HasValue())
             {
-                item = await PlexContentRepository.Get(obj.ImdbId);
+                item = await PlexContentRepository.GetByType(obj.ImdbId, ProviderType.ImdbId, type);
                 if (item != null)
                 {
                     useImdb = true;
@@ -36,9 +40,17 @@ namespace Ombi.Core.Rule.Rules.Search
             }
             if (item == null)
             {
+                if (obj.Id > 0)
+                {
+                    item = await PlexContentRepository.GetByType(obj.Id.ToString(), ProviderType.TheMovieDbId, type);
+                    if (item != null)
+                    {
+                        useId = true;
+                    }
+                }
                 if (obj.TheMovieDbId.HasValue())
                 {
-                    item = await PlexContentRepository.Get(obj.TheMovieDbId);
+                    item = await PlexContentRepository.GetByType(obj.TheMovieDbId, ProviderType.TheMovieDbId, type);
                     if (item != null)
                     {
                         useTheMovieDb = true;
@@ -49,7 +61,7 @@ namespace Ombi.Core.Rule.Rules.Search
                 {
                     if (obj.TheTvDbId.HasValue())
                     {
-                        item = await PlexContentRepository.Get(obj.TheTvDbId);
+                        item = await PlexContentRepository.GetByType(obj.TheTvDbId, ProviderType.TvDbId, type);
                         if (item != null)
                         {
                             useTvDb = true;
@@ -60,6 +72,11 @@ namespace Ombi.Core.Rule.Rules.Search
 
             if (item != null)
             {
+                if (useId)
+                {
+                    obj.TheMovieDbId = obj.Id.ToString();
+                    useTheMovieDb = true;
+                }
                 obj.Available = true;
                 obj.PlexUrl = item.Url;
                 obj.Quality = item.Quality;
@@ -71,9 +88,9 @@ namespace Ombi.Core.Rule.Rules.Search
                     if (search.SeasonRequests.Any())
                     {
                         var allEpisodes = PlexContentRepository.GetAllEpisodes();
-                        foreach (var season in search.SeasonRequests)
+                        foreach (var season in search.SeasonRequests.ToList())
                         {
-                            foreach (var episode in season.Episodes)
+                            foreach (var episode in season.Episodes.ToList())
                             {
                                 await AvailabilityRuleHelper.SingleEpisodeCheck(useImdb, allEpisodes, episode, season, item, useTheMovieDb, useTvDb, Log);
                             }
@@ -86,6 +103,12 @@ namespace Ombi.Core.Rule.Rules.Search
             return Success();
         }
 
-        
+        private PlexMediaTypeEntity ConvertType(RequestType type) =>
+            type switch
+            {
+                RequestType.Movie => PlexMediaTypeEntity.Movie,
+                RequestType.TvShow => PlexMediaTypeEntity.Show,
+                _ => PlexMediaTypeEntity.Movie,
+            };
     }
 }

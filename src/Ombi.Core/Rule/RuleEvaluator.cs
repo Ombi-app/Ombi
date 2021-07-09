@@ -58,13 +58,13 @@ namespace Ombi.Core.Rule
             return results;
         }
 
-        public async Task<RuleResult> StartSpecificRules(object obj, SpecificRules selectedRule)
+        public async Task<RuleResult> StartSpecificRules(object obj, SpecificRules selectedRule, string requestOnBehalf)
         {
             foreach (var rule in SpecificRules)
             {
                 if (selectedRule == rule.Rule)
                 {
-                    var result = await rule.Execute(obj);
+                    var result = await rule.Execute(obj, requestOnBehalf);
                     return result;
                 }
             }

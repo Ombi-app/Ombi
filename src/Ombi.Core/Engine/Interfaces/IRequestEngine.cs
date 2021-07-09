@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Ombi.Core.Models;
 using Ombi.Core.Models.Requests;
@@ -24,5 +25,6 @@ namespace Ombi.Core.Engine.Interfaces
         Task UnSubscribeRequest(int requestId, RequestType type);
         Task SubscribeToRequest(int requestId, RequestType type);
         Task<RequestQuotaCountModel> GetRemainingRequests(OmbiUser user = null);
+        Task<RequestEngineResult> ReProcessRequest(int requestId, CancellationToken cancellationToken);
     }
 }

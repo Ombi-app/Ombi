@@ -21,10 +21,10 @@ namespace Ombi.Controllers.V1
         private readonly ICacheService _cache;
         private readonly IChangeLogProcessor _processor;
 
-        [HttpGet("{branch}")]
-        public async Task<UpdateModel> UpdateAvailable(string branch)
+        [HttpGet]
+        public async Task<UpdateModel> UpdateAvailable()
         {
-            return await _cache.GetOrAdd(branch, async () => await _processor.Process(branch));
+            return await _cache.GetOrAddAsync("Update", () =>  _processor.Process());
         }
     }
 }

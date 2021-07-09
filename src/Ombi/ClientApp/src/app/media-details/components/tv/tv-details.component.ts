@@ -27,6 +27,7 @@ export class TvDetailsComponent implements OnInit {
     public showRequest: ITvRequests;
     public fromSearch: boolean;
     public isAdmin: boolean;
+    public manageOwnRequests: boolean;
     public advancedOptions: IAdvancedData;
     public showAdvanced: boolean; // Set on the UI
     public requestType = RequestType.tvShow;
@@ -53,6 +54,7 @@ export class TvDetailsComponent implements OnInit {
 
         this.issuesEnabled = this.settingsState.getIssue();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+        this.manageOwnRequests = this.auth.hasRole('ManageOwnRequests');
 
         if (this.isAdmin) {
             this.showAdvanced = await this.sonarrService.isEnabled();
@@ -102,7 +104,8 @@ export class TvDetailsComponent implements OnInit {
                 // get the name and ids
                 result.rootFolder = result.rootFolders.filter(f => f.id === +result.rootFolderId)[0];
                 result.profile = result.profiles.filter(f => f.id === +result.profileId)[0];
-                await this.requestService2.updateTvAdvancedOptions({ qualityOverride: result.profileId, rootPathOverride: result.rootFolderId, requestId: this.showRequest.id }).toPromise();
+                result.language = result.languages.filter(x => x.id === +result.langaugeId)[0];
+                await this.requestService2.updateTvAdvancedOptions({ qualityOverride: result.profileId, rootPathOverride: result.rootFolderId, languageProfile: result.languageId, requestId: this.showRequest.id }).toPromise();
                 this.setAdvancedOptions(result);
             }
         });
@@ -117,15 +120,20 @@ export class TvDetailsComponent implements OnInit {
         if (data.profileId) {
             this.showRequest.rootPathOverrideTitle =  data.rootFolders.filter(x => x.id == data.rootFolderId)[0].path;
         }
+        if (data.languageId) {
+            this.showRequest.languageOverrideTitle =  data.languages.filter(x => x.id == data.languageId)[0].name;
+        }
     }
 
     private loadAdvancedInfo() {
         const profile = this.sonarrService.getQualityProfilesWithoutSettings();
         const folders = this.sonarrService.getRootFoldersWithoutSettings();
+        const languages = this.sonarrService.getV3LanguageProfilesWithoutSettings();
 
-        forkJoin([profile, folders]).subscribe(x => {
+        forkJoin([profile, folders, languages]).subscribe(x => {
             const sonarrProfiles = x[0];
             const sonarrRootFolders = x[1];
+            const languageProfiles = x[2];
 
             const profile = sonarrProfiles.filter((p) => {
                 return p.id === this.showRequest.qualityOverride;
@@ -139,6 +147,13 @@ export class TvDetailsComponent implements OnInit {
             });
             if (path.length > 0) {
                 this.showRequest.rootPathOverrideTitle = path[0].path;
+            }
+
+            const lang = languageProfiles.filter((folder) => {
+                return folder.id === this.showRequest.languageProfile;
+            });
+            if (lang.length > 0) {
+                this.showRequest.languageOverrideTitle = lang[0].name;
             }
 
         });

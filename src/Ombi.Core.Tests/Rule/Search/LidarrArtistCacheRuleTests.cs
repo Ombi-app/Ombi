@@ -29,7 +29,7 @@ namespace Ombi.Core.Tests.Rule.Search
         public async Task Should_Not_Be_Monitored()
         {
             var request = new SearchArtistViewModel { ForignArtistId = "abc" };
-            var result = await Rule.Execute(request);
+            var result = await Rule.Execute(request, string.Empty);
 
             Assert.True(result.Success);
             Assert.False(request.Monitored);
@@ -46,7 +46,7 @@ namespace Ombi.Core.Tests.Rule.Search
                 }
             }.AsQueryable());
             var request = new SearchArtistViewModel { ForignArtistId = "abc" };
-            var result = await Rule.Execute(request);
+            var result = await Rule.Execute(request, string.Empty);
 
             Assert.True(result.Success);
             Assert.True(request.Monitored);
@@ -64,7 +64,7 @@ namespace Ombi.Core.Tests.Rule.Search
                 }
             }.AsQueryable());
             var request = new SearchArtistViewModel { ForignArtistId = "abc" };
-            var result = await Rule.Execute(request);
+            var result = await Rule.Execute(request, string.Empty);
 
             Assert.True(result.Success);
             Assert.True(request.Monitored);

@@ -52,8 +52,7 @@ namespace Ombi.Controllers.V1
             {
                 var productArray = _updater.GetVersion();
                 var version = productArray[0];
-                var branch = productArray[1];
-                var updateAvailable = await _updater.UpdateAvailable(branch, version);
+                var updateAvailable = await _updater.UpdateAvailable(version);
 
                 return updateAvailable;
             }
@@ -67,15 +66,14 @@ namespace Ombi.Controllers.V1
         [HttpGet("updateCached")]
         public async Task<bool> CheckForUpdateCached()
         {
-            var val = await _memCache.GetOrAdd(CacheKeys.Update, async () =>
+            var val = await _memCache.GetOrAddAsync(CacheKeys.Update, async () =>
             {
                 var productArray = _updater.GetVersion();
-                if (productArray.Length > 1)
-                {
+
                     var version = productArray[0];
-                    var branch = productArray[1];
-                    var updateAvailable = await _updater.UpdateAvailable(branch, version);
-                }
+
+                    var updateAvailable = await _updater.UpdateAvailable( version);
+                
 
                 return true;
             });

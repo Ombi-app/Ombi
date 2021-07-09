@@ -15,12 +15,11 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Ombi.Settings.Settings.Models;
-using System.Diagnostics;
 using System.IO;
-using Ombi.Api.TheMovieDb;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.TheMovieDb.Models;
+using System.Net.Http;
 
 namespace Ombi
 {
@@ -131,8 +130,8 @@ namespace Ombi
             }
 
             await SortOutBaseUrl(baseUrl, settingsDb, ombiSettingsContent);
-            var httpClient = new Ombi.Api.OmbiHttpClient(null, null);
-            var api = new Ombi.Api.Api(new Logger<Api.Api>(NullLoggerFactory.Instance), httpClient);
+            var httpClient = new HttpClient();
+                var api = new Ombi.Api.Api(new Logger<Api.Api>(NullLoggerFactory.Instance), httpClient);
             await MigrateOldTvDbIds(ombiDb, ombiSettingsContent, settingsDb, new Ombi.Api.TheMovieDb.TheMovieDbApi(null, (Api.IApi)api, null));
 
             Console.WriteLine($"We are running on {urlValue}");

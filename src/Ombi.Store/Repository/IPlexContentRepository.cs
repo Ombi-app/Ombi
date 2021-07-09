@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Ombi.Helpers;
 using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
@@ -10,7 +11,8 @@ namespace Ombi.Store.Repository
     public interface IPlexContentRepository : IExternalRepository<PlexServerContent>
     {
         Task<bool> ContentExists(string providerId);
-        Task<PlexServerContent> Get(string providerId);
+        Task<PlexServerContent> Get(string providerId, ProviderType type);
+        Task<PlexServerContent> GetByType(string providerId, ProviderType type, PlexMediaTypeEntity plexType);
         Task<PlexServerContent> GetByKey(int key);
         Task Update(PlexServerContent existingContent);
         IQueryable<PlexEpisode> GetAllEpisodes();

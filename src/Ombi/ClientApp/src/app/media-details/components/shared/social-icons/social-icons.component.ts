@@ -26,6 +26,7 @@ export class SocialIconsComponent {
 
     @Output() openTrailer: EventEmitter<any> = new EventEmitter();
     @Output() onAdvancedOptions: EventEmitter<any> = new EventEmitter();
+    @Output() onReProcessRequest: EventEmitter<any> = new EventEmitter();
 
     public RequestType = RequestType;
 
@@ -36,5 +37,9 @@ export class SocialIconsComponent {
 
     public openAdvancedOptions() {
         this.onAdvancedOptions.emit();
+    }
+
+    public reProcessRequest() {
+        this.onReProcessRequest.emit();
     }
 }

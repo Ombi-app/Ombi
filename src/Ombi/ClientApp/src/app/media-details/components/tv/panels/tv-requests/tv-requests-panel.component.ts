@@ -1,9 +1,11 @@
 import { Component, Input } from "@angular/core";
 import { IChildRequests, RequestType } from "../../../../../interfaces";
-import { RequestService } from "../../../../../services/request.service";
-import { MessageService } from "../../../../../services";
-import { MatDialog } from "@angular/material/dialog";
+
 import { DenyDialogComponent } from "../../../shared/deny-dialog/deny-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
+import { MessageService } from "../../../../../services";
+import { RequestService } from "../../../../../services/request.service";
+import { RequestServiceV2 } from "../../../../../services/requestV2.service";
 
 @Component({
     templateUrl: "./tv-requests-panel.component.html",
@@ -13,10 +15,13 @@ import { DenyDialogComponent } from "../../../shared/deny-dialog/deny-dialog.com
 export class TvRequestsPanelComponent {
     @Input() public tvRequest: IChildRequests[];
     @Input() public isAdmin: boolean;
+    @Input() public manageOwnRequests: boolean;
 
     public displayedColumns: string[] = ['number', 'title', 'airDate', 'status'];
 
-    constructor(private requestService: RequestService, private messageService: MessageService,
+    constructor(private requestService: RequestService,
+        private requestService2: RequestServiceV2,
+        private messageService: MessageService,
         public dialog: MatDialog) {
 
     }
@@ -83,14 +88,24 @@ export class TvRequestsPanelComponent {
             width: '250px',
             data: {requestId: request.id,  requestType: RequestType.tvShow}
           });
-      
+
           dialogRef.afterClosed().subscribe(result => {
-            request.denied = true;    
+            request.denied = true;
             request.seasonRequests.forEach((season) => {
                 season.episodes.forEach((ep) => {
                     ep.approved = false;
                 });
             });
           });
+    }
+
+    public reProcessRequest(request: IChildRequests) {
+        this.requestService2.reprocessRequest(request.id, RequestType.tvShow).subscribe(result => {
+            if (result.result) {
+                this.messageService.send(result.message ? result.message : "Successfully Re-processed the request", "Ok");
+            } else {
+                this.messageService.send(result.errorMessage, "Ok");
+            }
+        });
     }
 }

@@ -175,7 +175,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
             var allEps = Repo.GetAllEpisodes();
 
-            foreach (var content in allContent)
+            foreach (var content in allContent.OrderByDescending(x => x.viewGroup))
             {
                 Logger.LogDebug($"Got type '{content.viewGroup}' to process");
                 if (content.viewGroup.Equals(PlexMediaType.Episode.ToString(), StringComparison.InvariantCultureIgnoreCase))

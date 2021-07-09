@@ -1,7 +1,7 @@
 <div *ngIf="!tv" class="justify-content-md-center top-spacing loading-spinner">
     <mat-spinner [color]="'accent'"></mat-spinner>
 </div>
-<div *ngIf="tv">
+<div *ngIf="tv" class="main-content-container">
     <div *ngIf="tv.id === 0; else main">
         <div class="small-middle-container no-info">
             <h1><i class="far fa-frown-o" aria-hidden="true"></i></h1>
@@ -126,7 +126,7 @@
                                             {{'Requests.Title' | translate}}
                                         </mat-panel-title>
                                     </mat-expansion-panel-header>
-                                    <tv-requests-panel [tvRequest]="tvRequest" [isAdmin]="isAdmin"></tv-requests-panel>
+                                    <tv-requests-panel [tvRequest]="tvRequest" [isAdmin]="isAdmin" [manageOwnRequests]="manageOwnRequests"></tv-requests-panel>
                                 </mat-expansion-panel>
 
                             </mat-accordion>

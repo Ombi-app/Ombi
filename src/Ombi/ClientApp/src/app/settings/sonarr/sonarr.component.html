@@ -140,6 +140,18 @@
                             </div>
 
                         </div>
+                        <div id="langaugeProfileAnime">
+                            <div class="md-form-field" style="display:contents;">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Language Profiles Anime</mat-label>
+                                    <mat-select formControlName="languageProfileAnime">
+                                      <mat-option *ngFor="let lang of languageProfiles" [value]="lang.id">{{lang.name}}</mat-option>
+                                    </mat-select>
+                                    <mat-error>A Language Profile Anime is required</mat-error>
+                                  </mat-form-field>
+                            </div>
+
+                        </div>
                     </div>
 
 

@@ -130,11 +130,11 @@ namespace Ombi.Schedule.Jobs.Ombi
                 var jellyfinContent = _jellyfin.GetAll().Include(x => x.Episodes).AsNoTracking();
                 var lidarrContent = _lidarrAlbumRepository.GetAll().AsNoTracking().ToList().Where(x => x.FullyAvailable);
 
-                var addedLog = _recentlyAddedLog.GetAll();
-                var addedPlexMovieLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Plex && x.ContentType == ContentType.Parent).Select(x => x.ContentId).ToHashSet();
-                var addedEmbyMoviesLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Emby && x.ContentType == ContentType.Parent).Select(x => x.ContentId).ToHashSet();
-                var addedJellyfinMoviesLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Jellyfin && x.ContentType == ContentType.Parent).Select(x => x.ContentId).ToHashSet();
-                var addedAlbumLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Lidarr && x.ContentType == ContentType.Album).Select(x => x.AlbumId).ToHashSet();
+                var addedLog = _recentlyAddedLog.GetAll().ToList();
+
+                HashSet<int> addedPlexMovieLogIds, addedEmbyMoviesLogIds, addedJellyfinMoviesLogIds;
+                HashSet<string> addedAlbumLogIds;
+                GetRecentlyAddedMoviesData(addedLog, out addedPlexMovieLogIds, out addedEmbyMoviesLogIds, out addedJellyfinMoviesLogIds, out addedAlbumLogIds);
 
                 var addedPlexEpisodesLogIds =
                 addedLog.Where(x => x.Type == RecentlyAddedType.Plex && x.ContentType == ContentType.Episode);
@@ -170,6 +170,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 plexContentMoviesToSend = plexContentMoviesToSend.DistinctBy(x => x.Id).ToHashSet();
                 embyContentMoviesToSend = embyContentMoviesToSend.DistinctBy(x => x.Id).ToHashSet();
+                jellyfinContentMoviesToSend = jellyfinContentMoviesToSend.DistinctBy(x => x.Id).ToHashSet();
 
                 var plexEpisodesToSend =
                     FilterPlexEpisodes(_plex.GetAllEpisodes().Include(x => x.Series).AsNoTracking(), addedPlexEpisodesLogIds);
@@ -226,32 +227,33 @@ namespace Ombi.Schedule.Jobs.Ombi
                     var messageContent = ParseTemplate(template, customization);
                     var email = new NewsletterTemplate();
 
-                    var html = email.LoadTemplate(messageContent.Subject, messageContent.Message, body, customization.Logo);
-
-                    var bodyBuilder = new BodyBuilder
-                    {
-                        HtmlBody = html,
-                    };
-
-                    var message = new MimeMessage
-                    {
-                        Body = bodyBuilder.ToMessageBody(),
-                        Subject = messageContent.Subject
-                    };
-
                     foreach (var user in users)
                     {
+                        var url = GenerateUnsubscribeLink(customization.ApplicationUrl, user.Id);
+                        var html = email.LoadTemplate(messageContent.Subject, messageContent.Message, body, customization.Logo, url);
+
+                        var bodyBuilder = new BodyBuilder
+                        {
+                            HtmlBody = html,
+                        };
+
+                        var message = new MimeMessage
+                        {
+                            Body = bodyBuilder.ToMessageBody(),
+                            Subject = messageContent.Subject
+                        };
+
                         // Get the users to send it to
                         if (user.Email.IsNullOrEmpty())
                         {
                             continue;
                         }
-                        // BCC the messages
-                        message.Bcc.Add(new MailboxAddress(user.Email.Trim(), user.Email.Trim()));
-                    }
+                        // Send the message to the user
+                        message.To.Add(new MailboxAddress(user.Email.Trim(), user.Email.Trim()));
 
-                    // Send the email
-                    await _email.Send(message, emailSettings);
+                        // Send the email
+                        await _email.Send(message, emailSettings);
+                    }
 
                     // Now add all of this to the Recently Added log
                     var recentlyAddedLog = new HashSet<RecentlyAddedLog>();
@@ -344,11 +346,14 @@ namespace Ombi.Schedule.Jobs.Ombi
                         {
                             continue;
                         }
+
+                        var unsubscribeLink = GenerateUnsubscribeLink(customization.ApplicationUrl, a.Id);
+
                         var messageContent = ParseTemplate(template, customization);
 
                         var email = new NewsletterTemplate();
 
-                        var html = email.LoadTemplate(messageContent.Subject, messageContent.Message, body, customization.Logo);
+                        var html = email.LoadTemplate(messageContent.Subject, messageContent.Message, body, customization.Logo, unsubscribeLink);
 
                         await _email.Send(
                             new NotificationMessage { Message = html, Subject = messageContent.Subject, To = a.Email },
@@ -367,6 +372,36 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Newsletter Finished");
+        }
+
+        private void GetRecentlyAddedMoviesData(List<RecentlyAddedLog> addedLog, out HashSet<int> addedPlexMovieLogIds, out HashSet<int> addedEmbyMoviesLogIds, out HashSet<int> addedJellyfinMoviesLogIds, out HashSet<string> addedAlbumLogIds)
+        {
+            var plexParent = addedLog.Where(x => x.Type == RecentlyAddedType.Plex && x.ContentType == ContentType.Parent).ToList();
+            addedPlexMovieLogIds = plexParent != null && plexParent.Any() ? (plexParent?.Select(x => x.ContentId)?.ToHashSet() ?? new HashSet<int>()) : new HashSet<int>();
+
+            var embyParent = addedLog.Where(x => x.Type == RecentlyAddedType.Emby && x.ContentType == ContentType.Parent);
+            addedEmbyMoviesLogIds = embyParent != null && embyParent.Any() ? (embyParent?.Select(x => x.ContentId)?.ToHashSet() ?? new HashSet<int>()) : new HashSet<int>();
+
+            var jellyFinParent = addedLog.Where(x => x.Type == RecentlyAddedType.Jellyfin && x.ContentType == ContentType.Parent);
+            addedJellyfinMoviesLogIds = jellyFinParent != null && jellyFinParent.Any() ? (jellyFinParent?.Select(x => x.ContentId)?.ToHashSet() ?? new HashSet<int>()) : new HashSet<int>();
+
+            var lidarrParent = addedLog.Where(x => x.Type == RecentlyAddedType.Lidarr && x.ContentType == ContentType.Album);
+            addedAlbumLogIds = lidarrParent != null && lidarrParent.Any() ? (lidarrParent?.Select(x => x.AlbumId)?.ToHashSet() ?? new HashSet<string>()) : new HashSet<string>();
+        }
+
+        public static string GenerateUnsubscribeLink(string applicationUrl, string id)
+        {
+            if (!applicationUrl.HasValue())
+            {
+                return string.Empty;
+            }
+
+            if (!applicationUrl.EndsWith('/'))
+            {
+                applicationUrl += '/';
+            }
+            var b = new UriBuilder($"{applicationUrl}unsubscribe/{id}");
+            return b.ToString();
         }
 
         private async Task<HashSet<PlexServerContent>> GetMoviesWithoutId(HashSet<int> addedMovieLogIds, HashSet<PlexServerContent> needsMovieDbPlex)
@@ -466,7 +501,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             await Start(newsletterSettings, false);
         }
 
-        private HashSet<PlexEpisode> FilterPlexEpisodes(IEnumerable<PlexEpisode> source, IQueryable<RecentlyAddedLog> recentlyAdded)
+        private HashSet<PlexEpisode> FilterPlexEpisodes(IEnumerable<PlexEpisode> source, IEnumerable<RecentlyAddedLog> recentlyAdded)
         {
             var itemsToReturn = new HashSet<PlexEpisode>();
             foreach (var ep in source.Where(x => x.Series.HasTvDb))
@@ -483,7 +518,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             return itemsToReturn;
         }
 
-        private HashSet<EmbyEpisode> FilterEmbyEpisodes(IEnumerable<EmbyEpisode> source, IQueryable<RecentlyAddedLog> recentlyAdded)
+        private HashSet<EmbyEpisode> FilterEmbyEpisodes(IEnumerable<EmbyEpisode> source, IEnumerable<RecentlyAddedLog> recentlyAdded)
         {
             var itemsToReturn = new HashSet<EmbyEpisode>();
             foreach (var ep in source.Where(x => x.Series.HasTvDb))
@@ -500,7 +535,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             return itemsToReturn;
         }
 
-        private HashSet<JellyfinEpisode> FilterJellyfinEpisodes(IEnumerable<JellyfinEpisode> source, IQueryable<RecentlyAddedLog> recentlyAdded)
+        private HashSet<JellyfinEpisode> FilterJellyfinEpisodes(IEnumerable<JellyfinEpisode> source, IEnumerable<RecentlyAddedLog> recentlyAdded)
         {
             var itemsToReturn = new HashSet<JellyfinEpisode>();
             foreach (var ep in source.Where(x => x.Series.HasTvDb))
@@ -537,7 +572,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             var plexMovies = plexContentToSend.Where(x => x.Type == PlexMediaTypeEntity.Movie);
             var embyMovies = embyContentToSend.Where(x => x.Type == EmbyMediaType.Movie);
             var jellyfinMovies = jellyfinContentToSend.Where(x => x.Type == JellyfinMediaType.Movie);
-            if ((plexMovies.Any() || embyMovies.Any()) && !settings.DisableMovies)
+            if ((plexMovies.Any() || embyMovies.Any() || jellyfinMovies.Any()) && !settings.DisableMovies)
             {
                 sb.Append("<h1 style=\"text-align: center; max-width: 1042px;\">New Movies</h1><br /><br />");
                 sb.Append(
@@ -568,7 +603,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 sb.Append("</table>");
             }
 
-            if ((plexEpisodes.Any() || embyEp.Any()) || jellyfinEp.Any() && !settings.DisableTv)
+            if ((plexEpisodes.Any() || embyEp.Any() || jellyfinEp.Any()) && !settings.DisableTv)
             {
                 sb.Append("<br /><br /><h1 style=\"text-align: center; max-width: 1042px;\">New TV</h1><br /><br />");
                 sb.Append(

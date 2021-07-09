@@ -71,7 +71,7 @@
 
 .discover-filter-buttons-group {
   background: $ombi-background-primary;
-  border: 1px solid $ombi-background-primary-accent;
+  border: 1px solid #293a4c;
   border-radius: 30px;
   color:#fff;
   margin-bottom:10px;
@@ -84,6 +84,7 @@
     border-radius: 30px;
     padding-left: 20px;
     padding-right: 20px;
+    border-left:none;
   }
 
   ::ng-deep .mat-button-toggle-appearance-standard .mat-button-toggle-label-content{
@@ -91,7 +92,7 @@
   }
 
   .button-active{
-    background:$ombi-active;
+    background:#293a4c;
   }
 
 
@@ -102,4 +103,10 @@
 
 .card-skeleton {
    padding: 5px;
+}
+
+@media (min-width:755px){
+  ::ng-deep .p-carousel-item{
+    flex: 1 0 200px !important;
+  }
 }

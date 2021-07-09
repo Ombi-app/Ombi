@@ -23,7 +23,6 @@ using Ombi.Notifications;
 using Ombi.Schedule;
 using Ombi.Schedule.Jobs;
 using Ombi.Settings.Settings;
-using Ombi.Store.Context;
 using Ombi.Store.Repository;
 using Ombi.Notifications.Agents;
 using Ombi.Schedule.Jobs.Radarr;
@@ -68,6 +67,8 @@ using Ombi.Api.MusicBrainz;
 using Ombi.Api.Twilio;
 using Ombi.Api.CloudService;
 using Ombi.Api.RottenTomatoes;
+using System.Net.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Ombi.DependencyInjection
 {
@@ -119,14 +120,24 @@ namespace Ombi.DependencyInjection
 
         public static void RegisterHttp(this IServiceCollection services)
         {
+            var runtimeVersion = AssemblyHelper.GetRuntimeVersion();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IPrincipal>(sp => sp.GetService<IHttpContextAccessor>().HttpContext.User);
+            services.AddHttpClient("OmbiClient", client =>
+            {                
+                client.DefaultRequestHeaders.Add("User-Agent", $"Ombi/{runtimeVersion} (https://ombi.io/)");
+            }).ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                var httpClientHandler = new HttpClientHandler();
+                httpClientHandler.ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true;
+
+                return httpClientHandler;
+            });
         }
 
         public static void RegisterApi(this IServiceCollection services)
         {
-            services.AddScoped<IApi, Api.Api>();
-            services.AddScoped<IOmbiHttpClient, OmbiHttpClient>(); // https://blogs.msdn.microsoft.com/alazarev/2017/12/29/disposable-finalizers-and-httpclient/
+            services.AddScoped<IApi, Api.Api>(s => new Api.Api(s.GetRequiredService<ILogger<Api.Api>>(), s.GetRequiredService<IHttpClientFactory>().CreateClient("OmbiClient")));
             services.AddTransient<IMovieDbApi, Api.TheMovieDb.TheMovieDbApi>();
             services.AddTransient<IPlexApi, PlexApi>();
             services.AddTransient<IEmbyApi, EmbyApi>();
@@ -195,6 +206,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IEmailProvider, GenericEmailProvider>();
             services.AddTransient<INotificationHelper, NotificationHelper>();
             services.AddSingleton<ICacheService, CacheService>();
+            services.AddSingleton<IMediaCacheService, MediaCacheService>();
             services.AddScoped<IImageService, ImageService>();
 
             services.AddTransient<IDiscordNotification, DiscordNotification>();

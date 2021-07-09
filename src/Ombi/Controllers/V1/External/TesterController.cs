@@ -45,7 +45,7 @@ namespace Ombi.Controllers.V1.External
         /// </summary>
         public TesterController(INotificationService service, IDiscordNotification notification, IEmailNotification emailN,
             IPushbulletNotification pushbullet, ISlackNotification slack, IPushoverNotification po, IMattermostNotification mm,
-            IPlexApi plex, IEmbyApiFactory emby, IRadarrApi radarr, ISonarrApi sonarr, ILogger<TesterController> log, IEmailProvider provider,
+            IPlexApi plex, IEmbyApiFactory emby, IRadarrV3Api radarr, ISonarrApi sonarr, ILogger<TesterController> log, IEmailProvider provider,
             ICouchPotatoApi cpApi, ITelegramNotification telegram, ISickRageApi srApi, INewsletterJob newsletter, ILegacyMobileNotification mobileNotification,
             ILidarrApi lidarrApi, IGotifyNotification gotifyNotification, IWhatsAppApi whatsAppApi, OmbiUserManager um, IWebhookNotification webhookNotification,
             IJellyfinApi jellyfinApi)
@@ -86,7 +86,7 @@ namespace Ombi.Controllers.V1.External
         private IWebhookNotification WebhookNotification { get; }
         private IMattermostNotification MattermostNotification { get; }
         private IPlexApi PlexApi { get; }
-        private IRadarrApi RadarrApi { get; }
+        private IRadarrV3Api RadarrApi { get; }
         private IEmbyApiFactory EmbyApi { get; }
         private ISonarrApi SonarrApi { get; }
         private ICouchPotatoApi CouchPotatoApi { get; }

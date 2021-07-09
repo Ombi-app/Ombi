@@ -66,6 +66,7 @@ export class EpisodeRequestComponent {
                     viewModel.requestOnBehalf = result.username?.id;
                     viewModel.qualityPathOverride = result?.sonarrPathId;
                     viewModel.rootFolderOverride = result?.sonarrFolderId;
+                    viewModel.languageProfile = result?.sonarrLanguageId;
 
                     const requestResult = await this.requestService.requestTv(viewModel).toPromise();
                     this.postRequest(requestResult);

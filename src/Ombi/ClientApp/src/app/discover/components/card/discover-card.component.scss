@@ -1,5 +1,4 @@
-$ombi-primary:#3f3f3f;
-$card-background: #2b2b2b;
+@import "~styles/variables.scss";
 
 #cardImage {
     border-radius: 5px;
@@ -106,6 +105,17 @@ small {
   -ms-transform: translate(-50%, -50%);
 }
 
+.middle-show {
+  transition: .5s ease;
+  opacity: 1;
+  position: absolute;
+  top: 67%;
+  width: 90%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+
 
 .c {
   position: relative;
@@ -141,19 +151,20 @@ small {
 
 .card-top-info{
   position: absolute;
-  text-transform: uppercase;
   top: 0px;
   width: 100%;
-  background-color: rgba(15,23,31,0.6);
+  background-color: rgba(15,23,31,0.7);
   display:flex;
   justify-content: space-between;
   padding-top:0.6em;
   padding-bottom:0.3em;
   z-index:2;
+  letter-spacing: 0.2px;
 }
 
 .top-left {
   font-size: 14px;
+  font-weight:200;
   padding-left: 0.5em;
   font-size: 14px; 
 } 
@@ -161,6 +172,7 @@ small {
 /* common */
 .top-right{
   display:flex;
+  font-weight:200;
 }
 
 .top-right span.indicator, span.indicator-text {
@@ -247,9 +259,19 @@ a.poster-overlay:hover{
   width: 100%;
   margin-left: 0;
   margin-right: 0;
-  margin-top: -37px;
+  margin-top: -36px;
   margin-bottom: 0px;
   opacity:0;
+  transition: .5s ease;
+}
+.ombi-card .button-request-container-show{
+  position: relative;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: -36px;
+  margin-bottom: 0px;
+  opacity:1;
   transition: .5s ease;
 }
 
@@ -258,7 +280,16 @@ a.poster-overlay:hover{
   padding-left:0px;
   width:100%;
 }
+::ng-deep .ombi-card .button-request-container-show .button-request{
+  padding-right:0px;
+  padding-left:0px;
+  width:100%;
+}
 
 .c:hover .button-request-container {
   opacity:1;
+}
+
+.btn-ombi{
+  background-color:#293a4c;
 }

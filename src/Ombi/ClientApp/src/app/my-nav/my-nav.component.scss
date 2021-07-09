@@ -24,7 +24,8 @@
 }
 
 .icon-spacing {
-    margin-right: 5%;
+    width:40px;
+    text-align: center;
 }
 
 .example-form {
@@ -48,18 +49,33 @@
     padding: 0px 5px;
 }
 
-::ng-deep .dark .active-list-item {
-    background: $accent-dark !important;
-    color:black !important;
-    font-weight:500;
-}
-
 .slide-menu {
     width: 100%;
 }
 
 ::ng-deep .smaller-panel {
     max-width: 170px !important;
+}
+
+.top-bar-container{
+    width: 95%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+
+.top-search-block{
+    height:84px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex:1;
+    margin-right:5%;
+}
+
+.top-search-bar{
+    width:100%;
 }
 
 .mat-drawer-content {
@@ -71,36 +87,51 @@
     /* overflow: auto; */
 }
 
-.profile-img-container {
-    margin: 20px auto 10px;
-    overflow: hidden;
-    text-align: center;
-    width: 80%;
+.profile-block a{
+    color: #FFF;
+    font-size: 0.8em;
+    font-weight: 100;
+    display:flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    text-transform: capitalize;
+    flex:0 0 250px;
 }
 
-.profile-img {
-    float: left;
-    width: 45px;
-    border-radius: 100%;
+
+.profile-username{
+    justify-content: center;
+    display:flex;
+    height:50px;
+    align-items: center;
+    margin-right:5px;
 }
-.profile-info {
-    overflow: hidden;
-    text-align: left;
+
+#nav-openMobile {
+    display: none;
 }
-.profile-info > h3 {
-    font-size: 15px;
-    text-transform: capitalize;
-    // color: #333;
-    margin-bottom: 2px;
+
+@media (max-width: 600px) {
+    .profile-username{
+        display:none;
+    }
+
 }
-.profile-info > p {
-    // color: #333;
-    font-size: 11px;
-    margin-top: 5px;
+
+@media (max-width: 950px) {
+    #nav-openMobile {
+        display: block;
+    }
+}
+
+.profile-img{
+    display: flex;
+    justify-content: center;
+    align-self: center;
 }
 
 .profile-img img {
-    width: 45px;
+    width: 40px;
 }
 
 
@@ -125,15 +156,14 @@
         text-transform: uppercase;
         color: $ombi-active;
         align-items:center;
-        justify-content: center;
         font-weight: 700;
         font-size:36px;
         padding:40px 20px;
         height:auto;
-        max-width: 350px;
+        max-width: 300px;
         display: flex;
         white-space: normal;
-        text-align: center;
+        word-break: break-word;
     }
 
     .outer-profile {
@@ -148,7 +178,6 @@
         font-weight: 400;
         padding:10px 20px;
         height:auto;
-        width:20rem;
         margin-bottom:0.5rem;
     }
     
@@ -158,7 +187,23 @@
         border-radius:0px 30px 30px 0px;
         padding:10px 20px;
         height:auto;
-        width:20rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .sidenav-container .sidenav{
+        .application-name{
+            font-size:2em;
+            max-width:200px;
+        }
+        .mat-list-item{
+            width:14rem;
+            padding:10px 0px;
+        }
+        .active-list-item{
+            width:14rem;
+            padding:10px 0px;
+        }
     }
 }
 
@@ -173,18 +218,16 @@
     .top-bar-container{
         background: $ombi-background-primary;
         color:$ombi-background-primary-accent;
+        padding-top:1em;
     }
 
-}
-
-.top-search-bar{
-    margin-left: 30px;
 }
 
 ::ng-deep .mat-toolbar-row, .mat-toolbar-single-row{
     height:auto;
 }
 
-.top-search-bar{
-    height:84px;
+::ng-deep .mat-sidenav-fixed .mat-list-base .mat-list-item .mat-list-item-content, .mat-list-base .mat-list-option .mat-list-item-content{
+    padding:0;
+    margin: 0 4em 0 0.5em;
 }

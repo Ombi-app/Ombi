@@ -21,6 +21,7 @@ using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Core.Models;
+using System.Threading;
 
 namespace Ombi.Core.Engine
 {
@@ -29,7 +30,7 @@ namespace Ombi.Core.Engine
         public MovieRequestEngine(IMovieDbApi movieApi, IRequestServiceMain requestService, IPrincipal user,
             INotificationHelper helper, IRuleEvaluator r, IMovieSender sender, ILogger<MovieRequestEngine> log,
             OmbiUserManager manager, IRepository<RequestLog> rl, ICacheService cache,
-            ISettingsService<OmbiSettings> ombiSettings, IRepository<RequestSubscription> sub)
+            ISettingsService<OmbiSettings> ombiSettings, IRepository<RequestSubscription> sub, IMediaCacheService mediaCacheService)
             : base(user, requestService, r, manager, cache, ombiSettings, sub)
         {
             MovieApi = movieApi;
@@ -37,6 +38,7 @@ namespace Ombi.Core.Engine
             Sender = sender;
             Logger = log;
             _requestLog = rl;
+            _mediaCacheService = mediaCacheService;
         }
 
         private IMovieDbApi MovieApi { get; }
@@ -44,6 +46,7 @@ namespace Ombi.Core.Engine
         private IMovieSender Sender { get; }
         private ILogger<MovieRequestEngine> Logger { get; }
         private readonly IRepository<RequestLog> _requestLog;
+        private readonly IMediaCacheService _mediaCacheService;
 
         /// <summary>
         /// Requests the movie.
@@ -70,7 +73,7 @@ namespace Ombi.Core.Engine
             var canRequestOnBehalf = model.RequestOnBehalf.HasValue();
 
             var isAdmin = await UserManager.IsInRoleAsync(userDetails, OmbiRoles.PowerUser) || await UserManager.IsInRoleAsync(userDetails, OmbiRoles.Admin);
-            if (model.RequestOnBehalf.HasValue() && !isAdmin)
+            if (canRequestOnBehalf && !isAdmin)
             {
                 return new RequestEngineResult
                 {
@@ -370,7 +373,6 @@ namespace Ombi.Core.Engine
             };
         }
 
-
         public async Task<RequestEngineResult> UpdateAdvancedOptions(MediaAdvancedOptions options)
         {
             var request = await MovieRepository.Find(options.RequestId);
@@ -526,6 +528,7 @@ namespace Ombi.Core.Engine
             // We are denying a request
             await NotificationHelper.Notify(request, NotificationType.RequestDeclined);
             await MovieRepository.Update(request);
+            await _mediaCacheService.Purge();
 
             return new RequestEngineResult
             {
@@ -549,12 +552,42 @@ namespace Ombi.Core.Engine
             request.Denied = false;
             await MovieRepository.Update(request);
 
-            var canNotify = await RunSpecificRule(request, SpecificRules.CanSendNotification);
+            var canNotify = await RunSpecificRule(request, SpecificRules.CanSendNotification, string.Empty);
             if (canNotify.Success)
             {
                 await NotificationHelper.Notify(request, NotificationType.RequestApproved);
             }
+            await _mediaCacheService.Purge();
 
+            return await ProcessSendingMovie(request);
+        }
+
+        public async Task<RequestEngineResult> RequestCollection(int collectionId, CancellationToken cancellationToken)
+        {
+            var langCode = await DefaultLanguageCode(null);
+            var collections = await Cache.GetOrAddAsync($"GetCollection{collectionId}{langCode}",
+                () =>  MovieApi.GetCollection(langCode, collectionId, cancellationToken), DateTimeOffset.Now.AddDays(1));
+
+            var results = new List<RequestEngineResult>();
+            foreach (var collection in collections.parts)
+            {
+                results.Add(await RequestMovie(new MovieRequestViewModel
+                {
+                    TheMovieDbId = collection.id
+                }));
+            }
+
+
+            if (results.All(x => x.IsError))
+            {
+                new RequestEngineResult { Result = false, ErrorMessage = $"The whole collection {collections.name} Is already monitored or requested!" };
+            }
+
+            return new RequestEngineResult { Result = true, Message = $"The collection {collections.name} has been successfully added!", RequestId = results.FirstOrDefault().RequestId};
+        }
+
+        private async Task<RequestEngineResult> ProcessSendingMovie(MovieRequests request)
+        {
             if (request.Approved)
             {
                 var result = await Sender.Send(request);
@@ -609,6 +642,7 @@ namespace Ombi.Core.Engine
             results.RootPathOverride = request.RootPathOverride;
 
             await MovieRepository.Update(results);
+            await _mediaCacheService.Purge();
             return results;
         }
 
@@ -621,17 +655,34 @@ namespace Ombi.Core.Engine
         {
             var request = await MovieRepository.GetAll().FirstOrDefaultAsync(x => x.Id == requestId);
             await MovieRepository.Delete(request);
+            await _mediaCacheService.Purge();
         }
 
         public async Task RemoveAllMovieRequests()
         {
             var request = MovieRepository.GetAll();
             await MovieRepository.DeleteRange(request);
+            await _mediaCacheService.Purge();
         }
 
         public async Task<bool> UserHasRequest(string userId)
         {
             return await MovieRepository.GetAll().AnyAsync(x => x.RequestedUserId == userId);
+        }
+
+        public async Task<RequestEngineResult> ReProcessRequest(int requestId, CancellationToken cancellationToken)
+        {
+            var request = await MovieRepository.Find(requestId);
+            if (request == null)
+            {
+                return new RequestEngineResult
+                {
+                    Result = false,
+                    ErrorMessage = "Request does not exist"
+                };
+            }
+
+            return await ProcessSendingMovie(request);
         }
 
         public async Task<RequestEngineResult> MarkUnavailable(int modelId)
@@ -647,6 +698,7 @@ namespace Ombi.Core.Engine
 
             request.Available = false;
             await MovieRepository.Update(request);
+            await _mediaCacheService.Purge();
 
             return new RequestEngineResult
             {
@@ -670,6 +722,7 @@ namespace Ombi.Core.Engine
             request.MarkedAsAvailable = DateTime.Now;
             await NotificationHelper.Notify(request, NotificationType.RequestAvailable);
             await MovieRepository.Update(request);
+            await _mediaCacheService.Purge();
 
             return new RequestEngineResult
             {
@@ -682,11 +735,13 @@ namespace Ombi.Core.Engine
         {
             await MovieRepository.Add(model);
 
-            var result = await RunSpecificRule(model, SpecificRules.CanSendNotification);
+            var result = await RunSpecificRule(model, SpecificRules.CanSendNotification, requestOnBehalf);
             if (result.Success)
             {
                 await NotificationHelper.NewRequest(model);
             }
+
+            await _mediaCacheService.Purge();
 
             await _requestLog.Add(new RequestLog
             {

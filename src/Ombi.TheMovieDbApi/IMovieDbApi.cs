@@ -4,6 +4,10 @@ using System.Threading.Tasks;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.TheMovieDbApi.Models;
 
+// Due to conflicting Genre models in
+// Ombi.TheMovieDbApi.Models and Ombi.Api.TheMovieDb.Models   
+using Genre = Ombi.TheMovieDbApi.Models.Genre;
+
 namespace Ombi.Api.TheMovieDb
 {
     public interface IMovieDbApi
@@ -14,6 +18,7 @@ namespace Ombi.Api.TheMovieDb
         Task<List<MovieDbSearchResult>> PopularMovies(string languageCode, int? page = null, CancellationToken cancellationToken = default(CancellationToken));
         Task<List<MovieDbSearchResult>> PopularTv(string langCode, int? page = null, CancellationToken cancellationToken = default(CancellationToken));
         Task<List<MovieDbSearchResult>> SearchMovie(string searchTerm, int? year, string languageCode);
+        Task<List<MovieDbSearchResult>> GetMoviesViaKeywords(string keywordId, string langCode, CancellationToken cancellationToken, int? page = null);
         Task<List<TvSearchResult>> SearchTv(string searchTerm, string year = default);
         Task<List<MovieDbSearchResult>> TopRated(string languageCode, int? page = null);
         Task<List<MovieDbSearchResult>> Upcoming(string languageCode, int? page = null);
@@ -34,5 +39,6 @@ namespace Ombi.Api.TheMovieDb
         Task<Keyword> GetKeyword(int keywordId);
         Task<WatchProviders> GetMovieWatchProviders(int theMoviedbId, CancellationToken token);
         Task<WatchProviders> GetTvWatchProviders(int theMoviedbId, CancellationToken token);
+        Task<List<Genre>> GetGenres(string media);
     }
 }

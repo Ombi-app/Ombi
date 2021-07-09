@@ -1,4 +1,4 @@
-<div class="right">
+<div class="right" *ngIf="discoverType !== DiscoverType.Seasonal">
 <mat-button-toggle-group name="discoverMode" (change)="toggleChanged($event)" value="{{discoverOptions}}" class="discover-filter-buttons-group">
     <mat-button-toggle id="{{id}}Combined" [ngClass]="{'button-active': discoverOptions === DiscoverOption.Combined}" value="{{DiscoverOption.Combined}}" class="discover-filter-button">{{'Discovery.Combined' | translate}}</mat-button-toggle>
     <mat-button-toggle id="{{id}}Movie" [ngClass]="{'button-active': discoverOptions === DiscoverOption.Movie}" value="{{DiscoverOption.Movie}}" class="discover-filter-button">{{'Discovery.Movies' | translate}}</mat-button-toggle>

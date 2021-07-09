@@ -4,6 +4,6 @@ namespace Ombi.Core.Processor
 {
     public interface IChangeLogProcessor
     {
-        Task<UpdateModel> Process(string branch);
+        Task<UpdateModel> Process();
     }
 }

@@ -1,6 +1,6 @@
 ﻿<settings-menu></settings-menu>
 <div class="small-middle-container">
-<wiki [path]="'/settings/ombi-settings/'"></wiki>
+<wiki></wiki>
 <fieldset *ngIf="form">
     <legend>Ombi Configuration</legend>
     <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
@@ -40,11 +40,6 @@
                     <mat-label>Delete After Days of Availbility</mat-label>
                     <input matInput formControlName="autoDeleteAfterDays">
                 </mat-form-field>
-            </div>
-            <div>
-                <mat-slide-toggle formControlName="ignoreCertificateErrors" matTooltip="Enable if you are having connectivity problems over SSL">
-                    Ignore any certificate errors (Please restart after changing)
-                </mat-slide-toggle>
             </div>
             <div>
                 <mat-slide-toggle formControlName="collectAnalyticData" matTooltip="This will allow us to have a better understanding of the userbase so we know what we should be supporting (Uses Google Analytics)">

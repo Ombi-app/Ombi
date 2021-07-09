@@ -6,12 +6,12 @@
         <mat-toolbar class="application-name" id="nav-applicationName">{{applicationName}}</mat-toolbar>
 
         <mat-nav-list>
-            <span *ngFor="let nav of navItems">
+            <span  mat-list-item  *ngFor="let nav of navItems">
 
-                <div class="menu-spacing" *ngIf="(nav.requiresAdmin && isAdmin || !nav.requiresAdmin) && nav.enabled">
+                <div class="menu-spacing mat-ripple" mat-ripple *ngIf="(nav.requiresAdmin && isAdmin || !nav.requiresAdmin) && nav.enabled">
 
 
-                    <a id="{{nav.id}}" *ngIf="nav.externalLink" mat-list-item [href]="nav.link" target="_blank"
+                    <a [disableRipple]="true" mat-list-item  id="{{nav.id}}" *ngIf="nav.externalLink" [href]="nav.link" target="_blank"
                         matTooltip="{{nav.toolTipMessage | translate}}" matTooltipPosition="right"
                         [routerLinkActive]="'active-list-item'">
 
@@ -19,7 +19,7 @@
                             style="padding-left: 5px; padding-right: 5px;" aria-hidden="true"></i>
                         &nbsp;{{nav.name | translate}}
                     </a>
-                    <a id="{{nav.id}}" *ngIf="!nav.externalLink" mat-list-item [routerLink]="nav.link" [style]="nav.color"
+                    <a [disableRipple]="true"  mat-list-item  id="{{nav.id}}" *ngIf="!nav.externalLink" [routerLink]="nav.link" [style]="nav.color"
                         [routerLinkActive]="'active-list-item'">
 
                         <i class="fa-lg {{nav.icon}} icon-spacing"></i>
@@ -28,7 +28,14 @@
                 </div>
             </span>
 
-            <a   class="menu-spacing" id="nav-logout" mat-list-item [routerLinkActive]="'active-list-item'"
+            <span mat-list-item  >
+            <a mat-list-item [disableRipple]="true" id="nav-openMobile" [routerLinkActive]="'active-list-item'"
+                aria-label="Toggle sidenav" (click)="openMobileApp($event);">
+                <i class="fa-lg fas fa-mobile-alt  icon-spacing"></i>
+                &nbsp;{{ 'NavigationBar.OpenMobileApp' | translate }}
+            </a></span>
+
+            <a mat-list-item [disableRipple]="true"   class="menu-spacing" id="nav-logout" [routerLinkActive]="'active-list-item'"
                 aria-label="Toggle sidenav" (click)="logOut();">
                 <i class="fa-lg fas fa-sign-out-alt  icon-spacing"></i>
                 &nbsp;{{ 'NavigationBar.Logout' | translate }}
@@ -53,36 +60,33 @@
                 <i class="fa-lg fas fa-bars"></i>
             </button>
 
-            <div class="col-8 col-lg-10 top-search-bar">
-                <span class="justify-content-center align-items-center">
+            <div class="top-search-block">
                     <!-- Search Bar -->
-                    <div>
+                    <div class="top-search-bar">
                         <app-nav-search></app-nav-search>
                     </div>
-                </span>
+                    <button id="search-filter" mat-icon-button [matMenuTriggerFor]="filterMenu">
+                        <i class="fa-lg fas fa-filter"></i>
+                    </button>
+                    <mat-menu #filterMenu="matMenu" yPosition="below" class="smaller-panel">
+                        <mat-slide-toggle id="filterMovies" class="mat-menu-item slide-menu" [checked]="searchFilter.movies"
+                            (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Movie)">
+                            {{ 'NavigationBar.Filter.Movies' | translate}}</mat-slide-toggle>
+                        <mat-slide-toggle id="filterTv" class="mat-menu-item slide-menu" [checked]="searchFilter.tvShows"
+                            (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.TvShow)">
+                            {{ 'NavigationBar.Filter.TvShows' | translate}}</mat-slide-toggle>
+                        <mat-slide-toggle id="filterMusic" class="mat-menu-item slide-menu" [checked]="searchFilter.music"
+                            (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Music)">
+                            {{ 'NavigationBar.Filter.Music' | translate}}</mat-slide-toggle>
+                        <!-- <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.people"
+                            (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.People)">
+                            {{ 'NavigationBar.Filter.People' | translate}}</mat-slide-toggle> -->
+                    </mat-menu>
             </div>
-            <div class="col-1 top-filter">
-                <button id="search-filter" mat-icon-button [matMenuTriggerFor]="filterMenu">
-                    <i class="fa-lg fas fa-filter"></i>
-                </button>
-                <mat-menu #filterMenu="matMenu" yPosition="below" class="smaller-panel">
-                    <mat-slide-toggle id="filterMovies" class="mat-menu-item slide-menu" [checked]="searchFilter.movies"
-                        (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Movie)">
-                        {{ 'NavigationBar.Filter.Movies' | translate}}</mat-slide-toggle>
-                    <mat-slide-toggle id="filterTv" class="mat-menu-item slide-menu" [checked]="searchFilter.tvShows"
-                        (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.TvShow)">
-                        {{ 'NavigationBar.Filter.TvShows' | translate}}</mat-slide-toggle>
-                    <mat-slide-toggle id="filterMusic" class="mat-menu-item slide-menu" [checked]="searchFilter.music"
-                        (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Music)">
-                        {{ 'NavigationBar.Filter.Music' | translate}}</mat-slide-toggle>
-                    <!-- <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.people"
-                        (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.People)">
-                        {{ 'NavigationBar.Filter.People' | translate}}</mat-slide-toggle> -->
-                </mat-menu>
-            </div>
-            <div class="col-1">
+            <div class="profile-block">
                 <a routerLink="/user-preferences">
-                <img [matTooltip]="username" id="profile-image" class="profile-img"  [src]="getUserImage()" />
+                <div class="profile-username" data-test="profile-username">{{username}}</div>
+                <div class="profile-img" data-test="profile-image"><img [src]="getUserImage()" /></div>
             </a>
             </div>
 

@@ -11,8 +11,9 @@ namespace Ombi.Core
         Task<SearchFullInfoTvShowViewModel> GetShowInformation(string tvdbid, CancellationToken token);
         Task<SearchFullInfoTvShowViewModel> GetShowByRequest(int requestId, CancellationToken token);
         Task<IEnumerable<StreamingData>> GetStreamInformation(int movieDbId, CancellationToken cancellationToken);
-        Task<IEnumerable<SearchTvShowViewModel>> Popular(int currentlyLoaded, int amountToLoad);
+        Task<IEnumerable<SearchTvShowViewModel>> Popular(int currentlyLoaded, int amountToLoad, string langCustomCode = null);
         Task<IEnumerable<SearchTvShowViewModel>> Anticipated(int currentlyLoaded, int amountToLoad);
         Task<IEnumerable<SearchTvShowViewModel>> Trending(int currentlyLoaded, int amountToLoad);
+        Task<IEnumerable<SearchFullInfoTvShowViewModel>> RecentlyRequestedShows(int currentlyLoaded, int toLoad, CancellationToken cancellationToken);
     }
 }

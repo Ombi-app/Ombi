@@ -31,7 +31,9 @@
             "Validation": "Please check your entered values"
         },
         "Cancel": "Cancel",
-        "Submit": "Submit"
+        "Submit": "Submit",
+		"tvShow": "TV Show",
+        "movie": "Movie"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "Email Address",
@@ -52,7 +54,7 @@
         "Discover": "Discover",
         "Search": "Search",
         "Requests": "Requests",
-        "UserManagement": "User Management",
+        "UserManagement": "Users",
         "Issues": "Issues",
         "Vote": "Vote",
         "Donate": "Donate!",
@@ -68,7 +70,7 @@
         "ChangeTheme": "Change Theme",
         "Calendar": "Calendar",
         "UserPreferences": "Preferences",
-        "FeatureSuggestion":"Feature Suggestion",
+        "FeatureSuggestion":"Features",
         "FeatureSuggestionTooltip":"Have a great new idea? Suggest it here!",
         "Filter": {
             "Movies":"Movies",
@@ -252,11 +254,12 @@
         "ViewCollection":"View Collection",
         "NotEnoughInfo": "Unfortunately there is not enough information about this show yet!",
         "AdvancedOptions":"Advanced Options",
-        "AutoApproveOptions":"You can configure the request here, once requested it will be send to your DVR application and will be auto approved!",
-        "AutoApproveOptionsTv":"You can configure the request here, once requested it will be send to your DVR application and will be auto approved! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it!",
-        "AutoApproveOptionsTvShort":"You can configure the request here, once requested it will be send to your DVR application! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it!",
+        "AutoApproveOptions":"You can configure the request here, once requested it will be send to your DVR application and will be auto approved! Please note, this is optional, just press Request to skip!",
+        "AutoApproveOptionsTv":"You can configure the request here, once requested it will be send to your DVR application and will be auto approved! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it!  Please note, this is optional, just press Request to skip!",
+        "AutoApproveOptionsTvShort":"You can configure the request here, once requested it will be send to your DVR application! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it! Please note, this is optional, just press Request to skip!",
         "QualityProfilesSelect":"Select A Quality Profile",
         "RootFolderSelect":"Select A Root Folder",
+        "LanguageProfileSelect":"Select A Language Profile",
         "Status":"Status",
         "Availability":"Availability",
         "RequestStatus":"Request Status",
@@ -285,12 +288,14 @@
         "RadarrConfiguration": "Radarr Configuration",
         "RequestOnBehalf": "Request on behalf of",
         "PleaseSelectUser": "Please select a user",
-        "StreamingOn": "Streaming On"
+        "StreamingOn": "Streaming On",
+        "ReProcessRequest": "Re-Process Request"
     },
     "Discovery": {
         "PopularTab": "Popular",
         "TrendingTab": "Trending",
         "UpcomingTab": "Upcoming",
+        "SeasonalTab": "Seasonal",
         "RecentlyRequestedTab": "Recently Requested",
         "Movies": "Movies",
         "Combined": "Combined",

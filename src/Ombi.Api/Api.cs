@@ -16,14 +16,14 @@ namespace Ombi.Api
 {
     public class Api : IApi
     {
-        public Api(ILogger<Api> log, IOmbiHttpClient client)
+        public Api(ILogger<Api> log, HttpClient client)
         {
             Logger = log;
             _client = client;
         }
 
         private ILogger<Api> Logger { get; }
-        private readonly IOmbiHttpClient _client;
+        private readonly HttpClient _client;
 
         public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
@@ -73,7 +73,7 @@ namespace Ombi.Api
                 }
 
                 // do something with the response
-                var receivedString = await httpResponseMessage.Content.ReadAsStringAsync();
+                var receivedString = await httpResponseMessage.Content.ReadAsStringAsync(cancellationToken);
                 LogDebugContent(receivedString);
                 if (request.ContentType == ContentType.Json)
                 {

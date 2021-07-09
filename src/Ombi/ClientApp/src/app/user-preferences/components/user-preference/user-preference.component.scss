@@ -5,9 +5,22 @@
 }
 
 .profile-img {
-    border-radius: 100%;
     width: 75px;
+    height: 75px; 
+    margin-right: 20px;
+    border-radius: 100%;
 }
+
+#usernameTitle {
+    margin: 0;
+    align-self: center;
+    overflow-wrap: anywhere;
+}
+
+.user-type-row {
+    padding-bottom: 1.25em;
+}
+
 .my-auto {
     margin-top: auto;
     margin-bottom: auto;
@@ -19,5 +32,5 @@
 }
 
 .tab-content {
-    margin-top: 1%;
+    margin-top: 1.5em;
 }

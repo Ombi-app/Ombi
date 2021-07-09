@@ -41,12 +41,12 @@ namespace Ombi.Settings.Settings
                 var model = obj;
 
                 return model;
-            }, DateTime.Now.AddHours(2));
+            }, DateTimeOffset.Now.AddHours(2));
         }
 
         public async Task<T> GetSettingsAsync()
         {
-            return await _cache.GetOrAdd(CacheName, async () =>
+            return await _cache.GetOrAddAsync(CacheName, async () =>
             {
                 var result = await Repo.GetAsync(EntityName);
                 if (result == null)
@@ -61,7 +61,7 @@ namespace Ombi.Settings.Settings
                 var model = obj;
 
                 return model;
-            }, DateTime.Now.AddHours(5));
+            }, DateTimeOffset.Now.AddHours(5));
         }
 
         public bool SaveSettings(T model)

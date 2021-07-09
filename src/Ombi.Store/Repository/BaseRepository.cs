@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,11 @@ namespace Ombi.Store.Repository
         public async Task<T> Find(object key)
         {
             return await _db.FindAsync(key);
+        }
+
+        public async Task<T> Find(object key, CancellationToken cancellationToken)
+        {
+            return await _db.FindAsync(new[] { key }, cancellationToken: cancellationToken);
         }
 
         public IQueryable<T> GetAll()

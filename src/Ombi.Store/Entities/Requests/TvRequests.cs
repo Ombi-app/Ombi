@@ -16,6 +16,7 @@ namespace Ombi.Store.Entities.Requests
         public string ImdbId { get; set; }
         public int? QualityOverride { get; set; }
         public int? RootFolder { get; set; }
+        public int? LanguageProfile { get; set; }
         public string Overview { get; set; }
         public string Title { get; set; }
         public string PosterPath { get; set; }

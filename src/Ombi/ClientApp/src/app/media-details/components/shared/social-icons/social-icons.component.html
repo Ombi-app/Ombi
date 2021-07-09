@@ -35,5 +35,9 @@
             <span *ngIf="type === RequestType.movie"> {{ 'MediaDetails.RadarrConfiguration' | translate}}</span>
             <span *ngIf="type === RequestType.tvShow"> {{ 'MediaDetails.SonarrConfiguration' | translate}}</span>
         </button>
+        <button *ngIf="type === RequestType.movie" mat-menu-item (click)="reProcessRequest()">
+            <i class="fas fa-sync icon-spacing"></i>
+            <span> {{ 'MediaDetails.ReProcessRequest' | translate}}</span>
+        </button>
     </mat-menu>
 </div>

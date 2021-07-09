@@ -95,4 +95,8 @@ export class IdentityService extends ServiceHelpers {
     public updateStreamingCountry(code: string): Observable<null> {
         return this.http.post<any>(`${this.url}streamingcountry`, {code: code}, {headers: this.headers});
     }
+
+    public unsubscribeNewsletter(userId: string): Observable<any>{
+        return this.http.get<any>(`${this.url}newsletter/unsubscribe/${userId}`, {headers: this.headers});
+    }
 }

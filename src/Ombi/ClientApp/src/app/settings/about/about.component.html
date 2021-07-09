@@ -13,8 +13,10 @@
     </div>
     <div class="mat-row">
       <div class="mat-cell">Version</div>
-      <div class="mat-cell">{{about.version}} <a [routerLink]="['/Settings/Update']" *ngIf="newUpdate"
-          style="color:#df691a"><b>(New Update Available)</b></a></div>
+      <div class="mat-cell">{{about.version}} &nbsp; <a (click)="openUpdate()" *ngIf="newUpdate"
+          style="color:#df691a; text-decoration: underline; cursor: pointer;"><b><i class="fas fa-code-branch"></i> (New Update Available)</b></a>
+        <span *ngIf="!newUpdate"> <i class="far fa-thumbs-up" matTooltip="Nice work bro! Latest version FTW!"></i></span>
+        </div>
     </div>
 
     <!-- <div class="mat-row">

@@ -1,10 +1,12 @@
 import { Component, OnInit } from "@angular/core";
+import { MessageService, SearchV2Service } from "../../../services";
+
 import { ActivatedRoute } from "@angular/router";
-import { SearchV2Service, RequestService, MessageService } from "../../../services";
-import { IMovieCollectionsViewModel } from "../../../interfaces/ISearchTvResultV2";
-import { IDiscoverCardResult } from "../../interfaces";
-import { RequestType } from "../../../interfaces";
 import { AuthService } from "../../../auth/auth.service";
+import { IDiscoverCardResult } from "../../interfaces";
+import { IMovieCollectionsViewModel } from "../../../interfaces/ISearchTvResultV2";
+import { RequestServiceV2 } from "../../../services/requestV2.service";
+import { RequestType } from "../../../interfaces";
 
 @Component({
     templateUrl: "./discover-collections.component.html",
@@ -21,7 +23,7 @@ export class DiscoverCollectionsComponent implements OnInit {
 
     constructor(private searchService: SearchV2Service,
          private route: ActivatedRoute,
-         private requestService: RequestService,
+         private requestServiceV2: RequestServiceV2,
          private messageService: MessageService,
          private auth: AuthService) {
         this.route.params.subscribe((params: any) => {
@@ -37,10 +39,15 @@ export class DiscoverCollectionsComponent implements OnInit {
     }
 
     public async requestCollection() {
-        await this.collection.collection.forEach(async (movie) => {
-            await this.requestService.requestMovie({theMovieDbId: movie.id, languageCode: null, requestOnBehalf: null, qualityPathOverride: null, rootFolderOverride: null}).toPromise();
+        this.loading();
+        this.requestServiceV2.requestMovieCollection(this.collectionId).subscribe(result => {
+            if (result.result) {
+                this.messageService.send(result.message);
+            } else {
+                this.messageService.send(result.errorMessage);
+            }
+            this.finishLoading();
         });
-        this.messageService.send("Requested Collection");
     }
 
     private createModel() {

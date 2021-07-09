@@ -92,7 +92,7 @@ namespace Ombi.Controllers.V1
         [Admin]
         public async Task<bool> RemoveUser([FromBody] RemoveUserModel userId)
         {
-            var user = await _userManager.Users.Include(x => x.NotificationUserIds).FirstOrDefaultAsync(x => x.Id.Equals(userId.UserId, StringComparison.InvariantCultureIgnoreCase));
+            var user = await _userManager.Users.Include(x => x.NotificationUserIds).FirstOrDefaultAsync(x => x.Id == userId.UserId);
             try
             {
                 await _notification.DeleteRange(user.NotificationUserIds);

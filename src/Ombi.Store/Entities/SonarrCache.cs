@@ -6,5 +6,6 @@ namespace Ombi.Store.Entities
     public class SonarrCache : Entity
     {
         public int TvDbId { get; set; }
+        public int TheMovieDbId { get; set; }
     }
 }

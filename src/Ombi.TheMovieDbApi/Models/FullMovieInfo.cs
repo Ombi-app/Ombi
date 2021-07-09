@@ -95,8 +95,10 @@ namespace Ombi.Api.TheMovieDb.Models
 
     public class Keywords
     {
-        [JsonProperty("keywords")]
+        [JsonProperty("results")]
         public List<KeywordsValue> KeywordsValue { get; set; }
+        [JsonProperty("keywords")]
+        private List<KeywordsValue> _movieKeywordValue { set { KeywordsValue = value; }}
     }
 
     public class KeywordsValue

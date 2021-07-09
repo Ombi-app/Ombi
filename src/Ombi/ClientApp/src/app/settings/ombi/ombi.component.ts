@@ -25,7 +25,6 @@ export class OmbiComponent implements OnInit {
             this.form = this.fb.group({
                 collectAnalyticData: [x.collectAnalyticData],
                 apiKey: [x.apiKey],
-                ignoreCertificateErrors: [x.ignoreCertificateErrors],
                 baseUrl: [x.baseUrl],
                 doNotSendNotificationsForAutoApprove: [x.doNotSendNotificationsForAutoApprove],
                 hideRequestsUsers: [x.hideRequestsUsers],

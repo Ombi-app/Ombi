@@ -69,7 +69,11 @@ class NavBar {
   }
 
   get userPreferences(): Cypress.Chainable<any> {
-    return cy.get('#profile-image');
+    return cy.getByData('profile-image');
+  }
+
+  get username(): Cypress.Chainable<any> {
+    return cy.getByData('profile-username');
   }
 
   get logout(): Cypress.Chainable<any> {

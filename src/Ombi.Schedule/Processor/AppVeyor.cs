@@ -109,8 +109,8 @@ namespace Ombi.Core.Processor
         public string UpdateVersionString { get; set; }
         public int UpdateVersion { get; set; }
         public DateTime UpdateDate { get; set; }
-
-        public List<ChangeLog> ChangeLogs { get; set; }
+        public bool UpdateAvailable { get; set; }
+        public string ChangeLogs { get; set; }
         public List<Downloads> Downloads { get; set; }
     }
 

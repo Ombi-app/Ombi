@@ -13,6 +13,10 @@ using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.TheMovieDbApi.Models;
 
+// Due to conflicting Genre models in
+// Ombi.TheMovieDbApi.Models and Ombi.Api.TheMovieDb.Models   
+using Genre = Ombi.TheMovieDbApi.Models.Genre;
+
 namespace Ombi.Api.TheMovieDb
 {
     public class TheMovieDbApi : IMovieDbApi
@@ -198,6 +202,7 @@ namespace Ombi.Api.TheMovieDb
                 request.AddQueryString("page", page.ToString());
             }
             await AddDiscoverSettings(request);
+            await AddGenreFilter(request, type);
             AddRetry(request);
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request, cancellationToken);
             return Mapper.Map<List<MovieDbSearchResult>>(result.results);
@@ -233,6 +238,7 @@ namespace Ombi.Api.TheMovieDb
             request.AddQueryString("vote_count.gte", "250");
 
             await AddDiscoverSettings(request);
+            await AddGenreFilter(request, type);
             AddRetry(request);
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
             return Mapper.Map<List<MovieDbSearchResult>>(result.results);
@@ -269,6 +275,7 @@ namespace Ombi.Api.TheMovieDb
                 request.AddQueryString("page", page.ToString());
             }
             await AddDiscoverSettings(request);
+            await AddGenreFilter(request, type);
             AddRetry(request);
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
             return Mapper.Map<List<MovieDbSearchResult>>(result.results);
@@ -297,6 +304,7 @@ namespace Ombi.Api.TheMovieDb
             }
 
             await AddDiscoverSettings(request);
+            await AddGenreFilter(request, "movie");
             AddRetry(request);
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
             return Mapper.Map<List<MovieDbSearchResult>>(result.results);
@@ -323,6 +331,32 @@ namespace Ombi.Api.TheMovieDb
             return await Api.Request<SeasonDetails>(request, token);
         }
 
+        public async Task<List<MovieDbSearchResult>> GetMoviesViaKeywords(string keywordId, string langCode, CancellationToken cancellationToken, int? page = null)
+        {
+            var request = new Request($"discover/movie", BaseUri, HttpMethod.Get);
+            request.AddQueryString("api_key", ApiToken);
+            request.AddQueryString("language", langCode);
+            request.AddQueryString("sort_by", "vote_average.desc");
+
+            request.AddQueryString("with_keywords", keywordId);            
+            
+            // `vote_count` consideration isn't explicitly documented, but using only the `sort_by` filter
+            // does not provide the same results as `/movie/top_rated`. This appears to be adequate enough
+            // to filter out extremely high-rated movies due to very little votes
+            request.AddQueryString("vote_count.gte", "250");
+
+            if (page != null)
+            {
+                request.AddQueryString("page", page.ToString());
+            }
+
+            await AddDiscoverSettings(request);
+            await AddGenreFilter(request, "movie");
+            AddRetry(request);
+            var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request, cancellationToken);
+            return Mapper.Map<List<MovieDbSearchResult>>(result.results);
+        }
+
         public async Task<List<Keyword>> SearchKeyword(string searchTerm)
         {
             var request = new Request("search/keyword", BaseUri, HttpMethod.Get);
@@ -342,6 +376,16 @@ namespace Ombi.Api.TheMovieDb
 
             var keyword = await Api.Request<Keyword>(request);
             return keyword == null || keyword.Id == 0 ? null : keyword;
+        }
+
+        public async Task<List<Genre>> GetGenres(string media)
+        {
+            var request = new Request($"genre/{media}/list", BaseUri, HttpMethod.Get);
+            request.AddQueryString("api_key", ApiToken);
+            AddRetry(request);
+
+            var result = await Api.Request<GenreContainer<Genre>>(request);
+            return result.genres ?? new List<Genre>();
         }
 
         public Task<TheMovieDbContainer<MultiSearch>> MultiSearch(string searchTerm, string languageCode, CancellationToken cancellationToken)
@@ -377,6 +421,28 @@ namespace Ombi.Api.TheMovieDb
             if (settings.ExcludedKeywordIds?.Any() == true)
             {
                 request.AddQueryString("without_keywords", string.Join(",", settings.ExcludedKeywordIds));
+            }
+        }
+
+        private async Task AddGenreFilter(Request request, string media_type)
+        {
+            var settings = await Settings;
+            List<int> excludedGenres;
+
+            switch (media_type) {
+                case "tv":
+                    excludedGenres = settings.ExcludedTvGenreIds;
+                    break;
+                case "movie":
+                    excludedGenres = settings.ExcludedMovieGenreIds;
+                    break;
+                default:
+                    return;
+            }
+
+            if (excludedGenres?.Any() == true)
+            {
+                request.AddQueryString("without_genres", string.Join(",", excludedGenres));
             }
         }
 

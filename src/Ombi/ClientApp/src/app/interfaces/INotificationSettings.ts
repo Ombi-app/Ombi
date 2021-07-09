@@ -59,6 +59,7 @@ export interface IDiscordNotifcationSettings extends INotificationSettings {
     webhookUrl: string;
     username: string;
     icon: string;
+    hideUser: boolean;
     notificationTemplates: INotificationTemplates[];
 }
 

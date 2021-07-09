@@ -2,7 +2,7 @@
     <mat-spinner [color]="'accent'"></mat-spinner>
 </div>
 
-<div *ngIf="movie" class="dark-theme">
+<div *ngIf="movie" class="main-content-container">
 
     <top-banner [background]="movie.background" [available]="movie.available" [title]="movie.title" [releaseDate]="movie.releaseDate" [tagline]="movie.tagline"></top-banner>
     <div class="social-icons-container">
@@ -24,6 +24,7 @@
             [type]="requestType"
             (openTrailer)="openDialog()"
             (onAdvancedOptions)="openAdvancedOptions()"
+            (onReProcessRequest)="reProcessRequest()"
             >
         </social-icons>
 
@@ -48,7 +49,7 @@
                                 {{'Search.ViewOnEmby' | translate}}
                                 <i class="far fa-play-circle fa-2x"></i>
                             </a>
-                            <a id="viewOnJellyfinButton" *ngIf="movie.jellyfinUrl" href="{{movie.jellyfinUrl}}" mat-raised-button  target="_blank" class="btn-spacing viewon-btn jellyfinUrl">
+                            <a id="viewOnJellyfinButton" *ngIf="movie.jellyfinUrl" href="{{movie.jellyfinUrl}}" mat-raised-button  target="_blank" class="btn-spacing viewon-btn jellyfin">
                                 {{'Search.ViewOnJellyfin' | translate}}
                                 <i class="far fa-play-circle fa-2x"></i>
                             </a>
@@ -64,7 +65,7 @@
                                     </button>
                                 </ng-template>
                                 <ng-template #notRequestedBtn>
-                                    <button id="requestBtn" mat-raised-button class="btn-spacing" color="primary" (click)="request()">
+                                    <button *ngIf="!movie.requested" id="requestBtn" mat-raised-button class="btn-spacing" color="primary" (click)="request()">
                                         <i *ngIf="movie.requestProcessing" class="fas fa-circle-notch fa-spin fa-fw"></i> 
                                         <i *ngIf="!movie.requestProcessing && !movie.processed" class="fas fa-plus"></i>
                                         <i *ngIf="movie.processed && !movie.requestProcessing" class="fas fa-check"></i> 
@@ -81,7 +82,12 @@
                                 <i class="fas fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}
                                 </button>
 
-                                <button id="denyBtn" *ngIf="movieRequest && !movieRequest.denied && !movie.available" mat-raised-button class="btn-spacing" color="warn" (click)="deny()">
+                                <button id="markUnavailableBtn" *ngIf="movie.available" (click)="markUnavailable()" mat-raised-button class="btn-spacing"
+                                color="accent">
+                                <i class="fas fa-minus"></i> {{ 'Requests.MarkUnavailable' | translate }}
+                                </button>
+
+                                <button id="denyBtn" *ngIf="movieRequest && !movieRequest.denied" mat-raised-button class="btn-spacing" color="warn" (click)="deny()">
                                     <i class="fas fa-times"></i> {{'Requests.Deny' | translate }}
                                 </button>
                                 <button id="deniedButton" *ngIf="movieRequest && movieRequest.denied" [matTooltip]="movieRequest.deniedReason" mat-raised-button class="btn-spacing" color="warn">

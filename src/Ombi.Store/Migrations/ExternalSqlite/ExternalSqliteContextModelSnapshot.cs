@@ -412,6 +412,9 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("TheMovieDbId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("TvDbId")
                         .HasColumnType("INTEGER");
 
@@ -430,6 +433,9 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("HasFile")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MovieDbId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("SeasonNumber")

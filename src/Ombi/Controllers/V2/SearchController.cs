@@ -1,11 +1,9 @@
 ﻿using System;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Threading;
 using Ombi.Core;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Engine.V2;
@@ -16,14 +14,15 @@ using Ombi.Core.Models.Search.V2.Music;
 using Ombi.Models;
 using Ombi.Api.RottenTomatoes.Models;
 using Ombi.Api.RottenTomatoes;
-using Hqub.MusicBrainz.API.Entities.Collections;
+using Ombi.Helpers;
 
 namespace Ombi.Controllers.V2
 {
     public class SearchController : V2Controller
     {
         public SearchController(IMultiSearchEngine multiSearchEngine,
-            IMovieEngineV2 v2Movie, ITVSearchEngineV2 v2Tv, IMusicSearchEngineV2 musicEngine, IRottenTomatoesApi rottenTomatoesApi)
+            IMovieEngineV2 v2Movie, ITVSearchEngineV2 v2Tv, IMusicSearchEngineV2 musicEngine, IRottenTomatoesApi rottenTomatoesApi,
+            IMediaCacheService mediaCacheService)
         {
             _multiSearchEngine = multiSearchEngine;
             _movieEngineV2 = v2Movie;
@@ -31,6 +30,7 @@ namespace Ombi.Controllers.V2
             _tvEngineV2 = v2Tv;
             _musicEngine = musicEngine;
             _rottenTomatoesApi = rottenTomatoesApi;
+            _mediaCacheService = mediaCacheService;
         }
 
         private readonly IMultiSearchEngine _multiSearchEngine;
@@ -38,6 +38,7 @@ namespace Ombi.Controllers.V2
         private readonly ITVSearchEngineV2 _tvEngineV2;
         private readonly IMusicSearchEngineV2 _musicEngine;
         private readonly IRottenTomatoesApi _rottenTomatoesApi;
+        private readonly IMediaCacheService _mediaCacheService;
 
         /// <summary>
         /// Returns search results for both TV and Movies
@@ -59,24 +60,30 @@ namespace Ombi.Controllers.V2
         /// </summary>
         /// <param name="movieDbId">The MovieDB Id</param>
         [HttpGet("movie/{movieDbId}")]
-        public async Task<MovieFullInfoViewModel> GetMovieInfo(int movieDbId)
+        public Task<MovieFullInfoViewModel> GetMovieInfo(int movieDbId)
         {
-            return await _movieEngineV2.GetFullMovieInformation(movieDbId, Request.HttpContext.RequestAborted);
+            return _mediaCacheService.GetOrAddAsync(nameof(GetMovieInfo) + movieDbId,
+            () => _movieEngineV2.GetFullMovieInformation(movieDbId, Request.HttpContext.RequestAborted),
+                DateTimeOffset.Now.AddHours(12));
         }
 
         [HttpGet("movie/imdb/{imdbid}")]
-        public async Task<MovieFullInfoViewModel> GetMovieInfoByImdbId(string imdbId)
+        public Task<MovieFullInfoViewModel> GetMovieInfoByImdbId(string imdbId)
         {
-            return await _movieEngineV2.GetMovieInfoByImdbId(imdbId, Request.HttpContext.RequestAborted);
+            return _mediaCacheService.GetOrAddAsync(nameof(GetMovieInfoByImdbId) + imdbId,
+            () => _movieEngineV2.GetMovieInfoByImdbId(imdbId, Request.HttpContext.RequestAborted),
+                DateTimeOffset.Now.AddHours(12));
         }
 
         /// <summary>
         /// Returns details for a single movie
         /// </summary>
         [HttpGet("movie/request/{requestId}")]
-        public async Task<MovieFullInfoViewModel> GetMovieByRequest(int requestId)
+        public Task<MovieFullInfoViewModel> GetMovieByRequest(int requestId)
         {
-            return await _movieEngineV2.GetMovieInfoByRequestId(requestId, Request.HttpContext.RequestAborted);
+            return _mediaCacheService.GetOrAddAsync(nameof(GetMovieByRequest) + requestId,
+            () => _movieEngineV2.GetMovieInfoByRequestId(requestId, Request.HttpContext.RequestAborted),
+                DateTimeOffset.Now.AddHours(12));
         }
 
         /// <summary>
@@ -85,9 +92,11 @@ namespace Ombi.Controllers.V2
         /// <param name="collectionId">The collection id from TheMovieDb</param>
         /// <returns></returns>
         [HttpGet("movie/collection/{collectionId}")]
-        public async Task<MovieCollectionsViewModel> GetMovieCollections(int collectionId)
+        public Task<MovieCollectionsViewModel> GetMovieCollections(int collectionId)
         {
-            return await _movieEngineV2.GetCollection(collectionId, Request.HttpContext.RequestAborted);
+            return _mediaCacheService.GetOrAddAsync(nameof(GetMovieCollections) + collectionId,
+                () => _movieEngineV2.GetCollection(collectionId, Request.HttpContext.RequestAborted),
+                DateTimeOffset.Now.AddHours(12));
         }
 
         /// <summary>
@@ -96,9 +105,11 @@ namespace Ombi.Controllers.V2
         /// <remarks>TVMaze is the TV Show Provider</remarks>
         /// <param name="tvdbid">The TVDB Id</param>
         [HttpGet("tv/{tvdbId}")]
-        public async Task<SearchFullInfoTvShowViewModel> GetTvInfo(string tvdbid)
+        public Task<SearchFullInfoTvShowViewModel> GetTvInfo(string tvdbid)
         {
-            return await _tvEngineV2.GetShowInformation(tvdbid, HttpContext.RequestAborted);
+            return _mediaCacheService.GetOrAddAsync(nameof(GetTvInfo) + tvdbid,
+                () => _tvEngineV2.GetShowInformation(tvdbid, HttpContext.RequestAborted),
+                DateTimeOffset.Now.AddHours(12));
         }
 
         /// <summary>
@@ -107,9 +118,11 @@ namespace Ombi.Controllers.V2
         /// <remarks>TVMaze is the TV Show Provider</remarks>
         /// 
         [HttpGet("tv/request/{requestId}")]
-        public async Task<SearchFullInfoTvShowViewModel> GetTvInfoByRequest(int requestId)
+        public Task<SearchFullInfoTvShowViewModel> GetTvInfoByRequest(int requestId)
         {
-            return await _tvEngineV2.GetShowByRequest(requestId, HttpContext.RequestAborted);
+            return _mediaCacheService.GetOrAddAsync(nameof(GetTvInfoByRequest) + requestId,
+                () => _tvEngineV2.GetShowByRequest(requestId, HttpContext.RequestAborted),
+                DateTimeOffset.Now.AddHours(12));
         }
 
         /// <summary>
@@ -117,9 +130,11 @@ namespace Ombi.Controllers.V2
         /// </summary>
         /// <returns></returns>
         [HttpGet("tv/moviedb/{moviedbid}")]
-        public async Task<SearchFullInfoTvShowViewModel> GetTvInfoByMovieId(string moviedbid)
+        public Task<SearchFullInfoTvShowViewModel> GetTvInfoByMovieId(string moviedbid)
         {
-            return await _tvEngineV2.GetShowInformation(moviedbid, HttpContext.RequestAborted);
+            return _mediaCacheService.GetOrAddAsync(nameof(GetTvInfoByMovieId) + moviedbid,
+                () => _tvEngineV2.GetShowInformation(moviedbid, HttpContext.RequestAborted),
+                DateTimeOffset.Now.AddHours(12));
         }
 
         /// <summary>
@@ -131,9 +146,11 @@ namespace Ombi.Controllers.V2
         [HttpPost("movie/similar")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public async Task<IEnumerable<SearchMovieViewModel>> SimilarMovies([FromBody] SimilarMoviesRefineModel model)
+        public Task<IEnumerable<SearchMovieViewModel>> SimilarMovies([FromBody] SimilarMoviesRefineModel model)
         {
-            return await _movieEngineV2.SimilarMovies(model.TheMovieDbId, model.LanguageCode);
+            return _mediaCacheService.GetOrAddAsync(nameof(SimilarMovies) + model.TheMovieDbId + model.LanguageCode,
+                () => _movieEngineV2.SimilarMovies(model.TheMovieDbId, model.LanguageCode),
+                DateTimeOffset.Now.AddHours(12));
         }
 
 
@@ -159,9 +176,26 @@ namespace Ombi.Controllers.V2
         [HttpGet("movie/popular/{currentPosition}/{amountToLoad}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public async Task<IEnumerable<SearchMovieViewModel>> Popular(int currentPosition, int amountToLoad)
+        public Task<IEnumerable<SearchMovieViewModel>> Popular(int currentPosition, int amountToLoad)
         {
-            return await _movieEngineV2.PopularMovies(currentPosition, amountToLoad, Request.HttpContext.RequestAborted);
+            return _mediaCacheService.GetOrAddAsync(nameof(Popular) + "Movies" + currentPosition + amountToLoad,
+            () => _movieEngineV2.PopularMovies(currentPosition, amountToLoad, Request.HttpContext.RequestAborted),
+                DateTimeOffset.Now.AddHours(12));
+        }
+
+        /// <summary>
+        /// Returns Seasonal Movies
+        /// </summary>
+        /// <remarks>We use TheMovieDb as the Movie Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("movie/seasonal/{currentPosition}/{amountToLoad}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public Task<IEnumerable<SearchMovieViewModel>> Seasonal(int currentPosition, int amountToLoad)
+        {
+            return _mediaCacheService.GetOrAddAsync(nameof(Seasonal) + "Movies" + currentPosition + amountToLoad,
+             () => _movieEngineV2.SeasonalList(currentPosition, amountToLoad, Request.HttpContext.RequestAborted),
+                DateTimeOffset.Now.AddHours(1));
         }
 
         /// <summary>
@@ -175,6 +209,19 @@ namespace Ombi.Controllers.V2
         public async Task<IEnumerable<SearchMovieViewModel>> RecentlyRequestedMovies(int currentPosition, int amountToLoad)
         {
             return await _movieEngineV2.RecentlyRequestedMovies(currentPosition, amountToLoad, Request.HttpContext.RequestAborted);
+        }
+
+        /// <summary>
+        /// Returns Recently Requested Tv using Paging
+        /// </summary>
+        /// <remarks>We use TheMovieDb as the Movie Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("tv/requested/{currentPosition}/{amountToLoad}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<IEnumerable<SearchFullInfoTvShowViewModel>> RecentlyRequestedTv(int currentPosition, int amountToLoad)
+        {
+            return await _tvEngineV2.RecentlyRequestedShows(currentPosition, amountToLoad, Request.HttpContext.RequestAborted);
         }
 
         /// <summary>
@@ -198,9 +245,11 @@ namespace Ombi.Controllers.V2
         [HttpGet("movie/nowplaying/{currentPosition}/{amountToLoad}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public async Task<IEnumerable<SearchMovieViewModel>> NowPlayingMovies(int currentPosition, int amountToLoad)
+        public Task<IEnumerable<SearchMovieViewModel>> NowPlayingMovies(int currentPosition, int amountToLoad)
         {
-            return await _movieEngineV2.NowPlayingMovies(currentPosition, amountToLoad);
+            return _mediaCacheService.GetOrAddAsync(nameof(NowPlayingMovies) + currentPosition + amountToLoad,
+            () => _movieEngineV2.NowPlayingMovies(currentPosition, amountToLoad),
+                DateTimeOffset.Now.AddHours(12));
         }
 
         /// <summary>
@@ -224,9 +273,11 @@ namespace Ombi.Controllers.V2
         [HttpGet("movie/toprated/{currentPosition}/{amountToLoad}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public async Task<IEnumerable<SearchMovieViewModel>> TopRatedMovies(int currentPosition, int amountToLoad)
+        public Task<IEnumerable<SearchMovieViewModel>> TopRatedMovies(int currentPosition, int amountToLoad)
         {
-            return await _movieEngineV2.TopRatedMovies(currentPosition, amountToLoad);
+            return _mediaCacheService.GetOrAddAsync(nameof(TopRatedMovies) + currentPosition + amountToLoad,
+                () => _movieEngineV2.TopRatedMovies(currentPosition, amountToLoad),
+                DateTimeOffset.Now.AddHours(12));
         }
 
         /// <summary>
@@ -250,9 +301,11 @@ namespace Ombi.Controllers.V2
         [HttpGet("movie/upcoming/{currentPosition}/{amountToLoad}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public async Task<IEnumerable<SearchMovieViewModel>> UpcomingMovies(int currentPosition, int amountToLoad)
+        public Task<IEnumerable<SearchMovieViewModel>> UpcomingMovies(int currentPosition, int amountToLoad)
         {
-            return await _movieEngineV2.UpcomingMovies(currentPosition, amountToLoad);
+            return _mediaCacheService.GetOrAddAsync(nameof(UpcomingMovies) + currentPosition + amountToLoad,
+                () => _movieEngineV2.UpcomingMovies(currentPosition, amountToLoad),
+                DateTimeOffset.Now.AddHours(12));
         }
 
         /// <summary>
@@ -263,9 +316,11 @@ namespace Ombi.Controllers.V2
         [HttpGet("tv/popular/{currentPosition}/{amountToLoad}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public async Task<IEnumerable<SearchTvShowViewModel>> PopularTv(int currentPosition, int amountToLoad)
+        public Task<IEnumerable<SearchTvShowViewModel>> PopularTv(int currentPosition, int amountToLoad)
         {
-            return await _tvEngineV2.Popular(currentPosition, amountToLoad);
+            return _mediaCacheService.GetOrAddAsync(nameof(PopularTv) + currentPosition + amountToLoad,
+                () => _tvEngineV2.Popular(currentPosition, amountToLoad),
+                DateTimeOffset.Now.AddHours(12));
         }
 
         /// <summary>
@@ -276,9 +331,11 @@ namespace Ombi.Controllers.V2
         [HttpGet("tv/anticipated/{currentPosition}/{amountToLoad}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public async Task<IEnumerable<SearchTvShowViewModel>> AnticipatedTv(int currentPosition, int amountToLoad)
+        public Task<IEnumerable<SearchTvShowViewModel>> AnticipatedTv(int currentPosition, int amountToLoad)
         {
-            return await _tvEngineV2.Anticipated(currentPosition, amountToLoad);
+            return _mediaCacheService.GetOrAddAsync(nameof(AnticipatedTv) + currentPosition + amountToLoad,
+                () => _tvEngineV2.Anticipated(currentPosition, amountToLoad),
+                DateTimeOffset.Now.AddHours(12));
         }
 
         /// <summary>
@@ -290,9 +347,11 @@ namespace Ombi.Controllers.V2
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
         [Obsolete("This method is obsolete, Trakt API no longer supports this")]
-        public async Task<IEnumerable<SearchTvShowViewModel>> MostWatched(int currentPosition, int amountToLoad)
+        public Task<IEnumerable<SearchTvShowViewModel>> MostWatched(int currentPosition, int amountToLoad)
         {
-            return await _tvEngineV2.Popular(currentPosition, amountToLoad);
+            return _mediaCacheService.GetOrAddAsync(nameof(MostWatched) + currentPosition + amountToLoad,
+            () => _tvEngineV2.Popular(currentPosition, amountToLoad),
+                DateTimeOffset.Now.AddHours(12));
         }
 
 
@@ -304,9 +363,11 @@ namespace Ombi.Controllers.V2
         [HttpGet("tv/trending/{currentPosition}/{amountToLoad}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public async Task<IEnumerable<SearchTvShowViewModel>> Trending(int currentPosition, int amountToLoad)
+        public Task<IEnumerable<SearchTvShowViewModel>> Trending(int currentPosition, int amountToLoad)
         {
-            return await _tvEngineV2.Trending(currentPosition, amountToLoad);
+            return _mediaCacheService.GetOrAddAsync(nameof(Trending) + currentPosition + amountToLoad,
+                () => _tvEngineV2.Trending(currentPosition, amountToLoad),
+                DateTimeOffset.Now.AddHours(12));
         }
 
         /// <summary>
@@ -360,7 +421,9 @@ namespace Ombi.Controllers.V2
         [ProducesDefaultResponseType]
         public Task<MovieRatings> GetRottenMovieRatings(string name, int year)
         {
-            return _rottenTomatoesApi.GetMovieRatings(name, year);
+            return _mediaCacheService.GetOrAddAsync(nameof(GetRottenMovieRatings) + name + year,
+                () => _rottenTomatoesApi.GetMovieRatings(name, year),
+                DateTimeOffset.Now.AddHours(12));
         }
 
         [HttpGet("ratings/tv/{name}/{year}")]
@@ -368,7 +431,9 @@ namespace Ombi.Controllers.V2
         [ProducesDefaultResponseType]
         public Task<TvRatings> GetRottenTvRatings(string name, int year)
         {
-            return _rottenTomatoesApi.GetTvRatings(name, year);
+            return _mediaCacheService.GetOrAddAsync(nameof(GetRottenTvRatings) + name + year,
+            () => _rottenTomatoesApi.GetTvRatings(name, year),
+                DateTimeOffset.Now.AddHours(12));
         }
 
         [HttpGet("stream/movie/{movieDbId}")]
@@ -376,7 +441,9 @@ namespace Ombi.Controllers.V2
         [ProducesDefaultResponseType]
         public Task<IEnumerable<StreamingData>> GetMovieStreams(int movieDBId)
         {
-            return _movieEngineV2.GetStreamInformation(movieDBId, HttpContext.RequestAborted);
+            return _mediaCacheService.GetOrAddAsync(nameof(GetMovieStreams) + movieDBId,
+                () => _movieEngineV2.GetStreamInformation(movieDBId, HttpContext.RequestAborted),
+                DateTimeOffset.Now.AddHours(12));
         }
 
         [HttpGet("stream/tv/{movieDbId}")]
@@ -384,7 +451,9 @@ namespace Ombi.Controllers.V2
         [ProducesDefaultResponseType]
         public Task<IEnumerable<StreamingData>> GetTvStreams(int movieDbId)
         {
-            return _tvEngineV2.GetStreamInformation(movieDbId, HttpContext.RequestAborted);
+            return _mediaCacheService.GetOrAddAsync(nameof(GetTvStreams) + movieDbId,
+                () => _tvEngineV2.GetStreamInformation(movieDbId, HttpContext.RequestAborted),
+                DateTimeOffset.Now.AddHours(12));
         }
     }
 }

@@ -13,6 +13,12 @@ export class TopBannerComponent {
     @Input() available: boolean;
     @Input() background: any;
 
+    get releaseDateFormat(): Date|null {
+        if (this.releaseDate && this.releaseDate instanceof Date && this.releaseDate.getFullYear() !== 1) {
+            return this.releaseDate;
+        }
+        return null;
+    }
 
     constructor(private sanitizer:DomSanitizer){ }
 
