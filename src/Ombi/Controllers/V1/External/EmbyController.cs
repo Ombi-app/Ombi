@@ -98,7 +98,45 @@ namespace Ombi.Controllers.V1.External
         {
             var client = await EmbyApi.CreateClient();
             var result = await client.GetLibraries(server.ApiKey, server.FullUri);
-            return result;
+            var mediaFolders = new EmbyItemContainer<MediaFolders>
+            {
+                TotalRecordCount = result.Count,
+                Items = new List<MediaFolders>()
+            };
+
+            foreach(var folder in result)
+            {
+                var toAdd = new MediaFolders
+                {
+                    Name = folder.Name,
+                    Id = folder.ItemId,
+                    ServerId = server.ServerId
+                };
+
+                var types = folder?.LibraryOptions?.TypeOptions?.Select(x => x.Type);
+                
+                if (!types.Any())
+                {
+                    continue;
+                }
+
+                if (types.Where(x => x.Equals("Movie", System.StringComparison.InvariantCultureIgnoreCase)
+                    || x.Equals("Episode", System.StringComparison.InvariantCultureIgnoreCase)).Count() >= 2)
+                {
+                    toAdd.CollectionType = "mixed";
+                }
+                else if (types.Where(x => x.Equals("Movie", System.StringComparison.InvariantCultureIgnoreCase)).Any())
+                {
+                    toAdd.CollectionType = "movies";
+                }
+                else if (types.Where(x => x.Equals("Episode", System.StringComparison.InvariantCultureIgnoreCase)).Any())
+                {
+                    toAdd.CollectionType = "tvshows";
+                }
+
+                mediaFolders.Items.Add(toAdd);
+            }
+            return mediaFolders;
         }
     }
 }

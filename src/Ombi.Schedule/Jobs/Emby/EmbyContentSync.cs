@@ -95,6 +95,15 @@ namespace Ombi.Schedule.Jobs.Emby
                     _logger.LogInformation($"Scanning Lib '{tvParentIdFilter.Title}'");
                     await ProcessTv(server, tvParentIdFilter.Key);
                 }
+
+
+                var mixedLibs = server.EmbySelectedLibraries.Where(x => x.Enabled && x.CollectionType == "mixed");
+                foreach (var m in mixedLibs)
+                {
+                    _logger.LogInformation($"Scanning Lib '{m.Title}'");
+                    await ProcessTv(server, m.Key);
+                    await ProcessMovies(server, m.Key);
+                }
             }
             else
             {
