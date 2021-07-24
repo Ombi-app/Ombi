@@ -87,13 +87,12 @@ namespace Ombi.Api.Jellyfin
             return await Api.Request<JellyfinItemContainer<JellyfinMovie>>(request);
         }
 
-        public async Task<JellyfinItemContainer<MediaFolders>> GetLibraries(string apiKey, string baseUrl)
+        public async Task<List<LibraryVirtualFolders>> GetLibraries(string apiKey, string baseUrl)
         {
-            var request = new Request("library/mediafolders", baseUrl, HttpMethod.Get);
+            var request = new Request("library/virtualfolders", baseUrl, HttpMethod.Get);
             AddHeaders(request, apiKey);
 
-            var response = await Api.Request<JellyfinItemContainer<MediaFolders>>(request);
-            response.Items = response.Items.Where(x => !x.CollectionType.Equals("playlists", StringComparison.InvariantCultureIgnoreCase)).ToList();
+            var response = await Api.Request<List<LibraryVirtualFolders>>(request);
             return response;
         }
 

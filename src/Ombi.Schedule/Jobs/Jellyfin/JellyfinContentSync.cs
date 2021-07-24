@@ -96,6 +96,14 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                     _logger.LogInformation($"Scanning Lib '{tvParentIdFilter.Title}'");
                     await ProcessTv(server, tvParentIdFilter.Key);
                 }
+
+                var mixedLibs = server.JellyfinSelectedLibraries.Where(x => x.Enabled && x.CollectionType == "mixed");
+                foreach (var m in mixedLibs)
+                {
+                    _logger.LogInformation($"Scanning Lib '{m.Title}'");
+                    await ProcessTv(server, m.Key);
+                    await ProcessMovies(server, m.Key);
+                }
             }
             else
             {
