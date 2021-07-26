@@ -357,34 +357,34 @@ namespace Ombi.Api.TheMovieDb
             return Mapper.Map<List<MovieDbSearchResult>>(result.results);
         }
 
-        public async Task<List<Keyword>> SearchKeyword(string searchTerm)
+        public async Task<List<TheMovidDbKeyValue>> SearchKeyword(string searchTerm)
         {
             var request = new Request("search/keyword", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             request.AddQueryString("query", searchTerm);
             AddRetry(request);
 
-            var result = await Api.Request<TheMovieDbContainer<Keyword>>(request);
-            return result.results ?? new List<Keyword>();
+            var result = await Api.Request<TheMovieDbContainer<TheMovidDbKeyValue>>(request);
+            return result.results ?? new List<TheMovidDbKeyValue>();
         }
 
-        public async Task<Keyword> GetKeyword(int keywordId)
+        public async Task<TheMovidDbKeyValue> GetKeyword(int keywordId)
         {
             var request = new Request($"keyword/{keywordId}", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             AddRetry(request);
 
-            var keyword = await Api.Request<Keyword>(request);
+            var keyword = await Api.Request<TheMovidDbKeyValue>(request);
             return keyword == null || keyword.Id == 0 ? null : keyword;
         }
 
-        public async Task<List<Genre>> GetGenres(string media)
+        public async Task<List<Genre>> GetGenres(string media, CancellationToken cancellationToken)
         {
             var request = new Request($"genre/{media}/list", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             AddRetry(request);
 
-            var result = await Api.Request<GenreContainer<Genre>>(request);
+            var result = await Api.Request<GenreContainer<Genre>>(request, cancellationToken);
             return result.genres ?? new List<Genre>();
         }
 

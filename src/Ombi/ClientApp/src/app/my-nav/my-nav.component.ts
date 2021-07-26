@@ -3,9 +3,11 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IUser, RequestType, UserType } from '../interfaces';
 import { SettingsService, SettingsStateService } from '../services';
 
+import { AdvancedSearchDialogComponent } from '../shared/advanced-search-dialog/advanced-search-dialog.component';
 import { FilterService } from '../discover/services/filter-service';
 import { ILocalUser } from '../auth/IUserLogin';
 import { INavBar } from '../interfaces/ICommon';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Md5 } from 'ts-md5/dist/md5';
 import { Observable } from 'rxjs';
@@ -54,6 +56,7 @@ export class MyNavComponent implements OnInit {
     private settingsService: SettingsService,
     private store: StorageService,
     private filterService: FilterService,
+    private dialogService: MatDialog,
     private readonly settingState: SettingsStateService) {
   }
 
@@ -119,6 +122,10 @@ export class MyNavComponent implements OnInit {
     }
     this.filterService.changeFilter(this.searchFilter);
     this.store.save("searchFilter", JSON.stringify(this.searchFilter));
+  }
+
+  public openAdvancedSearch() {
+    this.dialogService.open(AdvancedSearchDialogComponent, null);
   }
 
   public getUserImage(): string {

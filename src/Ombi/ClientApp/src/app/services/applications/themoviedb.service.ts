@@ -7,7 +7,9 @@ import { catchError } from "rxjs/operators";
 import { IMovieDbKeyword } from "../../interfaces";
 import { ServiceHelpers } from "../service.helpers";
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+  })
 export class TheMovieDbService extends ServiceHelpers {
     constructor(http: HttpClient, @Inject(APP_BASE_HREF) href:string) {
         super(http, "/api/v1/TheMovieDb", href);

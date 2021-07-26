@@ -1,0 +1,25 @@
+
+<mat-form-field class="example-chip-list" appearance="fill">
+  <mat-label>Genres</mat-label>
+  <mat-chip-list #chipList aria-label="Fruit selection">
+    <mat-chip
+      *ngFor="let word of form.controls.genres.value"
+      [removable]="true"
+      (removed)="remove(word)">
+      {{word.name}}
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+    <input
+      placeholder="Search Keyword"
+      #keywordInput
+      [formControl]="control"
+      [matAutocomplete]="auto"
+      [matChipInputFor]="chipList"/>
+  </mat-chip-list>
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+    <mat-option *ngFor="let word of filteredKeywords | async" [value]="word">
+      {{word.name}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
+
