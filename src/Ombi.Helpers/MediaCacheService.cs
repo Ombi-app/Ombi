@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LazyCache;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Ombi.Helpers
 {
@@ -14,7 +15,7 @@ namespace Ombi.Helpers
     {
         private const string CacheKey = "MediaCacheServiceKeys";
 
-        public MediaCacheService(IAppCache memoryCache) : base(memoryCache)
+        public MediaCacheService(IMemoryCache memoryCache) : base(memoryCache)
         {
         }
 
@@ -33,24 +34,28 @@ namespace Ombi.Helpers
             // Not in the cache, so add this Key into our MediaServiceCache
             await UpdateLocalCache(cacheKey);
 
-            return await _memoryCache.GetOrAddAsync<T>(cacheKey, () => factory(), absoluteExpiration);
+            return await _memoryCache.GetOrCreateAsync<T>(cacheKey, entry =>
+            {
+                entry.AbsoluteExpiration = absoluteExpiration;
+                return factory();
+            });
         }
 
         private async Task UpdateLocalCache(string cacheKey)
         {
-            var mediaServiceCache = await _memoryCache.GetAsync<List<string>>(CacheKey);
+            var mediaServiceCache = _memoryCache.Get<List<string>>(CacheKey);
             if (mediaServiceCache == null)
             {
                 mediaServiceCache = new List<string>();
             }
             mediaServiceCache.Add(cacheKey);
             _memoryCache.Remove(CacheKey);
-            _memoryCache.Add(CacheKey, mediaServiceCache);
+            _memoryCache.Set(CacheKey, mediaServiceCache);
         }
 
         public async Task Purge()
         {
-            var keys = await _memoryCache.GetAsync<List<string>>(CacheKey);
+            var keys = _memoryCache.Get<List<string>>(CacheKey);
             if (keys == null)
             {
                 return;
