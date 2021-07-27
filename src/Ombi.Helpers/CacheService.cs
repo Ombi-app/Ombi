@@ -2,13 +2,14 @@
 using System.Threading;
 using System.Threading.Tasks;
 using LazyCache;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Ombi.Helpers
 {
     public class CacheService : ICacheService
     {
-        protected readonly IAppCache _memoryCache;
-        public CacheService(IAppCache memoryCache)
+        protected readonly IMemoryCache _memoryCache;
+        public CacheService(IMemoryCache memoryCache)
         {
             _memoryCache = memoryCache;
         }
@@ -20,7 +21,11 @@ namespace Ombi.Helpers
                 absoluteExpiration = DateTimeOffset.Now.AddHours(1);
             }
 
-            return await _memoryCache.GetOrAddAsync<T>(cacheKey, () => factory(), absoluteExpiration);
+            return await _memoryCache.GetOrCreateAsync<T>(cacheKey, entry =>
+            {
+                entry.AbsoluteExpiration = absoluteExpiration;
+                return factory();
+            });
         }
 
         public void Remove(string key)
@@ -31,7 +36,11 @@ namespace Ombi.Helpers
         public T GetOrAdd<T>(string cacheKey, Func<T> factory, DateTimeOffset absoluteExpiration)
         {
             // locks get and set internally
-            return _memoryCache.GetOrAdd<T>(cacheKey, () => factory(), absoluteExpiration);
+            return _memoryCache.GetOrCreate<T>(cacheKey, entry =>
+            {
+                entry.AbsoluteExpiration = absoluteExpiration;
+                return factory();
+            });
         }
 
         private static class TypeLock<T>
