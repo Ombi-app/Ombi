@@ -1,14 +1,19 @@
 import { Component, AfterViewInit, ViewChild, Output, EventEmitter, ChangeDetectorRef, OnInit } from "@angular/core";
-import {  IRequestsViewModel, IChildRequests } from "../../../interfaces";
+import {IRequestsViewModel, IChildRequests, IMovieRequests, IRequestEngineResult} from "../../../interfaces";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
-import { merge, of as observableOf, Observable } from 'rxjs';
+import { MatTableDataSource } from "@angular/material/table";
+import { SelectionModel } from "@angular/cdk/collections";
+
+import {merge, of as observableOf, Observable, forkJoin} from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { AuthService } from "../../../auth/auth.service";
 import { StorageService } from "../../../shared/storage/storage-service";
 import { RequestFilterType } from "../../models/RequestFilterType";
+import {NotificationService, RequestService} from "../../../services";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
     templateUrl: "./tv-grid.component.html",
@@ -16,7 +21,7 @@ import { RequestFilterType } from "../../models/RequestFilterType";
     styleUrls: ["../requests-list.component.scss"]
 })
 export class TvGridComponent implements OnInit, AfterViewInit {
-    public dataSource: IChildRequests[] = [];
+    public dataSource: MatTableDataSource<IChildRequests>;
     public resultsLength: number;
     public isLoadingResults = true;
     public displayedColumns: string[] = ['series',  'requestedBy', 'status', 'requestStatus', 'requestedDate','actions'];
@@ -25,6 +30,8 @@ export class TvGridComponent implements OnInit, AfterViewInit {
     public defaultSort: string = "requestedDate";
     public defaultOrder: string = "desc";
     public currentFilter: RequestFilterType = RequestFilterType.All;
+    public selection = new SelectionModel<IChildRequests>(true, []);
+
 
     public RequestFilter = RequestFilterType;
     public manageOwnRequests: boolean;
@@ -40,12 +47,15 @@ export class TvGridComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort) sort: MatSort;
 
     constructor(private requestService: RequestServiceV2, private auth: AuthService,
-                private ref: ChangeDetectorRef, private storageService: StorageService) {
+                private ref: ChangeDetectorRef, private storageService: StorageService,
+                private notification: NotificationService,
+                private translateService: TranslateService,
+                private requestServiceV1: RequestService) {
 
     }
 
-    public ngOnInit() {       
-        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser"); 
+    public ngOnInit() {
+        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
         const defaultCount = this.storageService.get(this.storageKeyGridCount);
         const defaultSort = this.storageService.get(this.storageKey);
         const defaultOrder = this.storageService.get(this.storageKeyOrder);
@@ -66,7 +76,7 @@ export class TvGridComponent implements OnInit, AfterViewInit {
 
     public async ngAfterViewInit() {
 
-        this.storageService.save(this.storageKeyGridCount, this.gridCount);   
+        this.storageService.save(this.storageKeyGridCount, this.gridCount);
         this.storageService.save(this.storageKeyCurrentFilter, (+this.currentFilter).toString());
         this.paginator.showFirstLastButtons = true;
 
@@ -78,7 +88,7 @@ export class TvGridComponent implements OnInit, AfterViewInit {
                 startWith({}),
                 switchMap((value: any) => {
                     this.isLoadingResults = true;
-                    
+
                     if (value.active || value.direction) {
                         this.storageService.save(this.storageKey, value.active);
                         this.storageService.save(this.storageKeyOrder, value.direction);
@@ -96,14 +106,14 @@ export class TvGridComponent implements OnInit, AfterViewInit {
                     this.isLoadingResults = false;
                     return observableOf([]);
                 })
-            ).subscribe(data => this.dataSource = data);
+            ).subscribe(data => this.dataSource = new MatTableDataSource(data));
     }
 
     public openOptions(request: IChildRequests) {
-        const filter = () => { this.dataSource = this.dataSource.filter((req) => {
+        const filter = () => { this.dataSource.data = this.dataSource.data.filter((req) => {
             return req.id !== request.id;
         })};
-        
+
         const onChange = () => {
             this.ref.detectChanges();
         };
@@ -131,4 +141,56 @@ export class TvGridComponent implements OnInit, AfterViewInit {
         this.currentFilter = type;
         this.ngAfterViewInit();
     }
+
+    public isAllSelected() {
+      const numSelected = this.selection.selected.length;
+      const numRows = this.dataSource.data.length;
+      return numSelected === numRows;
+    }
+
+    public masterToggle() {
+      this.isAllSelected() ?
+        this.selection.clear() :
+        this.dataSource.data.forEach(row => this.selection.select(row));
+    }
+
+  public async bulkDelete() {
+    if (this.selection.isEmpty()) {
+      return;
+    }
+    let tasks = new Array();
+    this.selection.selected.forEach((selected) => {
+      tasks.push(this.requestServiceV1.deleteChild(selected.id));
+    });
+
+    await Promise.all(tasks);
+
+    this.notification.success(this.translateService.instant('Requests.RequestPanel.Deleted'))
+    this.selection.clear();
+    this.ngAfterViewInit();
+  }
+
+  public bulkApprove() {
+    if (this.selection.isEmpty()) {
+      return;
+    }
+    let tasks = new Array<Observable<IRequestEngineResult>>();
+    this.selection.selected.forEach((selected) => {
+      tasks.push(this.requestServiceV1.approveChild({ id: selected.id }));
+    });
+
+    this.isLoadingResults = true;
+    forkJoin(tasks).subscribe((result: IRequestEngineResult[]) => {
+      this.isLoadingResults = false;
+      const failed = result.filter(x => !x.result);
+      if(failed.length > 0) {
+        this.notification.error("Some requests failed to approve: " + failed[0].errorMessage);
+        this.selection.clear();
+        return;
+      }
+      this.notification.success(this.translateService.instant('Requests.RequestPanel.Approved'));
+      this.selection.clear();
+      this.ngAfterViewInit();
+    })
+  }
 }

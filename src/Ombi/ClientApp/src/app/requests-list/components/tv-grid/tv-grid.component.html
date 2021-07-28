@@ -30,6 +30,20 @@
 
     <table mat-table [dataSource]="dataSource" class="requests table" matSort [matSortActive]="defaultSort" matSortDisableClear [matSortDirection]="defaultOrder">
 
+      <ng-container matColumnDef="select" *ngIf="isAdmin">
+        <th  mat-header-cell *matHeaderCellDef>
+          <mat-checkbox id="adminMasterCheckbox" (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox  id="adminMasterCheckbox{{row.id}}"  (click)="$event.stopPropagation()"
+                         (change)="$event ? selection.toggle(row) : null"
+                         [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
 
         <ng-container matColumnDef="series">
             <th mat-header-cell *matHeaderCellDef> {{'Requests.RequestsTitle' | translate}} </th>
@@ -79,3 +93,10 @@
 
     <mat-paginator [length]="resultsLength" [pageSize]="gridCount"></mat-paginator>
 </div>
+
+<button id="bulkFab" *ngIf="selection.hasValue() && isAdmin" mat-fab color="accent" class="floating-fab" [matMenuTriggerFor]="aboveMenu">
+  <i class="fas fa-bars"></i></button>
+<mat-menu #aboveMenu="matMenu" yPosition="above">
+  <button id="deleteFabButton" mat-menu-item (click)="bulkDelete()">{{'Requests.RequestPanel.Delete' | translate}}</button>
+  <button id="approveFabButton" mat-menu-item (click)="bulkApprove()">{{'Requests.RequestPanel.Approve' | translate}}</button>
+</mat-menu>
