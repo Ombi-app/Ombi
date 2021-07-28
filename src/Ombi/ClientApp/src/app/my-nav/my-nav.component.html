@@ -78,7 +78,7 @@
                         <mat-slide-toggle id="filterMusic" class="mat-menu-item slide-menu" [checked]="searchFilter.music"
                             (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Music)">
                             {{ 'NavigationBar.Filter.Music' | translate}}</mat-slide-toggle>
-                            <button (click)="openAdvancedSearch()">Advanced Search</button>
+                            <button class="advanced-search"  mat-raised-button color="accent" (click)="openAdvancedSearch()">Advanced Search</button>
                         <!-- <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.people"
                             (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.People)">
                             {{ 'NavigationBar.Filter.People' | translate}}</mat-slide-toggle> -->

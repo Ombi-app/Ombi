@@ -40,23 +40,23 @@ export class KeywordSearchComponent implements OnInit  {
    };
 
    remove(word: IMovieDbKeyword): void {
-    const exisiting = this.form.controls.keywords.value;
+    const exisiting = this.form.controls.keywordIds.value;
     const index = exisiting.indexOf(word);
 
     if (index >= 0) {
       exisiting.splice(index, 1);
-      this.form.controls.keywords.setValue(exisiting);
+      this.form.controls.keywordIds.setValue(exisiting);
     }
   }
 
 
   selected(event: MatAutocompleteSelectedEvent): void {
     const val = event.option.value;
-    const exisiting = this.form.controls.keywords.value;    
+    const exisiting = this.form.controls.keywordIds.value;    
     if (exisiting.indexOf(val) < 0) {
         exisiting.push(val);
     }
-    this.form.controls.keywords.setValue(exisiting);
+    this.form.controls.keywordIds.setValue(exisiting);
     this.input.nativeElement.value = '';
     this.control.setValue(null);
   }

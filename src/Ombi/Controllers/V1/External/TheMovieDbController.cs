@@ -46,5 +46,23 @@ namespace Ombi.Controllers.External
         [HttpGet("Genres/{media}")]
         public async Task<IEnumerable<Genre>> GetGenres(string media) =>
             await TmdbApi.GetGenres(media, HttpContext.RequestAborted);
+
+        /// <summary>
+        /// Searches for the watch providers matching the specified term.
+        /// </summary>
+        /// <param name="searchTerm">The search term.</param>
+        [HttpGet("WatchProviders/movie")]
+        public async Task<IEnumerable<WatchProvidersResults>> GetWatchProvidersMovies([FromQuery] string searchTerm) =>
+            await TmdbApi.SearchWatchProviders("movie", searchTerm, HttpContext.RequestAborted);
+
+
+        /// <summary>
+        /// Searches for the watch providers matching the specified term.
+        /// </summary>
+        /// <param name="searchTerm">The search term.</param>
+        [HttpGet("WatchProviders/tv")]
+        public async Task<IEnumerable<WatchProvidersResults>> GetWatchProvidersTv([FromQuery] string searchTerm) =>
+            await TmdbApi.SearchWatchProviders("tv", searchTerm, HttpContext.RequestAborted);
+
     }
 }

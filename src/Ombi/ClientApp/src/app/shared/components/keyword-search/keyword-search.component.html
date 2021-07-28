@@ -15,7 +15,7 @@
   <mat-label>Keywords</mat-label>
   <mat-chip-list #chipList aria-label="Fruit selection">
     <mat-chip
-      *ngFor="let word of form.controls.keywords.value"
+      *ngFor="let word of form.controls.keywordIds.value"
       [removable]="true"
       (removed)="remove(word)">
       {{word.name}}

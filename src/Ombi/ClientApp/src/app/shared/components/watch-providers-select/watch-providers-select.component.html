@@ -1,12 +1,11 @@
-
 <mat-form-field class="example-chip-list" appearance="fill">
-  <mat-label>Genres</mat-label>
+  <mat-label>Watch Providers</mat-label>
   <mat-chip-list #chipList aria-label="Fruit selection">
     <mat-chip
-      *ngFor="let word of form.controls.genreIds.value"
+      *ngFor="let word of form.controls.watchProviders.value"
       [removable]="true"
       (removed)="remove(word)">
-      {{word.name}}
+      {{word.provider_name}}
       <mat-icon matChipRemove>cancel</mat-icon>
     </mat-chip>
     <input
@@ -17,8 +16,8 @@
       [matChipInputFor]="chipList"/>
   </mat-chip-list>
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-    <mat-option *ngFor="let word of filteredKeywords | async" [value]="word">
-      {{word.name}}
+    <mat-option *ngFor="let word of filteredList | async" [value]="word">
+      {{word.provider_name}}
     </mat-option>
   </mat-autocomplete>
 </mat-form-field>

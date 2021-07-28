@@ -1,4 +1,4 @@
-<form [formGroup]="form" *ngIf="form">
+<form [formGroup]="form"  (ngSubmit)="onSubmit()" *ngIf="form">
   <h1 id="advancedOptionsTitle">
     <i class="fas fa-sliders-h"></i> Advanced Search
   </h1>
@@ -34,6 +34,10 @@
     <div class="col-md-6">
       <genre-select [form]="form" [mediaType]="form.controls.type.value"></genre-select>
     </div>
+    
+    <div class="col-md-6">
+      <watch-providers-select [form]="form" [mediaType]="form.controls.type.value"></watch-providers-select>
+    </div>
 
     </div>
 
@@ -49,10 +53,10 @@
     <button
       mat-raised-button
       id="requestButton"
-      (click)="submitRequest()"
       color="accent"
+      type="submit"
     >
-      <i class="fas fa-plus"></i> {{ "Common.Request" | translate }}
+      <i class="fas fa-plus"></i> {{ "Common.Search" | translate }}
     </button>
   </div>
 </form>

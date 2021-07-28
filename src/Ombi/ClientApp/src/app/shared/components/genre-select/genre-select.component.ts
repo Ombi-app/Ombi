@@ -11,7 +11,7 @@ import { TheMovieDbService } from "../../../services";
   selector: "genre-select",
   templateUrl: "genre-select.component.html"
 })
-export class GenreSelectComponent implements OnInit  {
+export class GenreSelectComponent {
   constructor(
     private tmdbService: TheMovieDbService
   ) {}
@@ -39,32 +39,24 @@ export class GenreSelectComponent implements OnInit  {
 
   @ViewChild('keywordInput') input: ElementRef<HTMLInputElement>;
 
-  async ngOnInit() {
-
-    // this.genres = await this.tmdbService.getGenres(this.mediaType).toPromise();
- 
-
-
-  }
-
    remove(word: IMovieDbKeyword): void {
-    const exisiting = this.form.controls.genres.value;
+    const exisiting = this.form.controls.genreIds.value;
     const index = exisiting.indexOf(word);
 
     if (index >= 0) {
       exisiting.splice(index, 1);
-      this.form.controls.genres.setValue(exisiting);
+      this.form.controls.genreIds.setValue(exisiting);
     }
   }
 
 
   selected(event: MatAutocompleteSelectedEvent): void {
     const val = event.option.value;
-    const exisiting = this.form.controls.genres.value;
+    const exisiting = this.form.controls.genreIds.value;
     if(exisiting.indexOf(val) < 0) {
       exisiting.push(val);
     }
-    this.form.controls.genres.setValue(exisiting);
+    this.form.controls.genreIds.setValue(exisiting);
     this.input.nativeElement.value = '';
     this.control.setValue(null);
   }

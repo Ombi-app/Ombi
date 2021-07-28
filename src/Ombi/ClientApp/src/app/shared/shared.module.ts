@@ -41,6 +41,7 @@ import { SidebarModule } from "primeng/sidebar";
 import { TheMovieDbService } from "../services";
 import { TranslateModule } from "@ngx-translate/core";
 import { TruncateModule } from "@yellowspot/ng-truncate";
+import { WatchProvidersSelectComponent } from "./components/watch-providers-select/watch-providers-select.component";
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { TruncateModule } from "@yellowspot/ng-truncate";
     AdvancedSearchDialogComponent,
     KeywordSearchComponent,
     GenreSelectComponent,
+    WatchProvidersSelectComponent,
   ],
   imports: [
     SidebarModule,
@@ -99,6 +101,7 @@ import { TruncateModule } from "@yellowspot/ng-truncate";
       AdvancedSearchDialogComponent,
       GenreSelectComponent,
       KeywordSearchComponent,
+      WatchProvidersSelectComponent,
       DetailsGroupComponent,
       TruncateModule,
       InputSwitchModule,

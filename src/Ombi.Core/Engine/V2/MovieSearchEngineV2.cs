@@ -137,7 +137,22 @@ namespace Ombi.Core.Engine.V2
             foreach (var pagesToLoad in pages)
             {
                 var apiResult = await Cache.GetOrAddAsync(nameof(PopularMovies) + pagesToLoad.Page + langCode,
-                    () =>  MovieApi.PopularMovies(langCode, pagesToLoad.Page, cancellationToken), DateTimeOffset.Now.AddHours(12));
+                    () => MovieApi.PopularMovies(langCode, pagesToLoad.Page, cancellationToken), DateTimeOffset.Now.AddHours(12));
+                results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
+            }
+            return await TransformMovieResultsToResponse(results);
+        }
+
+        public async Task<IEnumerable<SearchMovieViewModel>> AdvancedSearch(DiscoverModel model, int currentlyLoaded, int toLoad, CancellationToken cancellationToken)
+        {
+            var langCode = await DefaultLanguageCode(null);
+
+            var pages = PaginationHelper.GetNextPages(currentlyLoaded, toLoad, _theMovieDbMaxPageItems);
+
+            var results = new List<MovieDbSearchResult>();
+            foreach (var pagesToLoad in pages)
+            {
+                var apiResult = await MovieApi.AdvancedSearch(model, cancellationToken);
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
             return await TransformMovieResultsToResponse(results);
