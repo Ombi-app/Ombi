@@ -1,15 +1,13 @@
-﻿import { NgModule } from "@angular/core";
-import { RouterModule } from "@angular/router";
+﻿import * as fromComponents from './components';
+
+import { CarouselModule } from 'primeng/carousel';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
-
-import { SharedModule } from "../shared/shared.module";
+import { NgModule } from "@angular/core";
 import { PipeModule } from "../pipes/pipe.module";
-import { CarouselModule } from 'primeng/carousel';
+import { RouterModule } from "@angular/router";
+import { SharedModule } from "../shared/shared.module";
 import { SkeletonModule } from 'primeng/skeleton';
-
-import * as fromComponents from './components';
-
 
 @NgModule({
     imports: [

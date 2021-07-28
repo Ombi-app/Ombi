@@ -90,7 +90,7 @@ namespace Ombi.Api.TheMovieDb
             {
                 request.FullUri = request.FullUri.AddQueryParameter("with_watch_providers", string.Join(',', model.WatchProviders));
             }
-            request.FullUri = request.FullUri.AddQueryParameter("sort_by", "popularity.desc");
+            //request.FullUri = request.FullUri.AddQueryParameter("sort_by", "popularity.desc");
 
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request, cancellationToken);
             return Mapper.Map<List<MovieDbSearchResult>>(result.results);

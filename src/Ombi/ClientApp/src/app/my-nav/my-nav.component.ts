@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Md5 } from 'ts-md5/dist/md5';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 import { SearchFilter } from './SearchFilter';
 import { StorageService } from '../shared/storage/storage-service';
 import { map } from 'rxjs/operators';
@@ -57,7 +58,8 @@ export class MyNavComponent implements OnInit {
     private store: StorageService,
     private filterService: FilterService,
     private dialogService: MatDialog,
-    private readonly settingState: SettingsStateService) {
+    private readonly settingState: SettingsStateService,
+    private router: Router) {
   }
 
   public async ngOnInit() {
@@ -125,7 +127,15 @@ export class MyNavComponent implements OnInit {
   }
 
   public openAdvancedSearch() {
-    this.dialogService.open(AdvancedSearchDialogComponent, null);
+    const dialogRef = this.dialogService.open(AdvancedSearchDialogComponent, { panelClass: 'dialog-responsive' });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.router.navigate([`discover/advanced/search`]);
+      }
+
+      return;
+    });
   }
 
   public getUserImage(): string {

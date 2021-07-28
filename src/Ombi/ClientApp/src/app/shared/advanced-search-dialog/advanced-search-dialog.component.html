@@ -4,8 +4,8 @@
   </h1>
   <hr />
   <div class="alert alert-info" role="alert">
-    <i class="fas fa-x7 fa-exclamation-triangle glyphicon"></i>
-    <span>{{ "MediaDetails.AutoApproveOptions" | translate }}</span>
+    <i class="fas fa-x7 fa-search glyphicon"></i>
+    <span>{{ "Search.AdvancedSearch" | translate }}</span>
   </div>
 
   <div style="max-width: 0; max-height: 0; overflow: hidden">
@@ -13,7 +13,10 @@
   </div>
 
   <div class="row">
-    <div class="col-md-6">
+      <div style="margin: 2%;">
+    <span>Please choose what type of media you are searching for:</span>
+  </div>
+    <div class="col-md-12">
       <div class="md-form-field">
         <mat-radio-group formControlName="type" aria-label="Select an option">
           <mat-radio-button value="movie">Movies </mat-radio-button>
@@ -21,22 +24,25 @@
         </mat-radio-group>
       </div>
     </div>
-    <div class="col-md-6">
-      <mat-form-field appearance="outline" floatLabel=always>
-        <mat-label>Year</mat-label>
+    <div class="col-md-12"  style="margin-top:1%">
+      <mat-form-field appearance="outline" floatLabel=auto>
+        <mat-label>Year of Release</mat-label>
         <input matInput id="releaseYear" name="releaseYear" formControlName="releaseYear">
     </mat-form-field>
   </div>
 
-    <div class="col-md-6">
-      <keyword-search [form]="form"></keyword-search>
-    </div>
-    <div class="col-md-6">
+
+    <div class="col-md-12">
       <genre-select [form]="form" [mediaType]="form.controls.type.value"></genre-select>
     </div>
-    
-    <div class="col-md-6">
+
+    <div class="col-md-12">
       <watch-providers-select [form]="form" [mediaType]="form.controls.type.value"></watch-providers-select>
+    </div>
+    <div class="col-md-12">
+      
+      <span style="margin: 1%;">Please note that Keyword Searching is very hit and miss due to the inconsistent data in TheMovieDb</span>
+      <keyword-search [form]="form"></keyword-search>
     </div>
 
     </div>

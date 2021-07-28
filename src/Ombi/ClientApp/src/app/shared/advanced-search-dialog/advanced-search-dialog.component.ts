@@ -1,9 +1,9 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { IDiscoverModel } from "../../interfaces";
+import { RequestType } from "../../interfaces";
 import { SearchV2Service } from "../../services";
-
+import { AdvancedSearchDialogDataService } from "./advanced-search-dialog-data.service";
 
 @Component({
   selector: "advanced-search-dialog",
@@ -12,14 +12,13 @@ import { SearchV2Service } from "../../services";
 })
 export class AdvancedSearchDialogComponent implements OnInit {
   constructor(
-    public dialogRef: MatDialogRef<AdvancedSearchDialogComponent, string>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    public dialogRef: MatDialogRef<AdvancedSearchDialogComponent, boolean>,
     private fb: FormBuilder,
     private searchService: SearchV2Service,
+    private advancedSearchDialogService: AdvancedSearchDialogDataService
   ) {}
 
   public form: FormGroup;
-
 
   public async ngOnInit() {
 
@@ -35,17 +34,28 @@ export class AdvancedSearchDialogComponent implements OnInit {
       this.form.controls.genres.setValue([]);
       this.form.controls.watchProviders.setValue([]);
     });
-
-
   }
 
   public async onSubmit() {
-    const watchProviderIds = <number[]>this.form.controls.watchProviders.value.map(x => x.provider_id);
-    const genres = <number[]>this.form.controls.genreIds.value.map(x => x.id);
-    await this.searchService.advancedSearch({
+    const formData = this.form.value;
+    const watchProviderIds = <number[]>formData.watchProviders.map(x => x.provider_id);
+    const genres = <number[]>formData.genreIds.map(x => x.id);
+    const keywords = <number[]>formData.keywordIds.map(x => x.id);
+    const data = await this.searchService.advancedSearch({
       watchProviders: watchProviderIds,
       genreIds: genres,
-      type: this.form.controls.type.value,
+      keywordIds: keywords,
+      releaseYear: formData.releaseYear,
+      type: formData.type,
     }, 0, 30);
+
+    this.advancedSearchDialogService.setData(data, formData.type === 'movie' ? RequestType.movie : RequestType.tvShow);
+
+    this.dialogRef.close(true);
   }
+
+  public onClose() {
+    this.dialogRef.close(false);
+  }
+
 }
