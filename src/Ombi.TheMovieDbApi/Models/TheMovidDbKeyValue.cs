@@ -2,7 +2,7 @@
 
 namespace Ombi.Api.TheMovieDb.Models
 {
-    public sealed class Keyword
+    public sealed class TheMovidDbKeyValue
     {
         [DataMember(Name = "id")]
         public int Id { get; set; }

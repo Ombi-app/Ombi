@@ -26,7 +26,7 @@ namespace Ombi.Api.TheMovieDb
         Task<List<MovieDbSearchResult>> UpcomingTv(string languageCode, int? page = null);
         Task<List<MovieDbSearchResult>> SimilarMovies(int movieId, string langCode);
         Task<FindResult> Find(string externalId, ExternalSource source);
-        Task<TvExternals> GetTvExternals(int theMovieDbId); 
+        Task<TvExternals> GetTvExternals(int theMovieDbId);
         Task<SeasonDetails> GetSeasonEpisodes(int theMovieDbId, int seasonNumber, CancellationToken token, string langCode = "en");
         Task<TvInfo> GetTVInfo(string themoviedbid, string langCode = "en");
         Task<TheMovieDbContainer<ActorResult>> SearchByActor(string searchTerm, string langCode);
@@ -35,10 +35,12 @@ namespace Ombi.Api.TheMovieDb
         Task<TheMovieDbContainer<DiscoverMovies>> DiscoverMovies(string langCode, int keywordId);
         Task<FullMovieInfo> GetFullMovieInfo(int movieId, CancellationToken cancellationToken, string langCode);
         Task<Collections> GetCollection(string langCode, int collectionId, CancellationToken cancellationToken);
-        Task<List<Keyword>> SearchKeyword(string searchTerm);
-        Task<Keyword> GetKeyword(int keywordId);
+        Task<List<TheMovidDbKeyValue>> SearchKeyword(string searchTerm);
+        Task<TheMovidDbKeyValue> GetKeyword(int keywordId);
         Task<WatchProviders> GetMovieWatchProviders(int theMoviedbId, CancellationToken token);
         Task<WatchProviders> GetTvWatchProviders(int theMoviedbId, CancellationToken token);
-        Task<List<Genre>> GetGenres(string media);
+        Task<List<Genre>> GetGenres(string media, CancellationToken cancellationToken);
+        Task<List<WatchProvidersResults>> SearchWatchProviders(string media, string searchTerm, CancellationToken cancellationToken);
+        Task<List<MovieDbSearchResult>> AdvancedSearch(DiscoverModel model, CancellationToken cancellationToken);
     }
 }

@@ -1,73 +1,98 @@
-import { CommonModule, PlatformLocation, APP_BASE_HREF } from "@angular/common";
-import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
-import { NgModule } from "@angular/core";
+import { APP_BASE_HREF, CommonModule, PlatformLocation } from "@angular/common";
+import { CardsFreeModule, MDBBootstrapModule, NavbarModule } from "angular-bootstrap-md";
+import { CustomPageService, ImageService, RequestService, SettingsService } from "./services";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { BrowserModule } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from "@angular/common/http";
+import { IdentityService, IssuesService, JobService, MessageService, PlexTvService, SearchService, StatusService } from "./services";
 import { RouterModule, Routes } from "@angular/router";
-
-import { JwtModule } from "@auth0/angular-jwt";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
-import { TranslateHttpLoader } from "@ngx-translate/http-loader";
-import { CookieService } from "ng2-cookies";
 
-import { ButtonModule } from "primeng/button";
-import { ConfirmDialogModule } from "primeng/confirmdialog";
-import { DataViewModule } from "primeng/dataview";
-import { DialogModule } from "primeng/dialog";
-import { OverlayPanelModule } from "primeng/overlaypanel";
-import { TooltipModule } from "primeng/tooltip";
-import { SidebarModule } from "primeng/sidebar";
-
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatCardModule } from "@angular/material/card";
-import { MatInputModule } from "@angular/material/input";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { MatTabsModule } from "@angular/material/tabs";
-import { MatTooltipModule } from "@angular/material/tooltip";
-
-
-import { MDBBootstrapModule, CardsFreeModule, NavbarModule } from "angular-bootstrap-md";
-
-// Components
 import { AppComponent } from "./app.component";
-
-import { CookieComponent } from "./auth/cookie.component";
-import { CustomPageComponent } from "./custompage/custompage.component";
-import { PageNotFoundComponent } from "./errors/not-found.component";
-import { LandingPageComponent } from "./landingpage/landingpage.component";
-import { LoginComponent } from "./login/login.component";
-import { LoginOAuthComponent } from "./login/loginoauth.component";
-import { ResetPasswordComponent } from "./login/resetpassword.component";
-import { TokenResetPasswordComponent } from "./login/tokenresetpassword.component";
-
-// Services
 import { AuthGuard } from "./auth/auth.guard";
 import { AuthService } from "./auth/auth.service";
-import { ImageService, SettingsService, CustomPageService, RequestService } from "./services";
-import { LandingPageService } from "./services";
-import { NotificationService } from "./services";
-import { IssuesService, JobService, PlexTvService, StatusService, SearchService, IdentityService, MessageService } from "./services";
-import { MyNavComponent } from './my-nav/my-nav.component';
-import { LayoutModule } from '@angular/cdk/layout';
-import { SearchV2Service } from "./services/searchV2.service";
-import { NavSearchComponent } from "./my-nav/nav-search.component";
-import { OverlayModule } from "@angular/cdk/overlay";
-import { StorageService } from "./shared/storage/storage-service";
-import { SignalRNotificationService } from "./services/signlarnotification.service";
-import { MatMenuModule } from "@angular/material/menu";
-import { RemainingRequestsComponent } from "./shared/remaining-requests/remaining-requests.component";
-import { UnauthorizedInterceptor } from "./auth/unauthorized.interceptor";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { BrowserModule } from "@angular/platform-browser";
+import { ButtonModule } from "primeng/button";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { CookieComponent } from "./auth/cookie.component";
+import { CookieService } from "ng2-cookies";
+import { CustomPageComponent } from "./custompage/custompage.component";
+import { DataViewModule } from "primeng/dataview";
+import { DialogModule } from "primeng/dialog";
 import { FilterService } from "./discover/services/filter-service";
+import { JwtModule } from "@auth0/angular-jwt";
+import { LandingPageComponent } from "./landingpage/landingpage.component";
+import { LandingPageService } from "./services";
+import { LayoutModule } from '@angular/cdk/layout';
+import { LoginComponent } from "./login/login.component";
+import { LoginOAuthComponent } from "./login/loginoauth.component";
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from "@angular/material/card";
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatChipsModule } from "@angular/material/chips";
+import { MatDialogModule } from "@angular/material/dialog";
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from "@angular/material/input";
+import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from "@angular/material/menu";
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MyNavComponent } from './my-nav/my-nav.component';
+import { NavSearchComponent } from "./my-nav/nav-search.component";
+import { NgModule } from "@angular/core";
+import { NotificationService } from "./services";
+import { OverlayModule } from "@angular/cdk/overlay";
+import { OverlayPanelModule } from "primeng/overlaypanel";
+import { PageNotFoundComponent } from "./errors/not-found.component";
+import { RemainingRequestsComponent } from "./shared/remaining-requests/remaining-requests.component";
+import { ResetPasswordComponent } from "./login/resetpassword.component";
+import { SearchV2Service } from "./services/searchV2.service";
+import { SidebarModule } from "primeng/sidebar";
+import { SignalRNotificationService } from "./services/signlarnotification.service";
+import { StorageService } from "./shared/storage/storage-service";
+import { TokenResetPasswordComponent } from "./login/tokenresetpassword.component";
+import { TooltipModule } from "primeng/tooltip";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { UnauthorizedInterceptor } from "./auth/unauthorized.interceptor";
+
+// Components
+
+
+
+
+
+
+
+
+
+
+
+// Services
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
@@ -135,6 +160,8 @@ export function JwtTokenGetter() {
         MatMenuModule,
         MatInputModule,
         MatTabsModule,
+        MatChipsModule,
+        MatDialogModule,
         ReactiveFormsModule,
         MatAutocompleteModule,
         TooltipModule,
@@ -146,7 +173,6 @@ export function JwtTokenGetter() {
         MatCheckboxModule,
         MatProgressSpinnerModule,
         MDBBootstrapModule.forRoot(),
-        // NbThemeModule.forRoot({ name: 'dark'}),
         JwtModule.forRoot({
             config: {
                 tokenGetter: JwtTokenGetter,

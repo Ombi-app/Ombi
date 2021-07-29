@@ -184,6 +184,19 @@ namespace Ombi.Controllers.V2
         }
 
         /// <summary>
+        /// Returns Advanced Searched Media using paging
+        /// </summary>
+        /// <remarks>We use TheMovieDb as the Movie Provider</remarks>
+        /// <returns></returns>
+        [HttpPost("advancedSearch/movie/{currentPosition}/{amountToLoad}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public Task<IEnumerable<SearchMovieViewModel>> AdvancedSearchMovie([FromBody]DiscoverModel model, int currentPosition, int amountToLoad)
+        {
+            return _movieEngineV2.AdvancedSearch(model, currentPosition, amountToLoad, Request.HttpContext.RequestAborted);
+        }
+
+        /// <summary>
         /// Returns Seasonal Movies
         /// </summary>
         /// <remarks>We use TheMovieDb as the Movie Provider</remarks>
