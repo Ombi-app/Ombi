@@ -57,7 +57,7 @@ namespace Ombi.Core.Tests.Engine.V2
             _lidarrApi = new Mock<ILidarrApi>();
             _lidarrSettings.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new LidarrSettings());
             _engine = new MusicSearchEngineV2(principle.Object, requestService.Object, ruleEval.Object,
-                um.Object, cache.Object, ombiSettings.Object, requestSub.Object, _musicApi.Object,
+                um.Object, cache.Object, ombiSettings.Object, requestSub.Object,
                 _lidarrSettings.Object, _lidarrApi.Object);
         }
 

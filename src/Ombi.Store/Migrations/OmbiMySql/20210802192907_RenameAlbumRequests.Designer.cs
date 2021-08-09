@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Ombi.Store.Context.Sqlite;
+using Ombi.Store.Context.MySql;
 
-namespace Ombi.Store.Migrations.OmbiSqlite
+namespace Ombi.Store.Migrations.OmbiMySql
 {
-    [DbContext(typeof(OmbiSqliteContext))]
-    partial class OmbiSqliteContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(OmbiMySqlContext))]
+    [Migration("20210802192907_RenameAlbumRequests")]
+    partial class RenameAlbumRequests
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

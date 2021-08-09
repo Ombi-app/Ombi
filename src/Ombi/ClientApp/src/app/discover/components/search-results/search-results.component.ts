@@ -70,6 +70,8 @@ export class DiscoverSearchResultsComponent implements OnInit {
             } else if (m.mediaType == "tv") {
                 mediaType = RequestType.tvShow;
             } else if (m.mediaType == "Artist") {
+                mediaType = RequestType.artist;
+            } else if (m.mediaType == "Album") {
                 mediaType = RequestType.album;
             }
 
@@ -84,7 +86,7 @@ export class DiscoverSearchResultsComponent implements OnInit {
             }
 
             this.discoverResults.push({
-                posterPath: mediaType !== RequestType.album ? poster : "images/default-music-placeholder.png",
+                posterPath: mediaType !== RequestType.artist && mediaType !== RequestType.album ? poster : "images/default-music-placeholder.png",
                 requested: false,
                 title: m.title,
                 type: mediaType,

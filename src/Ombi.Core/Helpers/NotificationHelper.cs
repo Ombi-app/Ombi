@@ -40,7 +40,7 @@ namespace Ombi.Core
             });
         }
 
-        public async Task NewRequest(AlbumRequest model)
+        public async Task NewRequest(MusicRequests model)
         {
             var notificationModel = new NotificationOptions
             {
@@ -54,7 +54,6 @@ namespace Ombi.Core
                 {JobDataKeys.NotificationOptions, notificationModel}
             });
         }
-
 
         public async Task Notify(MovieRequests model, NotificationType type)
         {
@@ -88,7 +87,7 @@ namespace Ombi.Core
             });
         }
 
-        public async Task Notify(AlbumRequest model, NotificationType type)
+        public async Task Notify(MusicRequests model, NotificationType type)
         {
             var notificationModel = new NotificationOptions
             {

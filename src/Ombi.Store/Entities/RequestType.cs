@@ -4,6 +4,7 @@
     {
         TvShow = 0,
         Movie = 1,
-        Album = 2,
+        Artist = 2,
+        Album = 3,
     }
 }

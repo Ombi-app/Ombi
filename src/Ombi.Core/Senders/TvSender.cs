@@ -261,7 +261,7 @@ namespace Ombi.Core.Senders
                         qualityProfileId = qualityToUse,
                         titleSlug = model.ParentRequest.Title,
                         seriesType = seriesType,
-                        addOptions = new AddOptions
+                        addOptions = new Ombi.Api.Sonarr.Models.AddOptions
                         {
                             ignoreEpisodesWithFiles = false, // There shouldn't be any episodes with files, this is a new season
                             ignoreEpisodesWithoutFiles = false, // We want all missing

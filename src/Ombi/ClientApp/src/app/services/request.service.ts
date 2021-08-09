@@ -5,7 +5,8 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 import { UITreeNode } from "primeng/tree";
-import { FilterType, IAlbumRequest, IAlbumRequestModel, IAlbumUpdateModel, IChildRequests, IDenyAlbumModel, IDenyMovieModel, IFilter,
+import {
+    FilterType, IAlbumRequest, IAlbumRequestModel, IArtistRequestModel, IAlbumUpdateModel, IChildRequests, IDenyAlbumModel, IDenyMovieModel, IFilter,
       IMovieRequestModel, IMovieRequests, IMovieUpdateModel, IRequestEngineResult, IRequestsViewModel, ITvDenyModel, ITvRequests, ITvUpdateModel, OrderType } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
@@ -154,6 +155,9 @@ export class RequestService extends ServiceHelpers {
     // Music
     public requestAlbum(Album: IAlbumRequestModel): Observable<IRequestEngineResult> {
         return this.http.post<IRequestEngineResult>(`${this.url}music/`, JSON.stringify(Album),  {headers: this.headers});
+    }
+    public requestArtist(Artist: IArtistRequestModel): Observable<IRequestEngineResult> {
+        return this.http.post<IRequestEngineResult>(`${this.url}artist/`, JSON.stringify(Artist), { headers: this.headers });
     }
 
     public getTotalAlbums(): Observable<number> {

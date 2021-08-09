@@ -18,6 +18,7 @@ namespace Ombi.Core.Models.Search.V2.Music
         public string Poster { get; set; }
         public string FanArt { get; set; }
         public string Overview { get; set; }
+        public bool Monitored { get; set; }
         public List<ReleaseGroup> ReleaseGroups { get; set; }
         public ArtistLinks Links { get; set; }
         public List<BandMember> Members { get; set; }

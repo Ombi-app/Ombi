@@ -112,8 +112,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Hubs", "Ombi.Hubs\Ombi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.GroupMe", "Ombi.Api.GroupMe\Ombi.Api.GroupMe.csproj", "{9266403C-B04D-4C0F-AC39-82F12C781949}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.MusicBrainz", "Ombi.Api.MusicBrainz\Ombi.Api.MusicBrainz.csproj", "{C5C1769B-4197-4410-A160-0EEF39EDDC98}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Twilio", "Ombi.Api.Twilio\Ombi.Api.Twilio.csproj", "{34E5DD1A-6A90-448B-9E71-64D1ACD6C1A3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.HealthChecks", "Ombi.HealthChecks\Ombi.HealthChecks.csproj", "{59D19538-0496-44EE-936E-EBBC22CF7B27}"
@@ -330,6 +328,10 @@ Global
 		{8F19C701-7881-4BC7-8BBA-B068A6B954AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F19C701-7881-4BC7-8BBA-B068A6B954AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F19C701-7881-4BC7-8BBA-B068A6B954AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C81C423-25CC-4A91-ABE7-9C3F97770F69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C81C423-25CC-4A91-ABE7-9C3F97770F69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C81C423-25CC-4A91-ABE7-9C3F97770F69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C81C423-25CC-4A91-ABE7-9C3F97770F69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

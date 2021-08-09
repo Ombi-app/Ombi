@@ -41,7 +41,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Lidarr Availability Check Started");
             var allAlbumRequests = _requestRepository.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available);
-            var albumsToUpdate = new List<AlbumRequest>();
+            var albumsToUpdate = new List<MusicRequests>();
             foreach (var request in allAlbumRequests)
             {
                 // Check if we have it cached
