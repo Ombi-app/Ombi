@@ -42,20 +42,22 @@ namespace Ombi.Core.Engine.V2
         {
             var lidarrSettings = await GetLidarrSettings();
             Task<AlbumLookup> lidarrAlbumTask = null;
+            var release = new ReleaseGroup{};
             if (lidarrSettings.Enabled)
             {
                 lidarrAlbumTask = _lidarrApi.GetAlbumByForeignId(albumId, lidarrSettings.ApiKey, lidarrSettings.FullUri);
-            }
-            var albumResult = await lidarrAlbumTask;
-            var release = new ReleaseGroup
-            {
-                ReleaseType = albumResult.artistType,
-                Id = albumResult.artistId.ToString(),
-                Title = albumResult.title,
-                ReleaseDate = albumResult.releaseDate.ToString(),
-            };
+                var albumResult = await lidarrAlbumTask;
+                release = new ReleaseGroup
+                {
+                    ReleaseType = albumResult.artistType,
+                    Id = albumResult.artistId.ToString(),
+                    Title = albumResult.title,
+                    ReleaseDate = albumResult.releaseDate.ToString(),
+                };
 
-            await RunSearchRules(release);
+                await RunSearchRules(release);
+            }
+            
             return release;
         }
 
@@ -63,31 +65,33 @@ namespace Ombi.Core.Engine.V2
         {
             var lidarrSettings = await GetLidarrSettings();
             Task<ArtistResult> lidarrArtistTask = null;
+            var info = new ArtistInformation { };
             if (lidarrSettings.Enabled)
             {
                 lidarrArtistTask = _lidarrApi.GetArtistByForeignId(artistId, lidarrSettings.ApiKey, lidarrSettings.FullUri);
+                info = new ArtistInformation { };
+
+                if (lidarrArtistTask != null)
+                {
+                    try
+                    {
+                        var artistResult = await lidarrArtistTask;
+                        info.Banner = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("banner", StringComparison.InvariantCultureIgnoreCase))?.url.ToHttpsUrl();
+                        info.Logo = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("logo", StringComparison.InvariantCultureIgnoreCase))?.url.ToHttpsUrl();
+                        info.Poster = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("poster", StringComparison.InvariantCultureIgnoreCase))?.url.ToHttpsUrl();
+                        info.FanArt = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("fanart", StringComparison.InvariantCultureIgnoreCase))?.url.ToHttpsUrl();
+                        info.Overview = artistResult.overview;
+                        info.Name = artistResult.artistName;
+                        info.Monitored = artistResult.monitored;
+                    }
+                    catch (JsonSerializationException)
+                    {
+                        // swallow, Lidarr probably doesn't have this artist
+                    }
+                }
             }
 
-            var info = new ArtistInformation{};
-
-            if (lidarrArtistTask != null)
-            {
-                try
-                {
-                    var artistResult = await lidarrArtistTask;
-                    info.Banner = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("banner", StringComparison.InvariantCultureIgnoreCase))?.url.ToHttpsUrl();
-                    info.Logo = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("logo", StringComparison.InvariantCultureIgnoreCase))?.url.ToHttpsUrl();
-                    info.Poster = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("poster", StringComparison.InvariantCultureIgnoreCase))?.url.ToHttpsUrl();
-                    info.FanArt = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("fanart", StringComparison.InvariantCultureIgnoreCase))?.url.ToHttpsUrl();
-                    info.Overview = artistResult.overview;
-                    info.Name = artistResult.artistName;
-                    info.Monitored = artistResult.monitored;
-                }
-                catch (JsonSerializationException)
-                {
-                    // swallow, Lidarr probably doesn't have this artist
-                }
-            }
+            
 
             return info;
         }
@@ -96,28 +100,27 @@ namespace Ombi.Core.Engine.V2
         {
             var lidarrSettings = await GetLidarrSettings();
             Task<AlbumLookup> lidarrAlbumTask = null;
+            var info = new AlbumInformation { };
             if (lidarrSettings.Enabled)
             {
                 lidarrAlbumTask = _lidarrApi.GetAlbumByForeignId(albumId, lidarrSettings.ApiKey, lidarrSettings.FullUri);
-            }
-
-            var info = new AlbumInformation { };
-
-            if (lidarrAlbumTask != null)
-            {
-                try
+            
+                if (lidarrAlbumTask != null)
                 {
-                    var albumResult = await lidarrAlbumTask;
-                    info.Cover = albumResult.images?.FirstOrDefault(x => x.coverType.Equals("cover", StringComparison.InvariantCultureIgnoreCase))?.url.ToHttpsUrl();
-                    info.Title = albumResult.title;
-                    info.Disambiguation = albumResult.disambiguation;
-                    info.Overview = albumResult.overview;
-                    info.Monitored = albumResult.monitored;
-                    info.Id = albumResult.foreignAlbumId;
-                }
-                catch (JsonSerializationException)
-                {
-                    // swallow, Lidarr probably doesn't have this album
+                    try
+                    {
+                        var albumResult = await lidarrAlbumTask;
+                        info.Cover = albumResult.images?.FirstOrDefault(x => x.coverType.Equals("cover", StringComparison.InvariantCultureIgnoreCase))?.url.ToHttpsUrl();
+                        info.Title = albumResult.title;
+                        info.Disambiguation = albumResult.disambiguation;
+                        info.Overview = albumResult.overview;
+                        info.Monitored = albumResult.monitored;
+                        info.Id = albumResult.foreignAlbumId;
+                    }
+                    catch (JsonSerializationException)
+                    {
+                        // swallow, Lidarr probably doesn't have this album
+                    }
                 }
             }
 
