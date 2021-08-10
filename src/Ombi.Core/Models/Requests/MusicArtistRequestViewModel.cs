@@ -4,6 +4,8 @@
     {
         public string ForeignAlbumId { get; set; }
         public string RequestedByAlias { get; set; }
+        public string Monitor { get; set; }
+        public bool SearchForMissingAlbums { get; set; }
     }
 
     public class MusicArtistRequestViewModel

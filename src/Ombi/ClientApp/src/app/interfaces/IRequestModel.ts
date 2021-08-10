@@ -45,6 +45,9 @@ export interface IAlbumRequest extends IBaseRequest {
 
 export interface IAlbumRequestModel {
   foreignAlbumId: string;
+  monitored: boolean;
+  monitor: string;
+  searchForMissingAlbums: boolean;
 }
 
 export interface IArtistRequestModel {

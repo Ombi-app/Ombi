@@ -154,7 +154,7 @@ export class RequestService extends ServiceHelpers {
 
     // Music
     public requestAlbum(Album: IAlbumRequestModel): Observable<IRequestEngineResult> {
-        return this.http.post<IRequestEngineResult>(`${this.url}music/`, JSON.stringify(Album),  {headers: this.headers});
+        return this.http.post<IRequestEngineResult>(`${this.url}album/`, JSON.stringify(Album),  {headers: this.headers});
     }
     public requestArtist(Artist: IArtistRequestModel): Observable<IRequestEngineResult> {
         return this.http.post<IRequestEngineResult>(`${this.url}artist/`, JSON.stringify(Artist), { headers: this.headers });

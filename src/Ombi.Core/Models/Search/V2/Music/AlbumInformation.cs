@@ -8,7 +8,7 @@ namespace Ombi.Core.Models.Search.V2.Music
         public string Id { get; set; }
         public string StartYear { get; set; }
         public string EndYear { get; set; }
-        public bool IsEnded => EndYear != null;
+        public bool IsEnded => string.IsNullOrEmpty(EndYear);
         public bool Monitored { get; set; }
         public string Type { get; set; }
         public string Country { get; set; }

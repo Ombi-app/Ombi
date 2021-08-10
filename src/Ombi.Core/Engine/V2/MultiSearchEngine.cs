@@ -76,7 +76,7 @@ namespace Ombi.Core.Engine.V2
                 }
             }
 
-            if (filter.Movies)
+            if (filter.Movies || filter.TvShows)
             {
                 var movieDbData = (await _movieDbApi.MultiSearch(searchTerm, lang, cancellationToken)).results;
 

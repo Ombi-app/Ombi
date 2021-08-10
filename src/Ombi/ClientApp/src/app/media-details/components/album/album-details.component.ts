@@ -51,7 +51,10 @@ export class AlbumDetailsComponent {
             return;
         }
         this.requestService.requestAlbum({
-            foreignAlbumId: this.album.id
+            foreignAlbumId: this.album.id,
+            monitored: true,
+            monitor: "existing",
+            searchForMissingAlbums: true
         }).toPromise()
         .then(r => {
             if (r.result) {

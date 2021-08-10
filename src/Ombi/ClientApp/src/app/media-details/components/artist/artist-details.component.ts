@@ -87,7 +87,10 @@ export class ArtistDetailsComponent {
                     return;
                 }
                 this.requestService.requestAlbum({
-                    foreignAlbumId : a.id
+                    foreignAlbumId : a.id,
+                    monitored: true,
+                    monitor: "all",
+                    searchForMissingAlbums: true
                 }).toPromise()
                 .then(r => {
                     if (r.result) {
@@ -110,7 +113,10 @@ export class ArtistDetailsComponent {
                     return;
                 }
                 this.requestService.requestAlbum({
-                    foreignAlbumId : a.id
+                    foreignAlbumId : a.id,
+                    monitored: true,
+                    monitor: "all",
+                    searchForMissingAlbums: true
                 }).toPromise()
                 .then(r => {
                     if (r.result) {
