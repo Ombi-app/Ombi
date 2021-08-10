@@ -75,7 +75,6 @@ namespace Ombi.Core.Senders
 
         public async Task<SenderResult> SendArtist(MusicRequests model)
         {
-            Console.Write(model);
             try
             {
                 var settings = await _lidarrSettings.GetSettingsAsync();

@@ -77,7 +77,6 @@ namespace Ombi.Api.Lidarr
 
             request.AddQueryString("term", $"lidarr:{foreignArtistId}");
             AddHeaders(request, apiKey);
-            Console.Write(request);
             return (await _api.Request<List<ArtistResult>>(request, token)).FirstOrDefault();
         }
 
@@ -141,7 +140,6 @@ namespace Ombi.Api.Lidarr
 
         public Task<ArtistResult> AddArtist(ArtistAdd artist, string apiKey, string baseUrl)
         {
-            Console.Write(artist);
             var request = new Request($"{ApiVersion}/artist", baseUrl, HttpMethod.Post);
             request.AddJsonBody(artist);
             AddHeaders(request, apiKey);

@@ -29,7 +29,6 @@ namespace Ombi.Core.Tests.Engine.V2
 
         private MusicSearchEngineV2 _engine;
 
-        // private Mock<ILidarrApi> _musicApi;
         private Mock<ILidarrApi> _lidarrApi;
         private Mock<ISettingsService<LidarrSettings>> _lidarrSettings;
         private Fixture F;
