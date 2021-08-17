@@ -29,5 +29,6 @@ namespace Ombi.Core.Engine.Interfaces
         Task<IEnumerable<StreamingData>> GetStreamInformation(int movieDbId, CancellationToken cancellationToken);
         Task<IEnumerable<SearchMovieViewModel>> RecentlyRequestedMovies(int currentlyLoaded, int toLoad, CancellationToken cancellationToken);
         Task<IEnumerable<SearchMovieViewModel>> SeasonalList(int currentPosition, int amountToLoad, CancellationToken cancellationToken);
+        Task<IEnumerable<SearchMovieViewModel>> AdvancedSearch(DiscoverModel model, int currentlyLoaded, int toLoad, CancellationToken cancellationToken);
     }
 }

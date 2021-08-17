@@ -1,13 +1,13 @@
 ﻿import {COMMA, ENTER} from "@angular/cdk/keycodes";
-import { Component, OnInit, ElementRef, ViewChild } from "@angular/core";
-import { MatAutocomplete } from "@angular/material/autocomplete";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { FormBuilder, FormGroup } from "@angular/forms";
+import { IMovieDbKeyword, ITheMovieDbSettings } from "../../interfaces";
+import { debounceTime, switchMap } from "rxjs/operators";
 
-import { ITheMovieDbSettings, IMovieDbKeyword } from "../../interfaces";
+import { MatAutocomplete } from "@angular/material/autocomplete";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
 import { TheMovieDbService } from "../../services";
-import { FormBuilder, FormGroup } from "@angular/forms";
-import { debounceTime, switchMap } from "rxjs/operators";
 
 interface IKeywordTag {
     id: number;
@@ -29,8 +29,6 @@ export class TheMovieDbComponent implements OnInit {
     public filteredTags: IMovieDbKeyword[];
     public filteredMovieGenres: IMovieDbKeyword[];
     public filteredTvGenres: IMovieDbKeyword[];
-
-    @ViewChild('fruitInput') public fruitInput: ElementRef<HTMLInputElement>;
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,

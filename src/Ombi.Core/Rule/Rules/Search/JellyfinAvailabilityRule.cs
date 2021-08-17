@@ -28,6 +28,7 @@ namespace Ombi.Core.Rule.Rules.Search
             var useImdb = false;
             var useTheMovieDb = false;
             var useTvDb = false;
+            var useId = false;
 
             if (obj.ImdbId.HasValue())
             {
@@ -39,6 +40,14 @@ namespace Ombi.Core.Rule.Rules.Search
             }
             if (item == null)
             {
+                if (obj.Id > 0)
+                {
+                    item = await JellyfinContentRepository.GetByTheMovieDbId(obj.Id.ToString());
+                    if (item != null)
+                    {
+                        useId = true;
+                    }
+                }
                 if (obj.TheMovieDbId.HasValue())
                 {
                     item = await JellyfinContentRepository.GetByTheMovieDbId(obj.TheMovieDbId);
@@ -63,6 +72,11 @@ namespace Ombi.Core.Rule.Rules.Search
             
             if (item != null)
             {
+                if (useId)
+                {
+                    obj.TheMovieDbId = obj.Id.ToString();
+                    useTheMovieDb = true;
+                }
                 obj.Available = true;
                 var s = await JellyfinSettings.GetSettingsAsync();
                 if (s.Enable)

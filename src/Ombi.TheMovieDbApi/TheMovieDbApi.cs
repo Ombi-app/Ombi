@@ -68,6 +68,34 @@ namespace Ombi.Api.TheMovieDb
             return await Api.Request<TheMovieDbContainer<DiscoverMovies>>(request);
         }
 
+
+
+        public async Task<List<MovieDbSearchResult>> AdvancedSearch(DiscoverModel model, CancellationToken cancellationToken)
+        {
+            var request = new Request($"discover/{model.Type}", BaseUri, HttpMethod.Get);
+            request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
+            if(model.ReleaseYear.HasValue && model.ReleaseYear.Value > 1900)
+            {
+                request.FullUri = request.FullUri.AddQueryParameter("year", model.ReleaseYear.Value.ToString());
+            }
+            if (model.KeywordIds.Any())
+            {
+                request.FullUri = request.FullUri.AddQueryParameter("with_keyword", string.Join(',', model.KeywordIds));
+            }
+            if (model.GenreIds.Any())
+            {
+                request.FullUri = request.FullUri.AddQueryParameter("with_genres", string.Join(',', model.GenreIds));
+            }
+            if (model.WatchProviders.Any())
+            {
+                request.FullUri = request.FullUri.AddQueryParameter("with_watch_providers", string.Join(',', model.WatchProviders));
+            }
+            //request.FullUri = request.FullUri.AddQueryParameter("sort_by", "popularity.desc");
+
+            var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request, cancellationToken);
+            return Mapper.Map<List<MovieDbSearchResult>>(result.results);
+        }
+
         public async Task<Collections> GetCollection(string langCode, int collectionId, CancellationToken cancellationToken)
         {
             // https://developers.themoviedb.org/3/discover/movie-discover
@@ -357,34 +385,45 @@ namespace Ombi.Api.TheMovieDb
             return Mapper.Map<List<MovieDbSearchResult>>(result.results);
         }
 
-        public async Task<List<Keyword>> SearchKeyword(string searchTerm)
+        public async Task<List<TheMovidDbKeyValue>> SearchKeyword(string searchTerm)
         {
             var request = new Request("search/keyword", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             request.AddQueryString("query", searchTerm);
             AddRetry(request);
 
-            var result = await Api.Request<TheMovieDbContainer<Keyword>>(request);
-            return result.results ?? new List<Keyword>();
+            var result = await Api.Request<TheMovieDbContainer<TheMovidDbKeyValue>>(request);
+            return result.results ?? new List<TheMovidDbKeyValue>();
         }
 
-        public async Task<Keyword> GetKeyword(int keywordId)
+        public async Task<List<WatchProvidersResults>> SearchWatchProviders(string media, string searchTerm, CancellationToken cancellationToken)
+        {
+            var request = new Request($"/watch/providers/{media}", BaseUri, HttpMethod.Get);
+            request.AddQueryString("api_key", ApiToken);
+            request.AddQueryString("query", searchTerm);
+            AddRetry(request);
+
+            var result = await Api.Request<TheMovieDbContainer<WatchProvidersResults>>(request, cancellationToken);
+            return result.results ?? new List<WatchProvidersResults>();
+        }
+
+        public async Task<TheMovidDbKeyValue> GetKeyword(int keywordId)
         {
             var request = new Request($"keyword/{keywordId}", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             AddRetry(request);
 
-            var keyword = await Api.Request<Keyword>(request);
+            var keyword = await Api.Request<TheMovidDbKeyValue>(request);
             return keyword == null || keyword.Id == 0 ? null : keyword;
         }
 
-        public async Task<List<Genre>> GetGenres(string media)
+        public async Task<List<Genre>> GetGenres(string media, CancellationToken cancellationToken)
         {
             var request = new Request($"genre/{media}/list", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             AddRetry(request);
 
-            var result = await Api.Request<GenreContainer<Genre>>(request);
+            var result = await Api.Request<GenreContainer<Genre>>(request, cancellationToken);
             return result.genres ?? new List<Genre>();
         }
 

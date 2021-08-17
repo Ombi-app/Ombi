@@ -231,3 +231,17 @@
     padding:0;
     margin: 0 4em 0 0.5em;
 }
+
+.advanced-search {
+    margin-left: 10px;
+}
+
+::ng-deep .dialog-responsive {
+    width: 40%;
+}
+
+@media only screen and (max-width: 760px) {
+    ::ng-deep .dialog-responsive {
+        width: 100%;
+    }
+}

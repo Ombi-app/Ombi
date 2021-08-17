@@ -4,10 +4,12 @@ import { Injectable, Inject } from "@angular/core";
 import { empty, Observable, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
 
-import { IMovieDbKeyword } from "../../interfaces";
+import { IMovieDbKeyword, IWatchProvidersResults } from "../../interfaces";
 import { ServiceHelpers } from "../service.helpers";
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+  })
 export class TheMovieDbService extends ServiceHelpers {
     constructor(http: HttpClient, @Inject(APP_BASE_HREF) href:string) {
         super(http, "/api/v1/TheMovieDb", href);
@@ -25,5 +27,9 @@ export class TheMovieDbService extends ServiceHelpers {
 
     public getGenres(media: string): Observable<IMovieDbKeyword[]> {
         return this.http.get<IMovieDbKeyword[]>(`${this.url}/Genres/${media}`, { headers: this.headers })
+    }
+
+    public getWatchProviders(media: string): Observable<IWatchProvidersResults[]> {
+        return this.http.get<IWatchProvidersResults[]>(`${this.url}/WatchProviders/${media}`, {headers: this.headers});
     }
 }

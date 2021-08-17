@@ -1,0 +1,68 @@
+<form [formGroup]="form"  (ngSubmit)="onSubmit()" *ngIf="form">
+  <h1 id="advancedOptionsTitle">
+    <i class="fas fa-sliders-h"></i> Advanced Search
+  </h1>
+  <hr />
+  <div class="alert alert-info" role="alert">
+    <i class="fas fa-x7 fa-search glyphicon"></i>
+    <span>{{ "Search.AdvancedSearch" | translate }}</span>
+  </div>
+
+  <div style="max-width: 0; max-height: 0; overflow: hidden">
+    <input autofocus="true" />
+  </div>
+
+  <div class="row">
+      <div style="margin: 2%;">
+    <span>Please choose what type of media you are searching for:</span>
+  </div>
+    <div class="col-md-12">
+      <div class="md-form-field">
+        <mat-radio-group formControlName="type" aria-label="Select an option">
+          <mat-radio-button value="movie">Movies </mat-radio-button>
+          <mat-radio-button style="padding-left: 5px;" value="tv">TV Shows </mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+    <div class="col-md-12"  style="margin-top:1%">
+      <mat-form-field appearance="outline" floatLabel=auto>
+        <mat-label>Year of Release</mat-label>
+        <input matInput id="releaseYear" name="releaseYear" formControlName="releaseYear">
+    </mat-form-field>
+  </div>
+
+
+    <div class="col-md-12">
+      <genre-select [form]="form" [mediaType]="form.controls.type.value"></genre-select>
+    </div>
+
+    <div class="col-md-12">
+      <watch-providers-select [form]="form" [mediaType]="form.controls.type.value"></watch-providers-select>
+    </div>
+    <div class="col-md-12">
+      
+      <span style="margin: 1%;">Please note that Keyword Searching is very hit and miss due to the inconsistent data in TheMovieDb</span>
+      <keyword-search [form]="form"></keyword-search>
+    </div>
+
+    </div>
+
+  <div mat-dialog-actions class="right-buttons">
+    <button
+      mat-raised-button
+      id="cancelButton"
+      [mat-dialog-close]=""
+      color="warn"
+    >
+      <i class="fas fa-times"></i> {{ "Common.Cancel" | translate }}
+    </button>
+    <button
+      mat-raised-button
+      id="requestButton"
+      color="accent"
+      type="submit"
+    >
+      <i class="fas fa-plus"></i> {{ "Common.Search" | translate }}
+    </button>
+  </div>
+</form>
