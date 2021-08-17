@@ -173,6 +173,10 @@ namespace Ombi.Core.Engine
                 return currentCode;
             }
             var user = await GetUser();
+            if (user == null)
+            {
+                return "en";
+            }
 
             if (string.IsNullOrEmpty(user.Language))
             {
