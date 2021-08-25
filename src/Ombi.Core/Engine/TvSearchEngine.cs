@@ -77,16 +77,16 @@ namespace Ombi.Core.Engine
 
         public async Task<SearchTvShowViewModel> GetShowInformation(string tvdbid, CancellationToken token)
         {
-            var show = await Cache.GetOrAdd(nameof(GetShowInformation) + tvdbid,
-                async () => await TvMazeApi.ShowLookupByTheTvDbId(int.Parse(tvdbid)), DateTime.Now.AddHours(12));
+            var show = await Cache.GetOrAddAsync(nameof(GetShowInformation) + tvdbid,
+                () =>  TvMazeApi.ShowLookupByTheTvDbId(int.Parse(tvdbid)), DateTimeOffset.Now.AddHours(12));
             if (show == null)
             {
                 // We don't have enough information
                 return null;
             }
 
-            var episodes = await Cache.GetOrAdd("TvMazeEpisodeLookup" + show.id,
-                async () => await TvMazeApi.EpisodeLookup(show.id), DateTime.Now.AddHours(12));
+            var episodes = await Cache.GetOrAddAsync("TvMazeEpisodeLookup" + show.id,
+                () =>  TvMazeApi.EpisodeLookup(show.id), DateTimeOffset.Now.AddHours(12));
             if (episodes == null || !episodes.Any())
             {
                 // We don't have enough information
@@ -133,7 +133,7 @@ namespace Ombi.Core.Engine
 
         public async Task<IEnumerable<SearchTvShowViewModel>> Popular()
         {
-            var result = await Cache.GetOrAdd(CacheKeys.PopularTv, async () => await TraktApi.GetPopularShows(null, ResultLimit), DateTime.Now.AddHours(12));
+            var result = await Cache.GetOrAddAsync(CacheKeys.PopularTv, () =>  TraktApi.GetPopularShows(null, ResultLimit), DateTimeOffset.Now.AddHours(12));
             var processed = ProcessResults(result);
             return await processed;
         }
@@ -146,8 +146,8 @@ namespace Ombi.Core.Engine
             var results = new List<TraktShow>();
             foreach (var pagesToLoad in pages)
             {
-                var apiResult = await Cache.GetOrAdd(nameof(Popular) + langCode + pagesToLoad.Page,
-                    async () => await TraktApi.GetPopularShows(pagesToLoad.Page, ResultLimit), DateTime.Now.AddHours(12));
+                var apiResult = await Cache.GetOrAddAsync(nameof(Popular) + langCode + pagesToLoad.Page,
+                    () =>  TraktApi.GetPopularShows(pagesToLoad.Page, ResultLimit), DateTimeOffset.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
 
@@ -158,7 +158,7 @@ namespace Ombi.Core.Engine
         public async Task<IEnumerable<SearchTvShowViewModel>> Anticipated()
         {
 
-            var result = await Cache.GetOrAdd(CacheKeys.AnticipatedTv, async () => await TraktApi.GetAnticipatedShows(null, ResultLimit), DateTime.Now.AddHours(12));
+            var result = await Cache.GetOrAddAsync(CacheKeys.AnticipatedTv, () =>  TraktApi.GetAnticipatedShows(null, ResultLimit), DateTimeOffset.Now.AddHours(12));
             var processed = ProcessResults(result);
             return await processed;
         }
@@ -171,8 +171,8 @@ namespace Ombi.Core.Engine
             var results = new List<TraktShow>();
             foreach (var pagesToLoad in pages)
             {
-                var apiResult = await Cache.GetOrAdd(nameof(Anticipated) + langCode + pagesToLoad.Page,
-                    async () => await TraktApi.GetAnticipatedShows(pagesToLoad.Page, ResultLimit), DateTime.Now.AddHours(12));
+                var apiResult = await Cache.GetOrAddAsync(nameof(Anticipated) + langCode + pagesToLoad.Page,
+                    () =>  TraktApi.GetAnticipatedShows(pagesToLoad.Page, ResultLimit), DateTimeOffset.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
             var processed = ProcessResults(results);
@@ -181,7 +181,7 @@ namespace Ombi.Core.Engine
 
         public async Task<IEnumerable<SearchTvShowViewModel>> Trending()
         {
-            var result = await Cache.GetOrAdd(CacheKeys.TrendingTv, async () => await TraktApi.GetTrendingShows(null, ResultLimit), DateTime.Now.AddHours(12));
+            var result = await Cache.GetOrAddAsync(CacheKeys.TrendingTv, () =>  TraktApi.GetTrendingShows(null, ResultLimit), DateTimeOffset.Now.AddHours(12));
             var processed = ProcessResults(result);
             return await processed;
         }
@@ -195,8 +195,8 @@ namespace Ombi.Core.Engine
             var results = new List<TraktShow>();
             foreach (var pagesToLoad in pages)
             {
-                var apiResult = await Cache.GetOrAdd(nameof(Trending) + langCode + pagesToLoad.Page,
-                    async () => await TraktApi.GetTrendingShows(pagesToLoad.Page, ResultLimit), DateTime.Now.AddHours(12));
+                var apiResult = await Cache.GetOrAddAsync(nameof(Trending) + langCode + pagesToLoad.Page,
+                    () =>  TraktApi.GetTrendingShows(pagesToLoad.Page, ResultLimit), DateTimeOffset.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
             var processed = ProcessResults(results);

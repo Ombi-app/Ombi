@@ -168,6 +168,17 @@ export class MovieDetailsComponent {
         }
     }
 
+
+    public async markUnavailable() {
+        const result = await this.requestService.markMovieUnavailable({ id: this.movieRequest.id }).toPromise();
+        if (result.result) {
+            this.movie.available = false;
+            this.messageService.send(result.message, "Ok");
+        } else {
+            this.messageService.send(result.errorMessage, "Ok");
+        }
+    }
+
     public setAdvancedOptions(data: IAdvancedData) {
         this.advancedOptions = data;
         if (data.rootFolderId) {

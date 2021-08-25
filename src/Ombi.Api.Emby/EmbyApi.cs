@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 using Ombi.Api.Emby.Models;
+using Ombi.Api.Emby.Models.Media;
 using Ombi.Api.Emby.Models.Media.Tv;
 using Ombi.Api.Emby.Models.Movie;
 using Ombi.Helpers;
@@ -112,19 +115,29 @@ namespace Ombi.Api.Emby
             return await Api.Request<EmbyItemContainer<EmbyMovie>>(request);
         }
 
-        public async Task<EmbyItemContainer<EmbyMovie>> GetAllMovies(string apiKey, int startIndex, int count, string userId, string baseUri)
+        public async Task<List<LibraryVirtualFolders>> GetLibraries(string apiKey, string baseUrl)
         {
-            return await GetAll<EmbyMovie>("Movie", apiKey, userId, baseUri, true, startIndex, count);
+            var request = new Request("library/VirtualFolders", baseUrl, HttpMethod.Get);
+            AddHeaders(request, apiKey);
+
+            var response = await Api.Request<List<LibraryVirtualFolders>>(request);
+            return response;
         }
 
-        public async Task<EmbyItemContainer<EmbyEpisodes>> GetAllEpisodes(string apiKey, int startIndex, int count, string userId, string baseUri)
+
+        public async Task<EmbyItemContainer<EmbyMovie>> GetAllMovies(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri)
         {
-            return await GetAll<EmbyEpisodes>("Episode", apiKey, userId, baseUri, false, startIndex, count);
+            return await GetAll<EmbyMovie>("Movie", apiKey, userId, baseUri, true, startIndex, count, parentIdFilder);
         }
 
-        public async Task<EmbyItemContainer<EmbySeries>> GetAllShows(string apiKey, int startIndex, int count, string userId, string baseUri)
+        public async Task<EmbyItemContainer<EmbyEpisodes>> GetAllEpisodes(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri)
         {
-            return await GetAll<EmbySeries>("Series", apiKey, userId, baseUri, false, startIndex, count);
+            return await GetAll<EmbyEpisodes>("Episode", apiKey, userId, baseUri, false, startIndex, count, parentIdFilder);
+        }
+
+        public async Task<EmbyItemContainer<EmbySeries>> GetAllShows(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri)
+        {
+            return await GetAll<EmbySeries>("Series", apiKey, userId, baseUri, false, startIndex, count, parentIdFilder);
         }
 
         public async Task<SeriesInformation> GetSeriesInformation(string mediaId, string apiKey, string userId, string baseUrl)
@@ -167,7 +180,7 @@ namespace Ombi.Api.Emby
             var obj = await Api.Request<EmbyItemContainer<T>>(request);
             return obj;
         }
-        private async Task<EmbyItemContainer<T>> GetAll<T>(string type, string apiKey, string userId, string baseUri, bool includeOverview, int startIndex, int count)
+        private async Task<EmbyItemContainer<T>> GetAll<T>(string type, string apiKey, string userId, string baseUri, bool includeOverview, int startIndex, int count, string parentIdFilder = default)
         {
             var request = new Request($"emby/users/{userId}/items", baseUri, HttpMethod.Get);
 
@@ -176,6 +189,10 @@ namespace Ombi.Api.Emby
             request.AddQueryString("Fields", includeOverview ? "ProviderIds,Overview" : "ProviderIds");
             request.AddQueryString("startIndex", startIndex.ToString());
             request.AddQueryString("limit", count.ToString());
+            if (!string.IsNullOrEmpty(parentIdFilder))
+            {
+                request.AddQueryString("ParentId", parentIdFilder);
+            }
 
             request.AddQueryString("IsVirtualItem", "False");
 

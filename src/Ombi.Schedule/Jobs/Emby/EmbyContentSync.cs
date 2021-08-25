@@ -35,6 +35,7 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly IEmbyApiFactory _apiFactory;
         private readonly IEmbyContentRepository _repo;
         private readonly IHubContext<NotificationHub> _notification;
+
         private IEmbyApi Api { get; set; }
 
         public async Task Execute(IJobExecutionContext job)
@@ -78,47 +79,46 @@ namespace Ombi.Schedule.Jobs.Emby
             //await _repo.ExecuteSql("DELETE FROM EmbyEpisode");
             //await _repo.ExecuteSql("DELETE FROM EmbyContent");
 
-            var movies = await Api.GetAllMovies(server.ApiKey, 0, 200, server.AdministratorId, server.FullUri);
-            var totalCount = movies.TotalRecordCount;
-            var processed = 1;
-
-            var mediaToAdd = new HashSet<EmbyContent>();
-
-            while (processed < totalCount)
+            if (server.EmbySelectedLibraries.Any() && server.EmbySelectedLibraries.Any(x => x.Enabled))
             {
-                foreach (var movie in movies.Items)
-                {
-                    if (movie.Type.Equals("boxset", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        var movieInfo =
-                            await Api.GetCollection(movie.Id, server.ApiKey, server.AdministratorId, server.FullUri);
-                        foreach (var item in movieInfo.Items)
-                        {
-                            await ProcessMovies(item, mediaToAdd, server);
-                        }
+                var movieLibsToFilter = server.EmbySelectedLibraries.Where(x => x.Enabled && x.CollectionType == "movies");
 
-                        processed++;
-                    }
-                    else
-                    {
-                        processed++;
-                        // Regular movie
-                        await ProcessMovies(movie, mediaToAdd, server);
-                    }
+                foreach (var movieParentIdFilder in movieLibsToFilter)
+                {
+                    _logger.LogInformation($"Scanning Lib '{movieParentIdFilder.Title}'");
+                    await ProcessMovies(server, movieParentIdFilder.Key);
                 }
 
-                // Get the next batch
-                movies = await Api.GetAllMovies(server.ApiKey, processed, 200, server.AdministratorId, server.FullUri);
-                await _repo.AddRange(mediaToAdd);
-                mediaToAdd.Clear();
+                var tvLibsToFilter = server.EmbySelectedLibraries.Where(x => x.Enabled && x.CollectionType == "tvshows");
+                foreach (var tvParentIdFilter in tvLibsToFilter)
+                {
+                    _logger.LogInformation($"Scanning Lib '{tvParentIdFilter.Title}'");
+                    await ProcessTv(server, tvParentIdFilter.Key);
+                }
 
+
+                var mixedLibs = server.EmbySelectedLibraries.Where(x => x.Enabled && x.CollectionType == "mixed");
+                foreach (var m in mixedLibs)
+                {
+                    _logger.LogInformation($"Scanning Lib '{m.Title}'");
+                    await ProcessTv(server, m.Key);
+                    await ProcessMovies(server, m.Key);
+                }
             }
+            else
+            {
+                await ProcessMovies(server);
+                await ProcessTv(server);
+            }
+        }
 
-
+        private async Task ProcessTv(EmbyServers server, string parentId = default)
+        {
             // TV Time
-            var tv = await Api.GetAllShows(server.ApiKey, 0, 200, server.AdministratorId, server.FullUri);
+            var mediaToAdd = new HashSet<EmbyContent>();
+            var tv = await Api.GetAllShows(server.ApiKey, parentId, 0, 200, server.AdministratorId, server.FullUri);
             var totalTv = tv.TotalRecordCount;
-            processed = 1;
+            var processed = 1;
             while (processed < totalTv)
             {
                 foreach (var tvShow in tv.Items)
@@ -162,13 +162,50 @@ namespace Ombi.Schedule.Jobs.Emby
                     }
                 }
                 // Get the next batch
-                tv = await Api.GetAllShows(server.ApiKey, processed, 200, server.AdministratorId, server.FullUri);
+                tv = await Api.GetAllShows(server.ApiKey, parentId, processed, 200, server.AdministratorId, server.FullUri);
                 await _repo.AddRange(mediaToAdd);
                 mediaToAdd.Clear();
             }
 
             if (mediaToAdd.Any())
                 await _repo.AddRange(mediaToAdd);
+        }
+
+        private async Task ProcessMovies(EmbyServers server, string parentId = default)
+        {
+            var movies = await Api.GetAllMovies(server.ApiKey, parentId, 0, 200, server.AdministratorId, server.FullUri);
+            var totalCount = movies.TotalRecordCount;
+            var processed = 1;
+            var mediaToAdd = new HashSet<EmbyContent>();
+            while (processed < totalCount)
+            {
+                foreach (var movie in movies.Items)
+                {
+                    if (movie.Type.Equals("boxset", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        var movieInfo =
+                            await Api.GetCollection(movie.Id, server.ApiKey, server.AdministratorId, server.FullUri);
+                        foreach (var item in movieInfo.Items)
+                        {
+                            await ProcessMovies(item, mediaToAdd, server);
+                        }
+
+                        processed++;
+                    }
+                    else
+                    {
+                        processed++;
+                        // Regular movie
+                        await ProcessMovies(movie, mediaToAdd, server);
+                    }
+                }
+
+                // Get the next batch
+                movies = await Api.GetAllMovies(server.ApiKey, parentId, processed, 200, server.AdministratorId, server.FullUri);
+                await _repo.AddRange(mediaToAdd);
+                mediaToAdd.Clear();
+
+            }
         }
 
         private async Task ProcessMovies(EmbyMovie movieInfo, ICollection<EmbyContent> content, EmbyServers server)

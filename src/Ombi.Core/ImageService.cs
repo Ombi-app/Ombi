@@ -23,8 +23,8 @@ namespace Ombi.Core
 
         public async Task<string> GetTvBackground(string tvdbId)
         {
-            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await _configRepository.GetAsync(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
-            var images = await _cache.GetOrAdd($"{CacheKeys.FanartTv}tv{tvdbId}", async () => await _fanartTvApi.GetTvImages(int.Parse(tvdbId), key.Value), DateTime.Now.AddDays(1));
+            var key = await _cache.GetOrAddAsync(CacheKeys.FanartTv, () => _configRepository.GetAsync(Store.Entities.ConfigurationTypes.FanartTv), DateTimeOffset.Now.AddDays(1));
+            var images = await _cache.GetOrAddAsync($"{CacheKeys.FanartTv}tv{tvdbId}", () => _fanartTvApi.GetTvImages(int.Parse(tvdbId), key.Value), DateTimeOffset.Now.AddDays(1));
 
             if (images == null)
             {

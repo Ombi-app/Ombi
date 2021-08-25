@@ -69,7 +69,7 @@ namespace Ombi.Controllers.V1.External
         [HttpGet("Profiles")]
         public async Task<IEnumerable<LidarrProfile>> GetProfiles()
         {
-            return await Cache.GetOrAdd(CacheKeys.LidarrQualityProfiles, async () =>
+            return await Cache.GetOrAddAsync(CacheKeys.LidarrQualityProfiles, async () =>
             {
                 var settings = await _lidarrSettings.GetSettingsAsync();
                 if (settings.Enabled)
@@ -77,7 +77,7 @@ namespace Ombi.Controllers.V1.External
                     return await _lidarrApi.GetProfiles(settings.ApiKey, settings.FullUri);
                 }
                 return null;
-            }, DateTime.Now.AddHours(1));
+            }, DateTimeOffset.Now.AddHours(1));
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Ombi.Controllers.V1.External
         [HttpGet("RootFolders")]
         public async Task<IEnumerable<LidarrRootFolder>> GetRootFolders()
         {
-            return await Cache.GetOrAdd(CacheKeys.LidarrRootFolders, async () =>
+            return await Cache.GetOrAddAsync(CacheKeys.LidarrRootFolders, async () =>
             {
                 var settings = await _lidarrSettings.GetSettingsAsync();
                 if (settings.Enabled)
@@ -96,7 +96,7 @@ namespace Ombi.Controllers.V1.External
                     return await _lidarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
                 }
                 return null;
-            }, DateTime.Now.AddHours(1));
+            }, DateTimeOffset.Now.AddHours(1));
         }
     }
 }

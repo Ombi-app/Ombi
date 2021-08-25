@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
-using System.Reflection;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Ombi.Api.Plex.Models;
 using Ombi.Api.Plex.Models.Friends;
 using Ombi.Api.Plex.Models.OAuth;
@@ -208,12 +208,28 @@ namespace Ombi.Api.Plex
             return await Api.Request<PlexMetadata>(request);
         }
 
-        public async Task<OAuthPin> GetPin(int pinId)
+        public async Task<OAuthContainer> GetPin(int pinId)
         {
             var request = new Request($"api/v2/pins/{pinId}", "https://plex.tv/", HttpMethod.Get);
             await AddHeaders(request);
 
-            return await Api.Request<OAuthPin>(request);
+            var response = await Api.RequestContent(request);
+
+            if (response.Contains("errors"))
+            {
+                var errors = JsonConvert.DeserializeObject<OAuthErrorsContainer>(response, Ombi.Api.Api.Settings);
+                return new OAuthContainer
+                {
+                    Errors = errors
+                };
+            }
+
+            var pinResult = JsonConvert.DeserializeObject<OAuthPin>(response, Ombi.Api.Api.Settings);
+
+            return new OAuthContainer
+            {
+                Result = pinResult
+            };
         }
 
         public async Task<Uri> GetOAuthUrl(string code, string applicationUrl)

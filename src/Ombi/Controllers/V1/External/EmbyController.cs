@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Api.Emby;
 using Ombi.Api.Emby.Models;
-using Ombi.Api.Plex;
+using Ombi.Api.Emby.Models.Media;
 using Ombi.Attributes;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
@@ -91,6 +91,52 @@ namespace Ombi.Controllers.V1.External
 
             // Filter out any dupes
             return vm.DistinctBy(x => x.Id);
+        }
+
+        [HttpPost("Library")]
+        public async Task<EmbyItemContainer<MediaFolders>> GetLibaries([FromBody] EmbyServers server)
+        {
+            var client = await EmbyApi.CreateClient();
+            var result = await client.GetLibraries(server.ApiKey, server.FullUri);
+            var mediaFolders = new EmbyItemContainer<MediaFolders>
+            {
+                TotalRecordCount = result.Count,
+                Items = new List<MediaFolders>()
+            };
+
+            foreach(var folder in result)
+            {
+                var toAdd = new MediaFolders
+                {
+                    Name = folder.Name,
+                    Id = folder.ItemId,
+                    ServerId = server.ServerId
+                };
+
+                var types = folder?.LibraryOptions?.TypeOptions?.Select(x => x.Type);
+                
+                if (!types.Any())
+                {
+                    continue;
+                }
+
+                if (types.Where(x => x.Equals("Movie", System.StringComparison.InvariantCultureIgnoreCase)
+                    || x.Equals("Episode", System.StringComparison.InvariantCultureIgnoreCase)).Count() >= 2)
+                {
+                    toAdd.CollectionType = "mixed";
+                }
+                else if (types.Where(x => x.Equals("Movie", System.StringComparison.InvariantCultureIgnoreCase)).Any())
+                {
+                    toAdd.CollectionType = "movies";
+                }
+                else if (types.Where(x => x.Equals("Episode", System.StringComparison.InvariantCultureIgnoreCase)).Any())
+                {
+                    toAdd.CollectionType = "tvshows";
+                }
+
+                mediaFolders.Items.Add(toAdd);
+            }
+            return mediaFolders;
         }
     }
 }

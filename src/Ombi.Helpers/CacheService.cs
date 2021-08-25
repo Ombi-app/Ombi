@@ -1,48 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using LazyCache;
 using Microsoft.Extensions.Caching.Memory;
-using Nito.AsyncEx;
 
 namespace Ombi.Helpers
 {
     public class CacheService : ICacheService
     {
-        private readonly IMemoryCache _memoryCache;
-        private readonly AsyncLock _mutex = new AsyncLock();
+        protected readonly IMemoryCache _memoryCache;
         public CacheService(IMemoryCache memoryCache)
         {
-            _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
+            _memoryCache = memoryCache;
         }
 
-        public async Task<T> GetOrAdd<T>(string cacheKey, Func<Task<T>> factory, DateTime absoluteExpiration = default(DateTime), CancellationToken cancellationToken = default(CancellationToken))
+        public virtual async Task<T> GetOrAddAsync<T>(string cacheKey, Func<Task<T>> factory, DateTimeOffset absoluteExpiration = default)
         {
-            if (absoluteExpiration == default(DateTime))
+            if (absoluteExpiration == default)
             {
-                absoluteExpiration = DateTime.Now.AddHours(1);
-            }
-            // locks get and set internally
-            if (_memoryCache.TryGetValue<T>(cacheKey, out var result))
-            {
-                return result;
+                absoluteExpiration = DateTimeOffset.Now.AddHours(1);
             }
 
-            if (_memoryCache.TryGetValue(cacheKey, out result))
+            return await _memoryCache.GetOrCreateAsync<T>(cacheKey, entry =>
             {
-                return result;
-            }
-
-            if (cancellationToken.CanBeCanceled)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-            }
-
-            result = await factory();
-            _memoryCache.Set(cacheKey, result, absoluteExpiration);
-
-            return result;
+                entry.AbsoluteExpiration = absoluteExpiration;
+                return factory();
+            });
         }
 
         public void Remove(string key)
@@ -50,28 +33,14 @@ namespace Ombi.Helpers
             _memoryCache.Remove(key);
         }
 
-
-
-        public T GetOrAdd<T>(string cacheKey, Func<T> factory, DateTime absoluteExpiration)
+        public T GetOrAdd<T>(string cacheKey, Func<T> factory, DateTimeOffset absoluteExpiration)
         {
             // locks get and set internally
-            if (_memoryCache.TryGetValue<T>(cacheKey, out var result))
+            return _memoryCache.GetOrCreate<T>(cacheKey, entry =>
             {
-                return result;
-            }
-
-            lock (TypeLock<T>.Lock)
-            {
-                if (_memoryCache.TryGetValue(cacheKey, out result))
-                {
-                    return result;
-                }
-
-                result = factory();
-                _memoryCache.Set(cacheKey, result, absoluteExpiration);
-
-                return result;
-            }
+                entry.AbsoluteExpiration = absoluteExpiration;
+                return factory();
+            });
         }
 
         private static class TypeLock<T>

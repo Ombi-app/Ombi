@@ -42,8 +42,9 @@ namespace Ombi.Core.Tests.Engine.V2
             var cache = new Mock<ICacheService>();
             var ombiSettings = new Mock<ISettingsService<OmbiSettings>>();
             var requestSubs = new Mock<IRepository<RequestSubscription>>();
+            var mediaCache = new Mock<IMediaCacheService>();
             _engine = new MovieRequestEngine(movieApi.Object, requestService.Object, user.Object, notificationHelper.Object, rules.Object, movieSender.Object,
-                logger.Object, userManager.Object, requestLogRepo.Object, cache.Object, ombiSettings.Object, requestSubs.Object);
+                logger.Object, userManager.Object, requestLogRepo.Object, cache.Object, ombiSettings.Object, requestSubs.Object, mediaCache.Object);
         }
 
         [Test]

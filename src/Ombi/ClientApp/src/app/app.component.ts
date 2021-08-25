@@ -28,7 +28,6 @@ export class AppComponent implements OnInit {
     public showNav: boolean;
     public updateAvailable: boolean;
     public currentUrl: string;
-    public userAccessToken: string;
     public voteEnabled = false;
     public applicationName: string = "Ombi"
     public isAdmin: boolean;
@@ -51,7 +50,7 @@ export class AppComponent implements OnInit {
         private readonly identity: IdentityService,
         @Inject(DOCUMENT) private document: HTMLDocument) {
 
-        this.translate.addLangs(["en", "de", "fr", "da", "es", "it", "nl", "sk", "sv", "no", "pl", "pt"]);
+        this.translate.addLangs(["en", "de", "fr", "da", "es", "it", "nl", "sk", "sv", "no", "pl", "ru", "pt"]);
 
         if (this.authService.loggedIn()) {
             this.user = this.authService.claims();
@@ -79,7 +78,7 @@ export class AppComponent implements OnInit {
 
         // See if we can match the supported langs with the current browser lang
         const browserLang: string = translate.getBrowserLang();
-        this.translate.use(browserLang.match(/en|fr|da|de|es|it|nl|sk|sv|no|pl|pt/) ? browserLang : "en");
+        this.translate.use(browserLang.match(/en|fr|da|de|es|it|nl|ru|sk|sv|no|pl|pt/) ? browserLang : "en");
 
     }
 

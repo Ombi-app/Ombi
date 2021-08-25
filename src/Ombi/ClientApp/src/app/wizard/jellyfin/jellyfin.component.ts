@@ -1,9 +1,8 @@
 ﻿import { Component, OnInit } from "@angular/core";
 
+import { IJellyfinSettings } from "../../interfaces";
 import { JellyfinService } from "../../services";
 import { NotificationService } from "../../services";
-
-import { IJellyfinSettings } from "../../interfaces";
 
 @Component({
     selector: "wizard-jellyfin",
@@ -35,7 +34,8 @@ export class JellyfinComponent implements OnInit {
             ssl: false,
             subDir: "",
             serverHostname: "",
-            serverId: undefined
+            serverId: undefined,
+            jellyfinSelectedLibraries: []
         });
     }
 

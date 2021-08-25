@@ -20,6 +20,7 @@ export class PlexTvService {
         "X-Plex-Device": "Ombi (Web)",
         "X-Plex-Platform": "Web",
         "Accept": "application/json",
+        'X-Plex-Model': 'Plex OAuth',
     });
         return this.http.post<IPlexPin>("https://plex.tv/api/v2/pins?strong=true", null,  {headers});
     }

@@ -8,13 +8,11 @@
         </legend>
 
         <div class="row">
-            <div class="col-md-6 col-6 col-sm-6">
-                <div style="float:right;text-align:left;">
-                    <div class="md-form-field">
-                        <mat-slide-toggle [(ngModel)]="settings.enable" (change)="toggle()" [checked]="settings.enable">Enable</mat-slide-toggle>
-                    </div>
-                </div>
-            </div>
+          <div class="col-md-6 col-6 col-sm-6">
+                <div class="md-form-field">
+                    <mat-slide-toggle [(ngModel)]="settings.enable" [checked]="settings.enable">Enable
+                    </mat-slide-toggle>
+                </div>  </div>
         </div>
         <mat-tab-group #tabGroup [selectedIndex]="selected.value" (selectedTabChange)="addTab($event)" (selectedIndexChange)="selected.setValue($event)" animationDuration="0ms" style="display:block;"> 
             <mat-tab *ngFor="let server of settings.servers" [label]="server.name">
@@ -74,8 +72,29 @@
                                     <span *ngIf="!server.serverHostname">Current URL: "https://app.emby.media/#!/item/item.html?id=1</span>
                                 </small>
                             </div>
+                            <label>Please select the libraries you want Ombi to look in for content</label>
+                            <br />
+                            <small>Note: if nothing is selected, we will monitor all libraries</small>
+                            <div class="md-form-field">
+                                <div>
+                                    <button mat-raised-button (click)="loadLibraries(server)"
+                                        class="mat-focus-indicator mat-stroked-button mat-button-base">Load Libraries
+                                        <i class="fas fa-film"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <br />
+                            <div *ngIf="server.embySelectedLibraries">
+                                <div *ngFor="let lib of server.embySelectedLibraries">
+                                    <div class="md-form-field">
+                                        <div class="checkbox">
+                                            <mat-slide-toggle [(ngModel)]="lib.enabled" [checked]="lib.enabled"
+                                                for="{{lib.title}}">{{lib.title}}</mat-slide-toggle>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                            
                             <div class="form-group">
                                 <div>
                                     <button mat-raised-button id="testEmby" type="button" (click)="test(server)" class="mat-focus-indicator mat-stroked-button mat-button-base">Test Connectivity <div id="spinner"></div></button>
@@ -87,7 +106,7 @@
                                 </div>
                             </div>
                         </div>
-            </mat-tab>  
+            </mat-tab>
             <mat-tab label="" disabled=true> </mat-tab>
             <mat-tab label="Add Server" position=100> </mat-tab>
                   

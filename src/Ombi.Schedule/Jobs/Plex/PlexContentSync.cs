@@ -52,8 +52,10 @@ namespace Ombi.Schedule.Jobs.Plex
     public class PlexContentSync : IPlexContentSync
     {
         private readonly IMovieDbApi _movieApi;
+        private readonly IMediaCacheService _mediaCacheService;
+
         public PlexContentSync(ISettingsService<PlexSettings> plex, IPlexApi plexApi, ILogger<PlexContentSync> logger, IPlexContentRepository repo,
-            IPlexEpisodeSync epsiodeSync, IHubContext<NotificationHub> hub, IMovieDbApi movieDbApi)
+            IPlexEpisodeSync epsiodeSync, IHubContext<NotificationHub> hub, IMovieDbApi movieDbApi, IMediaCacheService mediaCacheService)
         {
             Plex = plex;
             PlexApi = plexApi;
@@ -62,6 +64,7 @@ namespace Ombi.Schedule.Jobs.Plex
             EpisodeSync = epsiodeSync;
             Notification = hub;
             _movieApi = movieDbApi;
+            _mediaCacheService = mediaCacheService;
             Plex.ClearCache();
         }
 
@@ -121,6 +124,7 @@ namespace Ombi.Schedule.Jobs.Plex
             {
                 await NotifyClient("Plex Sync - Checking if any requests are now available");
                 Logger.LogInformation("Kicking off Plex Availability Checker");
+                await _mediaCacheService.Purge();
                 await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
             }
             var processedCont = processedContent?.Content?.Count() ?? 0;
@@ -175,7 +179,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
             var allEps = Repo.GetAllEpisodes();
 
-            foreach (var content in allContent)
+            foreach (var content in allContent.OrderByDescending(x => x.viewGroup))
             {
                 Logger.LogDebug($"Got type '{content.viewGroup}' to process");
                 if (content.viewGroup.Equals(PlexMediaType.Episode.ToString(), StringComparison.InvariantCultureIgnoreCase))

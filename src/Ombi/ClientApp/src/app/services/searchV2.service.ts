@@ -4,7 +4,7 @@ import { Injectable, Inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
-import { IMultiSearchResult, ISearchMovieResult, ISearchTvResult } from "../interfaces";
+import { IDiscoverModel, IMultiSearchResult, ISearchMovieResult, ISearchTvResult } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
 import { ISearchMovieResultV2 } from "../interfaces/ISearchMovieResultV2";
@@ -51,6 +51,10 @@ export class SearchV2Service extends ServiceHelpers {
         return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/Popular/${currentlyLoaded}/${toLoad}`).toPromise();
     }
 
+    public advancedSearch(model: IDiscoverModel, currentlyLoaded: number, toLoad: number): Promise<ISearchMovieResult[]> {
+        return this.http.post<ISearchMovieResult[]>(`${this.url}/advancedSearch/Movie/${currentlyLoaded}/${toLoad}`, model).toPromise();
+    }
+
     public upcomingMovies(): Observable<ISearchMovieResult[]> {
         return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/upcoming`);
     }
@@ -61,6 +65,14 @@ export class SearchV2Service extends ServiceHelpers {
 
     public recentlyRequestedMoviesByPage(currentlyLoaded: number, toLoad: number): Promise<ISearchMovieResult[]> {
         return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/requested/${currentlyLoaded}/${toLoad}`).toPromise();
+    }
+
+    public recentlyRequestedTvByPage(currentlyLoaded: number, toLoad: number): Promise<ISearchTvResultV2[]> {
+        return this.http.get<ISearchTvResultV2[]>(`${this.url}/tv/requested/${currentlyLoaded}/${toLoad}`).toPromise();
+    }
+
+    public seasonalMoviesByPage(currentlyLoaded: number, toLoad: number): Promise<ISearchMovieResult[]> {
+        return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/seasonal/${currentlyLoaded}/${toLoad}`).toPromise();
     }
 
     public nowPlayingMovies(): Observable<ISearchMovieResult[]> {

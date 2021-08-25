@@ -23,6 +23,8 @@ using System.Threading;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using System.Diagnostics;
+using Ombi.Core.Engine.Interfaces;
+using Ombi.Core.Models.UI;
 
 namespace Ombi.Core.Engine.V2
 {
@@ -33,10 +35,11 @@ namespace Ombi.Core.Engine.V2
         private readonly ITraktApi _traktApi;
         private readonly IMovieDbApi _movieApi;
         private readonly ISettingsService<CustomizationSettings> _customization;
+        private readonly ITvRequestEngine _requestEngine;
 
         public TvSearchEngineV2(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper,
             ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um, ICacheService memCache, ISettingsService<OmbiSettings> s,
-            IRepository<RequestSubscription> sub, IMovieDbApi movieApi, ISettingsService<CustomizationSettings> customization)
+            IRepository<RequestSubscription> sub, IMovieDbApi movieApi, ISettingsService<CustomizationSettings> customization, ITvRequestEngine requestEngine)
             : base(identity, service, r, um, memCache, s, sub)
         {
             _tvMaze = tvMaze;
@@ -44,6 +47,7 @@ namespace Ombi.Core.Engine.V2
             _traktApi = trakt;
             _movieApi = movieApi;
             _customization = customization;
+            _requestEngine = requestEngine;
         }
 
 
@@ -56,8 +60,8 @@ namespace Ombi.Core.Engine.V2
         public async Task<SearchFullInfoTvShowViewModel> GetShowInformation(string tvdbid, CancellationToken token)
         {
             var langCode = await DefaultLanguageCode(null);
-            var show = await Cache.GetOrAdd(nameof(GetShowInformation) + langCode + tvdbid,
-              async () => await _movieApi.GetTVInfo(tvdbid, langCode), DateTime.Now.AddHours(12));
+            var show = await Cache.GetOrAddAsync(nameof(GetShowInformation) + langCode + tvdbid,
+              async () => await _movieApi.GetTVInfo(tvdbid, langCode), DateTimeOffset.Now.AddHours(12));
             if (show == null || show.name == null)
             {
                 // We don't have enough information
@@ -68,8 +72,8 @@ namespace Ombi.Core.Engine.V2
             {
                 // There's no regional assets for this, so 
                 // lookup the en-us version to get them
-                var enShow = await Cache.GetOrAdd(nameof(GetShowInformation) + "en" + tvdbid,
-                    async () => await _movieApi.GetTVInfo(tvdbid, "en"), DateTime.Now.AddHours(12));
+                var enShow = await Cache.GetOrAddAsync(nameof(GetShowInformation) + "en" + tvdbid,
+                    async () => await _movieApi.GetTVInfo(tvdbid, "en"), DateTimeOffset.Now.AddHours(12));
 
                 // For some of the more obsecure cases
                 if (!show.overview.HasValue())
@@ -101,8 +105,8 @@ namespace Ombi.Core.Engine.V2
             var results = new List<MovieDbSearchResult>();
             foreach (var pagesToLoad in pages)
             {
-                var apiResult = await Cache.GetOrAdd(nameof(Popular) + langCode + pagesToLoad.Page,
-                 async () => await _movieApi.PopularTv(langCode, pagesToLoad.Page), DateTime.Now.AddHours(12));
+                var apiResult = await Cache.GetOrAddAsync(nameof(Popular) + langCode + pagesToLoad.Page,
+                 async () => await _movieApi.PopularTv(langCode, pagesToLoad.Page), DateTimeOffset.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
 
@@ -118,8 +122,8 @@ namespace Ombi.Core.Engine.V2
             var results = new List<MovieDbSearchResult>();
             foreach (var pagesToLoad in pages)
             {
-                var apiResult = await Cache.GetOrAdd(nameof(Anticipated) + langCode + pagesToLoad.Page,
-                    async () => await _movieApi.UpcomingTv(langCode, pagesToLoad.Page), DateTime.Now.AddHours(12));
+                var apiResult = await Cache.GetOrAddAsync(nameof(Anticipated) + langCode + pagesToLoad.Page,
+                    async () => await _movieApi.UpcomingTv(langCode, pagesToLoad.Page), DateTimeOffset.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
             var processed = ProcessResults(results);
@@ -134,8 +138,8 @@ namespace Ombi.Core.Engine.V2
             var results = new List<MovieDbSearchResult>();
             foreach (var pagesToLoad in pages)
             {
-                var apiResult = await Cache.GetOrAdd(nameof(Trending) + langCode + pagesToLoad.Page,
-                    async () => await _movieApi.TopRatedTv(langCode, pagesToLoad.Page), DateTime.Now.AddHours(12));
+                var apiResult = await Cache.GetOrAddAsync(nameof(Trending) + langCode + pagesToLoad.Page,
+                    async () => await _movieApi.TopRatedTv(langCode, pagesToLoad.Page), DateTimeOffset.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
 
@@ -164,6 +168,43 @@ namespace Ombi.Core.Engine.V2
             return data;
         }
 
+
+        public async Task<IEnumerable<SearchFullInfoTvShowViewModel>> RecentlyRequestedShows(int currentlyLoaded, int toLoad, CancellationToken cancellationToken)
+        {
+            var langCode = await DefaultLanguageCode(null);
+
+            var results = new List<SearchFullInfoTvShowViewModel>();
+
+            var requestResult = await Cache.GetOrAddAsync(nameof(RecentlyRequestedShows) + "Requests" + toLoad + langCode,
+                async () =>
+                {
+                    return await _requestEngine.GetRequests(toLoad, currentlyLoaded, new Models.UI.OrderFilterModel
+                    {
+                        OrderType = OrderType.RequestedDateDesc
+                    });
+                }, DateTimeOffset.Now.AddMinutes(15));
+
+            var movieDBResults = await Cache.GetOrAddAsync(nameof(RecentlyRequestedShows) + toLoad + langCode,
+                async () =>
+                {
+                    var responses = new List<TvInfo>();
+                    foreach (var movie in requestResult.Collection)
+                    {
+                        responses.Add(await _movieApi.GetTVInfo(movie.ExternalProviderId.ToString()));
+                    }
+                    return responses;
+                }, DateTimeOffset.Now.AddHours(12));
+
+            var mapped = _mapper.Map<List<SearchFullInfoTvShowViewModel>>(movieDBResults);
+  
+            foreach(var map in mapped)
+            {
+                var processed = await ProcessResult(map);
+                results.Add(processed);
+            }
+            return results;
+        }
+
         private async Task<IEnumerable<SearchTvShowViewModel>> ProcessResults(List<MovieDbSearchResult> items)
         {
             var retVal = new List<SearchTvShowViewModel>(); 
@@ -178,14 +219,14 @@ namespace Ombi.Core.Engine.V2
                 if (settings.HideAvailableFromDiscover)
                 {
                     // To hide, we need to know if it's fully available, the only way to do this is to lookup it's episodes to check if we have every episode
-                    var show = await Cache.GetOrAdd(nameof(GetShowInformation) + tvMazeSearch.Id.ToString(),
+                    var show = await Cache.GetOrAddAsync(nameof(GetShowInformation) + tvMazeSearch.Id.ToString(),
                         async () => await _movieApi.GetTVInfo(tvMazeSearch.Id.ToString()), DateTime.Now.AddHours(12));
                     foreach (var tvSeason in show.seasons.Where(x => x.season_number != 0)) // skip the first season
                     {
-                        var seasonEpisodes = await Cache.GetOrAdd("SeasonEpisodes" + show.id + tvSeason.season_number, async () =>
+                        var seasonEpisodes = await Cache.GetOrAddAsync("SeasonEpisodes" + show.id + tvSeason.season_number, async () =>
                         {
                             return await _movieApi.GetSeasonEpisodes(show.id, tvSeason.season_number, CancellationToken.None);
-                        }, DateTime.Now.AddHours(12));
+                        }, DateTimeOffset.Now.AddHours(12));
 
                         MapSeasons(tvMazeSearch.SeasonRequests, tvSeason, seasonEpisodes);
                     }

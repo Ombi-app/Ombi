@@ -1,14 +1,15 @@
+import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { SearchV2Service } from "../../../services";
-import { IDiscoverCardResult } from "../../interfaces";
-import { IMultiSearchResult, RequestType } from "../../../interfaces";
-import { FilterService } from "../../services/filter-service";
-import { SearchFilter } from "../../../my-nav/SearchFilter";
-import { StorageService } from "../../../shared/storage/storage-service";
+import { IMultiSearchResult, ISearchMovieResult, RequestType } from "../../../interfaces";
 
-import { isEqual } from "lodash";
+import { AdvancedSearchDialogDataService } from "../../../shared/advanced-search-dialog/advanced-search-dialog-data.service";
 import { AuthService } from "../../../auth/auth.service";
+import { FilterService } from "../../services/filter-service";
+import { IDiscoverCardResult } from "../../interfaces";
+import { SearchFilter } from "../../../my-nav/SearchFilter";
+import { SearchV2Service } from "../../../services";
+import { StorageService } from "../../../shared/storage/storage-service";
+import { isEqual } from "lodash";
 
 @Component({
     templateUrl: "./search-results.component.html",
@@ -25,21 +26,40 @@ export class DiscoverSearchResultsComponent implements OnInit {
 
     public filter: SearchFilter;
 
+    private isAdvancedSearch: boolean;
+
     constructor(private searchService: SearchV2Service,
         private route: ActivatedRoute,
         private filterService: FilterService,
+        private router: Router,
+        private advancedDataService: AdvancedSearchDialogDataService,
         private store: StorageService,
         private authService: AuthService) {
         this.route.params.subscribe((params: any) => {
+            this.isAdvancedSearch = this.router.url === '/discover/advanced/search';
+            if (this.isAdvancedSearch) {
+                this.loadAdvancedData();
+                return;
+            }
             this.searchTerm = params.searchTerm;
             this.clear();
             this.init();
         });
+
+        this.advancedDataService.onDataChange.subscribe(() => {
+            this.clear();
+            this.loadAdvancedData();
+        });
+
     }
 
     public async ngOnInit() {
-        this.loadingFlag = true;
         this.isAdmin = this.authService.isAdmin();
+
+        if (this.advancedDataService) {
+            return;
+        }
+        this.loadingFlag = true;
 
         this.filterService.onFilterChange.subscribe(async x => {
             if (!isEqual(this.filter, x)) {
@@ -113,6 +133,48 @@ export class DiscoverSearchResultsComponent implements OnInit {
     private clear() {
         this.results = [];
         this.discoverResults = [];
+    }
+
+    private loadAdvancedData() {
+        const advancedData = this.advancedDataService.getData();
+        this.mapAdvancedData(advancedData);
+        return;
+    }
+
+    public mapAdvancedData(advancedData: ISearchMovieResult[]) {
+        this.finishLoading();
+        const type = this.advancedDataService.getType();
+        advancedData.forEach(m => {
+
+            let mediaType = type;
+
+            let poster = `https://image.tmdb.org/t/p/w300/${m.posterPath}`;
+            if (!m.posterPath) {
+                if (mediaType === RequestType.movie) {
+                    poster = "images/default_movie_poster.png"
+                }
+                if (mediaType === RequestType.tvShow) {
+                    poster = "images/default_tv_poster.png"
+                }
+            }
+
+            this.discoverResults.push({
+                posterPath:  poster,
+                requested: false,
+                title: m.title,
+                type: mediaType,
+                id: m.id,
+                url: "",
+                rating: 0,
+                overview: m.overview,
+                approved: false,
+                imdbid: "",
+                denied: false,
+                background: "",
+                available: false,
+                tvMovieDb: false
+            });
+        });
     }
 
     private async search() {

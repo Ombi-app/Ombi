@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
 using Ombi.Api.Plex.Models;
 using Ombi.Api.Plex.Models.OAuth;
@@ -11,24 +13,37 @@ namespace Ombi.Core.Authentication
 {
     public class PlexOAuthManager : IPlexOAuthManager
     {
-        public PlexOAuthManager(IPlexApi api, ISettingsService<CustomizationSettings> settings)
+        public PlexOAuthManager(IPlexApi api, ISettingsService<CustomizationSettings> settings, ILogger<PlexOAuthManager> logger)
         {
             _api = api;
             _customizationSettingsService = settings;
+            _logger = logger;
         }
 
         private readonly IPlexApi _api;
         private readonly ISettingsService<CustomizationSettings> _customizationSettingsService;
+        private readonly ILogger _logger;
 
         public async Task<string> GetAccessTokenFromPin(int pinId)
         {
             var pin = await _api.GetPin(pinId);
-            if (pin.expiresAt < DateTime.UtcNow)
+            if (pin.Errors != null)
             {
+                foreach (var err in pin.Errors?.errors ?? new List<OAuthErrors>())
+                { 
+                    _logger.LogError($"Code: '{err.code}' : '{err.message}'");
+                }
+
                 return string.Empty;
             }
 
-            return pin.authToken;
+            if (pin.Result.expiresIn <= 0)
+            {
+                _logger.LogError("Pin has expired");
+                return string.Empty;
+            }
+
+            return pin.Result.authToken;
         }
 
         public async Task<PlexAccount> GetAccount(string accessToken)

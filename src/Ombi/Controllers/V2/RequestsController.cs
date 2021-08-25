@@ -12,6 +12,7 @@ using Ombi.Store.Entities;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Ombi.Attributes;
+using Ombi.Helpers;
 
 namespace Ombi.Controllers.V2
 {
