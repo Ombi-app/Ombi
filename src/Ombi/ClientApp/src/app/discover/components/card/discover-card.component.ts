@@ -82,9 +82,6 @@ export class DiscoverCardComponent implements OnInit {
                 this.requestable = true;
                 this.monitored = false;
             }
-            console.log(this.result.title);
-            console.log(this.requestable);
-            console.log(this.monitored);
         });
     }
 
