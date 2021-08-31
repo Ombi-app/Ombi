@@ -11,7 +11,7 @@
     </div>
         <img [routerLink]="generateDetailsLink()" id="cardImage" src="{{result.posterPath}}" class="image"
             alt="{{result.title}}">
-        <div [ngClass]="result.posterPath != null ? 'middle-show' : 'middle'">
+        <div [ngClass]="result.posterPath != null ? 'middle' : 'middle-show'">
             <a class="poster-overlay" [routerLink]="generateDetailsLink()">
                 <div class="summary">
                     <div class="title" id="title{{result.id}}">{{result.title}}</div>
