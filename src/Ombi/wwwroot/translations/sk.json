@@ -4,8 +4,8 @@
         "UsernamePlaceholder": "Užívateľské meno",
         "PasswordPlaceholder": "Heslo",
         "RememberMe": "Zapamätať prihlásenie",
-        "SignInWith": "Sign in with {{appName}}",
-        "SignInWithPlex": "Sign in with Plex",
+        "SignInWith": "Prihlásiť sa s {{appName}}",
+        "SignInWithPlex": "Prihlásiť sa s Plex",
         "ForgottenPassword": "Zabudli ste heslo?",
         "Errors": {
             "IncorrectCredentials": "Nesprávne meno alebo heslo"
@@ -26,12 +26,12 @@
         "Denied": "Zamietnuté",
         "Approve": "Schválené",
         "PartlyAvailable": "Čiastočne dostupné",
-        "ViewDetails": "View Details",
+        "ViewDetails": "Zobraziť podrobnosti",
         "Errors": {
             "Validation": "Skontrolujte zadaný obsah"
         },
-        "Cancel": "Cancel",
-        "Submit": "Submit"
+        "Cancel": "Zrušiť",
+        "Submit": "Odoslať"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "Emailová adresa",
@@ -49,7 +49,7 @@
         "CheckPageForUpdates": "Prezrite túto stránku pre aktualizácie."
     },
     "NavigationBar": {
-        "Discover": "Discover",
+        "Discover": "Objaviť",
         "Search": "Hľadať",
         "Requests": "Požiadavky",
         "UserManagement": "Správa užívateľov",
@@ -65,20 +65,20 @@
         "Logout": "Odhlásiť sa",
         "OpenMobileApp": "Otvoriť mobilnú aplikáciu",
         "RecentlyAdded": "Nedávno pridané",
-        "ChangeTheme": "Change Theme",
-        "Calendar": "Calendar",
-        "UserPreferences": "Preferences",
-        "FeatureSuggestion": "Feature Suggestion",
-        "FeatureSuggestionTooltip": "Have a great new idea? Suggest it here!",
+        "ChangeTheme": "Zmeniť tému",
+        "Calendar": "Kalendár",
+        "UserPreferences": "Preferencie",
+        "FeatureSuggestion": "Návrh funkcie",
+        "FeatureSuggestionTooltip": "Máš skvelý nápad? Navrhni to tu!",
         "Filter": {
             "Movies": "Filmy",
             "TvShows": "Seriály",
             "Music": "Hudba",
-            "People": "People"
+            "People": "Ľudia"
         },
-        "MorningWelcome": "Good morning!",
-        "AfternoonWelcome": "Good afternoon!",
-        "EveningWelcome": "Good evening!"
+        "MorningWelcome": "Dobré ráno!",
+        "AfternoonWelcome": "Dobrý deň!",
+        "EveningWelcome": "Dobrý večer!"
     },
     "Search": {
         "Title": "Hľadať",
@@ -124,8 +124,8 @@
         "Title": "Požiadavky",
         "Paragraph": "Nižšie nájdete svoje a všetky ďalšie žiadosti, ako aj stav ich sťahovania a schvaľovania.",
         "MoviesTab": "Filmy",
-        "ArtistName": "Artist",
-        "AlbumName": "Album Name",
+        "ArtistName": "Umelec",
+        "AlbumName": "Názov albumu",
         "TvTab": "Seriály",
         "MusicTab": "Hudba",
         "RequestedBy": "Vyžiadané od",
@@ -145,7 +145,7 @@
         "MarkAvailable": "Označiť dostupné",
         "Remove": "Odstrániť",
         "Deny": "Odmietnuť",
-        "DenyReason": "Deny Reason",
+        "DenyReason": "Odmietnuť dôvod",
         "Season": "Séria",
         "GridTitle": "Názov",
         "AirDate": "Dátum vysielania",
@@ -167,19 +167,19 @@
             "NextMinutes": "Ďalšia žiadosť bude pridaná o {{time}} minút",
             "NextMinute": "Ďalšia žiadosť bude pridaná o {{time}} minútu"
         },
-        "AllRequests": "All Requests",
-        "PendingRequests": "Pending Requests",
-        "ProcessingRequests": "Processing Requests",
-        "AvailableRequests": "Available Requests",
-        "DeniedRequests": "Denied Requests",
+        "AllRequests": "Všetky požiadavky",
+        "PendingRequests": "Čakajúce požiadavky",
+        "ProcessingRequests": "Spracovávané požiadavky",
+        "AvailableRequests": "Dostupné požiadavky",
+        "DeniedRequests": "Odmietnuté požiadavky",
         "RequestsToDisplay": "Requests to display",
         "RequestsTitle": "Názov",
         "Details": "Podrobnosti",
-        "Options": "Options",
+        "Options": "Možnosti",
         "RequestPanel": {
-            "Delete": "Delete Request",
-            "Approve": "Approve Request",
-            "ChangeAvailability": "Mark Available"
+            "Delete": "Odstrániž požiadavku",
+            "Approve": "Schváliť žiadosť",
+            "ChangeAvailability": "Označiť k dispozícií"
         }
     },
     "Issues": {
@@ -201,19 +201,19 @@
         "WriteMessagePlaceholder": "Napíšte správu sem...",
         "ReportedBy": "Nahlásené od",
         "IssueDialog": {
-            "Title": "Report an issue",
-            "DescriptionPlaceholder": "Please describe the issue",
-            "TitlePlaceholder": "Short title of your issue",
-            "SelectCategory": "Select Category",
-            "IssueCreated": "Issue has been created"
+            "Title": "Nahlásiť problém",
+            "DescriptionPlaceholder": "Prosím, popíšte váš problém",
+            "TitlePlaceholder": "Krátky nadpis vášho problému",
+            "SelectCategory": "Vybrať kategóriu",
+            "IssueCreated": "Problém bol nahlásený"
         },
         "Outstanding": "There are outstanding issues",
-        "ResolvedDate": "Resolved date",
-        "CreatedDate": "Raised on",
-        "MarkedAsResolved": "This issue has now been marked as resolved!",
-        "MarkedAsInProgress": "This issue has now been marked as in progress!",
-        "Delete": "Delete issue",
-        "DeletedIssue": "Issue has been deleted"
+        "ResolvedDate": "Dátum vyriešenia",
+        "CreatedDate": "Nastolený",
+        "MarkedAsResolved": "Tento problém bol označený ako vyriešený!",
+        "MarkedAsInProgress": "Tento problém bol označený ako v priebehu riešenia!",
+        "Delete": "Odstrániť problém",
+        "DeletedIssue": "Problém bol odstránený"
     },
     "Filter": {
         "ClearFilter": "Vymazať filter",
@@ -223,10 +223,10 @@
         "PendingApproval": "Čaká na schválenie"
     },
     "UserManagment": {
-        "TvRemaining": "TV: {{remaining}}/{{total}} zostávajúce",
+        "TvRemaining": "Seriál: {{remaining}}/{{total}} zostávajúce",
         "MovieRemaining": "Filmy: {{remaining}}/{{total}} zostávajúce",
         "MusicRemaining": "Hudba: {{remaining}}/{{total}} zostávajúce",
-        "TvDue": "TV: {{date}}",
+        "TvDue": "Seriál: {{date}}",
         "MovieDue": "Film: {{date}}",
         "MusicDue": "Hudba: {{date}}"
     },
@@ -236,65 +236,65 @@
     },
     "MediaDetails": {
         "Denied": "Zamietnuté",
-        "RecommendationsTitle": "Recommendations",
+        "RecommendationsTitle": "Odporúčania",
         "SimilarTitle": "Podobné",
-        "VideosTitle": "Videos",
-        "AlbumsTitle": "Albums",
-        "RequestAllAlbums": "Request All Albums",
-        "ClearSelection": "Clear Selection",
-        "RequestSelectedAlbums": "Request Selected Albums",
-        "ViewCollection": "View Collection",
-        "NotEnoughInfo": "Unfortunately there is not enough information about this show yet!",
-        "AdvancedOptions": "Advanced Options",
-        "QualityProfilesSelect": "Select A Quality Profile",
-        "RootFolderSelect": "Select A Root Folder",
+        "VideosTitle": "Videá",
+        "AlbumsTitle": "Albumy",
+        "RequestAllAlbums": "Požiadať všetky albumy",
+        "ClearSelection": "Zrušiť výber",
+        "RequestSelectedAlbums": "Požiadať vybrané albumy",
+        "ViewCollection": "Pozrieť zbierku",
+        "NotEnoughInfo": "Bohužiaľ, o tomto seriáli nie je k dispozícií dostatok informácií!",
+        "AdvancedOptions": "Pokročilé možnosti",
+        "QualityProfilesSelect": "Výber profilu kvality",
+        "RootFolderSelect": "Výber koreňového priečinka",
         "Status": "Stav",
         "Availability": "Dostupnosť",
-        "RequestStatus": "Request Status",
-        "Quality": "Quality",
-        "RootFolderOverride": "Prepísanie Root priečinku",
+        "RequestStatus": "Požiadať stav",
+        "Quality": "Kvalita",
+        "RootFolderOverride": "Prepísanie koreňového priečinku",
         "QualityOverride": "Prepísanie kvality",
-        "Genres": "Genres",
+        "Genres": "Žánre",
         "TheatricalRelease": "Kino vydanie",
-        "DigitalRelease": "Digital Release",
-        "Votes": "Votes",
-        "Runtime": "Runtime",
-        "Minutes": "{{runtime}} Minutes",
-        "Revenue": "Revenue",
-        "Budget": "Budget",
-        "Keywords": "Keywords/Tags",
+        "DigitalRelease": "Digitálne vydanie",
+        "Votes": "Hlasy",
+        "Runtime": "Dĺžka",
+        "Minutes": "{{runtime}} minút",
+        "Revenue": "Výnos",
+        "Budget": "Rozpočet",
+        "Keywords": "Kľúčové slová/Tagy",
         "Casts": {
-            "CastTitle": "Cast"
+            "CastTitle": "Obsadenie"
         },
         "EpisodeSelector": {
-            "AllSeasonsTooltip": "This will request every season for this show",
-            "FirstSeasonTooltip": "This will only request the First Season for this show",
-            "LatestSeasonTooltip": "This will only request the Latest Season for this show"
+            "AllSeasonsTooltip": "Požiadať všetky sezóny série.",
+            "FirstSeasonTooltip": "Požiadať iba prvú sezónu série.",
+            "LatestSeasonTooltip": "Požiadať iba poslednú sezónu série"
         }
     },
     "Discovery": {
         "PopularTab": "Populárne",
         "TrendingTab": "Trendy",
-        "UpcomingTab": "Upcoming",
+        "UpcomingTab": "Čoskoro",
         "Movies": "Filmy",
-        "Combined": "Combined",
-        "Tv": "TV",
+        "Combined": "Kombinované",
+        "Tv": "Seriály",
         "CardDetails": {
             "Availability": "Dostupnosť",
-            "Studio": "Studio",
-            "Network": "Network",
-            "UnknownNetwork": "Unknown",
-            "RequestStatus": "Request Status",
-            "Director": "Director",
-            "InCinemas": "In Cinemas",
-            "FirstAired": "First Aired",
-            "Writer": "Writer",
-            "ExecProducer": "Exec Producer"
+            "Studio": "Štúdio",
+            "Network": "Sieť",
+            "UnknownNetwork": "Neuvedené",
+            "RequestStatus": "Požiadať stav",
+            "Director": "Režisér",
+            "InCinemas": "V kinách",
+            "FirstAired": "Prvýkrát odvysielané",
+            "Writer": "Autor",
+            "ExecProducer": "Výkonný producent"
         }
     },
     "UserPreferences": {
         "Welcome": "Vitaj {{username}}!",
-        "OmbiLanguage": "Language",
-        "DarkMode": "Dark Mode"
+        "OmbiLanguage": "Jazyk",
+        "DarkMode": "Tmavý režim"
     }
 }
