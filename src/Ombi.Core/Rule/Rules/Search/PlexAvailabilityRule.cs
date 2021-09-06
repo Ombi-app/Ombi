@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
+using Ombi.Core.Settings;
+using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
@@ -11,10 +13,13 @@ namespace Ombi.Core.Rule.Rules.Search
 {
     public class PlexAvailabilityRule : BaseSearchRule, IRules<SearchViewModel>
     {
-        public PlexAvailabilityRule(IPlexContentRepository repo, ILogger<PlexAvailabilityRule> log)
+        private readonly ISettingsService<PlexSettings> _plexSettings;
+
+        public PlexAvailabilityRule(IPlexContentRepository repo, ILogger<PlexAvailabilityRule> log, ISettingsService<PlexSettings> plexSettings)
         {
             PlexContentRepository = repo;
             Log = log;
+            _plexSettings = plexSettings;
         }
 
         private IPlexContentRepository PlexContentRepository { get; }
@@ -72,13 +77,20 @@ namespace Ombi.Core.Rule.Rules.Search
 
             if (item != null)
             {
+                var settings = await _plexSettings.GetSettingsAsync();
+                var firstServer = settings.Servers.FirstOrDefault();
+                var host = string.Empty;
+                if (firstServer != null)
+                {
+                    host = firstServer.ServerHostname;
+                }
                 if (useId)
                 {
                     obj.TheMovieDbId = obj.Id.ToString();
                     useTheMovieDb = true;
                 }
                 obj.Available = true;
-                obj.PlexUrl = item.Url;
+                obj.PlexUrl = PlexHelper.BuildPlexMediaUrl(item.Url, host);
                 obj.Quality = item.Quality;
                 
                 if (obj.Type == RequestType.TvShow)

@@ -107,8 +107,38 @@ namespace Ombi.Helpers
         public static string GetPlexMediaUrl(string machineId, int mediaId)
         {
             var url =
-                $"https://app.plex.tv/web/app#!/server/{machineId}/details?key=%2flibrary%2Fmetadata%2F{mediaId}";
+                $"web/app#!/server/{machineId}/details?key=%2flibrary%2Fmetadata%2F{mediaId}";
             return url;
+        }
+
+        public static string BuildPlexMediaUrl(string savedUrl, string plexHost)
+        {
+            if (savedUrl.Contains("app.plex.tv"))
+            {
+                var split = savedUrl.Split("https://app.plex.tv/", StringSplitOptions.RemoveEmptyEntries);
+                if (split.Length == 1)
+                {
+                    savedUrl = split[0];
+                } 
+                else
+                {
+                    throw new ArgumentException($"Attempt to parse url {savedUrl} and could not");
+                }
+            }
+            if (!plexHost.HasValue())
+            {
+                plexHost = "https://app.plex.tv/";
+            }
+            else
+            {
+                if (plexHost[plexHost.Length - 1] != '/')
+                {
+                    plexHost += '/';
+                }
+            }
+
+
+            return $"{plexHost}{savedUrl}";
         }
 
         public static ProviderId GetProviderIdsFromMetadata(params string[] guids)

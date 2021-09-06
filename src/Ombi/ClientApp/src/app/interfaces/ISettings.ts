@@ -115,6 +115,7 @@ export interface IPlexServer extends IExternalSettings {
   machineIdentifier: string;
   episodeBatchSize: number;
   plexSelectedLibraries: IPlexLibrariesSettings[];
+  serverHostname: string;
 }
 
 export interface IPlexLibrariesSettings {

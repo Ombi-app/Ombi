@@ -76,6 +76,29 @@ namespace Ombi.Helpers.Tests
             }
         }
 
+        [TestCaseSource(nameof(PlexBuildUrlData))]
+        public string BuildPlexMediaUrlTest(string saved, string hostname)
+        {
+            return PlexHelper.BuildPlexMediaUrl(saved, hostname);
+        }
+
+        public static IEnumerable<TestCaseData> PlexBuildUrlData
+        {
+            get
+            {
+                yield return new TestCaseData("web/app#!/server/df5", "https://myhost.com/").Returns("https://myhost.com/web/app#!/server/df5");
+                yield return new TestCaseData("web/app#!/server/df5", "").Returns("https://app.plex.tv/web/app#!/server/df5");
+                yield return new TestCaseData("web/app#!/server/df5", "https://myhost.com").Returns("https://myhost.com/web/app#!/server/df5");
+                yield return new TestCaseData("web/app#!/server/df5", "http://myhost.com").Returns("http://myhost.com/web/app#!/server/df5");
+                yield return new TestCaseData("web/app#!/server/df5", "http://www.myhost.com").Returns("http://www.myhost.com/web/app#!/server/df5");
+                yield return new TestCaseData("web/app#!/server/df5", "http://www.myhost.com:3456").Returns("http://www.myhost.com:3456/web/app#!/server/df5").SetName("PortTest");
+                yield return new TestCaseData("https://app.plex.tv/web/app#!/server/df5", "http://www.myhost.com:3456").Returns("http://www.myhost.com:3456/web/app#!/server/df5");
+                yield return new TestCaseData("https://app.plex.tv/web/app#!/server/df5", "https://tidusjar.com:3456").Returns("https://tidusjar.com:3456/web/app#!/server/df5");
+                yield return new TestCaseData("https://app.plex.tv/web/app#!/server/df5", "").Returns("https://app.plex.tv/web/app#!/server/df5").SetName("OldUrl_BlankHost");
+            }
+        }
+
+
         public enum ProviderIdType
         {
             Imdb,

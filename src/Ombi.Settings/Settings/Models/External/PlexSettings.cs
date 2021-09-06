@@ -21,6 +21,7 @@ namespace Ombi.Core.Settings.Models.External
         public string MachineIdentifier { get; set; }
 
         public int EpisodeBatchSize { get; set; }
+        public string ServerHostname { get; set; } = "https://app.plex.tv";
 
         public List<PlexSelectedLibraries> PlexSelectedLibraries { get; set; } = new List<PlexSelectedLibraries>();
     }
