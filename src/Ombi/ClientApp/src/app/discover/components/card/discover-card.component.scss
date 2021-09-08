@@ -59,9 +59,6 @@ small {
     font-size: 0.8rem;
 }
 
-.ombi-card{
-  height:100%;
-}
  #cardImage {
   height: 100%;
   object-fit: cover;
@@ -77,6 +74,9 @@ small {
 
 .ombi-card {
   padding: 5px;
+  height:100%;
+  max-width: 200px;
+  max-height: 295px;
 }
 ::ng-deep .p-carousel-indicators {
   display: none !important;
