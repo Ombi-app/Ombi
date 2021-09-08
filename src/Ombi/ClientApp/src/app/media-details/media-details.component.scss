@@ -95,6 +95,10 @@
     line-height: 1.2;
 }
 
+#summary-wrapper .row {
+    margin-top: 3px;
+}
+
 #info-wrapper {
     min-height: 600px;
 }
@@ -256,10 +260,6 @@
     display: none !important;
     }
 
-
-#info-wrapper{
-    margin-top:-200px;
-}
 .full-screenshot.enabled.overlay{
     background-image: linear-gradient(to bottom, transparent, 50%, $ombi-background-primary);
 }

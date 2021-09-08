@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
-using Ombi.Api.MusicBrainz;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
+using Ombi.Api.Lidarr;
 using Ombi.Core.Authentication;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search.V2;
@@ -23,17 +23,18 @@ namespace Ombi.Core.Engine.V2
     {
         public MultiSearchEngine(IPrincipal identity, IRequestServiceMain requestService, IRuleEvaluator rules,
             OmbiUserManager um, ICacheService cache, ISettingsService<OmbiSettings> ombiSettings, IRepository<RequestSubscription> sub,
-            IMovieDbApi movieDbApi, ISettingsService<LidarrSettings> lidarrSettings, IMusicBrainzApi musicApi)
+            IMovieDbApi movieDbApi, ISettingsService<LidarrSettings> lidarrSettings, ILidarrApi lidarrApi)
             : base(identity, requestService, rules, um, cache, ombiSettings, sub)
         {
             _movieDbApi = movieDbApi;
             _lidarrSettings = lidarrSettings;
-            _musicApi = musicApi;
+            _lidarrApi = lidarrApi;
         }
 
         private readonly IMovieDbApi _movieDbApi;
         private readonly ISettingsService<LidarrSettings> _lidarrSettings;
-        private readonly IMusicBrainzApi _musicApi;
+
+        private readonly ILidarrApi _lidarrApi;
 
         private bool _demo = DemoSingleton.Instance.Demo;
 
@@ -43,72 +44,92 @@ namespace Ombi.Core.Engine.V2
             var lang = await DefaultLanguageCode(null);
             var model = new List<MultiSearchResult>();
 
-            var movieDbData = (await _movieDbApi.MultiSearch(searchTerm, lang, cancellationToken)).results;
-
             var lidarrSettings = await _lidarrSettings.GetSettingsAsync();
             if (lidarrSettings.Enabled && filter.Music)
             {
-                var artistResult = await _musicApi.SearchArtist(searchTerm);
-                foreach (var artist in artistResult)
+                var lidarSearchResult = await _lidarrApi.Search(searchTerm, lidarrSettings.ApiKey, lidarrSettings.FullUri);
+                foreach (var search_result in lidarSearchResult)
                 {
-                    model.Add(new MultiSearchResult
+                    if (search_result.artist != null) 
                     {
-                        MediaType = "Artist",
-                        Title = artist.Name,
-                        Id = artist.Id
-                    });
+                        model.Add(new MultiSearchResult
+                        {
+                            MediaType = "Artist",
+                            Title = search_result.artist.artistName,
+                            Id = search_result.artist.foreignArtistId,
+                            Poster = search_result.artist.remotePoster,
+                            Monitored = search_result.artist.monitored
+                            
+                        });
+                    } else if (search_result.album != null)
+                    {
+                        model.Add(new MultiSearchResult
+                        {
+                            MediaType = "Album",
+                            Title = search_result.album.title,
+                            Id = search_result.album.foreignAlbumId,
+                            Poster = search_result.album.remoteCover,
+                            Monitored = search_result.album.monitored
+                        });
+                    }
+
                 }
             }
 
-            foreach (var multiSearch in movieDbData)
+            if (filter.Movies || filter.TvShows)
             {
+                var movieDbData = (await _movieDbApi.MultiSearch(searchTerm, lang, cancellationToken)).results;
 
-                if (DemoCheck(multiSearch.title) || DemoCheck(multiSearch.name))
+                foreach (var multiSearch in movieDbData)
                 {
-                    continue;
-                }
 
-                var result = new MultiSearchResult
-                {
-                    MediaType = multiSearch.media_type,
-                    Poster = multiSearch.poster_path,
-                    Overview = multiSearch.overview
-                };
-
-                if (multiSearch.media_type.Equals("movie", StringComparison.InvariantCultureIgnoreCase) && filter.Movies)
-                {
-                    if (multiSearch.release_date.HasValue() && DateTime.TryParse(multiSearch.release_date, out var releaseDate))
+                    if (DemoCheck(multiSearch.title) || DemoCheck(multiSearch.name))
                     {
-                        result.Title = $"{multiSearch.title} ({releaseDate.Year})";
+                        continue;
                     }
-                    else
-                    {
-                        result.Title = multiSearch.title;
-                    }
-                }
 
-                else if (multiSearch.media_type.Equals("tv", StringComparison.InvariantCultureIgnoreCase) && filter.TvShows)
-                {
-                    if (multiSearch.release_date.HasValue() && DateTime.TryParse(multiSearch.release_date, out var releaseDate))
+                    var result = new MultiSearchResult
                     {
-                        result.Title = $"{multiSearch.name} ({releaseDate.Year})";
+                        MediaType = multiSearch.media_type,
+                        Poster = multiSearch.poster_path,
+                        Overview = multiSearch.overview
+                    };
+
+                    if (multiSearch.media_type.Equals("movie", StringComparison.InvariantCultureIgnoreCase) && filter.Movies)
+                    {
+                        if (multiSearch.release_date.HasValue() && DateTime.TryParse(multiSearch.release_date, out var releaseDate))
+                        {
+                            result.Title = $"{multiSearch.title} ({releaseDate.Year})";
+                        }
+                        else
+                        {
+                            result.Title = multiSearch.title;
+                        }
                     }
-                    else
+
+                    else if (multiSearch.media_type.Equals("tv", StringComparison.InvariantCultureIgnoreCase) && filter.TvShows)
+                    {
+                        if (multiSearch.release_date.HasValue() && DateTime.TryParse(multiSearch.release_date, out var releaseDate))
+                        {
+                            result.Title = $"{multiSearch.name} ({releaseDate.Year})";
+                        }
+                        else
+                        {
+                            result.Title = multiSearch.name;
+                        }
+                    }
+                    else if (multiSearch.media_type.Equals("person", StringComparison.InvariantCultureIgnoreCase) && filter.People)
                     {
                         result.Title = multiSearch.name;
                     }
-                }
-                else if (multiSearch.media_type.Equals("person", StringComparison.InvariantCultureIgnoreCase) && filter.People)
-                {
-                    result.Title = multiSearch.name;
-                }
-                else
-                {
-                    continue;
-                }
+                    else
+                    {
+                        continue;
+                    }
 
-                result.Id = multiSearch.id.ToString();
-                model.Add(result);
+                    result.Id = multiSearch.id.ToString();
+                    model.Add(result);
+                }
             }
 
             return model;

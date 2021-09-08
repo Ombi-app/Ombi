@@ -3,6 +3,8 @@ import { IDiscoverCardResult } from "../../interfaces";
 import { RequestType } from "../../../interfaces";
 import { MessageService, RequestService, SearchV2Service } from "../../../services";
 import { MatDialog } from "@angular/material/dialog";
+import { IArtistRequestModel } from "../../../interfaces/IRequestModel";
+import { IReleaseGroups } from "../../../interfaces/IMusicSearchResultV2";
 import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
 import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
 import { EpisodeRequestComponent } from "../../../shared/episode-request/episode-request.component";
@@ -25,9 +27,11 @@ export class DiscoverCardComponent implements OnInit {
     public loading: boolean;
 
     public requestable: boolean;
+    public monitored: boolean;
 
     // This data is needed to open the dialog
     private tvSearchResult: ISearchTvResultV2;
+    private allAlbums: IReleaseGroups[] = [];
 
     constructor(private searchService: SearchV2Service, private dialog: MatDialog, private requestService: RequestService,
         public messageService: MessageService) { }
@@ -39,6 +43,9 @@ export class DiscoverCardComponent implements OnInit {
         }
         if (this.result.type == RequestType.movie) {
             this.getExtraMovieInfo();
+        }
+        if (this.result.type == RequestType.artist) {
+            this.getArtistInformation();
         }
         if (this.result.type == RequestType.album) {
             this.getAlbumInformation();
@@ -52,7 +59,7 @@ export class DiscoverCardComponent implements OnInit {
         this.updateTvItem(this.tvSearchResult);
     }
 
-    public async getAlbumInformation() {
+    public async getArtistInformation() {
         this.searchService.getArtistInformation(this.result.id.toString()).subscribe(x => {
             if (x.poster) {
                 this.result.posterPath = x.poster;
@@ -65,10 +72,35 @@ export class DiscoverCardComponent implements OnInit {
                     }
                 })
             }
-            this.result.title = x.startYear ? `${x.name} (${x.startYear})` : x.name;
+            this.result.title = x.name;
             this.result.overview = x.overview;
             this.fullyLoaded = true;
-            this.requestable = true;
+            if (x.monitored) {
+                this.requestable = false;
+                this.monitored = true;
+            } else {
+                this.requestable = true;
+                this.monitored = false;
+            }
+        });
+    }
+
+    public async getAlbumInformation() {
+        this.searchService.getAlbumInformation(this.result.id.toString()).subscribe(x => {
+            if (x.cover) {
+                this.result.posterPath = x.cover;
+                this.fullyLoaded = true;
+            }
+            this.result.title = x.title;
+            this.result.overview = x.overview;
+            this.fullyLoaded = true;
+            if (x.monitored) {
+                this.requestable = false;
+                this.monitored = true;
+            } else {
+                this.requestable = true;
+                this.monitored = false;
+            }
         });
     }
 
@@ -78,8 +110,10 @@ export class DiscoverCardComponent implements OnInit {
                 return `/details/movie/${this.result.id}`;
             case RequestType.tvShow:
                 return `/details/tv/${this.result.id}`;
-            case RequestType.album: //Actually artist
+            case RequestType.artist: //Actually artist
                 return `/details/artist/${this.result.id}`;
+            case RequestType.album: //Actually artist
+                return `/details/album/${this.result.id}`;
         }
     }
 
@@ -113,6 +147,17 @@ export class DiscoverCardComponent implements OnInit {
         event.preventDefault();
         this.loading = true;
         switch (this.result.type) {
+            case RequestType.artist:
+                this.requestService.requestArtist({ foreignArtistId: this.result.id.toString(), monitored: true, monitor: "all", searchForMissingAlbums: true }).subscribe(x => {
+                    if (x.result) {
+                        this.result.requested = true;
+                        this.messageService.send(x.message, "Ok");
+                    } else {
+                        this.messageService.send(x.errorMessage, "Ok");
+                    }
+                    this.loading = false;
+                });;
+                return;
             case RequestType.tvShow:
                 const dia = this.dialog.open(EpisodeRequestComponent, { width: "700px", data: { series: this.tvSearchResult, isAdmin: this.isAdmin }, panelClass: 'modal-panel' });
                 dia.afterClosed().subscribe(x => this.loading = false);

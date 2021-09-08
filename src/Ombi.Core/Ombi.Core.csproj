@@ -14,8 +14,7 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.0" />
-    <PackageReference Include="MusicBrainzAPI" Version="2.0.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.Diagnostics.Process" Version="4.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
   </ItemGroup>
@@ -27,7 +26,6 @@
     <ProjectReference Include="..\Ombi.Api.Jellyfin\Ombi.Api.Jellyfin.csproj" />
     <ProjectReference Include="..\Ombi.Api.FanartTv\Ombi.Api.FanartTv.csproj" />
     <ProjectReference Include="..\Ombi.Api.Lidarr\Ombi.Api.Lidarr.csproj" />
-    <ProjectReference Include="..\Ombi.Api.MusicBrainz\Ombi.Api.MusicBrainz.csproj" />
     <ProjectReference Include="..\Ombi.Api.Plex\Ombi.Api.Plex.csproj" />
     <ProjectReference Include="..\Ombi.Api.Radarr\Ombi.Api.Radarr.csproj" />
     <ProjectReference Include="..\Ombi.Api.SickRage\Ombi.Api.SickRage.csproj" />

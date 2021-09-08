@@ -16,73 +16,22 @@
                 <!--Next to poster-->
                 <div class="col-12 col-lg-3 col-xl-3 media-row">
 
-                    <social-icons [homepage]="artist.links.homePage" [doNotAppend]="true" [imdbId]="artist.links.imdb" [twitter]="artist.links.twitter" [facebook]="artist.links.facebook" [instagram]="artist.links.instagram"></social-icons>
+                    <!-- <social-icons [homepage]="artist.links.homePage" [doNotAppend]="true" [imdbId]="artist.links.imdb" [twitter]="artist.links.twitter" [facebook]="artist.links.facebook" [instagram]="artist.links.instagram"></social-icons> -->
 
                 </div>
 
                 <div class="col-12 col-lg-6 col-xl-6 media-row">
-
-                    <button mat-raised-button *ngIf="selectedAlbums.length === 0" class="btn-spacing" color="primary" (click)="requestAllAlbums()">
-            <i class="fas fa-plus"></i> {{ 'MediaDetails.RequestAllAlbums' | translate }}</button>
-                    <button mat-raised-button *ngIf="selectedAlbums.length > 0" class="btn-spacing" color="primary" (click)="requestAllAlbums()">
-              <i class="fas fa-plus"></i> {{ 'MediaDetails.RequestSelectedAlbums' | translate }}</button>
-
-                    <button mat-raised-button *ngIf="selectedAlbums.length > 0" class="btn-spacing" color="accent" (click)="clearSelection()">
-                <i class="fas fa-minus"></i> {{ 'MediaDetails.ClearSelection' | translate }}</button>
-
-
-
-                    <!-- <button mat-raised-button class="btn-green btn-spacing" *ngIf="movie.available"> {{ 
-            'Common.Available' | translate }}</button> -->
-                    <!-- <span *ngIf="!movie.available">
-            <span *ngIf="movie.requested || movie.approved; then requestedBtn else notRequestedBtn"></span>
-
-            <ng-template #requestedBtn>
-              <button mat-raised-button *ngIf="!hasRequest || hasRequest && movieRequest && !movieRequest.denied"
-                class="btn-spacing" color="warn" [disabled]><i class="fas fa-check"></i>
-                {{ 'Common.Requested' | translate }}</button>
-            </ng-template>
-            <ng-template #notRequestedBtn>
-              <button mat-raised-button class="btn-spacing" color="primary" (click)="request()">
-                <i *ngIf="movie.requestProcessing" class="fas fa-circle-notch fa-spin fa-fw"></i> <i
-                  *ngIf="!movie.requestProcessing && !movie.processed" class="fas fa-plus"></i>
-                <i *ngIf="movie.processed && !movie.requestProcessing" class="fas fa-check"></i> {{
-                'Common.Request' | translate }}</button>
-            </ng-template>
-          </span> -->
-                    <!-- <span *ngIf="isAdmin && hasRequest">
-            <button (click)="approve()" mat-raised-button class="btn-spacing" color="accent">
-              <i class="fas fa-plus"></i> {{ 'Common.Approve' | translate }}
-            </button>
-            <button *ngIf="!movie.available" (click)="markAvailable()" mat-raised-button class="btn-spacing"
-              color="accent">
-              <i class="fas fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}
-            </button>
-
-            <button *ngIf="movieRequest && !movieRequest.denied" mat-raised-button class="btn-spacing" color="warn"
-              (click)="deny()">
-              <i class="fas fa-times"></i> {{
-                    'Requests.Deny' | translate }}</button>
-            <button *ngIf="movieRequest && movieRequest.denied" [matTooltip]="movieRequest.deniedReason"
-              mat-raised-button class="btn-spacing" color="warn">
-              <i class="fas fa-times"></i> {{
-                            'MediaDetails.Denied' | translate }}</button>
-          </span> -->
-
-                    <!-- <button *ngIf="(hasRequest && movieRequest) || movie.available" mat-raised-button class="btn-spacing"
-            color="danger" (click)="issue()">
-            <i class="fas fa-exclamation"></i> {{
-                'Requests.ReportIssue' | translate }}</button> -->
-
-
-
-
+                    <button mat-raised-button *ngIf="artist.monitored" class="btn-spacing" color="primary"
+                      color="accent" [disabled]>
+                      <i class="fa-lg fas fa-check"></i> {{'Common.Monitored' | translate }}</button>
+                    <button mat-raised-button *ngIf="!artist.monitored && selectedAlbums.length === 0" class="btn-spacing" color="primary" (click)="requestAllAlbums()">
+            <i class="fas fa-plus"></i> {{ 'Common.Request' | translate }}</button>
                 </div>
             </div>
 
             <div class="row">
 
-                <div class="col-12 col-md-2">
+                <!-- <div class="col-12 col-md-2">
 
                     <mat-card class="mat-elevation-z8">
                         <mat-card-content class="medium-font">
@@ -91,7 +40,7 @@
                     </mat-card>
 
 
-                </div>
+                </div> -->
 
                 <div class="col-12 col-md-10">
                     <div class="row">
@@ -106,7 +55,7 @@
 
                     <div class="row">
                         <div class="col-12">
-                            <artist-release-panel (onAlbumSelect)="albumSelected($event)" (albumLoad)="albumLoad($event)" *ngIf="artist.releaseGroups.length > 0" [releases]="artist.releaseGroups"></artist-release-panel>
+                            <artist-release-panel (onAlbumSelect)="albumSelected($event)" (albumLoad)="albumLoad($event)" *ngIf="artist.releaseGroups?.length > 0" [releases]="artist.releaseGroups"></artist-release-panel>
                         </div>
                     </div>
 
@@ -119,78 +68,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- <div class="row">
-            <div class="col-12">
-              <mat-accordion class="mat-elevation-z8  spacing-below">
-                <mat-expansion-panel>
-                  <mat-expansion-panel-header>
-                    <mat-panel-title>
-                      {{'MediaDetails.RecommendationsTitle' | translate}}
-                    </mat-panel-title>
-                  </mat-expansion-panel-header>
-
-                  <div class="row card-spacer" *ngIf="movie.recommendations.results.length > 0">
-
-                    <div class="col-md-2" *ngFor="let r of movie.recommendations.results">
-                      <div class="sidebar affixable affix-top preview-poster">
-                        <div class="poster">
-                          <a [routerLink]="'/details/movie/'+r.id">
-                            <img class="real grow" matTooltip="{{r.title}}"
-                              src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}" alt="Poster"
-                              style="display: block;">
-                          </a>
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
-                </mat-expansion-panel>
-                <mat-expansion-panel>
-                  <mat-expansion-panel-header>
-                    <mat-panel-title>
-                      {{'MediaDetails.SimilarTitle' | translate}}
-                    </mat-panel-title>
-                  </mat-expansion-panel-header>
-
-                  <div class="row card-spacer" *ngIf="movie.similar.results.length > 0">
-
-                    <div class="col-md-2" *ngFor="let r of movie.similar.results">
-                      <div class="sidebar affixable affix-top preview-poster">
-                        <div class="poster ">
-                          <a [routerLink]="'/details/movie/'+r.id">
-                            <img class="real grow" matTooltip="{{r.title}}"
-                              src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}" alt="Poster"
-                              style="display: block;">
-                          </a>
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
-                </mat-expansion-panel>
-                <mat-expansion-panel>
-                  <mat-expansion-panel-header>
-                    <mat-panel-title>
-                      {{'MediaDetails.VideosTitle' | translate}}
-                    </mat-panel-title>
-                  </mat-expansion-panel-header>
-
-                  <div class="row card-spacer" *ngIf="movie.videos.results.length > 0">
-
-                    <div class="col-md-6" *ngFor="let video of movie.videos.results">
-                      <iframe width="100%" height="315px" [src]="'https://www.youtube.com/embed/' + video.key | safe"
-                        frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
-                    </div>
-                  </div>
-                </mat-expansion-panel>
-              </mat-accordion>
-            </div>
-          </div> -->
-
-
-
                 </div>
             </div>
 

@@ -73,7 +73,7 @@ namespace Ombi.Core.Engine
 
             var userDetails = await GetUser();
 
-            var requestModel = new AlbumRequest
+            var requestModel = new MusicRequests
             {
                 ForeignAlbumId = model.ForeignAlbumId,
                 ArtistName = album.artist?.artistName,
@@ -85,8 +85,10 @@ namespace Ombi.Core.Engine
                 Title = album.title,
                 Disk = album.images?.FirstOrDefault(x => x.coverType.Equals("disc"))?.url,
                 Cover = album.images?.FirstOrDefault(x => x.coverType.Equals("cover"))?.url,
-                ForeignArtistId = album?.artist?.foreignArtistId ?? string.Empty, // This needs to be populated to send to Lidarr for new requests
-                RequestedByAlias = model.RequestedByAlias
+                ForeignArtistId = album.artist?.foreignArtistId,
+                RequestedByAlias = model.RequestedByAlias,
+                Monitor = model.Monitor,
+                SearchForMissingAlbums = model.SearchForMissingAlbums
             };
             if (requestModel.Cover.IsNullOrEmpty())
             {
@@ -128,6 +130,58 @@ namespace Ombi.Core.Engine
             return await AddAlbumRequest(requestModel);
         }
 
+        public async Task<RequestEngineResult> RequestArtist(MusicArtistRequestViewModel model)
+        {
+            var s = await _lidarrSettings.GetSettingsAsync();
+            var artist = await _lidarrApi.GetArtistByForeignId(model.ForeignArtistId, s.ApiKey, s.FullUri);
+            var userDetails = await GetUser();
+            var requestModel = new MusicRequests
+            {
+                ForeignArtistId = model.ForeignArtistId,
+                Monitored = model.Monitored,
+                Title = artist.artistName,
+                ArtistName = artist.artistName,
+                RequestedDate = DateTime.Now,
+                RequestType = RequestType.Artist,
+                RequestedUserId = userDetails.Id,
+                Monitor = model.Monitor, 
+                SearchForMissingAlbums = model.SearchForMissingAlbums
+            };
+
+            var ruleResults = (await RunRequestRules(requestModel)).ToList();
+            if (ruleResults.Any(x => !x.Success))
+            {
+                return new RequestEngineResult
+                {
+                    ErrorMessage = ruleResults.FirstOrDefault(x => x.Message.HasValue()).Message
+                };
+            }
+            if (requestModel.Approved) // The rules have auto approved this
+            {
+                var requestEngineResult = await AddArtistRequest(requestModel);
+                if (requestEngineResult.Result)
+                {
+                    var result = await ApproveArtist(requestModel);
+                    if (result.IsError)
+                    {
+                        Logger.LogWarning("Tried auto sending Album but failed. Message: {0}", result.Message);
+                        return new RequestEngineResult
+                        {
+                            Message = result.Message,
+                            ErrorMessage = result.Message,
+                            Result = false
+                        };
+                    }
+
+                    return requestEngineResult;
+                }
+
+                // If there are no providers then it's successful but album has not been sent
+            }
+
+            return await AddArtistRequest(requestModel);
+        }
+
         /// <summary>
         /// Gets the requests.
         /// </summary>
@@ -135,11 +189,11 @@ namespace Ombi.Core.Engine
         /// <param name="position">The position.</param>
         /// <param name="orderFilter">The order/filter type.</param>
         /// <returns></returns>
-        public async Task<RequestsViewModel<AlbumRequest>> GetRequests(int count, int position,
+        public async Task<RequestsViewModel<MusicRequests>> GetRequests(int count, int position,
             OrderFilterModel orderFilter)
         {
             var shouldHide = await HideFromOtherUsers();
-            IQueryable<AlbumRequest> allRequests;
+            IQueryable<MusicRequests> allRequests;
             if (shouldHide.Hide)
             {
                 allRequests =
@@ -193,14 +247,86 @@ namespace Ombi.Core.Engine
             {
                 await CheckForSubscription(shouldHide, x);
             });
-            return new RequestsViewModel<AlbumRequest>
+            return new RequestsViewModel<MusicRequests>
             {
                 Collection = requests,
                 Total = total
             };
         }
 
-        private IQueryable<AlbumRequest> OrderAlbums(IQueryable<AlbumRequest> allRequests, OrderType type)
+        /// <summary>
+        /// Gets the requests.
+        /// </summary>
+        /// <param name="count">The count.</param>
+        /// <param name="position">The position.</param>
+        /// <param name="orderFilter">The order/filter type.</param>
+        /// <returns></returns>
+        public async Task<RequestsViewModel<MusicRequests>> GetRequestArtist(int count, int position,
+            OrderFilterModel orderFilter)
+        {
+            var shouldHide = await HideFromOtherUsers();
+            IQueryable<MusicRequests> allRequests;
+            if (shouldHide.Hide)
+            {
+                allRequests =
+                    MusicRepository.GetWithUser(shouldHide
+                        .UserId); //.Skip(position).Take(count).OrderByDescending(x => x.ReleaseDate).ToListAsync();
+            }
+            else
+            {
+                allRequests =
+                    MusicRepository
+                        .GetWithUser(); //.Skip(position).Take(count).OrderByDescending(x => x.ReleaseDate).ToListAsync();
+            }
+
+            switch (orderFilter.AvailabilityFilter)
+            {
+                case FilterType.None:
+                    break;
+                case FilterType.Available:
+                    allRequests = allRequests.Where(x => x.Available);
+                    break;
+                case FilterType.NotAvailable:
+                    allRequests = allRequests.Where(x => !x.Available);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            switch (orderFilter.StatusFilter)
+            {
+                case FilterType.None:
+                    break;
+                case FilterType.Approved:
+                    allRequests = allRequests.Where(x => x.Approved);
+                    break;
+                case FilterType.Processing:
+                    allRequests = allRequests.Where(x => x.Approved && !x.Available);
+                    break;
+                case FilterType.PendingApproval:
+                    allRequests = allRequests.Where(x => !x.Approved && !x.Available && !(x.Denied ?? false));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            var total = allRequests.Count();
+
+            var requests = await (OrderAlbums(allRequests, orderFilter.OrderType)).Skip(position).Take(count)
+                .ToListAsync();
+
+            requests.ForEach(async x =>
+            {
+                await CheckForSubscription(shouldHide, x);
+            });
+            return new RequestsViewModel<MusicRequests>
+            {
+                Collection = requests,
+                Total = total
+            };
+        }
+
+        private IQueryable<MusicRequests> OrderAlbums(IQueryable<MusicRequests> allRequests, OrderType type)
         {
             switch (type)
             {
@@ -234,10 +360,10 @@ namespace Ombi.Core.Engine
         /// Gets the requests.
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<AlbumRequest>> GetRequests()
+        public async Task<IEnumerable<MusicRequests>> GetRequests()
         {
             var shouldHide = await HideFromOtherUsers();
-            List<AlbumRequest> allRequests;
+            List<MusicRequests> allRequests;
             if (shouldHide.Hide)
             {
                 allRequests = await MusicRepository.GetWithUser(shouldHide.UserId).ToListAsync();
@@ -254,8 +380,28 @@ namespace Ombi.Core.Engine
             return allRequests;
         }
 
+        public async Task<IEnumerable<MusicRequests>> GetRequestsArtist()
+        {
+            var shouldHide = await HideFromOtherUsers();
+            List<MusicRequests> allRequests;
+            if (shouldHide.Hide)
+            {
+                allRequests = await MusicRepository.GetWithUser(shouldHide.UserId).ToListAsync();
+            }
+            else
+            {
+                allRequests = await MusicRepository.GetWithUser().ToListAsync();
+            }
+
+            allRequests.ForEach(async x =>
+            {
+                await CheckForArtistSubscription(shouldHide, x);
+            });
+            return allRequests;
+        }
+
         
-        private async Task CheckForSubscription(HideResult shouldHide, List<AlbumRequest> albumRequests)
+        private async Task CheckForSubscription(HideResult shouldHide, List<MusicRequests> albumRequests)
         {
             var requestIds = albumRequests.Select(x => x.Id);
             var sub = await _subscriptionRepository.GetAll().Where(s =>
@@ -276,7 +422,22 @@ namespace Ombi.Core.Engine
             }
         }
 
-        private async Task CheckForSubscription(HideResult shouldHide, AlbumRequest x)
+        private async Task CheckForArtistSubscription(HideResult shouldHide, MusicRequests artistRequest)
+        {
+            if (shouldHide.UserId == artistRequest.RequestedUserId)
+            {
+                artistRequest.ShowSubscribe = false;
+            }
+            else
+            {
+                artistRequest.ShowSubscribe = true;
+                var sub = await _subscriptionRepository.GetAll().FirstOrDefaultAsync(s =>
+                    s.UserId == shouldHide.UserId && s.RequestId == artistRequest.Id && s.RequestType == RequestType.Artist);
+                artistRequest.Subscribed = sub != null;
+            }
+        }
+
+        private async Task CheckForSubscription(HideResult shouldHide, MusicRequests x)
         {
             if (shouldHide.UserId == x.RequestedUserId)
             {
@@ -296,10 +457,10 @@ namespace Ombi.Core.Engine
         /// </summary>
         /// <param name="search">The search.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<AlbumRequest>> SearchAlbumRequest(string search)
+        public async Task<IEnumerable<MusicRequests>> SearchAlbumRequest(string search)
         {
             var shouldHide = await HideFromOtherUsers();
-            List<AlbumRequest> allRequests;
+            List<MusicRequests> allRequests;
             if (shouldHide.Hide)
             {
                 allRequests = await MusicRepository.GetWithUser(shouldHide.UserId).ToListAsync();
@@ -346,7 +507,7 @@ namespace Ombi.Core.Engine
             };
         }
 
-        public async Task<RequestEngineResult> ApproveAlbum(AlbumRequest request)
+        public async Task<RequestEngineResult> ApproveAlbum(MusicRequests request)
         {
             if (request == null)
             {
@@ -370,7 +531,60 @@ namespace Ombi.Core.Engine
 
             if (request.Approved)
             {
-                var result = await _musicSender.Send(request);
+                var result = await _musicSender.SendAlbum(request);
+                if (result.Success && result.Sent)
+                {
+                    return new RequestEngineResult
+                    {
+                        Result = true
+                    };
+                }
+
+                if (!result.Success)
+                {
+                    Logger.LogWarning("Tried auto sending album but failed. Message: {0}", result.Message);
+                    return new RequestEngineResult
+                    {
+                        Message = result.Message,
+                        ErrorMessage = result.Message,
+                        Result = false
+                    };
+                }
+
+                // If there are no providers then it's successful but movie has not been sent
+            }
+
+            return new RequestEngineResult
+            {
+                Result = true
+            };
+        }
+
+        public async Task<RequestEngineResult> ApproveArtist(MusicRequests request)
+        {
+            if (request == null)
+            {
+                return new RequestEngineResult
+                {
+                    ErrorMessage = "Request does not exist"
+                };
+            }
+
+            request.MarkedAsApproved = DateTime.Now;
+            request.Approved = true;
+            request.Denied = false;
+            await MusicRepository.Update(request);
+
+
+            var canNotify = await RunSpecificRule(request, SpecificRules.CanSendNotification, string.Empty);
+            if (canNotify.Success)
+            {
+                await NotificationHelper.Notify(request, NotificationType.RequestApproved);
+            }
+
+            if (request.Approved)
+            {
+                var result = await _musicSender.SendArtist(request);
                 if (result.Success && result.Sent)
                 {
                     return new RequestEngineResult
@@ -502,7 +716,7 @@ namespace Ombi.Core.Engine
             };
         }
 
-        private async Task<RequestEngineResult> AddAlbumRequest(AlbumRequest model)
+        private async Task<RequestEngineResult> AddAlbumRequest(MusicRequests model)
         {
             await MusicRepository.Add(model);
 
@@ -523,10 +737,32 @@ namespace Ombi.Core.Engine
             return new RequestEngineResult { Result = true, Message = $"{model.Title} has been successfully added!", RequestId = model.Id };
         }
 
-        public async Task<RequestsViewModel<AlbumRequest>> GetRequestsByStatus(int count, int position, string sortProperty, string sortOrder, RequestStatus status)
+        private async Task<RequestEngineResult> AddArtistRequest(MusicRequests model)
+        {
+            // Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(MusicRepository));
+            await MusicRepository.Add(model);
+
+            var result = await RunSpecificRule(model, SpecificRules.CanSendNotification, string.Empty);
+            if (result.Success)
+            {
+                await NotificationHelper.NewRequest(model);
+            }
+
+            await _requestLog.Add(new RequestLog
+            {
+                UserId = (await GetUser()).Id,
+                RequestDate = DateTime.UtcNow,
+                RequestId = model.Id,
+                RequestType = RequestType.Artist,
+            });
+
+            return new RequestEngineResult { Result = true, Message = $"{model.Title} has been successfully added!", RequestId = model.Id };
+        }
+
+        public async Task<RequestsViewModel<MusicRequests>> GetRequestsByStatus(int count, int position, string sortProperty, string sortOrder, RequestStatus status)
         {
              var shouldHide = await HideFromOtherUsers();
-            IQueryable<AlbumRequest> allRequests;
+            IQueryable<MusicRequests> allRequests;
             if (shouldHide.Hide)
             {
                 allRequests =
@@ -558,12 +794,12 @@ namespace Ombi.Core.Engine
                     break;
             }
 
-            var prop = TypeDescriptor.GetProperties(typeof(AlbumRequest)).Find(sortProperty, true);
+            var prop = TypeDescriptor.GetProperties(typeof(MusicRequests)).Find(sortProperty, true);
 
             if (sortProperty.Contains('.'))
             {
                 // This is a navigation property currently not supported
-                prop = TypeDescriptor.GetProperties(typeof(AlbumRequest)).Find("RequestedDate", true);
+                prop = TypeDescriptor.GetProperties(typeof(MusicRequests)).Find("RequestedDate", true);
                 //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
                 //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
                 //var propType = firstProp.PropertyType;
@@ -578,17 +814,17 @@ namespace Ombi.Core.Engine
             requests = requests.Skip(position).Take(count).ToList();
 
             await CheckForSubscription(shouldHide, requests);
-            return new RequestsViewModel<AlbumRequest>
+            return new RequestsViewModel<MusicRequests>
             {
                 Collection = requests,
                 Total = total
             };
         }
 
-        public async Task<RequestsViewModel<AlbumRequest>> GetRequests(int count, int position, string sortProperty, string sortOrder)
+        public async Task<RequestsViewModel<MusicRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder)
         { 
             var shouldHide = await HideFromOtherUsers();
-            IQueryable<AlbumRequest> allRequests;
+            IQueryable<MusicRequests> allRequests;
             if (shouldHide.Hide)
             {
                 allRequests =
@@ -622,7 +858,7 @@ namespace Ombi.Core.Engine
             requests = requests.Skip(position).Take(count).ToList();
 
             await CheckForSubscription(shouldHide, requests);
-            return new RequestsViewModel<AlbumRequest>
+            return new RequestsViewModel<MusicRequests>
             {
                 Collection = requests,
                 Total = total

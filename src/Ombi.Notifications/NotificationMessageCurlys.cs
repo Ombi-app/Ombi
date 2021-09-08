@@ -79,7 +79,7 @@ namespace Ombi.Notifications
             CalculateRequestStatus(req);
         }
 
-        public void Setup(NotificationOptions opts, AlbumRequest req, CustomizationSettings s,
+        public void Setup(NotificationOptions opts, MusicRequests req, CustomizationSettings s,
             UserNotificationPreferences pref)
         {
             LoadIssues(opts);

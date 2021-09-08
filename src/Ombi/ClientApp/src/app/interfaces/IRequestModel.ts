@@ -3,7 +3,8 @@
 export enum RequestType {
   tvShow = 0,
   movie = 1,
-  album = 2,
+  artist = 2,
+  album = 3
 }
 
 // NEW WORLD
@@ -44,6 +45,16 @@ export interface IAlbumRequest extends IBaseRequest {
 
 export interface IAlbumRequestModel {
   foreignAlbumId: string;
+  monitored: boolean;
+  monitor: string;
+  searchForMissingAlbums: boolean;
+}
+
+export interface IArtistRequestModel {
+  foreignArtistId: string;
+  monitored: boolean;
+  monitor: string;
+  searchForMissingAlbums: boolean;
 }
 
 export interface IRequestsViewModel<T> {

@@ -416,9 +416,9 @@ namespace Ombi.Controllers.V2
         [HttpGet("artist/album/{albumId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public Task<ReleaseGroup> GetAlbumInformation(string albumId)
+        public Task<AlbumInformation> GetAlbumInformation(string albumId)
         {
-            return _musicEngine.GetAlbum(albumId);
+            return _musicEngine.GetAlbumInformation(albumId);
         }
 
         [HttpGet("releasegroupart/{musicBrainzId}")]

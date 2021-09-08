@@ -13,6 +13,7 @@ import { MovieAdvancedOptionsComponent } from "./movie/panels/movie-advanced-opt
 import { SearchService, RequestService, RadarrService, IssuesService, SonarrService } from "../../services";
 import { RequestServiceV2 } from "../../services/requestV2.service";
 import { NewIssueComponent } from "./shared/new-issue/new-issue.component";
+import { AlbumDetailsComponent } from "./album/album-details.component";
 import { ArtistDetailsComponent } from "./artist/artist-details.component";
 import { ArtistInformationPanel } from "./artist/panels/artist-information-panel/artist-information-panel.component";
 import { ArtistReleasePanel } from "./artist/panels/artist-release-panel/artist-release-panel.component";
@@ -37,6 +38,7 @@ export const components: any[] = [
     MovieAdvancedOptionsComponent,
     TvAdvancedOptionsComponent,
     NewIssueComponent,
+    AlbumDetailsComponent,
     ArtistDetailsComponent,
     ArtistInformationPanel,
     ArtistReleasePanel,

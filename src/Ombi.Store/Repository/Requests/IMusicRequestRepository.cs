@@ -4,14 +4,14 @@ using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Store.Repository.Requests
 {
-    public interface IMusicRequestRepository : IRepository<AlbumRequest>
+    public interface IMusicRequestRepository : IRepository<MusicRequests>
     {
-        IQueryable<AlbumRequest> GetAll(string userId);
-        AlbumRequest GetRequest(string foreignAlbumId);
-        Task<AlbumRequest> GetRequestAsync(string foreignAlbumId);
-        IQueryable<AlbumRequest> GetWithUser();
-        IQueryable<AlbumRequest> GetWithUser(string userId);
+        IQueryable<MusicRequests> GetAll(string userId);
+        MusicRequests GetRequest(string foreignAlbumId);
+        Task<MusicRequests> GetRequestAsync(string foreignAlbumId);
+        IQueryable<MusicRequests> GetWithUser();
+        IQueryable<MusicRequests> GetWithUser(string userId);
         Task Save();
-        Task Update(AlbumRequest request);
+        Task Update(MusicRequests request);
     }
 }

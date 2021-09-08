@@ -46,7 +46,8 @@ namespace Ombi.Notifications
 
 
         protected ChildRequests TvRequest { get; set; }
-        protected AlbumRequest AlbumRequest { get; set; }
+        protected MusicRequests AlbumRequest { get; set; }
+        protected MusicRequests ArtistRequest { get; set; }
         protected MovieRequests MovieRequest { get; set; }
         protected IQueryable<OmbiUser> Subscribed { get; private set; }
 

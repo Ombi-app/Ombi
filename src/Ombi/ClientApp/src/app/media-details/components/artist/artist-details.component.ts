@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ViewEncapsulation } from "@angular/core";
 import { ImageService, SearchV2Service, RequestService, MessageService } from "../../../services";
 import { ActivatedRoute } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -12,6 +12,7 @@ import { IArtistSearchResult, IReleaseGroups } from "../../../interfaces/IMusicS
 @Component({
     templateUrl: "./artist-details.component.html",
     styleUrls: ["../../media-details.component.scss"],
+    encapsulation: ViewEncapsulation.None
 })
 export class ArtistDetailsComponent {
     private artistId: string;
@@ -87,7 +88,10 @@ export class ArtistDetailsComponent {
                     return;
                 }
                 this.requestService.requestAlbum({
-                    foreignAlbumId : a.id
+                    foreignAlbumId : a.id,
+                    monitored: true,
+                    monitor: "all",
+                    searchForMissingAlbums: true
                 }).toPromise()
                 .then(r => {
                     if (r.result) {
@@ -110,7 +114,10 @@ export class ArtistDetailsComponent {
                     return;
                 }
                 this.requestService.requestAlbum({
-                    foreignAlbumId : a.id
+                    foreignAlbumId : a.id,
+                    monitored: true,
+                    monitor: "all",
+                    searchForMissingAlbums: true
                 }).toPromise()
                 .then(r => {
                     if (r.result) {

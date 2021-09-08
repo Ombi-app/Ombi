@@ -8,6 +8,7 @@ namespace Ombi.Api.Lidarr.Models
         public string title { get; set; }
         public string status { get; set; }
         public string artistType { get; set; }
+        public string overview { get; set; }
         public string disambiguation { get; set; }
         public List<LidarrLinks> links { get; set; }
         public int artistId { get; set; }
