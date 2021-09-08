@@ -31,8 +31,8 @@ export class TvInformationPanelComponent implements OnInit {
         if (this.internalBaseUrl.length > 1) {
             this.baseUrl = this.internalBaseUrl;
         }
-        this.searchService.getRottenTvRatings(this.tv.title, +this.tv.firstAired.toString().substring(0,4))
-            .subscribe(x => this.ratings = x);
+        // this.searchService.getRottenTvRatings(this.tv.title, +this.tv.firstAired.toString().substring(0,4))
+        //     .subscribe(x => this.ratings = x);
 
         this.searchService.getTvStreams(+this.tv.id ).subscribe(x => this.streams = x);
         this.tv.seasonRequests.forEach(season => {
