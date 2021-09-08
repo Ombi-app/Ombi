@@ -3,8 +3,6 @@ import { IDiscoverCardResult } from "../../interfaces";
 import { RequestType } from "../../../interfaces";
 import { MessageService, RequestService, SearchV2Service } from "../../../services";
 import { MatDialog } from "@angular/material/dialog";
-import { IArtistRequestModel } from "../../../interfaces/IRequestModel";
-import { IReleaseGroups } from "../../../interfaces/IMusicSearchResultV2";
 import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
 import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
 import { EpisodeRequestComponent } from "../../../shared/episode-request/episode-request.component";
@@ -31,7 +29,6 @@ export class DiscoverCardComponent implements OnInit {
 
     // This data is needed to open the dialog
     private tvSearchResult: ISearchTvResultV2;
-    private allAlbums: IReleaseGroups[] = [];
 
     constructor(private searchService: SearchV2Service, private dialog: MatDialog, private requestService: RequestService,
         public messageService: MessageService) { }
@@ -68,7 +65,6 @@ export class DiscoverCardComponent implements OnInit {
                 this.searchService.getReleaseGroupArt(this.result.id.toString()).subscribe(art => {
                     if (art.image) {
                         this.result.posterPath = art.image;
-
                     }
                 })
             }
@@ -112,7 +108,7 @@ export class DiscoverCardComponent implements OnInit {
                 return `/details/tv/${this.result.id}`;
             case RequestType.artist: //Actually artist
                 return `/details/artist/${this.result.id}`;
-            case RequestType.album: //Actually artist
+            case RequestType.album:
                 return `/details/album/${this.result.id}`;
         }
     }
@@ -156,8 +152,18 @@ export class DiscoverCardComponent implements OnInit {
                         this.messageService.send(x.errorMessage, "Ok");
                     }
                     this.loading = false;
-                });;
+                });
                 return;
+            case RequestType.album:
+                this.requestService.requestAlbum({foreignAlbumId: this.result.id.toString(), monitor: 'all', monitored: true, searchForMissingAlbums: false}).subscribe(x => {
+                    if (x.result) {
+                        this.result.requested = true;
+                        this.messageService.send(x.message, "Ok");
+                    } else {
+                        this.messageService.send(x.errorMessage, "Ok");
+                    }
+                    this.loading = false;
+                });
             case RequestType.tvShow:
                 const dia = this.dialog.open(EpisodeRequestComponent, { width: "700px", data: { series: this.tvSearchResult, isAdmin: this.isAdmin }, panelClass: 'modal-panel' });
                 dia.afterClosed().subscribe(x => this.loading = false);
