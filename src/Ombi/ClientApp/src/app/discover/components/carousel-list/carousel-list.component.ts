@@ -144,7 +144,7 @@ export class CarouselListComponent implements OnInit {
         let currentIteration = 0;
         while (this.discoverResults.length <= 14 && currentIteration <= 3) {
             currentIteration++;
-            await this.loadData();
+            await this.loadData(false);
         }
     }
 
@@ -155,7 +155,11 @@ export class CarouselListComponent implements OnInit {
     public async newPage() {
         // Note this is using the internal carousel APIs
         // https://github.com/primefaces/primeng/blob/master/src/app/components/carousel/carousel.ts
-        var end = this.carousel._page >= (this.carousel.totalDots() - 1);
+        if (!this.carousel?.page) {
+            return;
+        }
+
+        var end = this.carousel.page >= (this.carousel.totalDots() - 2) || this.carousel.totalDots() === 1;
         if (end) {
             var moviePromise: Promise<void>;
             var tvPromise: Promise<void>;
@@ -178,7 +182,7 @@ export class CarouselListComponent implements OnInit {
         }
     }
 
-    private async loadData() {
+    private async loadData(clearExisting: boolean = true) {
         var moviePromise: Promise<void>;
         var tvPromise: Promise<void>;
         switch (+this.discoverOptions) {
@@ -195,7 +199,7 @@ export class CarouselListComponent implements OnInit {
         }
         await moviePromise;
         await tvPromise;
-        this.createInitialModel();
+        this.createInitialModel(clearExisting);
     }
 
     private async switchDiscoverMode(newMode: DiscoverOption) {
@@ -250,8 +254,10 @@ export class CarouselListComponent implements OnInit {
         this.currentlyLoaded += this.amountToLoad;
     }
 
-    private createInitialModel() {
-        this.clear();
+    private createInitialModel(clearExisting: boolean = true) {
+        if (clearExisting) {
+            this.clear();
+        }
         this.createModel();
     }
 
