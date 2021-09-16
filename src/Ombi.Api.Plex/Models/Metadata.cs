@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Ombi.Api.Plex.Models
 {
     public class Metadata
@@ -44,7 +46,7 @@ namespace Ombi.Api.Plex.Models
         public string grandparentTheme { get; set; }
         public string chapterSource { get; set; }
         public Medium[] Media { get; set; }
-        public PlexGuids[] Guid { get; set; }
+        public List<PlexGuids> Guid { get; set; } = new List<PlexGuids>();
         //    public Director[] Director { get; set; }
         //    public Writer[] Writer { get; set; }
     }

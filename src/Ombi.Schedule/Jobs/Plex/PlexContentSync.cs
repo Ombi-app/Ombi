@@ -287,17 +287,26 @@ namespace Ombi.Schedule.Jobs.Plex
                             }
 
                             Logger.LogDebug("Adding movie {0}", movie.title);
-                            var metaData = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
-                                movie.ratingKey);
+                            var guids = new List<string>();
+                            if (!movie.Guid.Any())
+                            {
+                                var metaData = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
+                                    movie.ratingKey);
 
-                            var meta = metaData.MediaContainer.Metadata.FirstOrDefault();
-                            var guids = new List<string>
+                                var meta = metaData.MediaContainer.Metadata.FirstOrDefault();
+                                guids.Add(meta.guid);
+                                if (meta.Guid != null)
+                                {
+                                    foreach (var g in meta.Guid)
+                                    {
+                                        guids.Add(g.Id);
+                                    }
+                                }
+                            }
+                            else
                             {
-                                meta.guid
-                            };
-                            if (meta.Guid != null)
-                            {
-                                foreach (var g in meta.Guid)
+                                // Currently a Plex Pass feature only
+                                foreach (var g in movie.Guid)
                                 {
                                     guids.Add(g.Id);
                                 }

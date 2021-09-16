@@ -123,6 +123,7 @@ namespace Ombi.Api.Plex
         public async Task<PlexContainer> GetLibrary(string authToken, string plexFullHost, string libraryId)
         {
             var request = new Request($"library/sections/{libraryId}/all", plexFullHost, HttpMethod.Get);
+            request.AddQueryString("includeGuids","1");
             await AddHeaders(request, authToken);
             return await Api.Request<PlexContainer>(request);
         }
