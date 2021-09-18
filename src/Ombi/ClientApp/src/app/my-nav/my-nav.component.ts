@@ -91,7 +91,7 @@ export class MyNavComponent implements OnInit {
       this.filterService.changeFilter(this.searchFilter);
     }
     this.navItems = [
-      { id: "nav-discover", name: "NavigationBar.Discover", icon: "fas fa-bolt", link: "/discover", requiresAdmin: false, enabled: true },
+      { id: "nav-discover", name: "NavigationBar.Discover", icon: "fas fa-bolt", style:"z-index:-1;", link: "/discover", requiresAdmin: false, enabled: true },
       { id: "nav-requests", name: "NavigationBar.Requests", icon: "fas fa-stream", link: "/requests-list", requiresAdmin: false, enabled: true },
       { id: "nav-issues", name: "NavigationBar.Issues", icon: "fas fa-exclamation-triangle", link: "/issues", requiresAdmin: false, enabled: this.issuesEnabled },
       { id: "nav-userManagement", name: "NavigationBar.UserManagement", icon: "fas fa-users", link: "/usermanagement", requiresAdmin: true, enabled: true },
