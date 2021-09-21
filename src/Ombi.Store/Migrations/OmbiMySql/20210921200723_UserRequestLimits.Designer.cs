@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Ombi.Store.Context.MySql;
 
 namespace Ombi.Store.Migrations.OmbiMySql
 {
     [DbContext(typeof(OmbiMySqlContext))]
-    partial class OmbiMySqlContextModelSnapshot : ModelSnapshot
+    [Migration("20210921200723_UserRequestLimits")]
+    partial class UserRequestLimits
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
