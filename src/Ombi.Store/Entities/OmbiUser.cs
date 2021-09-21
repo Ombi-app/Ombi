@@ -31,6 +31,13 @@ namespace Ombi.Store.Entities
         public int? EpisodeRequestLimit { get; set; }
         public int? MusicRequestLimit { get; set; }
 
+        public RequestLimitType? MovieRequestLimitType { get; set; }
+        public RequestLimitType? EpisodeRequestLimitType { get; set; }
+        public RequestLimitType? MusicRequestLimitType { get; set; }
+        public int? MovieRequestLimitAmount { get; set; }
+        public int? EpisodeRequestLimitAmount { get; set; }
+        public int? MusicRequestLimitAmount { get; set; }
+
         public string UserAccessToken { get; set; }
 
         public List<NotificationUserId> NotificationUserIds { get; set; }
@@ -68,5 +75,12 @@ namespace Ombi.Store.Entities
             set => base.ConcurrencyStamp = value;
         }
 
+    }
+
+    public enum RequestLimitType
+    {
+        Day = 0,
+        Week = 1,
+        Month = 2,
     }
 }
