@@ -5,6 +5,7 @@ using NUnit.Framework;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine;
 using Ombi.Core.Models;
+using Ombi.Core.Services;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
@@ -21,7 +22,7 @@ namespace Ombi.Core.Tests.Engine
     {
 
         private AutoMocker _mocker;
-        private TvRequestEngine _subject;
+        private RequestLimitService _subject;
 
         [SetUp]
         public void SetUp()
@@ -33,14 +34,14 @@ namespace Ombi.Core.Tests.Engine
             principleMock.SetupGet(x => x.Identity).Returns(identityMock.Object);
             _mocker.Use(principleMock.Object);
 
-            _subject = _mocker.CreateInstance<TvRequestEngine>();
+            _subject = _mocker.CreateInstance<RequestLimitService>();
         }
 
         [Test]
         public async Task User_No_TvLimit_Set()
         {
             var user = new OmbiUser();
-            var result = await _subject.GetRemainingRequests(user);
+            var result = await _subject.GetRemainingTvRequests(user);
 
             Assert.That(result.HasLimit, Is.False);
         }
@@ -55,7 +56,7 @@ namespace Ombi.Core.Tests.Engine
 
 
 
-            var result = await _subject.GetRemainingRequests(null);
+            var result = await _subject.GetRemainingTvRequests(null);
 
             Assert.That(result, Is.Null);
         }
@@ -73,7 +74,7 @@ namespace Ombi.Core.Tests.Engine
 
 
 
-            var result = await _subject.GetRemainingRequests(null);
+            var result = await _subject.GetRemainingTvRequests(null);
 
             Assert.That(result.HasLimit, Is.False);
         }
@@ -89,7 +90,7 @@ namespace Ombi.Core.Tests.Engine
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(new List<RequestLog>().AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingRequests(user);
+            var result = await _subject.GetRemainingTvRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -120,7 +121,7 @@ namespace Ombi.Core.Tests.Engine
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingRequests(user);
+            var result = await _subject.GetRemainingTvRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -202,7 +203,7 @@ namespace Ombi.Core.Tests.Engine
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingRequests(user);
+            var result = await _subject.GetRemainingTvRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -236,7 +237,7 @@ namespace Ombi.Core.Tests.Engine
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingRequests(user);
+            var result = await _subject.GetRemainingTvRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -269,7 +270,7 @@ namespace Ombi.Core.Tests.Engine
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingRequests(user);
+            var result = await _subject.GetRemainingTvRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -310,7 +311,7 @@ namespace Ombi.Core.Tests.Engine
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingRequests(user);
+            var result = await _subject.GetRemainingTvRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -351,7 +352,7 @@ namespace Ombi.Core.Tests.Engine
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingRequests(user);
+            var result = await _subject.GetRemainingTvRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -385,7 +386,7 @@ namespace Ombi.Core.Tests.Engine
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingRequests(user);
+            var result = await _subject.GetRemainingTvRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -418,7 +419,7 @@ namespace Ombi.Core.Tests.Engine
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingRequests(user);
+            var result = await _subject.GetRemainingTvRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -459,7 +460,7 @@ namespace Ombi.Core.Tests.Engine
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingRequests(user);
+            var result = await _subject.GetRemainingTvRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -500,7 +501,7 @@ namespace Ombi.Core.Tests.Engine
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingRequests(user);
+            var result = await _subject.GetRemainingTvRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -534,7 +535,7 @@ namespace Ombi.Core.Tests.Engine
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingRequests(user);
+            var result = await _subject.GetRemainingTvRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -567,7 +568,7 @@ namespace Ombi.Core.Tests.Engine
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingRequests(user);
+            var result = await _subject.GetRemainingTvRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -608,7 +609,7 @@ namespace Ombi.Core.Tests.Engine
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingRequests(user);
+            var result = await _subject.GetRemainingTvRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -649,7 +650,7 @@ namespace Ombi.Core.Tests.Engine
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingRequests(user);
+            var result = await _subject.GetRemainingTvRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)

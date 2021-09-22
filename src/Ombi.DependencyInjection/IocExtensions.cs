@@ -69,6 +69,7 @@ using Ombi.Api.CloudService;
 using Ombi.Api.RottenTomatoes;
 using System.Net.Http;
 using Microsoft.Extensions.Logging;
+using Ombi.Core.Services;
 
 namespace Ombi.DependencyInjection
 {
@@ -88,34 +89,34 @@ namespace Ombi.DependencyInjection
 
         public static void RegisterEngines(this IServiceCollection services)
         {
-            services.AddTransient<IMovieEngine, MovieSearchEngine>();
-            services.AddTransient<IMovieRequestEngine, MovieRequestEngine>();
-            services.AddTransient<ITvRequestEngine, TvRequestEngine>();
-            services.AddTransient<ITvSearchEngine, TvSearchEngine>();
-            services.AddTransient<IRuleEvaluator, RuleEvaluator>();
-            services.AddTransient<IUserStatsEngine, UserStatsEngine>();
-            services.AddTransient<IMovieSender, MovieSender>();
-            services.AddTransient<IRecentlyAddedEngine, RecentlyAddedEngine>();
-            services.AddTransient<IMusicSearchEngine, MusicSearchEngine>();
-            services.AddTransient<IMusicRequestEngine, MusicRequestEngine>();
-            services.AddTransient<ITvSender, TvSender>();
-            services.AddTransient<IMusicSender, MusicSender>();
-            services.AddTransient<IMassEmailSender, MassEmailSender>();
-            services.AddTransient<IPlexOAuthManager, PlexOAuthManager>();
-            services.AddTransient<IVoteEngine, VoteEngine>();
-            services.AddTransient<IDemoMovieSearchEngine, DemoMovieSearchEngine>();
-            services.AddTransient<IDemoTvSearchEngine, DemoTvSearchEngine>();
-            services.AddTransient<IUserDeletionEngine, UserDeletionEngine>();
+            services.AddScoped<IMovieEngine, MovieSearchEngine>();
+            services.AddScoped<IMovieRequestEngine, MovieRequestEngine>();
+            services.AddScoped<ITvRequestEngine, TvRequestEngine>();
+            services.AddScoped<ITvSearchEngine, TvSearchEngine>();
+            services.AddScoped<IRuleEvaluator, RuleEvaluator>();
+            services.AddScoped<IUserStatsEngine, UserStatsEngine>();
+            services.AddScoped<IMovieSender, MovieSender>();
+            services.AddScoped<IRecentlyAddedEngine, RecentlyAddedEngine>();
+            services.AddScoped<IMusicSearchEngine, MusicSearchEngine>();
+            services.AddScoped<IMusicRequestEngine, MusicRequestEngine>();
+            services.AddScoped<ITvSender, TvSender>();
+            services.AddScoped<IMusicSender, MusicSender>();
+            services.AddScoped<IMassEmailSender, MassEmailSender>();
+            services.AddScoped<IPlexOAuthManager, PlexOAuthManager>();
+            services.AddScoped<IVoteEngine, VoteEngine>();
+            services.AddScoped<IDemoMovieSearchEngine, DemoMovieSearchEngine>();
+            services.AddScoped<IDemoTvSearchEngine, DemoTvSearchEngine>();
+            services.AddScoped<IUserDeletionEngine, UserDeletionEngine>();
         }
 
         public static void RegisterEnginesV2(this IServiceCollection services)
         {
-            services.AddTransient<IMultiSearchEngine, MultiSearchEngine>();
-            services.AddTransient<IMovieEngineV2, MovieSearchEngineV2>();
-            services.AddTransient<ITVSearchEngineV2, TvSearchEngineV2>();
-            services.AddTransient<ICalendarEngine, CalendarEngine>();
-            services.AddTransient<IMusicSearchEngineV2, MusicSearchEngineV2>();
-            services.AddTransient<IIssuesEngine, IssuesEngine>();
+            services.AddScoped<IMultiSearchEngine, MultiSearchEngine>();
+            services.AddScoped<IMovieEngineV2, MovieSearchEngineV2>();
+            services.AddScoped<ITVSearchEngineV2, TvSearchEngineV2>();
+            services.AddScoped<ICalendarEngine, CalendarEngine>();
+            services.AddScoped<IMusicSearchEngineV2, MusicSearchEngineV2>();
+            services.AddScoped<IIssuesEngine, IssuesEngine>();
         }
 
         public static void RegisterHttp(this IServiceCollection services)
@@ -138,40 +139,40 @@ namespace Ombi.DependencyInjection
         public static void RegisterApi(this IServiceCollection services)
         {
             services.AddScoped<IApi, Api.Api>(s => new Api.Api(s.GetRequiredService<ILogger<Api.Api>>(), s.GetRequiredService<IHttpClientFactory>().CreateClient("OmbiClient")));
-            services.AddTransient<IMovieDbApi, Api.TheMovieDb.TheMovieDbApi>();
-            services.AddTransient<IPlexApi, PlexApi>();
-            services.AddTransient<IEmbyApi, EmbyApi>();
-            services.AddTransient<IJellyfinApi, JellyfinApi>();
-            services.AddTransient<ISonarrApi, SonarrApi>();
-            services.AddTransient<ISonarrV3Api, SonarrV3Api>();
-            services.AddTransient<ISlackApi, SlackApi>();
-            services.AddTransient<ITvMazeApi, TvMazeApi>();
-            services.AddTransient<ITraktApi, TraktApi>();
-            services.AddTransient<IRadarrApi, RadarrApi>();
-            services.AddTransient<IRadarrV3Api, RadarrV3Api>();
-            services.AddTransient<IDiscordApi, DiscordApi>();
-            services.AddTransient<IPushbulletApi, PushbulletApi>();
-            services.AddTransient<IOmbiService, OmbiService>();
-            services.AddTransient<IFanartTvApi, FanartTvApi>();
-            services.AddTransient<IPushoverApi, PushoverApi>();
-            services.AddTransient<IGotifyApi, GotifyApi>();
-            services.AddTransient<IWebhookApi, WebhookApi>();
-            services.AddTransient<IMattermostApi, MattermostApi>();
-            services.AddTransient<ICouchPotatoApi, CouchPotatoApi>();
-            services.AddTransient<IDogNzbApi, DogNzbApi>();
-            services.AddTransient<ITelegramApi, TelegramApi>();
-            services.AddTransient<IGithubApi, GithubApi>();
-            services.AddTransient<ISickRageApi, SickRageApi>();
-            services.AddTransient<IAppVeyorApi, AppVeyorApi>();
-            services.AddTransient<IOneSignalApi, OneSignalApi>();
-            services.AddTransient<ILidarrApi, LidarrApi>();
-            services.AddTransient<IGroupMeApi, GroupMeApi>();
-            services.AddTransient<IMusicBrainzApi, MusicBrainzApi>();
-            services.AddTransient<IWhatsAppApi, WhatsAppApi>();
-            services.AddTransient<ICloudMobileNotification, CloudMobileNotification>();
-            services.AddTransient<IEmbyApiFactory, EmbyApiFactory>();
-            services.AddTransient<IJellyfinApiFactory, JellyfinApiFactory>();
-            services.AddTransient<IRottenTomatoesApi, RottenTomatoesApi>();
+            services.AddScoped<IMovieDbApi, Api.TheMovieDb.TheMovieDbApi>();
+            services.AddScoped<IPlexApi, PlexApi>();
+            services.AddScoped<IEmbyApi, EmbyApi>();
+            services.AddScoped<IJellyfinApi, JellyfinApi>();
+            services.AddScoped<ISonarrApi, SonarrApi>();
+            services.AddScoped<ISonarrV3Api, SonarrV3Api>();
+            services.AddScoped<ISlackApi, SlackApi>();
+            services.AddScoped<ITvMazeApi, TvMazeApi>();
+            services.AddScoped<ITraktApi, TraktApi>();
+            services.AddScoped<IRadarrApi, RadarrApi>();
+            services.AddScoped<IRadarrV3Api, RadarrV3Api>();
+            services.AddScoped<IDiscordApi, DiscordApi>();
+            services.AddScoped<IPushbulletApi, PushbulletApi>();
+            services.AddScoped<IOmbiService, OmbiService>();
+            services.AddScoped<IFanartTvApi, FanartTvApi>();
+            services.AddScoped<IPushoverApi, PushoverApi>();
+            services.AddScoped<IGotifyApi, GotifyApi>();
+            services.AddScoped<IWebhookApi, WebhookApi>();
+            services.AddScoped<IMattermostApi, MattermostApi>();
+            services.AddScoped<ICouchPotatoApi, CouchPotatoApi>();
+            services.AddScoped<IDogNzbApi, DogNzbApi>();
+            services.AddScoped<ITelegramApi, TelegramApi>();
+            services.AddScoped<IGithubApi, GithubApi>();
+            services.AddScoped<ISickRageApi, SickRageApi>();
+            services.AddScoped<IAppVeyorApi, AppVeyorApi>();
+            services.AddScoped<IOneSignalApi, OneSignalApi>();
+            services.AddScoped<ILidarrApi, LidarrApi>();
+            services.AddScoped<IGroupMeApi, GroupMeApi>();
+            services.AddScoped<IMusicBrainzApi, MusicBrainzApi>();
+            services.AddScoped<IWhatsAppApi, WhatsAppApi>();
+            services.AddScoped<ICloudMobileNotification, CloudMobileNotification>();
+            services.AddScoped<IEmbyApiFactory, EmbyApiFactory>();
+            services.AddScoped<IJellyfinApiFactory, JellyfinApiFactory>();
+            services.AddScoped<IRottenTomatoesApi, RottenTomatoesApi>();
         }
 
         public static void RegisterStore(this IServiceCollection services) { 
@@ -201,26 +202,27 @@ namespace Ombi.DependencyInjection
         }
         public static void RegisterServices(this IServiceCollection services)
         {
-            services.AddTransient<IRequestServiceMain, RequestService>();
-            services.AddTransient<INotificationService, NotificationService>();
-            services.AddTransient<IEmailProvider, GenericEmailProvider>();
-            services.AddTransient<INotificationHelper, NotificationHelper>();
+            services.AddScoped<IRequestServiceMain, RequestService>();
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IEmailProvider, GenericEmailProvider>();
+            services.AddScoped<INotificationHelper, NotificationHelper>();
             services.AddSingleton<ICacheService, CacheService>();
             services.AddSingleton<IMediaCacheService, MediaCacheService>();
             services.AddScoped<IImageService, ImageService>();
+            services.AddSingleton<IRequestLimitService, RequestLimitService>();
 
-            services.AddTransient<IDiscordNotification, DiscordNotification>();
-            services.AddTransient<IEmailNotification, EmailNotification>();
-            services.AddTransient<IPushbulletNotification, PushbulletNotification>();
-            services.AddTransient<ISlackNotification, SlackNotification>();
-            services.AddTransient<ISlackNotification, SlackNotification>();
-            services.AddTransient<IMattermostNotification, MattermostNotification>();
-            services.AddTransient<IPushoverNotification, PushoverNotification>();
-            services.AddTransient<IGotifyNotification, GotifyNotification>();
-            services.AddTransient<IWebhookNotification, WebhookNotification>();
-            services.AddTransient<ITelegramNotification, TelegramNotification>();
-            services.AddTransient<ILegacyMobileNotification, LegacyMobileNotification>();
-            services.AddTransient<IChangeLogProcessor, ChangeLogProcessor>();
+            services.AddScoped<IDiscordNotification, DiscordNotification>();
+            services.AddScoped<IEmailNotification, EmailNotification>();
+            services.AddScoped<IPushbulletNotification, PushbulletNotification>();
+            services.AddScoped<ISlackNotification, SlackNotification>();
+            services.AddScoped<ISlackNotification, SlackNotification>();
+            services.AddScoped<IMattermostNotification, MattermostNotification>();
+            services.AddScoped<IPushoverNotification, PushoverNotification>();
+            services.AddScoped<IGotifyNotification, GotifyNotification>();
+            services.AddScoped<IWebhookNotification, WebhookNotification>();
+            services.AddScoped<ITelegramNotification, TelegramNotification>();
+            services.AddScoped<ILegacyMobileNotification, LegacyMobileNotification>();
+            services.AddScoped<IChangeLogProcessor, ChangeLogProcessor>();
         }
 
         public static void RegisterJobs(this IServiceCollection services)
@@ -228,35 +230,35 @@ namespace Ombi.DependencyInjection
             services.AddSingleton<QuartzJobRunner>();
             services.AddSingleton<IJobFactory, IoCJobFactory>();
 
-            services.AddTransient<IPlexContentSync, PlexContentSync>();
-            services.AddTransient<IEmbyContentSync, EmbyContentSync>();
-            services.AddTransient<IEmbyEpisodeSync, EmbyEpisodeSync>();
-            services.AddTransient<IEmbyAvaliabilityChecker, EmbyAvaliabilityChecker>();
-            services.AddTransient<IJellyfinContentSync, JellyfinContentSync>();
-            services.AddTransient<IJellyfinEpisodeSync, JellyfinEpisodeSync>();
-            services.AddTransient<IJellyfinAvaliabilityChecker, JellyfinAvaliabilityChecker>();
-            services.AddTransient<IPlexEpisodeSync, PlexEpisodeSync>();
-            services.AddTransient<IPlexAvailabilityChecker, PlexAvailabilityChecker>();
-            services.AddTransient<IRadarrSync, RadarrSync>();
-            services.AddTransient<ISonarrSync, SonarrSync>();
-            services.AddTransient<IOmbiAutomaticUpdater, OmbiAutomaticUpdater>();
-            services.AddTransient<IPlexUserImporter, PlexUserImporter>();
-            services.AddTransient<IEmbyUserImporter, EmbyUserImporter>();
-            services.AddTransient<IJellyfinUserImporter, JellyfinUserImporter>();
-            services.AddTransient<IWelcomeEmail, WelcomeEmail>();
-            services.AddTransient<ICouchPotatoSync, CouchPotatoSync>();
-            services.AddTransient<IProcessProvider, ProcessProvider>();
-            services.AddTransient<ISickRageSync, SickRageSync>();
-            services.AddTransient<IRefreshMetadata, RefreshMetadata>();
-            services.AddTransient<INewsletterJob, NewsletterJob>();
-            services.AddTransient<ILidarrAlbumSync, LidarrAlbumSync>();
-            services.AddTransient<ILidarrArtistSync, LidarrArtistSync>();
-            services.AddTransient<ILidarrAvailabilityChecker, LidarrAvailabilityChecker>();
-            services.AddTransient<IIssuesPurge, IssuesPurge>();
-            services.AddTransient<IResendFailedRequests, ResendFailedRequests>();
-            services.AddTransient<IMediaDatabaseRefresh, MediaDatabaseRefresh>();
-            services.AddTransient<IArrAvailabilityChecker, ArrAvailabilityChecker>();
-            services.AddTransient<IAutoDeleteRequests, AutoDeleteRequests>();
+            services.AddSingleton<IPlexContentSync, PlexContentSync>();
+            services.AddSingleton<IEmbyContentSync, EmbyContentSync>();
+            services.AddSingleton<IEmbyEpisodeSync, EmbyEpisodeSync>();
+            services.AddSingleton<IEmbyAvaliabilityChecker, EmbyAvaliabilityChecker>();
+            services.AddSingleton<IJellyfinContentSync, JellyfinContentSync>();
+            services.AddSingleton<IJellyfinEpisodeSync, JellyfinEpisodeSync>();
+            services.AddSingleton<IJellyfinAvaliabilityChecker, JellyfinAvaliabilityChecker>();
+            services.AddSingleton<IPlexEpisodeSync, PlexEpisodeSync>();
+            services.AddSingleton<IPlexAvailabilityChecker, PlexAvailabilityChecker>();
+            services.AddSingleton<IRadarrSync, RadarrSync>();
+            services.AddSingleton<ISonarrSync, SonarrSync>();
+            services.AddSingleton<IOmbiAutomaticUpdater, OmbiAutomaticUpdater>();
+            services.AddSingleton<IPlexUserImporter, PlexUserImporter>();
+            services.AddSingleton<IEmbyUserImporter, EmbyUserImporter>();
+            services.AddSingleton<IJellyfinUserImporter, JellyfinUserImporter>();
+            services.AddSingleton<IWelcomeEmail, WelcomeEmail>();
+            services.AddSingleton<ICouchPotatoSync, CouchPotatoSync>();
+            services.AddSingleton<IProcessProvider, ProcessProvider>();
+            services.AddSingleton<ISickRageSync, SickRageSync>();
+            services.AddSingleton<IRefreshMetadata, RefreshMetadata>();
+            services.AddSingleton<INewsletterJob, NewsletterJob>();
+            services.AddSingleton<ILidarrAlbumSync, LidarrAlbumSync>();
+            services.AddSingleton<ILidarrArtistSync, LidarrArtistSync>();
+            services.AddSingleton<ILidarrAvailabilityChecker, LidarrAvailabilityChecker>();
+            services.AddSingleton<IIssuesPurge, IssuesPurge>();
+            services.AddSingleton<IResendFailedRequests, ResendFailedRequests>();
+            services.AddSingleton<IMediaDatabaseRefresh, MediaDatabaseRefresh>();
+            services.AddSingleton<IArrAvailabilityChecker, ArrAvailabilityChecker>();
+            services.AddSingleton<IAutoDeleteRequests, AutoDeleteRequests>();
         }
     }
 }

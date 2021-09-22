@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 namespace Ombi.Core.Tests.Engine
 {
     [TestFixture]
-    public class MovieRequestLimitsTests
+    public class MusicRequestLimitTests
     {
 
         private AutoMocker _mocker;
@@ -42,16 +42,16 @@ namespace Ombi.Core.Tests.Engine
         }
 
         [Test]
-        public async Task User_No_MovieLimit_Set()
+        public async Task User_No_MusicLimit_Set()
         {
             var user = new OmbiUser();
-            var result = await _subject.GetRemainingMovieRequests(user);
+            var result = await _subject.GetRemainingMusicRequests(user);
 
             Assert.That(result.HasLimit, Is.False);
         }
 
         [Test]
-        public async Task No_UserPassedIn_UsernotExist_No_MovieLimit_Set()
+        public async Task No_UserPassedIn_UsernotExist_No_MusicLimit_Set()
         {
             var user = new OmbiUser();
 
@@ -60,13 +60,13 @@ namespace Ombi.Core.Tests.Engine
             
 
 
-            var result = await _subject.GetRemainingMovieRequests(null);
+            var result = await _subject.GetRemainingMusicRequests(null);
 
             Assert.That(result, Is.Null);
         }
 
         [Test]
-        public async Task No_UserPassedIn_No_MovieLimit_Set()
+        public async Task No_UserPassedIn_No_MusicLimit_Set()
         {
             var user = new OmbiUser
             {
@@ -78,23 +78,23 @@ namespace Ombi.Core.Tests.Engine
 
 
 
-            var result = await _subject.GetRemainingMovieRequests(null);
+            var result = await _subject.GetRemainingMusicRequests(null);
 
             Assert.That(result.HasLimit, Is.False);
         }
 
         [Test]
-        public async Task UserPassedIn_MovieLimit_Set_No_Requests()
+        public async Task UserPassedIn_MusicLimit_Set_No_Requests()
         {
             var user = new OmbiUser
             {
                 NormalizedUserName = "TEST",
-                MovieRequestLimit = 1
+                MusicRequestLimit = 1
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(new List<RequestLog>().AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingMovieRequests(user);
+            var result = await _subject.GetRemainingMusicRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -104,12 +104,12 @@ namespace Ombi.Core.Tests.Engine
         }
 
         [Test]
-        public async Task UserPassedIn_MovieLimit_Set_Limit()
+        public async Task UserPassedIn_MusicLimit_Set_Limit()
         {
             var user = new OmbiUser
             {
                 NormalizedUserName = "TEST",
-                MovieRequestLimit = 2,
+                MusicRequestLimit = 2,
                 Id = "id1"
             };
             var yesterday = DateTime.Now.AddDays(-1);
@@ -118,14 +118,14 @@ namespace Ombi.Core.Tests.Engine
                 new RequestLog
                 {
                     UserId = "id1",
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.Album,
                     RequestDate = yesterday, // Yesterday
                 }
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingMovieRequests(user);
+            var result = await _subject.GetRemainingMusicRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -136,12 +136,12 @@ namespace Ombi.Core.Tests.Engine
         }
 
         [Test]
-        public async Task UserPassedIn_MovieLimit_Set_Limit_MultipleRequests()
+        public async Task UserPassedIn_MusicLimit_Set_Limit_MultipleRequests()
         {
             var user = new OmbiUser
             {
                 NormalizedUserName = "TEST",
-                MovieRequestLimit = 2,
+                MusicRequestLimit = 2,
                 Id = "id1"
             };
             var yesterday = DateTime.Now.AddDays(-1);
@@ -150,56 +150,56 @@ namespace Ombi.Core.Tests.Engine
                 new RequestLog
                 {
                     UserId = "id1",
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.Album,
                     RequestDate = yesterday,
                 },
                 new RequestLog
                 {
                     UserId = "id1",
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.Album,
                     RequestDate = yesterday.AddDays(-2),
                 },
                 new RequestLog
                 {
                     UserId = "id1",
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.Album,
                     RequestDate =yesterday.AddDays(-3), // Yesterday
                 },
                 new RequestLog
                 {
                     UserId = "id1",
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.Album,
                     RequestDate =yesterday.AddDays(-4), // Yesterday
                 },
                 new RequestLog
                 {
                     UserId = "id1",
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.Album,
                     RequestDate =yesterday.AddDays(-5), // Yesterday
                 },
                 new RequestLog
                 {
                     UserId = "id1",
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.Album,
                     RequestDate =yesterday.AddDays(-6), // Yesterday
                 },
                 new RequestLog
                 {
                     UserId = "id1",
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.Album,
                     RequestDate =yesterday.AddDays(-7), // Yesterday
                 },
                 new RequestLog
                 {
                     UserId = "id1",
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.Album,
                     RequestDate = yesterday.AddDays(-8), // Yesterday
                 },
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingMovieRequests(user);
+            var result = await _subject.GetRemainingMusicRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -210,13 +210,13 @@ namespace Ombi.Core.Tests.Engine
         }
 
         [Test]
-        public async Task UserPassedIn_MovieLimit_Set_Limit_Daily_NoRequestsToday()
+        public async Task UserPassedIn_MusicLimit_Set_Limit_Daily_NoRequestsToday()
         {
             var user = new OmbiUser
             {
                 NormalizedUserName = "TEST",
-                MovieRequestLimit = 2,
-                MovieRequestLimitType = RequestLimitType.Day,
+                MusicRequestLimit = 2,
+                MusicRequestLimitType = RequestLimitType.Day,
                 Id = "id1"
             };
             var yesterday = DateTime.Now.AddDays(-1);
@@ -225,14 +225,14 @@ namespace Ombi.Core.Tests.Engine
                 new RequestLog
                 {
                     UserId = "id1",
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.Album,
                     RequestDate = yesterday,
                 }
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingMovieRequests(user);
+            var result = await _subject.GetRemainingMusicRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -242,13 +242,13 @@ namespace Ombi.Core.Tests.Engine
         }
 
         [Test]
-        public async Task UserPassedIn_MovieLimit_Set_Limit_Daily_OneRequestsToday()
+        public async Task UserPassedIn_MusicLimit_Set_Limit_Daily_OneRequestsToday()
         {
             var user = new OmbiUser
             {
                 NormalizedUserName = "TEST",
-                MovieRequestLimit = 2,
-                MovieRequestLimitType = RequestLimitType.Day,
+                MusicRequestLimit = 2,
+                MusicRequestLimitType = RequestLimitType.Day,
                 Id = "id1"
             };
 
@@ -258,14 +258,14 @@ namespace Ombi.Core.Tests.Engine
                 new RequestLog
                 {
                     UserId = "id1",
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.Album,
                     RequestDate = today.AddHours(-1),
                 }
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingMovieRequests(user);
+            var result = await _subject.GetRemainingMusicRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -276,13 +276,13 @@ namespace Ombi.Core.Tests.Engine
         }
 
         [Test]
-        public async Task UserPassedIn_MovieLimit_Set_Limit_Daily_AllRequestsToday()
+        public async Task UserPassedIn_MusicLimit_Set_Limit_Daily_AllRequestsToday()
         {
             var user = new OmbiUser
             {
                 NormalizedUserName = "TEST",
-                MovieRequestLimit = 2,
-                MovieRequestLimitType = RequestLimitType.Day,
+                MusicRequestLimit = 2,
+                MusicRequestLimitType = RequestLimitType.Day,
                 Id = "id1"
             };
             var today = DateTime.Now;
@@ -291,20 +291,20 @@ namespace Ombi.Core.Tests.Engine
                 new RequestLog
                 {
                     UserId = "id1",
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.Album,
                     RequestDate = today.AddHours(-1),
                 },
                 new RequestLog
                 {
                     UserId = "id1",
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.Album,
                     RequestDate = today.AddHours(-2),
                 },
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingMovieRequests(user);
+            var result = await _subject.GetRemainingMusicRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -315,13 +315,13 @@ namespace Ombi.Core.Tests.Engine
         }
 
         [Test]
-        public async Task UserPassedIn_MovieLimit_Set_Limit_Weekly_NoRequests()
+        public async Task UserPassedIn_MusicLimit_Set_Limit_Weekly_NoRequests()
         {
             var user = new OmbiUser
             {
                 NormalizedUserName = "TEST",
-                MovieRequestLimit = 2,
-                MovieRequestLimitType = RequestLimitType.Week,
+                MusicRequestLimit = 2,
+                MusicRequestLimitType = RequestLimitType.Week,
                 Id = "id1"
             };
             var lastWeek = DateTime.Now.FirstDateInWeek().AddDays(-1); // Day before reset
@@ -330,14 +330,14 @@ namespace Ombi.Core.Tests.Engine
                 new RequestLog
                 {
                     UserId = "id1",
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.Album,
                     RequestDate = lastWeek,
                 }
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingMovieRequests(user);
+            var result = await _subject.GetRemainingMusicRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -347,13 +347,13 @@ namespace Ombi.Core.Tests.Engine
         }
 
         [Test]
-        public async Task UserPassedIn_MovieLimit_Set_Limit_Weekly_OneRequestsWeek()
+        public async Task UserPassedIn_MusicLimit_Set_Limit_Weekly_OneRequestsWeek()
         {
             var user = new OmbiUser
             {
                 NormalizedUserName = "TEST",
-                MovieRequestLimit = 2,
-                MovieRequestLimitType = RequestLimitType.Week,
+                MusicRequestLimit = 2,
+                MusicRequestLimitType = RequestLimitType.Week,
                 Id = "id1"
             };
             var today = DateTime.UtcNow;
@@ -362,14 +362,14 @@ namespace Ombi.Core.Tests.Engine
                 new RequestLog
                 {
                     UserId = "id1",
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.Album,
                     RequestDate = today,
                 }
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingMovieRequests(user);
+            var result = await _subject.GetRemainingMusicRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -380,13 +380,13 @@ namespace Ombi.Core.Tests.Engine
         }
 
         [Test]
-        public async Task UserPassedIn_MovieLimit_Set_Limit_Weekly_AllRequestsWeek()
+        public async Task UserPassedIn_MusicLimit_Set_Limit_Weekly_AllRequestsWeek()
         {
             var user = new OmbiUser
             {
                 NormalizedUserName = "TEST",
-                MovieRequestLimit = 2,
-                MovieRequestLimitType = RequestLimitType.Week,
+                MusicRequestLimit = 2,
+                MusicRequestLimitType = RequestLimitType.Week,
                 Id = "id1"
             };
             var today = DateTime.Now;
@@ -395,20 +395,20 @@ namespace Ombi.Core.Tests.Engine
                 new RequestLog
                 {
                     UserId = "id1",
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.Album,
                     RequestDate = today.AddDays(-1),
                 },
                 new RequestLog
                 {
                     UserId = "id1",
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.Album,
                     RequestDate = today,
                 },
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingMovieRequests(user);
+            var result = await _subject.GetRemainingMusicRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -418,13 +418,13 @@ namespace Ombi.Core.Tests.Engine
                 );
         }
         [Test]
-        public async Task UserPassedIn_MovieLimit_Set_Limit_Monthly_NoRequests()
+        public async Task UserPassedIn_MusicLimit_Set_Limit_Monthly_NoRequests()
         {
             var user = new OmbiUser
             {
                 NormalizedUserName = "TEST",
-                MovieRequestLimit = 2,
-                MovieRequestLimitType = RequestLimitType.Month,
+                MusicRequestLimit = 2,
+                MusicRequestLimitType = RequestLimitType.Month,
                 Id = "id1"
             };
             var lastWeek = DateTime.Now.AddMonths(-1).AddDays(-1);
@@ -433,14 +433,14 @@ namespace Ombi.Core.Tests.Engine
                 new RequestLog
                 {
                     UserId = "id1",
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.Album,
                     RequestDate = lastWeek,
                 }
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingMovieRequests(user);
+            var result = await _subject.GetRemainingMusicRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -450,13 +450,13 @@ namespace Ombi.Core.Tests.Engine
         }
 
         [Test]
-        public async Task UserPassedIn_MovieLimit_Set_Limit_Monthly_OneRequests()
+        public async Task UserPassedIn_MusicLimit_Set_Limit_Monthly_OneRequests()
         {
             var user = new OmbiUser
             {
                 NormalizedUserName = "TEST",
-                MovieRequestLimit = 2,
-                MovieRequestLimitType = RequestLimitType.Month,
+                MusicRequestLimit = 2,
+                MusicRequestLimitType = RequestLimitType.Month,
                 Id = "id1"
             };
             var today = DateTime.Now;
@@ -466,14 +466,14 @@ namespace Ombi.Core.Tests.Engine
                 new RequestLog
                 {
                     UserId = "id1",
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.Album,
                     RequestDate = today,
                 }
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingMovieRequests(user);
+            var result = await _subject.GetRemainingMusicRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -484,13 +484,13 @@ namespace Ombi.Core.Tests.Engine
         }
 
         [Test]
-        public async Task UserPassedIn_MovieLimit_Set_Limit_Monthly_AllRequests()
+        public async Task UserPassedIn_MusicLimit_Set_Limit_Monthly_AllRequests()
         {
             var user = new OmbiUser
             {
                 NormalizedUserName = "TEST",
-                MovieRequestLimit = 2,
-                MovieRequestLimitType = RequestLimitType.Month,
+                MusicRequestLimit = 2,
+                MusicRequestLimitType = RequestLimitType.Month,
                 Id = "id1"
             };
             var today = DateTime.Now;
@@ -500,20 +500,20 @@ namespace Ombi.Core.Tests.Engine
                 new RequestLog
                 {
                     UserId = "id1",
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.Album,
                     RequestDate = today.AddDays(-1),
                 },
                 new RequestLog
                 {
                     UserId = "id1",
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.Album,
                     RequestDate = today,
                 },
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingMovieRequests(user);
+            var result = await _subject.GetRemainingMusicRequests(user);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)

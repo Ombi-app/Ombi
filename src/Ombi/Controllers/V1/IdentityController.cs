@@ -17,6 +17,7 @@ using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Helpers;
 using Ombi.Core.Models.UI;
+using Ombi.Core.Services;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
@@ -68,6 +69,7 @@ namespace Ombi.Controllers.V1
             ITvRequestEngine tvRequestEngine,
             IMusicRequestEngine musicEngine,
             IUserDeletionEngine deletionEngine,
+            IRequestLimitService requestLimitService,
             ICacheService cacheService)
         {
             UserManager = user;
@@ -96,11 +98,13 @@ namespace Ombi.Controllers.V1
             _userQualityProfiles = userProfiles;
             MusicRequestEngine = musicEngine;
             _deletionEngine = deletionEngine;
+            _requestLimitService = requestLimitService;
             _cacheService = cacheService;
         }
 
         private OmbiUserManager UserManager { get; }
         private readonly IUserDeletionEngine _deletionEngine;
+        private readonly IRequestLimitService _requestLimitService;
         private readonly ICacheService _cacheService;
 
         private RoleManager<IdentityRole> RoleManager { get; }
@@ -422,17 +426,17 @@ namespace Ombi.Controllers.V1
 
             if (vm.EpisodeRequestLimit > 0)
             {
-                vm.EpisodeRequestQuota = await TvRequestEngine.GetRemainingRequests(user);
+                vm.EpisodeRequestQuota = await _requestLimitService.GetRemainingTvRequests(user);
             }
 
             if (vm.MovieRequestLimit > 0)
             {
-                vm.MovieRequestQuota = await MovieRequestEngine.GetRemainingRequests(user);
+                vm.MovieRequestQuota = await _requestLimitService.GetRemainingMovieRequests(user);
             }
 
             if (vm.MusicRequestLimit > 0)
             {
-                vm.MusicRequestQuota = await MusicRequestEngine.GetRemainingRequests(user);
+                vm.MusicRequestQuota = await _requestLimitService.GetRemainingMusicRequests(user);
             }
 
             // Get the quality profiles
