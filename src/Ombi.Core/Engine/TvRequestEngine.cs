@@ -981,29 +981,98 @@ namespace Ombi.Core.Engine
                 };
             }
 
-            IQueryable<RequestLog> log = _requestLog.GetAll()
-                                            .Where(x => x.UserId == user.Id
-                                                && x.RequestType == RequestType.TvShow
-                                                && x.RequestDate >= DateTime.UtcNow.AddDays(-7));
+            IQueryable<RequestLog> log = _requestLog.GetAll().Where(x => x.UserId == user.Id && x.RequestType == RequestType.TvShow);
 
-            // Needed, due to a bug which would cause all episode counts to be 0
-            int zeroEpisodeCount = await log.Where(x => x.EpisodeCount == 0).Select(x => x.EpisodeCount).CountAsync();
+            int count = 0;
+            DateTime oldestRequestedAt = DateTime.Now;
+            DateTime nextRequest = DateTime.Now;
 
-            int episodeCount = await log.Where(x => x.EpisodeCount != 0).Select(x => x.EpisodeCount).SumAsync();
 
-            int count = limit - (zeroEpisodeCount + episodeCount);
+            IQueryable<RequestLog> filteredLog;
+            int zeroEpisodeCount;
+            int episodeCount;
 
-            DateTime oldestRequestedAt = await log.OrderBy(x => x.RequestDate)
+            if (!user.EpisodeRequestLimitType.HasValue)
+            {
+                filteredLog = log.Where(x => x.RequestDate >= DateTime.UtcNow.AddDays(-7));
+                // Needed, due to a bug which would cause all episode counts to be 0
+                zeroEpisodeCount = await filteredLog.Where(x => x.EpisodeCount == 0).Select(x => x.EpisodeCount).CountAsync();
+
+                episodeCount = await filteredLog.Where(x => x.EpisodeCount != 0).Select(x => x.EpisodeCount).SumAsync();
+
+                count = limit - (zeroEpisodeCount + episodeCount);
+
+                oldestRequestedAt = await log
+                                                .Where(x => x.RequestDate >= DateTime.UtcNow.AddDays(-7))
+                                                .OrderBy(x => x.RequestDate)
+                                                .Select(x => x.RequestDate)
+                                                .FirstOrDefaultAsync();
+
+                return new RequestQuotaCountModel()
+                {
+                    HasLimit = true,
+                    Limit = limit,
+                    Remaining = count < 0 ? 0 : count,
+                    NextRequest = DateTime.SpecifyKind(oldestRequestedAt.AddDays(7), DateTimeKind.Utc),
+                };
+            }
+
+            switch (user.EpisodeRequestLimitType)
+            {
+                case RequestLimitType.Day:
+
+                    filteredLog = log.Where(x => x.RequestDate >= DateTime.UtcNow.Date);
+                    // Needed, due to a bug which would cause all episode counts to be 0
+                    zeroEpisodeCount = await filteredLog.Where(x => x.EpisodeCount == 0).Select(x => x.EpisodeCount).CountAsync();
+                    episodeCount = await filteredLog.Where(x => x.EpisodeCount != 0).Select(x => x.EpisodeCount).SumAsync();
+                    count = limit - (zeroEpisodeCount + episodeCount);
+
+                    oldestRequestedAt = await log.Where(x => x.RequestDate >= DateTime.UtcNow.Date)
+                                            .OrderBy(x => x.RequestDate)
                                             .Select(x => x.RequestDate)
                                             .FirstOrDefaultAsync();
+                    nextRequest = oldestRequestedAt.AddDays(1);
+                    break;
+                case RequestLimitType.Week:
+
+                    filteredLog = log.Where(x => x.RequestDate >= DateTime.UtcNow.Date.AddDays(-7));
+                    // Needed, due to a bug which would cause all episode counts to be 0
+                    zeroEpisodeCount = await filteredLog.Where(x => x.EpisodeCount == 0).Select(x => x.EpisodeCount).CountAsync();
+                    episodeCount = await filteredLog.Where(x => x.EpisodeCount != 0).Select(x => x.EpisodeCount).SumAsync();
+                    count = limit - (zeroEpisodeCount + episodeCount);
+                    
+                    oldestRequestedAt = await log.Where(x => x.RequestDate >= DateTime.UtcNow.Date.AddDays(-7))
+                                            .OrderBy(x => x.RequestDate)
+                                            .Select(x => x.RequestDate)
+                                            .FirstOrDefaultAsync();
+                    nextRequest = oldestRequestedAt.AddDays(7);
+                    break;
+                case RequestLimitType.Month:
+                    filteredLog = log.Where(x => x.RequestDate >= DateTime.UtcNow.Date.AddMonths(-1));
+                    // Needed, due to a bug which would cause all episode counts to be 0
+                    zeroEpisodeCount = await filteredLog.Where(x => x.EpisodeCount == 0).Select(x => x.EpisodeCount).CountAsync();
+                    episodeCount = await filteredLog.Where(x => x.EpisodeCount != 0).Select(x => x.EpisodeCount).SumAsync();
+                    count = limit - (zeroEpisodeCount + episodeCount);
+
+                    oldestRequestedAt = await log.Where(x => x.RequestDate >= DateTime.UtcNow.Date.AddMonths(-1))
+                                            .OrderBy(x => x.RequestDate)
+                                            .Select(x => x.RequestDate)
+                                            .FirstOrDefaultAsync();
+                    nextRequest = oldestRequestedAt.AddMonths(1);
+                    break;
+                default:
+                    break;
+            }
 
             return new RequestQuotaCountModel()
             {
                 HasLimit = true,
                 Limit = limit,
-                Remaining = count,
-                NextRequest = DateTime.SpecifyKind(oldestRequestedAt.AddDays(7), DateTimeKind.Utc),
+                Remaining = count < 0 ? 0 : count,
+                NextRequest = DateTime.SpecifyKind(nextRequest, DateTimeKind.Utc),
             };
+
+            return null;
         }
 
         public async Task<RequestEngineResult> UpdateAdvancedOptions(MediaAdvancedOptions options)

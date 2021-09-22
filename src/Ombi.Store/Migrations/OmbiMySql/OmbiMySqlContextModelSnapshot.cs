@@ -266,9 +266,6 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<int?>("EpisodeRequestLimit")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EpisodeRequestLimitAmount")
-                        .HasColumnType("int");
-
                     b.Property<int?>("EpisodeRequestLimitType")
                         .HasColumnType("int");
 
@@ -287,16 +284,10 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<int?>("MovieRequestLimit")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MovieRequestLimitAmount")
-                        .HasColumnType("int");
-
                     b.Property<int?>("MovieRequestLimitType")
                         .HasColumnType("int");
 
                     b.Property<int?>("MusicRequestLimit")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MusicRequestLimitAmount")
                         .HasColumnType("int");
 
                     b.Property<int?>("MusicRequestLimitType")

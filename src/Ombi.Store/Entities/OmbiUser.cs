@@ -34,9 +34,6 @@ namespace Ombi.Store.Entities
         public RequestLimitType? MovieRequestLimitType { get; set; }
         public RequestLimitType? EpisodeRequestLimitType { get; set; }
         public RequestLimitType? MusicRequestLimitType { get; set; }
-        public int? MovieRequestLimitAmount { get; set; }
-        public int? EpisodeRequestLimitAmount { get; set; }
-        public int? MusicRequestLimitAmount { get; set; }
 
         public string UserAccessToken { get; set; }
 
