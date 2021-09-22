@@ -813,23 +813,26 @@ namespace Ombi.Core.Engine
                                                 .OrderBy(x => x.RequestDate)
                                                 .Select(x => x.RequestDate)
                                                 .FirstOrDefaultAsync();
-                    nextRequest = oldestRequestedAt.AddDays(1);
+                    nextRequest = oldestRequestedAt.AddDays(1).Date;
                     break;
                 case RequestLimitType.Week:
-                    count = limit - await log.CountAsync(x => x.RequestDate >= DateTime.UtcNow.Date.AddDays(-7));
-                    oldestRequestedAt = await log.Where(x => x.RequestDate >= DateTime.UtcNow.Date.AddDays(-7))
+                    var fdow = DateTime.UtcNow.FirstDateInWeek();
+                    count = limit - await log.CountAsync(x => x.RequestDate >= fdow);
+                    oldestRequestedAt = await log.Where(x => x.RequestDate >= fdow)
                                             .OrderBy(x => x.RequestDate)
                                             .Select(x => x.RequestDate)
                                             .FirstOrDefaultAsync();
-                    nextRequest = oldestRequestedAt.AddDays(7);
+                    nextRequest = fdow.AddDays(7).Date;
                     break;
                 case RequestLimitType.Month:
-                    count = limit - await log.CountAsync(x => x.RequestDate >= DateTime.UtcNow.Date.AddMonths(-1));
-                    oldestRequestedAt = await log.Where(x => x.RequestDate >= DateTime.UtcNow.Date.AddMonths(-1))
+                    var now = DateTime.UtcNow;
+                    var firstDayOfMonth = new DateTime(now.Year, now.Month, 1);
+                    count = limit - await log.CountAsync(x => x.RequestDate >= firstDayOfMonth);
+                    oldestRequestedAt = await log.Where(x => x.RequestDate >= firstDayOfMonth)
                                             .OrderBy(x => x.RequestDate)
                                             .Select(x => x.RequestDate)
                                             .FirstOrDefaultAsync();
-                    nextRequest = oldestRequestedAt.AddMonths(1);
+                    nextRequest = firstDayOfMonth.AddMonths(1).Date;
                     break;
                 default:
                     break;

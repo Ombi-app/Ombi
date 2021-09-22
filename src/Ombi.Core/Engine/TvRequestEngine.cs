@@ -1071,8 +1071,6 @@ namespace Ombi.Core.Engine
                 Remaining = count < 0 ? 0 : count,
                 NextRequest = DateTime.SpecifyKind(nextRequest, DateTimeKind.Utc),
             };
-
-            return null;
         }
 
         public async Task<RequestEngineResult> UpdateAdvancedOptions(MediaAdvancedOptions options)

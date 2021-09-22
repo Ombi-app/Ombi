@@ -5,13 +5,16 @@ using NUnit.Framework;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine;
 using Ombi.Core.Models;
+using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ombi.Core.Tests.Engine
@@ -26,6 +29,7 @@ namespace Ombi.Core.Tests.Engine
         [SetUp]
         public void SetUp()
         {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-GB");
             _mocker = new AutoMocker();
             var principleMock = new Mock<IPrincipal>();
             var identityMock = new Mock<IIdentity>();
@@ -246,6 +250,7 @@ namespace Ombi.Core.Tests.Engine
                 MovieRequestLimitType = RequestLimitType.Day,
                 Id = "id1"
             };
+
             var today = DateTime.Now;
             var log = new List<RequestLog>
             {
@@ -265,7 +270,7 @@ namespace Ombi.Core.Tests.Engine
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
                 .And.Property(nameof(RequestQuotaCountModel.Limit)).EqualTo(2)
                 .And.Property(nameof(RequestQuotaCountModel.Remaining)).EqualTo(1)
-                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.AddDays(1).AddHours(-1))
+                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.AddDays(1).Date)
                 );
         }
 
@@ -304,7 +309,7 @@ namespace Ombi.Core.Tests.Engine
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
                 .And.Property(nameof(RequestQuotaCountModel.Limit)).EqualTo(2)
                 .And.Property(nameof(RequestQuotaCountModel.Remaining)).EqualTo(0)
-                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.AddDays(1).AddHours(-2))
+                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.AddDays(1).Date)
                 );
         }
 
@@ -318,7 +323,7 @@ namespace Ombi.Core.Tests.Engine
                 MovieRequestLimitType = RequestLimitType.Week,
                 Id = "id1"
             };
-            var lastWeek = DateTime.Now.AddDays(-8);
+            var lastWeek = DateTime.Now.FirstDateInWeek().AddDays(-1); // Day before reset
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -350,7 +355,7 @@ namespace Ombi.Core.Tests.Engine
                 MovieRequestLimitType = RequestLimitType.Week,
                 Id = "id1"
             };
-            var today = DateTime.Now;
+            var today = DateTime.UtcNow;
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -369,7 +374,7 @@ namespace Ombi.Core.Tests.Engine
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
                 .And.Property(nameof(RequestQuotaCountModel.Limit)).EqualTo(2)
                 .And.Property(nameof(RequestQuotaCountModel.Remaining)).EqualTo(1)
-                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.AddDays(7))
+                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.FirstDateInWeek().AddDays(7).Date)
                 );
         }
 
@@ -408,7 +413,7 @@ namespace Ombi.Core.Tests.Engine
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
                 .And.Property(nameof(RequestQuotaCountModel.Limit)).EqualTo(2)
                 .And.Property(nameof(RequestQuotaCountModel.Remaining)).EqualTo(0)
-                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.AddDays(6))
+                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.FirstDateInWeek().AddDays(7).Date)
                 );
         }
         [Test]
@@ -454,6 +459,7 @@ namespace Ombi.Core.Tests.Engine
                 Id = "id1"
             };
             var today = DateTime.Now;
+            var firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -472,7 +478,7 @@ namespace Ombi.Core.Tests.Engine
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
                 .And.Property(nameof(RequestQuotaCountModel.Limit)).EqualTo(2)
                 .And.Property(nameof(RequestQuotaCountModel.Remaining)).EqualTo(1)
-                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.AddMonths(1))
+                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(firstDayOfMonth.AddMonths(1).Date)
                 );
         }
 
@@ -487,6 +493,7 @@ namespace Ombi.Core.Tests.Engine
                 Id = "id1"
             };
             var today = DateTime.Now;
+            var firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -511,7 +518,7 @@ namespace Ombi.Core.Tests.Engine
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
                 .And.Property(nameof(RequestQuotaCountModel.Limit)).EqualTo(2)
                 .And.Property(nameof(RequestQuotaCountModel.Remaining)).EqualTo(0)
-                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.AddMonths(1).AddDays(-1))
+                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(firstDayOfMonth.AddMonths(1).Date)
                 );
         }
     }
