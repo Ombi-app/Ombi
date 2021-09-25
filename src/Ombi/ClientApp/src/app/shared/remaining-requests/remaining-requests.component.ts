@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { TranslateService } from "@ngx-translate/core";
-import { RequestType } from "../../interfaces";
+
 import { IRemainingRequests } from "../../interfaces/IRemainingRequests";
 import { RequestService } from "../../services";
+import { RequestType } from "../../interfaces";
+import { TranslateService } from "@ngx-translate/core";
+
 @Component({
     selector: "app-remaining-requests",
     templateUrl: "remaining-requests.component.html",

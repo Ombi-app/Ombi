@@ -81,10 +81,10 @@ namespace Ombi.DependencyInjection
             services.RegisterEngines();
             services.RegisterEnginesV2();
             services.RegisterApi();
+            services.RegisterHttp();
             services.RegisterServices();
             services.RegisterStore();
             services.RegisterJobs();
-            services.RegisterHttp();
         }
 
         public static void RegisterEngines(this IServiceCollection services)

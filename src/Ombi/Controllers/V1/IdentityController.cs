@@ -399,6 +399,9 @@ namespace Ombi.Controllers.V1
                 EpisodeRequestLimit = user.EpisodeRequestLimit ?? 0,
                 MovieRequestLimit = user.MovieRequestLimit ?? 0,
                 MusicRequestLimit = user.MusicRequestLimit ?? 0,
+                MovieRequestLimitType = user.MovieRequestLimitType ?? RequestLimitType.Week,
+                EpisodeRequestLimitType = user.EpisodeRequestLimitType ?? RequestLimitType.Week,
+                MusicRequestLimitType = user.MusicRequestLimitType ?? RequestLimitType.Week,
                 Language = user.Language,
                 StreamingCountry = user.StreamingCountry
             };
@@ -641,6 +644,9 @@ namespace Ombi.Controllers.V1
             user.MovieRequestLimit = ui.MovieRequestLimit;
             user.EpisodeRequestLimit = ui.EpisodeRequestLimit;
             user.MusicRequestLimit = ui.MusicRequestLimit;
+            user.EpisodeRequestLimitType = ui.EpisodeRequestLimitType;
+            user.MusicRequestLimitType = ui.MusicRequestLimitType;
+            user.MovieRequestLimitType = ui.MovieRequestLimitType;
             if (ui.Password.HasValue())
             {
                 user.PasswordHash = UserManager.PasswordHasher.HashPassword(user, ui.Password);

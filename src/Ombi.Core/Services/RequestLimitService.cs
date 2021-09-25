@@ -20,12 +20,16 @@ namespace Ombi.Core.Services
         Task<RequestQuotaCountModel> GetRemainingTvRequests(OmbiUser user = default);
         Task<RequestQuotaCountModel> GetRemainingMusicRequests(OmbiUser user = default);
     }
-    public class RequestLimitService : BaseEngine, IRequestLimitService
+    public class RequestLimitService : IRequestLimitService
     {
+        private readonly IPrincipal _user;
+        private readonly OmbiUserManager _userManager;
         private readonly IRepository<RequestLog> _requestLog;
 
-        public RequestLimitService(IPrincipal user, OmbiUserManager um, IRuleEvaluator rules, IRepository<RequestLog> rl) : base(user, um, rules)
+        public RequestLimitService(IPrincipal user, OmbiUserManager userManager, IRepository<RequestLog> rl)
         {
+            _user = user;
+            _userManager = userManager;
             _requestLog = rl;
         }
 
@@ -127,6 +131,12 @@ namespace Ombi.Core.Services
             }
 
             return await CalculateBasicRemaingRequests(user, limit, user.MusicRequestLimitType ?? RequestLimitType.Day, log);
+        }
+
+        private async Task<OmbiUser> GetUser()
+        {
+            var username = _user.Identity.Name.ToUpper();
+            return await _userManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
         }
 
         private static async Task<RequestQuotaCountModel> CalculateBasicRemaingRequests(OmbiUser user, int limit, RequestLimitType type, IQueryable<RequestLog> log)
