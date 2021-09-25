@@ -43,7 +43,7 @@ export class RemainingRequestsComponent implements OnInit {
 
     private start() {
 
-        const callback = (remaining => {
+        const callback = ((remaining: IRemainingRequests) => {
             this.remaining = remaining;
             if (this.remaining && this.remaining.hasLimit) {
                 this.calculateTime();
