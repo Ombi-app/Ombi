@@ -242,7 +242,7 @@ namespace Ombi.Core.Services
                     HasLimit = true,
                     Limit = limit,
                     Remaining = count < 0 ? 0 : count,
-                    NextRequest = DateTime.SpecifyKind(oldestRequestedAt.AddDays(7), DateTimeKind.Utc),
+                    NextRequest = DateTime.SpecifyKind(oldestRequestedAt.AddDays(7), DateTimeKind.Utc).Date,
                 };
             }
 
