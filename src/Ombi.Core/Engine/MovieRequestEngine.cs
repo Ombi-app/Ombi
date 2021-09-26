@@ -566,7 +566,7 @@ namespace Ombi.Core.Engine
         {
             var langCode = await DefaultLanguageCode(null);
             var collections = await Cache.GetOrAddAsync($"GetCollection{collectionId}{langCode}",
-                () =>  MovieApi.GetCollection(langCode, collectionId, cancellationToken), DateTimeOffset.Now.AddDays(1));
+                () => MovieApi.GetCollection(langCode, collectionId, cancellationToken), DateTimeOffset.Now.AddDays(1));
 
             var results = new List<RequestEngineResult>();
             foreach (var collection in collections.parts)
@@ -583,7 +583,7 @@ namespace Ombi.Core.Engine
                 new RequestEngineResult { Result = false, ErrorMessage = $"The whole collection {collections.name} Is already monitored or requested!" };
             }
 
-            return new RequestEngineResult { Result = true, Message = $"The collection {collections.name} has been successfully added!", RequestId = results.FirstOrDefault().RequestId};
+            return new RequestEngineResult { Result = true, Message = $"The collection {collections.name} has been successfully added!", RequestId = results.FirstOrDefault().RequestId };
         }
 
         private async Task<RequestEngineResult> ProcessSendingMovie(MovieRequests request)
@@ -752,50 +752,6 @@ namespace Ombi.Core.Engine
             });
 
             return new RequestEngineResult { Result = true, Message = $"{movieName} has been successfully added!", RequestId = model.Id };
-        }
-
-        public async Task<RequestQuotaCountModel> GetRemainingRequests(OmbiUser user)
-        {
-            if (user == null)
-            {
-                user = await GetUser();
-
-                // If user is still null after attempting to get the logged in user, return null.
-                if (user == null)
-                {
-                    return null;
-                }
-            }
-
-            int limit = user.MovieRequestLimit ?? 0;
-
-            if (limit <= 0)
-            {
-                return new RequestQuotaCountModel()
-                {
-                    HasLimit = false,
-                    Limit = 0,
-                    Remaining = 0,
-                    NextRequest = DateTime.Now,
-                };
-            }
-
-            IQueryable<RequestLog> log = _requestLog.GetAll().Where(x => x.UserId == user.Id && x.RequestType == RequestType.Movie);
-
-            int count = limit - await log.CountAsync(x => x.RequestDate >= DateTime.UtcNow.AddDays(-7));
-
-            DateTime oldestRequestedAt = await log.Where(x => x.RequestDate >= DateTime.UtcNow.AddDays(-7))
-                                            .OrderBy(x => x.RequestDate)
-                                            .Select(x => x.RequestDate)
-                                            .FirstOrDefaultAsync();
-
-            return new RequestQuotaCountModel()
-            {
-                HasLimit = true,
-                Limit = limit,
-                Remaining = count,
-                NextRequest = DateTime.SpecifyKind(oldestRequestedAt.AddDays(7), DateTimeKind.Utc),
-            };
         }
     }
 }

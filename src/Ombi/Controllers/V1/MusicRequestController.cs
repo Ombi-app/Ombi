@@ -10,6 +10,7 @@ using Ombi.Core.Engine;
 using Ombi.Core.Models;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.UI;
+using Ombi.Core.Services;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
@@ -22,16 +23,18 @@ namespace Ombi.Controllers.V1
     [ApiController]
     public class MusicRequestController : ControllerBase
     {
-        public MusicRequestController(IMusicRequestEngine engine, IVoteEngine voteEngine, ILogger<MusicRequestController> log)
+        public MusicRequestController(IMusicRequestEngine engine, IVoteEngine voteEngine, ILogger<MusicRequestController> log, IRequestLimitService requestLimitService)
         {
             _engine = engine;
             _voteEngine = voteEngine;
             _log = log;
+            _requestLimitService = requestLimitService;
         }
 
         private readonly IMusicRequestEngine _engine;
         private readonly IVoteEngine _voteEngine;
         private readonly ILogger _log;
+        private readonly IRequestLimitService _requestLimitService;
 
         /// <summary>
         /// Gets album requests.
@@ -169,7 +172,7 @@ namespace Ombi.Controllers.V1
         [HttpGet("remaining")]
         public async Task<RequestQuotaCountModel> GetRemainingMusicRequests()
         {
-            return await _engine.GetRemainingRequests();
+            return await _requestLimitService.GetRemainingMusicRequests();
         }
         private string GetApiAlias()
         {

@@ -24,6 +24,9 @@ namespace Ombi.Core.Models.UI
         public RequestQuotaCountModel MusicRequestQuota { get; set; }
         public int MusicRequestLimit { get; set; }
         public UserQualityProfiles UserQualityProfiles { get; set; }
+        public RequestLimitType MovieRequestLimitType { get; set; }
+        public RequestLimitType MusicRequestLimitType { get; set; }
+        public RequestLimitType EpisodeRequestLimitType { get; set; }
     }
 
     public class ClaimCheckboxes

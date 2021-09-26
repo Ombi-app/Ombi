@@ -1,6 +1,6 @@
 ﻿import { ActivatedRoute, Router } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
-import { ICheckbox, ICustomizationSettings, INotificationAgent, INotificationPreferences, IRadarrProfile, IRadarrRootFolder, ISonarrProfile, ISonarrRootFolder, IUser, UserType } from "../interfaces";
+import { ICheckbox, ICustomizationSettings, INotificationAgent, INotificationPreferences, IRadarrProfile, IRadarrRootFolder, ISonarrProfile, ISonarrRootFolder, IUser, RequestLimitType, UserType } from "../interfaces";
 import { IdentityService, MessageService, RadarrService, SettingsService, SonarrService } from "../services";
 
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -27,6 +27,8 @@ export class UserManagementUserComponent implements OnInit {
     public edit: boolean;
 
     public countries: string[];
+    public requestLimitTypes: RequestLimitType[];
+    public RequestLimitType = RequestLimitType;
 
     private customization: ICustomizationSettings;
     private accessToken: string;
@@ -53,7 +55,7 @@ export class UserManagementUserComponent implements OnInit {
                  }
 
     public ngOnInit() {
-
+        this.requestLimitTypes = [RequestLimitType.Day, RequestLimitType.Week, RequestLimitType.Month];
         this.identityService.getSupportedStreamingCountries().subscribe(x => this.countries = x);
         this.identityService.getAllAvailableClaims().subscribe(x => this.availableClaims = x);
         if(this.edit) {
