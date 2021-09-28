@@ -8,14 +8,10 @@ on:
     branches: [ develop ]
 
 jobs:
-  build:
+  build-ui:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '5.0.x'
-
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
@@ -23,7 +19,7 @@ jobs:
       - name: UI Install
         run: yarn --cwd ./src/Ombi/ClientApp install
 
-      - name: Build and Publish UI
+      - name: Build UI
         run: yarn --cwd ./src/Ombi/ClientApp run build
 
       - name: Publish UI Artifacts
@@ -32,6 +28,14 @@ jobs:
           name: angular_dist
           path: |
             ./src/Ombi/ClientApp/dist/
+
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
 
       - name: Run Unit Tests
         run: |
