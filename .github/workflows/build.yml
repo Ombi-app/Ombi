@@ -105,7 +105,7 @@ jobs:
       - name: Copy Dist to Artifacts
         run: |
           ls
-          cp -a /dist/ /src/Ombi/${{ matrix.os }}/ClientApp/dist/
+          cp -r /dist/* /src/Ombi/${{ matrix.os }}/ClientApp/dist/
 
       - name: Archive Release
         uses: thedoctor0/zip-release@master
