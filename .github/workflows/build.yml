@@ -51,7 +51,7 @@ jobs:
       - name: Upload dotnet test results
         uses: actions/upload-artifact@v2
         with:
-          name: dotnet-results-*
+          name: dotnet-results
           path: src/TestResults
         # Use always() to always run this step to publish test results when there are test failures
         if: ${{ always() }}
@@ -105,6 +105,7 @@ jobs:
       - name: Copy Dist to Artifacts
         run: |
           ls
+          mkdir -p /src/Ombi/${{ matrix.os }}/ClientApp/dist
           cp -r dist/* /src/Ombi/${{ matrix.os }}/ClientApp/dist/
 
       - name: Archive Release
@@ -112,7 +113,7 @@ jobs:
         with:
           type: '${{ matrix.compression }}'
           filename: '${{ matrix.os }}.${{ matrix.compression }}'
-          directory: '${{ matrix.os }}'
+          directory: 'src/Ombi/${{ matrix.os }}'
       # - name: Publish UI Artifacts
       #   uses: actions/upload-artifact@v2
       #   with:
