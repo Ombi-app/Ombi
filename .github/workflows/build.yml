@@ -21,8 +21,6 @@ jobs:
         with:
           path: '**/node_modules'
           key: node_modules-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-          node_modules
 
       - name: UI Install
         run: yarn --cwd ./src/Ombi/ClientApp install
