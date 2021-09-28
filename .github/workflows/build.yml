@@ -92,16 +92,14 @@ jobs:
             ${{ runner.os }}-nuget
 
       - name: Publish Backend ${{ matrix.os }}
-        run: |
-          cd src/Ombi
-          dotnet publish -c Release -r ${{ matrix.os }} -o "${{ matrix.os }}" --self-contained true -p:PublishSingleFile=true
-          ls
+        run: dotnet publish -c Release -r ${{ matrix.os }} -o "${{ matrix.os }}" --self-contained true -p:PublishSingleFile=true
+        working-directory: src/Ombi
 
       - name: Download Angular
         uses: actions/download-artifact@v2
         with:
           name: angular_dist
-          path: /src/Ombi/${{ matrix.os }}/
+          path: ~/src/Ombi/${{ matrix.os }}
 
       - name: Copy Dist to Artifacts
         run: |
