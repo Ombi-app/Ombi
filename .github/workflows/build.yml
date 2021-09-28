@@ -100,6 +100,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: angular_dist
+          path: dist
 
       - name: Copy Dist to Artifacts
         run: |
