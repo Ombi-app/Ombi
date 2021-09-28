@@ -61,6 +61,7 @@ jobs:
     steps:
       - name: Publish Backend ${{ matrix.os }}
         run: |
+          ls
           cd src/Ombi
           dotnet publish -c Release -r ${{ matrix.os }} -o "${{ matrix.os }}" --self-contained true -p:PublishSingleFile=true
 
