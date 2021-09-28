@@ -22,7 +22,7 @@ jobs:
           path: '**/node_modules'
           key: node_modules-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            node_modules
+          node_modules
 
       - name: UI Install
         run: yarn --cwd ./src/Ombi/ClientApp install
@@ -88,10 +88,10 @@ jobs:
       - name: Nuget Cache
         uses: actions/cache@v2
         with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget
 
       - name: Publish Backend ${{ matrix.os }}
         run: |
