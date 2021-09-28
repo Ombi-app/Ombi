@@ -79,8 +79,8 @@ jobs:
 
       - name: Download Angular
         uses: actions/download-artifact@v2
-          with:
-            name: angular_dist
+        with:
+          name: angular_dist
 
       - name: Copy Dist to Artifacts
         run: |
