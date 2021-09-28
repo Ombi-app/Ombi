@@ -115,6 +115,9 @@ jobs:
           ls
           cd ${{ matrix.os }}
           sudo mkdir -p /ClientApp
+          cd ClientApp
+          sudo mkdir -p /dist
+          cd ..
           cd ..
           ls
           sudo mv ~/src/Ombi/dist/ ${{ matrix.os }}/ClientApp/dist/
@@ -146,7 +149,7 @@ jobs:
           github-token: ${{ secrets.github_token }}
           git-message: 'chore(release): {version}'
           version-file: 'version.json'
-          output-file: 'CHANGELOG2.md'
+          output-file: 'CHANGELOG.md'
 
       - name: Download Artifacts
         uses: actions/download-artifact@v2
