@@ -35,6 +35,5 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          ls
-          cd src/ombi
+          cd src/Ombi
           dotnet test
