@@ -129,7 +129,7 @@ jobs:
           type: '${{ matrix.compression }}'
           filename: '${{ matrix.os }}.${{ matrix.format }}'
           path: '${{ matrix.os }}'
-          directory: 'src/Ombi/''
+          directory: 'src/Ombi/'
 
       - name: Publish Release
         uses: actions/upload-artifact@v2
