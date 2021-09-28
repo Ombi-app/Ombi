@@ -145,6 +145,9 @@ jobs:
         with:
           github-token: ${{ secrets.github_token }}
           git-message: 'chore(release): {version}'
+          version-file: 'version.json'
+          output-file: 'CHANGELOG2.md'
+          skip-on-empty: 'false'
 
       - name: Download Artifacts
         uses: actions/download-artifact@v2
