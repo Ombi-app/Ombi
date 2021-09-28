@@ -583,7 +583,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 sb.Append("<tr>");
                 if (plexSettings.Enable)
                 {
-                    await ProcessPlexMovies(plexMovies, sb, ombiSettings.DefaultLanguageCode);
+                    await ProcessPlexMovies(plexMovies, sb, ombiSettings.DefaultLanguageCode, plexSettings.Servers.FirstOrDefault().ServerHostname ?? string.Empty);
                 }
 
                 if (embySettings.Enable)
@@ -614,7 +614,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 sb.Append("<tr>");
                 if (plexSettings.Enable)
                 {
-                    await ProcessPlexTv(plexEpisodes, sb);
+                    await ProcessPlexTv(plexEpisodes, sb, plexSettings.Servers.FirstOrDefault().ServerHostname ?? string.Empty);
                 }
 
                 if (embySettings.Enable)
@@ -655,7 +655,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             return sb.ToString();
         }
 
-        private async Task ProcessPlexMovies(IQueryable<PlexServerContent> plexContentToSend, StringBuilder sb, string defaultLanguageCode)
+        private async Task ProcessPlexMovies(IQueryable<PlexServerContent> plexContentToSend, StringBuilder sb, string defaultLanguageCode, string mediaServerUrl)
         {
             int count = 0;
             var ordered = plexContentToSend.OrderByDescending(x => x.AddedAt);
@@ -667,7 +667,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     continue;
                 }
                 var info = await _movieApi.GetMovieInformationWithExtraInfo(movieDbId, defaultLanguageCode);
-                var mediaurl = content.Url;
+                var mediaurl = PlexHelper.BuildPlexMediaUrl(content.Url, mediaServerUrl);
                 if (info == null)
                 {
                     continue;
@@ -907,7 +907,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             AddGenres(sb, $"Type: {info.albumType}");
         }
 
-        private async Task ProcessPlexTv(HashSet<PlexEpisode> plexContent, StringBuilder sb)
+        private async Task ProcessPlexTv(HashSet<PlexEpisode> plexContent, StringBuilder sb, string serverHostname)
         {
             var series = new List<PlexServerContent>();
             foreach (var plexEpisode in plexContent)
@@ -985,7 +985,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         AddBackgroundInsideTable(sb, $"https://image.tmdb.org/t/p/w1280/");
                     }
                     AddPosterInsideTable(sb, banner);
-                    AddMediaServerUrl(sb, t.Url, banner);
+                    AddMediaServerUrl(sb, PlexHelper.BuildPlexMediaUrl(t.Url, serverHostname), banner);
                     AddInfoTable(sb);
 
                     var title = "";
