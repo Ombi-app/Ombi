@@ -59,6 +59,7 @@ jobs:
             format: tar.gz
             compression: tar
     steps:
+      - uses: actions/checkout@v2
       - name: Publish Backend ${{ matrix.os }}
         run: |
           ls
