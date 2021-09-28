@@ -34,4 +34,7 @@ jobs:
             ./src/Ombi/ClientApp/dist/
 
       - name: Run Unit Tests
-        run: dotnet test ~/src/Ombi.sln
+        run: |
+        ls
+        cd ./src/Ombi
+        dotnet test
