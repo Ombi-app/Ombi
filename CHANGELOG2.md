@@ -1,3 +1,12 @@
+## [4.1.2](https://github.com/Ombi-app/Ombi/compare/v4.1.1...v4.1.2) (2021-09-28)
+
+
+### Bug Fixes
+
+* :bug: Pretending to fix a bug ([5351c14](https://github.com/Ombi-app/Ombi/commit/5351c14cb087f9ecbb37b784724bb35107d17cb8))
+
+
+
 ## [4.1.1](https://github.com/Ombi-app/Ombi/compare/v4.0.1506...v4.1.1) (2021-09-28)
 
 
@@ -29,7 +38,6 @@
 ### Features
 
 * **discover:** :lipstick: Moved the advanced search to the nav bar for better discovery ([f83abaf](https://github.com/Ombi-app/Ombi/commit/f83abafdd9fc416c8ca4d99a52b5fc94e0b781fd))
-* **plex:** :zap: Use the new Plex Pass includeGuids feature for syncing plex movies ([7c5646d](https://github.com/Ombi-app/Ombi/commit/7c5646d416372983ac8996b1a6539e671db18c86))
 
 
 
