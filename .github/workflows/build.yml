@@ -33,7 +33,7 @@ jobs:
         with:
           name: angular_dist
           path: |
-            ./src/Ombi/ClientApp/dist/
+            ./src/Ombi/ClientApp/dist
 
   unit-test:
     runs-on: ubuntu-latest
