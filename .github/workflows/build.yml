@@ -112,7 +112,9 @@ jobs:
       - name: Copy Dist to Artifacts
         run: |
           ls
-          mkdir -p /${{ matrix.os }}/ClientApp/dist
+          cd ${{ matrix.os }}
+          mkdir -p /ClientApp/dist
+          cd ..
           cp -r dist/* /${{ matrix.os }}/ClientApp/dist/
         working-directory: src/Ombi
 
