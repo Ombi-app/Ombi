@@ -29,7 +29,7 @@ jobs:
       - name: Publish UI Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: dist
+          name: angular_dist
           path: |
             ./src/Ombi/ClientApp/dist/
 
@@ -48,22 +48,55 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    # needs: [build]
+    needs: [build]
     strategy:
       matrix:
         include:
           - os: win10-x64
             format: zip
             compression: zip
+          - os: win10-x86
+            format: zip
+            compression: zip
           - os: linux-x64
             format: tar.gz
             compression: tar
+          - os: linux-arm
+            format: tar.gz
+            compression: tar
+          - os: linux-arm64
+            compression: tar
+            format: tar.gz
+          - os: osx-x64
+            compression: tar
+            format: tar.gz
     steps:
       - uses: actions/checkout@v2
       - name: Publish Backend ${{ matrix.os }}
         run: |
-          ls
           cd src/Ombi
           dotnet publish -c Release -r ${{ matrix.os }} -o "${{ matrix.os }}" --self-contained true -p:PublishSingleFile=true
+
+      - name: Download Angular
+        uses: actions/download-artifact@v2
+          with:
+            name: angular_dist
+
+      - name: Copy Dist to Artifacts
+        run: |
+          copy dist ${{ matrix.os }}/ClientApp/dist
+  
+      - name: Archive Release
+        uses: thedoctor0/zip-release@master
+        with:
+          type: '${{ matrix.compression }}'
+          filename: '${{ matrix.os }}.${{ matrix.compression }}'
+          directory: '${{ matrix.os }}'
+      # - name: Publish UI Artifacts
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: dist
+      #     path: |
+      #       ${{ matrix.os }}
 
 #https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#using-environment-variables-in-a-matrix
