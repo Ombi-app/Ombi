@@ -95,6 +95,7 @@ jobs:
         run: |
           cd src/Ombi
           dotnet publish -c Release -r ${{ matrix.os }} -o "${{ matrix.os }}" --self-contained true -p:PublishSingleFile=true
+          ls
 
       - name: Download Angular
         uses: actions/download-artifact@v2
