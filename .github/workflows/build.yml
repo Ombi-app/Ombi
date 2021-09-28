@@ -119,10 +119,6 @@ jobs:
           sudo mv ~/src/Ombi/dist/ ${{ matrix.os }}/ClientApp/
         working-directory: src/Ombi
 
-      - name: Sleep for 30 seconds
-        run: sleep 30s
-        shell: bash
-
       - name: Archive Release
         uses: thedoctor0/zip-release@master
         with:
