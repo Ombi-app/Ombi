@@ -397,7 +397,7 @@ namespace Ombi.Core.Tests.Engine
                 {
                     UserId = "id1",
                     RequestType = RequestType.Album,
-                    RequestDate = today.AddDays(-1),
+                    RequestDate = today,
                 },
                 new RequestLog
                 {
