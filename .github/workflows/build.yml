@@ -16,6 +16,14 @@ jobs:
         with:
           node-version: '14'
 
+    - name: NodeModules Cache
+      uses: actions/cache@v2
+      with:
+        path: '**/node_modules'
+        key: node_modules-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          node_modules
+
       - name: UI Install
         run: yarn --cwd ./src/Ombi/ClientApp install
 
@@ -45,8 +53,8 @@ jobs:
       - name: Upload dotnet test results
         uses: actions/upload-artifact@v2
         with:
-          name: dotnet-results-${{ matrix.dotnet-version }}
-          path: TestResults-${{ matrix.dotnet-version }}
+          name: dotnet-results-*
+          path: TestResults
         # Use always() to always run this step to publish test results when there are test failures
         if: ${{ always() }}
 
@@ -76,6 +84,15 @@ jobs:
             format: tar.gz
     steps:
       - uses: actions/checkout@v2
+
+      - name: Nuget Cache
+        uses: actions/cache@v2
+        with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget
+
       - name: Publish Backend ${{ matrix.os }}
         run: |
           cd src/Ombi
@@ -88,8 +105,8 @@ jobs:
 
       - name: Copy Dist to Artifacts
         run: |
-          copy dist ${{ matrix.os }}/ClientApp/dist
-  
+          cp -a /dist/. ${{ matrix.os }}/ClientApp/dist/
+
       - name: Archive Release
         uses: thedoctor0/zip-release@master
         with:
