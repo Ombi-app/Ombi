@@ -42,7 +42,7 @@ jobs:
       - uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.x'
-  
+
       - name: Nuget Cache
         uses: actions/cache@v2
         with:
@@ -119,17 +119,14 @@ jobs:
           sudo mv ~/src/Ombi/dist/ ${{ matrix.os }}/ClientApp/
         working-directory: src/Ombi
 
+      - name: Sleep for 30 seconds
+        run: sleep 30s
+        shell: bash
+
       - name: Archive Release
         uses: thedoctor0/zip-release@master
         with:
           type: '${{ matrix.compression }}'
-          filename: '${{ matrix.os }}.${{ matrix.compression }}'
+          filename: '${{ matrix.os }}.${{ matrix.format }}'
           directory: 'src/Ombi/${{ matrix.os }}'
-      # - name: Publish UI Artifacts
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: dist
-      #     path: |
-      #       ${{ matrix.os }}
 
-#https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#using-environment-variables-in-a-matrix
