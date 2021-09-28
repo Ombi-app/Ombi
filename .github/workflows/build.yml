@@ -103,6 +103,7 @@ jobs:
 
       - name: Copy Dist to Artifacts
         run: |
+          cd src/Ombi
           cp -a /dist/. ${{ matrix.os }}/ClientApp/dist/
 
       - name: Archive Release
