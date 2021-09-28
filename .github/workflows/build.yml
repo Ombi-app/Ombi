@@ -101,7 +101,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: angular_dist
-          path: /src/Ombi/dist/${{ matrix.os }}/
+          path: /src/Ombi/${{ matrix.os }}/
 
       - name: Copy Dist to Artifacts
         run: |
