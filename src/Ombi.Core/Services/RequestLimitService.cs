@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Authentication;
-using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models;
-using Ombi.Core.Rule.Interfaces;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
@@ -246,6 +244,7 @@ namespace Ombi.Core.Services
                 };
             }
 
+            var now = DateTime.UtcNow;
             switch (user.EpisodeRequestLimitType)
             {
                 case RequestLimitType.Day:
@@ -260,10 +259,10 @@ namespace Ombi.Core.Services
                                             .OrderBy(x => x.RequestDate)
                                             .Select(x => x.RequestDate)
                                             .FirstOrDefaultAsync();
-                    nextRequest = oldestRequestedAt.AddDays(1);
+                    nextRequest = oldestRequestedAt.AddDays(1).Date;
                     break;
                 case RequestLimitType.Week:
-
+                    var fdow = now.FirstDateInWeek();
                     filteredLog = log.Where(x => x.RequestDate >= DateTime.UtcNow.Date.AddDays(-7));
                     // Needed, due to a bug which would cause all episode counts to be 0
                     zeroEpisodeCount = await filteredLog.Where(x => x.EpisodeCount == 0).Select(x => x.EpisodeCount).CountAsync();
@@ -274,9 +273,10 @@ namespace Ombi.Core.Services
                                             .OrderBy(x => x.RequestDate)
                                             .Select(x => x.RequestDate)
                                             .FirstOrDefaultAsync();
-                    nextRequest = oldestRequestedAt.AddDays(7);
+                    nextRequest = fdow.AddDays(7).Date;
                     break;
                 case RequestLimitType.Month:
+                    var firstDayOfMonth = new DateTime(now.Year, now.Month, 1);
                     filteredLog = log.Where(x => x.RequestDate >= DateTime.UtcNow.Date.AddMonths(-1));
                     // Needed, due to a bug which would cause all episode counts to be 0
                     zeroEpisodeCount = await filteredLog.Where(x => x.EpisodeCount == 0).Select(x => x.EpisodeCount).CountAsync();
@@ -287,7 +287,7 @@ namespace Ombi.Core.Services
                                             .OrderBy(x => x.RequestDate)
                                             .Select(x => x.RequestDate)
                                             .FirstOrDefaultAsync();
-                    nextRequest = oldestRequestedAt.AddMonths(1);
+                    nextRequest = firstDayOfMonth.AddMonths(1).Date;
                     break;
             }
 

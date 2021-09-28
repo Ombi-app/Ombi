@@ -25,16 +25,11 @@
 //  ************************************************************************/
 #endregion
 
-using System;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Ombi.Core.Authentication;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Services;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
-using Ombi.Store.Repository;
 
 namespace Ombi.Core.Rule.Rules.Request
 {

@@ -6,6 +6,7 @@ using Ombi.Core.Authentication;
 using Ombi.Core.Engine;
 using Ombi.Core.Models;
 using Ombi.Core.Services;
+using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
@@ -277,7 +278,7 @@ namespace Ombi.Core.Tests.Engine
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
                 .And.Property(nameof(RequestQuotaCountModel.Limit)).EqualTo(2)
                 .And.Property(nameof(RequestQuotaCountModel.Remaining)).EqualTo(1)
-                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.AddDays(1).AddHours(-1))
+                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.AddDays(1).Date)
                 );
         }
 
@@ -318,7 +319,7 @@ namespace Ombi.Core.Tests.Engine
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
                 .And.Property(nameof(RequestQuotaCountModel.Limit)).EqualTo(2)
                 .And.Property(nameof(RequestQuotaCountModel.Remaining)).EqualTo(0)
-                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.AddDays(1).AddHours(-2))
+                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.AddDays(1).Date)
                 );
         }
 
@@ -359,7 +360,7 @@ namespace Ombi.Core.Tests.Engine
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
                 .And.Property(nameof(RequestQuotaCountModel.Limit)).EqualTo(10)
                 .And.Property(nameof(RequestQuotaCountModel.Remaining)).EqualTo(1)
-                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.AddDays(1).AddHours(-2))
+                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.AddDays(1).Date)
                 );
         }
 
@@ -426,7 +427,7 @@ namespace Ombi.Core.Tests.Engine
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
                 .And.Property(nameof(RequestQuotaCountModel.Limit)).EqualTo(2)
                 .And.Property(nameof(RequestQuotaCountModel.Remaining)).EqualTo(1)
-                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.AddDays(7))
+                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.FirstDateInWeek().AddDays(7).Date)
                 );
         }
 
@@ -467,7 +468,7 @@ namespace Ombi.Core.Tests.Engine
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
                 .And.Property(nameof(RequestQuotaCountModel.Limit)).EqualTo(2)
                 .And.Property(nameof(RequestQuotaCountModel.Remaining)).EqualTo(0)
-                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.AddDays(6))
+                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.FirstDateInWeek().AddDays(7).Date)
                 );
         }
 
@@ -508,7 +509,7 @@ namespace Ombi.Core.Tests.Engine
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
                 .And.Property(nameof(RequestQuotaCountModel.Limit)).EqualTo(10)
                 .And.Property(nameof(RequestQuotaCountModel.Remaining)).EqualTo(1)
-                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.AddDays(6))
+                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.FirstDateInWeek().AddDays(7).Date)
                 );
         }
 
@@ -575,7 +576,7 @@ namespace Ombi.Core.Tests.Engine
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
                 .And.Property(nameof(RequestQuotaCountModel.Limit)).EqualTo(2)
                 .And.Property(nameof(RequestQuotaCountModel.Remaining)).EqualTo(1)
-                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.AddMonths(1))
+                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(new DateTime(today.Year, today.Month, 1).AddMonths(1).Date)
                 );
         }
 
@@ -616,7 +617,7 @@ namespace Ombi.Core.Tests.Engine
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
                 .And.Property(nameof(RequestQuotaCountModel.Limit)).EqualTo(2)
                 .And.Property(nameof(RequestQuotaCountModel.Remaining)).EqualTo(0)
-                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.AddMonths(1).AddDays(-1))
+                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(new DateTime(today.Year, today.Month, 1).AddMonths(1).Date)
                 );
         }
 
@@ -657,7 +658,7 @@ namespace Ombi.Core.Tests.Engine
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
                 .And.Property(nameof(RequestQuotaCountModel.Limit)).EqualTo(10)
                 .And.Property(nameof(RequestQuotaCountModel.Remaining)).EqualTo(1)
-                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(today.AddMonths(1).AddDays(-1))
+                .And.Property(nameof(RequestQuotaCountModel.NextRequest)).EqualTo(new DateTime(today.Year, today.Month, 1).AddMonths(1).Date)
                 );
 
         }
