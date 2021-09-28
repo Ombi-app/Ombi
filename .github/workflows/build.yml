@@ -107,14 +107,14 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: angular_dist
-          path: ~/src/Ombi/${{ matrix.os }}
+          path: ~/src/Ombi/dist
 
       - name: Copy Dist to Artifacts
         run: |
           ls
-          cd /src/Ombi/${{ matrix.os }}
-          mkdir -p /ClientApp/dist
-          cp -r dist/* /ClientApp/dist/
+          mkdir -p /${{ matrix.os }}/ClientApp/dist
+          cp -r dist/* /${{ matrix.os }}/ClientApp/dist/
+        working-directory: src/Ombi
 
       - name: Archive Release
         uses: thedoctor0/zip-release@master
