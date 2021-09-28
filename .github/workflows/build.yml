@@ -117,7 +117,7 @@ jobs:
           sudo mkdir -p /ClientApp
           cd ..
           ls
-          sudo mv ~/src/Ombi/dist/ ${{ matrix.os }}/ClientApp/
+          sudo mv ~/src/Ombi/dist/ ${{ matrix.os }}/ClientApp/dist/
         working-directory: src/Ombi
 
       - name: Archive Release
@@ -125,7 +125,7 @@ jobs:
         with:
           type: '${{ matrix.compression }}'
           filename: '${{ matrix.os }}.${{ matrix.format }}'
-          path: '${{ matrix.os }}'
+          path: '${{ matrix.os }}/'
           directory: 'src/Ombi/'
 
       - name: Publish Release
@@ -152,6 +152,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           path: artifacts
+      
 
 
 
