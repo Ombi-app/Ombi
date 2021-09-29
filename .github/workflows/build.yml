@@ -205,8 +205,8 @@ jobs:
           name: ${{ steps.changelog.outputs.tag }}
           tag_name: ${{ steps.changelog.outputs.tag }}
           files: |
-            artifacts/**.tar.gz
-            artifacts/**.zip
+            artifacts/*.tar.gz
+            artifacts/*.zip
 
 
 
