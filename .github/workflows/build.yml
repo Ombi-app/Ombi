@@ -118,6 +118,10 @@ jobs:
           cd ..
           ls
           sudo mv ~/src/Ombi/dist/ ${{ matrix.os }}/ClientApp
+          cd ${{ matrix.os }}
+          ls
+          cd ClientApp
+          ls
         working-directory: src/Ombi
 
       - name: Archive Release
