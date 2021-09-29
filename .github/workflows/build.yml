@@ -134,9 +134,9 @@ jobs:
         uses: thedoctor0/zip-release@master
         with:
           type: '${{ matrix.compression }}'
-          filename: '${{ matrix.os }}.${{ matrix.format }}'
-          path: '${{ matrix.os }}/*'
-          directory: 'src/Ombi/'
+          filename: '../${{ matrix.os }}.${{ matrix.format }}'
+          path: '.'
+          directory: 'src/Ombi/${{ matrix.os }}'
 
       - name: Publish Release
         uses: actions/upload-artifact@v2
