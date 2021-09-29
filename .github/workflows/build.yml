@@ -113,7 +113,7 @@ jobs:
       - name: Copy Dist to Artifacts
         run: |
           cd ${{ matrix.os }}
-          sudo mkdir -p /ClientApp/dist
+          sudo mkdir -p ClientApp/dist
           echo "mkdir /ClientApp"
           echo "list os (ClientApp should be here)"
           ls
