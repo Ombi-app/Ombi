@@ -135,7 +135,7 @@ jobs:
         with:
           type: '${{ matrix.compression }}'
           filename: '${{ matrix.os }}.${{ matrix.format }}'
-          path: '/${{ matrix.os }}/'
+          path: '${{ matrix.os }}/'
           directory: 'src/Ombi/'
 
       - name: Publish Release
