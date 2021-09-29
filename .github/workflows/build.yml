@@ -198,10 +198,10 @@ jobs:
 
       - name: Publish to GitHub
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+        # if: startsWith(github.ref, 'refs/tags/')
         with:
           body: ${{ steps.changelog.outputs.clean_changelog }}
-          prerelease: 'true'
+          draft: 'true'
           name: ${{ steps.changelog.outputs.tag }}
           tag_name: ${{ steps.changelog.outputs.tag }}
           files: |
