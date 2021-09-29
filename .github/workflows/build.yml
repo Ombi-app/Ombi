@@ -114,10 +114,7 @@ jobs:
         run: |
           ls
           cd ${{ matrix.os }}
-          sudo mkdir /ClientApp
-          cd ClientApp
-          sudo mkdir /dist
-          cd ..
+          sudo mkdir -p /ClientApp/dist
           cd ..
           ls
           sudo mv ~/src/Ombi/dist/ ${{ matrix.os }}/ClientApp/dist/
