@@ -116,6 +116,11 @@ jobs:
           setversion -r ${{ steps.changelog.outputs.version }}
         working-directory: src/Ombi
 
+      - name: Output version
+        run: |
+          echo "outputs: ${{ steps.changelog.outputs }}"
+          echo "Version: ${{ steps.changelog.outputs.version }}"
+
       - name: Publish Backend ${{ matrix.os }}
         run: dotnet publish -c Release -r ${{ matrix.os }} -o "${{ matrix.os }}" --self-contained true -p:PublishSingleFile=true
         working-directory: src/Ombi
