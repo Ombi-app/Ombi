@@ -112,15 +112,14 @@ jobs:
 
       - name: Copy Dist to Artifacts
         run: |
-          ls
           cd ${{ matrix.os }}
-          sudo mkdir -p /ClientApp
+          sudo mkdir -p /ClientApp/dist
           echo "mkdir /ClientApp"
-          cd ..
-          echo "List main folder"
+          echo "list os (ClientApp should be here)"
           ls
+          cd ..
           echo "Copy dist to /ClientApp"
-          sudo mv ~/src/Ombi/dist/* ${{ matrix.os }}/ClientApp/
+          sudo mv ~/src/Ombi/dist/* ${{ matrix.os }}/ClientApp/dist
           cd ${{ matrix.os }}
           echo "List OS folder"
           ls
