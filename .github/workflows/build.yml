@@ -183,6 +183,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Conventional Changelog Action
+        id: changelog
         uses: TriPSs/conventional-changelog-action@v3
         with:
           github-token: ${{ secrets.github_token }}
@@ -194,7 +195,22 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           path: artifacts
-      
+
+      - name: Publish to GitHub
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          body: ${{ steps.changelog.outputs.clean_changelog }}
+          prerelease: 'true'
+          name: ${{ steps.changelog.outputs.tag }}
+          tag_name: ${{ steps.changelog.outputs.tag }}
+          files: |
+            linux-arm.tar.gz
+            linux-arm64.tar.gz
+            linux-x64.tar.gz
+            osx-x64.tar.gz
+            win10-x86.zip
+            win10-x64.zip
 
 
 
