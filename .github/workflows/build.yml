@@ -115,13 +115,20 @@ jobs:
           ls
           cd ${{ matrix.os }}
           sudo mkdir -p /ClientApp
+          echo "mkdir /ClientApp"
           cd ..
+          echo "List main folder"
           ls
-          sudo mv ~/src/Ombi/dist/ ${{ matrix.os }}/ClientApp
+          echo "Copy dist to /ClientApp"
+          sudo mv ~/src/Ombi/dist/* ${{ matrix.os }}/ClientApp
           cd ${{ matrix.os }}
+          echo "List OS folder"
           ls
+          echo "list Clientapp"
           cd ClientApp
           ls
+          echo "list root"
+          ls ~/
         working-directory: src/Ombi
 
       - name: Archive Release
