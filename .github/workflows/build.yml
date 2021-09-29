@@ -182,35 +182,40 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Conventional Changelog Action
-        id: changelog
-        uses: TriPSs/conventional-changelog-action@v3
-        with:
-          github-token: ${{ secrets.github_token }}
-          git-message: 'chore(release): {version}'
-          version-file: 'version.json'
-          output-file: 'CHANGELOG.md'
+      # - name: Conventional Changelog Action
+      #   id: changelog
+      #   uses: TriPSs/conventional-changelog-action@v3
+      #   with:
+      #     github-token: ${{ secrets.github_token }}
+      #     git-message: 'chore(release): {version}'
+      #     version-file: 'version.json'
+      #     output-file: 'CHANGELOG.md'
 
       - name: Download Artifacts
+        id: download
         uses: actions/download-artifact@v2
         with:
           path: artifacts
 
-      - name: Publish to GitHub
-        uses: softprops/action-gh-release@v1
-        # if: startsWith(github.ref, 'refs/tags/')
-        with:
-          body: ${{ steps.changelog.outputs.clean_changelog }}
-          draft: 'true'
-          name: ${{ steps.changelog.outputs.tag }}
-          tag_name: ${{ steps.changelog.outputs.tag }}
-          files: |
-            artifacts/linux-arm.tar.gz
-            artifacts/linux-arm64.tar.gz
-            artifacts/linux-x64.tar.gz
-            artifacts/osx-x64.tar.gz
-            artifacts/win10-x86.zip
-            artifacts/win10-x64.zip
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: artifacts
+
+      # - name: Publish to GitHub
+      #   uses: softprops/action-gh-release@v1
+      #   # if: startsWith(github.ref, 'refs/tags/')
+      #   with:
+      #     body: ${{ steps.changelog.outputs.clean_changelog }}
+      #     draft: 'true'
+      #     name: ${{ steps.changelog.outputs.tag }}
+      #     tag_name: ${{ steps.changelog.outputs.tag }}
+      #     files: |
+      #       artifacts/linux-arm.tar.gz
+      #       artifacts/linux-arm64.tar.gz
+      #       artifacts/linux-x64.tar.gz
+      #       artifacts/osx-x64.tar.gz
+      #       artifacts/win10-x86.zip
+      #       artifacts/win10-x64.zip
 
 
 
