@@ -124,7 +124,7 @@ jobs:
 
       # This is only to get the next version number so we can set the version before compile
       - name: Conventional Changelog Action
-        id: pre-build-changelog
+        id: changelog
         uses: TriPSs/conventional-changelog-action@v3
         with:
           github-token: ${{ secrets.github_token }}
@@ -137,7 +137,7 @@ jobs:
       - name: Set Backend Version
         run: |
           dotnet tool install -g dotnet-setversion
-          setversion -r ${{ steps.pre-build-changelog.outputs.version }}
+          setversion -r ${{ steps.changelog.outputs.version }}
         working-directory: src
 
       - name: Publish Backend ${{ matrix.os }}
