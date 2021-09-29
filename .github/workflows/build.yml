@@ -79,6 +79,7 @@ jobs:
           skip-commit: 'true'
           version-file: 'version.json'
           output-file: 'false'
+          skip-on-empty: 'false'
 
       - name: Output version
         run: |
