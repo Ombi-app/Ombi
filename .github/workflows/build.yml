@@ -120,7 +120,7 @@ jobs:
           echo "List main folder"
           ls
           echo "Copy dist to /ClientApp"
-          sudo mv ~/src/Ombi/dist/* ${{ matrix.os }}/ClientApp
+          sudo mv ~/src/Ombi/dist/* ${{ matrix.os }}/ClientApp/
           cd ${{ matrix.os }}
           echo "List OS folder"
           ls
