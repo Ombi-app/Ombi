@@ -205,12 +205,8 @@ jobs:
           name: ${{ steps.changelog.outputs.tag }}
           tag_name: ${{ steps.changelog.outputs.tag }}
           files: |
-            linux-arm.tar.gz
-            linux-arm64.tar.gz
-            linux-x64.tar.gz
-            osx-x64.tar.gz
-            win10-x86.zip
-            win10-x64.zip
+            artifacts/**.tar.gz
+            artifacts/**.zip
 
 
 
