@@ -197,10 +197,6 @@ jobs:
         with:
           path: artifacts
 
-      - name: Display structure of downloaded files
-        run: ls -R
-        working-directory: artifacts
-
       # - name: Publish to GitHub
       #   uses: softprops/action-gh-release@v1
       #   # if: startsWith(github.ref, 'refs/tags/')
@@ -210,12 +206,19 @@ jobs:
       #     name: ${{ steps.changelog.outputs.tag }}
       #     tag_name: ${{ steps.changelog.outputs.tag }}
       #     files: |
-      #       artifacts/linux-arm.tar.gz
-      #       artifacts/linux-arm64.tar.gz
-      #       artifacts/linux-x64.tar.gz
-      #       artifacts/osx-x64.tar.gz
-      #       artifacts/win10-x86.zip
-      #       artifacts/win10-x64.zip
+      #       artifacts/**/*.tar.gz
+      #       artifacts/**/*.zip
+
+      - name: Publish to GitHub
+        uses: softprops/action-gh-release@v1
+        # if: startsWith(github.ref, 'refs/tags/')
+        with:
+          body: 'Test'
+          draft: 'true'
+          name: 'Test'
+          files: |
+            artifacts/**/*.tar.gz
+            artifacts/**/*.zip
 
 
 
