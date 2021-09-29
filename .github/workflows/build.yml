@@ -114,9 +114,9 @@ jobs:
         run: |
           ls
           cd ${{ matrix.os }}
-          sudo mkdir -p /ClientApp
+          sudo mkdir /ClientApp
           cd ClientApp
-          sudo mkdir -p /dist
+          sudo mkdir /dist
           cd ..
           cd ..
           ls
