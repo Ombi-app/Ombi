@@ -45,74 +45,74 @@ stages:
     steps:
       - template: templates/publish-os-steps.yml
 
-- stage: deploy
-  jobs:
-  - job:
-    condition: and(succeeded(), eq(variables.isMain, true))
-    steps:
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        buildType: 'current'
-        targetPath: '$(System.ArtifactsDirectory)'
+# - stage: deploy
+#   jobs:
+#   - job:
+#     condition: and(succeeded(), eq(variables.isMain, true))
+#     steps:
+#     - task: DownloadPipelineArtifact@2
+#       inputs:
+#         buildType: 'current'
+#         targetPath: '$(System.ArtifactsDirectory)'
 
-    - task: PowerShell@2
-      displayName: 'Get Release Notes'
-      inputs:
-        targetType: 'inline'
-        script: |
-          $response = Invoke-WebRequest -Uri "https://ombireleasenote.azurewebsites.net/api/ReleaseNotesFunction?buildId=$(Build.BuildId)"
-          Write-Host "##vso[task.setvariable variable=ReleaseNotes;]$response"
+#     - task: PowerShell@2
+#       displayName: 'Get Release Notes'
+#       inputs:
+#         targetType: 'inline'
+#         script: |
+#           $response = Invoke-WebRequest -Uri "https://ombireleasenote.azurewebsites.net/api/ReleaseNotesFunction?buildId=$(Build.BuildId)"
+#           Write-Host "##vso[task.setvariable variable=ReleaseNotes;]$response"
 
-    - task: GitHubRelease@1
-      displayName: 'Ombi.Releases Release'
-      inputs:
-        gitHubConnection: 'PAT'
-        repositoryName: 'Ombi-app/Ombi.Releases'
-        action: 'create'
-        target: 'c7fcbb77b58aef1076d635a9ef99e4374abc8672'
-        tagSource: 'userSpecifiedTag'
-        tag: '$(gitTag)'
-        releaseNotesSource: 'inline'
-        releaseNotesInline: '$(ReleaseNotes)'
-        assets: |
-          $(System.ArtifactsDirectory)/**/*.zip
-          $(System.ArtifactsDirectory)/**/*.tar.gz
-        isPreRelease: true
-        changeLogCompareToRelease: 'lastNonDraftRelease'
-        changeLogType: 'commitBased'
+#     - task: GitHubRelease@1
+#       displayName: 'Ombi.Releases Release'
+#       inputs:
+#         gitHubConnection: 'PAT'
+#         repositoryName: 'Ombi-app/Ombi.Releases'
+#         action: 'create'
+#         target: 'c7fcbb77b58aef1076d635a9ef99e4374abc8672'
+#         tagSource: 'userSpecifiedTag'
+#         tag: '$(gitTag)'
+#         releaseNotesSource: 'inline'
+#         releaseNotesInline: '$(ReleaseNotes)'
+#         assets: |
+#           $(System.ArtifactsDirectory)/**/*.zip
+#           $(System.ArtifactsDirectory)/**/*.tar.gz
+#         isPreRelease: true
+#         changeLogCompareToRelease: 'lastNonDraftRelease'
+#         changeLogType: 'commitBased'
 
-    - task: GitHubRelease@1
-      displayName: 'Ombi Release'
-      inputs:
-        gitHubConnection: 'PAT'
-        repositoryName: 'Ombi-app/Ombi'
-        action: 'create'
-        target: '$(Build.SourceVersion)'
-        tagSource: 'userSpecifiedTag'
-        tag: '$(gitTag)'
-        releaseNotesSource: 'inline'
-        releaseNotesInline: '$(ReleaseNotes)'
-        assets: |
-          $(System.ArtifactsDirectory)/**/*.zip
-          $(System.ArtifactsDirectory)/**/*.tar.gz
-        isPreRelease: true
-        changeLogCompareToRelease: 'lastNonDraftRelease'
-        changeLogType: 'commitBased'
+#     - task: GitHubRelease@1
+#       displayName: 'Ombi Release'
+#       inputs:
+#         gitHubConnection: 'PAT'
+#         repositoryName: 'Ombi-app/Ombi'
+#         action: 'create'
+#         target: '$(Build.SourceVersion)'
+#         tagSource: 'userSpecifiedTag'
+#         tag: '$(gitTag)'
+#         releaseNotesSource: 'inline'
+#         releaseNotesInline: '$(ReleaseNotes)'
+#         assets: |
+#           $(System.ArtifactsDirectory)/**/*.zip
+#           $(System.ArtifactsDirectory)/**/*.tar.gz
+#         isPreRelease: true
+#         changeLogCompareToRelease: 'lastNonDraftRelease'
+#         changeLogType: 'commitBased'
 
-    - task: PowerShell@2
-      displayName: "Trigger APT build"
-      inputs:
-        targetType: 'inline'
-        script: |
-          $body = @{
-            "ref"="main"
-            "inputs"= @{"version"= "$(gitTag)"}
-          } | ConvertTo-Json
+#     - task: PowerShell@2
+#       displayName: "Trigger APT build"
+#       inputs:
+#         targetType: 'inline'
+#         script: |
+#           $body = @{
+#             "ref"="main"
+#             "inputs"= @{"version"= "$(gitTag)"}
+#           } | ConvertTo-Json
 
-          $header = @{
-            "Accept"="application/vnd.github.v3+json"
-            "Authorization"="Bearer $(APTPAT)"
-            "User-Agent"="Ombi"
-          } 
+#           $header = @{
+#             "Accept"="application/vnd.github.v3+json"
+#             "Authorization"="Bearer $(APTPAT)"
+#             "User-Agent"="Ombi"
+#           } 
 
-          Invoke-RestMethod -Uri "https://api.github.com/repos/Ombi-app/Ombi.Apt/actions/workflows/build-deb.yml/dispatches" -Method 'Post' -Body $body -Headers $header
+#           Invoke-RestMethod -Uri "https://api.github.com/repos/Ombi-app/Ombi.Apt/actions/workflows/build-deb.yml/dispatches" -Method 'Post' -Body $body -Headers $header

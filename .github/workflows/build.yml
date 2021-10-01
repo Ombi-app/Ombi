@@ -4,8 +4,6 @@ on:
   push:
     # branches: [ develop, feature/** ]
     branches: [ releaseNotes ]
-  pull_request:
-    branches: [ develop ]
 
 jobs:
   build-ui:
@@ -182,14 +180,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      # - name: Conventional Changelog Action
-      #   id: changelog
-      #   uses: TriPSs/conventional-changelog-action@v3
-      #   with:
-      #     github-token: ${{ secrets.github_token }}
-      #     git-message: 'chore(release): {version}'
-      #     version-file: 'version.json'
-      #     output-file: 'CHANGELOG.md'
+      - name: Conventional Changelog Action
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v3
+        with:
+          github-token: ${{ secrets.github_token }}
+          git-message: 'chore(release): {version}'
+          version-file: 'version.json'
+          output-file: 'CHANGELOG.md'
 
       - name: Download Artifacts
         id: download
@@ -197,28 +195,36 @@ jobs:
         with:
           path: artifacts
 
-      # - name: Publish to GitHub
-      #   uses: softprops/action-gh-release@v1
-      #   # if: startsWith(github.ref, 'refs/tags/')
-      #   with:
-      #     body: ${{ steps.changelog.outputs.clean_changelog }}
-      #     draft: 'true'
-      #     name: ${{ steps.changelog.outputs.tag }}
-      #     tag_name: ${{ steps.changelog.outputs.tag }}
-      #     files: |
-      #       artifacts/**/*.tar.gz
-      #       artifacts/**/*.zip
-
       - name: Publish to GitHub
         uses: softprops/action-gh-release@v1
-        # if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          body: 'Test'
+          body: ${{ steps.changelog.outputs.clean_changelog }}
           draft: 'true'
-          name: 'Test'
+          name: ${{ steps.changelog.outputs.tag }}
+          tag_name: ${{ steps.changelog.outputs.tag }}
           files: |
             artifacts/**/*.tar.gz
             artifacts/**/*.zip
 
+      # - name: Publish to GitHub
+      #   uses: softprops/action-gh-release@v1
+      #   # if: startsWith(github.ref, 'refs/tags/')
+      #   with:
+      #     body: 'Test'
+      #     draft: 'true'
+      #     name: 'Test'
+      #     files: |
+      #       artifacts/**/*.tar.gz
+      #       artifacts/**/*.zip
+
+      - name: Trigger APT Build
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: 'https://api.github.com/repos/Ombi-app/Ombi.Apt/actions/workflows/build-deb.yml/dispatches'
+          method: 'POST'
+          contentType: 'application/json'
+          data: "{ 'ref':'main', 'inputs': { 'version': '${{ steps.changelog.outputs.tag }}'} }"
+          customHeaders: "{'Accept':'application/vnd.github.v3+json', 'Authorization':'Bearer ${{secrets.APT_PAT}}', 'User-Agent':'Ombi'}"
 
 
