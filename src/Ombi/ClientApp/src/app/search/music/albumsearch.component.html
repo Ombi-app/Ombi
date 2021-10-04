@@ -54,7 +54,7 @@
 
                 
                 <ng-template [ngIf]="result.releaseDate">
-                        <span class="label label-info" id="availableLabel">Release Date: {{result.releaseDate | amLocal | amDateFormat: 'L'}}</span>
+                        <span class="label label-info" id="availableLabel">Release Date: {{result.releaseDate | amLocal | amUserLocale | amDateFormat: 'L'}}</span>
                     </ng-template>
                     <ng-template [ngIf]="result.rating">
                         <span class="label label-info" id="availableLabel">{{result.rating}}/10</span>

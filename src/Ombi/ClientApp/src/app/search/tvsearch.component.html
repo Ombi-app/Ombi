@@ -84,7 +84,7 @@
                                     <span *ngIf="node.status" class="label label-primary" id="statusLabel" target="_blank">{{node.status}}</span>
 
 
-                                    <span *ngIf="node.firstAired" class="label label-info" target="_blank" id="airDateLabel">{{ 'Search.TvShows.AirDate' | translate }} {{node.firstAired | amLocal | amDateFormat: 'L'}}</span>
+                                    <span *ngIf="node.firstAired" class="label label-info" target="_blank" id="airDateLabel">{{ 'Search.TvShows.AirDate' | translate }} {{node.firstAired | amLocal | amUserLocale | amDateFormat: 'L'}}</span>
 
                                     <span *ngIf="node.network" class="label label-info" id="networkLabel" target="_blank">{{node.network}}</span>
 

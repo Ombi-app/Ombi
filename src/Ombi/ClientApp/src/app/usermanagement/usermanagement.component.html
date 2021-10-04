@@ -61,13 +61,13 @@
                 <th mat-header-cell *matHeaderCellDef>  Next Request Due </th>
                 <td mat-cell *matCellDef="let u"> 
                         <div *ngIf="u.movieRequestQuota != null && u.movieRequestQuota.remaining != u.movieRequestLimit">
-                                    {{'UserManagment.MovieDue' | translate: {date: (u.movieRequestQuota.nextRequest | amLocal | amDateFormat: 'l')} }}
+                                    {{'UserManagment.MovieDue' | translate: {date: (u.movieRequestQuota.nextRequest | amLocal | amUserLocale | amDateFormat: 'l')} }}
                         </div>
                         <div *ngIf="u.episodeRequestQuota != null && u.episodeRequestQuota.remaining != u.episodeRequestLimit">
-                                    {{'UserManagment.TvDue' | translate: {date: (u.episodeRequestQuota.nextRequest  | amLocal | amDateFormat: 'l')} }}
+                                    {{'UserManagment.TvDue' | translate: {date: (u.episodeRequestQuota.nextRequest  | amLocal | amUserLocale | amDateFormat: 'l')} }}
                         </div>
                         <div *ngIf="u.musicRequestQuota != null && u.musicRequestQuota.remaining != u.musicRequestLimit">
-                                    {{'UserManagment.MusicDue' | translate: {date: (u.musicRequestQuota.nextRequest  | amLocal | amDateFormat: 'l')} }}
+                                    {{'UserManagment.MusicDue' | translate: {date: (u.musicRequestQuota.nextRequest  | amLocal | amUserLocale | amDateFormat: 'l')} }}
                         </div>
                 </td>
           </ng-container>
@@ -75,7 +75,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>  Last Logged In </th>
                 <td mat-cell *matCellDef="let u">
                         <span *ngIf="u.lastLoggedIn">
-                                        {{u.lastLoggedIn  | amFromUtc | amLocal | amDateFormat: 'l LT'}}
+                                {{u.lastLoggedIn  | amFromUtc | amLocal | amUserLocale | amDateFormat: 'l LT'}}
                         </span>
                         <span *ngIf="!u.lastLoggedIn">
                                         Not logged in yet!
