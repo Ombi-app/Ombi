@@ -153,7 +153,7 @@ namespace Ombi.Core.Services
                     nextRequest = oldestRequestedAt.AddDays(1).Date;
                     break;
                 case RequestLimitType.Week:
-                    var fdow = DateTime.UtcNow.FirstDateInWeek();
+                    var fdow = DateTime.UtcNow.FirstDateInWeek().Date;
                     count = limit - await log.CountAsync(x => x.RequestDate >= fdow);
                     oldestRequestedAt = await log.Where(x => x.RequestDate >= fdow)
                                             .OrderBy(x => x.RequestDate)
@@ -262,7 +262,7 @@ namespace Ombi.Core.Services
                     nextRequest = oldestRequestedAt.AddDays(1).Date;
                     break;
                 case RequestLimitType.Week:
-                    var fdow = now.FirstDateInWeek();
+                    var fdow = now.FirstDateInWeek().Date;
                     filteredLog = log.Where(x => x.RequestDate >= DateTime.UtcNow.Date.AddDays(-7));
                     // Needed, due to a bug which would cause all episode counts to be 0
                     zeroEpisodeCount = await filteredLog.Where(x => x.EpisodeCount == 0).Select(x => x.EpisodeCount).CountAsync();
