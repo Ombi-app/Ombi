@@ -357,7 +357,7 @@ namespace Ombi.Core.Tests.Engine
                 MovieRequestLimitType = RequestLimitType.Week,
                 Id = "id1"
             };
-            var today = DateTime.UtcNow;
+            var today = new DateTime(2021,10,05);
             var log = new List<RequestLog>
             {
                 new RequestLog
