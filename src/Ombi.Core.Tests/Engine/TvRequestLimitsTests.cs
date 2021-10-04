@@ -109,7 +109,7 @@ namespace Ombi.Core.Tests.Engine
                 EpisodeRequestLimit = 2,
                 Id = "id1"
             };
-            var yesterday = DateTime.Now.AddDays(-1);
+            var yesterday = new DateTime(2020, 10, 05).AddDays(-1);
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -142,7 +142,7 @@ namespace Ombi.Core.Tests.Engine
                 EpisodeRequestLimit = 2,
                 Id = "id1"
             };
-            var yesterday = DateTime.Now.AddDays(-1);
+            var yesterday = new DateTime(2020, 10, 05).AddDays(-1);
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -225,7 +225,7 @@ namespace Ombi.Core.Tests.Engine
                 EpisodeRequestLimitType = RequestLimitType.Day,
                 Id = "id1"
             };
-            var yesterday = DateTime.Now.AddDays(-1);
+            var yesterday = new DateTime(2020, 10, 05).AddDays(-1);
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -258,7 +258,7 @@ namespace Ombi.Core.Tests.Engine
                 EpisodeRequestLimitType = RequestLimitType.Day,
                 Id = "id1"
             };
-            var today = DateTime.Now;
+            var today = new DateTime(2020, 10, 05);
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -292,7 +292,7 @@ namespace Ombi.Core.Tests.Engine
                 EpisodeRequestLimitType = RequestLimitType.Day,
                 Id = "id1"
             };
-            var today = DateTime.Now;
+            var today = new DateTime(2020, 10, 05);
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -333,7 +333,7 @@ namespace Ombi.Core.Tests.Engine
                 EpisodeRequestLimitType = RequestLimitType.Day,
                 Id = "id1"
             };
-            var today = DateTime.Now;
+            var today = new DateTime(2020, 10, 05);
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -407,7 +407,7 @@ namespace Ombi.Core.Tests.Engine
                 EpisodeRequestLimitType = RequestLimitType.Week,
                 Id = "id1"
             };
-            var today = DateTime.Now;
+            var today = new DateTime(2020, 10, 05);
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -441,7 +441,7 @@ namespace Ombi.Core.Tests.Engine
                 EpisodeRequestLimitType = RequestLimitType.Week,
                 Id = "id1"
             };
-            var today = DateTime.Now;
+            var today = new DateTime(2020, 10, 05);
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -482,7 +482,7 @@ namespace Ombi.Core.Tests.Engine
                 EpisodeRequestLimitType = RequestLimitType.Week,
                 Id = "id1"
             };
-            var today = DateTime.Now;
+            var today = new DateTime(2020, 10, 05);
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -523,7 +523,7 @@ namespace Ombi.Core.Tests.Engine
                 EpisodeRequestLimitType = RequestLimitType.Month,
                 Id = "id1"
             };
-            var lastWeek = DateTime.Now.AddMonths(-1).AddDays(-1);
+            var lastWeek = new DateTime(2020, 10, 05).AddMonths(-1).AddDays(-1);
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -556,7 +556,7 @@ namespace Ombi.Core.Tests.Engine
                 EpisodeRequestLimitType = RequestLimitType.Month,
                 Id = "id1"
             };
-            var today = DateTime.Now;
+            var today = new DateTime(2020, 10, 05);
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -590,7 +590,7 @@ namespace Ombi.Core.Tests.Engine
                 EpisodeRequestLimitType = RequestLimitType.Month,
                 Id = "id1"
             };
-            var today = DateTime.Now;
+            var today = new DateTime(2020, 10, 05);
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -631,7 +631,7 @@ namespace Ombi.Core.Tests.Engine
                 EpisodeRequestLimitType = RequestLimitType.Month,
                 Id = "id1"
             };
-            var today = DateTime.Now;
+            var today = new DateTime(2020, 10, 05);
             var log = new List<RequestLog>
             {
                 new RequestLog
