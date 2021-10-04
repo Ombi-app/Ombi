@@ -145,7 +145,7 @@ namespace Ombi.Core.Tests.Engine
                 MovieRequestLimit = 2,
                 Id = "id1"
             };
-            var yesterday = DateTime.Now.AddDays(-1);
+            var yesterday = new DateTime(2020, 09, 05).AddDays(-1);
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -220,7 +220,7 @@ namespace Ombi.Core.Tests.Engine
                 MovieRequestLimitType = RequestLimitType.Day,
                 Id = "id1"
             };
-            var yesterday = DateTime.Now.AddDays(-1);
+            var yesterday = new DateTime(2020, 09, 05).AddDays(-1);
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -253,7 +253,7 @@ namespace Ombi.Core.Tests.Engine
                 Id = "id1"
             };
 
-            var today = DateTime.Now;
+            var today = DateTime.UtcNow;
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -286,7 +286,7 @@ namespace Ombi.Core.Tests.Engine
                 MovieRequestLimitType = RequestLimitType.Day,
                 Id = "id1"
             };
-            var today = DateTime.Now;
+            var today = DateTime.UtcNow;
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -325,7 +325,7 @@ namespace Ombi.Core.Tests.Engine
                 MovieRequestLimitType = RequestLimitType.Week,
                 Id = "id1"
             };
-            var lastWeek = DateTime.Now.FirstDateInWeek().AddDays(-1); // Day before reset
+            var lastWeek = new DateTime(2020, 09, 05).FirstDateInWeek().AddDays(-1); // Day before reset
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -390,7 +390,7 @@ namespace Ombi.Core.Tests.Engine
                 MovieRequestLimitType = RequestLimitType.Week,
                 Id = "id1"
             };
-            var today = DateTime.Now;
+            var today = new DateTime(2021,10,05);
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -428,7 +428,7 @@ namespace Ombi.Core.Tests.Engine
                 MovieRequestLimitType = RequestLimitType.Month,
                 Id = "id1"
             };
-            var lastWeek = DateTime.Now.AddMonths(-1).AddDays(-1);
+            var lastWeek = new DateTime(2020, 09, 05).AddMonths(-1).AddDays(-1);
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -460,7 +460,7 @@ namespace Ombi.Core.Tests.Engine
                 MovieRequestLimitType = RequestLimitType.Month,
                 Id = "id1"
             };
-            var today = DateTime.Now;
+            var today = DateTime.UtcNow;
             var firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
             var log = new List<RequestLog>
             {
@@ -494,7 +494,7 @@ namespace Ombi.Core.Tests.Engine
                 MovieRequestLimitType = RequestLimitType.Month,
                 Id = "id1"
             };
-            var today = DateTime.Now;
+            var today = DateTime.UtcNow;
             var firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
             var log = new List<RequestLog>
             {
