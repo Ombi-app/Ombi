@@ -39,7 +39,7 @@
 
           <ng-container matColumnDef="airDate">
             <th mat-header-cell *matHeaderCellDef> {{ 'Requests.AirDate' | translate }} </th>
-            <td mat-cell *matCellDef="let element"> {{element.airDate | amLocal | amDateFormat: 'L' }}</td>
+            <td mat-cell *matCellDef="let element"> {{element.airDate | amLocal | amUserLocale | amDateFormat: 'L' }}</td>
           </ng-container>
 
           <ng-container matColumnDef="status">

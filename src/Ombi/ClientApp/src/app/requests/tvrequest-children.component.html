@@ -86,7 +86,7 @@
                                             {{ep.title}}
                                         </td>
                                         <td>
-                                            {{ep.airDate | amLocal | amDateFormat: 'L' }}
+                                            {{ep.airDate | amLocal | amUserLocale | amDateFormat: 'L' }}
                                         </td>
                                         <td>
                                             <span *ngIf="child.denied" class="label label-danger" id="deniedLabel"
