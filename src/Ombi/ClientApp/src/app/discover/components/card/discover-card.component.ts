@@ -167,7 +167,6 @@ export class DiscoverCardComponent implements OnInit {
         this.result.url = "http://www.imdb.com/title/" + updated.imdbId + "/";
         this.result.available = updated.available;
         this.result.requested = updated.requested;
-        this.result.requested = updated.requestProcessing;
         this.result.rating = updated.voteAverage;
         this.result.overview = updated.overview;
         this.result.imdbid = updated.imdbId;
