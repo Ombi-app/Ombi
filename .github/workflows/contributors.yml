@@ -16,12 +16,10 @@ jobs:
     - uses: lowlighter/metrics@latest
       with:
         token: ${{ secrets.WORKFLOW_PAT }}
+        filename: metrics.plugin.contributors.svg
+        template: repository
         plugin_contributors: yes
-        plugin_contributors_base: ""               # Base reference (commit, tag, branch, etc.)
-        plugin_contributors_head: main             # Head reference (commit, tag, branch, etc.)
-        plugin_contributors_ignored: bot           # Ignore "bot" user
-        plugin_contributors_contributions: yes     # Display number of contributions for each contributor
-        plugin_contributors_sections: contributors # Display contributors sections
+        plugin_contributors_sections: categories
         plugin_contributors_categories: |
           {
             "📚 Documentation": ["README.md", "docs/**"],
