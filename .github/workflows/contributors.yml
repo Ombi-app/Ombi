@@ -1,0 +1,29 @@
+
+name: Contributors
+
+on:
+  push:
+    branches: [ develop ]
+    workflow_dispatch:
+
+jobs:
+  automation-tests:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - uses: lowlighter/metrics@latest
+      with:
+        plugin_contributors: yes
+        plugin_contributors_base: ""               # Base reference (commit, tag, branch, etc.)
+        plugin_contributors_head: main             # Head reference (commit, tag, branch, etc.)
+        plugin_contributors_ignored: bot           # Ignore "bot" user
+        plugin_contributors_contributions: yes     # Display number of contributions for each contributor
+        plugin_contributors_sections: contributors # Display contributors sections
+        plugin_contributors_categories: |
+        {
+          "📚 Documentation": ["README.md", "docs/**"],
+          "💻 Backend": ["source/**", "src/**"],
+          "#️⃣ Frontend": ["src/Ombi/ClientApp/**"]
+        }
