@@ -18,6 +18,7 @@ jobs:
         token: ${{ secrets.WORKFLOW_PAT }}
         filename: metrics.plugin.contributors.svg
         template: repository
+        repo: Ombi
         plugin_contributors: yes
         plugin_contributors_sections: categories
         plugin_contributors_categories: |
