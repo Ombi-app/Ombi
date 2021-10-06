@@ -14,7 +14,7 @@ jobs:
 
     - uses: lowlighter/metrics@latest
       with:
-        token: ${{ secrets.WORKFLOW_PAT }}
+        token: ${{ secrets.PERSONAL_PAT }}
         filename: metrics.plugin.contributors.categories.svg
         template: repository
         repo: Ombi
