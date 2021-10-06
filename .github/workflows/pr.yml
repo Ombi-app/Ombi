@@ -2,7 +2,7 @@ name: PR Build
 
 on:
   pull_request:
-    branches: [ develop ]
+    types: [opened, synchronize, reopened]
 
 jobs:
   build-ui:
@@ -46,19 +46,26 @@ jobs:
           cd src
           dotnet test --logger trx --results-directory "TestResults"
 
-      ## Don't need yet
-      # - name: Upload dotnet test results
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: dotnet-results
-      #     path: src/TestResults
-      #   # Use always() to always run this step to publish test results when there are test failures
-      #   if: ${{ always() }}
-
+  analysis:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+        fetch-depth: 0
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@master
+      with:
+        args: >
+          -Dsonar.organization=ombi-app
+          -Dsonar.projectKey=Ombi-app_Ombi
+      env:
+        GITHUB_TOKEN:  ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   publish:
     runs-on: ubuntu-latest
-    needs: [ build-ui ]
+    needs: [ unit-test ]
     strategy:
       matrix:
         include:
