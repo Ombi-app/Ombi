@@ -46,5 +46,5 @@ jobs:
           # on the project dashboard in SonarCloud.
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"Ombi-app_Ombi" /o:"ombi-app" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet build src/Ombi.sln
+          dotnet build src/Ombi.sln -c NonUiBuild
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
