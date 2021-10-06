@@ -114,18 +114,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget
 
-     # - name: Conventional Changelog Action
-       # id: changelog
-      #  uses: TriPSs/conventional-changelog-action@v3.7.1
-     #   with:
-      #    github-token: ${{ secrets.WORKFLOW_PAT }}
-         # git-message: 'chore(release): {version}'
-      #    version-file: 'version.json'
-        #  output-file: 'CHANGELOG.md'
-       #   skip-on-empty: 'false'
-        #env:
-       #   ENV: 'dont-use-git'
-
       - name: Set Backend Version
         run: |
           dotnet tool install -g dotnet-setversion
