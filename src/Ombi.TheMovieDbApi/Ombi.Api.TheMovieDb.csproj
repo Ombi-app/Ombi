@@ -8,6 +8,7 @@
     <Version></Version>
     <PackageVersion></PackageVersion>
     <LangVersion>8.0</LangVersion>
+    <Configurations>Debug;Release;NonUiBuild</Configurations>
     <!--<NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>-->
   </PropertyGroup>
 

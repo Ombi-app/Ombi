@@ -8,6 +8,7 @@
     <FileVersion>3.0.0.0</FileVersion>
     <Version></Version>
     <PackageVersion></PackageVersion>
+    <Configurations>Debug;Release;NonUiBuild</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

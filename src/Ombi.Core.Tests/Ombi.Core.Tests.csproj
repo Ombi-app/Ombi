@@ -4,6 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
   <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+  <Configurations>Debug;Release;NonUiBuild</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
