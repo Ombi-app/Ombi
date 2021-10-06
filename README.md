@@ -68,9 +68,7 @@ Here are some of the features Ombi has:
 
 # Contributors
 
-We are looking for any contributions to the project! Just pick up a task, if you have any questions ask and i'll get straight on it!
-
-Please feel free to submit a pull request!
+[![Contributors](/metrics.plugin.contributors.categories.svg)](/metrics.plugin.contributors.categories.svg)
 
 # Donation
 If you feel like donating you can donate with the below buttons!

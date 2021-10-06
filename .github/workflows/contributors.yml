@@ -1,0 +1,28 @@
+name: Contributors
+
+on:
+  push:
+    branches: [ develop ]
+    workflow_dispatch:
+
+jobs:
+  update-contributors:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - uses: lowlighter/metrics@latest
+      with:
+        token: ${{ secrets.WORKFLOW_PAT }}
+        filename: metrics.plugin.contributors.categories.svg
+        template: repository
+        repo: Ombi
+        base: ""
+        plugin_contributors: yes
+        plugin_contributors_sections: categories
+        plugin_contributors_categories: |
+          {
+            "📚 Documentation": ["README.md", "docs/**"],
+            "💻 Code": ["src/**"]
+          }
