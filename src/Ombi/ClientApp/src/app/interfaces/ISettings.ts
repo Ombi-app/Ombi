@@ -22,8 +22,8 @@ export interface IOmbiSettings extends ISettings {
 }
 
 export enum Branch {
-  Stable = 0,
-  Develop = 1
+  Stable = 1,
+  Develop = 0
 }
 
 export interface IUpdateSettings extends ISettings {
