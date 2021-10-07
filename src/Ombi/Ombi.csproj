@@ -24,12 +24,14 @@
 
   <ItemGroup>
     <Content Remove="$(SpaRoot)**" />
+    <Content Remove="Controllers\External\**" />
     <None Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
   
   <ItemGroup>
     <!-- Files not to show in IDE -->
+    <Compile Remove="Controllers\External\**" />
     <Compile Remove="Logs\**" />
     <Compile Remove="Styles\**" />
     <Compile Remove="wwwroot\dist\**" />
@@ -39,9 +41,11 @@
     <Content Remove="Logs\**" />
     <Content Remove="Styles\**" />
     <Content Remove="wwwroot\dist\**" />
+    <EmbeddedResource Remove="Controllers\External\**" />
     <EmbeddedResource Remove="Logs\**" />
     <EmbeddedResource Remove="Styles\**" />
     <EmbeddedResource Remove="wwwroot\dist\**" />
+    <None Remove="Controllers\External\**" />
     <None Remove="Logs\**" />
     <None Remove="Styles\**" />
     <None Remove="wwwroot\dist\**" />
@@ -97,10 +101,6 @@
     <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
     <ProjectReference Include="..\Ombi.TheMovieDbApi\Ombi.Api.TheMovieDb.csproj" />
     <ProjectReference Include="..\Ombi.Updater\Ombi.Updater.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\External\" />
   </ItemGroup>
 
   
