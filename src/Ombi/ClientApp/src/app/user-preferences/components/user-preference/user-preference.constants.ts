@@ -1,15 +1,19 @@
 export const AvailableLanguages: ILanguage[] = [
-    { display: 'English', value: 'en' },
-    { display: 'Français', value: 'fr' },
     { display: 'Dansk', value: 'da' },
     { display: 'Deutsch', value: 'de' },
-    { display: 'Italiano', value: 'it' },
+    { display: 'English', value: 'en' },
     { display: 'Español', value: 'es' },
+    { display: 'Français', value: 'fr' },
+    { display: 'Italiano', value: 'it' },
+    { display: 'Magyar', value: 'hu' },
     { display: 'Nederlands', value: 'nl' },
     { display: 'Norsk', value: 'no' },
-    { display: 'Português (Brasil)', value: 'pt' },
     { display: 'Polski', value: 'pl' },
+    { display: 'Português (Brasil)', value: 'pt' },
+    { display: 'Slovenčina', value: 'sk' },
     { display: 'Svenska', value: 'sv' },
+    { display: 'Български', value: 'bg' },
+    { display: 'Русский', value: 'ru' },
 ];
 
 export interface ILanguage {
