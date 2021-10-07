@@ -51,7 +51,7 @@ jobs:
       - name: Run Unit Tests
         run: |
           cd src
-          dotnet test --logger trx --results-directory "TestResults"
+          dotnet test -c NonUiBuild --logger trx --results-directory "TestResults"
 
   versioning:
      runs-on: ubuntu-latest
