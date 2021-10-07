@@ -209,7 +209,7 @@ jobs:
         url: 'https://api.github.com/repos/Ombi-app/Ombi.Apt/actions/workflows/build-deb.yml/dispatches'
         method: 'POST'
         contentType: 'application/json'
-        data: "{ 'ref':'main', 'inputs': { 'version': '${{ steps.changelog.outputs.tag }}'} }"
+        data: '{ "ref":"main", "inputs": { "version": "${{ steps.changelog.outputs.tag }}"} }'
         customHeaders: "{'Accept':'application/vnd.github.v3+json', 'Authorization':'Bearer ${{secrets.APT_PAT}}', 'User-Agent':'Ombi'}"
 
 
