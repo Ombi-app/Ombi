@@ -3,7 +3,6 @@ name: CI Build
 on:
   push:
     branches: [ develop, master ]
-  workflow-dispatch:
 
 jobs:
   build-ui:
