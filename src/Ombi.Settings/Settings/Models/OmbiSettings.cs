@@ -1,6 +1,6 @@
 ﻿namespace Ombi.Settings.Settings.Models
 {
-    public class OmbiSettings : Models.Settings
+    public class OmbiSettings : Settings
     {
         public string BaseUrl { get; set; }
         public bool CollectAnalyticData { get; set; }
@@ -12,9 +12,16 @@
         public string DefaultLanguageCode { get; set; } = "en";
         public bool AutoDeleteAvailableRequests { get; set; }
         public int AutoDeleteAfterDays { get; set; }
+        public Branch Branch { get; set; }
 
         //INTERNAL
         public bool HasMigratedOldTvDbData { get; set; }
         public bool Set { get; set; }
+    }
+
+    public enum Branch
+    {
+        Develop = 0,
+        Stable = 1,
     }
 }

@@ -18,6 +18,12 @@ export interface IOmbiSettings extends ISettings {
   disableHealthChecks: boolean;
   autoDeleteAvailableRequests: boolean;
   autoDeleteAfterDays: number;
+  branch: Branch;
+}
+
+export enum Branch {
+  Stable = 1,
+  Develop = 0
 }
 
 export interface IUpdateSettings extends ISettings {
