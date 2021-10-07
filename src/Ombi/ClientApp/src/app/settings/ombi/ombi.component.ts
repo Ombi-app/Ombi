@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 
-import { ILanguageRefine, IOmbiSettings } from "../../interfaces";
+import { Branch, ILanguageRefine, IOmbiSettings } from "../../interfaces";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
 
@@ -15,6 +15,7 @@ export class OmbiComponent implements OnInit {
 
     public form: FormGroup;
     public langauges: ILanguageRefine[];
+    public Branch = Branch;
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
@@ -31,7 +32,8 @@ export class OmbiComponent implements OnInit {
                 defaultLanguageCode: [x.defaultLanguageCode],
                 disableHealthChecks: [x.disableHealthChecks],
                 autoDeleteAvailableRequests: [x.autoDeleteAvailableRequests],
-                autoDeleteAfterDays: [x.autoDeleteAfterDays]
+                autoDeleteAfterDays: [x.autoDeleteAfterDays],
+                branch: [x.branch]
             });
         });
         this.langauges = <ILanguageRefine[]>languageData
