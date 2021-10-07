@@ -188,6 +188,7 @@
         "InProgressTitle": "In Progress Issues",
         "ResolvedTitle": "Resolved Issues",
         "ColumnTitle": "Title",
+        "Count": "Count",
         "Category": "Category",
         "Status": "Status",
         "Details": "Details",

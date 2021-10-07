@@ -188,6 +188,7 @@
         "InProgressTitle": "Pågående problem",
         "ResolvedTitle": "Lösta problem",
         "ColumnTitle": "Titel",
+        "Count": "Count",
         "Category": "Kategori",
         "Status": "Status",
         "Details": "Detaljer",

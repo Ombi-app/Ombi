@@ -196,6 +196,7 @@
         "InProgressTitle": "Проблеми в процес на изпълнение",
         "ResolvedTitle": "Решени проблеми",
         "ColumnTitle": "Заглавие",
+        "Count": "Count",
         "Category": "Категория",
         "Status": "Състояние",
         "Details": "Подробности",
