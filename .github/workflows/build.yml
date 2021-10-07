@@ -162,6 +162,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Conventional Changelog Action
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v3
+        with:
+          version-file: 'version.json'
+          skip-on-empty: 'false'
+          git-message: 'chore(release): :rocket: {version}'
+      
       - name: Download Artifacts
         id: download
         uses: actions/download-artifact@v2
@@ -190,19 +198,6 @@ jobs:
           files: |
             artifacts/**/*.tar.gz
             artifacts/**/*.zip
-
-  update-changelog:
-    needs: [ release ]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Conventional Changelog Action
-        id: changelog
-        uses: TriPSs/conventional-changelog-action@v3
-        with:
-          version-file: 'version.json'
-          skip-on-empty: 'false'
-          git-message: 'chore(release): :rocket: {version}'
 
   update-apt:
     needs: [ release ]
