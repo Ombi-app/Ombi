@@ -192,9 +192,9 @@ jobs:
         if: contains(github.ref, 'develop')
         with:
           prerelease: true
-          body: ${{ needs.versioning.outputs.changelog }}
-          name: ${{ needs.versioning.outputs.tag }}
-          tag_name: ${{ needs.versioning.outputs.tag }}
+          body: ${{ steps.changelog.outputs.changelog }}
+          name: ${{ steps.changelog.outputs.tag }}
+          tag_name: ${{ steps.changelog.outputs.tag }}
           files: |
             artifacts/**/*.tar.gz
             artifacts/**/*.zip
