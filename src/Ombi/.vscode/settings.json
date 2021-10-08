@@ -14,6 +14,7 @@
     "conventionalCommits.scopes": [
         "discover",
         "request-limits",
-        "notifications"
+        "notifications",
+        "settings"
     ]
 }
