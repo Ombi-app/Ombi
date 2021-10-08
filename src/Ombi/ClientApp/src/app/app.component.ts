@@ -24,14 +24,14 @@ export class AppComponent implements OnInit {
 
     public customizationSettings: ICustomizationSettings;
     public customPageSettings: ICustomPage;
-    public user: ILocalUser;
     public showNav: boolean;
     public updateAvailable: boolean;
     public currentUrl: string;
     public voteEnabled = false;
     public applicationName: string = "Ombi"
     public isAdmin: boolean;
-    public username: string;
+    public userName: string;
+    public userEmail: string;
     public accessToken: string;
 
     private hubConnected: boolean;
@@ -53,8 +53,6 @@ export class AppComponent implements OnInit {
         this.translate.addLangs(["da", "de", "en", "es", "fr", "it", "hu", "nl", "no", "pl", "pt", "sk", "sv", "bg", "ru"]);
 
         if (this.authService.loggedIn()) {
-            this.user = this.authService.claims();
-            this.username = this.user.name;
             this.identity.getAccessToken().subscribe(x => this.accessToken = x);
             if (!this.hubConnected) {
                 this.signalrNotification.initialize();
@@ -67,6 +65,8 @@ export class AppComponent implements OnInit {
                 });
             }
             this.identity.getUser().subscribe(u => {
+                this.userEmail = u.emailAddress;
+                this.userName = u.userName;
                 if (u.language) {
                     this.translate.use(u.language);
                 }
@@ -116,10 +116,6 @@ export class AppComponent implements OnInit {
             if (event instanceof NavigationStart) {
                 this.isAdmin = this.authService.hasRole("admin");
                 this.showNav = this.authService.loggedIn();
-                if (this.showNav) {
-                    this.user = this.authService.claims();
-                    this.username = this.user.name;
-                }
             }
         });
     }

@@ -1,5 +1,5 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { IUser, RequestType, UserType } from '../interfaces';
 import { SettingsService, SettingsStateService } from '../services';
 
@@ -40,16 +40,16 @@ export class MyNavComponent implements OnInit {
   @Input() public applicationLogo: string;
   @Input() public applicationUrl: string;
   @Input() public accessToken: string;
-  @Input() public username: string;
+  @Input() public userName: string;
+  @Input() public userEmail: string;
   @Input() public isAdmin: string;
-  @Input() public email: string;
   @Output() public logoutClick = new EventEmitter();
   public theme: string;
   public issuesEnabled: boolean = false;
   public navItems: INavBar[];
   public searchFilter: SearchFilter;
   public SearchFilterType = SearchFilterType;
-  public emailHash: string | Int32Array;
+  public userProfileImageUrl: string;
   public welcomeText: string;
   public RequestType = RequestType;
 
@@ -63,7 +63,6 @@ export class MyNavComponent implements OnInit {
   }
 
   public async ngOnInit() {
-
     this.searchFilter = {
       movies: true,
       music: false,
@@ -71,11 +70,7 @@ export class MyNavComponent implements OnInit {
       tvShows: true
     }
 
-    if (this.email) {
-      const md5 = new Md5();
-      this.emailHash = md5.appendStr(this.email).end();
-    }
-
+    this.setProfileImageUrl(this.userEmail)
     this.issuesEnabled = await this.settingsService.issueEnabled().toPromise();
     this.settingState.setIssue(this.issuesEnabled);
 
@@ -101,6 +96,12 @@ export class MyNavComponent implements OnInit {
       { id: "nav-featureSuggestion", name: "NavigationBar.FeatureSuggestion", icon: "far fa-lightbulb", link: "https://features.ombi.io/", externalLink: true, requiresAdmin: true, enabled: true, toolTip: true, toolTipMessage: 'NavigationBar.FeatureSuggestionTooltip'},
       { id: "nav-settings", name: "NavigationBar.Settings", icon: "fas fa-cogs", link: "/Settings/About", requiresAdmin: true, enabled: true },
       ];
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes?.userEmail || changes?.applicationLogo){
+      this.setProfileImageUrl(this.userEmail)
+    }
   }
 
   public logOut() {
@@ -138,9 +139,27 @@ export class MyNavComponent implements OnInit {
     });
   }
 
-  public getUserImage(): string {
-    var fallback = this.applicationLogo ? this.applicationLogo : 'https://raw.githubusercontent.com/Ombi-app/Ombi/gh-pages/img/android-chrome-512x512.png';
-    return `https://www.gravatar.com/avatar/${this.emailHash}?d=${fallback}`;
+  private setProfileImageUrl(email: string): void {
+    if (email) {
+        const md5 = new Md5();
+        const emailHash = md5.appendStr(email).end();
+        this.userProfileImageUrl = `https://www.gravatar.com/avatar/${emailHash}?d=404`;;
+    }
+    else{
+        this.userProfileImageUrl = this.getFallbackProfileImageUrl();
+    }
+  }
+
+  public onProfileImageError(): void {
+      const fallbackLogo = this.getFallbackProfileImageUrl();
+      if (this.userProfileImageUrl === fallbackLogo) return;        
+      this.userProfileImageUrl = fallbackLogo;
+  }
+
+  private getFallbackProfileImageUrl() {
+      return this.applicationLogo
+        ? this.applicationLogo
+        : "https://raw.githubusercontent.com/Ombi-app/Ombi/gh-pages/img/android-chrome-512x512.png";
   }
 
   public openMobileApp(event: any) {
@@ -148,6 +167,5 @@ export class MyNavComponent implements OnInit {
 
     const url = `ombi://${this.applicationUrl}|${this.accessToken}`;
     window.location.assign(url);
-}
-
+  }
 }

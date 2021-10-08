@@ -1,8 +1,8 @@
 <div class="small-middle-container" *ngIf="username">
   <div class="d-flex">
-    <img class="profile-img" [src]="getProfileImage()">
+    <img class="profile-img" [src]="userProfileImageUrl" (error)="onProfileImageError()" >
     <h2 id="usernameTitle">{{username}}
-      <small id="emailTitle" *ngIf="user.emailAddress">({{user.emailAddress}})</small>
+      <small id="emailTitle" *ngIf="user?.emailAddress">({{user.emailAddress}})</small>
     </h2>
   </div>
 
@@ -15,7 +15,7 @@
             User Type:
           </div>
           <div class="col-7 col-sm-9 col-md-10">
-            {{UserType[user.userType]}}
+            {{UserType[user?.userType]}}
           </div>
         </div>
 
@@ -75,7 +75,7 @@
       </div>
 
     </mat-tab>
-    <mat-tab *ngIf="user.userType === UserType.LocalUser" label="Security">
+    <mat-tab *ngIf="user?.userType === UserType.LocalUser" label="Security">
       <div class="tab-content">
         <h2>Change Details</h2>
         <form novalidate [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
