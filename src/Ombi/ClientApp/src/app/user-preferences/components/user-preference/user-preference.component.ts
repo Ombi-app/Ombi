@@ -15,6 +15,7 @@ import { APP_BASE_HREF } from "@angular/common";
 export class UserPreferenceComponent implements OnInit {
 
     public username: string;
+    public userProfileImageUrl: string;
     public selectedLang: string;
     public availableLanguages = AvailableLanguages;
     public qrCode: string;
@@ -61,6 +62,7 @@ export class UserPreferenceComponent implements OnInit {
 
         this.user = await this.identityService.getUser().toPromise();
         this.selectedCountry = this.user.streamingCountry;
+        this.setProfileImageUrl(this.user);
         this.identityService.getSupportedStreamingCountries().subscribe(x => this.countries = x);
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
 
@@ -92,14 +94,27 @@ export class UserPreferenceComponent implements OnInit {
         this.identityService.updateStreamingCountry(this.selectedCountry).subscribe(x => this.notification.success(this.translate.instant("UserPreferences.Updated")));
     }
 
-    public getProfileImage(): string {
-        let emailHash: string|Int32Array;
-        if (this.user.emailAddress) {
-          const md5 = new Md5();
-          emailHash = md5.appendStr(this.user.emailAddress).end();
+    private setProfileImageUrl(user: IUser): void {
+        if (user?.emailAddress) {
+            const md5 = new Md5();
+            const emailHash = md5.appendStr(this.user.emailAddress).end();
+            this.userProfileImageUrl = `https://www.gravatar.com/avatar/${emailHash}?d=404`;;
         }
-        var fallback = this.customizationSettings.logo ? this.customizationSettings.logo : 'https://raw.githubusercontent.com/Ombi-app/Ombi/gh-pages/img/android-chrome-512x512.png';
-        return `https://www.gravatar.com/avatar/${emailHash}?d=${fallback}`;
+        else{
+            this.userProfileImageUrl = this.getFallbackProfileImageUrl();
+        }
+    }
+
+    public onProfileImageError(): void {
+        const fallbackLogo = this.getFallbackProfileImageUrl();
+        if (this.userProfileImageUrl === fallbackLogo) return;        
+        this.userProfileImageUrl = fallbackLogo;
+    }
+
+    private getFallbackProfileImageUrl() {
+        return this.customizationSettings?.logo
+          ? this.customizationSettings.logo
+          : "https://raw.githubusercontent.com/Ombi-app/Ombi/gh-pages/img/android-chrome-512x512.png";
     }
 
     public updatePassword() {
