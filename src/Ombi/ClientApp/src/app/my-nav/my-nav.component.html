@@ -89,8 +89,10 @@
             </div>
             <div class="profile-block">
                 <a routerLink="/user-preferences">
-                <div class="profile-username" data-test="profile-username">{{username}}</div>
-                <div class="profile-img" data-test="profile-image"><img [src]="getUserImage()" /></div>
+                <div class="profile-username" data-test="profile-username">{{userName}}</div>
+                <div class="profile-img" data-test="profile-image">
+                    <img [src]="userProfileImageUrl" (error)="onProfileImageError()" >
+                </div>
             </a>
             </div>
 
