@@ -359,5 +359,26 @@ namespace Ombi.Notifications.Agents
                 }
             }
         }
+
+        protected override async Task PartiallyAvailable(NotificationOptions model, MobileNotificationSettings settings)
+        {
+            var parsed = await LoadTemplate(NotificationAgent.Mobile, NotificationType.PartiallyAvailable, model);
+            if (parsed.Disabled)
+            {
+                _logger.LogInformation($"Template {NotificationType.PartiallyAvailable} is disabled for {NotificationAgent.Mobile}");
+                return;
+            }
+
+            var notification = new NotificationMessage
+            {
+                Message = parsed.Message,
+                Subject = "New Request",
+                Data = GetNotificationData(parsed, NotificationType.PartiallyAvailable)
+            };
+
+            // Get admin devices
+            var playerIds = await GetAdmins(NotificationType.PartiallyAvailable);
+            await Send(playerIds, notification, settings, model, true);
+        }
     }
 }

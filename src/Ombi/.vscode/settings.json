@@ -13,6 +13,7 @@
     "discord.enabled": true,
     "conventionalCommits.scopes": [
         "discover",
-        "request-limits"
+        "request-limits",
+        "notifications"
     ]
 }
