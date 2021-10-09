@@ -52,7 +52,7 @@ export enum NotificationType {
     IssueResolved = 9,
     IssueComment = 10,
     Newsletter = 11,
-    WhatsApp = 12,
+    PartiallyAvailable = 12,
 }
 
 export interface IDiscordNotifcationSettings extends INotificationSettings {

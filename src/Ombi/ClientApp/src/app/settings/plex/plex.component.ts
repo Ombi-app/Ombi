@@ -63,6 +63,7 @@ export class PlexComponent implements OnInit, OnDestroy {
         server.plexAuthToken = selectedServer.accessToken;
         server.port = parseInt(selectedServer.port);
         server.ssl = selectedServer.scheme === "http" ? false : true;
+        server.serverHostname = "";
 
         this.notificationService.success(`Selected ${server.name}!`);
     }
@@ -128,7 +129,7 @@ export class PlexComponent implements OnInit, OnDestroy {
         let invalid = false;
 
         this.settings.servers.forEach(server => {
-            if (server.serverHostname.length > 0 && !server.serverHostname.startsWith("http")) {
+            if (server.serverHostname && server.serverHostname.length > 0 && !server.serverHostname.startsWith("http")) {
                 invalid = true;
             }
         });

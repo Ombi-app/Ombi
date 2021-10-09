@@ -127,22 +127,19 @@ namespace Ombi.Schedule.Jobs.Plex
                         {
                             availableEpisode.Add(new AvailabilityModel
                             {
-                                Id = episode.Id
+                                Id = episode.Id,
+                                EpisodeNumber = episode.EpisodeNumber,
+                                SeasonNumber = episode.Season.SeasonNumber
                             });
                             episode.Available = true;
                         }
                     }
                 }
 
-                //TODO Partial avilability notifications here
                 if (availableEpisode.Any())
                 {
                     await _tvRepo.Save();
                 }
-                //foreach(var c in availableEpisode)
-                //{
-                //    await _tvRepo.MarkEpisodeAsAvailable(c.Id);
-                //}
 
                 // Check to see if all of the episodes in all seasons are available for this request
                 var allAvailable = child.SeasonRequests.All(x => x.Episodes.All(c => c.Available));
@@ -161,6 +158,20 @@ namespace Ombi.Schedule.Jobs.Plex
                         RequestType = RequestType.TvShow,
                         Recipient = child.RequestedUser.Email
                     });
+                }
+                else if (availableEpisode.Any())
+                {
+                    var notification = new NotificationOptions
+                    {
+                        DateTime = DateTime.Now,
+                        NotificationType = NotificationType.PartiallyAvailable,
+                        RequestId = child.Id,
+                        RequestType = RequestType.TvShow,
+                        Recipient = child.RequestedUser.Email,
+                    };
+                    notification.Substitutes.Add("Season", availableEpisode.First().SeasonNumber.ToString());
+                    notification.Substitutes.Add("Episodes", string.Join(", " ,availableEpisode.Select(x => x.EpisodeNumber)));
+                    await _notificationService.Notify(notification);
                 }
             }
 

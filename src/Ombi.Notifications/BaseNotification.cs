@@ -110,6 +110,15 @@ namespace Ombi.Notifications
                     case NotificationType.IssueComment:
                         await IssueComment(model, notificationSettings);
                         break;
+                    case NotificationType.AdminNote:
+                        break;
+                    case NotificationType.WelcomeEmail:
+                        break;
+                    case NotificationType.Newsletter:
+                        break;
+                    case NotificationType.PartiallyAvailable:
+                        await PartiallyAvailable(model, notificationSettings);
+                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -236,6 +245,7 @@ namespace Ombi.Notifications
         protected abstract Task RequestDeclined(NotificationOptions model, T settings);
         protected abstract Task RequestApproved(NotificationOptions model, T settings);
         protected abstract Task AvailableRequest(NotificationOptions model, T settings);
+        protected abstract Task PartiallyAvailable(NotificationOptions model, T settings);
         protected abstract Task Send(NotificationMessage model, T settings);
         protected abstract Task Test(NotificationOptions model, T settings);
     }

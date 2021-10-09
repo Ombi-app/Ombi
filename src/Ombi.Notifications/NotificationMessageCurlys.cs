@@ -33,7 +33,7 @@ namespace Ombi.Notifications
             UserNotificationPreferences pref)
         {
             LoadIssues(opts);
-            LoadCommon(req, s, pref);
+            LoadCommon(req, s, pref, opts);
             LoadTitle(opts, req);
             ProviderId = req?.TheMovieDbId.ToString() ?? string.Empty;
             Year = req?.ReleaseDate.Year.ToString();
@@ -47,7 +47,7 @@ namespace Ombi.Notifications
             UserNotificationPreferences pref)
         {
             LoadIssues(opts);
-            LoadCommon(req, s, pref);
+            LoadCommon(req, s, pref, opts);
             LoadTitle(opts, req);
             ProviderId = req?.ParentRequest?.ExternalProviderId.ToString() ?? string.Empty;
             Year = req?.ParentRequest?.ReleaseDate.Year.ToString();
@@ -83,7 +83,7 @@ namespace Ombi.Notifications
             UserNotificationPreferences pref)
         {
             LoadIssues(opts);
-            LoadCommon(req, s, pref);
+            LoadCommon(req, s, pref, opts);
             LoadTitle(opts, req);
             ProviderId = req?.ForeignArtistId ?? string.Empty;
             Year = req?.ReleaseDate.Year.ToString();
@@ -106,7 +106,7 @@ namespace Ombi.Notifications
                 : string.Empty;
         }
 
-        private void LoadCommon(BaseRequest req, CustomizationSettings s, UserNotificationPreferences pref)
+        private void LoadCommon(BaseRequest req, CustomizationSettings s, UserNotificationPreferences pref, NotificationOptions opts)
         {
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s.ApplicationName;
             ApplicationUrl = s?.ApplicationUrl.HasValue() ?? false ? s.ApplicationUrl : string.Empty;
@@ -136,6 +136,18 @@ namespace Ombi.Notifications
             if (pref != null)
             {
                 UserPreference = pref.Value.HasValue() ? pref.Value : Alias;
+            }
+
+            if (opts.NotificationType == NotificationType.PartiallyAvailable)
+            {
+                if (opts.Substitutes.TryGetValue("Season", out var sNumber))
+                {
+                    PartiallyAvailableSeasonNumber = sNumber;
+                }
+                if (opts.Substitutes.TryGetValue("Episodes", out var epNumber))
+                {
+                    PartiallyAvailableEpisodeNumbers = epNumber;
+                }
             }
         }
 
@@ -220,6 +232,8 @@ namespace Ombi.Notifications
         public string AvailableDate { get; set; }
         public string RequestStatus { get; set; }
         public string ProviderId { get; set; }
+        public string PartiallyAvailableEpisodeNumbers { get; set; }
+        public string PartiallyAvailableSeasonNumber { get; set; }
 
         // System Defined
         private string LongDate => DateTime.Now.ToString("D");
@@ -259,6 +273,8 @@ namespace Ombi.Notifications
             { nameof(AvailableDate), AvailableDate },
             { nameof(RequestStatus), RequestStatus },
             { nameof(ProviderId), ProviderId },
+            { nameof(PartiallyAvailableEpisodeNumbers), PartiallyAvailableEpisodeNumbers },
+            { nameof(PartiallyAvailableSeasonNumber), PartiallyAvailableSeasonNumber },
         };
     }
 }

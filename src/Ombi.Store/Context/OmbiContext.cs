@@ -208,6 +208,16 @@ namespace Ombi.Store.Context
                                 Enabled = true,
                             };
                             break;
+                        case NotificationType.PartiallyAvailable:
+                            notificationToAdd = new NotificationTemplates
+                            {
+                                NotificationType = notificationType,
+                                Message = "Your TV request is now partially available! Season {PartiallyAvailableSeasonNumber} Episodes {PartiallyAvailableEpisodeNumbers}!",
+                                Subject = "{ApplicationName}: Partially Available Request!",
+                                Agent = agent,
+                                Enabled = true,
+                            };
+                            break;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }

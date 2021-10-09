@@ -55,23 +55,20 @@ jobs:
 
   versioning:
      runs-on: ubuntu-latest
+     needs: [ build-ui, unit-test ]
      outputs:
       changelog: ${{ steps.changelog.outputs.clean_changelog }}
       tag: ${{ steps.changelog.outputs.tag }}
       version: ${{ steps.changelog.outputs.version }}
      steps:
        - uses: actions/checkout@v2
-       # This is only to get the next version number so we can set the version before compile
        - name: Conventional Changelog Action
          id: changelog
          uses: TriPSs/conventional-changelog-action@v3
          with:
-           skip-version-file: 'true'
-           skip-commit: 'true'
-           version-file: 'version.json'
-           output-file: 'false'
-           skip-on-empty: 'false'
-           git-push: 'false'
+          version-file: 'version.json'
+          skip-on-empty: 'false'
+          git-message: 'chore(release): :rocket: {version}'
 
        - name: Output version
          run: |
@@ -162,14 +159,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Conventional Changelog Action
-        id: changelog
-        uses: TriPSs/conventional-changelog-action@v3
-        with:
-          version-file: 'version.json'
-          skip-on-empty: 'false'
-          git-message: 'chore(release): :rocket: {version}'
-      
+
       - name: Download Artifacts
         id: download
         uses: actions/download-artifact@v2
@@ -192,9 +182,9 @@ jobs:
         if: contains(github.ref, 'develop')
         with:
           prerelease: true
-          body: ${{ steps.changelog.outputs.changelog }}
-          name: ${{ steps.changelog.outputs.tag }}
-          tag_name: ${{ steps.changelog.outputs.tag }}
+          body: ${{ needs.versioning.outputs.changelog }}
+          name: ${{ needs.versioning.outputs.tag }}
+          tag_name: ${{ needs.versioning.outputs.tag }}
           files: |
             artifacts/**/*.tar.gz
             artifacts/**/*.zip
@@ -209,7 +199,7 @@ jobs:
         url: 'https://api.github.com/repos/Ombi-app/Ombi.Apt/actions/workflows/build-deb.yml/dispatches'
         method: 'POST'
         contentType: 'application/json'
-        data: '{ "ref":"main", "inputs": { "version": "${{ steps.changelog.outputs.tag }}"} }'
+        data: '{ "ref":"main", "inputs": { "version": "${{ needs.versioning.outputs.tag }}"} }'
         customHeaders: "{'Accept':'application/vnd.github.v3+json', 'Authorization':'Bearer ${{secrets.APT_PAT}}', 'User-Agent':'Ombi'}"
 
 

@@ -112,5 +112,10 @@ namespace Ombi.Notifications.Agents
 
             await Send(notification, settings);
         }
+
+        protected override async Task PartiallyAvailable(NotificationOptions model, GotifySettings settings)
+        {
+            await Run(model, settings, NotificationType.PartiallyAvailable);
+        }
     }
 }
