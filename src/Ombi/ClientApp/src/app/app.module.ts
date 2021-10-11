@@ -19,7 +19,6 @@ import { CookieService } from "ng2-cookies";
 import { CustomPageComponent } from "./custompage/custompage.component";
 import { DataViewModule } from "primeng/dataview";
 import { DialogModule } from "primeng/dialog";
-import { FilterService } from "./discover/services/filter-service";
 import { JwtModule } from "@auth0/angular-jwt";
 import { LandingPageComponent } from "./landingpage/landingpage.component";
 import { LandingPageService } from "./services";
@@ -222,7 +221,6 @@ export function JwtTokenGetter() {
         MessageService,
         StorageService,
         RequestService,
-        FilterService,
         SignalRNotificationService,
         {
             provide: APP_BASE_HREF,

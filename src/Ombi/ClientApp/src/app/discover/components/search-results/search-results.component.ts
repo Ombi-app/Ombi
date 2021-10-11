@@ -55,18 +55,17 @@ export class DiscoverSearchResultsComponent implements OnInit {
 
     public async ngOnInit() {
         this.isAdmin = this.authService.isAdmin();
-
-        if (this.advancedDataService) {
-            return;
-        }
-        this.loadingFlag = true;
-
         this.filterService.onFilterChange.subscribe(async x => {
             if (!isEqual(this.filter, x)) {
                 this.filter = { ...x };
                 await this.search();
             }
         });
+
+        if (this.advancedDataService) {
+            return;
+        }
+        this.loadingFlag = true;
     }
 
     public async init() {
