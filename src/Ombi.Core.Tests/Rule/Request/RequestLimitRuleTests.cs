@@ -32,7 +32,7 @@ namespace Ombi.Core.Tests.Rule.Request
         public async Task MovieRule_No_Limit()
         {
             var limitService = _mocker.GetMock<IRequestLimitService>();
-            limitService.Setup(x => x.GetRemainingMovieRequests(It.IsAny<OmbiUser>())).ReturnsAsync(new Models.RequestQuotaCountModel
+            limitService.Setup(x => x.GetRemainingMovieRequests(It.IsAny<OmbiUser>(), It.IsAny<DateTime>())).ReturnsAsync(new Models.RequestQuotaCountModel
             {
                 HasLimit = false
             });
@@ -49,7 +49,7 @@ namespace Ombi.Core.Tests.Rule.Request
         public async Task MovieRule_Limit_NotReached()
         {
             var limitService = _mocker.GetMock<IRequestLimitService>();
-            limitService.Setup(x => x.GetRemainingMovieRequests(It.IsAny<OmbiUser>())).ReturnsAsync(new Models.RequestQuotaCountModel
+            limitService.Setup(x => x.GetRemainingMovieRequests(It.IsAny<OmbiUser>(), It.IsAny<DateTime>())).ReturnsAsync(new Models.RequestQuotaCountModel
             {
                 HasLimit = true,
                 Limit = 2,
@@ -69,7 +69,7 @@ namespace Ombi.Core.Tests.Rule.Request
         public async Task MovieRule_Limit_Reached()
         {
             var limitService = _mocker.GetMock<IRequestLimitService>();
-            limitService.Setup(x => x.GetRemainingMovieRequests(It.IsAny<OmbiUser>())).ReturnsAsync(new Models.RequestQuotaCountModel
+            limitService.Setup(x => x.GetRemainingMovieRequests(It.IsAny<OmbiUser>(), It.IsAny<DateTime>())).ReturnsAsync(new Models.RequestQuotaCountModel
             {
                 HasLimit = true,
                 Limit = 1,
@@ -87,7 +87,7 @@ namespace Ombi.Core.Tests.Rule.Request
         public async Task MusicRule_No_Limit()
         {
             var limitService = _mocker.GetMock<IRequestLimitService>();
-            limitService.Setup(x => x.GetRemainingMusicRequests(It.IsAny<OmbiUser>())).ReturnsAsync(new Models.RequestQuotaCountModel
+            limitService.Setup(x => x.GetRemainingMusicRequests(It.IsAny<OmbiUser>(), It.IsAny<DateTime>())).ReturnsAsync(new Models.RequestQuotaCountModel
             {
                 HasLimit = false
             });
@@ -104,7 +104,7 @@ namespace Ombi.Core.Tests.Rule.Request
         public async Task MusicRule_Limit_NotReached()
         {
             var limitService = _mocker.GetMock<IRequestLimitService>();
-            limitService.Setup(x => x.GetRemainingMusicRequests(It.IsAny<OmbiUser>())).ReturnsAsync(new Models.RequestQuotaCountModel
+            limitService.Setup(x => x.GetRemainingMusicRequests(It.IsAny<OmbiUser>(), It.IsAny<DateTime>())).ReturnsAsync(new Models.RequestQuotaCountModel
             {
                 HasLimit = true,
                 Limit = 2,
@@ -124,7 +124,7 @@ namespace Ombi.Core.Tests.Rule.Request
         public async Task MusicRule_Limit_Reached()
         {
             var limitService = _mocker.GetMock<IRequestLimitService>();
-            limitService.Setup(x => x.GetRemainingMusicRequests(It.IsAny<OmbiUser>())).ReturnsAsync(new Models.RequestQuotaCountModel
+            limitService.Setup(x => x.GetRemainingMusicRequests(It.IsAny<OmbiUser>(), It.IsAny<DateTime>())).ReturnsAsync(new Models.RequestQuotaCountModel
             {
                 HasLimit = true,
                 Limit = 1,
@@ -143,7 +143,7 @@ namespace Ombi.Core.Tests.Rule.Request
         public async Task TvRule_No_Limit()
         {
             var limitService = _mocker.GetMock<IRequestLimitService>();
-            limitService.Setup(x => x.GetRemainingTvRequests(It.IsAny<OmbiUser>())).ReturnsAsync(new Models.RequestQuotaCountModel
+            limitService.Setup(x => x.GetRemainingTvRequests(It.IsAny<OmbiUser>(), It.IsAny<DateTime>())).ReturnsAsync(new Models.RequestQuotaCountModel
             {
                 HasLimit = false
             });
@@ -160,7 +160,7 @@ namespace Ombi.Core.Tests.Rule.Request
         public async Task TvRule_Limit_NotReached()
         {
             var limitService = _mocker.GetMock<IRequestLimitService>();
-            limitService.Setup(x => x.GetRemainingTvRequests(It.IsAny<OmbiUser>())).ReturnsAsync(new Models.RequestQuotaCountModel
+            limitService.Setup(x => x.GetRemainingTvRequests(It.IsAny<OmbiUser>(), It.IsAny<DateTime>())).ReturnsAsync(new Models.RequestQuotaCountModel
             {
                 HasLimit = true,
                 Limit = 2,
@@ -190,7 +190,7 @@ namespace Ombi.Core.Tests.Rule.Request
         public async Task TvRule_Limit_Reached()
         {
             var limitService = _mocker.GetMock<IRequestLimitService>();
-            limitService.Setup(x => x.GetRemainingTvRequests(It.IsAny<OmbiUser>())).ReturnsAsync(new Models.RequestQuotaCountModel
+            limitService.Setup(x => x.GetRemainingTvRequests(It.IsAny<OmbiUser>(), It.IsAny<DateTime>())).ReturnsAsync(new Models.RequestQuotaCountModel
             {
                 HasLimit = true,
                 Limit = 1,
@@ -219,7 +219,7 @@ namespace Ombi.Core.Tests.Rule.Request
         public async Task TvRule_Limit_Reached_ManyEpisodes()
         {
             var limitService = _mocker.GetMock<IRequestLimitService>();
-            limitService.Setup(x => x.GetRemainingTvRequests(It.IsAny<OmbiUser>())).ReturnsAsync(new Models.RequestQuotaCountModel
+            limitService.Setup(x => x.GetRemainingTvRequests(It.IsAny<OmbiUser>(), It.IsAny<DateTime>())).ReturnsAsync(new Models.RequestQuotaCountModel
             {
                 HasLimit = true,
                 Limit = 1,

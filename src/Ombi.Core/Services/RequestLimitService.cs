@@ -14,9 +14,9 @@ namespace Ombi.Core.Services
 {
     public interface IRequestLimitService
     {
-        Task<RequestQuotaCountModel> GetRemainingMovieRequests(OmbiUser user = default);
-        Task<RequestQuotaCountModel> GetRemainingTvRequests(OmbiUser user = default);
-        Task<RequestQuotaCountModel> GetRemainingMusicRequests(OmbiUser user = default);
+        Task<RequestQuotaCountModel> GetRemainingMovieRequests(OmbiUser user = default, DateTime now = default);
+        Task<RequestQuotaCountModel> GetRemainingTvRequests(OmbiUser user = default, DateTime now = default);
+        Task<RequestQuotaCountModel> GetRemainingMusicRequests(OmbiUser user = default, DateTime now = default);
     }
     public class RequestLimitService : IRequestLimitService
     {
@@ -31,8 +31,12 @@ namespace Ombi.Core.Services
             _requestLog = rl;
         }
 
-        public async Task<RequestQuotaCountModel> GetRemainingMovieRequests(OmbiUser user)
+        public async Task<RequestQuotaCountModel> GetRemainingMovieRequests(OmbiUser user, DateTime now = default)
         {
+            if (now == default)
+            {
+                now = DateTime.UtcNow;
+            }
             if (user == null)
             {
                 user = await GetUser();
@@ -78,11 +82,15 @@ namespace Ombi.Core.Services
             }
 
 
-            return await CalculateBasicRemaingRequests(user, limit, user.MovieRequestLimitType ?? RequestLimitType.Day, log);
+            return await CalculateBasicRemaingRequests(user, limit, user.MovieRequestLimitType ?? RequestLimitType.Day, log, now);
         }
 
-        public async Task<RequestQuotaCountModel> GetRemainingMusicRequests(OmbiUser user)
+        public async Task<RequestQuotaCountModel> GetRemainingMusicRequests(OmbiUser user, DateTime now = default)
         {
+            if (now == default)
+            {
+                now = DateTime.UtcNow;
+            }
             if (user == null)
             {
                 user = await GetUser();
@@ -128,7 +136,7 @@ namespace Ombi.Core.Services
                 };
             }
 
-            return await CalculateBasicRemaingRequests(user, limit, user.MusicRequestLimitType ?? RequestLimitType.Day, log);
+            return await CalculateBasicRemaingRequests(user, limit, user.MusicRequestLimitType ?? RequestLimitType.Day, log, now);
         }
 
         private async Task<OmbiUser> GetUser()
@@ -137,7 +145,7 @@ namespace Ombi.Core.Services
             return await _userManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
         }
 
-        private static async Task<RequestQuotaCountModel> CalculateBasicRemaingRequests(OmbiUser user, int limit, RequestLimitType type, IQueryable<RequestLog> log)
+        private static async Task<RequestQuotaCountModel> CalculateBasicRemaingRequests(OmbiUser user, int limit, RequestLimitType type, IQueryable<RequestLog> log, DateTime now)
         {
             int count = 0;
             DateTime oldestRequestedAt = DateTime.Now;
@@ -145,15 +153,15 @@ namespace Ombi.Core.Services
             switch (type)
             {
                 case RequestLimitType.Day:
-                    count = limit - await log.CountAsync(x => x.RequestDate >= DateTime.UtcNow.Date);
-                    oldestRequestedAt = await log.Where(x => x.RequestDate >= DateTime.UtcNow.Date)
+                    count = limit - await log.CountAsync(x => x.RequestDate >= now.Date);
+                    oldestRequestedAt = await log.Where(x => x.RequestDate >= now.Date)
                                             .OrderBy(x => x.RequestDate)
                                             .Select(x => x.RequestDate)
                                             .FirstOrDefaultAsync();
                     nextRequest = oldestRequestedAt.AddDays(1).Date;
                     break;
                 case RequestLimitType.Week:
-                    var fdow = DateTime.UtcNow.FirstDateInWeek().Date;
+                    var fdow = now.FirstDateInWeek().Date;
                     count = limit - await log.CountAsync(x => x.RequestDate >= fdow);
                     oldestRequestedAt = await log.Where(x => x.RequestDate >= fdow)
                                             .OrderBy(x => x.RequestDate)
@@ -162,7 +170,6 @@ namespace Ombi.Core.Services
                     nextRequest = fdow.AddDays(7).Date;
                     break;
                 case RequestLimitType.Month:
-                    var now = DateTime.UtcNow;
                     var firstDayOfMonth = new DateTime(now.Year, now.Month, 1);
                     count = limit - await log.CountAsync(x => x.RequestDate >= firstDayOfMonth);
                     oldestRequestedAt = await log.Where(x => x.RequestDate >= firstDayOfMonth)
@@ -182,8 +189,12 @@ namespace Ombi.Core.Services
             };
         }
 
-        public async Task<RequestQuotaCountModel> GetRemainingTvRequests(OmbiUser user)
+        public async Task<RequestQuotaCountModel> GetRemainingTvRequests(OmbiUser user, DateTime now = default)
         {
+            if (now == default)
+            {
+                now = DateTime.UtcNow;
+            }
             if (user == null)
             {
                 user = await GetUser();
@@ -230,7 +241,7 @@ namespace Ombi.Core.Services
                 count = limit - (zeroEpisodeCount + episodeCount);
 
                 oldestRequestedAt = await log
-                                                .Where(x => x.RequestDate >= DateTime.UtcNow.AddDays(-7))
+                                                .Where(x => x.RequestDate >= now.AddDays(-7))
                                                 .OrderBy(x => x.RequestDate)
                                                 .Select(x => x.RequestDate)
                                                 .FirstOrDefaultAsync();
@@ -244,7 +255,6 @@ namespace Ombi.Core.Services
                 };
             }
 
-            var now = DateTime.UtcNow;
             switch (user.EpisodeRequestLimitType)
             {
                 case RequestLimitType.Day:
@@ -255,7 +265,7 @@ namespace Ombi.Core.Services
                     episodeCount = await filteredLog.Where(x => x.EpisodeCount != 0).Select(x => x.EpisodeCount).SumAsync();
                     count = limit - (zeroEpisodeCount + episodeCount);
 
-                    oldestRequestedAt = await log.Where(x => x.RequestDate >= DateTime.UtcNow.Date)
+                    oldestRequestedAt = await log.Where(x => x.RequestDate >= now.Date)
                                             .OrderBy(x => x.RequestDate)
                                             .Select(x => x.RequestDate)
                                             .FirstOrDefaultAsync();
@@ -263,13 +273,13 @@ namespace Ombi.Core.Services
                     break;
                 case RequestLimitType.Week:
                     var fdow = now.FirstDateInWeek().Date;
-                    filteredLog = log.Where(x => x.RequestDate >= DateTime.UtcNow.Date.AddDays(-7));
+                    filteredLog = log.Where(x => x.RequestDate >= now.Date.AddDays(-7));
                     // Needed, due to a bug which would cause all episode counts to be 0
                     zeroEpisodeCount = await filteredLog.Where(x => x.EpisodeCount == 0).Select(x => x.EpisodeCount).CountAsync();
                     episodeCount = await filteredLog.Where(x => x.EpisodeCount != 0).Select(x => x.EpisodeCount).SumAsync();
                     count = limit - (zeroEpisodeCount + episodeCount);
 
-                    oldestRequestedAt = await log.Where(x => x.RequestDate >= DateTime.UtcNow.Date.AddDays(-7))
+                    oldestRequestedAt = await log.Where(x => x.RequestDate >= now.Date.AddDays(-7))
                                             .OrderBy(x => x.RequestDate)
                                             .Select(x => x.RequestDate)
                                             .FirstOrDefaultAsync();
@@ -277,13 +287,13 @@ namespace Ombi.Core.Services
                     break;
                 case RequestLimitType.Month:
                     var firstDayOfMonth = new DateTime(now.Year, now.Month, 1);
-                    filteredLog = log.Where(x => x.RequestDate >= DateTime.UtcNow.Date.AddMonths(-1));
+                    filteredLog = log.Where(x => x.RequestDate >= now.Date.AddMonths(-1));
                     // Needed, due to a bug which would cause all episode counts to be 0
                     zeroEpisodeCount = await filteredLog.Where(x => x.EpisodeCount == 0).Select(x => x.EpisodeCount).CountAsync();
                     episodeCount = await filteredLog.Where(x => x.EpisodeCount != 0).Select(x => x.EpisodeCount).SumAsync();
                     count = limit - (zeroEpisodeCount + episodeCount);
 
-                    oldestRequestedAt = await log.Where(x => x.RequestDate >= DateTime.UtcNow.Date.AddMonths(-1))
+                    oldestRequestedAt = await log.Where(x => x.RequestDate >= now.Date.AddMonths(-1))
                                             .OrderBy(x => x.RequestDate)
                                             .Select(x => x.RequestDate)
                                             .FirstOrDefaultAsync();

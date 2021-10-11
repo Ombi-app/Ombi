@@ -370,7 +370,7 @@ namespace Ombi.Core.Tests.Engine
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingMusicRequests(user);
+            var result = await _subject.GetRemainingMusicRequests(user, today);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
