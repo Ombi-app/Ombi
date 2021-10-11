@@ -200,6 +200,6 @@ jobs:
         method: 'POST'
         contentType: 'application/json'
         data: '{ "ref":"main", "inputs": { "version": "${{ needs.versioning.outputs.tag }}"} }'
-        customHeaders: "{'Accept':'application/vnd.github.v3+json', 'Authorization':'Bearer ${{secrets.APT_PAT}}', 'User-Agent':'Ombi'}"
+        customHeaders: '{"Accept":"application/vnd.github.v3+json", "Authorization":"Bearer ${{secrets.APT_PAT}}", "User-Agent":"Ombi"}'
 
 
