@@ -94,6 +94,10 @@ namespace Ombi.Notifications.Agents
         {
             await Run(model, settings, NotificationType.RequestAvailable);
         }
+        protected override async Task PartiallyAvailable(NotificationOptions model, DiscordNotificationSettings settings)
+        {
+            await Run(model, settings, NotificationType.PartiallyAvailable);
+        }
 
         protected override async Task Send(NotificationMessage model, DiscordNotificationSettings settings)
         {
@@ -165,8 +169,6 @@ namespace Ombi.Notifications.Agents
                 {
                     author.name = appName;
                 }
-
-                
 
                 var embed = new DiscordEmbeds
                 {
