@@ -1,5 +1,5 @@
-import { discoverPage as Page } from "@/integration/page-objects";
 import { DiscoverType } from "@/integration/page-objects/shared/DiscoverCard";
+import { discoverPage as Page } from "@/integration/page-objects";
 
 describe("Discover Cards Requests Tests", () => {
   beforeEach(() => {
@@ -288,8 +288,14 @@ describe("Discover Cards Requests Tests", () => {
       var expectedId = body[3].id;
       var title = body[3].title;
 
+      cy.wait(3000);
+
       const card = Page.popularCarousel.getCard(expectedId, false, DiscoverType.Popular);
       card.title.realHover();
+
+      cy.waitUntil(() => {
+        return card.requestButton.should("be.visible");
+      });
 
       card.verifyTitle(title);
       card.requestButton.should("be.visible");
@@ -335,8 +341,14 @@ describe("Discover Cards Requests Tests", () => {
           var expectedId = body[5].id;
           var title = body[5].title;
 
+          cy.wait(3000);
+
           const card = Page.popularCarousel.getCard(expectedId, false, DiscoverType.Popular);
           card.title.realHover();
+
+          cy.waitUntil(() => {
+            return card.requestButton.should("be.visible");
+          });
 
           card.verifyTitle(title);
           card.requestButton.should("be.visible");
