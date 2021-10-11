@@ -1,3 +1,12 @@
+## [4.2.2](https://github.com/Ombi-app/Ombi/compare/v4.2.1...v4.2.2) (2021-10-11)
+
+
+### Bug Fixes
+
+* **search:** :bug: Fixed an issue where changing the filter wouldn't refresh the search results ([10f5e05](https://github.com/Ombi-app/Ombi/commit/10f5e056c8257f8b8fe954bfbc70d3c3daa7a8e3))
+
+
+
 ## [4.2.1](https://github.com/Ombi-app/Ombi/compare/v4.2.0...v4.2.1) (2021-10-11)
 
 
@@ -32,15 +41,6 @@
 
 
 ## [4.0.1511](https://github.com/Ombi-app/Ombi/compare/v4.1.0...v4.0.1511) (2021-10-07)
-
-
-
-# [4.1.0](https://github.com/Ombi-app/Ombi/compare/v4.0.1510...v4.1.0) (2021-10-07)
-
-
-### Features
-
-* :sparkles: Added the ability to specify which branch you are on ([61f3e94](https://github.com/Ombi-app/Ombi/commit/61f3e94308fb3d239140b73d34c12f1496459989))
 
 
 
