@@ -235,7 +235,7 @@ namespace Ombi.Api.Plex
 
         public async Task<Uri> GetOAuthUrl(string code, string applicationUrl)
         {
-            var request = new Request("auth#", "https://app.plex.tv", HttpMethod.Get);
+            var request = new Request("auth/#", "https://app.plex.tv", HttpMethod.Get);
             await AddHeaders(request);
             
             request.AddQueryString("code", code);
