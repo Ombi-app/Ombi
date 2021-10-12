@@ -69,7 +69,7 @@ export class UserManagementUserComponent implements OnInit {
         this.radarrService.getRootFoldersFromSettings().subscribe(x => this.radarrRootFolders = x);
 
         this.settingsService.getCustomization().subscribe(x => this.customization = x);
-        this.identityService.getAccessToken().subscribe(x => this.accessToken = x);
+        this.identityService.getUserAccessToken(this.userId).subscribe(x => this.accessToken = x);
 
         if(!this.edit) {
             this.user = {

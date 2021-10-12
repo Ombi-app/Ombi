@@ -15,6 +15,7 @@
         "discover",
         "request-limits",
         "notifications",
-        "settings"
+        "settings",
+        "user-management"
     ]
 }

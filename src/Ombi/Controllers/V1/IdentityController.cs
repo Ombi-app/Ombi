@@ -947,6 +947,30 @@ namespace Ombi.Controllers.V1
             return user.UserAccessToken;
         }
 
+        [HttpGet("accesstoken/{userId}")]
+        [PowerUser]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<string> GetUserAccessToken(string userId)
+        {
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            if (user == null)
+            {
+                return Guid.Empty.ToString("N");
+            }
+            if (user.UserAccessToken.IsNullOrEmpty())
+            {
+                // Let's create an access token for this user
+                user.UserAccessToken = Guid.NewGuid().ToString("N");
+                var result = await UserManager.UpdateAsync(user);
+                if (!result.Succeeded)
+                {
+                    LogErrors(result);
+                    return Guid.Empty.ToString("N");
+                }
+            }
+            return user.UserAccessToken;
+        }
+
         [HttpGet("notificationpreferences")]
         public async Task<List<UserNotificationPreferences>> GetUserPreferences()
         {
