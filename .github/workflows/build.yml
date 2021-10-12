@@ -190,7 +190,7 @@ jobs:
             artifacts/**/*.zip
 
   update-apt:
-    needs: [ release ]
+    needs: [ release, versioning ]
     runs-on: ubuntu-latest
     steps:
     - name: Trigger APT Build
