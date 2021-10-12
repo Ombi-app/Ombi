@@ -1,3 +1,12 @@
+## [4.2.3](https://github.com/Ombi-app/Ombi/compare/v4.2.2...v4.2.3) (2021-10-12)
+
+
+### Bug Fixes
+
+* **user-management:** :bug: Fixed an issue where the Copy users App Link did not generate the correct app link for that user ([8cafcdc](https://github.com/Ombi-app/Ombi/commit/8cafcdcc3baa85c55d75e43835b2289bbea69b0e))
+
+
+
 ## [4.2.2](https://github.com/Ombi-app/Ombi/compare/v4.2.1...v4.2.2) (2021-10-11)
 
 
@@ -37,10 +46,6 @@
 ### Bug Fixes
 
 * **4153:** :bug: fixed gravitar issues ([ec963d8](https://github.com/Ombi-app/Ombi/commit/ec963d869a2bf57edfcfef418e2bf8a1d679d8ca))
-
-
-
-## [4.0.1511](https://github.com/Ombi-app/Ombi/compare/v4.1.0...v4.0.1511) (2021-10-07)
 
 
 
