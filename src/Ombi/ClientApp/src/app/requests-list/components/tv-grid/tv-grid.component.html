@@ -50,12 +50,7 @@
 
         <ng-container matColumnDef="requestStatus">
             <th mat-header-cell *matHeaderCellDef> {{'Requests.RequestStatus' | translate}} </th>
-            <td mat-cell id="requestedStatus{{element.id}}"  *matCellDef="let element">
-                <div *ngIf="element.approved && !element.available">{{'Common.ProcessingRequest' | translate}}</div>
-                <div *ngIf="!element.approved && !element.available">{{'Common.PendingApproval' |translate}}</div>
-                <div *ngIf="element.available">{{'Common.Available' | translate}}</div>
-
-            </td>
+            <td mat-cell id="requestedStatus{{element.id}}"  *matCellDef="let element"> {{element.requestStatus | translate}} </td>
         </ng-container>
 
         <ng-container matColumnDef="status">

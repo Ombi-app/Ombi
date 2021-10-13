@@ -42,3 +42,8 @@
     display: inline-block;
     background-color: #ffd740;
   }
+
+  .top-right.denied span:before{
+    display: inline-block;
+    background-color: #ff4040;
+  }

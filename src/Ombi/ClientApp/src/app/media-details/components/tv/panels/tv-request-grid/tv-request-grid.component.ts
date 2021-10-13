@@ -191,6 +191,13 @@ export class TvRequestGridComponent {
             return "available";
         }
 
+        const allDenied = season.episodes.every((ep) => {
+            return ep.denied;
+        });
+        if (allDenied) {
+            return "denied";
+        }
+
         const seasonPending = season.episodes.some((ep) => {
             return ep.requested && !ep.approved
           });
@@ -210,6 +217,10 @@ export class TvRequestGridComponent {
     public getEpisodeStatusClass(ep: IEpisodesRequests): string {
         if (ep.available) {
             return "available";
+        }
+
+        if (ep.denied) {
+            return "denied";
         }
 
         if (ep.requested && !ep.approved) {
