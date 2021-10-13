@@ -1,3 +1,13 @@
+## [4.2.4](https://github.com/Ombi-app/Ombi/compare/v4.2.3...v4.2.4) (2021-10-13)
+
+
+### Bug Fixes
+
+* **#4344:** :bug: Fixed an issue where we errored on Plex Episode Scan ([cd5532f](https://github.com/Ombi-app/Ombi/commit/cd5532fa8f7ebbfaf942841398672bafb9a405d4))
+* **#4345:** :bug: Fixed the issue where denied requests we not appearing correctly ([5a2f652](https://github.com/Ombi-app/Ombi/commit/5a2f652a28f5699dd667afef8dde129817e53392))
+
+
+
 ## [4.2.3](https://github.com/Ombi-app/Ombi/compare/v4.2.2...v4.2.3) (2021-10-12)
 
 
@@ -37,15 +47,6 @@
 
 * :sparkles: Added the ability to specify which branch you are on ([777ed2f](https://github.com/Ombi-app/Ombi/commit/777ed2f3224b91a0acb47c30efa96adaaba46fd2))
 * **notifications:** :sparkles: Added Partially Available Notifications ([1ef45dc](https://github.com/Ombi-app/Ombi/commit/1ef45dc44c93d566a0f04c011bfcefe2009a24b5))
-
-
-
-## [4.1.1](https://github.com/Ombi-app/Ombi/compare/v4.0.1511...v4.1.1) (2021-10-08)
-
-
-### Bug Fixes
-
-* **4153:** :bug: fixed gravitar issues ([ec963d8](https://github.com/Ombi-app/Ombi/commit/ec963d869a2bf57edfcfef418e2bf8a1d679d8ca))
 
 
 
