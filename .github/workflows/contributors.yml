@@ -11,18 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
-    - uses: lowlighter/metrics@latest
+    - name: Contribute List
+      uses: akhilmhdh/contributors-readme-action@v2.2.1
       with:
-        token: ${{ secrets.PERSONAL_PAT }}
-        filename: metrics.plugin.contributors.categories.svg
-        template: repository
-        repo: Ombi
-        base: ""
-        plugin_contributors: yes
-        plugin_contributors_sections: categories
-        plugin_contributors_categories: |
-          {
-            "📚 Documentation": ["README.md", "docs/**"],
-            "💻 Code": ["src/**"]
-          }
+        commit_message: "chore: :busts_in_silhouette: Updated Contributors [skip ci]"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
