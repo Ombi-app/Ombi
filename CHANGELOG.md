@@ -1,3 +1,12 @@
+## [4.2.6](https://github.com/Ombi-app/Ombi/compare/v4.2.5...v4.2.6) (2021-10-14)
+
+
+### Performance Improvements
+
+* :zap: Use ngxs store for the whole customization section of the app ([97b493d](https://github.com/Ombi-app/Ombi/commit/97b493d869feee59d360b484a6c59388a2aead1f))
+
+
+
 ## [4.2.5](https://github.com/Ombi-app/Ombi/compare/v4.2.4...v4.2.5) (2021-10-14)
 
 
@@ -27,15 +36,6 @@
 ### Bug Fixes
 
 * **search:** :bug: Fixed an issue where changing the filter wouldn't refresh the search results ([10f5e05](https://github.com/Ombi-app/Ombi/commit/10f5e056c8257f8b8fe954bfbc70d3c3daa7a8e3))
-
-
-
-## [4.2.1](https://github.com/Ombi-app/Ombi/compare/v4.2.0...v4.2.1) (2021-10-11)
-
-
-### Bug Fixes
-
-* **oauth:** :bug: Fixed an issue where on occasions the Plex OAuth wouldn't work ([ce1ed01](https://github.com/Ombi-app/Ombi/commit/ce1ed01a5f1a6e99d37a3cf32e53cf5de4f5943b))
 
 
 
