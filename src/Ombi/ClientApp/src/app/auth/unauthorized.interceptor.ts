@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Observable, Subject, throwError } from 'rxjs';
 import { catchError, throttleTime } from 'rxjs/operators';
+
 import { AuthService } from './auth.service';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Injectable()
@@ -20,7 +21,7 @@ export class UnauthorizedInterceptor implements HttpInterceptor {
         return next.handle(request).pipe(
             catchError((response: HttpErrorResponse) => {
                 if (response.status === 401) {
-                    this.throttleLogout.next();
+                    this.throttleLogout.next(request.url);
                 }
                 return throwError(response);
             }

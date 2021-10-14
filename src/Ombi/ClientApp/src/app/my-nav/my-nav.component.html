@@ -57,7 +57,7 @@
         </div>
     </mat-sidenav>
 
-    <mat-sidenav-content class="content-container">
+    <mat-sidenav-content autosize class="content-container">
         <mat-toolbar color="primary" class="top-bar-container">
             <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
                 *ngIf="isHandset$ | async">
