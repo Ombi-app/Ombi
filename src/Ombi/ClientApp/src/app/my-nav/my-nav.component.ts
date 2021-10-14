@@ -1,9 +1,10 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { IUser, RequestType, UserType } from '../interfaces';
+import { ICustomizationSettings, IUser, RequestType, UserType } from '../interfaces';
 import { SettingsService, SettingsStateService } from '../services';
 
 import { AdvancedSearchDialogComponent } from '../shared/advanced-search-dialog/advanced-search-dialog.component';
+import { CustomizationFacade } from '../state/customization';
 import { FilterService } from '../discover/services/filter-service';
 import { ILocalUser } from '../auth/IUserLogin';
 import { INavBar } from '../interfaces/ICommon';
@@ -53,8 +54,11 @@ export class MyNavComponent implements OnInit {
   public welcomeText: string;
   public RequestType = RequestType;
 
+  private customizationSettings: ICustomizationSettings;
+
   constructor(private breakpointObserver: BreakpointObserver,
     private settingsService: SettingsService,
+    private customizationFacade: CustomizationFacade,
     private store: StorageService,
     private filterService: FilterService,
     private dialogService: MatDialog,
@@ -74,8 +78,10 @@ export class MyNavComponent implements OnInit {
     this.issuesEnabled = await this.settingsService.issueEnabled().toPromise();
     this.settingState.setIssue(this.issuesEnabled);
 
-    const customizationSettings = await this.settingsService.getCustomization().toPromise();
-    console.log("issues enabled: " + this.issuesEnabled);
+    this.customizationFacade.settings$().subscribe(settings => {
+      this.customizationSettings = settings;
+    });
+
     this.theme = this.store.get("theme");
     if (!this.theme) {
       this.store.save("theme", "dark");
@@ -92,7 +98,7 @@ export class MyNavComponent implements OnInit {
       { id: "nav-userManagement", name: "NavigationBar.UserManagement", icon: "fas fa-users", link: "/usermanagement", requiresAdmin: true, enabled: true },
       //id: "",  { name: "NavigationBar.Calendar", icon: "calendar_today", link: "/calendar", requiresAdmin: false, enabled: true },
       { id: "nav-adminDonate", name: "NavigationBar.Donate", icon: "fas fa-dollar-sign", link: "https://www.paypal.me/PlexRequestsNet", externalLink: true, requiresAdmin: true, enabled: true, toolTip: true, style: "color:red;", toolTipMessage: 'NavigationBar.DonateTooltip' },
-      { id: "nav-userDonate", name: "NavigationBar.Donate", icon: "fas fa-dollar-sign", link: customizationSettings.customDonationUrl, externalLink: true, requiresAdmin: false, enabled: customizationSettings.enableCustomDonations, toolTip: true, toolTipMessage: customizationSettings.customDonationMessage },
+      { id: "nav-userDonate", name: "NavigationBar.Donate", icon: "fas fa-dollar-sign", link: this.customizationSettings.customDonationUrl, externalLink: true, requiresAdmin: false, enabled: this.customizationSettings.enableCustomDonations, toolTip: true, toolTipMessage: this.customizationSettings.customDonationMessage },
       { id: "nav-featureSuggestion", name: "NavigationBar.FeatureSuggestion", icon: "far fa-lightbulb", link: "https://features.ombi.io/", externalLink: true, requiresAdmin: true, enabled: true, toolTip: true, toolTipMessage: 'NavigationBar.FeatureSuggestionTooltip'},
       { id: "nav-settings", name: "NavigationBar.Settings", icon: "fas fa-cogs", link: "/Settings/About", requiresAdmin: true, enabled: true },
       ];
@@ -145,7 +151,7 @@ export class MyNavComponent implements OnInit {
         const emailHash = md5.appendStr(email).end();
         this.userProfileImageUrl = `https://www.gravatar.com/avatar/${emailHash}?d=404`;;
     }
-    else{
+    else {
         this.userProfileImageUrl = this.getFallbackProfileImageUrl();
     }
   }

@@ -13,6 +13,7 @@ import { ICustomizationSettings, ICustomPage } from "./interfaces";
 
 import { SignalRNotificationService } from './services/signlarnotification.service';
 import { DOCUMENT } from '@angular/common';
+import { CustomizationFacade } from './state/customization';
 
 
 @Component({
@@ -42,6 +43,7 @@ export class AppComponent implements OnInit {
         public authService: AuthService,
         private readonly router: Router,
         private readonly settingsService: SettingsService,
+        private customizationFacade: CustomizationFacade,
         public readonly translate: TranslateService,
         private readonly customPageService: CustomPageService,
         public overlayContainer: OverlayContainer,
@@ -84,10 +86,9 @@ export class AppComponent implements OnInit {
 
     public ngOnInit() {
         // window["loading_screen"].finish();
-
-        this.settingsService.getCustomization().subscribe(x => {
+        this.customizationFacade.loadCustomziationSettings();
+        this.customizationFacade.settings$().subscribe(x => {
             this.customizationSettings = x;
-
             if (this.customizationSettings && this.customizationSettings.applicationName) {
                 this.applicationName = this.customizationSettings.applicationName;
                 this.document.getElementsByTagName('title')[0].innerText = this.applicationName;

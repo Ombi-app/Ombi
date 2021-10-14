@@ -31,6 +31,7 @@
     "@ngu/carousel": "^1.4.9-beta-2",
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
+    "@ngxs/store": "^3.7.2",
     "@types/jquery": "^3.3.29",
     "@yellowspot/ng-truncate": "^1.4.0",
     "angular-bootstrap-md": "^7.5.4",
