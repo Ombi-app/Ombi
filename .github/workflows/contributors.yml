@@ -14,6 +14,7 @@ jobs:
     - name: Contribute List
       uses: akhilmhdh/contributors-readme-action@v2.2.1
       with:
-        commit_message: "chore: :busts_in_silhouette: Updated Contributors [skip ci]"
+        commit_message: "chore: :busts_in_silhouette: Updated Contributors [skip ci]" 
+        image_size: 50
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

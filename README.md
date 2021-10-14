@@ -66,16 +66,10 @@ Here are some of the features Ombi has:
 [Installation Guide](https://docs.ombi.app/installation/)  
 [Here for Reverse Proxy Config Examples](https://docs.ombi.app/info/reverse-proxy/)  
 
-# Collaborators
-
-<!-- readme: collaborators -start -->
-<!-- readme: collaborators -end -->
-
 # Contributors
 
-<!-- readme: contributors -start -->
-<!-- readme: contributors -end -->
-
+<!-- readme: collaborators,contributors -start -->
+<!-- readme: collaborators,contributors -end -->
 # Donation
 If you feel like donating you can donate with the below buttons!
 
