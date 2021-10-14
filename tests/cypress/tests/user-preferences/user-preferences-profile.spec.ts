@@ -45,8 +45,6 @@ streamingCountries.forEach((country) => {
       Page.profile.streamingSelectBox.click();
       Page.profile.streamingSelectBoxOption(country).click();
 
-      Page.profile.streamingSelectBox.should('have.attr','ng-reflect-value', country);
-
       cy.wait('@countryApiSave').then((intercept) => {
         expect(intercept.request.body.code).equal(country);
       })
