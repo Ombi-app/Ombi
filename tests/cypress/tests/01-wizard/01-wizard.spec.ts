@@ -8,7 +8,7 @@ describe("Wizard Setup", () => {
   });
 
 
-  it.only("Finsh with no local user", () => {
+  it("Finsh with no local user", () => {
     Page.visit();
 
     Page.welcomeTab.next.click();
