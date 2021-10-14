@@ -161,7 +161,7 @@ Here are some of the features Ombi has:
         <a href="https://github.com/bruvv">
             <img src="https://avatars.githubusercontent.com/u/3063928?v=4" width="50;" alt="bruvv"/>
             <br />
-            <sub><b>bruvv</b></sub>
+            <sub><b>Bruvv</b></sub>
         </a>
     </td>
     <td align="center">
@@ -182,7 +182,7 @@ Here are some of the features Ombi has:
         <a href="https://github.com/goldenpipes">
             <img src="https://avatars.githubusercontent.com/u/6140137?v=4" width="50;" alt="goldenpipes"/>
             <br />
-            <sub><b>goldenpipes</b></sub>
+            <sub><b>Goldenpipes</b></sub>
         </a>
     </td>
     <td align="center">
@@ -218,7 +218,7 @@ Here are some of the features Ombi has:
         <a href="https://github.com/stefangross">
             <img src="https://avatars.githubusercontent.com/u/8499989?v=4" width="50;" alt="stefangross"/>
             <br />
-            <sub><b>stefangross</b></sub>
+            <sub><b>Stefangross</b></sub>
         </a>
     </td>
     <td align="center">
@@ -268,21 +268,21 @@ Here are some of the features Ombi has:
         <a href="https://github.com/aptalca">
             <img src="https://avatars.githubusercontent.com/u/541623?v=4" width="50;" alt="aptalca"/>
             <br />
-            <sub><b>aptalca</b></sub>
+            <sub><b>Aptalca</b></sub>
         </a>
     </td>
     <td align="center">
         <a href="https://github.com/mhann">
             <img src="https://avatars.githubusercontent.com/u/17162399?v=4" width="50;" alt="mhann"/>
             <br />
-            <sub><b>mhann</b></sub>
+            <sub><b>Mhann</b></sub>
         </a>
     </td>
     <td align="center">
         <a href="https://github.com/ombi-bot">
             <img src="https://avatars.githubusercontent.com/u/51722903?v=4" width="50;" alt="ombi-bot"/>
             <br />
-            <sub><b>ombi-bot</b></sub>
+            <sub><b>Ombi-bot</b></sub>
         </a>
     </td></tr>
 <tr>
@@ -698,7 +698,7 @@ Here are some of the features Ombi has:
         <a href="https://github.com/camjac251">
             <img src="https://avatars.githubusercontent.com/u/6313132?v=4" width="50;" alt="camjac251"/>
             <br />
-            <sub><b>camjac251</b></sub>
+            <sub><b>Camjac251</b></sub>
         </a>
     </td>
     <td align="center">
@@ -741,7 +741,7 @@ Here are some of the features Ombi has:
         <a href="https://github.com/tdorsey">
             <img src="https://avatars.githubusercontent.com/u/1218404?v=4" width="50;" alt="tdorsey"/>
             <br />
-            <sub><b>tdorsey</b></sub>
+            <sub><b>Tdorsey</b></sub>
         </a>
     </td>
     <td align="center">
@@ -755,7 +755,7 @@ Here are some of the features Ombi has:
         <a href="https://github.com/zobe123">
             <img src="https://avatars.githubusercontent.com/u/13840542?v=4" width="50;" alt="zobe123"/>
             <br />
-            <sub><b>zobe123</b></sub>
+            <sub><b>Zobe123</b></sub>
         </a>
     </td></tr>
 </table>
