@@ -1,12 +1,13 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { AuthService } from "../../../auth/auth.service";
 import { TranslateService } from "@ngx-translate/core";
-import { AvailableLanguages, ILanguage } from "./user-preference.constants";
-import { IdentityService, NotificationService, SettingsService, ValidationService } from "../../../services";
-import { ICustomizationSettings, IUser, UserType } from "../../../interfaces";
+import { AvailableLanguages } from "./user-preference.constants";
+import { IdentityService, NotificationService, ValidationService } from "../../../services";
+import { IUser, UserType } from "../../../interfaces";
 import { Md5 } from "ts-md5";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { APP_BASE_HREF } from "@angular/common";
+import { CustomizationFacade } from "../../../state/customization";
 
 @Component({
     templateUrl: "./user-preference.component.html",
@@ -22,21 +23,22 @@ export class UserPreferenceComponent implements OnInit {
     public qrCodeEnabled: boolean;
     public countries: string[];
     public selectedCountry: string;
-    public customizationSettings: ICustomizationSettings;
     public UserType = UserType;
     public baseUrl: string;
 
     public passwordForm: FormGroup;
 
     private user: IUser;
+    private applicationUrl: string = this.customizationFacade.appUrl();
+    private logo: string = this.customizationFacade.logo();
 
     constructor(private authService: AuthService,
         private readonly translate: TranslateService,
         private readonly notification: NotificationService,
         private readonly identityService: IdentityService,
-        private readonly settingsService: SettingsService,
         private readonly fb: FormBuilder,
         private readonly validationService: ValidationService,
+        private readonly customizationFacade: CustomizationFacade,
         @Inject(APP_BASE_HREF) public internalBaseUrl: string) { }
 
     public async ngOnInit() {
@@ -47,14 +49,13 @@ export class UserPreferenceComponent implements OnInit {
         if (user.name) {
             this.username = user.name;
         }
-        this.customizationSettings = await this.settingsService.getCustomization().toPromise();
 
         this.selectedLang = this.translate.currentLang;
 
         const accessToken = await this.identityService.getAccessToken().toPromise();
-        this.qrCode = `${this.customizationSettings.applicationUrl}|${accessToken}`;
+        this.qrCode = `${this.applicationUrl}|${accessToken}`;
 
-        if(!this.customizationSettings.applicationUrl) {
+        if(!this.applicationUrl) {
            this.qrCodeEnabled = false;
         } else {
            this.qrCodeEnabled = true;
@@ -64,7 +65,6 @@ export class UserPreferenceComponent implements OnInit {
         this.selectedCountry = this.user.streamingCountry;
         this.setProfileImageUrl(this.user);
         this.identityService.getSupportedStreamingCountries().subscribe(x => this.countries = x);
-        this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
 
         this.passwordForm = this.fb.group({
             password: [null],
@@ -112,8 +112,8 @@ export class UserPreferenceComponent implements OnInit {
     }
 
     private getFallbackProfileImageUrl() {
-        return this.customizationSettings?.logo
-          ? this.customizationSettings.logo
+        return this.logo
+          ? this.logo
           : "https://raw.githubusercontent.com/Ombi-app/Ombi/gh-pages/img/android-chrome-512x512.png";
     }
 

@@ -8,4 +8,19 @@ export class CustomizationSelectors {
     public static customizationSettings(settings: ICustomizationSettings): ICustomizationSettings {
         return settings;
     }
+
+    @Selector([CustomizationSelectors.customizationSettings])
+    public static logo({logo}: ICustomizationSettings): string {
+        return logo;
+    }
+
+    @Selector([CustomizationSelectors.customizationSettings])
+    public static applicationName({applicationName}: ICustomizationSettings): string {
+        return applicationName;
+    }
+
+    @Selector([CustomizationSelectors.customizationSettings])
+    public static applicationUrl({applicationUrl}: ICustomizationSettings): string {
+        return applicationUrl;
+    }
 }

@@ -2,6 +2,7 @@
 import { ICheckbox, ICustomizationSettings, IEmailNotificationSettings, IUser } from "../interfaces";
 import { IdentityService, NotificationService, SettingsService } from "../services";
 
+import { CustomizationFacade } from "../state/customization";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { SelectionModel } from "@angular/cdk/collections";
@@ -21,7 +22,7 @@ export class UserManagementComponent implements OnInit {
     public users: IUser[];
     public checkAll = false;
     public emailSettings: IEmailNotificationSettings;
-    public customizationSettings: ICustomizationSettings;
+    public applicationUrl: string;
     public showBulkEdit = false;
     public availableClaims: ICheckbox[];
     public bulkMovieLimit?: number;
@@ -35,7 +36,8 @@ export class UserManagementComponent implements OnInit {
     constructor(private identityService: IdentityService,
         private settingsService: SettingsService,
         private notificationService: NotificationService,
-        private plexSettings: SettingsService) {
+        private plexSettings: SettingsService,
+        private customizationFacade: CustomizationFacade) {
             this.dataSource = new MatTableDataSource();
          }
 
@@ -49,7 +51,7 @@ export class UserManagementComponent implements OnInit {
         this.plexSettings.getPlex().subscribe(x => this.plexEnabled = x.enable);
 
         this.identityService.getAllAvailableClaims().subscribe(x => this.availableClaims = x);
-        this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
+        this.applicationUrl = this.customizationFacade.appUrl();
         this.settingsService.getEmailNotificationSettings().subscribe(x => this.emailSettings = x);
     }
 

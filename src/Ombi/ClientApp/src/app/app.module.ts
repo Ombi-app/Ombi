@@ -13,6 +13,7 @@ import { AuthService } from "./auth/auth.service";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BrowserModule } from "@angular/platform-browser";
 import { ButtonModule } from "primeng/button";
+import { CUSTOMIZATION_INITIALIZER } from "./state/customization/customization-initializer";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { CookieComponent } from "./auth/cookie.component";
 import { CookieService } from "ng2-cookies";
@@ -48,6 +49,7 @@ import { MyNavComponent } from './my-nav/my-nav.component';
 import { NavSearchComponent } from "./my-nav/nav-search.component";
 import { NgModule } from "@angular/core";
 import { NgxsModule } from '@ngxs/store';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NotificationService } from "./services";
 import { OverlayModule } from "@angular/cdk/overlay";
 import { OverlayPanelModule } from "primeng/overlaypanel";
@@ -63,38 +65,6 @@ import { TooltipModule } from "primeng/tooltip";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { UnauthorizedInterceptor } from "./auth/unauthorized.interceptor";
 import { environment } from "../environments/environment";
-
-// Components
-
-
-
-
-
-
-
-
-
-
-
-// Services
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
@@ -192,6 +162,10 @@ export function JwtTokenGetter() {
         NgxsModule.forRoot([CustomizationState], {
             developmentMode: !environment.production,
         }),
+        ...environment.production ? [] : 
+        [
+            NgxsReduxDevtoolsPluginModule.forRoot(),
+        ]
     ],
     declarations: [
         AppComponent,
@@ -236,7 +210,8 @@ export function JwtTokenGetter() {
             provide: HTTP_INTERCEPTORS,
             useClass: UnauthorizedInterceptor,
             multi: true
-        }
+        },
+        CUSTOMIZATION_INITIALIZER
        ],
     bootstrap: [AppComponent],
 })
