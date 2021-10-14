@@ -1,3 +1,7 @@
+## [4.2.5](https://github.com/Ombi-app/Ombi/compare/v4.2.4...v4.2.5) (2021-10-14)
+
+
+
 ## [4.2.4](https://github.com/Ombi-app/Ombi/compare/v4.2.3...v4.2.4) (2021-10-13)
 
 
@@ -32,21 +36,6 @@
 ### Bug Fixes
 
 * **oauth:** :bug: Fixed an issue where on occasions the Plex OAuth wouldn't work ([ce1ed01](https://github.com/Ombi-app/Ombi/commit/ce1ed01a5f1a6e99d37a3cf32e53cf5de4f5943b))
-
-
-
-# [4.2.0](https://github.com/Ombi-app/Ombi/compare/v4.1.1...v4.2.0) (2021-10-09)
-
-
-### Bug Fixes
-
-* **settings:** :bug: Fixed the issue where you couldn't save the Plex settings ([89a856a](https://github.com/Ombi-app/Ombi/commit/89a856a5d22a5f517702642876652d451f6e9b3e))
-
-
-### Features
-
-* :sparkles: Added the ability to specify which branch you are on ([777ed2f](https://github.com/Ombi-app/Ombi/commit/777ed2f3224b91a0acb47c30efa96adaaba46fd2))
-* **notifications:** :sparkles: Added Partially Available Notifications ([1ef45dc](https://github.com/Ombi-app/Ombi/commit/1ef45dc44c93d566a0f04c011bfcefe2009a24b5))
 
 
 
