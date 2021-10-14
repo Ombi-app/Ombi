@@ -4,6 +4,7 @@ import { ICheckbox, ICustomizationSettings, INotificationAgent, INotificationPre
 import { IdentityService, MessageService, RadarrService, SettingsService, SonarrService } from "../services";
 
 import { Clipboard } from '@angular/cdk/clipboard';
+import { CustomizationFacade } from "../state/customization";
 import { Location } from "@angular/common";
 
 @Component({
@@ -30,7 +31,7 @@ export class UserManagementUserComponent implements OnInit {
     public requestLimitTypes: RequestLimitType[];
     public RequestLimitType = RequestLimitType;
 
-    private customization: ICustomizationSettings;
+    private appUrl: string = this.customizationFacade.appUrl();
     private accessToken: string;
 
     constructor(private identityService: IdentityService,
@@ -41,7 +42,9 @@ export class UserManagementUserComponent implements OnInit {
                 private sonarrService: SonarrService,
                 private radarrService: RadarrService,
                 private clipboard: Clipboard,
-                private location: Location) {
+                private location: Location,
+                private customizationFacade: CustomizationFacade,
+                ) {
 
                     this.route.params.subscribe((params: any) => {
                         if(params.id) {
@@ -68,7 +71,6 @@ export class UserManagementUserComponent implements OnInit {
         this.radarrService.getQualityProfilesFromSettings().subscribe(x => this.radarrQualities = x);
         this.radarrService.getRootFoldersFromSettings().subscribe(x => this.radarrRootFolders = x);
 
-        this.settingsService.getCustomization().subscribe(x => this.customization = x);
         this.identityService.getUserAccessToken(this.userId).subscribe(x => this.accessToken = x);
 
         if(!this.edit) {
@@ -191,7 +193,7 @@ export class UserManagementUserComponent implements OnInit {
     }
 
     public async appLink() {
-        this.clipboard.copy(`ombi://${this.customization.applicationUrl}|${this.accessToken}`);
+        this.clipboard.copy(`ombi://${this.appUrl}|${this.accessToken}`);
         this.notificationService.send("Copied!");
     }
 

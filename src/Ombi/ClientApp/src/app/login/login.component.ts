@@ -16,6 +16,7 @@ import { ImageService } from "../services";
 import { fadeInOutAnimation } from "../animations/fadeinout";
 import { StorageService } from "../shared/storage/storage-service";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { CustomizationFacade } from "../state/customization";
 
 @Component({
   templateUrl: "./login.component.html",
@@ -60,6 +61,7 @@ export class LoginComponent implements OnDestroy, OnInit {
     private status: StatusService,
     private fb: FormBuilder,
     private settingsService: SettingsService,
+    private customziationFacade: CustomizationFacade,
     private images: ImageService,
     private sanitizer: DomSanitizer,
     private route: ActivatedRoute,
@@ -99,13 +101,13 @@ export class LoginComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
+
+    this.customziationFacade.settings$().subscribe(x => this.customizationSettings = x);
+
     this.settingsService
       .getAuthentication()
       .subscribe((x) => (this.authenticationSettings = x));
     this.settingsService.getClientId().subscribe((x) => (this.clientId = x));
-    this.settingsService
-      .getCustomization()
-      .subscribe((x) => (this.customizationSettings = x));
     this.images.getRandomBackground().subscribe((x) => {
       this.background = this.sanitizer.bypassSecurityTrustStyle(
         "url(" + x.url + ")"
