@@ -78,7 +78,7 @@ export class MyNavComponent implements OnInit {
     this.issuesEnabled = await this.settingsService.issueEnabled().toPromise();
     this.settingState.setIssue(this.issuesEnabled);
 
-    this.customizationFacade.settings$().subscribe(settings => {
+    this.settingsService.getCustomization().subscribe(settings => {
       this.customizationSettings = settings;
     });
 

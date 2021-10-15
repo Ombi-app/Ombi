@@ -85,7 +85,7 @@ export class AppComponent implements OnInit {
     }
 
     public ngOnInit() {
-        this.customizationFacade.settings$().subscribe(x => {
+        this.settingsService.getCustomization().subscribe(x => {
             this.customizationSettings = x;
             if (this.customizationSettings && this.customizationSettings.applicationName) {
                 this.applicationName = this.customizationSettings.applicationName;
