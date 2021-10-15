@@ -106,9 +106,9 @@ describe('User Management Page', () => {
       // Verify that the limits are set
       cy.get('#edituserToEdit').click();
       cy.contains('Request Limits').click();
-      cy.get('#movieRequestLimit').should('have.value', '2')
-      cy.get('#musicRequestLimit').should('have.value', '3')
-      cy.get('#episodeRequestLimit').should('have.value', '4')
+      cy.get('#movieRequestLimit').should('have.attr', 'ng-reflect-model', '2')
+      cy.get('#musicRequestLimit').should('have.attr', 'ng-reflect-model', '3')
+      cy.get('#episodeRequestLimit').should('have.attr', 'ng-reflect-model', '4')
 
     });
 
@@ -134,14 +134,14 @@ describe('User Management Page', () => {
       // Verify that the limits are set 
       cy.get('#edituserToEdit').click();
       cy.contains('Notification Preferences').click();
-      cy.get('#Discord').should('have.value', "Discord");
-      cy.get('#Pushbullet').should('have.value', "Pushbullet");
-      cy.get('#Pushover').should('have.value', "Pushover");
-      cy.get('#Telegram').should('have.value', "Telegram");
-      cy.get('#Slack').should('have.value', "Slack");
-      cy.get('#Mattermost').should('have.value', "Mattermost");
-      cy.get('#Gotify').should('have.value', "Gotify");
-      cy.get('#WhatsApp').should('have.value', "Whatsapp");
+      cy.get('#Discord').should('have.attr', 'ng-reflect-model', "Discord");
+      cy.get('#Pushbullet').should('have.attr', 'ng-reflect-model', "Pushbullet");
+      cy.get('#Pushover').should('have.attr', 'ng-reflect-model', "Pushover");
+      cy.get('#Telegram').should('have.attr', 'ng-reflect-model', "Telegram");
+      cy.get('#Slack').should('have.attr', 'ng-reflect-model', "Slack");
+      cy.get('#Mattermost').should('have.attr', 'ng-reflect-model', "Mattermost");
+      cy.get('#Gotify').should('have.attr', 'ng-reflect-model', "Gotify");
+      cy.get('#WhatsApp').should('have.attr', 'ng-reflect-model', "Whatsapp");
 
     });
 
@@ -158,6 +158,6 @@ describe('User Management Page', () => {
       cy.verifyNotification('successfully');
 
       cy.get('#edituserToEdit').click();
-      cy.get('#rolePowerUser').should('have.class', 'mat-checked');
+      cy.get('#rolePowerUser').should('have.attr',  'ng-reflect-model', 'true');
     });
   });
