@@ -63,21 +63,6 @@ jobs:
           - os: win10-x64
             format: zip
             compression: zip
-          - os: win10-x86
-            format: zip
-            compression: zip
-          - os: linux-x64
-            format: tar.gz
-            compression: tar
-          - os: linux-arm
-            format: tar.gz
-            compression: tar
-          - os: linux-arm64
-            compression: tar
-            format: tar.gz
-          - os: osx-x64
-            compression: tar
-            format: tar.gz
     steps:
       - uses: actions/checkout@v2
 
@@ -125,16 +110,3 @@ jobs:
           name: ${{ matrix.os }}
           path: |
             ./src/Ombi/${{ matrix.os }}.${{ matrix.format }}
-
-  release:
-    needs: [ publish, unit-test ]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Download Artifacts
-        id: download
-        uses: actions/download-artifact@v2
-        with:
-          path: artifacts
-

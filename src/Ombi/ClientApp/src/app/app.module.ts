@@ -202,7 +202,6 @@ export function JwtTokenGetter() {
         StorageService,
         RequestService,
         SignalRNotificationService,
-        CUSTOMIZATION_INITIALIZER,
         {
             provide: APP_BASE_HREF,
             useValue: window["baseHref"]
