@@ -1,3 +1,13 @@
+## [4.2.8](https://github.com/Ombi-app/Ombi/compare/v4.2.7...v4.2.8) (2021-10-15)
+
+
+### Bug Fixes
+
+* :adhesive_bandage: See if this fixes the proxy issue ([74d1aca](https://github.com/Ombi-app/Ombi/commit/74d1acae499707a7e21401f53eb2bb90c5bb9cfa))
+* :bug: Fixed Ombi not writing the baseUrl correctly ([e9cc8b6](https://github.com/Ombi-app/Ombi/commit/e9cc8b6fe71d3e10c1a901e70227989b3362afe3))
+
+
+
 ## [4.2.7](https://github.com/Ombi-app/Ombi/compare/v4.2.6...v4.2.7) (2021-10-14)
 
 
@@ -27,15 +37,6 @@
 
 * **#4344:** :bug: Fixed an issue where we errored on Plex Episode Scan ([cd5532f](https://github.com/Ombi-app/Ombi/commit/cd5532fa8f7ebbfaf942841398672bafb9a405d4))
 * **#4345:** :bug: Fixed the issue where denied requests we not appearing correctly ([5a2f652](https://github.com/Ombi-app/Ombi/commit/5a2f652a28f5699dd667afef8dde129817e53392))
-
-
-
-## [4.2.3](https://github.com/Ombi-app/Ombi/compare/v4.2.2...v4.2.3) (2021-10-12)
-
-
-### Bug Fixes
-
-* **user-management:** :bug: Fixed an issue where the Copy users App Link did not generate the correct app link for that user ([8cafcdc](https://github.com/Ombi-app/Ombi/commit/8cafcdcc3baa85c55d75e43835b2289bbea69b0e))
 
 
 
