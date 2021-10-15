@@ -22,8 +22,15 @@ describe("Wizard Setup", () => {
     // Verify we end back up on the user page
     Page.matStepsHeader.then((items) => {
 
-      cy.get('#cdk-step-label-0-2').should('have.attr', 'aria-selected', 'true');
+      const results = items.filter((index, html) => {
+        var attributes = Cypress.$(html).attr('ng-reflect-index');
+        return attributes === "2"; // 2nd index
+      }).get()[0];
 
+      console.log(results);
+
+      var attr = Cypress.$(results).attr('ng-reflect-selected');
+      assert.equal(attr, 'true');
     });
 
   });
