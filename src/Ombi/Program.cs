@@ -269,10 +269,10 @@ namespace Ombi
                 var indexHtml = await File.ReadAllTextAsync(indexPath);
                 var sb = new StringBuilder(indexHtml);
 
-                var headPosition = indexHtml.IndexOf("<head>");
-                var firstLinkPosition = indexHtml.IndexOf("<link");
+                var headPosition = indexHtml.IndexOf("<script");
+                var firstLinkPosition = indexHtml.IndexOf("<style type=");
 
-                sb.Remove(headPosition + 6, firstLinkPosition - headPosition - 6);
+                sb.Remove(headPosition, firstLinkPosition - headPosition - 6);
 
                 sb.Insert(headPosition + 6,
                     $"<script type='text/javascript'>window[\"baseHref\"] = '{trimmedBaseUrl}';</script><base href=\"{trimmedBaseUrl}/\">");
