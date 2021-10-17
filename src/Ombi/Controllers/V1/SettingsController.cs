@@ -468,6 +468,32 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
+        /// Gets the Cloudflare Authentication Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("cloudflare")]
+        public async Task<CloudflareAuthenticationSettings> CloudflareAuthenticationsSettings()
+        {
+            return await Get<CloudflareAuthenticationSettings>();
+        }
+
+        /// <summary>
+        /// Save the Cloudflare Authentication Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("cloudflare")]
+        public async Task<bool> CloudflareAuthenticationsSettings([FromBody]CloudflareAuthenticationSettings settings)
+        {
+            if (settings.audience.IsNullOrEmpty() && settings.certlink.IsNullOrEmpty() && settings.issuer.IsNullOrEmpty()) {
+                return true;
+            }
+            if ((settings.audience.IsNullOrEmpty() || settings.certlink.IsNullOrEmpty() || settings.issuer.IsNullOrEmpty())) {
+                return false;
+            }
+            return await Save(settings);
+        }
+
+        /// <summary>
         /// Save the Radarr settings.
         /// </summary>
         /// <param name="settings">The settings.</param>

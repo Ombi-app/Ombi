@@ -2,18 +2,23 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Ombi.Core.Authentication;
+using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Models;
 using Ombi.Models.External;
 using Ombi.Models.Identity;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 
@@ -25,13 +30,17 @@ namespace Ombi.Controllers.V1
     public class TokenController : ControllerBase
     {
         public TokenController(OmbiUserManager um, IOptions<TokenAuthentication> ta, ITokenRepository token,
-            IPlexOAuthManager oAuthManager, ILogger<TokenController> logger)
+            IPlexOAuthManager oAuthManager, ILogger<TokenController> logger, 
+            ISettingsService<AuthenticationSettings> auth, ISettingsService<CloudflareAuthenticationSettings> cfauth)
         {
             _userManager = um;
             _tokenAuthenticationOptions = ta.Value;
             _token = token;
             _plexOAuthManager = oAuthManager;
             _log = logger;
+            _authSettings = auth;
+            _cfsettings = cfauth;
+            _ = updateCFKeys(true);
         }
 
         private readonly TokenAuthentication _tokenAuthenticationOptions;
@@ -39,6 +48,10 @@ namespace Ombi.Controllers.V1
         private readonly OmbiUserManager _userManager;
         private readonly IPlexOAuthManager _plexOAuthManager;
         private readonly ILogger<TokenController> _log;
+        private readonly ISettingsService<AuthenticationSettings> _authSettings;
+        private readonly ISettingsService<CloudflareAuthenticationSettings> _cfsettings;
+
+        private CloudflareJWTJson _cfJson;
 
         /// <summary>
         /// Gets the token.
@@ -100,6 +113,7 @@ namespace Ombi.Controllers.V1
         /// Returns the Token for the Ombi User if we can match the Plex user with a valid Ombi User
         /// </summary>
         [HttpPost("plextoken")]
+        [ProducesResponseType(200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetTokenWithPlexToken([FromBody] PlexTokenAuthentication model)
@@ -116,6 +130,70 @@ namespace Ombi.Controllers.V1
             return await CreateToken(true, user);
         }
 
+
+        /// <summary>
+        /// Returns the Token for the Ombi User if we can match the Plex user with a valid Ombi User
+        /// </summary>
+        [HttpGet("cfAuth")]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> GetTokenWithCFJwt([FromHeader(Name="Cf-Access-Jwt-Assertion")] string CFJWTAuthentication)
+        {
+            if (!_authSettings.GetSettings().EnableCloudflareAccess) {
+                _log.LogError("EnableCloudflareAccess is disabled, API won't work!");
+                return Unauthorized();
+            }
+
+            if (String.IsNullOrEmpty(CFJWTAuthentication)) {
+                _log.LogError("Cf-Access-Jwt-Assertion Not found!");
+                return Unauthorized();
+            }
+  
+            updateCFKeys(false);
+            
+            IList<JsonWebKey> jwkList = new List<JsonWebKey>();
+            foreach (Dictionary<string,string> key in _cfJson.keys) {
+                jwkList.Add(JsonWebKey.Create(JsonSerializer.Serialize(key)));
+            }
+            
+            CloudflareAuthenticationSettings cfSettings = _cfsettings.GetSettings();
+
+            TokenValidationParameters validationParameters = new TokenValidationParameters
+            {
+                ValidIssuer = cfSettings.issuer,
+                ValidateIssuer = true,
+                ValidAudience = cfSettings.audience,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKeys = jwkList,
+                TryAllIssuerSigningKeys	= true
+            };
+            string email = null;
+            JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+            try
+            {
+                ClaimsPrincipal claimsP = handler.ValidateToken(CFJWTAuthentication, validationParameters, out var validatedSecurityToken);
+                email = claimsP.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
+            }
+            catch
+            {
+                return Unauthorized();
+            }
+            if (String.IsNullOrEmpty(email)) {
+                _log.LogError("cfJWT email not found!");
+                return Unauthorized();
+            }
+            
+            OmbiUser user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+            
+            _log.LogInformation(String.Format("Logging in user {0} with cfJWT", email));
+            return await CreateToken(false, user);
+        }
 
         private async Task<IActionResult> CreateToken(bool rememberMe, OmbiUser user)
         {
@@ -271,6 +349,17 @@ namespace Ombi.Controllers.V1
             }
 
             return ip;
+        }
+
+        private bool updateCFKeys(bool init) {
+            if (!(init || ((DateTime.UtcNow - _cfJson.lastUpdate).TotalDays > 7))) {
+                return false;
+            }
+            
+            HttpClient client = new HttpClient();
+            Task<string> res = Task.Run<string>(async () => await client.GetStringAsync(_cfsettings.GetSettings().certlink));
+            _cfJson = JsonSerializer.Deserialize<CloudflareJWTJson>(res.Result);
+            return true;
         }
     }
 }

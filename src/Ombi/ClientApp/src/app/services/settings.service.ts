@@ -6,6 +6,7 @@ import { Observable } from "rxjs";
 import {
     IAbout,
     IAuthenticationSettings,
+    ICloudflareSettings,
     ICouchPotatoSettings,
     ICronTestModel,
     ICronViewModelBody,
@@ -125,12 +126,20 @@ export class SettingsService extends ServiceHelpers {
         return this.http.get<IAuthenticationSettings>(`${this.url}/Authentication`, {headers: this.headers});
     }
 
+    public getCloudflareAuthentication(): Observable<ICloudflareSettings> {
+        return this.http.get<ICloudflareSettings>(`${this.url}/Cloudflare`, {headers: this.headers});
+    }
+
     public getClientId(): Observable<string> {
         return this.http.get<string>(`${this.url}/clientid`, {headers: this.headers});
     }
 
     public saveAuthentication(settings: IAuthenticationSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}/Authentication`, JSON.stringify(settings), {headers: this.headers});
+    }
+
+    public saveCloudflareAuthentication(settings: ICloudflareSettings): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}/Cloudflare`, JSON.stringify(settings), {headers: this.headers});
     }
 
     // Using http since we need it not to be authenticated to get the landing page settings

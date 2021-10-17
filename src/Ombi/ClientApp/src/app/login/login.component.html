@@ -9,7 +9,7 @@
             <H1 *ngIf="!customizationSettings.logo && !customizationSettings.applicationName" class="login_logo">OMBI</H1>
             <H1 *ngIf="customizationSettings.applicationName && !customizationSettings.logo" [ngClass]="{'bigText': customizationSettings.applicationName.length >= 7 && customizationSettings.applicationName.length < 14, 'hugeText': customizationSettings.applicationName.length >= 14 }" class="login_logo custom">{{customizationSettings.applicationName}}</H1>
             <img mat-card-image *ngIf="customizationSettings.logo" [src]="customizationSettings.logo" class="logo-img">
-            <mat-card-content id="login-box" *ngIf="!authenticationSettings.enableOAuth || loginWithOmbi">
+            <mat-card-content id="login-box" *ngIf="!(authenticationSettings.enableOAuth||authenticationSettings.enableCloudflareAccess) || loginWithOmbi">
                 <form *ngIf="authenticationSettings" class="form-signin" novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
 
 
@@ -35,11 +35,15 @@
                 </form>
             </mat-card-content>
 
-            <mat-card-content *ngIf="authenticationSettings.enableOAuth && !loginWithOmbi" class="login-buttons">
+            <mat-card-content *ngIf="!loginWithOmbi" class="login-buttons">
                 <div>
 
                     <button id="sign-in" mat-raised-button color="primary" type="submit" data-cy="OmbiButton" (click)="loginWithOmbi = true">{{'Login.SignInWith' | translate:appNameTranslate}}</button>
-                    <button id="sign-plex" mat-raised-button color="accent" type="button" data-cy="oAuthPlexButton" (click)="oauth()">
+                    <button id="sign-cf" *ngIf="authenticationSettings.enableCloudflareAccess" mat-raised-button color="primary" type="button" data-cy="CfButton" (click)="cfauth()">
+                        <span *ngIf="!cfLoading">{{'Login.SignInWithCF' | translate}}</span>
+                        <span *ngIf="cfLoading"><i class="fas fa-circle-notch fa-spin fa-fw"></i></span>
+                    </button>
+                    <button id="sign-plex" *ngIf="authenticationSettings.enableOAuth" mat-raised-button color="accent" type="button" data-cy="oAuthPlexButton" (click)="oauth()">
                         <span *ngIf="!oauthLoading">{{'Login.SignInWithPlex' | translate}}</span>
                         <span *ngIf="oauthLoading"><i class="fas fa-circle-notch fa-spin fa-fw"></i></span>
                     </button>

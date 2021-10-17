@@ -28,6 +28,10 @@ export class AuthService extends ServiceHelpers {
         return this.http.post<boolean>(`${this.url}/requirePassword`, JSON.stringify(login), { headers: this.headers });
     }
 
+    public attemptCF(): Observable<any> {
+        return this.http.get<any>(`${this.url}/cfAuth`);
+    }
+
     public getToken() {
         return this.jwtHelperService.tokenGetter();
     }
