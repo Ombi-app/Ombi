@@ -230,6 +230,13 @@ export interface IAuthenticationSettings extends ISettings {
   requireNonAlphanumeric: boolean;
   requireUppercase: boolean;
   enableOAuth: boolean;
+  enableCloudflareAccess: boolean;
+}
+
+export interface ICloudflareSettings extends ISettings {
+  issuer: string;
+  audience: string;
+  certlink: string;
 }
 
 export interface ICustomPage extends ISettings {

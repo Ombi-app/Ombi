@@ -1,66 +1,111 @@
 ﻿<settings-menu></settings-menu>
 <div class="small-middle-container">
-<wiki></wiki>
-<fieldset *ngIf="form">
-    <legend>Authentication</legend>
-    <div class="md-form-field" style="margin-top:1em;"></div>
-    <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
-            <div class="form-group">
-                <div class="checkbox">
-                    <mat-slide-toggle id="allowNoPassword" name="allowNoPassword" formControlName="allowNoPassword">
-                    Allow users to login without a password</mat-slide-toggle>
+    <wiki></wiki>
+    <fieldset *ngIf="form">
+        <legend>Authentication</legend>
+        <div class="md-form-field" style="margin-top:1em;"></div>
+        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <mat-slide-toggle id="allowNoPassword" name="allowNoPassword" formControlName="allowNoPassword">
+                        Allow users to login without a password</mat-slide-toggle>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <div class="checkbox">
-                    <mat-slide-toggle id="enableOAuth" name="enableOAuth" formControlName="enableOAuth">Enable Plex OAuth</mat-slide-toggle>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <mat-slide-toggle id="enableOAuth" name="enableOAuth" formControlName="enableOAuth">Enable Plex OAuth</mat-slide-toggle>
+                    </div>
                 </div>
-            </div>
 
-            <!-- <hr/>
-            <div class="form-group">
-                <div class="checkbox">
-                    <input type="checkbox" id="requiredDigit" name="requiredDigit" formControlName="requiredDigit">
-                    <label for="requiredDigit">Require a digit in the password</label>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <mat-slide-toggle id="enableCloudflareAccess" name="enableCloudflareAccess" formControlName="enableCloudflareAccess">Enable Cloudflare Access Auth</mat-slide-toggle>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="requiredLength" class="control-label">Required password length</label>
-                <div>
-                    <input type="text" class="form-control form-control-custom " id="requiredLength" name="requiredLength" formControlName="requiredLength">
-                </div>
-            </div>
 
-            <div class="form-group">
-                <div class="checkbox">
-                    <input type="checkbox" id="requiredLowercase" name="requiredLowercase" formControlName="requiredLowercase">
-                    <label for="requiredLowercase">Require a lowercase character in the password</label>
+                <!-- <hr/>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="requiredDigit" name="requiredDigit" formControlName="requiredDigit">
+                        <label for="requiredDigit">Require a digit in the password</label>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <div class="checkbox">
-                    <input type="checkbox" id="requireNonAlphanumeric" name="requireNonAlphanumeric" formControlName="requireNonAlphanumeric">
-                    <label for="requireNonAlphanumeric">Require a NonAlphanumeric character in the password</label>
+                <div class="form-group">
+                    <label for="requiredLength" class="control-label">Required password length</label>
+                    <div>
+                        <input type="text" class="form-control form-control-custom " id="requiredLength" name="requiredLength" formControlName="requiredLength">
+                    </div>
                 </div>
-            </div>
-            
-            <div class="form-group">
-                <div class="checkbox">
-                    <input type="checkbox" id="requireUppercase" name="requireUppercase" formControlName="requireUppercase">
-                    <label for="requireUppercase">Require a uppercase character in the password</label>
-                </div>
-            </div> -->
 
-            <div class="form-group">
-                <div>
-                    <button mat-raised-button type="submit" color="primary" [disabled]="form.invalid" class="mat-focus-indicator mat-stroked-button accent mat-accent mat-raised-button mat-button-base" ng-reflect-disabled="false">
-                        <span class="mat-button-wrapper">Submit</span><div matripple="" class="mat-ripple mat-button-ripple" ng-reflect-disabled="false" ng-reflect-centered="false" ng-reflect-trigger="[object HTMLButtonElement]"></div>
-                        <div class="mat-button-focus-overlay"></div></button><div class="md-form-field" style="margin-top:1em;"></div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="requiredLowercase" name="requiredLowercase" formControlName="requiredLowercase">
+                        <label for="requiredLowercase">Require a lowercase character in the password</label>
+                    </div>
                 </div>
+
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="requireNonAlphanumeric" name="requireNonAlphanumeric" formControlName="requireNonAlphanumeric">
+                        <label for="requireNonAlphanumeric">Require a NonAlphanumeric character in the password</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="requireUppercase" name="requireUppercase" formControlName="requireUppercase">
+                        <label for="requireUppercase">Require a uppercase character in the password</label>
+                    </div>
+                </div> -->
+
+                <div class="form-group">
+                    <div>
+                        <button mat-raised-button type="submit" color="primary" [disabled]="form.invalid" class="mat-focus-indicator mat-stroked-button accent mat-accent mat-raised-button mat-button-base" ng-reflect-disabled="false">
+                            <span class="mat-button-wrapper">Submit</span><div matripple="" class="mat-ripple mat-button-ripple" ng-reflect-disabled="false" ng-reflect-centered="false" ng-reflect-trigger="[object HTMLButtonElement]"></div>
+                            <div class="mat-button-focus-overlay"></div></button><div class="md-form-field" style="margin-top:1em;"></div>
+                    </div>
+                </div>
+            </form>
+    </fieldset>
+    <fieldset *ngIf="cfform">
+            <hr>
+            <br>
+            <div>
+                <legend>Cloudflare Authentication</legend>
+                <div class="md-form-field" style="margin-top:1em;"></div>
+                <form novalidate [formGroup]="cfform" (ngSubmit)="oncfSubmit(cfform)">
+                    <div class="form-group">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Audience TAG</mat-label>
+                            <input matInput id="audience" name="audience" formControlName="audience">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-group">
+                        <mat-form-field appearance="fill">
+                            <mat-label>JWT Certificate URL</mat-label>
+                            <input matInput id="certlink" name="certlink" formControlName="certlink">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-group">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Issuer URL</mat-label>
+                            <input matInput id="issuer" name="issuer" formControlName="issuer">
+                        </mat-form-field>
+                    </div>
+                
+                    <div class="form-group">
+                        <div>
+                            <button mat-raised-button type="submit" color="primary" [disabled]="form.invalid" class="mat-focus-indicator mat-stroked-button accent mat-accent mat-raised-button mat-button-base" ng-reflect-disabled="false">
+                                <span class="mat-button-wrapper">Submit</span><div matripple="" class="mat-ripple mat-button-ripple" ng-reflect-disabled="false" ng-reflect-centered="false" ng-reflect-trigger="[object HTMLButtonElement]"></div>
+                                <div class="mat-button-focus-overlay"></div></button><div class="md-form-field" style="margin-top:1em;"></div>
+                        </div>
+                    </div>
+                </form>
             </div>
-        </form>
-</fieldset>
+    </fieldset>
 </div>

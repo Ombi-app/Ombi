@@ -52,7 +52,7 @@ namespace Ombi.Core.Authentication
             IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<OmbiUser>> logger, IPlexApi plexApi,
             IEmbyApiFactory embyApi, ISettingsService<EmbySettings> embySettings,
             IJellyfinApiFactory jellyfinApi, ISettingsService<JellyfinSettings> jellyfinSettings,
-            ISettingsService<AuthenticationSettings> auth)
+            ISettingsService<AuthenticationSettings> auth, ISettingsService<CloudflareAuthenticationSettings> cfauth)
             : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
         {
             _plexApi = plexApi;

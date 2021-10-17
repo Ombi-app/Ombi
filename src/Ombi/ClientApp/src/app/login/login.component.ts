@@ -34,6 +34,7 @@ export class LoginComponent implements OnDestroy, OnInit {
   public loginWithOmbi: boolean;
   public pinTimer: any;
   public oauthLoading: boolean;
+  public cfLoading: boolean;
 
   public get appName(): string {
     if (this.customizationSettings.applicationName) {
@@ -101,7 +102,6 @@ export class LoginComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-
     this.customziationFacade.settings$().subscribe(x => this.customizationSettings = x);
 
     this.settingsService
@@ -171,6 +171,34 @@ export class LoginComponent implements OnDestroy, OnInit {
         }
       );
     });
+  }
+
+  public cfauth() {
+    this.cfLoading = true;
+    this.translate
+    .get("Login.Errors.UnauthorizedCFAccount")
+    .subscribe((x) => (this.errorBody = x));
+
+    this.authService.attemptCF().subscribe(
+      (x) => {
+        this.store.save("id_token", x.access_token);
+
+        if (this.authService.loggedIn()) {
+          this.ngOnDestroy();
+          this.router.navigate(["/"]);
+        } else {
+          this.notify.open(this.errorBody, "OK", {
+            duration: 3000,
+          });
+        }
+      },
+      (err) => {
+        this.notify.open(this.errorBody, "OK", {
+          duration: 3000000,
+        });
+      }
+    );
+    this.cfLoading = false;
   }
 
   public oauth() {

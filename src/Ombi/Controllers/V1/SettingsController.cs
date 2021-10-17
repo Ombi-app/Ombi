@@ -468,6 +468,39 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
+        /// Gets the Cloudflare Authentication Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("cloudflare")]
+        public async Task<CloudflareAuthenticationSettings> CloudflareAuthenticationsSettings()
+        {
+            return await Get<CloudflareAuthenticationSettings>();
+        }
+
+        /// <summary>
+        /// Save the Cloudflare Authentication Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("cloudflare")]
+        public async Task<bool> CloudflareAuthenticationsSettings([FromBody]CloudflareAuthenticationSettings settings)
+        {
+            if (settings.audience.IsNullOrEmpty() && settings.certlink.IsNullOrEmpty() && settings.issuer.IsNullOrEmpty()) {
+                return true;
+            }
+            if ((settings.audience.IsNullOrEmpty() || settings.certlink.IsNullOrEmpty() || settings.issuer.IsNullOrEmpty())) {
+                return false;
+            }
+            Uri uriResult;
+            if ((!Uri.TryCreate(settings.certlink, UriKind.Absolute, out uriResult)) || !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)
+                || (!Uri.TryCreate(settings.issuer, UriKind.Absolute, out uriResult)) || !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)) {
+                return false;
+            }
+            settings.certlink = settings.certlink.TrimEnd('/');
+            settings.issuer = settings.issuer.TrimEnd('/');
+            return await Save(settings);
+        }
+
+        /// <summary>
         /// Save the Radarr settings.
         /// </summary>
         /// <param name="settings">The settings.</param>

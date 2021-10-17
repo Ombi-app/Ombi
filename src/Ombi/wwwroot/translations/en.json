@@ -6,9 +6,11 @@
         "RememberMe": "Remember Me",
         "SignInWith": "Sign in with {{appName}}",
         "SignInWithPlex": "Sign in with Plex",
+        "SignInWithCF": "Sign in with Cloudflare",
         "ForgottenPassword": "Forgot your password?",
         "Errors": {
-            "IncorrectCredentials": "Incorrect username or password"
+            "IncorrectCredentials": "Incorrect username or password",
+            "UnauthorizedCFAccount": "Ombi has no user with the same email as the Cloudflare account"
         }
     },
     "Common": {
