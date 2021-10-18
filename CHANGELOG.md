@@ -1,3 +1,7 @@
+## [4.2.11](https://github.com/Ombi-app/Ombi/compare/v4.2.10...v4.2.11) (2021-10-18)
+
+
+
 ## [4.2.10](https://github.com/Ombi-app/Ombi/compare/v4.2.9...v4.2.10) (2021-10-15)
 
 
@@ -32,15 +36,6 @@
 ### Bug Fixes
 
 * :bug: Fixed the issue parsing TheMovieDB dates. They have broken something... ([6e397e0](https://github.com/Ombi-app/Ombi/commit/6e397e02e95f894a92e8bf02428efdcac1275b31))
-
-
-
-## [4.2.6](https://github.com/Ombi-app/Ombi/compare/v4.2.5...v4.2.6) (2021-10-14)
-
-
-### Performance Improvements
-
-* :zap: Use ngxs store for the whole customization section of the app ([97b493d](https://github.com/Ombi-app/Ombi/commit/97b493d869feee59d360b484a6c59388a2aead1f))
 
 
 
