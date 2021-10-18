@@ -22,7 +22,7 @@
         "RequestDenied": "Demande refusée",
         "NotRequested": "Non demandé",
         "Requested": "Demandé",
-        "Search": "Search",
+        "Search": "Rechercher",
         "Request": "Demander",
         "Denied": "Refusé",
         "Approve": "Approuver",
@@ -33,8 +33,8 @@
         },
         "Cancel": "Annuler",
         "Submit": "Envoyer",
-        "tvShow": "TV Show",
-        "movie": "Movie"
+        "tvShow": "Série TV",
+        "movie": "Film"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "Adresse e-mail",
@@ -89,14 +89,14 @@
         "MoviesTab": "Films",
         "TvTab": "Séries",
         "MusicTab": "Musique",
-        "AdvancedSearch": "You can fill in any of the below to discover new media. All of the results are sorted by popularity",
+        "AdvancedSearch": "Vous pouvez remplir l'un des éléments ci-dessous pour découvrir de nouveaux médias. Tous les résultats sont triés par popularité",
         "Suggestions": "Suggestions",
         "NoResults": "Désolé, nous n'avons trouvé aucun résultat !",
         "DigitalDate": "Sortie numérique: {{date}}",
         "TheatricalRelease": "Sortie en salle: {{date}}",
         "ViewOnPlex": "Regarder sur Plex",
         "ViewOnEmby": "Regarder sur Emby",
-        "ViewOnJellyfin": "Play On Jellyfin",
+        "ViewOnJellyfin": "Regarder sur Jellyfin",
         "RequestAdded": "La demande pour {{title}} a été ajoutée avec succès",
         "Similar": "Similaires",
         "Refine": "Affiner",
@@ -150,8 +150,8 @@
         "MarkAvailable": "Marquer comme disponible",
         "Remove": "Supprimer",
         "Deny": "Refuser",
-        "DenyReason": "Raison de refus",
-        "DeniedReason": "Denied Reason",
+        "DenyReason": "Motif de refus",
+        "DeniedReason": "Motif de refus",
         "Season": "Saison",
         "GridTitle": "Titre",
         "AirDate": "Date de diffusion",
@@ -186,8 +186,8 @@
             "Delete": "Supprimer la demande",
             "Approve": "Autoriser la demande",
             "ChangeAvailability": "Marquer comme Disponible",
-            "Deleted": "Successfully deleted selected items",
-            "Approved": "Successfully approved selected items"
+            "Deleted": "Éléments sélectionnés supprimés avec succès",
+            "Approved": "Éléments sélectionnés approuvés avec succès"
         }
     },
     "Issues": {
@@ -196,7 +196,7 @@
         "InProgressTitle": "Problèmes en cours",
         "ResolvedTitle": "Problèmes résolus",
         "ColumnTitle": "Titre",
-        "Count": "Count",
+        "Count": "Nombre",
         "Category": "Catégorie",
         "Status": "Statut",
         "Details": "Détails",
@@ -223,8 +223,8 @@
         "MarkedAsInProgress": "Ce problème a maintenant été marqué comme en cours de traitement !",
         "Delete": "Supprimer rapport d'erreur",
         "DeletedIssue": "Votre rapport d'erreur a été supprimé",
-        "Chat": "Chat",
-        "Requested": "Requested"
+        "Chat": "Discuter",
+        "Requested": "Demandé"
     },
     "Filter": {
         "ClearFilter": "Effacer les filtres",
@@ -257,12 +257,12 @@
         "ViewCollection": "Afficher la Collection",
         "NotEnoughInfo": "Malheureusement, il n'y a pas encore assez d'informations à propos de ce média !",
         "AdvancedOptions": "Options Avancées",
-        "AutoApproveOptions": "You can configure the request here, once requested it will be send to your DVR application and will be auto approved! Please note, this is optional, just press Request to skip!",
-        "AutoApproveOptionsTv": "You can configure the request here, once requested it will be send to your DVR application and will be auto approved! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it!  Please note, this is optional, just press Request to skip!",
-        "AutoApproveOptionsTvShort": "You can configure the request here, once requested it will be send to your DVR application! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it! Please note, this is optional, just press Request to skip!",
+        "AutoApproveOptions": "Vous pouvez configurer la demande ici. Une fois demandée, elle sera envoyée à votre application de DVR et sera automatiquement approuvée ! Veuillez noter que ceci est optionnel, appuyez simplement sur \"Demander\" pour sauter !",
+        "AutoApproveOptionsTv": "Vous pouvez configurer la demande ici. Une fois demandée, elle sera envoyée à votre application de DVR et sera automatiquement approuvée ! Si la demande est déjà dans Sonarr, nous ne changerons pas le dossier racine ou le profil de qualité si vous la définissez ! Veuillez noter que ceci est optionnel, appuyez simplement sur \"Demander\" pour sauter !",
+        "AutoApproveOptionsTvShort": "Vous pouvez configurer la demande ici. Une fois demandée, elle sera envoyée à votre application de DVR ! Si la demande est déjà dans Sonarr, nous ne changerons pas le dossier racine ou le profil de qualité si vous la définissez ! Veuillez noter que ceci est optionnel, appuyez simplement sur \"Demander\" pour sauter !",
         "QualityProfilesSelect": "Sélectionner un Profil de Qualité",
         "RootFolderSelect": "Sélectionner un Dossier Racine",
-        "LanguageProfileSelect": "Select A Language Profile",
+        "LanguageProfileSelect": "Sélectionnez un profil de langue",
         "Status": "Statut",
         "Availability": "Disponibilité",
         "RequestStatus": "Statut de la Demande",
@@ -285,21 +285,21 @@
             "AllSeasonsTooltip": "Cette action demandera toutes les saisons de cette série",
             "FirstSeasonTooltip": "Cette action ne demandera que la Première Saison de cette série",
             "LatestSeasonTooltip": "Cette action ne demandera que la Dernière Saison de cette série",
-            "NoEpisodes": "There unfortunately is no episode data for this show yet!"
+            "NoEpisodes": "Il n'y a malheureusement pas encore d'informations d'épisode pour cette série !"
         },
-        "SonarrConfiguration": "Sonarr Configuration",
-        "RadarrConfiguration": "Radarr Configuration",
-        "RequestOnBehalf": "Request on behalf of",
-        "PleaseSelectUser": "Please select a user",
-        "StreamingOn": "Streaming On",
-        "ReProcessRequest": "Re-Process Request"
+        "SonarrConfiguration": "Configuration Sonarr",
+        "RadarrConfiguration": "Configuration Radarr",
+        "RequestOnBehalf": "Demander au nom de",
+        "PleaseSelectUser": "Veuillez sélectionner un utilisateur",
+        "StreamingOn": "Diffusion sur",
+        "ReProcessRequest": "Refaire une demande"
     },
     "Discovery": {
         "PopularTab": "Populaire",
         "TrendingTab": "Tendances",
         "UpcomingTab": "Prochainement",
-        "SeasonalTab": "Seasonal",
-        "RecentlyRequestedTab": "Recently Requested",
+        "SeasonalTab": "De saison",
+        "RecentlyRequestedTab": "Demandé récemment",
         "Movies": "Films",
         "Combined": "Tous",
         "Tv": "TV",
@@ -315,18 +315,18 @@
             "Writer": "Scénariste",
             "ExecProducer": "Producteur Exécutif"
         },
-        "NoSearch": "Sorry, nothing matches your search!"
+        "NoSearch": "Désolé, rien ne correspond à votre recherche !"
     },
     "UserPreferences": {
         "Welcome": "Bienvenue {{username}}!",
         "OmbiLanguage": "Langue",
         "DarkMode": "Mode Sombre",
-        "Updated": "Successfully Updated",
-        "StreamingCountry": "Streaming Country",
-        "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will have US related streaming information.",
-        "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
-        "MobileQRCode": "Mobile QR Code",
-        "LegacyApp": "Launch Legacy App",
-        "NoQrCode": "Please contact your administrator to enable QR codes"
+        "Updated": "Mise à jour réussie",
+        "StreamingCountry": "Pays de diffusion",
+        "StreamingCountryDescription": "C'est le code du pays pour lequel nous afficherons des informations de diffusion. Si vous êtes en France, veuillez sélectionner la France et vous aurez des informations de streaming en relation avec la France.",
+        "LanguageDescription": "C'est la langue dans laquelle vous souhaitez que l'interface Ombi soit affichée.",
+        "MobileQRCode": "QR Code mobile",
+        "LegacyApp": "Lancer l'ancienne application",
+        "NoQrCode": "Veuillez contacter votre administrateur pour activer les QR codes"
     }
 }
