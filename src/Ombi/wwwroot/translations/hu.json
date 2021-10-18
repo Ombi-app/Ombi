@@ -90,6 +90,7 @@
         "TvTab": "Sorozatok",
         "MusicTab": "Zene",
         "AdvancedSearch": "You can fill in any of the below to discover new media. All of the results are sorted by popularity",
+        "AdvancedSearchHeader": "Advanced Search",
         "Suggestions": "Javaslatok",
         "NoResults": "Sajnáljuk, nem találtunk semmit!",
         "DigitalDate": "Digitális kiadás: {{date}}",
@@ -123,7 +124,10 @@
             "SubmitRequest": "Kérés küldése",
             "Season": "Évad {{seasonNumber}}",
             "SelectAllInSeason": "Egész {{seasonNumber}}. évad kiválasztása"
-        }
+        },
+        "AdvancedSearchInstructions": "Please choose what type of media you are searching for:",
+        "YearOfRelease": "Year of Release",
+        "KeywordSearchingDisclaimer": "Please note that Keyword Searching is very hit and miss due to the inconsistent data in TheMovieDb"
     },
     "Requests": {
         "Title": "Kérések",
@@ -231,7 +235,9 @@
         "FilterHeaderAvailability": "Elérhetőség",
         "FilterHeaderRequestStatus": "Állapot",
         "Approved": "Jóváhagyva",
-        "PendingApproval": "Jóváhagyásra vár"
+        "PendingApproval": "Jóváhagyásra vár",
+        "WatchProviders": "Watch Providers",
+        "Keywords": "Keywords"
     },
     "UserManagment": {
         "TvRemaining": "TV: {{remaining}}/{{total}} maradt",
