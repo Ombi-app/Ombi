@@ -90,6 +90,7 @@
         "TvTab": "Serien",
         "MusicTab": "Musik",
         "AdvancedSearch": "You can fill in any of the below to discover new media. All of the results are sorted by popularity",
+        "AdvancedSearchHeader": "Advanced Search",
         "Suggestions": "Vorschläge",
         "NoResults": "Es tut uns leid, wir haben keine Ergebnisse gefunden!",
         "DigitalDate": "Veröffentlichung der digitalen Version: {{date}}",
@@ -123,7 +124,10 @@
             "SubmitRequest": "Anfrage einreichen",
             "Season": "Staffel {{seasonNumber}}",
             "SelectAllInSeason": "Markiere alles in Staffel {{seasonNumber}}"
-        }
+        },
+        "AdvancedSearchInstructions": "Please choose what type of media you are searching for:",
+        "YearOfRelease": "Year of Release",
+        "KeywordSearchingDisclaimer": "Please note that Keyword Searching is very hit and miss due to the inconsistent data in TheMovieDb"
     },
     "Requests": {
         "Title": "Anfragen",
@@ -231,7 +235,9 @@
         "FilterHeaderAvailability": "Verfügbarkeit",
         "FilterHeaderRequestStatus": "Status",
         "Approved": "Bestätigt",
-        "PendingApproval": "Genehmigung ausstehend"
+        "PendingApproval": "Genehmigung ausstehend",
+        "WatchProviders": "Watch Providers",
+        "Keywords": "Keywords"
     },
     "UserManagment": {
         "TvRemaining": "TV: {{remaining}}/{{total}} verbleibend",
