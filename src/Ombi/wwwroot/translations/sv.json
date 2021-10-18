@@ -22,6 +22,7 @@
         "RequestDenied": "Efterfrågan nekas",
         "NotRequested": "Inte begärd",
         "Requested": "Begärd",
+        "Search": "Search",
         "Request": "Begär",
         "Denied": "Nekad",
         "Approve": "Godkänn",
@@ -31,7 +32,9 @@
             "Validation": "Vänligen kontrollera din angivna värden"
         },
         "Cancel": "Avbryt",
-        "Submit": "Skicka in"
+        "Submit": "Skicka in",
+        "tvShow": "TV Show",
+        "movie": "Movie"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "E-postadress",
@@ -86,12 +89,14 @@
         "MoviesTab": "Filmer",
         "TvTab": "TV-serier",
         "MusicTab": "Musik",
+        "AdvancedSearch": "You can fill in any of the below to discover new media. All of the results are sorted by popularity",
         "Suggestions": "Förslag",
         "NoResults": "Tyvärr hittade vi inte några resultat!",
         "DigitalDate": "Digitalt releasedatum: {{date}}",
         "TheatricalRelease": "Biopremiär: {{date}}",
         "ViewOnPlex": "Visa på Plex",
         "ViewOnEmby": "Visa på Emby",
+        "ViewOnJellyfin": "Play On Jellyfin",
         "RequestAdded": "Begäran av {{title}} har lagts till",
         "Similar": "Liknande",
         "Refine": "Förfina",
@@ -146,6 +151,7 @@
         "Remove": "Ta bort",
         "Deny": "Neka",
         "DenyReason": "Anledning för nekande",
+        "DeniedReason": "Denied Reason",
         "Season": "Säsong",
         "GridTitle": "Titel",
         "AirDate": "Releasedatum",
@@ -179,7 +185,9 @@
         "RequestPanel": {
             "Delete": "Ta bort förfrågan",
             "Approve": "Godkänn begäran",
-            "ChangeAvailability": "Markera Tillgänglig"
+            "ChangeAvailability": "Markera Tillgänglig",
+            "Deleted": "Successfully deleted selected items",
+            "Approved": "Successfully approved selected items"
         }
     },
     "Issues": {
@@ -214,7 +222,9 @@
         "MarkedAsResolved": "Detta problem har nu markerats som löst!",
         "MarkedAsInProgress": "Detta problem har nu markerats som på pågående!",
         "Delete": "Ta bort problem",
-        "DeletedIssue": "Problemet har tagits bort"
+        "DeletedIssue": "Problemet har tagits bort",
+        "Chat": "Chat",
+        "Requested": "Requested"
     },
     "Filter": {
         "ClearFilter": "Rensa filter",
@@ -247,8 +257,12 @@
         "ViewCollection": "Visa samling",
         "NotEnoughInfo": "Tyvärr finns det inte tillräckligt med information om denna serie ännu!",
         "AdvancedOptions": "Avancerade inställningar",
+        "AutoApproveOptions": "You can configure the request here, once requested it will be send to your DVR application and will be auto approved! Please note, this is optional, just press Request to skip!",
+        "AutoApproveOptionsTv": "You can configure the request here, once requested it will be send to your DVR application and will be auto approved! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it!  Please note, this is optional, just press Request to skip!",
+        "AutoApproveOptionsTvShort": "You can configure the request here, once requested it will be send to your DVR application! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it! Please note, this is optional, just press Request to skip!",
         "QualityProfilesSelect": "Välj en kvalitetsprofil",
         "RootFolderSelect": "Välj en rotmapp",
+        "LanguageProfileSelect": "Select A Language Profile",
         "Status": "Status",
         "Availability": "Tillgänglighet",
         "RequestStatus": "Status för begäran",
@@ -270,13 +284,22 @@
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Detta kommer att begära varje säsong för denna serie",
             "FirstSeasonTooltip": "Detta kommer endast att begära den första säsongen för denna serie",
-            "LatestSeasonTooltip": "Detta kommer endast att begära den senaste säsongen för denna serie"
-        }
+            "LatestSeasonTooltip": "Detta kommer endast att begära den senaste säsongen för denna serie",
+            "NoEpisodes": "There unfortunately is no episode data for this show yet!"
+        },
+        "SonarrConfiguration": "Sonarr Configuration",
+        "RadarrConfiguration": "Radarr Configuration",
+        "RequestOnBehalf": "Request on behalf of",
+        "PleaseSelectUser": "Please select a user",
+        "StreamingOn": "Streaming On",
+        "ReProcessRequest": "Re-Process Request"
     },
     "Discovery": {
         "PopularTab": "Populära",
         "TrendingTab": "Hetast just nu",
         "UpcomingTab": "Kommande",
+        "SeasonalTab": "Seasonal",
+        "RecentlyRequestedTab": "Recently Requested",
         "Movies": "Filmer",
         "Combined": "Kombinerad",
         "Tv": "TV",
@@ -291,11 +314,19 @@
             "FirstAired": "Sändes första gången",
             "Writer": "Författare",
             "ExecProducer": "Exekutiv producent"
-        }
+        },
+        "NoSearch": "Sorry, nothing matches your search!"
     },
     "UserPreferences": {
         "Welcome": "Välkommen {{username}}!",
         "OmbiLanguage": "Språk",
-        "DarkMode": "Mörkt läge"
+        "DarkMode": "Mörkt läge",
+        "Updated": "Successfully Updated",
+        "StreamingCountry": "Streaming Country",
+        "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will have US related streaming information.",
+        "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
+        "MobileQRCode": "Mobile QR Code",
+        "LegacyApp": "Launch Legacy App",
+        "NoQrCode": "Please contact your administrator to enable QR codes"
     }
 }
