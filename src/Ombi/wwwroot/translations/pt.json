@@ -1,44 +1,47 @@
 {
     "Login": {
-        "SignInButton": "Iniciar sessão",
-        "UsernamePlaceholder": "Nome de Usuário",
-        "PasswordPlaceholder": "Palavra-passe",
-        "RememberMe": "Recorde-me",
-        "SignInWith": "Entre com {{appName}}",
-        "SignInWithPlex": "Iniciar sessão com Plex",
-        "ForgottenPassword": "Esqueceu sua senha?",
+        "SignInButton": "Sign in",
+        "UsernamePlaceholder": "Username",
+        "PasswordPlaceholder": "Password",
+        "RememberMe": "Remember Me",
+        "SignInWith": "Sign in with {{appName}}",
+        "SignInWithPlex": "Sign in with Plex",
+        "ForgottenPassword": "Forgot your password?",
         "Errors": {
-            "IncorrectCredentials": "Usuário ou senha incorretos"
+            "IncorrectCredentials": "Incorrect username or password"
         }
     },
     "Common": {
-        "ContinueButton": "Continuar",
-        "Available": "Disponível",
-        "PartiallyAvailable": "Parcialmente Disponível",
+        "ContinueButton": "Continue",
+        "Available": "Available",
+        "PartiallyAvailable": "Partially Available",
         "Monitored": "Monitored",
-        "NotAvailable": "Não disponível",
-        "ProcessingRequest": "Processando o pedido",
-        "PendingApproval": "Aprovação Pendente",
-        "RequestDenied": "Pedido Negado",
-        "NotRequested": "Não Solicitado",
-        "Requested": "Pedido",
-        "Request": "Solicitar",
-        "Denied": "Recusado",
-        "Approve": "Aprovar",
-        "PartlyAvailable": "Parcialmente Disponível",
-        "ViewDetails": "Ver detalhes",
+        "NotAvailable": "Not Available",
+        "ProcessingRequest": "Processing Request",
+        "PendingApproval": "Pending Approval",
+        "RequestDenied": "Request Denied",
+        "NotRequested": "Not Requested",
+        "Requested": "Requested",
+        "Search": "Search",
+        "Request": "Request",
+        "Denied": "Denied",
+        "Approve": "Approve",
+        "PartlyAvailable": "Partly Available",
+        "ViewDetails": "View Details",
         "Errors": {
-            "Validation": "Por favor, verifique os valores inseridos"
+            "Validation": "Please check your entered values"
         },
-        "Cancel": "Cancelar",
-        "Submit": "Submeter"
+        "Cancel": "Cancel",
+        "Submit": "Submit",
+        "tvShow": "TV Show",
+        "movie": "Movie"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "Email Address",
-        "ResetPasswordButton": "Nova senha"
+        "ResetPasswordButton": "Reset Password"
     },
     "LandingPage": {
-        "OnlineHeading": "Online no momento",
+        "OnlineHeading": "Currently Online",
         "OnlineParagraph": "The media server is currently online",
         "PartiallyOnlineHeading": "Partially Online",
         "PartiallyOnlineParagraph": "The media server is partially online.",
@@ -52,7 +55,7 @@
         "Discover": "Discover",
         "Search": "Search",
         "Requests": "Requests",
-        "UserManagement": "User Management",
+        "UserManagement": "Users",
         "Issues": "Issues",
         "Vote": "Vote",
         "Donate": "Donate!",
@@ -68,7 +71,7 @@
         "ChangeTheme": "Change Theme",
         "Calendar": "Calendar",
         "UserPreferences": "Preferences",
-        "FeatureSuggestion": "Feature Suggestion",
+        "FeatureSuggestion": "Features",
         "FeatureSuggestionTooltip": "Have a great new idea? Suggest it here!",
         "Filter": {
             "Movies": "Movies",
@@ -86,12 +89,14 @@
         "MoviesTab": "Movies",
         "TvTab": "TV Shows",
         "MusicTab": "Music",
+        "AdvancedSearch": "You can fill in any of the below to discover new media. All of the results are sorted by popularity",
         "Suggestions": "Suggestions",
         "NoResults": "Sorry, we didn't find any results!",
         "DigitalDate": "Digital Release: {{date}}",
         "TheatricalRelease": "Theatrical Release: {{date}}",
-        "ViewOnPlex": "View On Plex",
-        "ViewOnEmby": "View On Emby",
+        "ViewOnPlex": "Play On Plex",
+        "ViewOnEmby": "Play On Emby",
+        "ViewOnJellyfin": "Play On Jellyfin",
         "RequestAdded": "Request for {{title}} has been added successfully",
         "Similar": "Similar",
         "Refine": "Refine",
@@ -146,9 +151,10 @@
         "Remove": "Remove",
         "Deny": "Deny",
         "DenyReason": "Deny Reason",
+        "DeniedReason": "Denied Reason",
         "Season": "Season",
         "GridTitle": "Title",
-        "AirDate": "AirDate",
+        "AirDate": "Air Date",
         "GridStatus": "Status",
         "ReportIssue": "Report Issue",
         "Filter": "Filter",
@@ -179,7 +185,9 @@
         "RequestPanel": {
             "Delete": "Delete Request",
             "Approve": "Approve Request",
-            "ChangeAvailability": "Mark Available"
+            "ChangeAvailability": "Mark Available",
+            "Deleted": "Successfully deleted selected items",
+            "Approved": "Successfully approved selected items"
         }
     },
     "Issues": {
@@ -214,7 +222,9 @@
         "MarkedAsResolved": "This issue has now been marked as resolved!",
         "MarkedAsInProgress": "This issue has now been marked as in progress!",
         "Delete": "Delete issue",
-        "DeletedIssue": "Issue has been deleted"
+        "DeletedIssue": "Issue has been deleted",
+        "Chat": "Chat",
+        "Requested": "Requested"
     },
     "Filter": {
         "ClearFilter": "Clear Filter",
@@ -247,8 +257,12 @@
         "ViewCollection": "View Collection",
         "NotEnoughInfo": "Unfortunately there is not enough information about this show yet!",
         "AdvancedOptions": "Advanced Options",
+        "AutoApproveOptions": "You can configure the request here, once requested it will be send to your DVR application and will be auto approved! Please note, this is optional, just press Request to skip!",
+        "AutoApproveOptionsTv": "You can configure the request here, once requested it will be send to your DVR application and will be auto approved! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it!  Please note, this is optional, just press Request to skip!",
+        "AutoApproveOptionsTvShort": "You can configure the request here, once requested it will be send to your DVR application! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it! Please note, this is optional, just press Request to skip!",
         "QualityProfilesSelect": "Select A Quality Profile",
         "RootFolderSelect": "Select A Root Folder",
+        "LanguageProfileSelect": "Select A Language Profile",
         "Status": "Status",
         "Availability": "Availability",
         "RequestStatus": "Request Status",
@@ -256,7 +270,7 @@
         "RootFolderOverride": "Root Folder Override",
         "QualityOverride": "Quality Override",
         "Genres": "Genres",
-        "TheatricalRelease": "Theatrical Release",
+        "TheatricalRelease": "Release",
         "DigitalRelease": "Digital Release",
         "Votes": "Votes",
         "Runtime": "Runtime",
@@ -270,13 +284,22 @@
         "EpisodeSelector": {
             "AllSeasonsTooltip": "This will request every season for this show",
             "FirstSeasonTooltip": "This will only request the First Season for this show",
-            "LatestSeasonTooltip": "This will only request the Latest Season for this show"
-        }
+            "LatestSeasonTooltip": "This will only request the Latest Season for this show",
+            "NoEpisodes": "There unfortunately is no episode data for this show yet!"
+        },
+        "SonarrConfiguration": "Sonarr Configuration",
+        "RadarrConfiguration": "Radarr Configuration",
+        "RequestOnBehalf": "Request on behalf of",
+        "PleaseSelectUser": "Please select a user",
+        "StreamingOn": "Streaming On",
+        "ReProcessRequest": "Re-Process Request"
     },
     "Discovery": {
         "PopularTab": "Popular",
         "TrendingTab": "Trending",
         "UpcomingTab": "Upcoming",
+        "SeasonalTab": "Seasonal",
+        "RecentlyRequestedTab": "Recently Requested",
         "Movies": "Movies",
         "Combined": "Combined",
         "Tv": "TV",
@@ -291,11 +314,19 @@
             "FirstAired": "First Aired",
             "Writer": "Writer",
             "ExecProducer": "Exec Producer"
-        }
+        },
+        "NoSearch": "Sorry, nothing matches your search!"
     },
     "UserPreferences": {
         "Welcome": "Welcome {{username}}!",
         "OmbiLanguage": "Language",
-        "DarkMode": "Dark Mode"
+        "DarkMode": "Dark Mode",
+        "Updated": "Successfully Updated",
+        "StreamingCountry": "Streaming Country",
+        "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will have US related streaming information.",
+        "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
+        "MobileQRCode": "Mobile QR Code",
+        "LegacyApp": "Launch Legacy App",
+        "NoQrCode": "Please contact your administrator to enable QR codes"
     }
 }
