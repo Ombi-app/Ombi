@@ -90,6 +90,7 @@
         "TvTab": "電視節目",
         "MusicTab": "音樂",
         "AdvancedSearch": "You can fill in any of the below to discover new media. All of the results are sorted by popularity",
+        "AdvancedSearchHeader": "Advanced Search",
         "Suggestions": "建議",
         "NoResults": "抱歉，我們沒有找到任何結果！",
         "DigitalDate": "數字發行：{{date}}",
@@ -123,7 +124,10 @@
             "SubmitRequest": "送出請求",
             "Season": "Season {{seasonNumber}}",
             "SelectAllInSeason": "選擇第 {{seasonNumber}} 季中的全部"
-        }
+        },
+        "AdvancedSearchInstructions": "Please choose what type of media you are searching for:",
+        "YearOfRelease": "Year of Release",
+        "KeywordSearchingDisclaimer": "Please note that Keyword Searching is very hit and miss due to the inconsistent data in TheMovieDb"
     },
     "Requests": {
         "Title": "請求",
@@ -231,7 +235,9 @@
         "FilterHeaderAvailability": "可用性",
         "FilterHeaderRequestStatus": "狀態",
         "Approved": "已通過審核",
-        "PendingApproval": "待決審核"
+        "PendingApproval": "待決審核",
+        "WatchProviders": "Watch Providers",
+        "Keywords": "Keywords"
     },
     "UserManagment": {
         "TvRemaining": "電視：{{remaining}}/{{total}} 剩餘",
