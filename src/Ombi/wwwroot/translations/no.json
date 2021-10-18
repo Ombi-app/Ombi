@@ -22,6 +22,7 @@
         "RequestDenied": "Forespørsel avslått",
         "NotRequested": "Ikke forespurt",
         "Requested": "Forespurt",
+        "Search": "Search",
         "Request": "Forespørsel",
         "Denied": "Avslått",
         "Approve": "Godkjenn",
@@ -31,7 +32,9 @@
             "Validation": "Kontroller de angitte verdiene"
         },
         "Cancel": "Cancel",
-        "Submit": "Submit"
+        "Submit": "Submit",
+        "tvShow": "TV Show",
+        "movie": "Movie"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "E-postadresse",
@@ -86,12 +89,14 @@
         "MoviesTab": "Filmer",
         "TvTab": "TV serier",
         "MusicTab": "Musikk",
+        "AdvancedSearch": "You can fill in any of the below to discover new media. All of the results are sorted by popularity",
         "Suggestions": "Forslag",
         "NoResults": "Beklager, vi fant ingen resultater!",
         "DigitalDate": "Digital utgivelse: {{date}}",
         "TheatricalRelease": "Kinopremiere: {{date}}",
         "ViewOnPlex": "Spill av på Plex",
         "ViewOnEmby": "Spill av på Emby",
+        "ViewOnJellyfin": "Play On Jellyfin",
         "RequestAdded": "Forespørsel om {{title}} er lagt til",
         "Similar": "Lignende",
         "Refine": "Spesifiser",
@@ -146,6 +151,7 @@
         "Remove": "Fjern",
         "Deny": "Avslå",
         "DenyReason": "Deny Reason",
+        "DeniedReason": "Denied Reason",
         "Season": "Sesong",
         "GridTitle": "Tittel",
         "AirDate": "Sendedato",
@@ -179,7 +185,9 @@
         "RequestPanel": {
             "Delete": "Delete Request",
             "Approve": "Approve Request",
-            "ChangeAvailability": "Mark Available"
+            "ChangeAvailability": "Mark Available",
+            "Deleted": "Successfully deleted selected items",
+            "Approved": "Successfully approved selected items"
         }
     },
     "Issues": {
@@ -214,7 +222,9 @@
         "MarkedAsResolved": "This issue has now been marked as resolved!",
         "MarkedAsInProgress": "This issue has now been marked as in progress!",
         "Delete": "Delete issue",
-        "DeletedIssue": "Issue has been deleted"
+        "DeletedIssue": "Issue has been deleted",
+        "Chat": "Chat",
+        "Requested": "Requested"
     },
     "Filter": {
         "ClearFilter": "Tøm filter",
@@ -247,8 +257,12 @@
         "ViewCollection": "View Collection",
         "NotEnoughInfo": "Unfortunately there is not enough information about this show yet!",
         "AdvancedOptions": "Advanced Options",
+        "AutoApproveOptions": "You can configure the request here, once requested it will be send to your DVR application and will be auto approved! Please note, this is optional, just press Request to skip!",
+        "AutoApproveOptionsTv": "You can configure the request here, once requested it will be send to your DVR application and will be auto approved! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it!  Please note, this is optional, just press Request to skip!",
+        "AutoApproveOptionsTvShort": "You can configure the request here, once requested it will be send to your DVR application! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it! Please note, this is optional, just press Request to skip!",
         "QualityProfilesSelect": "Select A Quality Profile",
         "RootFolderSelect": "Select A Root Folder",
+        "LanguageProfileSelect": "Select A Language Profile",
         "Status": "Status",
         "Availability": "Tilgjengelighet",
         "RequestStatus": "Request Status",
@@ -270,13 +284,22 @@
         "EpisodeSelector": {
             "AllSeasonsTooltip": "This will request every season for this show",
             "FirstSeasonTooltip": "This will only request the First Season for this show",
-            "LatestSeasonTooltip": "This will only request the Latest Season for this show"
-        }
+            "LatestSeasonTooltip": "This will only request the Latest Season for this show",
+            "NoEpisodes": "There unfortunately is no episode data for this show yet!"
+        },
+        "SonarrConfiguration": "Sonarr Configuration",
+        "RadarrConfiguration": "Radarr Configuration",
+        "RequestOnBehalf": "Request on behalf of",
+        "PleaseSelectUser": "Please select a user",
+        "StreamingOn": "Streaming On",
+        "ReProcessRequest": "Re-Process Request"
     },
     "Discovery": {
         "PopularTab": "Populært",
         "TrendingTab": "På vei opp",
         "UpcomingTab": "Upcoming",
+        "SeasonalTab": "Seasonal",
+        "RecentlyRequestedTab": "Recently Requested",
         "Movies": "Filmer",
         "Combined": "Combined",
         "Tv": "TV",
@@ -291,11 +314,19 @@
             "FirstAired": "First Aired",
             "Writer": "Writer",
             "ExecProducer": "Exec Producer"
-        }
+        },
+        "NoSearch": "Sorry, nothing matches your search!"
     },
     "UserPreferences": {
         "Welcome": "Velkommen {{username}}!",
         "OmbiLanguage": "Language",
-        "DarkMode": "Dark Mode"
+        "DarkMode": "Dark Mode",
+        "Updated": "Successfully Updated",
+        "StreamingCountry": "Streaming Country",
+        "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will have US related streaming information.",
+        "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
+        "MobileQRCode": "Mobile QR Code",
+        "LegacyApp": "Launch Legacy App",
+        "NoQrCode": "Please contact your administrator to enable QR codes"
     }
 }
