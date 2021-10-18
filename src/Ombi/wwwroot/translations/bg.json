@@ -90,6 +90,7 @@
         "TvTab": "Тв предавания",
         "MusicTab": "Музика",
         "AdvancedSearch": "Можете да попълните някое от долупосочените, за да откриете нова медия. Всички резултати са сортирани по популярност",
+        "AdvancedSearchHeader": "Advanced Search",
         "Suggestions": "Предложения",
         "NoResults": "Съжаляваме, не намерихме никакви резултати!",
         "DigitalDate": "Дигитално издание: {{date}}",
@@ -123,7 +124,10 @@
             "SubmitRequest": "Подаване на заявка",
             "Season": "Сезон {{seasonNumber}}",
             "SelectAllInSeason": "Избиране на всичко в сезона {{seasonNumber}}"
-        }
+        },
+        "AdvancedSearchInstructions": "Please choose what type of media you are searching for:",
+        "YearOfRelease": "Year of Release",
+        "KeywordSearchingDisclaimer": "Please note that Keyword Searching is very hit and miss due to the inconsistent data in TheMovieDb"
     },
     "Requests": {
         "Title": "Заявки",
@@ -231,7 +235,9 @@
         "FilterHeaderAvailability": "Наличност",
         "FilterHeaderRequestStatus": "Състояние",
         "Approved": "Одобрени",
-        "PendingApproval": "Чака одобрение"
+        "PendingApproval": "Чака одобрение",
+        "WatchProviders": "Watch Providers",
+        "Keywords": "Keywords"
     },
     "UserManagment": {
         "TvRemaining": "Телевизия: {{remaining}}/{{total}} оставащи",

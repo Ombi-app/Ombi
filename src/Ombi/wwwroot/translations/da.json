@@ -90,6 +90,7 @@
         "TvTab": "Tv-serier",
         "MusicTab": "Musik",
         "AdvancedSearch": "You can fill in any of the below to discover new media. All of the results are sorted by popularity",
+        "AdvancedSearchHeader": "Advanced Search",
         "Suggestions": "Forslag",
         "NoResults": "Beklager, vi fandt ingen resultater!",
         "DigitalDate": "Digital udgivelse: {{date}}",
@@ -123,7 +124,10 @@
             "SubmitRequest": "Send anmodning",
             "Season": "Sæson {{seasonNumber}}",
             "SelectAllInSeason": "Vælg alle i sæson {{seasonNumber}}"
-        }
+        },
+        "AdvancedSearchInstructions": "Please choose what type of media you are searching for:",
+        "YearOfRelease": "Year of Release",
+        "KeywordSearchingDisclaimer": "Please note that Keyword Searching is very hit and miss due to the inconsistent data in TheMovieDb"
     },
     "Requests": {
         "Title": "Anmodninger",
@@ -231,7 +235,9 @@
         "FilterHeaderAvailability": "Tilgængelighed",
         "FilterHeaderRequestStatus": "Status",
         "Approved": "Godkendt",
-        "PendingApproval": "Afventer godkendelse"
+        "PendingApproval": "Afventer godkendelse",
+        "WatchProviders": "Watch Providers",
+        "Keywords": "Keywords"
     },
     "UserManagment": {
         "TvRemaining": "Tv: {{remaining}}/{{total}} Resterende",

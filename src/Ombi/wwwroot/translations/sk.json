@@ -90,6 +90,7 @@
         "TvTab": "Seriály",
         "MusicTab": "Hudba",
         "AdvancedSearch": "You can fill in any of the below to discover new media. All of the results are sorted by popularity",
+        "AdvancedSearchHeader": "Advanced Search",
         "Suggestions": "Návrhy",
         "NoResults": "Ľutujeme, nenašli sme žiadne výsledky!",
         "DigitalDate": "Online vydanie: {{date}}",
@@ -123,7 +124,10 @@
             "SubmitRequest": "Poslať žiadosť",
             "Season": "Séria {{seasonNumber}}",
             "SelectAllInSeason": "Vybrať všetko v danej sérii {{seasonNumber}}"
-        }
+        },
+        "AdvancedSearchInstructions": "Please choose what type of media you are searching for:",
+        "YearOfRelease": "Year of Release",
+        "KeywordSearchingDisclaimer": "Please note that Keyword Searching is very hit and miss due to the inconsistent data in TheMovieDb"
     },
     "Requests": {
         "Title": "Požiadavky",
@@ -231,7 +235,9 @@
         "FilterHeaderAvailability": "Dostupnosť",
         "FilterHeaderRequestStatus": "Stav",
         "Approved": "Schválené",
-        "PendingApproval": "Čaká na schválenie"
+        "PendingApproval": "Čaká na schválenie",
+        "WatchProviders": "Watch Providers",
+        "Keywords": "Keywords"
     },
     "UserManagment": {
         "TvRemaining": "Seriál: {{remaining}}/{{total}} zostávajúce",
