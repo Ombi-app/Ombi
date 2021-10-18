@@ -90,6 +90,7 @@
         "TvTab": "TV-serier",
         "MusicTab": "Musik",
         "AdvancedSearch": "You can fill in any of the below to discover new media. All of the results are sorted by popularity",
+        "AdvancedSearchHeader": "Advanced Search",
         "Suggestions": "Förslag",
         "NoResults": "Tyvärr hittade vi inte några resultat!",
         "DigitalDate": "Digitalt releasedatum: {{date}}",
@@ -123,7 +124,10 @@
             "SubmitRequest": "Skicka begäran",
             "Season": "Säsong {{seasonNumber}}",
             "SelectAllInSeason": "Välj alla avsnitt i säsong {{seasonNumber}}"
-        }
+        },
+        "AdvancedSearchInstructions": "Please choose what type of media you are searching for:",
+        "YearOfRelease": "Year of Release",
+        "KeywordSearchingDisclaimer": "Please note that Keyword Searching is very hit and miss due to the inconsistent data in TheMovieDb"
     },
     "Requests": {
         "Title": "Efterfrågningar",
@@ -231,7 +235,9 @@
         "FilterHeaderAvailability": "Tillgänglighet",
         "FilterHeaderRequestStatus": "Status",
         "Approved": "Godkänd",
-        "PendingApproval": "Väntar på godkännande"
+        "PendingApproval": "Väntar på godkännande",
+        "WatchProviders": "Watch Providers",
+        "Keywords": "Keywords"
     },
     "UserManagment": {
         "TvRemaining": "TV: {{remaining}}/{{total}} återstående",
