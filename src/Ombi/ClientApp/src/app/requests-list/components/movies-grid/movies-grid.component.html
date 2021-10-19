@@ -58,7 +58,7 @@
 
         <ng-container matColumnDef="requestedDate">
             <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{ 'Requests.RequestDate' | translate}} </th>
-            <td mat-cell id="requestedDate{{element.id}}" *matCellDef="let element"> {{element.requestedDate | amLocal | amDateFormat: 'LL'}} </td>
+            <td mat-cell id="requestedDate{{element.id}}" *matCellDef="let element"> {{element.requestedDate | amLocal | amUserLocale | amDateFormat: 'LL'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="status">
