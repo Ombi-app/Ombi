@@ -50,7 +50,7 @@
 
     <div *ngIf="request">
         <span class="label">{{'MediaDetails.RequestDate' | translate }}</span>
-        {{request.requestedDate | localizedDate}}
+        {{request.requestedDate | amUserLocale | amDateFormat: 'LL'}}
     </div>
 
     <div *ngIf="request && request.denied">
@@ -78,11 +78,11 @@
     <hr>
 
     <span class="label">{{'MediaDetails.TheatricalRelease' | translate }}</span>
-    {{movie.releaseDate | localizedDate: 'mediumDate'}}
+    {{movie.releaseDate | amUserLocale | amDateFormat: 'LL': 'mediumDate'}}
 
     <div *ngIf="movie.digitalReleaseDate">
         <span class="label">{{'MediaDetails.DigitalRelease' | translate }}</span>
-        {{movie.digitalReleaseDate | localizedDate: 'mediumDate'}}
+        {{movie.digitalReleaseDate | amUserLocale | amDateFormat: 'LL': 'mediumDate'}}
     </div>
 
     <div *ngIf="movie.voteCount">

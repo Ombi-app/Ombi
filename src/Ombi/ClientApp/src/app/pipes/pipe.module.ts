@@ -1,6 +1,5 @@
 ﻿import { ModuleWithProviders, NgModule } from "@angular/core";
 import { HumanizePipe } from "./HumanizePipe";
-import { LocalizedDatePipe } from "./LocalizedDate";
 import { TranslateStatusPipe } from "./TranslateStatus";
 import { ThousandShortPipe } from "./ThousandShortPipe";
 import { SafePipe } from "./SafePipe";
@@ -9,8 +8,8 @@ import { UserLocalePipe } from "./UserLocalePipe";
 
 @NgModule({
     imports:        [],
-    declarations:   [HumanizePipe, ThousandShortPipe, SafePipe, QualityPipe, UserLocalePipe, LocalizedDatePipe, TranslateStatusPipe ],
-    exports:        [HumanizePipe, ThousandShortPipe, SafePipe, QualityPipe, UserLocalePipe, LocalizedDatePipe, TranslateStatusPipe ],
+    declarations:   [HumanizePipe, ThousandShortPipe, SafePipe, QualityPipe, UserLocalePipe, TranslateStatusPipe ],
+    exports:        [HumanizePipe, ThousandShortPipe, SafePipe, QualityPipe, UserLocalePipe, TranslateStatusPipe ],
 })
 export class PipeModule {
 

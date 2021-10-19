@@ -1,7 +1,7 @@
 <mat-card class="issue-card" *ngIf="!deleted">
   <mat-card-header>
     <mat-card-title>{{issue.subject}}</mat-card-title>
-    <mat-card-subtitle>{{issue.userReported?.userName}} on {{issue.createdDate | localizedDate:short}}</mat-card-subtitle>
+    <mat-card-subtitle>{{issue.userReported?.userName}} on {{issue.createdDate | amLocal | amUserLocale | amDateFormat: 'LL' }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
     <p>
