@@ -22,7 +22,7 @@
         <hr>
         <div *ngIf="tv.status">
             <span  class="label">{{'MediaDetails.Status' | translate }}</span>
-                <span id="status">{{ getTVStatusLabel()}}</span>
+                <span id="status">{{ this.tv.status | translateStatus }}</span>
         </div>
         <span class="label">{{'MediaDetails.FirstAired' | translate }}</span>
             {{tv.firstAired | localizedDate: 'mediumDate'}}

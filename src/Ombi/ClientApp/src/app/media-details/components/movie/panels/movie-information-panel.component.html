@@ -27,7 +27,7 @@
     <hr>
     <div>
         <span class="label">{{'MediaDetails.Status' | translate }}</span>
-        <span id="status">{{ getMovieStatusLabel()}}</span>
+        <span id="status">{{ this.movie.status | translateStatus }}</span>
     </div>
     <div>
         <span class="label">{{'MediaDetails.Availability' | translate }}</span>

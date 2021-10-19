@@ -1,6 +1,5 @@
 import { APP_BASE_HREF } from "@angular/common";
 import { Component, ViewEncapsulation, Input, OnInit, Inject } from "@angular/core";
-import { TranslateService } from "@ngx-translate/core";
 import { ITvRequests } from "../../../../../interfaces";
 import { ITvRatings } from "../../../../../interfaces/IRatings";
 import { ISearchTvResultV2 } from "../../../../../interfaces/ISearchTvResultV2"; 
@@ -15,8 +14,7 @@ import { SearchV2Service } from "../../../../../services";
 })
 export class TvInformationPanelComponent implements OnInit {
 
-    constructor(private searchService: SearchV2Service, @Inject(APP_BASE_HREF) public internalBaseUrl: string, 
-        private translate: TranslateService) { }
+    constructor(private searchService: SearchV2Service, @Inject(APP_BASE_HREF) public internalBaseUrl: string) { }
 
     @Input() public tv: ISearchTvResultV2;
     @Input() public request: ITvRequests;
@@ -45,15 +43,5 @@ export class TvInformationPanelComponent implements OnInit {
 
     public sortBy(prop: string) {
         return this.streams.sort((a, b) => a[prop] > b[prop] ? 1 : a[prop] === b[prop] ? 0 : -1);
-    }
-
-    public getTVStatusLabel() {
-        const textKey = 'MediaDetails.StatusValues.' + this.tv.status;
-        const text = this.translate.instant(textKey);
-        if (text !== textKey) {
-            return text;
-        } else {
-            return this.tv.status;
-        }
     }
 }
