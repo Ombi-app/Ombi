@@ -195,6 +195,13 @@
             "Deleted": "Successfully deleted selected items",
             "Approved": "Successfully approved selected items"
         },
+        "SuccessfullyApproved": "Successfully Approved",
+        "NowAvailable": "Request is now available",
+        "NowUnavailable": "Request is now unavailable",
+        "SuccessfullyReprocessed": "Successfully Re-processed the request",
+        "DeniedRequest": "Denied Request",
+        "RequestCollection": "Request Collection",
+        "CollectionSuccesfullyAdded": "The collection {{name}} has been successfully added!",
         "NeedToSelectEpisodes": "You need to select some episodes!",
         "RequestAddedSuccessfully": "Request for {{title}} has been added successfully"
     },
