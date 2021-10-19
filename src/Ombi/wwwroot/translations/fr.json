@@ -90,7 +90,7 @@
         "TvTab": "Séries",
         "MusicTab": "Musique",
         "AdvancedSearch": "Vous pouvez remplir l'un des éléments ci-dessous pour découvrir de nouveaux médias. Tous les résultats sont triés par popularité",
-        "AdvancedSearchHeader": "Advanced Search",
+        "AdvancedSearchHeader": "Recherche avancée",
         "Suggestions": "Suggestions",
         "NoResults": "Désolé, nous n'avons trouvé aucun résultat !",
         "DigitalDate": "Sortie numérique: {{date}}",
@@ -125,9 +125,9 @@
             "Season": "Saison {{seasonNumber}}",
             "SelectAllInSeason": "Tout sélectionner dans la saison {{seasonNumber}}"
         },
-        "AdvancedSearchInstructions": "Please choose what type of media you are searching for:",
-        "YearOfRelease": "Year of Release",
-        "KeywordSearchingDisclaimer": "Please note that Keyword Searching is very hit and miss due to the inconsistent data in TheMovieDb"
+        "AdvancedSearchInstructions": "Veuillez choisir le type de média que vous recherchez :",
+        "YearOfRelease": "Année de sortie",
+        "KeywordSearchingDisclaimer": "Veuillez noter que la recherche de mots-clés n'est pas très fiable en raison de données incohérentes dans TheMovieDb"
     },
     "Requests": {
         "Title": "Demandes",
@@ -218,7 +218,7 @@
             "DescriptionPlaceholder": "Veuillez décrire le problème rencontré",
             "TitlePlaceholder": "Titre court de votre problème",
             "SelectCategory": "Sélectionner une catégorie",
-            "IssueCreated": "Votre rapport d'erreur a été créée"
+            "IssueCreated": "Votre rapport d'erreur a été créé"
         },
         "Outstanding": "Des rapports d'erreurs sont en attente",
         "ResolvedDate": "Date de résolution",
@@ -236,8 +236,8 @@
         "FilterHeaderRequestStatus": "Statut",
         "Approved": "Validée",
         "PendingApproval": "En attente de validation",
-        "WatchProviders": "Watch Providers",
-        "Keywords": "Keywords"
+        "WatchProviders": "Fournisseurs de contenu",
+        "Keywords": "Mots-clés"
     },
     "UserManagment": {
         "TvRemaining": "TV : {{remaining}}/{{total}} restant(s)",
