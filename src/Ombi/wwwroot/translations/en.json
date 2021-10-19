@@ -239,7 +239,8 @@
         "Delete": "Delete issue",
         "DeletedIssue": "Issue has been deleted",
         "Chat":"Chat",
-        "Requested":"Requested"
+        "Requested":"Requested",
+        "UserOnDate": "{{user}} on {{date}}"
     },
     "Filter": {
         "ClearFilter": "Clear Filter",
