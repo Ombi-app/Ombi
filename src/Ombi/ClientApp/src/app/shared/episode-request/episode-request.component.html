@@ -20,8 +20,8 @@
         <mat-expansion-panel-header>
           <mat-panel-title>
             <mat-checkbox *ngIf="!season.seasonAvailable && isSeasonCheckable(season)" (click)="$event.stopPropagation();" (change)="seasonChanged($event, season)">
-              Season {{season.seasonNumber}}</mat-checkbox>
-            <span *ngIf="season.seasonAvailable || !isSeasonCheckable(season)">Season {{season.seasonNumber}}</span>
+              {{ 'MediaDetails.EpisodeSelector.SeasonNumber' | translate: { number: season.seasonNumber } }}</mat-checkbox>
+            <span *ngIf="season.seasonAvailable || !isSeasonCheckable(season)">{{ 'MediaDetails.EpisodeSelector.SeasonNumber' | translate: { number: season.seasonNumber } }}</span>
           </mat-panel-title>
           <mat-panel-description>
             <!-- Description -->

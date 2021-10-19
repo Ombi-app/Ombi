@@ -194,7 +194,9 @@
             "ChangeAvailability":"Mark Available",
             "Deleted": "Successfully deleted selected items",
             "Approved": "Successfully approved selected items"
-        }
+        },
+        "NeedToSelectEpisodes": "You need to select some episodes!",
+        "RequestAddedSuccessfully": "Request for {{title}} has been added successfully"
     },
     "Issues": {
         "Title": "Issues",
@@ -305,7 +307,8 @@
             "AllSeasonsTooltip": "This will request every season for this show",
             "FirstSeasonTooltip": "This will only request the First Season for this show",
             "LatestSeasonTooltip": "This will only request the Latest Season for this show",
-            "NoEpisodes": "There unfortunately is no episode data for this show yet!"
+            "NoEpisodes": "There unfortunately is no episode data for this show yet!",
+            "SeasonNumber": "Season {{number}}"
         },
         "SonarrConfiguration": "Sonarr Configuration",
         "RadarrConfiguration": "Radarr Configuration",
