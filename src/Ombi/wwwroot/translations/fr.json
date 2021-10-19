@@ -163,7 +163,7 @@
         "ReportIssue": "Signaler un problème",
         "Filter": "Filtre",
         "Sort": "Trier",
-        "SeasonNumberHeading": "Saison: {seasonNumber}",
+        "SeasonNumberHeading": "Saison : {seasonNumber}",
         "SortTitleAsc": "Titre ▲",
         "SortTitleDesc": "Titre ▼",
         "SortRequestDateAsc": "Date de la demande ▲",
