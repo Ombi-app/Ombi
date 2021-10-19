@@ -25,7 +25,7 @@
                 <span id="status">{{ getTVStatusLabel()}}</span>
         </div>
         <span class="label">{{'MediaDetails.FirstAired' | translate }}</span>
-            {{tv.firstAired | date: 'mediumDate'}}
+            {{tv.firstAired | localizedDate: 'mediumDate'}}
     </div>
 
     <div *ngIf="seasonCount">

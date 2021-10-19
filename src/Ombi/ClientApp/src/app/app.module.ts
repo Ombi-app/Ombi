@@ -66,6 +66,39 @@ import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { UnauthorizedInterceptor } from "./auth/unauthorized.interceptor";
 import { environment } from "../environments/environment";
 
+import { registerLocaleData } from '@angular/common';
+// TODO: lazy load locales, probably somewhere in app.component
+import localeDa from '@angular/common/locales/da';
+import localeDe from '@angular/common/locales/de';
+import localeEs from '@angular/common/locales/es';
+import localeFr from '@angular/common/locales/fr';
+import localeIt from '@angular/common/locales/it';
+import localeHu from '@angular/common/locales/hu';
+import localeNl from '@angular/common/locales/nl';
+// import localeNo from '@angular/common/locales/no';
+import localePl from '@angular/common/locales/pl';
+import localePt from '@angular/common/locales/pt';
+import localeSk from '@angular/common/locales/sk';
+import localeSv from '@angular/common/locales/sv';
+import localeBg from '@angular/common/locales/bg';
+import localeRu from '@angular/common/locales/ru';
+
+
+registerLocaleData(localeDa);
+registerLocaleData(localeDe);
+registerLocaleData(localeEs);
+registerLocaleData(localeFr);
+registerLocaleData(localeIt);
+registerLocaleData(localeHu);
+registerLocaleData(localeNl);
+// registerLocaleData(localeNo);
+registerLocaleData(localePl);
+registerLocaleData(localePt);
+registerLocaleData(localeSk);
+registerLocaleData(localeSv);
+registerLocaleData(localeBg);
+registerLocaleData(localeRu);
+
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
     { path: "", redirectTo: "/discover", pathMatch: "full" },
