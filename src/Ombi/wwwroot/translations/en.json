@@ -35,6 +35,7 @@
         },
         "Cancel": "Cancel",
         "Submit": "Submit",
+        "Update": "Update",
 		"tvShow": "TV Show",
         "movie": "Movie"
     },
@@ -361,6 +362,24 @@
         "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
         "MobileQRCode":"Mobile QR Code",
         "LegacyApp":"Launch Legacy App",
-        "NoQrCode":"Please contact your administrator to enable QR codes"
+        "NoQrCode":"Please contact your administrator to enable QR codes",
+        "UserType": "User Type:",
+        "ChangeDetails": "Change Details",
+        "NeedCurrentPassword": "You need your current password to make any changes here",
+        "CurrentPassword": "Current Password",
+        "EmailAddress": "Email Address",
+        "NewPassword": "New Password",
+        "NewPasswordConfirm": "New Password Confirm",
+        "Security": "Security",
+        "Profile": "Profile",
+        "UpdatedYourInformation": "Updated your information"
+    },
+    "UserTypeLabel": {
+        "1": "Local User",
+        "2": "Plex User",
+        "3": "Emby User",
+        "4": "Emby Connect User",
+        "5": "Jellyfin User"
     }
+
 }

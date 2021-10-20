@@ -7,15 +7,15 @@
   </div>
 
   <mat-tab-group>
-    <mat-tab label="Profile">
+    <mat-tab label="{{'UserPreferences.Profile' | translate}}">
       <div class="tab-content">
 
         <div class="row user-type-row">
           <div class="col-5 col-sm-3 col-md-2">
-            User Type:
+            {{'UserPreferences.UserType' | translate}}
           </div>
           <div class="col-7 col-sm-9 col-md-10">
-            {{UserType[user?.userType]}}
+            {{'UserTypeLabel.' + user?.userType | translate }}
           </div>
         </div>
 
@@ -58,7 +58,7 @@
                 <div class="col-12">
                   <a href="https://play.google.com/store/apps/details?id=com.tidusjar.Ombi&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"
                     target="_blank"><img width="200" alt="Get it on Google Play"
-                      src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" /></a>
+                      src="https://play.google.com/intl/{{ selectedLang }}/badges/static/images/badges/{{ selectedLang }}_badge_web_generic.png" /></a>
                 </div>
                 <div class="col-12">
                   <a href="https://apps.apple.com/us/app/ombi/id1335260043" target="_blank"><img
@@ -66,7 +66,9 @@
                       src="{{baseUrl}}/images/appstore.svg" /></a>
                 </div>
                 <div class="col-12">
-                  <button style="margin-left:13px; margin-top: 20px;" mat-raised-button color="accent" type="button" (click)="openMobileApp($event)">Open Mobile App</button>
+                  <button style="margin-left:13px; margin-top: 20px;" mat-raised-button color="accent" type="button" (click)="openMobileApp($event)">
+                    {{'NavigationBar.OpenMobileApp' | translate}}
+                  </button>
                 </div>
               </div>
             </div>
@@ -75,15 +77,15 @@
       </div>
 
     </mat-tab>
-    <mat-tab *ngIf="user?.userType === UserType.LocalUser" label="Security">
+    <mat-tab *ngIf="user?.userType === UserType.LocalUser" label="{{'UserPreferences.Security' | translate}}">
       <div class="tab-content">
-        <h2>Change Details</h2>
+        <h2>{{'UserPreferences.ChangeDetails' | translate}}</h2>
         <form novalidate [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
           <div class="row">
             <div class="col-md-6 col-12">
-              <span>You need your current password to make any changes here</span>
+              <span>{{'UserPreferences.NeedCurrentPassword' | translate}}</span>
               <mat-form-field appearance="outline" floatLabel=always>
-                <mat-label>Current Password</mat-label>
+                <mat-label>{{'UserPreferences.CurrentPassword' | translate}}</mat-label>
                 <input id="currentPassword" matInput type="password" formControlName="currentPassword">
               </mat-form-field>
             </div>
@@ -91,7 +93,7 @@
           <div class="row">
             <div class="col-md-6 col-12">
               <mat-form-field appearance="outline" floatLabel=always>
-                <mat-label>Email Address</mat-label>
+                <mat-label>{{'UserPreferences.EmailAddress' | translate}}</mat-label>
                 <input id="email" matInput formControlName="emailAddress">
               </mat-form-field>
             </div>
@@ -100,7 +102,7 @@
           <div class="row">
             <div class="col-md-6 col-12">
               <mat-form-field appearance="outline" floatLabel=always>
-                <mat-label>New Password</mat-label>
+                <mat-label>{{'UserPreferences.NewPassword' | translate}}</mat-label>
                 <input id="newPassword" matInput type="password" formControlName="password">
               </mat-form-field>
             </div>
@@ -108,12 +110,14 @@
           <div class="row">
             <div class="col-md-6 col-12">
               <mat-form-field appearance="outline" floatLabel=always>
-                <mat-label>New Password Confirm</mat-label>
+                <mat-label>{{'UserPreferences.NewPasswordConfirm' | translate}}</mat-label>
                 <input id="confirmPassword" matInput type="password" formControlName="confirmPassword">
               </mat-form-field>
             </div>
           </div>
-          <button id="submitSecurity" mat-raised-button color="accent" type="submit">Update</button>
+          <button id="submitSecurity" mat-raised-button color="accent" type="submit">
+            {{'Common.Update' | translate}}
+          </button>
         </form>
 
       </div>
