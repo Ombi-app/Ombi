@@ -42,7 +42,7 @@ describe("Discover Cards Requests Tests", () => {
       Page.adminOptionsDialog.isOpen();
       Page.adminOptionsDialog.requestButton.click();
 
-      cy.verifyNotification("has been successfully added!");
+      cy.verifyNotification("has been added successfully");
 
       card.requestButton.should("not.exist");
       card.availabilityText.should("have.text", "Pending");
@@ -91,7 +91,7 @@ describe("Discover Cards Requests Tests", () => {
           card.requestButton.should("be.visible");
           card.requestButton.click();
 
-          cy.verifyNotification("has been successfully added!");
+          cy.verifyNotification("has been added successfully");
 
           card.requestButton.should("not.exist");
           card.availabilityText.should("have.text", "Pending");
