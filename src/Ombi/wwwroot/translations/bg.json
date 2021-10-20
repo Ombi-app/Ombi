@@ -14,6 +14,8 @@
     "Common": {
         "ContinueButton": "Продължаване",
         "Available": "Налично",
+        "Approved": "Approved",
+        "Pending": "Pending",
         "PartiallyAvailable": "Частично налично",
         "Monitored": "Наблюдавано",
         "NotAvailable": "Не е налично",
@@ -33,6 +35,7 @@
         },
         "Cancel": "Отказ",
         "Submit": "Потвърждаване",
+        "Update": "Update",
         "tvShow": "Тв предаване",
         "movie": "Филм"
     },
@@ -192,7 +195,16 @@
             "ChangeAvailability": "Маркиране като налично",
             "Deleted": "Избраните елементи са изтрити успешно",
             "Approved": "Избраните елементи са одобрени успешно"
-        }
+        },
+        "SuccessfullyApproved": "Successfully Approved",
+        "NowAvailable": "Request is now available",
+        "NowUnavailable": "Request is now unavailable",
+        "SuccessfullyReprocessed": "Successfully Re-processed the request",
+        "DeniedRequest": "Denied Request",
+        "RequestCollection": "Request Collection",
+        "CollectionSuccesfullyAdded": "The collection {{name}} has been successfully added!",
+        "NeedToSelectEpisodes": "You need to select some episodes!",
+        "RequestAddedSuccessfully": "Request for {{title}} has been added successfully"
     },
     "Issues": {
         "Title": "Проблеми",
@@ -228,7 +240,8 @@
         "Delete": "Изтриване на проблем",
         "DeletedIssue": "Проблемът е изтрит",
         "Chat": "Чат",
-        "Requested": "Заявено"
+        "Requested": "Заявено",
+        "UserOnDate": "{{user}} on {{date}}"
     },
     "Filter": {
         "ClearFilter": "Изчистване на филтъра",
@@ -269,21 +282,33 @@
         "QualityProfilesSelect": "Изберете профил на качеството",
         "RootFolderSelect": "Изберете основна папка",
         "LanguageProfileSelect": "Изберете езиков профил",
-        "Status": "Състояние",
-        "Availability": "Наличност",
+        "Status": "Status:",
+        "StatusValues": {
+            "Planned": "Planned",
+            "In Production": "In Production",
+            "Released": "Released",
+            "Returning Series": "Returning Series",
+            "Ended": "Ended",
+            "Canceled": "Canceled"
+        },
+        "Seasons": "Seasons:",
+        "Episodes": "Episodes:",
+        "Availability": "Availability:",
         "RequestStatus": "Състояние на заявката",
-        "Quality": "Качество",
-        "RootFolderOverride": "Ръчно задаване на основната папка",
-        "QualityOverride": "Ръчно задаване на качеството",
-        "Genres": "Жанрове",
-        "TheatricalRelease": "Кино премиера",
-        "DigitalRelease": "Дигитална версия",
-        "Votes": "Гласове",
-        "Runtime": "Продължителност",
+        "Quality": "Quality:",
+        "RootFolderOverride": "Root Folder Override:",
+        "QualityOverride": "Quality Override:",
+        "Network": "Network:",
+        "Genres": "Genres:",
+        "FirstAired": "First Aired:",
+        "TheatricalRelease": "Release:",
+        "DigitalRelease": "Digital Release:",
+        "Votes": "Votes:",
+        "Runtime": "Runtime:",
         "Minutes": "{{runtime}} Минути",
-        "Revenue": "Приходи",
-        "Budget": "Бюджет",
-        "Keywords": "Ключови думи/тагове",
+        "Revenue": "Revenue:",
+        "Budget": "Budget:",
+        "Keywords": "Keywords/Tags:",
         "Casts": {
             "CastTitle": "В ролите"
         },
@@ -291,13 +316,17 @@
             "AllSeasonsTooltip": "Това ще заяви всеки сезон на това предаване",
             "FirstSeasonTooltip": "Това ще заяви само първия сезон на това предаване",
             "LatestSeasonTooltip": "Това ще заяви само последния сезон на това предаване",
-            "NoEpisodes": "За съжаление все още няма данни за епизоди на това предаване!"
+            "NoEpisodes": "За съжаление все още няма данни за епизоди на това предаване!",
+            "SeasonNumber": "Season {{number}}"
         },
         "SonarrConfiguration": "Конфигурация на Sonarr",
         "RadarrConfiguration": "Конфигурация на Radarr",
         "RequestOnBehalf": "Заявете от името на",
         "PleaseSelectUser": "Моля, изберете потребител",
-        "StreamingOn": "Поточното изпълнение е включено",
+        "StreamingOn": "Streaming On:",
+        "RequestedBy": "Requested By:",
+        "RequestDate": "Request Date:",
+        "DeniedReason": "Denied Reason:",
         "ReProcessRequest": "Повтаряне на заявка"
     },
     "Discovery": {
@@ -333,6 +362,23 @@
         "LanguageDescription": "Това е езикът, на който искате да се показва интерфейсът на Ombi.",
         "MobileQRCode": "Мобилен QR код",
         "LegacyApp": "Стартирайте старото приложение",
-        "NoQrCode": "Моля, свържете се с вашия администратор, за да активирате QR кодовете"
+        "NoQrCode": "Моля, свържете се с вашия администратор, за да активирате QR кодовете",
+        "UserType": "User Type:",
+        "ChangeDetails": "Change Details",
+        "NeedCurrentPassword": "You need your current password to make any changes here",
+        "CurrentPassword": "Current Password",
+        "EmailAddress": "Email Address",
+        "NewPassword": "New Password",
+        "NewPasswordConfirm": "New Password Confirm",
+        "Security": "Security",
+        "Profile": "Profile",
+        "UpdatedYourInformation": "Updated your information"
+    },
+    "UserTypeLabel": {
+        "1": "Local User",
+        "2": "Plex User",
+        "3": "Emby User",
+        "4": "Emby Connect User",
+        "5": "Jellyfin User"
     }
 }
