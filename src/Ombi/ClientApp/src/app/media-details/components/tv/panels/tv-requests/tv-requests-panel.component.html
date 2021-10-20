@@ -6,7 +6,7 @@
       </mat-panel-title>
       <mat-panel-description>
         {{'Requests.RequestedBy' | translate}} '{{request.requestedUser.userAlias}}' on
-        {{request.requestedDate | amLocal | amDateFormat: 'LL' }}
+        {{request.requestedDate | amLocal | amUserLocale | amDateFormat: 'LL' }}
         <span *ngIf="request.denied"> - {{request.deniedReason}}</span>
       </mat-panel-description>
     </mat-expansion-panel-header>

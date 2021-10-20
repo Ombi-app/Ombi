@@ -133,7 +133,7 @@ export class UserPreferenceComponent implements OnInit {
             currentPassword: values.currentPassword
         }).subscribe(x => {
             if (x.successful) {
-                this.notification.success("Updated your information");
+                this.notification.success(this.translate.instant("UserPreferences.UpdatedYourInformation"));
                 this.user.emailAddress = values.emailAddress;
             } else {
                 this.notification.error(x.errors[0]);

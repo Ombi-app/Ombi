@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from "@angular/core";
 import { IDiscoverCardResult } from "../../interfaces";
 import { RequestType } from "../../../interfaces";
 import { MessageService, RequestService, SearchV2Service } from "../../../services";
+import { TranslateService } from "@ngx-translate/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
 import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
@@ -30,7 +31,7 @@ export class DiscoverCardComponent implements OnInit {
     private tvSearchResult: ISearchTvResultV2;
 
     constructor(private searchService: SearchV2Service, private dialog: MatDialog, private requestService: RequestService,
-        public messageService: MessageService) { }
+        public messageService: MessageService, private translate: TranslateService) { }
 
     public ngOnInit() {
         if (this.result.type == RequestType.tvShow) {
@@ -98,13 +99,13 @@ export class DiscoverCardComponent implements OnInit {
 
     public getAvailbilityStatus(): string {
         if (this.result.available) {
-            return "Available";
+            return this.translate.instant("Common.Available");
         }
         if (this.result.approved) {
-            return "Approved";
+            return this.translate.instant("Common.Approved");
         }
         if (this.result.requested) {
-            return "Pending";
+            return this.translate.instant("Common.Pending");
         }
         return "";
     }
@@ -129,7 +130,7 @@ export class DiscoverCardComponent implements OnInit {
                                     rootFolderOverride: result.radarrFolderId, }).subscribe(x => {
                                 if (x.result) {
                                     this.result.requested = true;
-                                    this.messageService.send(x.message, "Ok");
+                                    this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.result.title }), "Ok");
                                 } else {
                                     this.messageService.send(x.errorMessage, "Ok");
                                 }
@@ -140,7 +141,7 @@ export class DiscoverCardComponent implements OnInit {
                 this.requestService.requestMovie({ theMovieDbId: +this.result.id, languageCode: null, requestOnBehalf: null, qualityPathOverride: null, rootFolderOverride: null }).subscribe(x => {
                     if (x.result) {
                         this.result.requested = true;
-                        this.messageService.send(x.message, "Ok");
+                        this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.result.title }), "Ok");
                     } else {
                         this.messageService.send(x.errorMessage, "Ok");
                     }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { MessageService, SearchV2Service } from "../../../services";
 
+import { TranslateService } from "@ngx-translate/core";
 import { ActivatedRoute } from "@angular/router";
 import { AuthService } from "../../../auth/auth.service";
 import { IDiscoverCardResult } from "../../interfaces";
@@ -25,7 +26,8 @@ export class DiscoverCollectionsComponent implements OnInit {
          private route: ActivatedRoute,
          private requestServiceV2: RequestServiceV2,
          private messageService: MessageService,
-         private auth: AuthService) {
+         private auth: AuthService,
+         private translate: TranslateService) {
         this.route.params.subscribe((params: any) => {
             this.collectionId = params.collectionId;
         });
@@ -42,7 +44,7 @@ export class DiscoverCollectionsComponent implements OnInit {
         this.loading();
         this.requestServiceV2.requestMovieCollection(this.collectionId).subscribe(result => {
             if (result.result) {
-                this.messageService.send(result.message);
+                this.messageService.send(this.translate.instant("Requests.CollectionSuccesfullyAdded", { name: this.collection.name }));
             } else {
                 this.messageService.send(result.errorMessage);
             }
