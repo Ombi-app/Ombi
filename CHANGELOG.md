@@ -1,3 +1,14 @@
+## [4.2.12](https://github.com/Ombi-app/Ombi/compare/v4.2.11...v4.2.12) (2021-10-20)
+
+
+### Bug Fixes
+
+* **newsletter:** :bug: Fixed a few small bugs in the newsletter ([21dba4c](https://github.com/Ombi-app/Ombi/commit/21dba4c524b98b9f2b883d97e7e13329425a8762))
+* **translations:** 🌐 New translations en.json from Crowdin [skip ci] ([52eda6a](https://github.com/Ombi-app/Ombi/commit/52eda6ab917a73842bc02b0d8e0c442e564ca8f0))
+* **translations:** 🌐 New translations en.json from Crowdin [skip ci] ([1095d52](https://github.com/Ombi-app/Ombi/commit/1095d524962648a1e427f0bcd8105fa734dd5b60))
+
+
+
 ## [4.2.11](https://github.com/Ombi-app/Ombi/compare/v4.2.10...v4.2.11) (2021-10-18)
 
 
@@ -27,15 +38,6 @@
 
 * :adhesive_bandage: See if this fixes the proxy issue ([74d1aca](https://github.com/Ombi-app/Ombi/commit/74d1acae499707a7e21401f53eb2bb90c5bb9cfa))
 * :bug: Fixed Ombi not writing the baseUrl correctly ([e9cc8b6](https://github.com/Ombi-app/Ombi/commit/e9cc8b6fe71d3e10c1a901e70227989b3362afe3))
-
-
-
-## [4.2.7](https://github.com/Ombi-app/Ombi/compare/v4.2.6...v4.2.7) (2021-10-14)
-
-
-### Bug Fixes
-
-* :bug: Fixed the issue parsing TheMovieDB dates. They have broken something... ([6e397e0](https://github.com/Ombi-app/Ombi/commit/6e397e02e95f894a92e8bf02428efdcac1275b31))
 
 
 
