@@ -14,6 +14,8 @@
     "Common": {
         "ContinueButton": "Continuer",
         "Available": "Disponible",
+        "Approved": "Approved",
+        "Pending": "Pending",
         "PartiallyAvailable": "Partiellement disponible",
         "Monitored": "Suivi",
         "NotAvailable": "Non disponible",
@@ -33,7 +35,8 @@
         },
         "Cancel": "Annuler",
         "Submit": "Envoyer",
-        "tvShow": "Série TV",
+        "Update": "Update",
+        "tvShow": "Série",
         "movie": "Film"
     },
     "PasswordReset": {
@@ -54,7 +57,7 @@
     "NavigationBar": {
         "Discover": "Découvrir",
         "Search": "Rechercher",
-        "Requests": "En attente",
+        "Requests": "Demandes",
         "UserManagement": "Utilisateurs",
         "Issues": "Problèmes",
         "Vote": "Vote",
@@ -71,7 +74,7 @@
         "ChangeTheme": "Changer de thème",
         "Calendar": "Calendrier",
         "UserPreferences": "Préférences",
-        "FeatureSuggestion": "Suggérer une fonctionnalité",
+        "FeatureSuggestion": "Suggestions",
         "FeatureSuggestionTooltip": "Vous avez une bonne idée ? Suggérez-la ici !",
         "Filter": {
             "Movies": "Films",
@@ -93,8 +96,8 @@
         "AdvancedSearchHeader": "Recherche avancée",
         "Suggestions": "Suggestions",
         "NoResults": "Désolé, nous n'avons trouvé aucun résultat !",
-        "DigitalDate": "Sortie numérique: {{date}}",
-        "TheatricalRelease": "Sortie en salle: {{date}}",
+        "DigitalDate": "Sortie numérique : {{date}}",
+        "TheatricalRelease": "Sortie en salle : {{date}}",
         "ViewOnPlex": "Regarder sur Plex",
         "ViewOnEmby": "Regarder sur Emby",
         "ViewOnJellyfin": "Regarder sur Jellyfin",
@@ -107,7 +110,7 @@
             "UpcomingMovies": "Films à venir",
             "TopRatedMovies": "Films les mieux notés",
             "NowPlayingMovies": "Films à l'affiche",
-            "HomePage": "Accueil",
+            "HomePage": "Site du film",
             "Trailer": "Bande-annonce"
         },
         "TvShows": {
@@ -148,8 +151,8 @@
         "RequestDate": "Date de la demande",
         "QualityOverride": "Remplacement de la qualité :",
         "RootFolderOverride": "Remplacement du répertoire racine :",
-        "ChangeRootFolder": "Modifier le répertoire racine",
-        "ChangeQualityProfile": "Changer le profil de qualité",
+        "ChangeRootFolder": "Répertoire racine",
+        "ChangeQualityProfile": "Profil de qualité",
         "MarkUnavailable": "Marquer comme non disponible",
         "MarkAvailable": "Marquer comme disponible",
         "Remove": "Supprimer",
@@ -178,21 +181,30 @@
             "NextMinute": "Une autre demande sera ajoutée dans {{time}} minute"
         },
         "AllRequests": "Toutes les demandes",
-        "PendingRequests": "Requêtes en attente",
-        "ProcessingRequests": "Requêtes en cours",
-        "AvailableRequests": "Requêtes disponibles",
-        "DeniedRequests": "Requêtes refusées",
-        "RequestsToDisplay": "Requêtes à afficher",
+        "PendingRequests": "Demandes en attente",
+        "ProcessingRequests": "Demandes en cours",
+        "AvailableRequests": "Demandes disponibles",
+        "DeniedRequests": "Demandes refusées",
+        "RequestsToDisplay": "Demandes à afficher",
         "RequestsTitle": "Titre",
         "Details": "Détails",
         "Options": "Options",
         "RequestPanel": {
             "Delete": "Supprimer la demande",
-            "Approve": "Autoriser la demande",
+            "Approve": "Approuver la demande",
             "ChangeAvailability": "Marquer comme Disponible",
             "Deleted": "Éléments sélectionnés supprimés avec succès",
             "Approved": "Éléments sélectionnés approuvés avec succès"
-        }
+        },
+        "SuccessfullyApproved": "Successfully Approved",
+        "NowAvailable": "Request is now available",
+        "NowUnavailable": "Request is now unavailable",
+        "SuccessfullyReprocessed": "Successfully Re-processed the request",
+        "DeniedRequest": "Denied Request",
+        "RequestCollection": "Request Collection",
+        "CollectionSuccesfullyAdded": "The collection {{name}} has been successfully added!",
+        "NeedToSelectEpisodes": "You need to select some episodes!",
+        "RequestAddedSuccessfully": "Request for {{title}} has been added successfully"
     },
     "Issues": {
         "Title": "Problèmes",
@@ -215,35 +227,36 @@
         "ReportedBy": "Signalé par",
         "IssueDialog": {
             "Title": "Signaler un problème",
-            "DescriptionPlaceholder": "Veuillez décrire le problème rencontré",
+            "DescriptionPlaceholder": "Veuillez décrire le problème",
             "TitlePlaceholder": "Titre court de votre problème",
             "SelectCategory": "Sélectionner une catégorie",
-            "IssueCreated": "Votre rapport d'erreur a été créé"
+            "IssueCreated": "Votre problème a été créé"
         },
-        "Outstanding": "Des rapports d'erreurs sont en attente",
+        "Outstanding": "Des problèmes ont été signalés",
         "ResolvedDate": "Date de résolution",
         "CreatedDate": "Signalé le",
         "MarkedAsResolved": "Ce problème a maintenant été marqué comme résolu !",
         "MarkedAsInProgress": "Ce problème a maintenant été marqué comme en cours de traitement !",
-        "Delete": "Supprimer rapport d'erreur",
-        "DeletedIssue": "Votre rapport d'erreur a été supprimé",
+        "Delete": "Supprimer le problème",
+        "DeletedIssue": "Problème supprimé",
         "Chat": "Discuter",
-        "Requested": "Demandé"
+        "Requested": "Demandé",
+        "UserOnDate": "{{user}} on {{date}}"
     },
     "Filter": {
         "ClearFilter": "Effacer les filtres",
         "FilterHeaderAvailability": "Disponibilité",
         "FilterHeaderRequestStatus": "Statut",
-        "Approved": "Validée",
-        "PendingApproval": "En attente de validation",
+        "Approved": "Approuvée",
+        "PendingApproval": "En attente d'approbation",
         "WatchProviders": "Fournisseurs de contenu",
         "Keywords": "Mots-clés"
     },
     "UserManagment": {
-        "TvRemaining": "TV : {{remaining}}/{{total}} restant(s)",
+        "TvRemaining": "Séries : {{remaining}}/{{total}} restant(s)",
         "MovieRemaining": "Films : {{remaining}}/{{total}} restant(s)",
         "MusicRemaining": "Musique : {{remaining}}/{{total}} restant(s)",
-        "TvDue": "TV : {{date}}",
+        "TvDue": "Séries : {{date}}",
         "MovieDue": "Film : {{date}}",
         "MusicDue": "Musique : {{date}}"
     },
@@ -253,7 +266,7 @@
     },
     "MediaDetails": {
         "Denied": "Refusé",
-        "RecommendationsTitle": "Suggestions",
+        "RecommendationsTitle": "Recommandations",
         "SimilarTitle": "Similaires",
         "VideosTitle": "Vidéos",
         "AlbumsTitle": "Albums",
@@ -261,7 +274,7 @@
         "ClearSelection": "Désélectionner",
         "RequestSelectedAlbums": "Demander les Albums sélectionnés",
         "ViewCollection": "Afficher la Collection",
-        "NotEnoughInfo": "Malheureusement, il n'y a pas encore assez d'informations à propos de ce média !",
+        "NotEnoughInfo": "Malheureusement, il n'y a pas encore assez d'informations à propos de cette série !",
         "AdvancedOptions": "Options Avancées",
         "AutoApproveOptions": "Vous pouvez configurer la demande ici. Une fois demandée, elle sera envoyée à votre application de DVR et sera automatiquement approuvée ! Veuillez noter que ceci est optionnel, appuyez simplement sur \"Demander\" pour sauter !",
         "AutoApproveOptionsTv": "Vous pouvez configurer la demande ici. Une fois demandée, elle sera envoyée à votre application de DVR et sera automatiquement approuvée ! Si la demande est déjà dans Sonarr, nous ne changerons pas le dossier racine ou le profil de qualité si vous la définissez ! Veuillez noter que ceci est optionnel, appuyez simplement sur \"Demander\" pour sauter !",
@@ -269,21 +282,33 @@
         "QualityProfilesSelect": "Sélectionner un Profil de Qualité",
         "RootFolderSelect": "Sélectionner un Dossier Racine",
         "LanguageProfileSelect": "Sélectionnez un profil de langue",
-        "Status": "Statut",
-        "Availability": "Disponibilité",
+        "Status": "Status:",
+        "StatusValues": {
+            "Planned": "Planned",
+            "In Production": "In Production",
+            "Released": "Released",
+            "Returning Series": "Returning Series",
+            "Ended": "Ended",
+            "Canceled": "Canceled"
+        },
+        "Seasons": "Seasons:",
+        "Episodes": "Episodes:",
+        "Availability": "Availability:",
         "RequestStatus": "Statut de la Demande",
-        "Quality": "Qualité",
-        "RootFolderOverride": "Remplacer le Dossier Racine",
-        "QualityOverride": "Remplacer la Qualité",
-        "Genres": "Genres",
-        "TheatricalRelease": "Sortie en salle",
-        "DigitalRelease": "Sorti en Numérique",
-        "Votes": "Votes",
-        "Runtime": "Durée de visionnage",
+        "Quality": "Quality:",
+        "RootFolderOverride": "Root Folder Override:",
+        "QualityOverride": "Quality Override:",
+        "Network": "Network:",
+        "Genres": "Genres:",
+        "FirstAired": "First Aired:",
+        "TheatricalRelease": "Release:",
+        "DigitalRelease": "Digital Release:",
+        "Votes": "Votes:",
+        "Runtime": "Runtime:",
         "Minutes": "{{runtime}} Minutes",
-        "Revenue": "Recettes",
-        "Budget": "Coût de Production",
-        "Keywords": "Mots Clés / Tags",
+        "Revenue": "Revenue:",
+        "Budget": "Budget:",
+        "Keywords": "Keywords/Tags:",
         "Casts": {
             "CastTitle": "Casting"
         },
@@ -291,13 +316,17 @@
             "AllSeasonsTooltip": "Cette action demandera toutes les saisons de cette série",
             "FirstSeasonTooltip": "Cette action ne demandera que la Première Saison de cette série",
             "LatestSeasonTooltip": "Cette action ne demandera que la Dernière Saison de cette série",
-            "NoEpisodes": "Il n'y a malheureusement pas encore d'informations d'épisode pour cette série !"
+            "NoEpisodes": "Il n'y a malheureusement pas encore d'informations d'épisode pour cette série !",
+            "SeasonNumber": "Season {{number}}"
         },
         "SonarrConfiguration": "Configuration Sonarr",
         "RadarrConfiguration": "Configuration Radarr",
         "RequestOnBehalf": "Demander au nom de",
         "PleaseSelectUser": "Veuillez sélectionner un utilisateur",
-        "StreamingOn": "Diffusion sur",
+        "StreamingOn": "Streaming On:",
+        "RequestedBy": "Requested By:",
+        "RequestDate": "Request Date:",
+        "DeniedReason": "Denied Reason:",
         "ReProcessRequest": "Refaire une demande"
     },
     "Discovery": {
@@ -308,7 +337,7 @@
         "RecentlyRequestedTab": "Demandé récemment",
         "Movies": "Films",
         "Combined": "Tous",
-        "Tv": "TV",
+        "Tv": "Séries",
         "CardDetails": {
             "Availability": "Disponibilité",
             "Studio": "Studio",
@@ -324,7 +353,7 @@
         "NoSearch": "Désolé, rien ne correspond à votre recherche !"
     },
     "UserPreferences": {
-        "Welcome": "Bienvenue {{username}}!",
+        "Welcome": "Bienvenue {{username}} !",
         "OmbiLanguage": "Langue",
         "DarkMode": "Mode Sombre",
         "Updated": "Mise à jour réussie",
@@ -333,6 +362,23 @@
         "LanguageDescription": "C'est la langue dans laquelle vous souhaitez que l'interface Ombi soit affichée.",
         "MobileQRCode": "QR Code mobile",
         "LegacyApp": "Lancer l'ancienne application",
-        "NoQrCode": "Veuillez contacter votre administrateur pour activer les QR codes"
+        "NoQrCode": "Veuillez contacter votre administrateur pour activer les QR codes",
+        "UserType": "User Type:",
+        "ChangeDetails": "Change Details",
+        "NeedCurrentPassword": "You need your current password to make any changes here",
+        "CurrentPassword": "Current Password",
+        "EmailAddress": "Email Address",
+        "NewPassword": "New Password",
+        "NewPasswordConfirm": "New Password Confirm",
+        "Security": "Security",
+        "Profile": "Profile",
+        "UpdatedYourInformation": "Updated your information"
+    },
+    "UserTypeLabel": {
+        "1": "Local User",
+        "2": "Plex User",
+        "3": "Emby User",
+        "4": "Emby Connect User",
+        "5": "Jellyfin User"
     }
 }
