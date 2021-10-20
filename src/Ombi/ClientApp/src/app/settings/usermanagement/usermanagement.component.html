@@ -39,18 +39,18 @@
             <div class="form-group">
                 <mat-slide-toggle id="importJellyfinUsers" [(ngModel)]="settings.importJellyfinUsers">Import Jellyfin Users</mat-slide-toggle>
             </div>
-            
+
             <div *ngIf="jellyfinUsers">
                 <p>Jellyfin Users excluded from Import</p>
-                
+
                 <p-autoComplete [(ngModel)]="bannedJellyfinUsers" [suggestions]="filteredJellyfinUsers" [multiple]="true" field="username" (completeMethod)="filterJellyfinList($event)"></p-autoComplete>
             </div>
 
         </div>
     </div>
     <div class="col-md-6">
-        <h4>Default Roles</h4>
-
+        <h3>Default Roles</h3>
+        <hr>
         <div *ngFor="let c of claims">
             <div class="form-group">
                 <div>
@@ -60,7 +60,10 @@
             </div>
         </div>
 
-        <h4>Default Request Limits</h4>
+        <h3>Default Request Limits</h3>
+
+        <hr>
+
         <div class="form-group">
             <label for="movieRequestLimit" class="control-label">Movie Request Limit</label>
             <div>
@@ -68,12 +71,38 @@
             </div>
         </div>
 
+        <mat-label>Movie Request Limit Type</mat-label>
+        <mat-select  id="movieRequestLimitType" [(value)]="settings.movieRequestLimitType">
+        <mat-option *ngFor="let value of requestLimitTypes" [value]="value">
+            {{RequestLimitType[value]}}
+        </mat-option>
+        </mat-select>
+
         <div class="form-group">
             <label for="episodeRequestLimit" class="control-label">Episode Request Limit</label>
             <div>
                 <input type="text" [(ngModel)]="settings.episodeRequestLimit" class="form-control form-small form-control-custom" id="episodeRequestLimit" name="episodeRequestLimit" value="{{settings?.episodeRequestLimit}}">
             </div>
+
         </div>
+        <mat-label>Episode Request Limit Type</mat-label>
+        <mat-select  id="episodeRequestLimitType" [(value)]="settings.episodeRequestLimitType">
+        <mat-option *ngFor="let value of requestLimitTypes" [value]="value">
+            {{RequestLimitType[value]}}
+        </mat-option>
+        </mat-select>
+        <div class="form-group">
+            <label for="episodeRequestLimit" class="control-label">Music Request Limit</label>
+            <div>
+                <input type="text" [(ngModel)]="settings.musicRequestLimit" class="form-control form-small form-control-custom" id="musicRequestLimit" name="musicRequestLimit" value="{{settings?.musicRequestLimit}}">
+            </div>
+        </div>
+        <mat-label>Music Request Limit Type</mat-label>
+        <mat-select  id="musicRequestLimitType" [(value)]="settings.musicRequestLimitType">
+        <mat-option *ngFor="let value of requestLimitTypes" [value]="value">
+            {{RequestLimitType[value]}}
+        </mat-option>
+        </mat-select>
 
         <mat-form-field>
             <mat-label [translate]="'UserPreferences.StreamingCountry'"></mat-label>
