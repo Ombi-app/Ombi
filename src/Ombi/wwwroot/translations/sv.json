@@ -14,6 +14,8 @@
     "Common": {
         "ContinueButton": "Fortsätt",
         "Available": "Tillgänglig",
+        "Approved": "Approved",
+        "Pending": "Pending",
         "PartiallyAvailable": "Delvis tillgänglig",
         "Monitored": "Övervakad",
         "NotAvailable": "Inte tillgänglig",
@@ -33,6 +35,7 @@
         },
         "Cancel": "Avbryt",
         "Submit": "Skicka in",
+        "Update": "Update",
         "tvShow": "TV Show",
         "movie": "Movie"
     },
@@ -192,7 +195,16 @@
             "ChangeAvailability": "Markera Tillgänglig",
             "Deleted": "Successfully deleted selected items",
             "Approved": "Successfully approved selected items"
-        }
+        },
+        "SuccessfullyApproved": "Successfully Approved",
+        "NowAvailable": "Request is now available",
+        "NowUnavailable": "Request is now unavailable",
+        "SuccessfullyReprocessed": "Successfully Re-processed the request",
+        "DeniedRequest": "Denied Request",
+        "RequestCollection": "Request Collection",
+        "CollectionSuccesfullyAdded": "The collection {{name}} has been successfully added!",
+        "NeedToSelectEpisodes": "You need to select some episodes!",
+        "RequestAddedSuccessfully": "Request for {{title}} has been added successfully"
     },
     "Issues": {
         "Title": "Problem",
@@ -228,7 +240,8 @@
         "Delete": "Ta bort problem",
         "DeletedIssue": "Problemet har tagits bort",
         "Chat": "Chat",
-        "Requested": "Requested"
+        "Requested": "Requested",
+        "UserOnDate": "{{user}} on {{date}}"
     },
     "Filter": {
         "ClearFilter": "Rensa filter",
@@ -269,21 +282,33 @@
         "QualityProfilesSelect": "Välj en kvalitetsprofil",
         "RootFolderSelect": "Välj en rotmapp",
         "LanguageProfileSelect": "Select A Language Profile",
-        "Status": "Status",
-        "Availability": "Tillgänglighet",
+        "Status": "Status:",
+        "StatusValues": {
+            "Planned": "Planned",
+            "In Production": "In Production",
+            "Released": "Released",
+            "Returning Series": "Returning Series",
+            "Ended": "Ended",
+            "Canceled": "Canceled"
+        },
+        "Seasons": "Seasons:",
+        "Episodes": "Episodes:",
+        "Availability": "Availability:",
         "RequestStatus": "Status för begäran",
-        "Quality": "Kvalitet",
-        "RootFolderOverride": "Rotmappsöverskridande",
-        "QualityOverride": "Kvalitétsöverskridande",
-        "Genres": "Genrer",
-        "TheatricalRelease": "Biopremiär",
-        "DigitalRelease": "Digital release",
-        "Votes": "Röster",
-        "Runtime": "Speltid",
+        "Quality": "Quality:",
+        "RootFolderOverride": "Root Folder Override:",
+        "QualityOverride": "Quality Override:",
+        "Network": "Network:",
+        "Genres": "Genres:",
+        "FirstAired": "First Aired:",
+        "TheatricalRelease": "Release:",
+        "DigitalRelease": "Digital Release:",
+        "Votes": "Votes:",
+        "Runtime": "Runtime:",
         "Minutes": "{{runtime}} minuter",
-        "Revenue": "Intäkter",
-        "Budget": "Budget",
-        "Keywords": "Nyckelord/Taggar",
+        "Revenue": "Revenue:",
+        "Budget": "Budget:",
+        "Keywords": "Keywords/Tags:",
         "Casts": {
             "CastTitle": "Rollista"
         },
@@ -291,13 +316,17 @@
             "AllSeasonsTooltip": "Detta kommer att begära varje säsong för denna serie",
             "FirstSeasonTooltip": "Detta kommer endast att begära den första säsongen för denna serie",
             "LatestSeasonTooltip": "Detta kommer endast att begära den senaste säsongen för denna serie",
-            "NoEpisodes": "There unfortunately is no episode data for this show yet!"
+            "NoEpisodes": "There unfortunately is no episode data for this show yet!",
+            "SeasonNumber": "Season {{number}}"
         },
         "SonarrConfiguration": "Sonarr Configuration",
         "RadarrConfiguration": "Radarr Configuration",
         "RequestOnBehalf": "Request on behalf of",
         "PleaseSelectUser": "Please select a user",
-        "StreamingOn": "Streaming On",
+        "StreamingOn": "Streaming On:",
+        "RequestedBy": "Requested By:",
+        "RequestDate": "Request Date:",
+        "DeniedReason": "Denied Reason:",
         "ReProcessRequest": "Re-Process Request"
     },
     "Discovery": {
@@ -333,6 +362,23 @@
         "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
         "MobileQRCode": "Mobile QR Code",
         "LegacyApp": "Launch Legacy App",
-        "NoQrCode": "Please contact your administrator to enable QR codes"
+        "NoQrCode": "Please contact your administrator to enable QR codes",
+        "UserType": "User Type:",
+        "ChangeDetails": "Change Details",
+        "NeedCurrentPassword": "You need your current password to make any changes here",
+        "CurrentPassword": "Current Password",
+        "EmailAddress": "Email Address",
+        "NewPassword": "New Password",
+        "NewPasswordConfirm": "New Password Confirm",
+        "Security": "Security",
+        "Profile": "Profile",
+        "UpdatedYourInformation": "Updated your information"
+    },
+    "UserTypeLabel": {
+        "1": "Local User",
+        "2": "Plex User",
+        "3": "Emby User",
+        "4": "Emby Connect User",
+        "5": "Jellyfin User"
     }
 }
