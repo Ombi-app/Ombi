@@ -88,3 +88,7 @@
 table {
     width: 100%;
 }
+
+::ng-deep .p-sidebar {
+    background: $background-dark !important;
+}
