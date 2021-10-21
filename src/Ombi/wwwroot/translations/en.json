@@ -284,9 +284,12 @@
         "LanguageProfileSelect":"Select A Language Profile",
         "Status":"Status:",
         "StatusValues" : {
+            "Rumored" : "Rumored",
             "Planned": "Planned",
             "In Production": "In Production",
+            "Post Production": "Post Production",
             "Released": "Released",
+            "Running": "Running",
             "Returning Series": "Returning Series",
             "Ended": "Ended",
             "Canceled": "Canceled"
