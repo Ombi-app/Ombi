@@ -573,7 +573,8 @@ namespace Ombi.Core.Engine
             {
                 results.Add(await RequestMovie(new MovieRequestViewModel
                 {
-                    TheMovieDbId = collection.id
+                    TheMovieDbId = collection.id,
+                    LanguageCode = langCode
                 }));
             }
 
