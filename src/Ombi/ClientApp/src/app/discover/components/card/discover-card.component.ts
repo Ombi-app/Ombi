@@ -124,7 +124,7 @@ export class DiscoverCardComponent implements OnInit {
                     dialog.afterClosed().subscribe((result) => {
                         if (result) {
                                 this.requestService.requestMovie({ theMovieDbId: +this.result.id,
-                                    languageCode: null,
+                                    languageCode: navigator.language,
                                     qualityPathOverride: result.radarrPathId,
                                     requestOnBehalf: result.username?.id,
                                     rootFolderOverride: result.radarrFolderId, }).subscribe(x => {
@@ -138,7 +138,7 @@ export class DiscoverCardComponent implements OnInit {
                         }
                     });
                 } else {
-                this.requestService.requestMovie({ theMovieDbId: +this.result.id, languageCode: null, requestOnBehalf: null, qualityPathOverride: null, rootFolderOverride: null }).subscribe(x => {
+                this.requestService.requestMovie({ theMovieDbId: +this.result.id, languageCode: navigator.language, requestOnBehalf: null, qualityPathOverride: null, rootFolderOverride: null }).subscribe(x => {
                     if (x.result) {
                         this.result.requested = true;
                         this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.result.title }), "Ok");

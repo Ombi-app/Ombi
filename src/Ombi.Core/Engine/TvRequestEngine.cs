@@ -183,7 +183,7 @@ namespace Ombi.Core.Engine
 
             var tvBuilder = new TvShowRequestBuilderV2(MovieDbApi);
             (await tvBuilder
-                .GetShowInfo(tv.TheMovieDbId))
+                .GetShowInfo(tv.TheMovieDbId, tv.languageCode))
                 .CreateTvList(tv)
                 .CreateChild(tv, canRequestOnBehalf ? tv.RequestOnBehalf : user.Id);
 

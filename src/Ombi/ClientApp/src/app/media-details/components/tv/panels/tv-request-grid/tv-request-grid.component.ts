@@ -43,7 +43,7 @@ export class TvRequestGridComponent {
 
         const viewModel = <ITvRequestViewModelV2>{
             firstSeason: this.tv.firstSeason, latestSeason: this.tv.latestSeason, requestAll: this.tv.requestAll, theMovieDbId: this.tv.id,
-            requestOnBehalf: null
+            requestOnBehalf: null, languageCode: navigator.language
         };
         viewModel.seasons = [];
         this.tv.seasonRequests.forEach((season) => {

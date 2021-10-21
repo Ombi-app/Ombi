@@ -45,7 +45,7 @@ export class EpisodeRequestComponent {
 
         const viewModel = <ITvRequestViewModelV2>{
             firstSeason: this.data.series.firstSeason, latestSeason: this.data.series.latestSeason, requestAll: this.data.series.requestAll, theMovieDbId: this.data.series.id,
-            requestOnBehalf: this.data.requestOnBehalf
+            requestOnBehalf: this.data.requestOnBehalf, languageCode: navigator.language
         };
         viewModel.seasons = [];
         this.data.series.seasonRequests.forEach((season) => {
