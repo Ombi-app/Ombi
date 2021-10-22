@@ -208,13 +208,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 if (!test)
                 {
-                    // Get the users to send it to
-                    var users = await _userManager.GetUsersInRoleAsync(OmbiRoles.ReceivesNewsletter);
-                    if (!users.Any())
-                    {
-                        return;
-                    }
-
+                    var users = new List<OmbiUser>();
                     foreach (var emails in settings.ExternalEmails)
                     {
                         users.Add(new OmbiUser
@@ -224,11 +218,23 @@ namespace Ombi.Schedule.Jobs.Ombi
                         });
                     }
 
+                    // Get the users to send it to
+                    users.AddRange(await _userManager.GetUsersInRoleAsync(OmbiRoles.ReceivesNewsletter));
+                    if (!users.Any())
+                    {
+                        return;
+                    }                    
+
                     var messageContent = ParseTemplate(template, customization);
                     var email = new NewsletterTemplate();
 
-                    foreach (var user in users)
-                    {
+                    foreach (var user in users.DistinctBy(x => x.Email))
+                    {                        // Get the users to send it to
+                        if (user.Email.IsNullOrEmpty())
+                        {
+                            continue;
+                        }
+
                         var url = GenerateUnsubscribeLink(customization.ApplicationUrl, user.Id);
                         var html = email.LoadTemplate(messageContent.Subject, messageContent.Message, body, customization.Logo, url);
 
@@ -243,11 +249,6 @@ namespace Ombi.Schedule.Jobs.Ombi
                             Subject = messageContent.Subject
                         };
 
-                        // Get the users to send it to
-                        if (user.Email.IsNullOrEmpty())
-                        {
-                            continue;
-                        }
                         // Send the message to the user
                         message.To.Add(new MailboxAddress(user.Email.Trim(), user.Email.Trim()));
 
@@ -391,7 +392,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         public static string GenerateUnsubscribeLink(string applicationUrl, string id)
         {
-            if (!applicationUrl.HasValue())
+            if (!applicationUrl.HasValue() || !id.HasValue())
             {
                 return string.Empty;
             }

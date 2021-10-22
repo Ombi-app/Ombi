@@ -99,11 +99,11 @@
 
 
                     <div id="releaseDate">{{ 'Requests.TheatricalRelease' | translate: {date: request.releaseDate |
-                        amLocal | amDateFormat: 'LL'} }}</div>
+                        amLocal | amUserLocale | amDateFormat: 'LL'} }}</div>
                     <div *ngIf="request.digitalReleaseDate" id="digitalReleaseDate">{{ 'Requests.DigitalRelease' |
-                        translate: {date: request.digitalReleaseDate | amLocal | amDateFormat: 'LL'} }}</div>
+                        translate: {date: request.digitalReleaseDate | amLocal | amUserLocale | amDateFormat: 'LL'} }}</div>
                     <div id="requestedDate">{{ 'Requests.RequestDate' | translate }} {{request.requestedDate | amLocal
-                        | amDateFormat: 'LL'}}</div>
+                        | amUserLocale | amDateFormat: 'LL'}}</div>
                     <br />
                 </div>
                 <div *ngIf="isAdmin">

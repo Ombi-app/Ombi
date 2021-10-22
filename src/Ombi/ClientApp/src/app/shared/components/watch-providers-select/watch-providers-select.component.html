@@ -1,5 +1,5 @@
 <mat-form-field class="example-chip-list"  appearance="outline" floatLabel=auto>
-    <mat-label>Watch Providers</mat-label>
+    <mat-label>{{ 'Filter.WatchProviders' | translate }}</mat-label>
   <mat-chip-list #chipList aria-label="Fruit selection">
     <mat-chip
       *ngFor="let word of form.controls.watchProviders.value"

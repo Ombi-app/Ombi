@@ -1,8 +1,8 @@
 ﻿import { Component, OnInit } from "@angular/core";
+import { EmbyService, IdentityService, JellyfinService, JobService, NotificationService, PlexService, SettingsService } from "../../services";
+import { ICheckbox, IUserManagementSettings, RequestLimitType } from "../../interfaces";
 
-import { ICheckbox, IUserManagementSettings } from "../../interfaces";
 import { IUsersModel } from "../../interfaces";
-import { EmbyService, JellyfinService, IdentityService, JobService, NotificationService, PlexService, SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./usermanagement.component.html",
@@ -30,6 +30,9 @@ export class UserManagementComponent implements OnInit {
 
     public enableImportButton = false;
     public countries: string[];
+
+    public requestLimitTypes: RequestLimitType[] = [RequestLimitType.Day, RequestLimitType.Week, RequestLimitType.Month];
+    public RequestLimitType = RequestLimitType;
 
     constructor(private readonly settingsService: SettingsService,
                 private readonly notificationService: NotificationService,
@@ -120,7 +123,7 @@ export class UserManagementComponent implements OnInit {
             if (x === true) {
                 this.notificationService.success("Successfully saved the User Management Settings");
             } else {
-                this.notificationService.success( "There was an error when saving the Ombi settings");
+                this.notificationService.success( "There was an error when saving the settings");
             }
         });
     }

@@ -9,6 +9,7 @@ import { AuthService } from "../../../auth/auth.service";
 import { IMovieRequests, RequestType, IAdvancedData } from "../../../interfaces";
 import { DenyDialogComponent } from "../shared/deny-dialog/deny-dialog.component";
 import { NewIssueComponent } from "../shared/new-issue/new-issue.component";
+import { TranslateService } from "@ngx-translate/core";
 import { MovieAdvancedOptionsComponent } from "./panels/movie-advanced-options/movie-advanced-options.component";
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { RequestBehalfComponent } from "../shared/request-behalf/request-behalf.component";
@@ -39,7 +40,8 @@ export class MovieDetailsComponent {
         private sanitizer: DomSanitizer, private imageService: ImageService,
         public dialog: MatDialog, private requestService: RequestService,
         private requestService2: RequestServiceV2, private radarrService: RadarrService,
-        public messageService: MessageService, private auth: AuthService, private settingsState: SettingsStateService) {
+        public messageService: MessageService, private auth: AuthService, private settingsState: SettingsStateService,
+        private translate: TranslateService) {
         this.route.params.subscribe(async (params: any) => {
             if (typeof params.movieDbId === 'string' || params.movieDbId instanceof String) {
                 if (params.movieDbId.startsWith("tt")) {
@@ -97,7 +99,7 @@ export class MovieDetailsComponent {
                     if (requestResult.result) {
                         this.movie.requested = true;
                         this.movie.requestId = requestResult.requestId;
-                        this.messageService.send(requestResult.message, "Ok");
+                        this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.movie.title }), "Ok");
                         this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
                     } else {
                         this.messageService.send(requestResult.errorMessage, "Ok");
@@ -110,7 +112,7 @@ export class MovieDetailsComponent {
             this.movie.requested = true;
             this.movie.requestId = result.requestId;
             this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
-            this.messageService.send(result.message, "Ok");
+            this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.movie.title }), "Ok");
         } else {
             this.messageService.send(result.errorMessage, "Ok");
         }
@@ -151,7 +153,7 @@ export class MovieDetailsComponent {
         this.movie.approved = true;
         const result = await this.requestService.approveMovie({ id: this.movieRequest.id }).toPromise();
         if (result.result) {
-            this.messageService.send("Successfully Approved", "Ok");
+            this.messageService.send(this.translate.instant("Requests.SuccessfullyApproved"), "Ok");
         } else {
             this.movie.approved = false;
             this.messageService.send(result.errorMessage, "Ok");
@@ -162,7 +164,7 @@ export class MovieDetailsComponent {
         const result = await this.requestService.markMovieAvailable({ id: this.movieRequest.id }).toPromise();
         if (result.result) {
             this.movie.available = true;
-            this.messageService.send(result.message, "Ok");
+            this.messageService.send(this.translate.instant("Requests.NowAvailable"), "Ok");
         } else {
             this.messageService.send(result.errorMessage, "Ok");
         }
@@ -173,7 +175,7 @@ export class MovieDetailsComponent {
         const result = await this.requestService.markMovieUnavailable({ id: this.movieRequest.id }).toPromise();
         if (result.result) {
             this.movie.available = false;
-            this.messageService.send(result.message, "Ok");
+            this.messageService.send(this.translate.instant("Requests.NowUnavailable"), "Ok");
         } else {
             this.messageService.send(result.errorMessage, "Ok");
         }
@@ -204,7 +206,7 @@ export class MovieDetailsComponent {
     public reProcessRequest() {
         this.requestService2.reprocessRequest(this.movieRequest.id, RequestType.movie).subscribe(result => {
             if (result.result) {
-                this.messageService.send(result.message ? result.message : "Successfully Re-processed the request", "Ok");
+                this.messageService.send(result.message ? result.message : this.translate.instant("Requests.SuccessfullyReprocessed"), "Ok");
             } else {
                 this.messageService.send(result.errorMessage, "Ok");
             }

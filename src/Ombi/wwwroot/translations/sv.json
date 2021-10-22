@@ -14,6 +14,8 @@
     "Common": {
         "ContinueButton": "Fortsätt",
         "Available": "Tillgänglig",
+        "Approved": "Approved",
+        "Pending": "Pending",
         "PartiallyAvailable": "Delvis tillgänglig",
         "Monitored": "Övervakad",
         "NotAvailable": "Inte tillgänglig",
@@ -22,6 +24,7 @@
         "RequestDenied": "Efterfrågan nekas",
         "NotRequested": "Inte begärd",
         "Requested": "Begärd",
+        "Search": "Search",
         "Request": "Begär",
         "Denied": "Nekad",
         "Approve": "Godkänn",
@@ -31,7 +34,10 @@
             "Validation": "Vänligen kontrollera din angivna värden"
         },
         "Cancel": "Avbryt",
-        "Submit": "Skicka in"
+        "Submit": "Skicka in",
+        "Update": "Update",
+        "tvShow": "TV Show",
+        "movie": "Movie"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "E-postadress",
@@ -86,12 +92,15 @@
         "MoviesTab": "Filmer",
         "TvTab": "TV-serier",
         "MusicTab": "Musik",
+        "AdvancedSearch": "You can fill in any of the below to discover new media. All of the results are sorted by popularity",
+        "AdvancedSearchHeader": "Advanced Search",
         "Suggestions": "Förslag",
         "NoResults": "Tyvärr hittade vi inte några resultat!",
         "DigitalDate": "Digitalt releasedatum: {{date}}",
         "TheatricalRelease": "Biopremiär: {{date}}",
         "ViewOnPlex": "Visa på Plex",
         "ViewOnEmby": "Visa på Emby",
+        "ViewOnJellyfin": "Play On Jellyfin",
         "RequestAdded": "Begäran av {{title}} har lagts till",
         "Similar": "Liknande",
         "Refine": "Förfina",
@@ -118,7 +127,10 @@
             "SubmitRequest": "Skicka begäran",
             "Season": "Säsong {{seasonNumber}}",
             "SelectAllInSeason": "Välj alla avsnitt i säsong {{seasonNumber}}"
-        }
+        },
+        "AdvancedSearchInstructions": "Please choose what type of media you are searching for:",
+        "YearOfRelease": "Year of Release",
+        "KeywordSearchingDisclaimer": "Please note that Keyword Searching is very hit and miss due to the inconsistent data in TheMovieDb"
     },
     "Requests": {
         "Title": "Efterfrågningar",
@@ -146,6 +158,7 @@
         "Remove": "Ta bort",
         "Deny": "Neka",
         "DenyReason": "Anledning för nekande",
+        "DeniedReason": "Denied Reason",
         "Season": "Säsong",
         "GridTitle": "Titel",
         "AirDate": "Releasedatum",
@@ -179,8 +192,19 @@
         "RequestPanel": {
             "Delete": "Ta bort förfrågan",
             "Approve": "Godkänn begäran",
-            "ChangeAvailability": "Markera Tillgänglig"
-        }
+            "ChangeAvailability": "Markera Tillgänglig",
+            "Deleted": "Successfully deleted selected items",
+            "Approved": "Successfully approved selected items"
+        },
+        "SuccessfullyApproved": "Successfully Approved",
+        "NowAvailable": "Request is now available",
+        "NowUnavailable": "Request is now unavailable",
+        "SuccessfullyReprocessed": "Successfully Re-processed the request",
+        "DeniedRequest": "Denied Request",
+        "RequestCollection": "Request Collection",
+        "CollectionSuccesfullyAdded": "The collection {{name}} has been successfully added!",
+        "NeedToSelectEpisodes": "You need to select some episodes!",
+        "RequestAddedSuccessfully": "Request for {{title}} has been added successfully"
     },
     "Issues": {
         "Title": "Problem",
@@ -214,14 +238,19 @@
         "MarkedAsResolved": "Detta problem har nu markerats som löst!",
         "MarkedAsInProgress": "Detta problem har nu markerats som på pågående!",
         "Delete": "Ta bort problem",
-        "DeletedIssue": "Problemet har tagits bort"
+        "DeletedIssue": "Problemet har tagits bort",
+        "Chat": "Chat",
+        "Requested": "Requested",
+        "UserOnDate": "{{user}} on {{date}}"
     },
     "Filter": {
         "ClearFilter": "Rensa filter",
         "FilterHeaderAvailability": "Tillgänglighet",
         "FilterHeaderRequestStatus": "Status",
         "Approved": "Godkänd",
-        "PendingApproval": "Väntar på godkännande"
+        "PendingApproval": "Väntar på godkännande",
+        "WatchProviders": "Watch Providers",
+        "Keywords": "Keywords"
     },
     "UserManagment": {
         "TvRemaining": "TV: {{remaining}}/{{total}} återstående",
@@ -247,36 +276,65 @@
         "ViewCollection": "Visa samling",
         "NotEnoughInfo": "Tyvärr finns det inte tillräckligt med information om denna serie ännu!",
         "AdvancedOptions": "Avancerade inställningar",
+        "AutoApproveOptions": "You can configure the request here, once requested it will be send to your DVR application and will be auto approved! Please note, this is optional, just press Request to skip!",
+        "AutoApproveOptionsTv": "You can configure the request here, once requested it will be send to your DVR application and will be auto approved! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it!  Please note, this is optional, just press Request to skip!",
+        "AutoApproveOptionsTvShort": "You can configure the request here, once requested it will be send to your DVR application! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it! Please note, this is optional, just press Request to skip!",
         "QualityProfilesSelect": "Välj en kvalitetsprofil",
         "RootFolderSelect": "Välj en rotmapp",
-        "Status": "Status",
-        "Availability": "Tillgänglighet",
+        "LanguageProfileSelect": "Select A Language Profile",
+        "Status": "Status:",
+        "StatusValues": {
+            "Planned": "Planned",
+            "In Production": "In Production",
+            "Released": "Released",
+            "Returning Series": "Returning Series",
+            "Ended": "Ended",
+            "Canceled": "Canceled"
+        },
+        "Seasons": "Seasons:",
+        "Episodes": "Episodes:",
+        "Availability": "Availability:",
         "RequestStatus": "Status för begäran",
-        "Quality": "Kvalitet",
-        "RootFolderOverride": "Rotmappsöverskridande",
-        "QualityOverride": "Kvalitétsöverskridande",
-        "Genres": "Genrer",
-        "TheatricalRelease": "Biopremiär",
-        "DigitalRelease": "Digital release",
-        "Votes": "Röster",
-        "Runtime": "Speltid",
+        "Quality": "Quality:",
+        "RootFolderOverride": "Root Folder Override:",
+        "QualityOverride": "Quality Override:",
+        "Network": "Network:",
+        "Genres": "Genres:",
+        "FirstAired": "First Aired:",
+        "TheatricalRelease": "Release:",
+        "DigitalRelease": "Digital Release:",
+        "Votes": "Votes:",
+        "Runtime": "Runtime:",
         "Minutes": "{{runtime}} minuter",
-        "Revenue": "Intäkter",
-        "Budget": "Budget",
-        "Keywords": "Nyckelord/Taggar",
+        "Revenue": "Revenue:",
+        "Budget": "Budget:",
+        "Keywords": "Keywords/Tags:",
         "Casts": {
             "CastTitle": "Rollista"
         },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Detta kommer att begära varje säsong för denna serie",
             "FirstSeasonTooltip": "Detta kommer endast att begära den första säsongen för denna serie",
-            "LatestSeasonTooltip": "Detta kommer endast att begära den senaste säsongen för denna serie"
-        }
+            "LatestSeasonTooltip": "Detta kommer endast att begära den senaste säsongen för denna serie",
+            "NoEpisodes": "There unfortunately is no episode data for this show yet!",
+            "SeasonNumber": "Season {{number}}"
+        },
+        "SonarrConfiguration": "Sonarr Configuration",
+        "RadarrConfiguration": "Radarr Configuration",
+        "RequestOnBehalf": "Request on behalf of",
+        "PleaseSelectUser": "Please select a user",
+        "StreamingOn": "Streaming On:",
+        "RequestedBy": "Requested By:",
+        "RequestDate": "Request Date:",
+        "DeniedReason": "Denied Reason:",
+        "ReProcessRequest": "Re-Process Request"
     },
     "Discovery": {
         "PopularTab": "Populära",
         "TrendingTab": "Hetast just nu",
         "UpcomingTab": "Kommande",
+        "SeasonalTab": "Seasonal",
+        "RecentlyRequestedTab": "Recently Requested",
         "Movies": "Filmer",
         "Combined": "Kombinerad",
         "Tv": "TV",
@@ -291,11 +349,36 @@
             "FirstAired": "Sändes första gången",
             "Writer": "Författare",
             "ExecProducer": "Exekutiv producent"
-        }
+        },
+        "NoSearch": "Sorry, nothing matches your search!"
     },
     "UserPreferences": {
         "Welcome": "Välkommen {{username}}!",
         "OmbiLanguage": "Språk",
-        "DarkMode": "Mörkt läge"
+        "DarkMode": "Mörkt läge",
+        "Updated": "Successfully Updated",
+        "StreamingCountry": "Streaming Country",
+        "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will have US related streaming information.",
+        "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
+        "MobileQRCode": "Mobile QR Code",
+        "LegacyApp": "Launch Legacy App",
+        "NoQrCode": "Please contact your administrator to enable QR codes",
+        "UserType": "User Type:",
+        "ChangeDetails": "Change Details",
+        "NeedCurrentPassword": "You need your current password to make any changes here",
+        "CurrentPassword": "Current Password",
+        "EmailAddress": "Email Address",
+        "NewPassword": "New Password",
+        "NewPasswordConfirm": "New Password Confirm",
+        "Security": "Security",
+        "Profile": "Profile",
+        "UpdatedYourInformation": "Updated your information"
+    },
+    "UserTypeLabel": {
+        "1": "Local User",
+        "2": "Plex User",
+        "3": "Emby User",
+        "4": "Emby Connect User",
+        "5": "Jellyfin User"
     }
 }

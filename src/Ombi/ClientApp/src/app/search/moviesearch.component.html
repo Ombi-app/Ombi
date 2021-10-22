@@ -103,7 +103,7 @@
                                 amDateFormat: 'LL'} }}</span>
                             <span *ngIf="result.digitalReleaseDate" class="label label-info" id="releaseDateLabel"
                                 target="_blank">{{ 'Search.DigitalDate' | translate: {date: result.digitalReleaseDate |
-                                amLocal | amDateFormat: 'LL'} }}</span>
+                                amLocal | amUserLocale | amDateFormat: 'LL'} }}</span>
 
                             <a *ngIf="result.homepage" href="{{result.homepage}}" id="homePageLabel" target="_blank"><span
                                     class="label label-info" [translate]="'Search.Movies.HomePage'"></span></a>

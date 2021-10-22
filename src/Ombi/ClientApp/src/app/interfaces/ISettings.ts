@@ -1,4 +1,5 @@
 ﻿import { ISettings } from "./ICommon";
+import { RequestLimitType } from ".";
 
 export interface IExternalSettings extends ISettings {
   ssl: boolean;
@@ -254,10 +255,14 @@ export interface IUserManagementSettings extends ISettings {
   defaultRoles: string[];
   movieRequestLimit: number;
   episodeRequestLimit: number;
+  musicRequestLimit: number;
   bannedPlexUserIds: string[];
   bannedEmbyUserIds: string[];
   bannedJellyfinUserIds: string[];
   defaultStreamingCountry: string;
+  movieRequestLimitType: RequestLimitType;
+  episodeRequestLimitType: RequestLimitType;
+  musicRequestLimitType: RequestLimitType;
 }
 
 export interface IAbout {

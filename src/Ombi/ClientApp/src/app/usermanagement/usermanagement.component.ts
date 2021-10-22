@@ -1,5 +1,5 @@
 ﻿import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
-import { ICheckbox, ICustomizationSettings, IEmailNotificationSettings, IUser } from "../interfaces";
+import { ICheckbox, ICustomizationSettings, IEmailNotificationSettings, IUser, RequestLimitType } from "../interfaces";
 import { IdentityService, NotificationService, SettingsService } from "../services";
 
 import { CustomizationFacade } from "../state/customization";
@@ -32,6 +32,12 @@ export class UserManagementComponent implements OnInit {
     public plexEnabled: boolean;
 
     public countries: string[];
+    public requestLimitTypes: RequestLimitType[] = [RequestLimitType.Day, RequestLimitType.Week, RequestLimitType.Month];
+    public RequestLimitType = RequestLimitType;
+
+    public musicRequestLimitType: RequestLimitType;
+    public episodeRequestLimitType: RequestLimitType;
+    public movieRequestLimitType: RequestLimitType;
 
     constructor(private identityService: IdentityService,
         private settingsService: SettingsService,
@@ -95,6 +101,15 @@ export class UserManagementComponent implements OnInit {
             if (this.bulkStreaming) {
                 x.streamingCountry = this.bulkStreaming;
             }
+            if (this.musicRequestLimitType) {
+                x.musicRequestLimitType = this.musicRequestLimitType;
+            }
+            if (this.episodeRequestLimitType) {
+                x.episodeRequestLimitType = this.episodeRequestLimitType;
+            }
+            if (this.movieRequestLimitType) {
+                x.movieRequestLimitType = this.movieRequestLimitType;
+            }
             this.identityService.updateUser(x).subscribe(y => {
                 if (!y.successful) {
                     this.notificationService.error(`Could not update user ${x.userName}. Reason ${y.errors[0]}`);
@@ -108,6 +123,9 @@ export class UserManagementComponent implements OnInit {
         this.bulkEpisodeLimit = undefined;
         this.bulkMusicLimit = undefined;
         this.bulkStreaming = undefined;
+        this.movieRequestLimitType = undefined;
+        this.episodeRequestLimitType = undefined;
+        this.musicRequestLimitType = undefined;
     }
 
     public isAllSelected() {

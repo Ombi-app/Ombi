@@ -14,14 +14,17 @@
     "Common": {
         "ContinueButton": "Weiter",
         "Available": "Verfügbar",
+        "Approved": "Approved",
+        "Pending": "Pending",
         "PartiallyAvailable": "Teilweise verfügbar",
         "Monitored": "Überwacht",
         "NotAvailable": "Nicht verfügbar",
         "ProcessingRequest": "Anfrage wird bearbeitet",
         "PendingApproval": "Genehmigung ausstehend",
         "RequestDenied": "Anfrage abgelehnt",
-        "NotRequested": "Nicht angefragt",
+        "NotRequested": "Nicht angefordert",
         "Requested": "Angefordert",
+        "Search": "Search",
         "Request": "Anfrage",
         "Denied": "Abgelehnt",
         "Approve": "Genehmigen",
@@ -31,20 +34,23 @@
             "Validation": "Bitte überprüfen Sie die eingegebenen Werte"
         },
         "Cancel": "Cancel",
-        "Submit": "Submit"
+        "Submit": "Submit",
+        "Update": "Update",
+        "tvShow": "TV Show",
+        "movie": "Movie"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "E-Mail-Adresse",
         "ResetPasswordButton": "Passwort zurücksetzen"
     },
     "LandingPage": {
-        "OnlineHeading": "Gerade Online",
+        "OnlineHeading": "Gerade online",
         "OnlineParagraph": "Der Mediaserver ist gerade online",
-        "PartiallyOnlineHeading": "Teilweise Online",
+        "PartiallyOnlineHeading": "Teilweise online",
         "PartiallyOnlineParagraph": "Der Mediaserver ist teilweise online.",
         "MultipleServersUnavailable": "Es sind {{serversUnavailable}} von {{totalServers}} Servern offline.",
         "SingleServerUnavailable": "Es sind {{serversUnavailable}} von {{totalServers}} Servern offline.",
-        "OfflineHeading": "Derzeit Offline",
+        "OfflineHeading": "Derzeit offline",
         "OfflineParagraph": "Der Mediaserver ist derzeit offline.",
         "CheckPageForUpdates": "Überprüfe diese Seite für kontinuierliche Website-Updates."
     },
@@ -86,12 +92,15 @@
         "MoviesTab": "Filme",
         "TvTab": "Serien",
         "MusicTab": "Musik",
+        "AdvancedSearch": "You can fill in any of the below to discover new media. All of the results are sorted by popularity",
+        "AdvancedSearchHeader": "Advanced Search",
         "Suggestions": "Vorschläge",
         "NoResults": "Es tut uns leid, wir haben keine Ergebnisse gefunden!",
         "DigitalDate": "Veröffentlichung der digitalen Version: {{date}}",
         "TheatricalRelease": "Kinostart: {{date}}",
         "ViewOnPlex": "In Plex anschauen",
         "ViewOnEmby": "In Emby anschauen",
+        "ViewOnJellyfin": "Play On Jellyfin",
         "RequestAdded": "Anfrage für {{title}} wurde erfolgreich hinzugefügt",
         "Similar": "Ähnliche",
         "Refine": "Auswahl verfeinern",
@@ -118,7 +127,10 @@
             "SubmitRequest": "Anfrage einreichen",
             "Season": "Staffel {{seasonNumber}}",
             "SelectAllInSeason": "Markiere alles in Staffel {{seasonNumber}}"
-        }
+        },
+        "AdvancedSearchInstructions": "Please choose what type of media you are searching for:",
+        "YearOfRelease": "Year of Release",
+        "KeywordSearchingDisclaimer": "Please note that Keyword Searching is very hit and miss due to the inconsistent data in TheMovieDb"
     },
     "Requests": {
         "Title": "Anfragen",
@@ -146,6 +158,7 @@
         "Remove": "Entfernen",
         "Deny": "Ablehnen",
         "DenyReason": "Ablehnungsgrund",
+        "DeniedReason": "Denied Reason",
         "Season": "Staffel",
         "GridTitle": "Titel",
         "AirDate": "Erstausstrahlung",
@@ -179,8 +192,19 @@
         "RequestPanel": {
             "Delete": "Delete Request",
             "Approve": "Approve Request",
-            "ChangeAvailability": "Mark Available"
-        }
+            "ChangeAvailability": "Mark Available",
+            "Deleted": "Successfully deleted selected items",
+            "Approved": "Successfully approved selected items"
+        },
+        "SuccessfullyApproved": "Successfully Approved",
+        "NowAvailable": "Request is now available",
+        "NowUnavailable": "Request is now unavailable",
+        "SuccessfullyReprocessed": "Successfully Re-processed the request",
+        "DeniedRequest": "Denied Request",
+        "RequestCollection": "Request Collection",
+        "CollectionSuccesfullyAdded": "The collection {{name}} has been successfully added!",
+        "NeedToSelectEpisodes": "You need to select some episodes!",
+        "RequestAddedSuccessfully": "Request for {{title}} has been added successfully"
     },
     "Issues": {
         "Title": "Probleme",
@@ -214,14 +238,19 @@
         "MarkedAsResolved": "This issue has now been marked as resolved!",
         "MarkedAsInProgress": "This issue has now been marked as in progress!",
         "Delete": "Delete issue",
-        "DeletedIssue": "Issue has been deleted"
+        "DeletedIssue": "Issue has been deleted",
+        "Chat": "Chat",
+        "Requested": "Requested",
+        "UserOnDate": "{{user}} on {{date}}"
     },
     "Filter": {
         "ClearFilter": "Filter zurücksetzen",
         "FilterHeaderAvailability": "Verfügbarkeit",
         "FilterHeaderRequestStatus": "Status",
         "Approved": "Bestätigt",
-        "PendingApproval": "Genehmigung ausstehend"
+        "PendingApproval": "Genehmigung ausstehend",
+        "WatchProviders": "Watch Providers",
+        "Keywords": "Keywords"
     },
     "UserManagment": {
         "TvRemaining": "TV: {{remaining}}/{{total}} verbleibend",
@@ -247,36 +276,65 @@
         "ViewCollection": "View Collection",
         "NotEnoughInfo": "Unfortunately there is not enough information about this show yet!",
         "AdvancedOptions": "Advanced Options",
+        "AutoApproveOptions": "You can configure the request here, once requested it will be send to your DVR application and will be auto approved! Please note, this is optional, just press Request to skip!",
+        "AutoApproveOptionsTv": "You can configure the request here, once requested it will be send to your DVR application and will be auto approved! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it!  Please note, this is optional, just press Request to skip!",
+        "AutoApproveOptionsTvShort": "You can configure the request here, once requested it will be send to your DVR application! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it! Please note, this is optional, just press Request to skip!",
         "QualityProfilesSelect": "Select A Quality Profile",
         "RootFolderSelect": "Select A Root Folder",
-        "Status": "Status",
-        "Availability": "Verfügbarkeit",
+        "LanguageProfileSelect": "Select A Language Profile",
+        "Status": "Status:",
+        "StatusValues": {
+            "Planned": "Planned",
+            "In Production": "In Production",
+            "Released": "Released",
+            "Returning Series": "Returning Series",
+            "Ended": "Ended",
+            "Canceled": "Canceled"
+        },
+        "Seasons": "Seasons:",
+        "Episodes": "Episodes:",
+        "Availability": "Availability:",
         "RequestStatus": "Anfrage Status",
-        "Quality": "Quality",
-        "RootFolderOverride": "Stammverzeichnis Überschreiben",
-        "QualityOverride": "Qualitäts Überschreiben",
-        "Genres": "Genres",
-        "TheatricalRelease": "Kinostart",
-        "DigitalRelease": "Digital Release",
-        "Votes": "Votes",
-        "Runtime": "Runtime",
+        "Quality": "Quality:",
+        "RootFolderOverride": "Root Folder Override:",
+        "QualityOverride": "Quality Override:",
+        "Network": "Network:",
+        "Genres": "Genres:",
+        "FirstAired": "First Aired:",
+        "TheatricalRelease": "Release:",
+        "DigitalRelease": "Digital Release:",
+        "Votes": "Votes:",
+        "Runtime": "Runtime:",
         "Minutes": "{{runtime}} Minutes",
-        "Revenue": "Revenue",
-        "Budget": "Budget",
-        "Keywords": "Keywords/Tags",
+        "Revenue": "Revenue:",
+        "Budget": "Budget:",
+        "Keywords": "Keywords/Tags:",
         "Casts": {
             "CastTitle": "Besetzung"
         },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Dies wird jede Saison für diese Show anfordern",
             "FirstSeasonTooltip": "Dies wird nur die erste Saison für diese Show anfordern",
-            "LatestSeasonTooltip": "Dies wird nur die letzte Saison für diese Show anfordern"
-        }
+            "LatestSeasonTooltip": "Dies wird nur die letzte Saison für diese Show anfordern",
+            "NoEpisodes": "There unfortunately is no episode data for this show yet!",
+            "SeasonNumber": "Season {{number}}"
+        },
+        "SonarrConfiguration": "Sonarr Configuration",
+        "RadarrConfiguration": "Radarr Configuration",
+        "RequestOnBehalf": "Request on behalf of",
+        "PleaseSelectUser": "Please select a user",
+        "StreamingOn": "Streaming On:",
+        "RequestedBy": "Requested By:",
+        "RequestDate": "Request Date:",
+        "DeniedReason": "Denied Reason:",
+        "ReProcessRequest": "Re-Process Request"
     },
     "Discovery": {
         "PopularTab": "Beliebt",
         "TrendingTab": "Angesagt",
         "UpcomingTab": "Demnächst",
+        "SeasonalTab": "Seasonal",
+        "RecentlyRequestedTab": "Recently Requested",
         "Movies": "Filme",
         "Combined": "Combined",
         "Tv": "TV",
@@ -291,11 +349,36 @@
             "FirstAired": "Erstausstrahlung",
             "Writer": "AutorIn",
             "ExecProducer": "Ausführender Produzent"
-        }
+        },
+        "NoSearch": "Sorry, nothing matches your search!"
     },
     "UserPreferences": {
         "Welcome": "Willkommen {{username}}!",
         "OmbiLanguage": "Language",
-        "DarkMode": "Dark Mode"
+        "DarkMode": "Dark Mode",
+        "Updated": "Successfully Updated",
+        "StreamingCountry": "Streaming Country",
+        "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will have US related streaming information.",
+        "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
+        "MobileQRCode": "Mobile QR Code",
+        "LegacyApp": "Launch Legacy App",
+        "NoQrCode": "Please contact your administrator to enable QR codes",
+        "UserType": "User Type:",
+        "ChangeDetails": "Change Details",
+        "NeedCurrentPassword": "You need your current password to make any changes here",
+        "CurrentPassword": "Current Password",
+        "EmailAddress": "Email Address",
+        "NewPassword": "New Password",
+        "NewPasswordConfirm": "New Password Confirm",
+        "Security": "Security",
+        "Profile": "Profile",
+        "UpdatedYourInformation": "Updated your information"
+    },
+    "UserTypeLabel": {
+        "1": "Local User",
+        "2": "Plex User",
+        "3": "Emby User",
+        "4": "Emby Connect User",
+        "5": "Jellyfin User"
     }
 }

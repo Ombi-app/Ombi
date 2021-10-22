@@ -50,7 +50,7 @@
       </div>
       <div class="col-6">
         <mat-label>Movie Request Limit Type</mat-label>
-        <mat-select [(value)]="user.movieRequestLimitType">
+        <mat-select id="movieRequestLimitType" [(value)]="user.movieRequestLimitType">
           <mat-option *ngFor="let value of requestLimitTypes" [value]="value">
             {{RequestLimitType[value]}}
           </mat-option>
@@ -65,7 +65,7 @@
       </div>
       <div class="col-6">
         <mat-label>Episode Request Limit Type</mat-label>
-        <mat-select [(value)]="user.episodeRequestLimitType">
+        <mat-select  id="episodeRequestLimitType" [(value)]="user.episodeRequestLimitType">
           <mat-option *ngFor="let value of requestLimitTypes" [value]="value">
             {{RequestLimitType[value]}}
           </mat-option>
@@ -80,7 +80,7 @@
     </div>
     <div class="col-6">
       <mat-label>Music Request Limit Type</mat-label>
-      <mat-select [(value)]="user.musicRequestLimitType">
+      <mat-select  id="musicRequestLimitType" [(value)]="user.musicRequestLimitType">
         <mat-option *ngFor="let value of requestLimitTypes" [value]="value">
           {{RequestLimitType[value]}}
         </mat-option>
