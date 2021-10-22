@@ -37,7 +37,8 @@
         "Submit": "Submit",
         "Update": "Update",
 		"tvShow": "TV Show",
-        "movie": "Movie"
+        "movie": "Movie",
+        "album": "Album"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "Email Address",
@@ -344,7 +345,13 @@
         "RequestedBy": "Requested By:",
         "RequestDate": "Request Date:",
         "DeniedReason": "Denied Reason:",
-        "ReProcessRequest": "Re-Process Request"
+        "ReProcessRequest": "Re-Process Request",
+        "Music": {
+            "Type": "Type:",
+            "Country": "Country:",
+            "StartDate": "Start Date:",
+            "EndDate": "EndDate:"
+        }
     },
     "Discovery": {
         "PopularTab": "Popular",
