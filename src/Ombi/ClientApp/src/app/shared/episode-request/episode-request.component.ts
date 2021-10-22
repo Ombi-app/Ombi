@@ -134,7 +134,7 @@ export class EpisodeRequestComponent {
             });
 
         } else {
-            this.notificationService.send(requestResult.errorMessage ? requestResult.errorMessage : requestResult.message);
+            this.notificationService.sendRequestEngineResultError(requestResult);
         }
     }
 }

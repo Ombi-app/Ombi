@@ -102,7 +102,7 @@ export class MovieDetailsComponent {
                         this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.movie.title }), "Ok");
                         this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
                     } else {
-                        this.messageService.send(requestResult.errorMessage, "Ok");
+                        this.messageService.sendRequestEngineResultError(requestResult);
                     }
                 }
             });
@@ -114,7 +114,7 @@ export class MovieDetailsComponent {
             this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
             this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.movie.title }), "Ok");
         } else {
-            this.messageService.send(result.errorMessage, "Ok");
+            this.messageService.sendRequestEngineResultError(result);
         }
     }
     }
@@ -156,7 +156,7 @@ export class MovieDetailsComponent {
             this.messageService.send(this.translate.instant("Requests.SuccessfullyApproved"), "Ok");
         } else {
             this.movie.approved = false;
-            this.messageService.send(result.errorMessage, "Ok");
+            this.messageService.sendRequestEngineResultError(result);
         }
     }
 
@@ -166,7 +166,7 @@ export class MovieDetailsComponent {
             this.movie.available = true;
             this.messageService.send(this.translate.instant("Requests.NowAvailable"), "Ok");
         } else {
-            this.messageService.send(result.errorMessage, "Ok");
+            this.messageService.sendRequestEngineResultError(result);
         }
     }
 
@@ -177,7 +177,7 @@ export class MovieDetailsComponent {
             this.movie.available = false;
             this.messageService.send(this.translate.instant("Requests.NowUnavailable"), "Ok");
         } else {
-            this.messageService.send(result.errorMessage, "Ok");
+            this.messageService.sendRequestEngineResultError(result);
         }
     }
 
@@ -208,7 +208,7 @@ export class MovieDetailsComponent {
             if (result.result) {
                 this.messageService.send(result.message ? result.message : this.translate.instant("Requests.SuccessfullyReprocessed"), "Ok");
             } else {
-                this.messageService.send(result.errorMessage, "Ok");
+                this.messageService.sendRequestEngineResultError(result);
             }
         });
     }

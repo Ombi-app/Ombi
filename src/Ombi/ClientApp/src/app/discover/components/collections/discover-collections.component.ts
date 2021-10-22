@@ -46,7 +46,7 @@ export class DiscoverCollectionsComponent implements OnInit {
             if (result.result) {
                 this.messageService.send(this.translate.instant("Requests.CollectionSuccesfullyAdded", { name: this.collection.name }));
             } else {
-                this.messageService.send(result.errorMessage);
+                this.messageService.sendRequestEngineResultError(result);
             }
             this.finishLoading();
         });

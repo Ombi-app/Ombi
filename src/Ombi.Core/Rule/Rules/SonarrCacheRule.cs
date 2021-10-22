@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Ombi.Core.Engine;
 using Ombi.Core.Models.Search;
 using Ombi.Helpers;
 using Ombi.Store.Context;
@@ -56,7 +57,7 @@ namespace Ombi.Core.Rule.Rules
 
                         if (!anyEpisodes)
                         {
-                            return new RuleResult { Message = $"We already have episodes requested from series {vm.Title}" };
+                            return new RuleResult { ErrorCode = ErrorCode.EpisodesAlreadyRequested, Message = $"We already have episodes requested from series {vm.Title}" };
                         }
                     }
                 }

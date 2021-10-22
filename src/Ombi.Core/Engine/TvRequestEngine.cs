@@ -144,6 +144,7 @@ namespace Ombi.Core.Engine
                     return new RequestEngineResult
                     {
                         Result = false,
+                        ErrorCode = ErrorCode.AlreadyRequested,
                         ErrorMessage = "This has already been requested"
                     };
                 }
@@ -166,6 +167,7 @@ namespace Ombi.Core.Engine
                 return new RequestEngineResult
                 {
                     Result = false,
+                    ErrorCode = ErrorCode.NoPermissionsOnBehalf,
                     Message = "You do not have the correct permissions to request on behalf of users!",
                     ErrorMessage = $"You do not have the correct permissions to request on behalf of users!"
                 };
@@ -176,6 +178,7 @@ namespace Ombi.Core.Engine
                 return new RequestEngineResult
                 {
                     Result = false,
+                    ErrorCode = ErrorCode.NoPermissions,
                     Message = "You do not have the correct permissions!",
                     ErrorMessage = $"You do not have the correct permissions!"
                 };
@@ -250,6 +253,7 @@ namespace Ombi.Core.Engine
                     return new RequestEngineResult
                     {
                         Result = false,
+                        ErrorCode = ErrorCode.AlreadyRequested,
                         ErrorMessage = "This has already been requested"
                     };
                 }
@@ -685,6 +689,7 @@ namespace Ombi.Core.Engine
             {
                 return new RequestEngineResult
                 {
+                    ErrorCode = ErrorCode.ChildRequestDoesNotExist,
                     ErrorMessage = "Child Request does not exist"
                 };
             }
@@ -722,6 +727,7 @@ namespace Ombi.Core.Engine
             {
                 return new RequestEngineResult
                 {
+                    ErrorCode = ErrorCode.ChildRequestDoesNotExist,
                     ErrorMessage = "Child Request does not exist"
                 };
             }
@@ -781,6 +787,7 @@ namespace Ombi.Core.Engine
             {
                 return new RequestEngineResult
                 {
+                    ErrorCode = ErrorCode.ChildRequestDoesNotExist,
                     ErrorMessage = "Child Request does not exist"
                 };
             }
@@ -808,6 +815,7 @@ namespace Ombi.Core.Engine
             {
                 return new RequestEngineResult
                 {
+                    ErrorCode = ErrorCode.ChildRequestDoesNotExist,
                     ErrorMessage = "Child Request does not exist"
                 };
             }
@@ -905,6 +913,7 @@ namespace Ombi.Core.Engine
                 return new RequestEngineResult
                 {
                     Result = false,
+                    ErrorCode = ErrorCode.RequestDoesNotExist,
                     ErrorMessage = "Request does not exist"
                 };
             }
@@ -965,6 +974,7 @@ namespace Ombi.Core.Engine
                 return new RequestEngineResult
                 {
                     Result = false,
+                    ErrorCode = ErrorCode.RequestDoesNotExist,
                     ErrorMessage = "Request does not exist"
                 };
             }

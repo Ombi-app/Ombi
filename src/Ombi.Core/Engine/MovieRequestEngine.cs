@@ -120,11 +120,13 @@ namespace Ombi.Core.Engine
                 ?.FirstOrDefault(x => x.Type == ReleaseDateType.Digital)?.ReleaseDate;
 
             var ruleResults = (await RunRequestRules(requestModel)).ToList();
-            if (ruleResults.Any(x => !x.Success))
+            var ruleResultInError = ruleResults.Find(x => !x.Success);
+            if (ruleResultInError != null)
             {
                 return new RequestEngineResult
                 {
-                    ErrorMessage = ruleResults.FirstOrDefault(x => x.Message.HasValue()).Message
+                    ErrorMessage = ruleResultInError.Message,
+                    ErrorCode = ruleResultInError.ErrorCode
                 };
             }
 

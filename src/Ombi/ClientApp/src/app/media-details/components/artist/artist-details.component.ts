@@ -94,14 +94,14 @@ export class ArtistDetailsComponent {
                         a.monitored = true;
                         this.messageService.send(r.message);
                     } else {
-                        this.messageService.send(r.errorMessage);
+                        this.messageService.sendRequestEngineResultError(r);
                     }
                     
                     a.selected = false;
                 })
                 .catch(r => {
                     console.log(r);
-                    this.messageService.send("Error when requesting album");
+                    this.messageService.sendRequestEngineResultError(r);
                 });
             });
         } else {
@@ -117,14 +117,14 @@ export class ArtistDetailsComponent {
                         a.monitored = true;
                         this.messageService.send(r.message);
                     } else {
-                        this.messageService.send(r.errorMessage);
+                        this.messageService.sendRequestEngineResultError(r);
                     }
                     
                     a.selected = false;
                 })
                 .catch(r => {
                     console.log(r);
-                    this.messageService.send("Error when requesting album");
+                    this.messageService.sendRequestEngineResultError(r);
                 });
             })
         }

@@ -132,7 +132,7 @@ export class DiscoverCardComponent implements OnInit {
                                     this.result.requested = true;
                                     this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.result.title }), "Ok");
                                 } else {
-                                    this.messageService.send(x.errorMessage, "Ok");
+                                    this.messageService.sendRequestEngineResultError(x);
                                 }
                             });
                         }
@@ -143,7 +143,7 @@ export class DiscoverCardComponent implements OnInit {
                         this.result.requested = true;
                         this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.result.title }), "Ok");
                     } else {
-                        this.messageService.send(x.errorMessage, "Ok");
+                        this.messageService.sendRequestEngineResultError(x);
                     }
                     this.loading = false;
                 });
