@@ -4,8 +4,8 @@
         "UsernamePlaceholder": "Felhasználónév",
         "PasswordPlaceholder": "Jelszó",
         "RememberMe": "Emlékezz rám",
-        "SignInWith": "Sign in with {{appName}}",
-        "SignInWithPlex": "Sign in with Plex",
+        "SignInWith": "Belépés {{appName}} fiókkal",
+        "SignInWithPlex": "Belépés Plex fiókkal",
         "ForgottenPassword": "Elfelejtetted a jelszavad?",
         "Errors": {
             "IncorrectCredentials": "Helytelen felhasználónév vagy jelszó"
@@ -14,8 +14,8 @@
     "Common": {
         "ContinueButton": "Tovább",
         "Available": "Elérhető",
-        "Approved": "Approved",
-        "Pending": "Pending",
+        "Approved": "Jóváhagyva",
+        "Pending": "Függőben",
         "PartiallyAvailable": "Részlegesen elérhető",
         "Monitored": "Figyelve",
         "NotAvailable": "Nem elérhető",
@@ -24,20 +24,20 @@
         "RequestDenied": "Kérés megtagadva",
         "NotRequested": "Nincs kérve",
         "Requested": "Kérve",
-        "Search": "Search",
+        "Search": "Keresés",
         "Request": "Kérés",
         "Denied": "Megtagadva",
         "Approve": "Jóváhagyva",
         "PartlyAvailable": "Részlegesen elérhető",
-        "ViewDetails": "View Details",
+        "ViewDetails": "Részletek",
         "Errors": {
             "Validation": "Kérjük, ellenőrizze a beírt értékeket"
         },
-        "Cancel": "Cancel",
-        "Submit": "Submit",
-        "Update": "Update",
-        "tvShow": "TV Show",
-        "movie": "Movie"
+        "Cancel": "Mégse",
+        "Submit": "Beküldés",
+        "Update": "Frissítés",
+        "tvShow": "TV műsor",
+        "movie": "Film"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "E-mail cím",
@@ -55,7 +55,7 @@
         "CheckPageForUpdates": "Látogasd meg ezt az oldalt a frissítésekhez."
     },
     "NavigationBar": {
-        "Discover": "Discover",
+        "Discover": "Felfedezés",
         "Search": "Keresés",
         "Requests": "Kérések",
         "UserManagement": "Felhasználók kezelése",
@@ -71,20 +71,20 @@
         "Logout": "Kilépés",
         "OpenMobileApp": "Mobil app megnyitása",
         "RecentlyAdded": "Nemrég hozzáadott",
-        "ChangeTheme": "Change Theme",
-        "Calendar": "Calendar",
-        "UserPreferences": "Preferences",
+        "ChangeTheme": "Téma váltása",
+        "Calendar": "Naptár",
+        "UserPreferences": "Beállítások",
         "FeatureSuggestion": "Feature Suggestion",
-        "FeatureSuggestionTooltip": "Have a great new idea? Suggest it here!",
+        "FeatureSuggestionTooltip": "Van egy jó ötleted? Oszd meg itt!",
         "Filter": {
             "Movies": "Filmek",
             "TvShows": "Sorozatok",
             "Music": "Zene",
-            "People": "People"
+            "People": "Személyek"
         },
-        "MorningWelcome": "Good morning!",
-        "AfternoonWelcome": "Good afternoon!",
-        "EveningWelcome": "Good evening!"
+        "MorningWelcome": "Jó reggelt!",
+        "AfternoonWelcome": "Jó napot!",
+        "EveningWelcome": "Jó estét!"
     },
     "Search": {
         "Title": "Keresés",
