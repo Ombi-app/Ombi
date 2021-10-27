@@ -50,7 +50,6 @@ export class DiscoverSearchResultsComponent implements OnInit {
             this.clear();
             this.loadAdvancedData();
         });
-
     }
 
     public async ngOnInit() {
@@ -79,8 +78,7 @@ export class DiscoverSearchResultsComponent implements OnInit {
         await this.search();
     }
 
-    public createInitalModel() {
-        this.finishLoading();
+    private createInitialModel() {
         this.results.forEach(m => {
 
             let mediaType = RequestType.movie;
@@ -119,6 +117,7 @@ export class DiscoverSearchResultsComponent implements OnInit {
                 tvMovieDb: mediaType === RequestType.tvShow ? true : false
             });
         });
+        this.finishLoading();
     }
 
     private loading() {
@@ -180,6 +179,6 @@ export class DiscoverSearchResultsComponent implements OnInit {
         this.clear();
         this.results = await this.searchService
             .multiSearch(this.searchTerm, this.filter).toPromise();
-        this.createInitalModel();
+        this.createInitialModel();
     }
 }
