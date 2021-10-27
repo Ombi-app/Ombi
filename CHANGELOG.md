@@ -1,3 +1,12 @@
+## [4.3.1](https://github.com/Ombi-app/Ombi/compare/v4.3.0...v4.3.1) (2021-10-27)
+
+
+### Bug Fixes
+
+* :bug: Hides no results message during search. ([#4375](https://github.com/Ombi-app/Ombi/issues/4375)) ([b819b0e](https://github.com/Ombi-app/Ombi/commit/b819b0e007e578bf3d8425f19591f87029c64d06))
+
+
+
 # [4.3.0](https://github.com/Ombi-app/Ombi/compare/v4.2.13...v4.3.0) (2021-10-20)
 
 
@@ -50,15 +59,6 @@
 
 
 ## [4.2.11](https://github.com/Ombi-app/Ombi/compare/v4.2.10...v4.2.11) (2021-10-18)
-
-
-
-## [4.2.10](https://github.com/Ombi-app/Ombi/compare/v4.2.9...v4.2.10) (2021-10-15)
-
-
-### Bug Fixes
-
-* :bug: Really really fix it this time? ([543d36e](https://github.com/Ombi-app/Ombi/commit/543d36e5615341bc8378cac377b843a3dbc1ef99))
 
 
 
