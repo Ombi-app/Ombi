@@ -21,7 +21,6 @@ export class MessageService {
         }
     }
     public sendRequestEngineResultError(result: IRequestEngineResult, action: string = "Ok") {
-        console.log(result.errorCode);
         const textKey = 'Requests.ErrorCodes.' + result.errorCode;
         const text = this.translate.instant(textKey);
         if (text !== textKey) {
