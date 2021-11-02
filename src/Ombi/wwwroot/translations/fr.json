@@ -37,7 +37,8 @@
         "Submit": "Envoyer",
         "Update": "Mettre à jour",
         "tvShow": "Série",
-        "movie": "Film"
+        "movie": "Film",
+        "album": "Album"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "Adresse e-mail",
@@ -204,7 +205,21 @@
         "RequestCollection": "Demander la collection",
         "CollectionSuccesfullyAdded": "La collection {{name}} a été ajoutée avec succès !",
         "NeedToSelectEpisodes": "Vous devez sélectionner des épisodes !",
-        "RequestAddedSuccessfully": "La demande de {{title}} a été ajoutée avec succès"
+        "RequestAddedSuccessfully": "La demande de {{title}} a été ajoutée avec succès",
+        "ErrorCodes": {
+            "AlreadyRequested": "This has already been requested",
+            "EpisodesAlreadyRequested": "We already have episodes requested from this series",
+            "NoPermissionsOnBehalf": "You do not have the correct permissions to request on behalf of users!",
+            "NoPermissions": "You do not have the correct permissions!",
+            "RequestDoesNotExist": "Request does not exist",
+            "ChildRequestDoesNotExist": "Child Request does not exist",
+            "NoPermissionsRequestMovie": "You do not have permissions to Request a Movie",
+            "NoPermissionsRequestTV": "You do not have permissions to Request a TV Show",
+            "NoPermissionsRequestAlbum": "You do not have permissions to Request an Album",
+            "MovieRequestQuotaExceeded": "You have exceeded your Movie request quota!",
+            "TvRequestQuotaExceeded": "You have exceeded your Episode request quota!",
+            "AlbumRequestQuotaExceeded": "You have exceeded your Album request quota!"
+        }
     },
     "Issues": {
         "Title": "Problèmes",
@@ -284,9 +299,12 @@
         "LanguageProfileSelect": "Sélectionnez un profil de langue",
         "Status": "Statut :",
         "StatusValues": {
+            "Rumored": "Rumored",
             "Planned": "Planifié",
             "In Production": "En Production",
+            "Post Production": "Post Production",
             "Released": "Sorti",
+            "Running": "Running",
             "Returning Series": "Série en cours",
             "Ended": "Finie",
             "Canceled": "Annulée"
@@ -327,7 +345,13 @@
         "RequestedBy": "Demandé par :",
         "RequestDate": "Date de la demande :",
         "DeniedReason": "Motif de refus :",
-        "ReProcessRequest": "Refaire une demande"
+        "ReProcessRequest": "Refaire une demande",
+        "Music": {
+            "Type": "Type:",
+            "Country": "Country:",
+            "StartDate": "Start Date:",
+            "EndDate": "EndDate:"
+        }
     },
     "Discovery": {
         "PopularTab": "Populaire",
