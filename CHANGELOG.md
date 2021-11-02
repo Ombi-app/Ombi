@@ -1,3 +1,12 @@
+## [4.3.2](https://github.com/Ombi-app/Ombi/compare/v4.3.1...v4.3.2) (2021-11-02)
+
+
+### Bug Fixes
+
+* **translations:** 🌐 Localization - Ensuring all of the app including backend are localized [#4366](https://github.com/Ombi-app/Ombi/issues/4366) ([5e140ab](https://github.com/Ombi-app/Ombi/commit/5e140ab6183b887a7665f5e870eb0bd05d487ace))
+
+
+
 ## [4.3.1](https://github.com/Ombi-app/Ombi/compare/v4.3.0...v4.3.1) (2021-10-27)
 
 
@@ -55,10 +64,6 @@
 * **newsletter:** :bug: Fixed a few small bugs in the newsletter ([21dba4c](https://github.com/Ombi-app/Ombi/commit/21dba4c524b98b9f2b883d97e7e13329425a8762))
 * **translations:** 🌐 New translations en.json from Crowdin [skip ci] ([52eda6a](https://github.com/Ombi-app/Ombi/commit/52eda6ab917a73842bc02b0d8e0c442e564ca8f0))
 * **translations:** 🌐 New translations en.json from Crowdin [skip ci] ([1095d52](https://github.com/Ombi-app/Ombi/commit/1095d524962648a1e427f0bcd8105fa734dd5b60))
-
-
-
-## [4.2.11](https://github.com/Ombi-app/Ombi/compare/v4.2.10...v4.2.11) (2021-10-18)
 
 
 
