@@ -54,7 +54,7 @@ namespace Ombi.Core.Rule.Rules.Request
 
                 if (remainingLimitsModel.Remaining < 1)
                 {
-                    return Fail("You have exceeded your Movie request quota!");
+                    return Fail(Engine.ErrorCode.MovieRequestQuotaExceeded, "You have exceeded your Movie request quota!");
                 }
             }
             if (obj.RequestType == RequestType.TvShow)
@@ -75,7 +75,7 @@ namespace Ombi.Core.Rule.Rules.Request
 
                 if ((remainingLimitsModel.Remaining - requestCount) < 0)
                 {
-                    return Fail("You have exceeded your Episode request quota!");
+                    return Fail(Engine.ErrorCode.TvRequestQuotaExceeded, "You have exceeded your Episode request quota!");
                 }
             }
             if (obj.RequestType == RequestType.Album)
@@ -88,7 +88,7 @@ namespace Ombi.Core.Rule.Rules.Request
 
                 if (remainingLimitsModel.Remaining < 1)
                 {
-                    return Fail("You have exceeded your Album request quota!");
+                    return Fail(Engine.ErrorCode.AlbumRequestQuotaExceeded, "You have exceeded your Album request quota!");
                 }
             }
             return Success();

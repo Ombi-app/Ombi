@@ -35,7 +35,7 @@ export class DenyDialogComponent {
                 this.messageService.send(this.translate.instant("Requests.DeniedRequest"), "Ok");
                 this.data.denied = true;
             } else {
-                this.messageService.send(result.errorMessage, "Ok");
+                this.messageService.sendRequestEngineResultError(result);
                 this.data.denied = false;
             }
 

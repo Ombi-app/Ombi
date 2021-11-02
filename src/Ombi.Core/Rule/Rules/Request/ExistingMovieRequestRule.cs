@@ -6,6 +6,7 @@ using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
+using Ombi.Core.Engine;
 using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Core.Rule.Rules.Request
@@ -49,7 +50,7 @@ namespace Ombi.Core.Rule.Rules.Request
                 }
                 if(found)
                 {
-                    return Fail($"\"{obj.Title}\" has already been requested");
+                    return Fail(ErrorCode.AlreadyRequested, $"\"{obj.Title}\" has already been requested");
                 }
             }
             return Success();

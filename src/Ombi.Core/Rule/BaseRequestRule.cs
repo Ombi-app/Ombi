@@ -1,4 +1,5 @@
-﻿namespace Ombi.Core.Rule
+﻿using Ombi.Core.Engine;
+namespace Ombi.Core.Rule
 {
     public abstract class BaseRequestRule
     {
@@ -7,9 +8,9 @@
             return new RuleResult {Success = true};
         }
 
-        public RuleResult Fail(string message)
+        public RuleResult Fail(ErrorCode errorCode, string message = "")
         {
-            return new RuleResult { Message = message };
+            return new RuleResult { ErrorCode = errorCode, Message = message };
         }
     }
 }

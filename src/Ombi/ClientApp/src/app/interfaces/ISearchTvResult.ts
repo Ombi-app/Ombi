@@ -44,6 +44,7 @@ export interface ISearchTvResult {
 
 export interface ITvRequestViewModelV2 extends ITvRequestViewModelBase {
     theMovieDbId: number;
+    languageCode: string;
 }
 
 

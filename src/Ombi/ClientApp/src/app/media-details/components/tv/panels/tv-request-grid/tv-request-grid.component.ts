@@ -4,6 +4,7 @@ import { RequestService } from "../../../../../services/request.service";
 import { MessageService } from "../../../../../services";
 import { DenyDialogComponent } from "../../../shared/deny-dialog/deny-dialog.component";
 import { ISearchTvResultV2 } from "../../../../../interfaces/ISearchTvResultV2";
+import { TranslateService } from "@ngx-translate/core";
 import { MatDialog } from "@angular/material/dialog";
 import { SelectionModel } from "@angular/cdk/collections";
 import { RequestServiceV2 } from "../../../../../services/requestV2.service";
@@ -27,7 +28,7 @@ export class TvRequestGridComponent {
     public displayedColumns: string[] = ['select', 'number', 'title', 'airDate', 'status'];
 
     constructor(private requestService: RequestService, private requestServiceV2: RequestServiceV2, private notificationService: MessageService,
-        private dialog: MatDialog) {
+        private dialog: MatDialog, private translate: TranslateService) {
 
     }
 
@@ -43,7 +44,7 @@ export class TvRequestGridComponent {
 
         const viewModel = <ITvRequestViewModelV2>{
             firstSeason: this.tv.firstSeason, latestSeason: this.tv.latestSeason, requestAll: this.tv.requestAll, theMovieDbId: this.tv.id,
-            requestOnBehalf: null
+            requestOnBehalf: null, languageCode: this.translate.currentLang
         };
         viewModel.seasons = [];
         this.tv.seasonRequests.forEach((season) => {
@@ -236,7 +237,7 @@ export class TvRequestGridComponent {
     private postRequest(requestResult: IRequestEngineResult) {
         if (requestResult.result) {
             this.notificationService.send(
-                `Request for ${this.tv.title} has been added successfully`);
+                this.translate.instant("Requests.RequestAddedSuccessfully", { title:this.tv.title }));
 
             this.selection.clear();
 
@@ -262,7 +263,7 @@ export class TvRequestGridComponent {
             }
 
         } else {
-            this.notificationService.send(requestResult.errorMessage ? requestResult.errorMessage : requestResult.message);
+            this.notificationService.sendRequestEngineResultError(requestResult);
         }
     }
 }

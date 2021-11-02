@@ -30,9 +30,9 @@ namespace Ombi.Core.Helpers
         public TvRequests NewRequest { get; protected set; }
         protected TvInfo TheMovieDbRecord { get; set; }
 
-        public async Task<TvShowRequestBuilderV2> GetShowInfo(int id)
+        public async Task<TvShowRequestBuilderV2> GetShowInfo(int id, string langCode = "en")
         {
-            TheMovieDbRecord = await MovieDbApi.GetTVInfo(id.ToString());
+            TheMovieDbRecord = await MovieDbApi.GetTVInfo(id.ToString(), langCode);
 
             // Remove 'Specials Season'
             var firstSeason = TheMovieDbRecord.seasons.OrderBy(x => x.season_number).FirstOrDefault();

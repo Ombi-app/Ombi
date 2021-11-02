@@ -92,7 +92,7 @@ export class MovieDetailsComponent {
             dialog.afterClosed().subscribe(async (result) => {
                 if (result) {
                     const requestResult = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId,
-                        languageCode: null,
+                        languageCode: this.translate.currentLang,
                         qualityPathOverride: result.radarrPathId,
                         requestOnBehalf: result.username?.id,
                         rootFolderOverride: result.radarrFolderId, }).toPromise();
@@ -102,19 +102,19 @@ export class MovieDetailsComponent {
                         this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.movie.title }), "Ok");
                         this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
                     } else {
-                        this.messageService.send(requestResult.errorMessage, "Ok");
+                        this.messageService.sendRequestEngineResultError(requestResult);
                     }
                 }
             });
         } else {
-        const result = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: null, requestOnBehalf: userId, qualityPathOverride: undefined, rootFolderOverride: undefined }).toPromise();
+        const result = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: this.translate.currentLang, requestOnBehalf: userId, qualityPathOverride: undefined, rootFolderOverride: undefined }).toPromise();
         if (result.result) {
             this.movie.requested = true;
             this.movie.requestId = result.requestId;
             this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
             this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.movie.title }), "Ok");
         } else {
-            this.messageService.send(result.errorMessage, "Ok");
+            this.messageService.sendRequestEngineResultError(result);
         }
     }
     }
@@ -156,7 +156,7 @@ export class MovieDetailsComponent {
             this.messageService.send(this.translate.instant("Requests.SuccessfullyApproved"), "Ok");
         } else {
             this.movie.approved = false;
-            this.messageService.send(result.errorMessage, "Ok");
+            this.messageService.sendRequestEngineResultError(result);
         }
     }
 
@@ -166,7 +166,7 @@ export class MovieDetailsComponent {
             this.movie.available = true;
             this.messageService.send(this.translate.instant("Requests.NowAvailable"), "Ok");
         } else {
-            this.messageService.send(result.errorMessage, "Ok");
+            this.messageService.sendRequestEngineResultError(result);
         }
     }
 
@@ -177,7 +177,7 @@ export class MovieDetailsComponent {
             this.movie.available = false;
             this.messageService.send(this.translate.instant("Requests.NowUnavailable"), "Ok");
         } else {
-            this.messageService.send(result.errorMessage, "Ok");
+            this.messageService.sendRequestEngineResultError(result);
         }
     }
 
@@ -208,7 +208,7 @@ export class MovieDetailsComponent {
             if (result.result) {
                 this.messageService.send(result.message ? result.message : this.translate.instant("Requests.SuccessfullyReprocessed"), "Ok");
             } else {
-                this.messageService.send(result.errorMessage, "Ok");
+                this.messageService.sendRequestEngineResultError(result);
             }
         });
     }

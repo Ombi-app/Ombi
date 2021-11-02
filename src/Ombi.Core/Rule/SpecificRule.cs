@@ -1,4 +1,5 @@
-﻿using Ombi.Core.Rule.Interfaces;
+﻿using Ombi.Core.Engine;
+using Ombi.Core.Rule.Interfaces;
 
 namespace Ombi.Core.Rule
 {
@@ -9,9 +10,9 @@ namespace Ombi.Core.Rule
             return new RuleResult { Success = true };
         }
 
-        public RuleResult Fail(string message)
+        public RuleResult Fail(ErrorCode errorCode, string message = "")
         {
-            return new RuleResult { Message = message };
+            return new RuleResult {  ErrorCode = errorCode, Message = message };
         }
         
         public abstract SpecificRules Rule { get; }

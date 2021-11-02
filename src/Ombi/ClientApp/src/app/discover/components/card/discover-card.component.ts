@@ -124,7 +124,7 @@ export class DiscoverCardComponent implements OnInit {
                     dialog.afterClosed().subscribe((result) => {
                         if (result) {
                                 this.requestService.requestMovie({ theMovieDbId: +this.result.id,
-                                    languageCode: null,
+                                    languageCode: this.translate.currentLang,
                                     qualityPathOverride: result.radarrPathId,
                                     requestOnBehalf: result.username?.id,
                                     rootFolderOverride: result.radarrFolderId, }).subscribe(x => {
@@ -132,18 +132,18 @@ export class DiscoverCardComponent implements OnInit {
                                     this.result.requested = true;
                                     this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.result.title }), "Ok");
                                 } else {
-                                    this.messageService.send(x.errorMessage, "Ok");
+                                    this.messageService.sendRequestEngineResultError(x);
                                 }
                             });
                         }
                     });
                 } else {
-                this.requestService.requestMovie({ theMovieDbId: +this.result.id, languageCode: null, requestOnBehalf: null, qualityPathOverride: null, rootFolderOverride: null }).subscribe(x => {
+                this.requestService.requestMovie({ theMovieDbId: +this.result.id, languageCode: this.translate.currentLang, requestOnBehalf: null, qualityPathOverride: null, rootFolderOverride: null }).subscribe(x => {
                     if (x.result) {
                         this.result.requested = true;
                         this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.result.title }), "Ok");
                     } else {
-                        this.messageService.send(x.errorMessage, "Ok");
+                        this.messageService.sendRequestEngineResultError(x);
                     }
                     this.loading = false;
                 });
