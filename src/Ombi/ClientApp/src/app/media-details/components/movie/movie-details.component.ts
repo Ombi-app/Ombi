@@ -92,7 +92,7 @@ export class MovieDetailsComponent {
             dialog.afterClosed().subscribe(async (result) => {
                 if (result) {
                     const requestResult = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId,
-                        languageCode: navigator.language,
+                        languageCode: this.translate.currentLang,
                         qualityPathOverride: result.radarrPathId,
                         requestOnBehalf: result.username?.id,
                         rootFolderOverride: result.radarrFolderId, }).toPromise();
@@ -107,7 +107,7 @@ export class MovieDetailsComponent {
                 }
             });
         } else {
-        const result = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: navigator.language, requestOnBehalf: userId, qualityPathOverride: undefined, rootFolderOverride: undefined }).toPromise();
+        const result = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: this.translate.currentLang, requestOnBehalf: userId, qualityPathOverride: undefined, rootFolderOverride: undefined }).toPromise();
         if (result.result) {
             this.movie.requested = true;
             this.movie.requestId = result.requestId;
