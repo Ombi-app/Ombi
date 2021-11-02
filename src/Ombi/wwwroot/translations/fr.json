@@ -207,18 +207,18 @@
         "NeedToSelectEpisodes": "Vous devez sélectionner des épisodes !",
         "RequestAddedSuccessfully": "La demande de {{title}} a été ajoutée avec succès",
         "ErrorCodes": {
-            "AlreadyRequested": "This has already been requested",
-            "EpisodesAlreadyRequested": "We already have episodes requested from this series",
-            "NoPermissionsOnBehalf": "You do not have the correct permissions to request on behalf of users!",
-            "NoPermissions": "You do not have the correct permissions!",
-            "RequestDoesNotExist": "Request does not exist",
-            "ChildRequestDoesNotExist": "Child Request does not exist",
-            "NoPermissionsRequestMovie": "You do not have permissions to Request a Movie",
-            "NoPermissionsRequestTV": "You do not have permissions to Request a TV Show",
-            "NoPermissionsRequestAlbum": "You do not have permissions to Request an Album",
-            "MovieRequestQuotaExceeded": "You have exceeded your Movie request quota!",
-            "TvRequestQuotaExceeded": "You have exceeded your Episode request quota!",
-            "AlbumRequestQuotaExceeded": "You have exceeded your Album request quota!"
+            "AlreadyRequested": "Ceci a déjà été demandé",
+            "EpisodesAlreadyRequested": "Nous avons déjà des épisodes demandés pour cette série",
+            "NoPermissionsOnBehalf": "Vous n'avez pas les permissions correctes pour demander au nom des utilisateurs !",
+            "NoPermissions": "Vous n'avez pas les droits d'accès requis !",
+            "RequestDoesNotExist": "Cette demande n'existe pas",
+            "ChildRequestDoesNotExist": "La demande enfant n'existe pas",
+            "NoPermissionsRequestMovie": "Vous n'avez pas la permission de demander un film",
+            "NoPermissionsRequestTV": "Vous n'avez pas la permission de demander une série TV",
+            "NoPermissionsRequestAlbum": "Vous n'avez pas la permission de demander un album",
+            "MovieRequestQuotaExceeded": "Vous avez dépassé votre quota de demande de films !",
+            "TvRequestQuotaExceeded": "Vous avez dépassé votre quota de demande d'épisodes !",
+            "AlbumRequestQuotaExceeded": "Vous avez dépassé votre quota de demande d'albums !"
         }
     },
     "Issues": {
@@ -299,12 +299,12 @@
         "LanguageProfileSelect": "Sélectionnez un profil de langue",
         "Status": "Statut :",
         "StatusValues": {
-            "Rumored": "Rumored",
+            "Rumored": "Rumeur",
             "Planned": "Planifié",
             "In Production": "En Production",
-            "Post Production": "Post Production",
+            "Post Production": "Post-production",
             "Released": "Sorti",
-            "Running": "Running",
+            "Running": "En cours",
             "Returning Series": "Série en cours",
             "Ended": "Finie",
             "Canceled": "Annulée"
@@ -347,10 +347,10 @@
         "DeniedReason": "Motif de refus :",
         "ReProcessRequest": "Refaire une demande",
         "Music": {
-            "Type": "Type:",
-            "Country": "Country:",
-            "StartDate": "Start Date:",
-            "EndDate": "EndDate:"
+            "Type": "Type :",
+            "Country": "Pays :",
+            "StartDate": "Date de début :",
+            "EndDate": "Date de fin :"
         }
     },
     "Discovery": {
