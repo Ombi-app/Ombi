@@ -138,5 +138,10 @@ namespace Ombi.Notifications.Agents
             notification.Other.Add("image", parsed.Image);
             await Send(notification, settings);
         }
+
+        protected override async Task PartiallyAvailable(NotificationOptions model, SlackNotificationSettings settings)
+        {
+            await Run(model, settings, NotificationType.PartiallyAvailable);
+        }
     }
 }

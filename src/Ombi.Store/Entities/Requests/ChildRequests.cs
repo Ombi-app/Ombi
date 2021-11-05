@@ -30,6 +30,35 @@ namespace Ombi.Store.Entities.Requests
         public List<Issues> Issues { get; set; }
 
         public List<SeasonRequests> SeasonRequests { get; set; }
+
+        [NotMapped]
+        public string RequestStatus
+        {
+            get
+            {
+                if (Available)
+                {
+                    return "Common.Available";
+                }
+
+                if (Denied ?? false)
+                {
+                    return "Common.Denied";
+                }
+
+                if (Approved & !Available)
+                {
+                    return "Common.ProcessingRequest";
+                }
+
+                if (!Approved && !Available)
+                {
+                    return "Common.PendingApproval";
+                }
+
+                return string.Empty;
+            }
+        }
     }
 
     public enum SeriesType

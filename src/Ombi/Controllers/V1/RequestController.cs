@@ -11,6 +11,7 @@ using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.UI;
+using Ombi.Core.Services;
 using Ombi.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
@@ -23,13 +24,16 @@ namespace Ombi.Controllers.V1
     [ApiController]
     public class RequestController : ControllerBase
     {
+        private readonly IRequestLimitService _requestLimitService;
+
         public RequestController(IMovieRequestEngine engine, ITvRequestEngine tvRequestEngine, IVoteEngine vote,
-            ILogger<RequestController> log)
+            ILogger<RequestController> log, IRequestLimitService requestLimitService)
         {
             MovieRequestEngine = engine;
             TvRequestEngine = tvRequestEngine;
             VoteEngine = vote;
             Log = log;
+            _requestLimitService = requestLimitService;
         }
 
         private IMovieRequestEngine MovieRequestEngine { get; }
@@ -523,7 +527,7 @@ namespace Ombi.Controllers.V1
         [HttpGet("movie/remaining")]
         public async Task<RequestQuotaCountModel> GetRemainingMovieRequests()
         {
-            return await MovieRequestEngine.GetRemainingRequests();
+            return await _requestLimitService.GetRemainingMovieRequests();
         }
 
         /// <summary>
@@ -532,7 +536,7 @@ namespace Ombi.Controllers.V1
         [HttpGet("tv/remaining")]
         public async Task<RequestQuotaCountModel> GetRemainingTvRequests()
         {
-            return await TvRequestEngine.GetRemainingRequests();
+            return await _requestLimitService.GetRemainingTvRequests();
         }
 
         private string GetApiAlias()

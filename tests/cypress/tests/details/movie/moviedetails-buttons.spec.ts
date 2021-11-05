@@ -10,7 +10,7 @@ describe("Movie Details Buttons", () => {
 
     Page.adminOptionsDialog.requestButton.click();
 
-    cy.verifyNotification("Tom & Jerry (2021) has been successfully added");
+    cy.verifyNotification("Request for Tom & Jerry has been added successfully");
 
     Page.requestedButton.should("be.visible");
   });
@@ -26,7 +26,7 @@ describe("Movie Details Buttons", () => {
         Page.visit("651571");
 
         Page.requestButton.click();
-        cy.verifyNotification("Breach (2020) has been successfully added");
+        cy.verifyNotification("Request for Breach has been added successfully");
 
         Page.requestedButton.should("be.visible");
       });
@@ -62,7 +62,7 @@ describe("Movie Details Buttons", () => {
         Page.visit("793723");
 
         Page.requestButton.click();
-        cy.verifyNotification("Sentinelle (2021) has been successfully added");
+        cy.verifyNotification("Request for Sentinelle has been added successfully");
 
         Page.requestedButton.should("be.visible");
 
@@ -90,13 +90,17 @@ describe("Movie Details Buttons", () => {
     Page.adminOptionsDialog.isOpen();
     Page.adminOptionsDialog.requestButton.click();
     cy.verifyNotification(
-      "Harry Potter and the Deathly Hallows: Part 1 (2010) has been successfully added"
+      "Request for Harry Potter and the Deathly Hallows: Part 1 has been added successfully"
     );
 
     cy.reload();
 
     Page.markAvailableButton.should("exist");
     Page.markAvailableButton.click();
+
+    cy.waitUntil(() => {
+      return Page.availableButton.should("be.visible");
+    })
 
     cy.verifyNotification("Request is now available");
     Page.availableButton.should("exist");
@@ -111,7 +115,7 @@ describe("Movie Details Buttons", () => {
     Page.adminOptionsDialog.isOpen();
     Page.adminOptionsDialog.requestButton.click();
     cy.verifyNotification(
-      "Harry Potter and the Philosopher's Stone (2001) has been successfully added"
+      "Request for Harry Potter and the Philosopher's Stone has been added successfully"
     );
 
     cy.reload();

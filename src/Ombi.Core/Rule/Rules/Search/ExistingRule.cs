@@ -75,6 +75,7 @@ namespace Ombi.Core.Rule.Rules.Search
                                 episodeSearching.Requested = true;
                                 episodeSearching.Available = ep.Available;
                                 episodeSearching.Approved = ep.Season.ChildRequest.Approved;
+                                episodeSearching.Denied = request.Denied;
                             }
                         }
                     }

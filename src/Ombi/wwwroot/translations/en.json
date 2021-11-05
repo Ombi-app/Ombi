@@ -14,6 +14,8 @@
     "Common": {
         "ContinueButton": "Continue",
         "Available": "Available",
+        "Approved": "Approved",
+        "Pending": "Pending",
         "PartiallyAvailable": "Partially Available",
         "Monitored": "Monitored",
         "NotAvailable": "Not Available",
@@ -33,8 +35,10 @@
         },
         "Cancel": "Cancel",
         "Submit": "Submit",
+        "Update": "Update",
 		"tvShow": "TV Show",
-        "movie": "Movie"
+        "movie": "Movie",
+        "album": "Album"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "Email Address",
@@ -90,6 +94,7 @@
         "TvTab": "TV Shows",
         "MusicTab": "Music",
         "AdvancedSearch":"You can fill in any of the below to discover new media. All of the results are sorted by popularity",
+        "AdvancedSearchHeader":"Advanced Search",
         "Suggestions": "Suggestions",
         "NoResults": "Sorry, we didn't find any results!",
         "DigitalDate": "Digital Release: {{date}}",
@@ -123,7 +128,10 @@
             "SubmitRequest": "Submit Request",
             "Season": "Season {{seasonNumber}}",
             "SelectAllInSeason": "Select All in Season {{seasonNumber}}"
-        }
+        },
+        "AdvancedSearchInstructions": "Please choose what type of media you are searching for:",
+        "YearOfRelease": "Year of Release",
+        "KeywordSearchingDisclaimer": "Please note that Keyword Searching is very hit and miss due to the inconsistent data in TheMovieDb"
     },
     "Requests": {
         "Title": "Requests",
@@ -154,7 +162,7 @@
         "DeniedReason": "Denied Reason",
         "Season": "Season",
         "GridTitle": "Title",
-        "AirDate": "AirDate",
+        "AirDate": "Air Date",
         "GridStatus": "Status",
         "ReportIssue": "Report Issue",
         "Filter": "Filter",
@@ -188,6 +196,29 @@
             "ChangeAvailability":"Mark Available",
             "Deleted": "Successfully deleted selected items",
             "Approved": "Successfully approved selected items"
+        },
+        "SuccessfullyApproved": "Successfully Approved",
+        "NowAvailable": "Request is now available",
+        "NowUnavailable": "Request is now unavailable",
+        "SuccessfullyReprocessed": "Successfully Re-processed the request",
+        "DeniedRequest": "Denied Request",
+        "RequestCollection": "Request Collection",
+        "CollectionSuccesfullyAdded": "The collection {{name}} has been successfully added!",
+        "NeedToSelectEpisodes": "You need to select some episodes!",
+        "RequestAddedSuccessfully": "Request for {{title}} has been added successfully",
+        "ErrorCodes": {
+            "AlreadyRequested": "This has already been requested",
+            "EpisodesAlreadyRequested": "We already have episodes requested from this series",
+            "NoPermissionsOnBehalf":"You do not have the correct permissions to request on behalf of users!",
+            "NoPermissions":"You do not have the correct permissions!",
+            "RequestDoesNotExist":"Request does not exist",
+            "ChildRequestDoesNotExist":"Child Request does not exist",
+            "NoPermissionsRequestMovie":"You do not have permissions to Request a Movie",
+            "NoPermissionsRequestTV":"You do not have permissions to Request a TV Show",
+            "NoPermissionsRequestAlbum":"You do not have permissions to Request an Album",
+            "MovieRequestQuotaExceeded":"You have exceeded your Movie request quota!",
+            "TvRequestQuotaExceeded":"You have exceeded your Episode request quota!",
+            "AlbumRequestQuotaExceeded":"You have exceeded your Album request quota!"
         }
     },
     "Issues": {
@@ -196,6 +227,7 @@
         "InProgressTitle": "In Progress Issues",
         "ResolvedTitle": "Resolved Issues",
         "ColumnTitle": "Title",
+        "Count": "Count",
         "Category": "Category",
         "Status": "Status",
         "Details": "Details",
@@ -223,14 +255,17 @@
         "Delete": "Delete issue",
         "DeletedIssue": "Issue has been deleted",
         "Chat":"Chat",
-        "Requested":"Requested"
+        "Requested":"Requested",
+        "UserOnDate": "{{user}} on {{date}}"
     },
     "Filter": {
         "ClearFilter": "Clear Filter",
         "FilterHeaderAvailability": "Availability",
         "FilterHeaderRequestStatus": "Status",
         "Approved": "Approved",
-        "PendingApproval": "Pending Approval"
+        "PendingApproval": "Pending Approval",
+        "WatchProviders": "Watch Providers",
+        "Keywords": "Keywords"
     },
     "UserManagment": {
         "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
@@ -262,21 +297,36 @@
         "QualityProfilesSelect":"Select A Quality Profile",
         "RootFolderSelect":"Select A Root Folder",
         "LanguageProfileSelect":"Select A Language Profile",
-        "Status":"Status",
-        "Availability":"Availability",
+        "Status":"Status:",
+        "StatusValues" : {
+            "Rumored" : "Rumored",
+            "Planned": "Planned",
+            "In Production": "In Production",
+            "Post Production": "Post Production",
+            "Released": "Released",
+            "Running": "Running",
+            "Returning Series": "Returning Series",
+            "Ended": "Ended",
+            "Canceled": "Canceled"
+        },
+        "Seasons": "Seasons:",
+        "Episodes": "Episodes:",
+        "Availability":"Availability:",
         "RequestStatus":"Request Status",
-        "Quality":"Quality",
-        "RootFolderOverride":"Root Folder Override",
-        "QualityOverride":"Quality Override",
-        "Genres":"Genres",
-        "TheatricalRelease":"Release",
-        "DigitalRelease":"Digital Release",
-        "Votes":"Votes",
-        "Runtime":"Runtime",
+        "Quality":"Quality:",
+        "RootFolderOverride":"Root Folder Override:",
+        "QualityOverride":"Quality Override:",
+        "Network":"Network:",
+        "Genres":"Genres:",
+        "FirstAired":"First Aired:",
+        "TheatricalRelease":"Release:",
+        "DigitalRelease":"Digital Release:",
+        "Votes":"Votes:",
+        "Runtime":"Runtime:",
         "Minutes": "{{runtime}} Minutes",
-        "Revenue":"Revenue",
-        "Budget":"Budget",
-        "Keywords":"Keywords/Tags",
+        "Revenue":"Revenue:",
+        "Budget":"Budget:",
+        "Keywords":"Keywords/Tags:",
         "Casts": {
             "CastTitle": "Cast"
         },
@@ -284,14 +334,24 @@
             "AllSeasonsTooltip": "This will request every season for this show",
             "FirstSeasonTooltip": "This will only request the First Season for this show",
             "LatestSeasonTooltip": "This will only request the Latest Season for this show",
-            "NoEpisodes": "There unfortunately is no episode data for this show yet!"
+            "NoEpisodes": "There unfortunately is no episode data for this show yet!",
+            "SeasonNumber": "Season {{number}}"
         },
         "SonarrConfiguration": "Sonarr Configuration",
         "RadarrConfiguration": "Radarr Configuration",
         "RequestOnBehalf": "Request on behalf of",
         "PleaseSelectUser": "Please select a user",
-        "StreamingOn": "Streaming On",
-        "ReProcessRequest": "Re-Process Request"
+        "StreamingOn": "Streaming On:",
+        "RequestedBy": "Requested By:",
+        "RequestDate": "Request Date:",
+        "DeniedReason": "Denied Reason:",
+        "ReProcessRequest": "Re-Process Request",
+        "Music": {
+            "Type": "Type:",
+            "Country": "Country:",
+            "StartDate": "Start Date:",
+            "EndDate": "EndDate:"
+        }
     },
     "Discovery": {
         "PopularTab": "Popular",
@@ -326,6 +386,24 @@
         "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
         "MobileQRCode":"Mobile QR Code",
         "LegacyApp":"Launch Legacy App",
-        "NoQrCode":"Please contact your administrator to enable QR codes"
+        "NoQrCode":"Please contact your administrator to enable QR codes",
+        "UserType": "User Type:",
+        "ChangeDetails": "Change Details",
+        "NeedCurrentPassword": "You need your current password to make any changes here",
+        "CurrentPassword": "Current Password",
+        "EmailAddress": "Email Address",
+        "NewPassword": "New Password",
+        "NewPasswordConfirm": "New Password Confirm",
+        "Security": "Security",
+        "Profile": "Profile",
+        "UpdatedYourInformation": "Updated your information"
+    },
+    "UserTypeLabel": {
+        "1": "Local User",
+        "2": "Plex User",
+        "3": "Emby User",
+        "4": "Emby Connect User",
+        "5": "Jellyfin User"
     }
+
 }

@@ -10,5 +10,13 @@
     "cSpell.words": [
         "usermanagement"
     ],
-    "discord.enabled": true
+    "discord.enabled": true,
+    "conventionalCommits.scopes": [
+        "discover",
+        "request-limits",
+        "notifications",
+        "settings",
+        "user-management",
+        "newsletter"
+    ]
 }

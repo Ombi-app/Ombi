@@ -1,0 +1,20 @@
+name: Contributors
+
+on:
+  push:
+    branches: [ develop ]
+  workflow_dispatch:
+
+jobs:
+  update-contributors:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Contribute List
+      uses: akhilmhdh/contributors-readme-action@v2.2.1
+      with:
+        commit_message: "chore: :busts_in_silhouette: Updated Contributors [skip ci]" 
+        image_size: 50
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

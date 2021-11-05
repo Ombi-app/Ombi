@@ -1,0 +1,205 @@
+name: CI Build
+
+on:
+  push:
+    branches: [ develop, master ]
+
+jobs:
+  build-ui:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: NodeModules Cache
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: node_modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: UI Install
+        run: yarn --cwd ./src/Ombi/ClientApp install
+
+      - name: Build UI
+        run: yarn --cwd ./src/Ombi/ClientApp run build
+
+      - name: Publish UI Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: angular_dist
+          path: |
+            ./src/Ombi/ClientApp/dist
+
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+
+      - name: Nuget Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget
+
+      - name: Run Unit Tests
+        run: |
+          cd src
+          dotnet test -c NonUiBuild --logger trx --results-directory "TestResults"
+
+  versioning:
+     runs-on: ubuntu-latest
+     needs: [ build-ui, unit-test ]
+     outputs:
+      changelog: ${{ steps.changelog.outputs.clean_changelog }}
+      tag: ${{ steps.changelog.outputs.tag }}
+      version: ${{ steps.changelog.outputs.version }}
+     steps:
+       - uses: actions/checkout@v2
+       - name: Conventional Changelog Action
+         id: changelog
+         uses: TriPSs/conventional-changelog-action@v3
+         with:
+          version-file: 'version.json'
+          skip-on-empty: 'false'
+          git-message: 'chore(release): :rocket: {version}'
+
+       - name: Output version
+         run: |
+           echo "outputs: ${{ steps.changelog.outputs.tag }}"
+           echo "Version: ${{ steps.changelog.outputs.version }}"
+           echo "log: ${{ steps.changelog.outputs.clean_changelog }}"
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: [ build-ui, versioning ]
+    strategy:
+      matrix:
+        include:
+          - os: win10-x64
+            format: zip
+            compression: zip
+          - os: win10-x86
+            format: zip
+            compression: zip
+          - os: linux-x64
+            format: tar.gz
+            compression: tar
+          - os: linux-arm
+            format: tar.gz
+            compression: tar
+          - os: linux-arm64
+            compression: tar
+            format: tar.gz
+          - os: osx-x64
+            compression: tar
+            format: tar.gz
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Nuget Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget
+
+      - name: Set Backend Version
+        run: |
+          dotnet tool install -g dotnet-setversion
+          setversion -r ${{ needs.versioning.outputs.version }}
+        working-directory: src
+
+      - name: Publish Backend ${{ matrix.os }}
+        run: dotnet publish -c Release -r ${{ matrix.os }} -o "${{ matrix.os }}" --self-contained true -p:PublishSingleFile=true
+        working-directory: src/Ombi
+
+      - name: Download Angular
+        uses: actions/download-artifact@v2
+        with:
+          name: angular_dist
+          path: ~/src/Ombi/dist
+
+      - name: Copy Dist to Artifacts
+        run: |
+          cd ${{ matrix.os }}
+          sudo mkdir -p ClientApp/dist
+          echo "mkdir /ClientApp"
+          echo "list os (ClientApp should be here)"
+          ls
+          cd ..
+          echo "Copy dist to /ClientApp"
+          sudo mv ~/src/Ombi/dist/* ${{ matrix.os }}/ClientApp/dist
+        working-directory: src/Ombi
+
+      - name: Archive Release
+        uses: thedoctor0/zip-release@master
+        with:
+          type: '${{ matrix.compression }}'
+          filename: '../${{ matrix.os }}.${{ matrix.format }}'
+          path: '.'
+          directory: 'src/Ombi/${{ matrix.os }}'
+
+      - name: Publish Release
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.os }}
+          path: |
+            ./src/Ombi/${{ matrix.os }}.${{ matrix.format }}
+
+  release:
+    needs: [ publish, unit-test, versioning ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Download Artifacts
+        id: download
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+
+      - name: Publish to GitHub Master
+        uses: softprops/action-gh-release@v1
+        if: contains(github.ref, 'master')
+        with:
+          body: ${{ needs.versioning.outputs.changelog }}
+          name: ${{ needs.versioning.outputs.tag }}
+          tag_name: ${{ needs.versioning.outputs.tag }}
+          files: |
+            artifacts/**/*.tar.gz
+            artifacts/**/*.zip
+
+      - name: Publish to GitHub Develop
+        uses: softprops/action-gh-release@v1
+        if: contains(github.ref, 'develop')
+        with:
+          prerelease: true
+          body: ${{ needs.versioning.outputs.changelog }}
+          name: ${{ needs.versioning.outputs.tag }}
+          tag_name: ${{ needs.versioning.outputs.tag }}
+          files: |
+            artifacts/**/*.tar.gz
+            artifacts/**/*.zip
+
+  update-apt:
+    needs: [ release, versioning ]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Trigger APT Build
+      uses: fjogeleit/http-request-action@master
+      with:
+        url: 'https://api.github.com/repos/Ombi-app/Ombi.Apt/actions/workflows/build-deb.yml/dispatches'
+        method: 'POST'
+        contentType: 'application/json'
+        data: '{ "ref":"main", "inputs": { "version": "${{ needs.versioning.outputs.tag }}"} }'
+        customHeaders: '{"Accept":"application/vnd.github.v3+json", "Authorization":"Bearer ${{secrets.APT_PAT}}", "User-Agent":"Ombi"}'
+
+

@@ -1,7 +1,8 @@
 ﻿import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
-import { ICheckbox, ICustomizationSettings, IEmailNotificationSettings, IUser } from "../interfaces";
+import { ICheckbox, ICustomizationSettings, IEmailNotificationSettings, IUser, RequestLimitType } from "../interfaces";
 import { IdentityService, NotificationService, SettingsService } from "../services";
 
+import { CustomizationFacade } from "../state/customization";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { SelectionModel } from "@angular/cdk/collections";
@@ -21,7 +22,7 @@ export class UserManagementComponent implements OnInit {
     public users: IUser[];
     public checkAll = false;
     public emailSettings: IEmailNotificationSettings;
-    public customizationSettings: ICustomizationSettings;
+    public applicationUrl: string;
     public showBulkEdit = false;
     public availableClaims: ICheckbox[];
     public bulkMovieLimit?: number;
@@ -31,11 +32,18 @@ export class UserManagementComponent implements OnInit {
     public plexEnabled: boolean;
 
     public countries: string[];
+    public requestLimitTypes: RequestLimitType[] = [RequestLimitType.Day, RequestLimitType.Week, RequestLimitType.Month];
+    public RequestLimitType = RequestLimitType;
+
+    public musicRequestLimitType: RequestLimitType;
+    public episodeRequestLimitType: RequestLimitType;
+    public movieRequestLimitType: RequestLimitType;
 
     constructor(private identityService: IdentityService,
         private settingsService: SettingsService,
         private notificationService: NotificationService,
-        private plexSettings: SettingsService) {
+        private plexSettings: SettingsService,
+        private customizationFacade: CustomizationFacade) {
             this.dataSource = new MatTableDataSource();
          }
 
@@ -49,7 +57,7 @@ export class UserManagementComponent implements OnInit {
         this.plexSettings.getPlex().subscribe(x => this.plexEnabled = x.enable);
 
         this.identityService.getAllAvailableClaims().subscribe(x => this.availableClaims = x);
-        this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
+        this.applicationUrl = this.customizationFacade.appUrl();
         this.settingsService.getEmailNotificationSettings().subscribe(x => this.emailSettings = x);
     }
 
@@ -93,6 +101,15 @@ export class UserManagementComponent implements OnInit {
             if (this.bulkStreaming) {
                 x.streamingCountry = this.bulkStreaming;
             }
+            if (this.musicRequestLimitType) {
+                x.musicRequestLimitType = this.musicRequestLimitType;
+            }
+            if (this.episodeRequestLimitType) {
+                x.episodeRequestLimitType = this.episodeRequestLimitType;
+            }
+            if (this.movieRequestLimitType) {
+                x.movieRequestLimitType = this.movieRequestLimitType;
+            }
             this.identityService.updateUser(x).subscribe(y => {
                 if (!y.successful) {
                     this.notificationService.error(`Could not update user ${x.userName}. Reason ${y.errors[0]}`);
@@ -106,6 +123,9 @@ export class UserManagementComponent implements OnInit {
         this.bulkEpisodeLimit = undefined;
         this.bulkMusicLimit = undefined;
         this.bulkStreaming = undefined;
+        this.movieRequestLimitType = undefined;
+        this.episodeRequestLimitType = undefined;
+        this.musicRequestLimitType = undefined;
     }
 
     public isAllSelected() {

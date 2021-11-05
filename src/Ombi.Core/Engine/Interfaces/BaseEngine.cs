@@ -35,7 +35,7 @@ namespace Ombi.Core.Engine.Interfaces
                 return null;
             }
             var username = Username.ToUpper();
-            return _user ?? (_user = await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username));
+            return _user ??= await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
         }
 
         protected async Task<string> UserAlias()

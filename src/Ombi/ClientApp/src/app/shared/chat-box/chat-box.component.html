@@ -13,7 +13,7 @@
               <p class="name" *ngIf="m?.username">{{m.username}}</p>
               <br/>
               <p class="message">{{m.message}}</p>
-              <p class="timestamp">{{m.date  | amLocal | amDateFormat: 'l LT'}}</p>
+              <p class="timestamp">{{m.date | amFromUtc | amLocal | amUserLocale | amDateFormat: 'l LT'}}</p>
             </div>
           </div>
         </div>

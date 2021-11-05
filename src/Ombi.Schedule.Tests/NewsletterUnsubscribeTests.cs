@@ -29,6 +29,8 @@ namespace Ombi.Schedule.Tests
                 yield return new TestCaseData("https://google.com:3577/", "1").Returns("https://google.com:3577/unsubscribe/1").SetName("Port With Slash");
                 yield return new TestCaseData("", "1").Returns(string.Empty).SetName("Missing App URL empty");
                 yield return new TestCaseData(null, "1").Returns(string.Empty).SetName("Missing App URL null");
+                yield return new TestCaseData("hty", string.Empty).Returns(string.Empty).SetName("Missing ID empty");
+                yield return new TestCaseData("hty", null).Returns(string.Empty).SetName("Missing ID null");
             }
         }
     }

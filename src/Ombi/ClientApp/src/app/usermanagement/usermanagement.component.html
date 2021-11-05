@@ -61,13 +61,13 @@
                 <th mat-header-cell *matHeaderCellDef>  Next Request Due </th>
                 <td mat-cell *matCellDef="let u"> 
                         <div *ngIf="u.movieRequestQuota != null && u.movieRequestQuota.remaining != u.movieRequestLimit">
-                                    {{'UserManagment.MovieDue' | translate: {date: (u.movieRequestQuota.nextRequest | amLocal | amDateFormat: 'l LT')} }}
+                                    {{'UserManagment.MovieDue' | translate: {date: (u.movieRequestQuota.nextRequest | amLocal | amUserLocale | amDateFormat: 'l')} }}
                         </div>
                         <div *ngIf="u.episodeRequestQuota != null && u.episodeRequestQuota.remaining != u.episodeRequestLimit">
-                                    {{'UserManagment.TvDue' | translate: {date: (u.episodeRequestQuota.nextRequest  | amLocal | amDateFormat: 'l LT')} }}
+                                    {{'UserManagment.TvDue' | translate: {date: (u.episodeRequestQuota.nextRequest  | amLocal | amUserLocale | amDateFormat: 'l')} }}
                         </div>
                         <div *ngIf="u.musicRequestQuota != null && u.musicRequestQuota.remaining != u.musicRequestLimit">
-                                    {{'UserManagment.MusicDue' | translate: {date: (u.musicRequestQuota.nextRequest  | amLocal | amDateFormat: 'l LT')} }}
+                                    {{'UserManagment.MusicDue' | translate: {date: (u.musicRequestQuota.nextRequest  | amLocal | amUserLocale | amDateFormat: 'l')} }}
                         </div>
                 </td>
           </ng-container>
@@ -75,7 +75,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>  Last Logged In </th>
                 <td mat-cell *matCellDef="let u">
                         <span *ngIf="u.lastLoggedIn">
-                                        {{u.lastLoggedIn  | amLocal | amDateFormat: 'l LT'}}
+                                {{u.lastLoggedIn  | amFromUtc | amLocal | amUserLocale | amDateFormat: 'l LT'}}
                         </span>
                         <span *ngIf="!u.lastLoggedIn">
                                         Not logged in yet!
@@ -105,8 +105,8 @@
           <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> </th>
                 <td mat-cell *matCellDef="let u">
-                        <button id="edit{{u.userName}}" mat-raised-button color="accent" [routerLink]="['/usermanagement/user/' + u.id]">Edit</button>  
-                        <button *ngIf="!u.hasLoggedIn" mat-raised-button color="accent"  (click)="welcomeEmail(u)" [disabled]="!customizationSettings?.applicationUrl"><i class="far fa-paper-plane"></i> Welcome</button>
+                        <button id="edit{{u.userName}}" mat-raised-button color="accent" [routerLink]="['/usermanagement/user/' + u.id]">Edit</button>
+                        <button *ngIf="!u.hasLoggedIn" mat-raised-button color="accent"  (click)="welcomeEmail(u)" [disabled]="!applicationUrl"><i class="far fa-paper-plane"></i> Welcome</button>
                 </td>
           </ng-container>
 
@@ -118,7 +118,7 @@
 
 
 
-<p-sidebar [(visible)]="showBulkEdit" position="right" [modal]="false">
+<p-sidebar [(visible)]="showBulkEdit" position="right" [modal]="false" [style]="{width:'40em'}">
         <div>
 <div *ngFor="let c of availableClaims">
         <div class="form-group">
@@ -129,19 +129,52 @@
             </div>
         </div>
     </div>
-
+    <div class="row">
+    <div class="col-6">
     <mat-form-field appearance="outline" class="full">
         <mat-label>Movie Request Limit</mat-label>
         <input matInput id="movieRequestLimit" name="movieRequestLimit"  [(ngModel)]="bulkMovieLimit">
-    </mat-form-field>
+    </mat-form-field></div>
+    <div class="col-6">
+        <mat-label>Movie Request Limit Type</mat-label>
+        <mat-select  id="movieRequestLimitType" [(value)]="movieRequestLimitType">
+          <mat-option *ngFor="let value of requestLimitTypes" [value]="value">
+            {{RequestLimitType[value]}}
+          </mat-option>
+        </mat-select>
+      </div></div>
+      <div class="row">
+        <div class="col-6">
     <mat-form-field appearance="outline"  class="full">
         <mat-label>Episode Request Limit</mat-label>
         <input matInput id="episodeRequestLimit" name="episodeRequestLimit"  [(ngModel)]="bulkEpisodeLimit">
     </mat-form-field>
+</div>
+<div class="col-6">
+        <mat-label>Episode Request Limit Type</mat-label>
+        <mat-select  id="episodeRequestLimitType" [(value)]="episodeRequestLimitType">
+          <mat-option *ngFor="let value of requestLimitTypes" [value]="value">
+            {{RequestLimitType[value]}}
+          </mat-option>
+        </mat-select>
+</div>
+    </div>
+    <div class="row">
+        <div class="col-6">
     <mat-form-field appearance="outline"  class="full">
         <mat-label>Music Request Limit</mat-label>
         <input matInput id="musicRequestLimit" name="musicRequestLimit"  [(ngModel)]="bulkMusicLimit">
     </mat-form-field>
+    </div>
+    <div class="col-6">
+        <mat-label>Music Request Limit Type</mat-label>
+        <mat-select  id="musicRequestLimitType" [(value)]="musicRequestLimitType">
+          <mat-option *ngFor="let value of requestLimitTypes" [value]="value">
+            {{RequestLimitType[value]}}
+          </mat-option>
+        </mat-select>
+        </div>
+    </div>
     <mat-form-field  appearance="outline"  class="full">
         <mat-label [translate]="'UserPreferences.StreamingCountry'"></mat-label>
         <mat-select [(value)]="bulkStreaming">
@@ -152,7 +185,7 @@
       </mat-form-field>
 
 
-<button type="button" mat-raised-button (click)="bulkUpdate()">Update Users</button>
+<button type="button" mat-raised-button color="primary" (click)="bulkUpdate()">Update Users</button>
 </p-sidebar>
 </div>
 </div>

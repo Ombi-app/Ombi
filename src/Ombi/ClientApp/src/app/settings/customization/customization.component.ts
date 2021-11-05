@@ -1,5 +1,6 @@
 ﻿import { Component, OnInit } from "@angular/core";
 
+import { CustomizationFacade } from "../../state/customization";
 import { ICustomizationSettings } from "../../interfaces";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
@@ -13,13 +14,14 @@ export class CustomizationComponent implements OnInit {
     public settings: ICustomizationSettings;
     public advanced: boolean;
 
-    constructor(private settingsService: SettingsService, private notificationService: NotificationService) {  }
+    constructor(private settingsService: SettingsService,
+        private notificationService: NotificationService,
+        private customizationFacade: CustomizationFacade) {  }
 
     public ngOnInit() {
-        this.settingsService.getCustomization().subscribe(x => {
-            this.settings = x;
+        this.customizationFacade.settings$().subscribe(x => {
+            this.settings = { ...x };
         });
-
     }
 
     public save() {
@@ -32,7 +34,7 @@ export class CustomizationComponent implements OnInit {
                 }
             }
 
-            this.settingsService.saveCustomization(this.settings).subscribe(x => {
+            this.customizationFacade.saveSettings(this.settings).subscribe(x => {
                 if (x) {
                     this.notificationService.success("Successfully saved Ombi settings");
                 } else {

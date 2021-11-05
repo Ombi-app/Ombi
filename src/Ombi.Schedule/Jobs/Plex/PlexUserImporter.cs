@@ -104,7 +104,11 @@ namespace Ombi.Schedule.Jobs.Plex
                             Email = plexUser?.Email ?? string.Empty,
                             Alias = string.Empty,
                             MovieRequestLimit = userManagementSettings.MovieRequestLimit,
+                            MovieRequestLimitType = userManagementSettings.MovieRequestLimitType,
                             EpisodeRequestLimit = userManagementSettings.EpisodeRequestLimit,
+                            EpisodeRequestLimitType = userManagementSettings.EpisodeRequestLimitType,
+                            MusicRequestLimit = userManagementSettings.MusicRequestLimit,
+                            MusicRequestLimitType = userManagementSettings.MusicRequestLimitType,
                             StreamingCountry = userManagementSettings.DefaultStreamingCountry
                         };
                         _log.LogInformation("Creating Plex user {0}", newUser.UserName);

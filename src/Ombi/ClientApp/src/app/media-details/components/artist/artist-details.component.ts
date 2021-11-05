@@ -8,6 +8,7 @@ import { AuthService } from "../../../auth/auth.service";
 import { DenyDialogComponent } from "../shared/deny-dialog/deny-dialog.component";
 import { NewIssueComponent } from "../shared/new-issue/new-issue.component";
 import { IArtistSearchResult, IReleaseGroups } from "../../../interfaces/IMusicSearchResultV2";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
     templateUrl: "./artist-details.component.html",
@@ -26,7 +27,8 @@ export class ArtistDetailsComponent {
     constructor(private searchService: SearchV2Service, private route: ActivatedRoute,
         private sanitizer: DomSanitizer, private imageService: ImageService,
         public dialog: MatDialog, private requestService: RequestService,
-        public messageService: MessageService, private auth: AuthService) {
+        public messageService: MessageService, private auth: AuthService,
+        private translate: TranslateService) {
         this.route.params.subscribe((params: any) => {
             this.artistId = params.artistId;
             this.load();
@@ -92,16 +94,16 @@ export class ArtistDetailsComponent {
                 .then(r => {
                     if (r.result) {
                         a.monitored = true;
-                        this.messageService.send(r.message);
+                        this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", {title: a.title}));
                     } else {
-                        this.messageService.send(r.errorMessage);
+                        this.messageService.sendRequestEngineResultError(r);
                     }
                     
                     a.selected = false;
                 })
                 .catch(r => {
                     console.log(r);
-                    this.messageService.send("Error when requesting album");
+                    this.messageService.sendRequestEngineResultError(r);
                 });
             });
         } else {
@@ -115,16 +117,16 @@ export class ArtistDetailsComponent {
                 .then(r => {
                     if (r.result) {
                         a.monitored = true;
-                        this.messageService.send(r.message);
+                        this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", {title: a.title}));
                     } else {
-                        this.messageService.send(r.errorMessage);
+                        this.messageService.sendRequestEngineResultError(r);
                     }
                     
                     a.selected = false;
                 })
                 .catch(r => {
                     console.log(r);
-                    this.messageService.send("Error when requesting album");
+                    this.messageService.sendRequestEngineResultError(r);
                 });
             })
         }

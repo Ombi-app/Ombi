@@ -63,7 +63,7 @@
                                 
                                 <div class="messages msg_sent"> <i *ngIf="isAdmin" style="float:right;" class="fas fa-times" aria-hidden="true" (click)="deleteComment(comment.id)"></i>
                                     <p>{{comment.comment}}</p>
-                                    <time>{{comment.username}} • {{comment.date  | amLocal | amDateFormat: 'l LT'}}</time>
+                                    <time>{{comment.username}} • {{comment.date | amFromUtc | amLocal | amUserLocale | amDateFormat: 'l LT'}}</time>
                                 </div>
                             </div>
                         </div>

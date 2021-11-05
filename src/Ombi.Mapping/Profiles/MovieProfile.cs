@@ -71,7 +71,7 @@ namespace Ombi.Mapping.Profiles
                 .ForMember(x => x.ReleaseDate, o => o.MapFrom(s => s.release_dates))
                 .ForMember(x => x.IsoCode, o => o.MapFrom(s => s.iso_3166_1));
             CreateMap<ReleaseDate, ReleaseDateDto>()
-                .ForMember(x => x.ReleaseDate, o => o.MapFrom(s => s.release_date))
+                .ForMember(x => x.ReleaseDate, o => o.MapFrom(s => s.ReleaseDateTime))
                 .ForMember(x => x.Type, o => o.MapFrom(s => s.Type));
 
             CreateMap<TheMovieDbApi.Models.Genre, GenreDto>();

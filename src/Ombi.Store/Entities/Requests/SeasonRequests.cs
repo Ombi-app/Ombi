@@ -29,6 +29,8 @@ namespace Ombi.Store.Repository.Requests
         public bool Available { get; set; }
         public bool Approved { get; set; }
         public bool Requested { get; set; }
+        [NotMapped]
+        public bool? Denied { get; set; }
 
         public int SeasonId { get; set; }
         [ForeignKey(nameof(SeasonId))]
@@ -46,12 +48,17 @@ namespace Ombi.Store.Repository.Requests
                     return "Common.Available";
                 }
 
+                if (Denied ?? false)
+                {
+                    return "Common.Denied";
+                }
+
                 if (Approved & !Available)
                 {
                     return "Common.ProcessingRequest";
                 }
 
-                if (!Approved && !Available && Requested)
+                if (!Approved && !Available)
                 {
                     return "Common.PendingApproval";
                 }

@@ -265,6 +265,9 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.Property<int?>("EpisodeRequestLimit")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("EpisodeRequestLimitType")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Language")
                         .HasColumnType("TEXT");
 
@@ -280,7 +283,13 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.Property<int?>("MovieRequestLimit")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("MovieRequestLimitType")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("MusicRequestLimit")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("MusicRequestLimitType")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("NormalizedEmail")

@@ -1,0 +1,106 @@
+name: PR Build
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build-ui:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: NodeModules Cache
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: node_modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: UI Install
+        run: yarn --cwd ./src/Ombi/ClientApp install
+
+      - name: Build UI
+        run: yarn --cwd ./src/Ombi/ClientApp run build
+
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+
+      - name: Nuget Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget
+
+      - name: Run Unit Tests
+        run: |
+          cd src
+          dotnet test --logger trx --results-directory "TestResults"
+
+  analysis:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+        fetch-depth: 0
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@master
+      with:
+        args: >
+          -Dsonar.organization=ombi-app
+          -Dsonar.projectKey=Ombi-app_Ombi
+      env:
+        GITHUB_TOKEN:  ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: [ unit-test ]
+    strategy:
+      matrix:
+        include:
+          - os: win10-x64
+            format: zip
+            compression: zip
+          - os: win10-x86
+            format: zip
+            compression: zip
+          - os: linux-x64
+            format: tar.gz
+            compression: tar
+          - os: linux-arm
+            format: tar.gz
+            compression: tar
+          - os: linux-arm64
+            compression: tar
+            format: tar.gz
+          - os: osx-x64
+            compression: tar
+            format: tar.gz
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Nuget Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget
+
+      - name: Publish Backend ${{ matrix.os }}
+        run: dotnet publish -c Release -r ${{ matrix.os }} -o "${{ matrix.os }}" --self-contained true -p:PublishSingleFile=true
+        working-directory: src/Ombi
+
+
+

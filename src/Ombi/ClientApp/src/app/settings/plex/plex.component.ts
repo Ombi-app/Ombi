@@ -55,12 +55,15 @@ export class PlexComponent implements OnInit, OnDestroy {
         var splitServers = selectedServer.localAddresses.split(",");
         if (splitServers.length > 1) {
             server.ip = splitServers[splitServers.length - 1];
+        } else {
+            server.ip = selectedServer.localAddresses;
         }
         server.name = selectedServer.name;
         server.machineIdentifier = selectedServer.machineIdentifier;
         server.plexAuthToken = selectedServer.accessToken;
         server.port = parseInt(selectedServer.port);
         server.ssl = selectedServer.scheme === "http" ? false : true;
+        server.serverHostname = "";
 
         this.notificationService.success(`Selected ${server.name}!`);
     }
@@ -123,6 +126,19 @@ export class PlexComponent implements OnInit, OnDestroy {
     public save() {
         const filtered = this.settings.servers.filter(x => x.name !== "");
         this.settings.servers = filtered;
+        let invalid = false;
+
+        this.settings.servers.forEach(server => {
+            if (server.serverHostname && server.serverHostname.length > 0 && !server.serverHostname.startsWith("http")) {
+                invalid = true;
+            }
+        });
+
+        if (invalid) {
+            this.notificationService.error("Please ensure that your External Hostname is a full URL including the Scheme (http/https)")
+            return;
+        }
+
         this.settingsService.savePlex(this.settings).subscribe(x => {
             if (x) {
                 this.notificationService.success("Successfully saved Plex settings");

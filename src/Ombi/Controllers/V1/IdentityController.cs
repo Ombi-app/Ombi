@@ -17,6 +17,7 @@ using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Helpers;
 using Ombi.Core.Models.UI;
+using Ombi.Core.Services;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
@@ -68,6 +69,7 @@ namespace Ombi.Controllers.V1
             ITvRequestEngine tvRequestEngine,
             IMusicRequestEngine musicEngine,
             IUserDeletionEngine deletionEngine,
+            IRequestLimitService requestLimitService,
             ICacheService cacheService)
         {
             UserManager = user;
@@ -96,11 +98,13 @@ namespace Ombi.Controllers.V1
             _userQualityProfiles = userProfiles;
             MusicRequestEngine = musicEngine;
             _deletionEngine = deletionEngine;
+            _requestLimitService = requestLimitService;
             _cacheService = cacheService;
         }
 
         private OmbiUserManager UserManager { get; }
         private readonly IUserDeletionEngine _deletionEngine;
+        private readonly IRequestLimitService _requestLimitService;
         private readonly ICacheService _cacheService;
 
         private RoleManager<IdentityRole> RoleManager { get; }
@@ -395,6 +399,9 @@ namespace Ombi.Controllers.V1
                 EpisodeRequestLimit = user.EpisodeRequestLimit ?? 0,
                 MovieRequestLimit = user.MovieRequestLimit ?? 0,
                 MusicRequestLimit = user.MusicRequestLimit ?? 0,
+                MovieRequestLimitType = user.MovieRequestLimitType ?? RequestLimitType.Week,
+                EpisodeRequestLimitType = user.EpisodeRequestLimitType ?? RequestLimitType.Week,
+                MusicRequestLimitType = user.MusicRequestLimitType ?? RequestLimitType.Week,
                 Language = user.Language,
                 StreamingCountry = user.StreamingCountry
             };
@@ -422,17 +429,17 @@ namespace Ombi.Controllers.V1
 
             if (vm.EpisodeRequestLimit > 0)
             {
-                vm.EpisodeRequestQuota = await TvRequestEngine.GetRemainingRequests(user);
+                vm.EpisodeRequestQuota = await _requestLimitService.GetRemainingTvRequests(user);
             }
 
             if (vm.MovieRequestLimit > 0)
             {
-                vm.MovieRequestQuota = await MovieRequestEngine.GetRemainingRequests(user);
+                vm.MovieRequestQuota = await _requestLimitService.GetRemainingMovieRequests(user);
             }
 
             if (vm.MusicRequestLimit > 0)
             {
-                vm.MusicRequestQuota = await MusicRequestEngine.GetRemainingRequests(user);
+                vm.MusicRequestQuota = await _requestLimitService.GetRemainingMusicRequests(user);
             }
 
             // Get the quality profiles
@@ -637,6 +644,9 @@ namespace Ombi.Controllers.V1
             user.MovieRequestLimit = ui.MovieRequestLimit;
             user.EpisodeRequestLimit = ui.EpisodeRequestLimit;
             user.MusicRequestLimit = ui.MusicRequestLimit;
+            user.EpisodeRequestLimitType = ui.EpisodeRequestLimitType;
+            user.MusicRequestLimitType = ui.MusicRequestLimitType;
+            user.MovieRequestLimitType = ui.MovieRequestLimitType;
             if (ui.Password.HasValue())
             {
                 user.PasswordHash = UserManager.PasswordHasher.HashPassword(user, ui.Password);
@@ -919,6 +929,30 @@ namespace Ombi.Controllers.V1
 
             var username = User.Identity.Name.ToUpper();
             var user = await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
+            if (user == null)
+            {
+                return Guid.Empty.ToString("N");
+            }
+            if (user.UserAccessToken.IsNullOrEmpty())
+            {
+                // Let's create an access token for this user
+                user.UserAccessToken = Guid.NewGuid().ToString("N");
+                var result = await UserManager.UpdateAsync(user);
+                if (!result.Succeeded)
+                {
+                    LogErrors(result);
+                    return Guid.Empty.ToString("N");
+                }
+            }
+            return user.UserAccessToken;
+        }
+
+        [HttpGet("accesstoken/{userId}")]
+        [PowerUser]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<string> GetUserAccessToken(string userId)
+        {
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
             if (user == null)
             {
                 return Guid.Empty.ToString("N");

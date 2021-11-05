@@ -1,0 +1,35 @@
+name: 'Issue Check'
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  issueCheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output version
+        run: |
+          echo "log: ${{ github.event.issue.body }}"
+
+      - if: startsWith(github.event.issue.body , '**Describe the bug**') == false
+        name: Close Issue
+        uses: peter-evans/close-issue@v1
+        with:
+          comment: |
+            Hello, Please use the Github template to report an issue. If this is a feature request, please take a look at the readme. <br/> Thanks, <br/> Ombi Bot
+
+      - if: startsWith(github.event.issue.body , '**Describe the bug**') == true
+        name: Create comment
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            Hi!
+            <br/>Thanks for the issue report. Before a real human comes by, please make sure you used our bug report format.
+            <br/>Have you looked at the wiki yet? https://docs.ombi.app/
+            <br/>Before posting make sure you also read our [FAQ](https://docs.ombi.app/info/faq/).
+            <br/> Make the title describe your issue. Having 'not working' or 'I get this bug' for 100 issues, isn't really helpful.
+            <br/> If we need more information or there is some progress we tag the issue or update the tag and keep you updated.
+            <br/> Thanks!
+            <br/> Ombi Bot.

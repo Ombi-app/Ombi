@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Ombi.Core.Engine;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
@@ -87,7 +88,7 @@ namespace Ombi.Core.Rule.Rules.Request
 
             if (!anyEpisodes)
             {
-                return Fail($"We already have episodes requested from series {child.Title}");
+                return Fail(ErrorCode.EpisodesAlreadyRequested, $"We already have episodes requested from series {child.Title}");
             }
 
             return Success();

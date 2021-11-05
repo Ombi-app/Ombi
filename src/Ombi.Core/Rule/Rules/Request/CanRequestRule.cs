@@ -6,6 +6,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Authentication;
+using Ombi.Core.Engine;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Helpers;
 using Ombi.Store.Entities.Requests;
@@ -34,7 +35,7 @@ namespace Ombi.Core.Rule.Rules.Request
             {
                 if (await _manager.IsInRoleAsync(user, OmbiRoles.RequestMovie) || await _manager.IsInRoleAsync(user, OmbiRoles.AutoApproveMovie))
                     return Success();
-                return Fail("You do not have permissions to Request a Movie");
+                return Fail(ErrorCode.NoPermissionsRequestMovie, "You do not have permissions to Request a Movie");
             }
 
             if (obj.RequestType == RequestType.TvShow)
@@ -44,7 +45,7 @@ namespace Ombi.Core.Rule.Rules.Request
                     return Success();
                 }
 
-                return Fail("You do not have permissions to Request a TV Show");
+                return Fail(ErrorCode.NoPermissionsRequestTV, "You do not have permissions to Request a TV Show");
             }
 
             if (obj.RequestType == RequestType.Album)
@@ -54,7 +55,7 @@ namespace Ombi.Core.Rule.Rules.Request
                     return Success();
                 }
 
-                return Fail("You do not have permissions to Request an Album");
+                return Fail(ErrorCode.NoPermissionsRequestAlbum, "You do not have permissions to Request an Album");
             }
 
             throw new InvalidDataException("Permission check failed: unknown RequestType");

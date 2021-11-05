@@ -10,23 +10,21 @@ using Octokit;
 using Ombi.Api;
 using Ombi.Api.Service;
 using Ombi.Core.Processor;
+using Ombi.Core.Settings;
 using Ombi.Helpers;
+using Ombi.Settings.Settings.Models;
+using Branch = Ombi.Settings.Settings.Models.Branch;
 
 namespace Ombi.Schedule.Processor
 {
     public class ChangeLogProcessor : IChangeLogProcessor
     {
-        public ChangeLogProcessor(IApi api, IHttpClientFactory client)
-        {
-            _api = api;
-            _client = client.CreateClient("OmbiClient");
-        }
+        private readonly ISettingsService<OmbiSettings> _ombiSettingsService;
 
-        private readonly IApi _api;
-        private readonly HttpClient _client;
-        private const string _changeLogUrl = "https://raw.githubusercontent.com/tidusjar/Ombi/{0}/CHANGELOG.md";
-        private const string AppveyorApiUrl = "https://ci.appveyor.com/api";
-        private string ChangeLogUrl(string branch) => string.Format(_changeLogUrl, branch);
+        public ChangeLogProcessor(ISettingsService<OmbiSettings> ombiSettings)
+        {
+            _ombiSettingsService = ombiSettings;
+        }
 
         public async Task<UpdateModel> Process()
         {
@@ -34,9 +32,9 @@ namespace Ombi.Schedule.Processor
             {
                 Downloads = new List<Downloads>()
             };
+            var settings = _ombiSettingsService.GetSettingsAsync();
+            await GetGitubRelease(release, settings);
 
-            await GetGitubRelease(release);
-            
             return TransformUpdate(release);
         }
 
@@ -50,7 +48,7 @@ namespace Ombi.Schedule.Processor
                 ChangeLogs = release.Description,
                 Downloads = new List<Downloads>(),
                 UpdateAvailable = release.Version != "v" + AssemblyHelper.GetRuntimeVersion()
-        };
+            };
 
             foreach (var dl in release.Downloads)
             {
@@ -64,12 +62,20 @@ namespace Ombi.Schedule.Processor
             return newUpdate;
         }
 
-        private async Task GetGitubRelease(Release release)
+        private async Task GetGitubRelease(Release release, Task<OmbiSettings> settingsTask)
         {
             var client = new GitHubClient(Octokit.ProductHeaderValue.Parse("OmbiV4"));
 
             var releases = await client.Repository.Release.GetAll("ombi-app", "ombi");
-            var latest = releases.OrderByDescending(x => x.CreatedAt).FirstOrDefault();
+
+            var settings = await settingsTask;
+
+            var latest = settings.Branch switch
+            {
+                Branch.Develop => releases.Where(x => x.Prerelease).OrderByDescending(x => x.CreatedAt).FirstOrDefault(),
+                Branch.Stable => releases.Where(x => !x.Prerelease).OrderByDescending(x => x.CreatedAt).FirstOrDefault(),
+                _ => throw new NotImplementedException(),
+            };
 
             foreach (var item in latest.Assets)
             {

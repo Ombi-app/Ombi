@@ -1,17 +1,17 @@
 <div class="small-middle-container">
   <mat-tab-group>
     <div class="buttons">
-    <mat-tab label="Movies">
+    <mat-tab label="{{ 'NavigationBar.Filter.Movies' | translate }}">
         <ng-template matTabContent>
           <movies-grid (onOpenOptions)="onOpenOptions($event)"></movies-grid>
           </ng-template>
     </mat-tab>
-    <mat-tab label="TV Shows">
+    <mat-tab label="{{ 'NavigationBar.Filter.TvShows' | translate }}">
         <ng-template matTabContent>
           <tv-grid (onOpenOptions)="onOpenOptions($event)"></tv-grid>
           </ng-template>
     </mat-tab>
-    <mat-tab label="Albums">
+    <mat-tab label="{{ 'NavigationBar.Filter.Music' | translate }}">
       <ng-template matTabContent>
         <albums-grid (onOpenOptions)="onOpenOptions($event)"></albums-grid>
         </ng-template>

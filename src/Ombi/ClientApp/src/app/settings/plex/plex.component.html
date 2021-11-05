@@ -69,6 +69,16 @@
                             </mat-form-field>
                         </div>
                         <div class="md-form-field">
+                            <mat-form-field appearance="outline" floatLabel=auto>
+                                <mat-label>Externally Facing Hostname</mat-label>
+                                <input matInput placeholder="e.g. https://app.plex.tv" [(ngModel)]="server.serverHostname" value="{{server.serverHostname}}" matTooltip="This will be the external address that users will navigate to when they press the 'View On Plex' button">
+                            </mat-form-field>
+                            <small>
+                                <span *ngIf="server.serverHostname">Current URL: "{{server.serverHostname}}/web/app#!/server/{{server.machineIdentifier}}/details?key=%2flibrary%2Fmetadata%2F53334"</span>
+                                <span *ngIf="!server.serverHostname">Current URL: "https://app.plex.tv/web/app#!/server/{{server.machineIdentifier}}/details?key=%2flibrary%2Fmetadata%2F53334"</span>
+                            </small>
+                        </div>
+                        <div class="md-form-field">
                             <div class="md-form-field" *ngIf="advanced">
                                 <mat-form-field appearance="outline" floatLabel=auto>
                                     <mat-label for="episodeBatchSize" class="control-label">Episode Batch Size</mat-label>

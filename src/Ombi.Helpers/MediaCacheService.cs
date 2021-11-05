@@ -32,7 +32,7 @@ namespace Ombi.Helpers
             }
 
             // Not in the cache, so add this Key into our MediaServiceCache
-            await UpdateLocalCache(cacheKey);
+            UpdateLocalCache(cacheKey);
 
             return await _memoryCache.GetOrCreateAsync<T>(cacheKey, entry =>
             {
@@ -41,7 +41,7 @@ namespace Ombi.Helpers
             });
         }
 
-        private async Task UpdateLocalCache(string cacheKey)
+        private void UpdateLocalCache(string cacheKey)
         {
             var mediaServiceCache = _memoryCache.Get<List<string>>(CacheKey);
             if (mediaServiceCache == null)

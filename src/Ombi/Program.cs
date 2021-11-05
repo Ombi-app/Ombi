@@ -20,6 +20,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.TheMovieDb.Models;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 
 namespace Ombi
 {
@@ -269,17 +270,16 @@ namespace Ombi
                 var indexHtml = await File.ReadAllTextAsync(indexPath);
                 var sb = new StringBuilder(indexHtml);
 
-                var headPosition = indexHtml.IndexOf("<head>");
-                var firstLinkPosition = indexHtml.IndexOf("<link");
+                const string scriptRegex = "<script.type=.+>window.+=.+;<.script>";
+                const string baseUrlRegex = "<base.href=\".+\">";
 
-                sb.Remove(headPosition + 6, firstLinkPosition - headPosition - 6);
+                indexHtml = Regex.Replace(indexHtml, scriptRegex, $"<script type='text/javascript'>window[\"baseHref\"] = '{trimmedBaseUrl}';</script>");
 
-                sb.Insert(headPosition + 6,
-                    $"<script type='text/javascript'>window[\"baseHref\"] = '{trimmedBaseUrl}';</script><base href=\"{trimmedBaseUrl}/\">");
+                indexHtml = Regex.Replace(indexHtml, baseUrlRegex, $"<base href=\"{trimmedBaseUrl}/\">");
 
                 try
                 {
-                    await File.WriteAllTextAsync(indexPath, sb.ToString());
+                    await File.WriteAllTextAsync(indexPath, indexHtml);
                 }
                 catch (UnauthorizedAccessException)
                 {

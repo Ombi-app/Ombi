@@ -26,6 +26,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
@@ -173,6 +174,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                         x.Series.Title == child.Title);
                 }
 
+                var availableEpisode = new List<AvailabilityModel>();
                 foreach (var season in child.SeasonRequests)
                 {
                     foreach (var episode in season.Episodes)
@@ -188,9 +190,20 @@ namespace Ombi.Schedule.Jobs.Jellyfin
 
                         if (foundEp != null)
                         {
+                            availableEpisode.Add(new AvailabilityModel
+                            {
+                                Id = episode.Id,
+                                EpisodeNumber = episode.EpisodeNumber,
+                                SeasonNumber = episode.Season.SeasonNumber
+                            });
                             episode.Available = true;
                         }
                     }
+                }
+
+                if (availableEpisode.Any())
+                {
+                    await _tvRepo.Save();
                 }
 
                 // Check to see if all of the episodes in all seasons are available for this request
@@ -208,6 +221,20 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                         RequestType = RequestType.TvShow,
                         Recipient = child.RequestedUser.Email
                     });
+                }
+                else if (availableEpisode.Any())
+                {
+                    var notification = new NotificationOptions
+                    {
+                        DateTime = DateTime.Now,
+                        NotificationType = NotificationType.PartiallyAvailable,
+                        RequestId = child.Id,
+                        RequestType = RequestType.TvShow,
+                        Recipient = child.RequestedUser.Email,
+                    };
+                    notification.Substitutes.Add("Season", availableEpisode.First().SeasonNumber.ToString());
+                    notification.Substitutes.Add("Episodes", string.Join(", ", availableEpisode.Select(x => x.EpisodeNumber)));
+                    await _notificationService.Notify(notification);
                 }
             }
 
