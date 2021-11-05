@@ -194,12 +194,12 @@
             "Delete": "Kérés törlése",
             "Approve": "Kérés elfogadása",
             "ChangeAvailability": "Elérhetőnek jelölés",
-            "Deleted": "Successfully deleted selected items",
-            "Approved": "Successfully approved selected items"
+            "Deleted": "A kijelölt elemek törlésre kerultek",
+            "Approved": "A kijelölt elemek jóváhagyásra kerultek"
         },
-        "SuccessfullyApproved": "Successfully Approved",
-        "NowAvailable": "Request is now available",
-        "NowUnavailable": "Request is now unavailable",
+        "SuccessfullyApproved": "Sikeresen jóváhagyva",
+        "NowAvailable": "Kérés elérhető",
+        "NowUnavailable": "Kérés nem elérhető",
         "SuccessfullyReprocessed": "Successfully Re-processed the request",
         "DeniedRequest": "Elutasított kérés",
         "RequestCollection": "Request Collection",
