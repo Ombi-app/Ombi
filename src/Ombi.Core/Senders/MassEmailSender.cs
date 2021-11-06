@@ -25,7 +25,9 @@
 //  ************************************************************************/
 #endregion
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -64,6 +66,26 @@ namespace Ombi.Core.Senders
             var customization = await _customizationService.GetSettingsAsync();
             var email = await _emailService.GetSettingsAsync();
             var messagesSent = new List<Task>();
+            if (model.Bcc)
+            {
+                await SendBccMails(model, customization, email, messagesSent);
+            }
+            else
+            {
+                await SendIndividualEmails(model, customization, email, messagesSent);
+            }
+
+            await Task.WhenAll(messagesSent);
+
+            return true;
+        }
+
+        private async Task SendBccMails(MassEmailModel model, CustomizationSettings customization, EmailNotificationSettings email, List<Task> messagesSent)
+        {
+            var resolver = new NotificationMessageResolver();
+            var curlys = new NotificationMessageCurlys();
+
+            var validUsers = new List<OmbiUser>();
             foreach (var user in model.Users)
             {
                 var fullUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == user.Id);
@@ -72,8 +94,43 @@ namespace Ombi.Core.Senders
                     _log.LogInformation("User {0} has no email, cannot send mass email to this user", fullUser.UserName);
                     continue;
                 }
-                var resolver = new NotificationMessageResolver();
-                var curlys = new NotificationMessageCurlys();
+
+                validUsers.Add(fullUser);
+            }
+            
+            if (!validUsers.Any())
+            {
+                return;
+            }
+
+            var firstUser = validUsers.FirstOrDefault();
+
+            var bccAddress = string.Join(',', validUsers.Select(x => x.Email));
+            curlys.Setup(firstUser, customization);
+            var template = new NotificationTemplates() { Message = model.Body, Subject = model.Subject };
+            var content = resolver.ParseMessage(template, curlys);
+            var msg = new NotificationMessage
+            {
+                Message = content.Message,
+                Subject = content.Subject,
+                Other = new Dictionary<string, string> { { "bcc", bccAddress } }
+            };
+
+            messagesSent.Add(_email.SendAdHoc(msg, email));
+        }
+
+        private async Task SendIndividualEmails(MassEmailModel model, CustomizationSettings customization, EmailNotificationSettings email, List<Task> messagesSent)
+        {
+            var resolver = new NotificationMessageResolver();
+            var curlys = new NotificationMessageCurlys();
+            foreach (var user in model.Users)
+            {
+                var fullUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == user.Id);
+                if (!fullUser.Email.HasValue())
+                {
+                    _log.LogInformation("User {0} has no email, cannot send mass email to this user", fullUser.UserName);
+                    continue;
+                }
                 curlys.Setup(fullUser, customization);
                 var template = new NotificationTemplates() { Message = model.Body, Subject = model.Subject };
                 var content = resolver.ParseMessage(template, curlys);
@@ -83,13 +140,19 @@ namespace Ombi.Core.Senders
                     To = fullUser.Email,
                     Subject = content.Subject
                 };
-                messagesSent.Add(_email.SendAdHoc(msg, email));
+                messagesSent.Add(DelayEmail(msg, email));
                 _log.LogInformation("Sent mass email to user {0} @ {1}", fullUser.UserName, fullUser.Email);
             }
+        }
 
-            await Task.WhenAll(messagesSent);
-
-            return true;
+        /// <summary>
+        /// This will add a 2 second delay, this is to help with concurrent connection limits
+        /// <see href="https://github.com/Ombi-app/Ombi/issues/4377"/>
+        /// </summary>
+        private async Task DelayEmail(NotificationMessage msg, EmailNotificationSettings email)
+        {
+            await Task.Delay(2000);
+            await _email.SendAdHoc(msg, email);
         }
     }
 }

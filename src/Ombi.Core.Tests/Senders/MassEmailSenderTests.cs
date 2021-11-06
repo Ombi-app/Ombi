@@ -38,9 +38,9 @@ namespace Ombi.Core.Tests.Senders
             {
                 Body = "Test",
                 Subject = "Subject",
-                Users = new List<Store.Entities.OmbiUser>
+                Users = new List<OmbiUser>
                 {
-                    new Store.Entities.OmbiUser
+                    new OmbiUser
                     {
                         Id = "a"
                     }
@@ -143,5 +143,86 @@ namespace Ombi.Core.Tests.Senders
 
             _mocker.Verify<IEmailProvider>(x => x.SendAdHoc(It.IsAny<NotificationMessage>(), It.IsAny<EmailNotificationSettings>()), Times.Never);
         }
+
+        [Test]
+        public async Task SendMassEmail_Bcc()
+        {
+            var model = new MassEmailModel
+            {
+                Body = "Test",
+                Subject = "Subject",
+                Bcc = true,
+                Users = new List<OmbiUser>
+                {
+                    new OmbiUser
+                    {
+                        Id = "a"
+                    },
+                    new OmbiUser
+                    {
+                        Id = "b"
+                    }
+                }
+            };
+
+            _mocker.Setup<OmbiUserManager, IQueryable<OmbiUser>>(x => x.Users).Returns(new List<OmbiUser>
+            {
+                new OmbiUser
+                {
+                    Id = "a",
+                    Email = "Test@test.com"
+                },
+                new OmbiUser
+                {
+                    Id = "b",
+                    Email = "b@test.com"
+                }
+            }.AsQueryable().BuildMock().Object);
+
+            var result = await _subject.SendMassEmail(model);
+
+            _mocker.Verify<IEmailProvider>(x => x.SendAdHoc(It.Is<NotificationMessage>(m => m.Subject == model.Subject
+            && m.Message == model.Body
+            && m.Other["bcc"] == "Test@test.com,b@test.com"), It.IsAny<EmailNotificationSettings>()), Times.Once);
+        }
+
+        [Test]
+        public async Task SendMassEmail_Bcc_NoEmails()
+        {
+            var model = new MassEmailModel
+            {
+                Body = "Test",
+                Subject = "Subject",
+                Bcc = true,
+                Users = new List<OmbiUser>
+                {
+                    new OmbiUser
+                    {
+                        Id = "a"
+                    },
+                    new OmbiUser
+                    {
+                        Id = "b"
+                    }
+                }
+            };
+
+            _mocker.Setup<OmbiUserManager, IQueryable<OmbiUser>>(x => x.Users).Returns(new List<OmbiUser>
+            {
+                new OmbiUser
+                {
+                    Id = "a",
+                },
+                new OmbiUser
+                {
+                    Id = "b",
+                }
+            }.AsQueryable().BuildMock().Object);
+
+            var result = await _subject.SendMassEmail(model);
+
+            _mocker.Verify<IEmailProvider>(x => x.SendAdHoc(It.IsAny<NotificationMessage>(), It.IsAny<EmailNotificationSettings>()), Times.Never);
+        }
+
     }
 }

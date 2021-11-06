@@ -35,6 +35,8 @@ namespace Ombi.Core.Models
         public string Subject { get; set; }
         public string Body { get; set; }
 
+        public bool Bcc { get; set; }
+
         public List<OmbiUser> Users { get; set; }
     }
 }
