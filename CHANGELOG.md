@@ -1,4 +1,14 @@
-## [4.3.3](https://github.com/Ombi-app/Ombi/compare/v4.3.2...v4.3.3) (2021-11-05)
+# [4.4.0](https://github.com/Ombi-app/Ombi/compare/v4.3.2...v4.4.0) (2021-11-06)
+
+
+### Bug Fixes
+
+* **request-list:** :bug: Fixed an issue where the request options were not appearing for Music requests ([c0406a2](https://github.com/Ombi-app/Ombi/commit/c0406a2ddebafb03d98ed25cdf7d89dc9a600c7d))
+
+
+### Features
+
+* **mass-email:** :sparkles: Added the ability to configure the Mass Email, we can now send BCC and we are less likely to be rate limited when not using bcc [#4377](https://github.com/Ombi-app/Ombi/issues/4377) ([ca655ae](https://github.com/Ombi-app/Ombi/commit/ca655ae57042dec44106a2f2ef5ba2e6f1019ee4))
 
 
 
@@ -57,6 +67,136 @@
 ### Bug Fixes
 
 * **translations:** 🌐 New translations %two_letters_code% from Crowdin [skip ci] ([8fbd267](https://github.com/Ombi-app/Ombi/commit/8fbd267b516ddaa80fd16c091bae532b860fbf45))
+
+
+
+## [4.2.12](https://github.com/Ombi-app/Ombi/compare/v4.2.11...v4.2.12) (2021-10-20)
+
+
+### Bug Fixes
+
+* **newsletter:** :bug: Fixed a few small bugs in the newsletter ([21dba4c](https://github.com/Ombi-app/Ombi/commit/21dba4c524b98b9f2b883d97e7e13329425a8762))
+* **translations:** 🌐 New translations en.json from Crowdin [skip ci] ([52eda6a](https://github.com/Ombi-app/Ombi/commit/52eda6ab917a73842bc02b0d8e0c442e564ca8f0))
+* **translations:** 🌐 New translations en.json from Crowdin [skip ci] ([1095d52](https://github.com/Ombi-app/Ombi/commit/1095d524962648a1e427f0bcd8105fa734dd5b60))
+
+
+
+## [4.2.11](https://github.com/Ombi-app/Ombi/compare/v4.2.10...v4.2.11) (2021-10-18)
+
+
+
+## [4.2.10](https://github.com/Ombi-app/Ombi/compare/v4.2.9...v4.2.10) (2021-10-15)
+
+
+### Bug Fixes
+
+* :bug: Really really fix it this time? ([543d36e](https://github.com/Ombi-app/Ombi/commit/543d36e5615341bc8378cac377b843a3dbc1ef99))
+
+
+
+## [4.2.9](https://github.com/Ombi-app/Ombi/compare/v4.2.8...v4.2.9) (2021-10-15)
+
+
+### Bug Fixes
+
+* :fire: Really fix the base url issue this time ([9f36923](https://github.com/Ombi-app/Ombi/commit/9f36923c51bfabf9cb026f2da14f9947050af0d9))
+
+
+
+## [4.2.8](https://github.com/Ombi-app/Ombi/compare/v4.2.7...v4.2.8) (2021-10-15)
+
+
+### Bug Fixes
+
+* :adhesive_bandage: See if this fixes the proxy issue ([74d1aca](https://github.com/Ombi-app/Ombi/commit/74d1acae499707a7e21401f53eb2bb90c5bb9cfa))
+* :bug: Fixed Ombi not writing the baseUrl correctly ([e9cc8b6](https://github.com/Ombi-app/Ombi/commit/e9cc8b6fe71d3e10c1a901e70227989b3362afe3))
+
+
+
+## [4.2.7](https://github.com/Ombi-app/Ombi/compare/v4.2.6...v4.2.7) (2021-10-14)
+
+
+### Bug Fixes
+
+* :bug: Fixed the issue parsing TheMovieDB dates. They have broken something... ([6e397e0](https://github.com/Ombi-app/Ombi/commit/6e397e02e95f894a92e8bf02428efdcac1275b31))
+
+
+
+## [4.2.6](https://github.com/Ombi-app/Ombi/compare/v4.2.5...v4.2.6) (2021-10-14)
+
+
+### Performance Improvements
+
+* :zap: Use ngxs store for the whole customization section of the app ([97b493d](https://github.com/Ombi-app/Ombi/commit/97b493d869feee59d360b484a6c59388a2aead1f))
+
+
+
+## [4.2.5](https://github.com/Ombi-app/Ombi/compare/v4.2.4...v4.2.5) (2021-10-14)
+
+
+
+## [4.2.4](https://github.com/Ombi-app/Ombi/compare/v4.2.3...v4.2.4) (2021-10-13)
+
+
+### Bug Fixes
+
+* **#4344:** :bug: Fixed an issue where we errored on Plex Episode Scan ([cd5532f](https://github.com/Ombi-app/Ombi/commit/cd5532fa8f7ebbfaf942841398672bafb9a405d4))
+* **#4345:** :bug: Fixed the issue where denied requests we not appearing correctly ([5a2f652](https://github.com/Ombi-app/Ombi/commit/5a2f652a28f5699dd667afef8dde129817e53392))
+
+
+
+## [4.2.3](https://github.com/Ombi-app/Ombi/compare/v4.2.2...v4.2.3) (2021-10-12)
+
+
+### Bug Fixes
+
+* **user-management:** :bug: Fixed an issue where the Copy users App Link did not generate the correct app link for that user ([8cafcdc](https://github.com/Ombi-app/Ombi/commit/8cafcdcc3baa85c55d75e43835b2289bbea69b0e))
+
+
+
+## [4.2.2](https://github.com/Ombi-app/Ombi/compare/v4.2.1...v4.2.2) (2021-10-11)
+
+
+### Bug Fixes
+
+* **search:** :bug: Fixed an issue where changing the filter wouldn't refresh the search results ([10f5e05](https://github.com/Ombi-app/Ombi/commit/10f5e056c8257f8b8fe954bfbc70d3c3daa7a8e3))
+
+
+
+## [4.2.1](https://github.com/Ombi-app/Ombi/compare/v4.2.0...v4.2.1) (2021-10-11)
+
+
+### Bug Fixes
+
+* **oauth:** :bug: Fixed an issue where on occasions the Plex OAuth wouldn't work ([ce1ed01](https://github.com/Ombi-app/Ombi/commit/ce1ed01a5f1a6e99d37a3cf32e53cf5de4f5943b))
+
+
+
+# [4.2.0](https://github.com/Ombi-app/Ombi/compare/v4.1.1...v4.2.0) (2021-10-09)
+
+
+### Bug Fixes
+
+* **settings:** :bug: Fixed the issue where you couldn't save the Plex settings ([89a856a](https://github.com/Ombi-app/Ombi/commit/89a856a5d22a5f517702642876652d451f6e9b3e))
+
+
+### Features
+
+* :sparkles: Added the ability to specify which branch you are on ([777ed2f](https://github.com/Ombi-app/Ombi/commit/777ed2f3224b91a0acb47c30efa96adaaba46fd2))
+* **notifications:** :sparkles: Added Partially Available Notifications ([1ef45dc](https://github.com/Ombi-app/Ombi/commit/1ef45dc44c93d566a0f04c011bfcefe2009a24b5))
+
+
+
+## [4.1.1](https://github.com/Ombi-app/Ombi/compare/v4.0.1511...v4.1.1) (2021-10-08)
+
+
+### Bug Fixes
+
+* **4153:** :bug: fixed gravitar issues ([ec963d8](https://github.com/Ombi-app/Ombi/commit/ec963d869a2bf57edfcfef418e2bf8a1d679d8ca))
+
+
+
+## [4.0.1511](https://github.com/Ombi-app/Ombi/compare/v4.1.0...v4.0.1511) (2021-10-07)
 
 
 
