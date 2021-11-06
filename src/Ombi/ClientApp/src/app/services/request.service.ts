@@ -128,6 +128,7 @@ export class RequestService extends ServiceHelpers {
     public approveChild(child: ITvUpdateModel): Observable<IRequestEngineResult> {
         return this.http.post<IRequestEngineResult>(`${this.url}tv/approve`, JSON.stringify(child), {headers: this.headers});
     }
+
     public deleteChild(childId: number): Observable<boolean> {
         return this.http.delete<boolean>(`${this.url}tv/child/${childId}`, {headers: this.headers});
     }

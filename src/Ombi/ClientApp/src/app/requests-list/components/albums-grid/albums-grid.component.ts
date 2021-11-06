@@ -25,6 +25,7 @@ export class AlbumsGridComponent implements OnInit, AfterViewInit {
     public defaultSort: string = "requestedDate";
     public defaultOrder: string = "desc";
     public currentFilter: RequestFilterType = RequestFilterType.All;
+    public manageOwnRequests: boolean;
 
     public RequestFilter = RequestFilterType;
 
@@ -46,6 +47,7 @@ export class AlbumsGridComponent implements OnInit, AfterViewInit {
 
     public ngOnInit() {
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+        this.manageOwnRequests = this.auth.hasRole("ManageOwnRequests")
 
         const defaultCount = this.storageService.get(this.storageKeyGridCount);
         const defaultSort = this.storageService.get(this.storageKey);
@@ -117,16 +119,17 @@ export class AlbumsGridComponent implements OnInit, AfterViewInit {
 
     public openOptions(request: IAlbumRequest) {
         const filter = () => {
-        this.dataSource = this.dataSource.filter((req) => {
-            return req.id !== request.id;
-        })
+            this.dataSource = this.dataSource.filter((req) => {
+                return req.id !== request.id;
+            });
         };
 
         const onChange = () => {
             this.ref.detectChanges();
         };
 
-        this.onOpenOptions.emit({ request: request, filter: filter, onChange: onChange });
+        const data = { request: request, filter: filter, onChange: onChange, manageOwnRequests: this.manageOwnRequests, isAdmin: this.isAdmin };
+        this.onOpenOptions.emit(data);
     }
 
     public switchFilter(type: RequestFilterType) {

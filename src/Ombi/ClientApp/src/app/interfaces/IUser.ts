@@ -121,6 +121,7 @@ export interface IMassEmailModel {
     subject: string;
     body: string;
     users: IUser[];
+    bcc: boolean;
 }
 
 export interface INotificationPreferences {
