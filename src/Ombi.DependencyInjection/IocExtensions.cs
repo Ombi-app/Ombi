@@ -224,6 +224,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ITelegramNotification, TelegramNotification>();
             services.AddTransient<ILegacyMobileNotification, LegacyMobileNotification>();
             services.AddTransient<IChangeLogProcessor, ChangeLogProcessor>();
+            services.AddTransient<IRecentlyRequestedService, RecentlyRequestedService>();
         }
 
         public static void RegisterJobs(this IServiceCollection services)

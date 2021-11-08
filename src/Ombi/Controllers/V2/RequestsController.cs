@@ -13,6 +13,8 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using Ombi.Attributes;
 using Ombi.Helpers;
+using Ombi.Core.Services;
+using System.Collections.Generic;
 
 namespace Ombi.Controllers.V2
 {
@@ -24,15 +26,17 @@ namespace Ombi.Controllers.V2
         private readonly IMusicRequestEngine _musicRequestEngine;
         private readonly IVoteEngine _voteEngine;
         private readonly ILogger<RequestsController> _logger;
+        private readonly IRecentlyRequestedService _recentlyRequestedService;
 
         public RequestsController(IMovieRequestEngine movieRequestEngine, ITvRequestEngine tvRequestEngine, IMusicRequestEngine musicRequestEngine,
-            IVoteEngine voteEngine, ILogger<RequestsController> logger)
+            IVoteEngine voteEngine, ILogger<RequestsController> logger, IRecentlyRequestedService recentlyRequestedService)
         {
             _movieRequestEngine = movieRequestEngine;
             _tvRequestEngine = tvRequestEngine;
             _musicRequestEngine = musicRequestEngine;
             _voteEngine = voteEngine;
             _logger = logger;
+            _recentlyRequestedService = recentlyRequestedService;
         }
 
         /// <summary>
@@ -221,6 +225,12 @@ namespace Ombi.Controllers.V2
         public async Task<RequestEngineResult> RequestCollection(int collectionId)
         {
             return await _movieRequestEngine.RequestCollection(collectionId, HttpContext.RequestAborted);
+        }
+
+        [HttpGet("recentlyRequested")]
+        public Task<IEnumerable<RecentlyRequestedModel>> RecentlyRequested()
+        {
+            return _recentlyRequestedService.GetRecentlyRequested(CancellationToken);
         }
 
         private string GetApiAlias()
