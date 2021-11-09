@@ -5,8 +5,6 @@ import { IActorCredits, IActorCast } from "../../../interfaces/ISearchTvResultV2
 import { IDiscoverCardResult } from "../../interfaces";
 import { RequestType } from "../../../interfaces";
 import { AuthService } from "../../../auth/auth.service";
-import { FilterService } from "../../services/filter-service";
-import { SearchFilter } from "../../../my-nav/SearchFilter";
 import { forkJoin } from "rxjs";
 import { isEqual } from "lodash";
 
@@ -20,27 +18,14 @@ export class DiscoverActorComponent {
     public isAdmin: boolean;
 
     public discoverResults: IDiscoverCardResult[] = [];
-    public filter: SearchFilter;
 
     constructor(private searchService: SearchV2Service,
         private route: ActivatedRoute,
-        private filterService: FilterService,
         private auth: AuthService) {
-            
-        this.filter = this.filterService.filter;
         this.route.params.subscribe((params: any) => {
             this.actorId = params.actorId;
             this.isAdmin = this.auth.isAdmin();
             this.search();
-        });
-    }
-
-    public async ngOnInit() {
-        this.filterService.onFilterChange.subscribe(async x => {
-            if (!isEqual(this.filter, x)) {
-                this.filter = { ...x };
-                await this.search();
-            }
         });
     }
 
@@ -49,25 +34,18 @@ export class DiscoverActorComponent {
         this.loading();
 
         var searches = [];
-        if (this.filter.movies) {
-            var moviesSearch = this.searchService.getMoviesByActor(this.actorId);
-            moviesSearch.subscribe(res => {
-                this.pushDiscoverResults(res.cast, RequestType.movie);
-            });
-            searches.push(moviesSearch);
-        }
+        var moviesSearch = this.searchService.getMoviesByActor(this.actorId);
+        moviesSearch.subscribe(res => {
+            this.pushDiscoverResults(res.cast, RequestType.movie);
+        });
+        searches.push(moviesSearch);
 
-        if (this.filter.tvShows) {
-            var TvSearch = this.searchService.getTvByActor(this.actorId);
-            TvSearch.subscribe(res => {
-                this.pushDiscoverResults(res.cast, RequestType.tvShow);
-            });
-            searches.push(TvSearch);
-        }
+        var TvSearch = this.searchService.getTvByActor(this.actorId);
+        TvSearch.subscribe(res => {
+            this.pushDiscoverResults(res.cast, RequestType.tvShow);
+        });
+        searches.push(TvSearch);
 
-        if (searches.length === 0) {
-            this.finishLoading();
-        }
         forkJoin(searches).subscribe(() => {
             this.finishLoading();
         });
