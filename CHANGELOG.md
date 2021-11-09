@@ -1,3 +1,12 @@
+# [4.5.0](https://github.com/Ombi-app/Ombi/compare/v4.4.0...v4.5.0) (2021-11-09)
+
+
+### Features
+
+* :sparkles: Upgrade Ombi to .NET 6 ([#4390](https://github.com/Ombi-app/Ombi/issues/4390)) ([719eb7d](https://github.com/Ombi-app/Ombi/commit/719eb7dbe37b3a72d264e2f670067518eef70694)), closes [#4392](https://github.com/Ombi-app/Ombi/issues/4392)
+
+
+
 # [4.4.0](https://github.com/Ombi-app/Ombi/compare/v4.3.2...v4.4.0) (2021-11-06)
 
 
@@ -193,10 +202,6 @@
 ### Bug Fixes
 
 * **4153:** :bug: fixed gravitar issues ([ec963d8](https://github.com/Ombi-app/Ombi/commit/ec963d869a2bf57edfcfef418e2bf8a1d679d8ca))
-
-
-
-## [4.0.1511](https://github.com/Ombi-app/Ombi/compare/v4.1.0...v4.0.1511) (2021-10-07)
 
 
 
