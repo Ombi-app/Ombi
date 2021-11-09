@@ -1,10 +1,14 @@
 import { Component } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { SearchV2Service } from "../../../services";
-import { IActorCredits } from "../../../interfaces/ISearchTvResultV2";
+import { IActorCredits, IActorCast } from "../../../interfaces/ISearchTvResultV2";
 import { IDiscoverCardResult } from "../../interfaces";
 import { RequestType } from "../../../interfaces";
 import { AuthService } from "../../../auth/auth.service";
+import { FilterService } from "../../services/filter-service";
+import { SearchFilter } from "../../../my-nav/SearchFilter";
+import { forkJoin } from "rxjs";
+import { isEqual } from "lodash";
 
 @Component({
     templateUrl: "./discover-actor.component.html",
@@ -12,36 +16,68 @@ import { AuthService } from "../../../auth/auth.service";
 })
 export class DiscoverActorComponent {
     public actorId: number;
-    public actorCredits: IActorCredits;
     public loadingFlag: boolean;
     public isAdmin: boolean;
 
     public discoverResults: IDiscoverCardResult[] = [];
+    public filter: SearchFilter;
 
     constructor(private searchService: SearchV2Service,
         private route: ActivatedRoute,
+        private filterService: FilterService,
         private auth: AuthService) {
         this.route.params.subscribe((params: any) => {
             this.actorId = params.actorId;
             this.isAdmin = this.auth.isAdmin();
-            this.loading();
-            this.searchService.getMoviesByActor(this.actorId).subscribe(res => {
-                this.actorCredits = res;
-                this.createModel();
-            });
         });
     }
 
-    private createModel() {
-        this.finishLoading();
+    public async ngOnInit() {
+        this.filterService.onFilterChange.subscribe(async x => {
+            if (!isEqual(this.filter, x)) {
+                this.filter = { ...x };
+                await this.search();
+            }
+        });
+    }
+
+    private search() {
         this.discoverResults = [];
-        this.actorCredits.cast.forEach(m => {
+        this.loading();
+
+        var searches = [];
+        if (this.filter.movies) {
+            var moviesSearch = this.searchService.getMoviesByActor(this.actorId);
+            moviesSearch.subscribe(res => {
+                this.pushDiscoverResults(res.cast, RequestType.movie);
+            });
+            searches.push(moviesSearch);
+        }
+
+        if (this.filter.tvShows) {
+            var TvSearch = this.searchService.getTvByActor(this.actorId);
+            TvSearch.subscribe(res => {
+                this.pushDiscoverResults(res.cast, RequestType.tvShow);
+            });
+            searches.push(TvSearch);
+        }
+
+        if (searches.length === 0) {
+            this.finishLoading();
+        }
+        forkJoin(searches).subscribe(() => {
+            this.finishLoading();
+        });
+    }
+
+    pushDiscoverResults(cast: IActorCast[], type: RequestType) {
+        cast.forEach(m => {
             this.discoverResults.push({
                 available: false,
                 posterPath: m.poster_path ? `https://image.tmdb.org/t/p/w300/${m.poster_path}` : "../../../images/default_movie_poster.png",
                 requested: false,
                 title: m.title,
-                type: RequestType.movie,
+                type: type,
                 id: m.id,
                 url: null,
                 rating: 0,
