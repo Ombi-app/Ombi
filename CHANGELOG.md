@@ -1,4 +1,4 @@
-# [4.5.0](https://github.com/Ombi-app/Ombi/compare/v4.4.0...v4.5.0) (2021-11-09)
+# [4.6.0](https://github.com/Ombi-app/Ombi/compare/v4.4.0...v4.6.0) (2021-11-09)
 
 
 ### Features
