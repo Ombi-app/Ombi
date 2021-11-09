@@ -26,9 +26,12 @@ export class DiscoverActorComponent {
         private route: ActivatedRoute,
         private filterService: FilterService,
         private auth: AuthService) {
+            
+        this.filter = this.filterService.filter;
         this.route.params.subscribe((params: any) => {
             this.actorId = params.actorId;
             this.isAdmin = this.auth.isAdmin();
+            this.search();
         });
     }
 
