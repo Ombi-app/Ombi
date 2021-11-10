@@ -1,3 +1,12 @@
+## [4.6.2](https://github.com/Ombi-app/Ombi/compare/v4.6.1...v4.6.2) (2021-11-10)
+
+
+### Bug Fixes
+
+* **discover:** TV shows now display on the Actor Pages ([#4388](https://github.com/Ombi-app/Ombi/issues/4388)) ([6b716e7](https://github.com/Ombi-app/Ombi/commit/6b716e722076e3d1e6bf2097c5263645d5ea9edf))
+
+
+
 ## [4.6.1](https://github.com/Ombi-app/Ombi/compare/v4.6.0...v4.6.1) (2021-11-10)
 
 
@@ -189,21 +198,6 @@
 ### Bug Fixes
 
 * **oauth:** :bug: Fixed an issue where on occasions the Plex OAuth wouldn't work ([ce1ed01](https://github.com/Ombi-app/Ombi/commit/ce1ed01a5f1a6e99d37a3cf32e53cf5de4f5943b))
-
-
-
-# [4.2.0](https://github.com/Ombi-app/Ombi/compare/v4.1.1...v4.2.0) (2021-10-09)
-
-
-### Bug Fixes
-
-* **settings:** :bug: Fixed the issue where you couldn't save the Plex settings ([89a856a](https://github.com/Ombi-app/Ombi/commit/89a856a5d22a5f517702642876652d451f6e9b3e))
-
-
-### Features
-
-* :sparkles: Added the ability to specify which branch you are on ([777ed2f](https://github.com/Ombi-app/Ombi/commit/777ed2f3224b91a0acb47c30efa96adaaba46fd2))
-* **notifications:** :sparkles: Added Partially Available Notifications ([1ef45dc](https://github.com/Ombi-app/Ombi/commit/1ef45dc44c93d566a0f04c011bfcefe2009a24b5))
 
 
 
