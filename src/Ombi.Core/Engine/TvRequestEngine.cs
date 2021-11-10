@@ -749,9 +749,13 @@ namespace Ombi.Core.Engine
             return request;
         }
 
-        public async Task RemoveTvChild(int requestId)
+        public async Task<RequestEngineResult> RemoveTvChild(int requestId)
         {
             var request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == requestId);
+
+            var result = await CheckOwnRequests(request);
+            if (result.IsError)
+                return result;
 
             TvRepository.Db.ChildRequests.Remove(request);
             var all = TvRepository.Db.TvRequests.Include(x => x.ChildRequests);
@@ -766,6 +770,11 @@ namespace Ombi.Core.Engine
 
             await TvRepository.Db.SaveChangesAsync();
             await _mediaCacheService.Purge();
+
+            return new RequestEngineResult
+            {
+                Result = true,
+            };
         }
 
         public async Task RemoveTvRequest(int requestId)

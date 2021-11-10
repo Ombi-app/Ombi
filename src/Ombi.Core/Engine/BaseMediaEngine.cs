@@ -78,6 +78,26 @@ namespace Ombi.Core.Engine
             return _dbTv;
         }
 
+        protected async Task<RequestEngineResult> CheckOwnRequests(BaseRequest request) {
+            
+            var isRequestedBySameUser = ( await GetUser() ).Equals(request.RequestedUser);
+            var isAdmin = await IsInRole(OmbiRoles.PowerUser) || await IsInRole(OmbiRoles.Admin);
+            
+            if (!isRequestedBySameUser && !isAdmin)
+            {
+                return new RequestEngineResult
+                {
+                    Result = false,
+                    ErrorCode = ErrorCode.NoPermissions
+                };
+            }
+
+            return new RequestEngineResult
+            {
+                Result = true,
+            };
+        }
+
         public RequestCountModel RequestCount()
         {
             var movieQuery = MovieRepository.GetAll();

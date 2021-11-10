@@ -73,8 +73,8 @@ export class RequestService extends ServiceHelpers {
         this.http.delete(`${this.url}movie/${requestId}`, {headers: this.headers}).subscribe();
     }
 
-    public removeMovieRequestAsync(requestId: number) {
-        return this.http.delete(`${this.url}movie/${requestId}`, {headers: this.headers}).toPromise();
+    public removeMovieRequestAsync(requestId: number): Observable<IRequestEngineResult> {
+        return this.http.delete<IRequestEngineResult>(`${this.url}movie/${requestId}`, {headers: this.headers});
     }
 
     public updateMovieRequest(request: IMovieRequests): Observable<IMovieRequests> {
@@ -129,8 +129,8 @@ export class RequestService extends ServiceHelpers {
         return this.http.post<IRequestEngineResult>(`${this.url}tv/approve`, JSON.stringify(child), {headers: this.headers});
     }
 
-    public deleteChild(childId: number): Observable<boolean> {
-        return this.http.delete<boolean>(`${this.url}tv/child/${childId}`, {headers: this.headers});
+    public deleteChild(childId: number): Observable<IRequestEngineResult> {
+        return this.http.delete<IRequestEngineResult>(`${this.url}tv/child/${childId}`, {headers: this.headers});
     }
 
     public subscribeToMovie(requestId: number): Observable<boolean> {
@@ -185,7 +185,7 @@ export class RequestService extends ServiceHelpers {
         return this.http.get<IAlbumRequest[]>(`${this.url}music/search/${search}`, {headers: this.headers});
     }
 
-    public removeAlbumRequest(request: number): any {
-        return this.http.delete(`${this.url}music/${request}`, {headers: this.headers});
+    public removeAlbumRequest(request: number): Observable<IRequestEngineResult> {
+        return this.http.delete<IRequestEngineResult>(`${this.url}music/${request}`, {headers: this.headers});
     }
 }

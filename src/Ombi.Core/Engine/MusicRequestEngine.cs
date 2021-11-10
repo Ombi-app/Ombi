@@ -404,10 +404,20 @@ namespace Ombi.Core.Engine
         /// </summary>
         /// <param name="requestId">The request identifier.</param>
         /// <returns></returns>
-        public async Task RemoveAlbumRequest(int requestId)
+        public async Task<RequestEngineResult> RemoveAlbumRequest(int requestId)
         {
             var request = await MusicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == requestId);
+            
+            var result = await CheckOwnRequests(request);
+            if (result.IsError)
+                return result;
+
             await MusicRepository.Delete(request);
+
+            return new RequestEngineResult
+            {
+                Result = true,
+            };
         }
 
         public async Task<bool> UserHasRequest(string userId)
