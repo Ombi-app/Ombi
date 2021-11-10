@@ -33,20 +33,12 @@ export class DiscoverActorComponent {
         this.discoverResults = [];
         this.loading();
 
-        var searches = [];
-        var moviesSearch = this.searchService.getMoviesByActor(this.actorId);
-        moviesSearch.subscribe(res => {
-            this.pushDiscoverResults(res.cast, RequestType.movie);
-        });
-        searches.push(moviesSearch);
-
-        var TvSearch = this.searchService.getTvByActor(this.actorId);
-        TvSearch.subscribe(res => {
-            this.pushDiscoverResults(res.cast, RequestType.tvShow);
-        });
-        searches.push(TvSearch);
-
-        forkJoin(searches).subscribe(() => {
+        forkJoin([
+            this.searchService.getMoviesByActor(this.actorId),
+            this.searchService.getTvByActor(this.actorId)
+        ]).subscribe(([movie, tv]) => {
+            this.pushDiscoverResults(movie.cast, RequestType.movie);
+            this.pushDiscoverResults(tv.cast, RequestType.tvShow);
             this.finishLoading();
         });
     }
