@@ -120,7 +120,7 @@ namespace Ombi.Extensions
 
         public static void ConfigureMySql(DbContextOptionsBuilder options, PerDatabaseConfiguration config)
         {
-            options.UseMySql(config.ConnectionString, b =>
+            options.UseMySql(config.ConnectionString, ServerVersion.AutoDetect(config.ConnectionString), b =>
             {
                 //b.CharSetBehavior(Pomelo.EntityFrameworkCore.MySql.Infrastructure.CharSetBehavior.NeverAppend); // ##ISSUE, link to migrations?
                 b.EnableRetryOnFailure();
