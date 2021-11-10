@@ -9,6 +9,7 @@ import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { AuthService } from "../../../auth/auth.service";
 import { StorageService } from "../../../shared/storage/storage-service";
 import { RequestFilterType } from "../../models/RequestFilterType";
+import { IdentityService } from "../../../services";
 
 @Component({
     templateUrl: "./albums-grid.component.html",
@@ -26,6 +27,7 @@ export class AlbumsGridComponent implements OnInit, AfterViewInit {
     public defaultOrder: string = "desc";
     public currentFilter: RequestFilterType = RequestFilterType.All;
     public manageOwnRequests: boolean;
+    public userName: string;
 
     public RequestFilter = RequestFilterType;
 
@@ -41,8 +43,11 @@ export class AlbumsGridComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort) sort: MatSort;
 
     constructor(private requestService: RequestServiceV2, private ref: ChangeDetectorRef,
-                private auth: AuthService, private storageService: StorageService) {
+                private auth: AuthService, private storageService: StorageService, private identity: IdentityService) {
 
+        identity.getUser().subscribe(u => {
+            this.userName = u.userName;
+        });
     }
 
     public ngOnInit() {
