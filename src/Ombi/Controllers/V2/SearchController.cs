@@ -52,7 +52,7 @@ namespace Ombi.Controllers.V2
         [HttpPost("multi/{searchTerm}")]
         public async Task<List<MultiSearchResult>> MultiSearch(string searchTerm, [FromBody] MultiSearchFilter filter)
         {
-            return await _multiSearchEngine.MultiSearch(searchTerm, filter, Request.HttpContext.RequestAborted);
+            return await _multiSearchEngine.MultiSearch(Uri.UnescapeDataString(searchTerm), filter, Request.HttpContext.RequestAborted);
         }
 
         /// <summary>
