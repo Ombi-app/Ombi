@@ -1,3 +1,23 @@
+## [4.6.1](https://github.com/Ombi-app/Ombi/compare/v4.6.0...v4.6.1) (2021-11-10)
+
+
+### Bug Fixes
+
+* :bug: Fixed the MySQL issue after .net 6 upgrade [#4393](https://github.com/Ombi-app/Ombi/issues/4393) ([fea7ff0](https://github.com/Ombi-app/Ombi/commit/fea7ff05139e9ff50c8097fa5389b4ef9ad21a15))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([c6acb45](https://github.com/Ombi-app/Ombi/commit/c6acb45f8d3f371c0b4024c4272849d0d0cc867f))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([18c220a](https://github.com/Ombi-app/Ombi/commit/18c220a0cd0d19e45a07d0c319da2b9512778a8a))
+
+
+
+# [4.6.0](https://github.com/Ombi-app/Ombi/compare/v4.4.0...v4.6.0) (2021-11-09)
+
+
+### Features
+
+* :sparkles: Upgrade Ombi to .NET 6 ([#4390](https://github.com/Ombi-app/Ombi/issues/4390)) ([719eb7d](https://github.com/Ombi-app/Ombi/commit/719eb7dbe37b3a72d264e2f670067518eef70694)), closes [#4392](https://github.com/Ombi-app/Ombi/issues/4392)
+
+
+
 # [4.4.0](https://github.com/Ombi-app/Ombi/compare/v4.3.2...v4.4.0) (2021-11-06)
 
 
@@ -184,19 +204,6 @@
 
 * :sparkles: Added the ability to specify which branch you are on ([777ed2f](https://github.com/Ombi-app/Ombi/commit/777ed2f3224b91a0acb47c30efa96adaaba46fd2))
 * **notifications:** :sparkles: Added Partially Available Notifications ([1ef45dc](https://github.com/Ombi-app/Ombi/commit/1ef45dc44c93d566a0f04c011bfcefe2009a24b5))
-
-
-
-## [4.1.1](https://github.com/Ombi-app/Ombi/compare/v4.0.1511...v4.1.1) (2021-10-08)
-
-
-### Bug Fixes
-
-* **4153:** :bug: fixed gravitar issues ([ec963d8](https://github.com/Ombi-app/Ombi/commit/ec963d869a2bf57edfcfef418e2bf8a1d679d8ca))
-
-
-
-## [4.0.1511](https://github.com/Ombi-app/Ombi/compare/v4.1.0...v4.0.1511) (2021-10-07)
 
 
 
