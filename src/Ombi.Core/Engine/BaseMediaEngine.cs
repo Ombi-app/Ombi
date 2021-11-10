@@ -88,8 +88,8 @@ namespace Ombi.Core.Engine
             // Users with 'ManageOwnRequests' can only manage their own requests
             var canManageOwnRequests = await IsInRole(OmbiRoles.ManageOwnRequests);
             if (canManageOwnRequests) {
-                var isRequestedBySameUser = ( await GetUser() ).Equals(request.RequestedUser);
-                if (!isRequestedBySameUser) {
+                var isRequestedBySameUser = ( await GetUser() ).Id == request.RequestedUser?.Id;
+                if (isRequestedBySameUser) {
                     return new RequestEngineResult { Result = true };
                 }
             }
