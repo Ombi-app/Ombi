@@ -122,7 +122,7 @@ namespace Ombi.Extensions
         {
             options.UseMySql(config.ConnectionString, b =>
             {
-                b.CharSetBehavior(Pomelo.EntityFrameworkCore.MySql.Infrastructure.CharSetBehavior.NeverAppend); // ##ISSUE
+                //b.CharSetBehavior(Pomelo.EntityFrameworkCore.MySql.Infrastructure.CharSetBehavior.NeverAppend); // ##ISSUE, link to migrations?
                 b.EnableRetryOnFailure();
             });
         }
