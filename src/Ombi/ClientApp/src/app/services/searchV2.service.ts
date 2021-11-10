@@ -132,6 +132,10 @@ export class SearchV2Service extends ServiceHelpers {
         return this.http.get<IActorCredits>(`${this.url}/actor/${actorId}/movie`, { headers: this.headers });
     }
 
+    public getTvByActor(actorId: number): Observable<IActorCredits> {
+        return this.http.get<IActorCredits>(`${this.url}/actor/${actorId}/tv`, { headers: this.headers });
+    }
+
     public getArtistInformation(artistId: string): Observable<IArtistSearchResult> {
         return this.http.get<IArtistSearchResult>(`${this.url}/artist/${artistId}`);
     }
