@@ -408,7 +408,7 @@ namespace Ombi.Core.Engine
         {
             var request = await MusicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == requestId);
             
-            var result = await CheckOwnRequests(request);
+            var result = await CheckCanManageRequest(request);
             if (result.IsError)
                 return result;
 

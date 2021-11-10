@@ -78,23 +78,23 @@ namespace Ombi.Core.Engine
             return _dbTv;
         }
 
-        protected async Task<RequestEngineResult> CheckOwnRequests(BaseRequest request) {
+        protected async Task<RequestEngineResult> CheckCanManageRequest(BaseRequest request) {
             
-            var isRequestedBySameUser = ( await GetUser() ).Equals(request.RequestedUser);
+            // Admins can always manage requests
             var isAdmin = await IsInRole(OmbiRoles.PowerUser) || await IsInRole(OmbiRoles.Admin);
-            
-            if (!isRequestedBySameUser && !isAdmin)
-            {
-                return new RequestEngineResult
-                {
-                    Result = false,
-                    ErrorCode = ErrorCode.NoPermissions
-                };
-            }
+            if (isAdmin)
+                return new RequestEngineResult { Result = true };
+
+            // Users with 'ManageOwnRequests' can only manage their own requests
+            var isRequestedBySameUser = ( await GetUser() ).Equals(request.RequestedUser);
+            var canManageOwnRequests = await IsInRole(OmbiRoles.ManageOwnRequests);
+            if(canManageOwnRequests && isRequestedBySameUser)
+                return new RequestEngineResult { Result = true };
 
             return new RequestEngineResult
             {
-                Result = true,
+                Result = false,
+                ErrorCode = ErrorCode.NoPermissions
             };
         }
 
