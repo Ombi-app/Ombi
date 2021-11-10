@@ -21,7 +21,7 @@ export class SearchV2Service extends ServiceHelpers {
     }
 
     public multiSearch(searchTerm: string, filter: SearchFilter): Observable<IMultiSearchResult[]> {
-        return this.http.post<IMultiSearchResult[]>(`${this.url}/multi/${searchTerm}`, filter);
+        return this.http.post<IMultiSearchResult[]>(`${this.url}/multi/${encodeURIComponent(searchTerm)}`, filter);
     }
     public getFullMovieDetails(theMovieDbId: number): Observable<ISearchMovieResultV2> {
         return this.http.get<ISearchMovieResultV2>(`${this.url}/Movie/${theMovieDbId}`);
