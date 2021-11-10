@@ -82,14 +82,17 @@ namespace Ombi.Core.Engine
             
             // Admins can always manage requests
             var isAdmin = await IsInRole(OmbiRoles.PowerUser) || await IsInRole(OmbiRoles.Admin);
-            if (isAdmin)
+            if (isAdmin) {
                 return new RequestEngineResult { Result = true };
-
+            }
             // Users with 'ManageOwnRequests' can only manage their own requests
-            var isRequestedBySameUser = ( await GetUser() ).Equals(request.RequestedUser);
             var canManageOwnRequests = await IsInRole(OmbiRoles.ManageOwnRequests);
-            if(canManageOwnRequests && isRequestedBySameUser)
-                return new RequestEngineResult { Result = true };
+            if (canManageOwnRequests) {
+                var isRequestedBySameUser = ( await GetUser() ).Equals(request.RequestedUser);
+                if (!isRequestedBySameUser) {
+                    return new RequestEngineResult { Result = true };
+                }
+            }
 
             return new RequestEngineResult
             {

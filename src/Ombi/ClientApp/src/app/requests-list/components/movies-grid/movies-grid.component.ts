@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild } from "@angular/core";
 import { IMovieRequests, IRequestEngineResult, IRequestsViewModel } from "../../../interfaces";
-import { IdentityService, NotificationService, RequestService } from "../../../services";
+import { NotificationService, RequestService } from "../../../services";
 import { Observable, forkJoin, merge, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
@@ -49,11 +49,9 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     constructor(private requestService: RequestServiceV2, private ref: ChangeDetectorRef,
         private auth: AuthService, private storageService: StorageService,
         private requestServiceV1: RequestService, private notification: NotificationService,
-        private translateService: TranslateService, private identity: IdentityService) {
+        private translateService: TranslateService) {
 
-        identity.getUser().subscribe(u => {
-            this.userName = u.userName;
-        });
+        this.userName = auth.claims().name;
     }
 
     public ngOnInit() {
