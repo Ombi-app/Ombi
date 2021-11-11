@@ -18,7 +18,7 @@ Don't worry, it's grandma friendly, and more importantly; has wife approval cert
 
 | Service  | Stable         | Develop          
 |----------|:---------------------------:|:----------------------------:|
-| Build Status | [![CI Build](https://github.com/Ombi-app/Ombi/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Ombi-app/Ombi/actions/workflows/build.yml) | [![CI Build](https://github.com/Ombi-app/Ombi/actions/workflows/build.yml/badge.svg)](https://github.com/Ombi-app/Ombi/actions/workflows/build.yml) | [![Build Status](https://dev.azure.com/tidusjar/Ombi/_apis/build/status/Ombi%20CI?branchName=feature%2Fv4)](https://dev.azure.com/tidusjar/Ombi/_build/latest?definitionId=18&branchName=feature%2Fv4)
+| Build Status | [![CI Build](https://github.com/Ombi-app/Ombi/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Ombi-app/Ombi/actions/workflows/build.yml) | [![CI Build](https://github.com/Ombi-app/Ombi/actions/workflows/build.yml/badge.svg?branch=develop)](https://github.com/Ombi-app/Ombi/actions/workflows/build.yml) | [![Build Status](https://dev.azure.com/tidusjar/Ombi/_apis/build/status/Ombi%20CI?branchName=feature%2Fv4)](https://dev.azure.com/tidusjar/Ombi/_build/latest?definitionId=18&branchName=feature%2Fv4)
 | Download |[![Download](https://img.shields.io/badge/-Download-blue)](https://github.com/Ombi-app/Ombi/releases)            |      [![Download](https://img.shields.io/badge/-Download-blue)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/develop/artifacts)       | [![Download](https://img.shields.io/badge/-Download-blue)](https://github.com/ombi-app/ombi/releases)       | 
 
 # Feature Requests
