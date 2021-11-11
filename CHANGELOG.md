@@ -1,3 +1,14 @@
+## [4.6.3](https://github.com/Ombi-app/Ombi/compare/v4.6.2...v4.6.3) (2021-11-11)
+
+
+### Bug Fixes
+
+* **discover:** :bug: Display TV + movies on actor page in user language ([#4395](https://github.com/Ombi-app/Ombi/issues/4395)) ([fe635c7](https://github.com/Ombi-app/Ombi/commit/fe635c7106bc487ff879bdc8a73bab16cb389b97))
+* **permissions:** :bug: Improved the security around the role "Manage Own Requests" ([#4397](https://github.com/Ombi-app/Ombi/issues/4397)) ([334a32b](https://github.com/Ombi-app/Ombi/commit/334a32bca42f90198d9b720d2bdb710a583be47f)), closes [#4391](https://github.com/Ombi-app/Ombi/issues/4391)
+* **search:** Fixed some cases where search wouldn't work correctly ([#4398](https://github.com/Ombi-app/Ombi/issues/4398)) ([4410790](https://github.com/Ombi-app/Ombi/commit/4410790bc096826bc11554098f846e3acb59589a))
+
+
+
 ## [4.6.2](https://github.com/Ombi-app/Ombi/compare/v4.6.1...v4.6.2) (2021-11-10)
 
 
@@ -189,15 +200,6 @@
 ### Bug Fixes
 
 * **search:** :bug: Fixed an issue where changing the filter wouldn't refresh the search results ([10f5e05](https://github.com/Ombi-app/Ombi/commit/10f5e056c8257f8b8fe954bfbc70d3c3daa7a8e3))
-
-
-
-## [4.2.1](https://github.com/Ombi-app/Ombi/compare/v4.2.0...v4.2.1) (2021-10-11)
-
-
-### Bug Fixes
-
-* **oauth:** :bug: Fixed an issue where on occasions the Plex OAuth wouldn't work ([ce1ed01](https://github.com/Ombi-app/Ombi/commit/ce1ed01a5f1a6e99d37a3cf32e53cf5de4f5943b))
 
 
 
