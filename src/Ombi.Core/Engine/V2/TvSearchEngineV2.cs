@@ -149,6 +149,7 @@ namespace Ombi.Core.Engine.V2
 
         public async Task<ActorCredits> GetTvByActor(int actorId, string langCode)
         {
+            langCode = await DefaultLanguageCode(langCode);
             var result = await Cache.GetOrAddAsync(nameof(GetTvByActor) + actorId + langCode,
                 () =>  _movieApi.GetActorTvCredits(actorId, langCode), DateTimeOffset.Now.AddHours(12));
             return result;
