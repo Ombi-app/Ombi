@@ -14,7 +14,7 @@ namespace Ombi.Core.Engine.Interfaces
         Task<IEnumerable<MovieRequests>> SearchMovieRequest(string search);
         Task<RequestEngineResult> RequestCollection(int collectionId, CancellationToken cancellationToken);
 
-        Task RemoveMovieRequest(int requestId);
+        Task<RequestEngineResult> RemoveMovieRequest(int requestId);
         Task RemoveAllMovieRequests();
         Task<MovieRequests> GetRequest(int requestId);
         Task<MovieRequests> UpdateMovieRequest(MovieRequests request);

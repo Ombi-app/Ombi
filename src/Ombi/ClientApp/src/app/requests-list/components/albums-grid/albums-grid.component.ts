@@ -26,6 +26,7 @@ export class AlbumsGridComponent implements OnInit, AfterViewInit {
     public defaultOrder: string = "desc";
     public currentFilter: RequestFilterType = RequestFilterType.All;
     public manageOwnRequests: boolean;
+    public userName: string;
 
     public RequestFilter = RequestFilterType;
 
@@ -43,6 +44,7 @@ export class AlbumsGridComponent implements OnInit, AfterViewInit {
     constructor(private requestService: RequestServiceV2, private ref: ChangeDetectorRef,
                 private auth: AuthService, private storageService: StorageService) {
 
+        this.userName = auth.claims().name;
     }
 
     public ngOnInit() {

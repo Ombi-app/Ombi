@@ -7,7 +7,7 @@ namespace Ombi.Core.Engine
     {
         public bool Result { get; set; }
         public string Message { get; set; }
-        public bool IsError => !string.IsNullOrEmpty(ErrorMessage);
+        public bool IsError => ( !string.IsNullOrEmpty(ErrorMessage) || ErrorCode != null );
         public string ErrorMessage { get; set; }
         public ErrorCode? ErrorCode { get; set; }
         public int RequestId { get; set; }
