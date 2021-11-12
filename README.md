@@ -143,25 +143,25 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/sephrat">
+            <img src="https://avatars.githubusercontent.com/u/34862846?v=4" width="50;" alt="sephrat"/>
+            <br />
+            <sub><b>Sephrat</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/dhruvb14">
             <img src="https://avatars.githubusercontent.com/u/4459649?v=4" width="50;" alt="dhruvb14"/>
             <br />
             <sub><b>Dhruv Bhavsar</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/joshuaboniface">
             <img src="https://avatars.githubusercontent.com/u/4031396?v=4" width="50;" alt="joshuaboniface"/>
             <br />
             <sub><b>Joshua M. Boniface</b></sub>
-        </a>
-    </td></tr>
-<tr>
-    <td align="center">
-        <a href="https://github.com/sephrat">
-            <img src="https://avatars.githubusercontent.com/u/34862846?v=4" width="50;" alt="sephrat"/>
-            <br />
-            <sub><b>Sephrat</b></sub>
         </a>
     </td>
     <td align="center">
