@@ -55,6 +55,9 @@
         "OfflineParagraph": "The media server is currently offline.",
         "CheckPageForUpdates": "Check this page for continuous site updates."
     },
+    "ErrorPages": {
+        "NotFound": "Page not found"
+    },
     "NavigationBar": {
         "Discover": "Discover",
         "Search": "Search",
@@ -283,6 +286,7 @@
     },
     "MediaDetails": {
         "Denied": "Denied",
+        "Trailers": "Trailers",
         "RecommendationsTitle": "Recommendations",
         "SimilarTitle": "Similar",
         "VideosTitle": "Videos",

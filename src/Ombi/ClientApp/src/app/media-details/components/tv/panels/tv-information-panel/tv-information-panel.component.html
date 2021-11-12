@@ -70,7 +70,7 @@
 
     <hr />
     <div class="keyword-button-container" *ngIf="tv?.keywords?.keywordsValue?.length > 0">
-        <span class="label">{{'MediaDetails.Keywords' | translate }}:</span>
+        <span class="label">{{'MediaDetails.Keywords' | translate }}</span>
         <mat-chip-list>
             <mat-chip selected *ngFor="let keyword of tv.keywords.keywordsValue">
                 {{keyword.name}}
