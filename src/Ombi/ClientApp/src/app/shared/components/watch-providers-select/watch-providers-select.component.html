@@ -9,7 +9,7 @@
       <mat-icon matChipRemove>cancel</mat-icon>
     </mat-chip>
     <input
-      placeholder="Search Keyword"
+      [placeholder]="'Search.SearchProvider' | translate"
       #keywordInput
       [formControl]="control"
       [matAutocomplete]="auto"

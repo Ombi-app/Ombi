@@ -65,6 +65,9 @@ import { TooltipModule } from "primeng/tooltip";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { UnauthorizedInterceptor } from "./auth/unauthorized.interceptor";
 import { environment } from "../environments/environment";
+import { MatPaginatorIntl } from "@angular/material/paginator";
+import { TranslateService } from "@ngx-translate/core";
+import { MatPaginatorI18n } from "./localization/MatPaginatorI18n";
 
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
@@ -211,6 +214,10 @@ export function JwtTokenGetter() {
             provide: HTTP_INTERCEPTORS,
             useClass: UnauthorizedInterceptor,
             multi: true
+        },
+        {
+            provide: MatPaginatorIntl, deps: [TranslateService],
+            useFactory: (translateService: TranslateService) => new MatPaginatorI18n(translateService).getPaginatorIntl()
         },
        ],
     bootstrap: [AppComponent],

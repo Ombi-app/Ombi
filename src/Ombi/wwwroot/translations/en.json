@@ -55,6 +55,9 @@
         "OfflineParagraph": "The media server is currently offline.",
         "CheckPageForUpdates": "Check this page for continuous site updates."
     },
+    "ErrorPages": {
+        "NotFound": "Page not found"
+    },
     "NavigationBar": {
         "Discover": "Discover",
         "Search": "Search",
@@ -131,6 +134,9 @@
         },
         "AdvancedSearchInstructions": "Please choose what type of media you are searching for:",
         "YearOfRelease": "Year of Release",
+        "SearchGenre": "Search Genre",
+        "SearchKeyword": "Search Keyword",
+        "SearchProvider": "Search Provider",
         "KeywordSearchingDisclaimer": "Please note that Keyword Searching is very hit and miss due to the inconsistent data in TheMovieDb"
     },
     "Requests": {
@@ -224,6 +230,7 @@
     },
     "Issues": {
         "Title": "Issues",
+        "IssuesForTitle": "Issues for {{title}}",
         "PendingTitle": "Pending Issues",
         "InProgressTitle": "In Progress Issues",
         "ResolvedTitle": "Resolved Issues",
@@ -256,6 +263,7 @@
         "Delete": "Delete issue",
         "DeletedIssue": "Issue has been deleted",
         "Chat":"Chat",
+        "EnterYourMessage":"Enter Your Message",
         "Requested":"Requested",
         "UserOnDate": "{{user}} on {{date}}"
     },
@@ -282,6 +290,7 @@
     },
     "MediaDetails": {
         "Denied": "Denied",
+        "Trailers": "Trailers",
         "RecommendationsTitle": "Recommendations",
         "SimilarTitle": "Similar",
         "VideosTitle": "Videos",
@@ -318,7 +327,8 @@
         "RootFolderOverride":"Root Folder Override:",
         "QualityOverride":"Quality Override:",
         "Network":"Network:",
-        "Genres":"Genres:",
+        "GenresLabel":"Genres:",
+        "Genres":"Genres",
         "FirstAired":"First Aired:",
         "TheatricalRelease":"Release:",
         "DigitalRelease":"Digital Release:",
@@ -344,6 +354,7 @@
         "PleaseSelectUser": "Please select a user",
         "StreamingOn": "Streaming On:",
         "RequestedBy": "Requested By:",
+        "RequestedByOn": "Requested By {{user}} on {{date}}",
         "RequestDate": "Request Date:",
         "DeniedReason": "Denied Reason:",
         "ReProcessRequest": "Re-Process Request",
@@ -397,7 +408,8 @@
         "NewPasswordConfirm": "New Password Confirm",
         "Security": "Security",
         "Profile": "Profile",
-        "UpdatedYourInformation": "Updated your information"
+        "UpdatedYourInformation": "Updated your information",
+        "Unsubscribed": "Unsubscribed!"
     },
     "UserTypeLabel": {
         "1": "Local User",
@@ -405,6 +417,15 @@
         "3": "Emby User",
         "4": "Emby Connect User",
         "5": "Jellyfin User"
+    },
+    "Paginator": {
+        "itemsPerPageLabel": "Items per page:",
+        "nextPageLabel": "Next page",
+        "previousPageLabel": "Previous page",
+        "firstPageLabel": "First page",
+        "lastPageLabel": "Last page",
+        "rangePageLabel1": "0 of {{length}}",
+        "rangePageLabel2": "{{startIndex}} – {{endIndex}} of {{length}}"
     }
 
 }
