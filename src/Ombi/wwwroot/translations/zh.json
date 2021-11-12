@@ -198,6 +198,7 @@
             "Approved": "Successfully approved selected items"
         },
         "SuccessfullyApproved": "Successfully Approved",
+        "SuccessfullyDeleted": "Request successfully deleted",
         "NowAvailable": "Request is now available",
         "NowUnavailable": "Request is now unavailable",
         "SuccessfullyReprocessed": "Successfully Re-processed the request",

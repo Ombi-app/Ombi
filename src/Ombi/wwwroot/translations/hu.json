@@ -198,6 +198,7 @@
             "Approved": "A kijelölt elemek jóváhagyásra kerultek"
         },
         "SuccessfullyApproved": "Sikeresen jóváhagyva",
+        "SuccessfullyDeleted": "Request successfully deleted",
         "NowAvailable": "Kérés elérhető",
         "NowUnavailable": "Kérés nem elérhető",
         "SuccessfullyReprocessed": "Successfully Re-processed the request",

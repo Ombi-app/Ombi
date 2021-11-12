@@ -198,6 +198,7 @@
             "Approved": "Los elementos seleccionados ha sido aprobados correctamente"
         },
         "SuccessfullyApproved": "Se ha aprobado con éxito",
+        "SuccessfullyDeleted": "Request successfully deleted",
         "NowAvailable": "La solicitud está disponible",
         "NowUnavailable": "La solicitud no está disponible",
         "SuccessfullyReprocessed": "La solicitud ha sido procesada correctamente",
