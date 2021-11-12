@@ -55,6 +55,9 @@
         "OfflineParagraph": "Le serveur média est actuellement hors-ligne.",
         "CheckPageForUpdates": "Consultez cette page pour voir les mises à jour du site."
     },
+    "ErrorPages": {
+        "NotFound": "Page non trouvée"
+    },
     "NavigationBar": {
         "Discover": "Découvrir",
         "Search": "Rechercher",
@@ -131,6 +134,9 @@
         },
         "AdvancedSearchInstructions": "Veuillez choisir le type de média que vous recherchez :",
         "YearOfRelease": "Année de sortie",
+        "SearchGenre": "Recherche par genre",
+        "SearchKeyword": "Rechercher un mot-clé",
+        "SearchProvider": "Rechercher un fournisseur",
         "KeywordSearchingDisclaimer": "Veuillez noter que la recherche de mots-clés n'est pas très fiable en raison de données incohérentes dans TheMovieDb"
     },
     "Requests": {
@@ -224,6 +230,7 @@
     },
     "Issues": {
         "Title": "Problèmes",
+        "IssuesForTitle": "Problèmes pour {{title}}",
         "PendingTitle": "Problèmes en attente",
         "InProgressTitle": "Problèmes en cours",
         "ResolvedTitle": "Problèmes résolus",
@@ -256,6 +263,7 @@
         "Delete": "Supprimer le problème",
         "DeletedIssue": "Problème supprimé",
         "Chat": "Discuter",
+        "EnterYourMessage": "Saisissez votre message",
         "Requested": "Demandé",
         "UserOnDate": "{{user}} le {{date}}"
     },
@@ -282,6 +290,7 @@
     },
     "MediaDetails": {
         "Denied": "Refusé",
+        "Trailers": "Bandes-annonces",
         "RecommendationsTitle": "Recommandations",
         "SimilarTitle": "Similaires",
         "VideosTitle": "Vidéos",
@@ -318,7 +327,8 @@
         "RootFolderOverride": "Remplacement du répertoire racine :",
         "QualityOverride": "Remplacement de la qualité :",
         "Network": "Diffuseur :",
-        "Genres": "Genres :",
+        "GenresLabel": "Genres :",
+        "Genres": "Genres",
         "FirstAired": "Première diffusion :",
         "TheatricalRelease": "Sortie :",
         "DigitalRelease": "Sortie numérique :",
@@ -344,6 +354,7 @@
         "PleaseSelectUser": "Veuillez sélectionner un utilisateur",
         "StreamingOn": "En streaming sur :",
         "RequestedBy": "Demandé par :",
+        "RequestedByOn": "Demandé par {{user}} le {{date}}",
         "RequestDate": "Date de la demande :",
         "DeniedReason": "Motif de refus :",
         "ReProcessRequest": "Refaire une demande",
@@ -397,7 +408,8 @@
         "NewPasswordConfirm": "Confirmation du nouveau mot de passe",
         "Security": "Sécurité",
         "Profile": "Profil",
-        "UpdatedYourInformation": "Informations mises à jour"
+        "UpdatedYourInformation": "Informations mises à jour",
+        "Unsubscribed": "Désabonné !"
     },
     "UserTypeLabel": {
         "1": "Utilisateur local",
@@ -405,5 +417,14 @@
         "3": "Utilisateur Emby",
         "4": "Utilisateur Emby Connect",
         "5": "Utilisateur Jellyfin"
+    },
+    "Paginator": {
+        "itemsPerPageLabel": "Éléments par page :",
+        "nextPageLabel": "Page suivante",
+        "previousPageLabel": "Page précédente",
+        "firstPageLabel": "Première page",
+        "lastPageLabel": "Dernière page",
+        "rangePageLabel1": "0 sur {{length}}",
+        "rangePageLabel2": "{{startIndex}} – {{endIndex}} sur {{length}}"
     }
 }
