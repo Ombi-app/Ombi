@@ -224,6 +224,7 @@
     },
     "Issues": {
         "Title": "Issues",
+        "IssuesForTitle": "Issues for {{title}}",
         "PendingTitle": "Pending Issues",
         "InProgressTitle": "In Progress Issues",
         "ResolvedTitle": "Resolved Issues",
@@ -344,6 +345,7 @@
         "PleaseSelectUser": "Please select a user",
         "StreamingOn": "Streaming On:",
         "RequestedBy": "Requested By:",
+        "RequestedByOn": "Requested By {{user}} on {{date}}",
         "RequestDate": "Request Date:",
         "DeniedReason": "Denied Reason:",
         "ReProcessRequest": "Re-Process Request",
@@ -397,7 +399,8 @@
         "NewPasswordConfirm": "New Password Confirm",
         "Security": "Security",
         "Profile": "Profile",
-        "UpdatedYourInformation": "Updated your information"
+        "UpdatedYourInformation": "Updated your information",
+        "Unsubscribed": "Unsubscribed!"
     },
     "UserTypeLabel": {
         "1": "Local User",
