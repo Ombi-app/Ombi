@@ -327,7 +327,7 @@
         "RootFolderOverride":"Root Folder Override:",
         "QualityOverride":"Quality Override:",
         "Network":"Network:",
-        "GenresHeader":"Genres:",
+        "GenresLabel":"Genres:",
         "Genres":"Genres",
         "FirstAired":"First Aired:",
         "TheatricalRelease":"Release:",
