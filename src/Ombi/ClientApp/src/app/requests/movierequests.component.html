@@ -1,6 +1,6 @@
 <div class="form-group">
     <div class="input-group">
-        <input type="text" id="search" class="form-control form-control-custom searchwidth" placeholder="Search"
+        <input type="text" id="search" class="form-control form-control-custom searchwidth"  [placeholder]="'Search.Search' | translate"
             (keyup)="search($event)">
         <span class="input-group-btn">
             <button id="filterBtn" class="btn btn-sm btn-info-outline" (click)="filterDisplay = !filterDisplay">

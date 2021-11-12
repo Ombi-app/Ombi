@@ -134,6 +134,9 @@
         },
         "AdvancedSearchInstructions": "Please choose what type of media you are searching for:",
         "YearOfRelease": "Year of Release",
+        "SearchGenre": "Search Genre",
+        "SearchKeyword": "Search Keyword",
+        "SearchProvider": "Search Provider",
         "KeywordSearchingDisclaimer": "Please note that Keyword Searching is very hit and miss due to the inconsistent data in TheMovieDb"
     },
     "Requests": {
@@ -260,6 +263,7 @@
         "Delete": "Delete issue",
         "DeletedIssue": "Issue has been deleted",
         "Chat":"Chat",
+        "EnterYourMessage":"Enter Your Message",
         "Requested":"Requested",
         "UserOnDate": "{{user}} on {{date}}"
     },
@@ -323,7 +327,8 @@
         "RootFolderOverride":"Root Folder Override:",
         "QualityOverride":"Quality Override:",
         "Network":"Network:",
-        "Genres":"Genres:",
+        "GenresHeader":"Genres:",
+        "Genres":"Genres",
         "FirstAired":"First Aired:",
         "TheatricalRelease":"Release:",
         "DigitalRelease":"Digital Release:",
