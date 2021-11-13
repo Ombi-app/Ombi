@@ -56,7 +56,7 @@
         "CheckPageForUpdates": "Controlla questa pagina per aggiornamenti continui del sito."
     },
     "ErrorPages": {
-        "NotFound": "Page not found"
+        "NotFound": "Pagina non trovata"
     },
     "NavigationBar": {
         "Discover": "Scopri",
@@ -134,9 +134,9 @@
         },
         "AdvancedSearchInstructions": "Please choose what type of media you are searching for:",
         "YearOfRelease": "Year of Release",
-        "SearchGenre": "Search Genre",
-        "SearchKeyword": "Search Keyword",
-        "SearchProvider": "Search Provider",
+        "SearchGenre": "Cerca per genere",
+        "SearchKeyword": "Termini di ricerca",
+        "SearchProvider": "Provider di ricerca",
         "KeywordSearchingDisclaimer": "Please note that Keyword Searching is very hit and miss due to the inconsistent data in TheMovieDb"
     },
     "Requests": {
@@ -230,7 +230,7 @@
     },
     "Issues": {
         "Title": "Problemi",
-        "IssuesForTitle": "Issues for {{title}}",
+        "IssuesForTitle": "Problemi per {{title}}",
         "PendingTitle": "Problemi In Attesa",
         "InProgressTitle": "Problemi In Corso",
         "ResolvedTitle": "Problemi Risolti",
@@ -263,7 +263,7 @@
         "Delete": "Elimina problema",
         "DeletedIssue": "Il problema è stato eliminato",
         "Chat": "Chat",
-        "EnterYourMessage": "Enter Your Message",
+        "EnterYourMessage": "Scrivi qualcosa...",
         "Requested": "Requested",
         "UserOnDate": "{{user}} on {{date}}"
     },
@@ -290,7 +290,7 @@
     },
     "MediaDetails": {
         "Denied": "Rifiutato",
-        "Trailers": "Trailers",
+        "Trailers": "Trailer",
         "RecommendationsTitle": "Raccomandazioni",
         "SimilarTitle": "Simili",
         "VideosTitle": "Video",
@@ -327,8 +327,8 @@
         "RootFolderOverride": "Root Folder Override:",
         "QualityOverride": "Quality Override:",
         "Network": "Network:",
-        "GenresLabel": "Genres:",
-        "Genres": "Genres",
+        "GenresLabel": "Generi:",
+        "Genres": "Generi",
         "FirstAired": "First Aired:",
         "TheatricalRelease": "Release:",
         "DigitalRelease": "Digital Release:",
@@ -354,7 +354,7 @@
         "PleaseSelectUser": "Please select a user",
         "StreamingOn": "Streaming On:",
         "RequestedBy": "Requested By:",
-        "RequestedByOn": "Requested By {{user}} on {{date}}",
+        "RequestedByOn": "Richiesto da {{user}} il {{date}}",
         "RequestDate": "Request Date:",
         "DeniedReason": "Denied Reason:",
         "ReProcessRequest": "Re-Process Request",
@@ -409,7 +409,7 @@
         "Security": "Security",
         "Profile": "Profile",
         "UpdatedYourInformation": "Updated your information",
-        "Unsubscribed": "Unsubscribed!"
+        "Unsubscribed": "Disiscritto!"
     },
     "UserTypeLabel": {
         "1": "Local User",
@@ -419,12 +419,12 @@
         "5": "Jellyfin User"
     },
     "Paginator": {
-        "itemsPerPageLabel": "Items per page:",
-        "nextPageLabel": "Next page",
-        "previousPageLabel": "Previous page",
-        "firstPageLabel": "First page",
-        "lastPageLabel": "Last page",
-        "rangePageLabel1": "0 of {{length}}",
-        "rangePageLabel2": "{{startIndex}} – {{endIndex}} of {{length}}"
+        "itemsPerPageLabel": "Righe per pagina:",
+        "nextPageLabel": "Pagina successiva",
+        "previousPageLabel": "Pagina precedente",
+        "firstPageLabel": "Prima pagina",
+        "lastPageLabel": "Ultima pagina",
+        "rangePageLabel1": "0 su {{length}}",
+        "rangePageLabel2": "{{startIndex}} – {{endIndex}} su {{length}}"
     }
 }
