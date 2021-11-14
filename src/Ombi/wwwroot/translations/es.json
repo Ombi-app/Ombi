@@ -134,8 +134,8 @@
         },
         "AdvancedSearchInstructions": "Por favor, elija el tipo de medio que está buscando:",
         "YearOfRelease": "Año de lanzamiento",
-        "SearchGenre": "Search Genre",
-        "SearchKeyword": "Buscar palabras clave",
+        "SearchGenre": "Buscar por género",
+        "SearchKeyword": "Buscar palabra clave",
         "SearchProvider": "Proveedor de búsqueda",
         "KeywordSearchingDisclaimer": "Por favor, ten en cuenta que la búsqueda de palabras clave es poco confiable debido a la inconsistencia en la base de datos de TheMovieDb"
     },
@@ -409,7 +409,7 @@
         "Security": "Security",
         "Profile": "Profile",
         "UpdatedYourInformation": "Updated your information",
-        "Unsubscribed": "Unsubscribed!"
+        "Unsubscribed": "No suscrito!"
     },
     "UserTypeLabel": {
         "1": "Usuario local",
