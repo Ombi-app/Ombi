@@ -56,7 +56,7 @@
         "CheckPageForUpdates": "Látogasd meg ezt az oldalt a frissítésekhez."
     },
     "ErrorPages": {
-        "NotFound": "Page not found"
+        "NotFound": "Az oldal nem található"
     },
     "NavigationBar": {
         "Discover": "Felfedezés",
@@ -134,8 +134,8 @@
         },
         "AdvancedSearchInstructions": "Kérlek válaszd ki, milyen típusú médiát keresel:",
         "YearOfRelease": "Megjelenés éve",
-        "SearchGenre": "Search Genre",
-        "SearchKeyword": "Search Keyword",
+        "SearchGenre": "Műfaj keresése",
+        "SearchKeyword": "Keresés kulcsszóra",
         "SearchProvider": "Search Provider",
         "KeywordSearchingDisclaimer": "Please note that Keyword Searching is very hit and miss due to the inconsistent data in TheMovieDb"
     },
