@@ -1,3 +1,15 @@
+## [4.6.5](https://github.com/Ombi-app/Ombi/compare/v4.6.4...v4.6.5) (2021-11-15)
+
+
+### Bug Fixes
+
+* **issues:** :bug: Added the issue category to the issue 'cards' [#4403](https://github.com/Ombi-app/Ombi/issues/4403) ([a3739f3](https://github.com/Ombi-app/Ombi/commit/a3739f375c49f48e34da12f0a74e4e068f12ab40))
+* **issues:** :bug: Added the issues back to the details page for TV Shows ([0225000](https://github.com/Ombi-app/Ombi/commit/02250000c08a253e57d8a0a855c2d30b8a1e5baa))
+* **issues:** :bug: Fixed an issue where you couldn't navigate to the details page from TV issues ([1a2825b](https://github.com/Ombi-app/Ombi/commit/1a2825bf3839b891b16e1dde4030afe53efe090e))
+* **issues:** :bug: Fixed where we did not show the poster when an issue is raised for media we do not have a request for [#4402](https://github.com/Ombi-app/Ombi/issues/4402) ([15e37b5](https://github.com/Ombi-app/Ombi/commit/15e37b532a83097dbdf1a9fea3eead7d0e211898))
+
+
+
 ## [4.6.4](https://github.com/Ombi-app/Ombi/compare/v4.6.3...v4.6.4) (2021-11-12)
 
 
@@ -186,15 +198,6 @@
 
 * **#4344:** :bug: Fixed an issue where we errored on Plex Episode Scan ([cd5532f](https://github.com/Ombi-app/Ombi/commit/cd5532fa8f7ebbfaf942841398672bafb9a405d4))
 * **#4345:** :bug: Fixed the issue where denied requests we not appearing correctly ([5a2f652](https://github.com/Ombi-app/Ombi/commit/5a2f652a28f5699dd667afef8dde129817e53392))
-
-
-
-## [4.2.3](https://github.com/Ombi-app/Ombi/compare/v4.2.2...v4.2.3) (2021-10-12)
-
-
-### Bug Fixes
-
-* **user-management:** :bug: Fixed an issue where the Copy users App Link did not generate the correct app link for that user ([8cafcdc](https://github.com/Ombi-app/Ombi/commit/8cafcdcc3baa85c55d75e43835b2289bbea69b0e))
 
 
 
