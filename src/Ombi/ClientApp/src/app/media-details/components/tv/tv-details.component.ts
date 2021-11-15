@@ -84,7 +84,7 @@ export class TvDetailsComponent implements OnInit {
     public async issue() {
         const dialogRef = this.dialog.open(NewIssueComponent, {
             width: '500px',
-            data: { requestId: this.tvRequest ? this.tv.requestId : null, requestType: RequestType.tvShow, providerId: this.tv.theTvDbId, title: this.tv.title }
+            data: { requestId: this.tvRequest ? this.tv.requestId : null, requestType: RequestType.tvShow, providerId: this.tv.id, title: this.tv.title, posterPath: this.tv.images.original }
         });
     }
 

@@ -70,6 +70,7 @@ export class IssueDetailsComponent implements OnInit {
                 requestId: x.requestId,
                 providerId: x.providerId,
                 userReported: x.userReported,
+                posterPath: undefined, // Poster Path is not stored in the db, will always be undefined
             };
             this.setBackground(x);
         });
