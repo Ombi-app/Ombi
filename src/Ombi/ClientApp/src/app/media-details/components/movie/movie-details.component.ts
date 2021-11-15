@@ -145,7 +145,7 @@ export class MovieDetailsComponent {
         }
         const dialogRef = this.dialog.open(NewIssueComponent, {
             width: '500px',
-            data: { requestId: this.movieRequest ? this.movieRequest.id : null, requestType: RequestType.movie, providerId: provider, title: this.movie.title }
+            data: { requestId: this.movieRequest ? this.movieRequest.id : null, requestType: RequestType.movie, providerId: provider, title: this.movie.title, posterPath: this.movie.posterPath }
         });
     }
 

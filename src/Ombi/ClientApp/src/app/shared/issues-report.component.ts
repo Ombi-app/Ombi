@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-
 import { IIssueCategory, IIssues, IssueStatus, RequestType } from "../interfaces";
 import { IssuesService, NotificationService } from "../services";
 
@@ -44,6 +43,7 @@ export class IssuesReportComponent {
             title: "",
             providerId: "",
             userReported: undefined,
+            posterPath: undefined
         };
     }
 
@@ -55,6 +55,7 @@ export class IssuesReportComponent {
         issue.issueCategoryId = this.issueCategory.id;
         issue.title = this.title;
         issue.providerId = this.providerId;
+        issue.posterPath = this.posterPath;
         if (this.movie) {
             issue.requestType = RequestType.movie;
         } else {

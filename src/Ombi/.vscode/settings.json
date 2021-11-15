@@ -17,6 +17,7 @@
         "settings",
         "user-management",
         "newsletter",
-        "mass-email"
+        "mass-email",
+        "issues"
     ]
 }
