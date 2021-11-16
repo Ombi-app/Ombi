@@ -4,8 +4,8 @@
         "UsernamePlaceholder": "帳戶名稱",
         "PasswordPlaceholder": "密碼",
         "RememberMe": "記住我",
-        "SignInWith": "Sign in with {{appName}}",
-        "SignInWithPlex": "Sign in with Plex",
+        "SignInWith": "使用 {{appName}} 登錄",
+        "SignInWithPlex": "使用Plex登入",
         "ForgottenPassword": "忘記密碼了嗎？",
         "Errors": {
             "IncorrectCredentials": "用戶名或密碼錯誤"
@@ -14,8 +14,8 @@
     "Common": {
         "ContinueButton": "繼續",
         "Available": "已收錄",
-        "Approved": "Approved",
-        "Pending": "Pending",
+        "Approved": "已通過審核",
+        "Pending": "等待中",
         "PartiallyAvailable": "部分已收錄",
         "Monitored": "監控中",
         "NotAvailable": "未收錄",
@@ -24,20 +24,20 @@
         "RequestDenied": "請求被拒絕",
         "NotRequested": "未申請",
         "Requested": "已申請",
-        "Search": "Search",
+        "Search": "搜索",
         "Request": "請求內容",
         "Denied": "拒絕",
         "Approve": "確認",
         "PartlyAvailable": "部分已收錄",
-        "ViewDetails": "View Details",
+        "ViewDetails": "檢視詳細資料",
         "Errors": {
             "Validation": "請檢查您輸入的數值"
         },
-        "Cancel": "Cancel",
-        "Submit": "Submit",
-        "Update": "Update",
-        "tvShow": "TV Show",
-        "movie": "Movie",
+        "Cancel": "取消",
+        "Submit": "递交",
+        "Update": "更新",
+        "tvShow": "電視節目",
+        "movie": "電影",
         "album": "Album"
     },
     "PasswordReset": {
