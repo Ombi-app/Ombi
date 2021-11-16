@@ -68,7 +68,9 @@ namespace Ombi
 
             var services = new ServiceCollection();
             services.ConfigureDatabases(null);
+#pragma warning disable ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
             using var provider = services.BuildServiceProvider();
+#pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
             var settingsDb = provider.GetRequiredService<SettingsContext>();
             var ombiDb = provider.GetRequiredService<OmbiContext>();
 

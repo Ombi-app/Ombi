@@ -55,6 +55,9 @@
         "OfflineParagraph": "El servidor de medios está fuera de línea.",
         "CheckPageForUpdates": "Consulta esta página para ver las últimas novedades."
     },
+    "ErrorPages": {
+        "NotFound": "Página no encontrada"
+    },
     "NavigationBar": {
         "Discover": "Descubre",
         "Search": "Buscar",
@@ -131,6 +134,9 @@
         },
         "AdvancedSearchInstructions": "Por favor, elija el tipo de medio que está buscando:",
         "YearOfRelease": "Año de lanzamiento",
+        "SearchGenre": "Buscar por género",
+        "SearchKeyword": "Buscar palabra clave",
+        "SearchProvider": "Proveedor de búsqueda",
         "KeywordSearchingDisclaimer": "Por favor, ten en cuenta que la búsqueda de palabras clave es poco confiable debido a la inconsistencia en la base de datos de TheMovieDb"
     },
     "Requests": {
@@ -198,6 +204,7 @@
             "Approved": "Los elementos seleccionados ha sido aprobados correctamente"
         },
         "SuccessfullyApproved": "Se ha aprobado con éxito",
+        "SuccessfullyDeleted": "Request successfully deleted",
         "NowAvailable": "La solicitud está disponible",
         "NowUnavailable": "La solicitud no está disponible",
         "SuccessfullyReprocessed": "La solicitud ha sido procesada correctamente",
@@ -223,6 +230,7 @@
     },
     "Issues": {
         "Title": "Problemas",
+        "IssuesForTitle": "Problemas de {{title}}",
         "PendingTitle": "Problemas pendientes",
         "InProgressTitle": "Problemas en curso",
         "ResolvedTitle": "Problemas resueltos",
@@ -255,6 +263,7 @@
         "Delete": "Borrar problema",
         "DeletedIssue": "El problema ha sido borrado",
         "Chat": "Chat",
+        "EnterYourMessage": "Ingrese Su Mensaje",
         "Requested": "Solicitado",
         "UserOnDate": "{{user}} en {{date}}"
     },
@@ -281,6 +290,7 @@
     },
     "MediaDetails": {
         "Denied": "Denegado",
+        "Trailers": "Trailer",
         "RecommendationsTitle": "Recomendaciones",
         "SimilarTitle": "Similar",
         "VideosTitle": "Vídeos",
@@ -317,7 +327,8 @@
         "RootFolderOverride": "Root Folder Override:",
         "QualityOverride": "Quality Override:",
         "Network": "Network:",
-        "Genres": "Genres:",
+        "GenresLabel": "Géneros:",
+        "Genres": "Géneros",
         "FirstAired": "First Aired:",
         "TheatricalRelease": "Release:",
         "DigitalRelease": "Digital Release:",
@@ -343,6 +354,7 @@
         "PleaseSelectUser": "Please select a user",
         "StreamingOn": "Streaming On:",
         "RequestedBy": "Requested By:",
+        "RequestedByOn": "Solicitado por {{user}} el {{date}}",
         "RequestDate": "Request Date:",
         "DeniedReason": "Denied Reason:",
         "ReProcessRequest": "Re-Process Request",
@@ -396,7 +408,8 @@
         "NewPasswordConfirm": "New Password Confirm",
         "Security": "Security",
         "Profile": "Profile",
-        "UpdatedYourInformation": "Updated your information"
+        "UpdatedYourInformation": "Updated your information",
+        "Unsubscribed": "No suscrito!"
     },
     "UserTypeLabel": {
         "1": "Usuario local",
@@ -404,5 +417,14 @@
         "3": "Usuario de Emby",
         "4": "Emby Connect User",
         "5": "Usuario de Jellyfin"
+    },
+    "Paginator": {
+        "itemsPerPageLabel": "Elementos por página:",
+        "nextPageLabel": "Página siguiente",
+        "previousPageLabel": "Página anterior",
+        "firstPageLabel": "Primera página",
+        "lastPageLabel": "Última página",
+        "rangePageLabel1": "0 de {{length}}",
+        "rangePageLabel2": "{{startIndex}} – {{endIndex}} de {{length}}"
     }
 }

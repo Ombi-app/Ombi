@@ -139,6 +139,16 @@ namespace Ombi.Api.TheMovieDb
             var result = await Api.Request<ActorCredits>(request);
             return result;
         }
+        
+        public async Task<ActorCredits> GetActorTvCredits(int actorId, string langCode)
+        {
+            var request = new Request($"person/{actorId}/tv_credits", BaseUri, HttpMethod.Get);
+            request.AddQueryString("api_key", ApiToken);
+            request.AddQueryString("language", langCode);
+
+            var result = await Api.Request<ActorCredits>(request);
+            return result;
+        }
 
         public async Task<List<TvSearchResult>> SearchTv(string searchTerm, string year = default)
         {

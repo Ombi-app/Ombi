@@ -321,7 +321,9 @@ namespace Ombi.Schedule.Jobs.Ombi
         public async Task DownloadAsync(string requestUri, string filename)
         {
             Logger.LogDebug(LoggingEvents.Updater, "Starting the DownloadAsync");
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
             using (var client = new WebClient())
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
             {
                 await client.DownloadFileTaskAsync(requestUri, filename);
             }

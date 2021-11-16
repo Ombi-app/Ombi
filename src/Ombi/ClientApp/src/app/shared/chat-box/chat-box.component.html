@@ -1,7 +1,7 @@
 <div class='container'>
     <div class='chatbox'>
       <div class='chatbox__user-list'>
-        <h1>Users</h1>
+        <h1>{{ "Issues.UserManagement" | translate }}</h1>
         <div class='chatbox__user--active' *ngFor="let user of userList">
             <p>{{user}}</p>
         </div>
@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="form">
-        <input type="text" [(ngModel)]="currentMessage" placeholder="Enter your message">
-        <button mat-raised-button class="add-message" (click)="addMessage()">Send</button>
+        <input type="text" [(ngModel)]="currentMessage" [placeholder]="'Issues.EnterYourMessage' | translate">
+        <button mat-raised-button class="add-message" (click)="addMessage()">{{ "Issues.SendMessageButton" | translate }}</button>
       </div>
     </div>

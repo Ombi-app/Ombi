@@ -128,9 +128,9 @@ namespace Ombi.Controllers.V1
         /// <returns></returns>
         [HttpDelete("movie/{requestId:int}")]
         [Authorize(Roles = "Admin,PowerUser,ManageOwnRequests")]
-        public async Task DeleteRequest(int requestId)
+        public async Task<RequestEngineResult> DeleteRequest(int requestId)
         {
-            await MovieRequestEngine.RemoveMovieRequest(requestId);
+            return await MovieRequestEngine.RemoveMovieRequest(requestId);
         }
 
         /// <summary>
@@ -324,7 +324,7 @@ namespace Ombi.Controllers.V1
         /// <param name="requestId">The request identifier.</param>
         /// <returns></returns>
         [HttpDelete("tv/{requestId:int}")]
-        [Authorize(Roles = "Admin,PowerUser,ManageOwnRequests")]
+        [Authorize(Roles = "Admin,PowerUser")]
         public async Task DeleteTvRequest(int requestId)
         {
             await TvRequestEngine.RemoveTvRequest(requestId);
@@ -437,10 +437,9 @@ namespace Ombi.Controllers.V1
         /// <returns></returns>
         [Authorize(Roles = "Admin,PowerUser,ManageOwnRequests")]
         [HttpDelete("tv/child/{requestId:int}")]
-        public async Task<bool> DeleteChildRequest(int requestId)
+        public async Task<RequestEngineResult> DeleteChildRequest(int requestId)
         {
-            await TvRequestEngine.RemoveTvChild(requestId);
-            return true;
+            return await TvRequestEngine.RemoveTvChild(requestId);
         }
 
 

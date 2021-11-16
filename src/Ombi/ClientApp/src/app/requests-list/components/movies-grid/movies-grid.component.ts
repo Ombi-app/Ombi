@@ -31,6 +31,7 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     public defaultOrder: string = "desc";
     public currentFilter: RequestFilterType = RequestFilterType.All;
     public selection = new SelectionModel<IMovieRequests>(true, []);
+    public userName: string;
 
     public RequestFilter = RequestFilterType;
 
@@ -46,10 +47,11 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort) sort: MatSort;
 
     constructor(private requestService: RequestServiceV2, private ref: ChangeDetectorRef,
-                private auth: AuthService, private storageService: StorageService,
-                private requestServiceV1: RequestService, private notification: NotificationService,
-                private translateService: TranslateService) {
+        private auth: AuthService, private storageService: StorageService,
+        private requestServiceV1: RequestService, private notification: NotificationService,
+        private translateService: TranslateService) {
 
+        this.userName = auth.claims().name;
     }
 
     public ngOnInit() {

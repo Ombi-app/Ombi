@@ -53,17 +53,18 @@ namespace Ombi.Helpers
             _memoryCache.Set(CacheKey, mediaServiceCache);
         }
 
-        public async Task Purge()
+        public Task Purge()
         {
             var keys = _memoryCache.Get<List<string>>(CacheKey);
             if (keys == null)
             {
-                return;
+                return Task.CompletedTask;
             }
             foreach (var key in keys)
             {
                 base.Remove(key);
             }
+            return Task.CompletedTask;
         }
 
     }

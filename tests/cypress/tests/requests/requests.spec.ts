@@ -39,7 +39,7 @@ describe("Requests Tests", () => {
     row.optionsDelete.click();
 
     cy.wait('@deleteRequest').then((intercept) => {
-      expect(intercept.response.body).is.true;
+      expect(intercept.response.body.result).is.true;
     })
 
     row.title.should('not.exist');

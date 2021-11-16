@@ -1,8 +1,10 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
-import { RequestService } from '../../../services';
-import { RequestType } from '../../../interfaces';
+import { MessageService, RequestService } from '../../../services';
+import { IRequestEngineResult, RequestType } from '../../../interfaces';
 import { UpdateType } from '../../models/UpdateType';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'request-options',
@@ -13,21 +15,31 @@ export class RequestOptionsComponent {
   public RequestType = RequestType;
 
   constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
-    private requestService: RequestService, private bottomSheetRef: MatBottomSheetRef<RequestOptionsComponent>) { }
+    private requestService: RequestService, 
+    private messageService: MessageService,
+    private bottomSheetRef: MatBottomSheetRef<RequestOptionsComponent>,
+    private translate: TranslateService) { }
 
   public async delete() {
+    var  request: Observable<IRequestEngineResult>;
     if (this.data.type === RequestType.movie) {
-      await this.requestService.removeMovieRequestAsync(this.data.id);
+      request = this.requestService.removeMovieRequestAsync(this.data.id);
     }
     if (this.data.type === RequestType.tvShow) {
-      await this.requestService.deleteChild(this.data.id).toPromise();
+      request = this.requestService.deleteChild(this.data.id);
     }
     if (this.data.type === RequestType.album) {
-      await this.requestService.removeAlbumRequest(this.data.id).toPromise();
+      request = this.requestService.removeAlbumRequest(this.data.id);
     }
-
-    this.bottomSheetRef.dismiss({type: UpdateType.Delete});
-    return;
+    request.subscribe(result => {
+      if (result.result) {
+          this.messageService.send(this.translate.instant("Requests.SuccessfullyDeleted"));
+          this.bottomSheetRef.dismiss({type: UpdateType.Delete});
+          return;
+      } else {
+          this.messageService.sendRequestEngineResultError(result);
+      }
+    });
   }
 
   public async approve() {

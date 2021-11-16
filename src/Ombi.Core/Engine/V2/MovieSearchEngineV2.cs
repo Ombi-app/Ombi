@@ -323,6 +323,7 @@ namespace Ombi.Core.Engine.V2
 
         public async Task<ActorCredits> GetMoviesByActor(int actorId, string langCode)
         {
+            langCode = await DefaultLanguageCode(langCode);
             var result = await Cache.GetOrAddAsync(nameof(GetMoviesByActor) + actorId + langCode,
                 () =>  MovieApi.GetActorMovieCredits(actorId, langCode), DateTimeOffset.Now.AddHours(12));
             // Later we run this through the rules engine
