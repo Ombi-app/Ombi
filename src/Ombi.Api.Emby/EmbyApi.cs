@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 using Ombi.Api.Emby.Models;
-using Ombi.Api.Emby.Models.Media;
 using Ombi.Api.Emby.Models.Media.Tv;
 using Ombi.Api.Emby.Models.Movie;
 using Ombi.Helpers;
@@ -124,10 +120,14 @@ namespace Ombi.Api.Emby
             return response;
         }
 
-
         public async Task<EmbyItemContainer<EmbyMovie>> GetAllMovies(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri)
         {
             return await GetAll<EmbyMovie>("Movie", apiKey, userId, baseUri, true, startIndex, count, parentIdFilder);
+        }
+
+        public async Task<EmbyItemContainer<EmbyMovie>> RecentlyAddedMovies(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri)
+        {
+            return await RecentlyAdded<EmbyMovie>("Movie", apiKey, userId, baseUri, true, startIndex, count, parentIdFilder);
         }
 
         public async Task<EmbyItemContainer<EmbyEpisodes>> GetAllEpisodes(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri)
@@ -135,9 +135,19 @@ namespace Ombi.Api.Emby
             return await GetAll<EmbyEpisodes>("Episode", apiKey, userId, baseUri, false, startIndex, count, parentIdFilder);
         }
 
+        public async Task<EmbyItemContainer<EmbyEpisodes>> RecentlyAddedEpisodes(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri)
+        {
+            return await RecentlyAdded<EmbyEpisodes>("Episode", apiKey, userId, baseUri, false, startIndex, count, parentIdFilder);
+        }
+
         public async Task<EmbyItemContainer<EmbySeries>> GetAllShows(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri)
         {
             return await GetAll<EmbySeries>("Series", apiKey, userId, baseUri, false, startIndex, count, parentIdFilder);
+        }
+
+        public async Task<EmbyItemContainer<EmbySeries>> RecentlyAddedShows(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri)
+        {
+            return await RecentlyAdded<EmbySeries>("Series", apiKey, userId, baseUri, false, startIndex, count, parentIdFilder);
         }
 
         public async Task<SeriesInformation> GetSeriesInformation(string mediaId, string apiKey, string userId, string baseUrl)
@@ -152,6 +162,31 @@ namespace Ombi.Api.Emby
         public async Task<EpisodeInformation> GetEpisodeInformation(string mediaId, string apiKey, string userId, string baseUrl)
         {
             return await GetInformation<EpisodeInformation>(mediaId, apiKey, userId, baseUrl);
+        }
+
+        private async Task<EmbyItemContainer<T>> RecentlyAdded<T>(string type, string apiKey, string userId, string baseUri, bool includeOverview, int startIndex, int count, string parentIdFilder = default)
+        {
+            var request = new Request($"emby/users/{userId}/items", baseUri, HttpMethod.Get);
+
+            request.AddQueryString("Recursive", true.ToString());
+            request.AddQueryString("IncludeItemTypes", type);
+            request.AddQueryString("Fields", includeOverview ? "ProviderIds,Overview" : "ProviderIds");
+            request.AddQueryString("startIndex", startIndex.ToString());
+            request.AddQueryString("limit", count.ToString());
+            request.AddQueryString("sortBy", "DateCreated");
+            request.AddQueryString("SortOrder", "Descending");
+            if (!string.IsNullOrEmpty(parentIdFilder))
+            {
+                request.AddQueryString("ParentId", parentIdFilder);
+            }
+
+            request.AddQueryString("IsVirtualItem", "False");
+
+            AddHeaders(request, apiKey);
+
+
+            var obj = await Api.Request<EmbyItemContainer<T>>(request);
+            return obj;
         }
 
         private async Task<T> GetInformation<T>(string mediaId, string apiKey, string userId, string baseUrl)

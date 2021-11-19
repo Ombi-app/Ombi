@@ -29,5 +29,8 @@ namespace Ombi.Api.Emby
         Task<MovieInformation> GetMovieInformation(string mediaId, string apiKey, string userId, string baseUrl);
         Task<EpisodeInformation> GetEpisodeInformation(string mediaId, string apiKey, string userId, string baseUrl);
         Task<PublicInfo> GetPublicInformation(string baseUrl);
+        Task<EmbyItemContainer<EmbyMovie>> RecentlyAddedMovies(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri);
+        Task<EmbyItemContainer<EmbyEpisodes>> RecentlyAddedEpisodes(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri);
+        Task<EmbyItemContainer<EmbySeries>> RecentlyAddedShows(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri);
     }
 }
