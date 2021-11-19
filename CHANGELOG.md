@@ -1,3 +1,12 @@
+# [4.7.0](https://github.com/Ombi-app/Ombi/compare/v4.6.5...v4.7.0) (2021-11-19)
+
+
+### Features
+
+* **emby:** :sparkles: Added a emby recently added sync! ([a0e1406](https://github.com/Ombi-app/Ombi/commit/a0e14068f4bc457f8a4a565de71707a8f16c803c))
+
+
+
 ## [4.6.5](https://github.com/Ombi-app/Ombi/compare/v4.6.4...v4.6.5) (2021-11-15)
 
 
@@ -188,16 +197,6 @@
 
 
 ## [4.2.5](https://github.com/Ombi-app/Ombi/compare/v4.2.4...v4.2.5) (2021-10-14)
-
-
-
-## [4.2.4](https://github.com/Ombi-app/Ombi/compare/v4.2.3...v4.2.4) (2021-10-13)
-
-
-### Bug Fixes
-
-* **#4344:** :bug: Fixed an issue where we errored on Plex Episode Scan ([cd5532f](https://github.com/Ombi-app/Ombi/commit/cd5532fa8f7ebbfaf942841398672bafb9a405d4))
-* **#4345:** :bug: Fixed the issue where denied requests we not appearing correctly ([5a2f652](https://github.com/Ombi-app/Ombi/commit/5a2f652a28f5699dd667afef8dde129817e53392))
 
 
 
