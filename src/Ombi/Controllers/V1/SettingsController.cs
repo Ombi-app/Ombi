@@ -618,6 +618,7 @@ namespace Ombi.Controllers.V1
             j.RetryRequests = j.RetryRequests.HasValue() ? j.RetryRequests : JobSettingsHelper.ResendFailedRequests(j);
             j.MediaDatabaseRefresh = j.MediaDatabaseRefresh.HasValue() ? j.MediaDatabaseRefresh : JobSettingsHelper.MediaDatabaseRefresh(j);
             j.AutoDeleteRequests = j.AutoDeleteRequests.HasValue() ? j.AutoDeleteRequests : JobSettingsHelper.AutoDeleteRequests(j);
+            j.EmbyRecentlyAddedSync = j.EmbyRecentlyAddedSync.HasValue() ? j.EmbyRecentlyAddedSync : JobSettingsHelper.EmbyRecentlyAddedSync(j);
 
             return j;
         }

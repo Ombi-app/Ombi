@@ -212,6 +212,7 @@ export interface IJobSettings {
   retryRequests: string;
   mediaDatabaseRefresh: string;
   autoDeleteRequests: string;
+  embyRecentlyAddedSync: string;
 }
 
 export interface IIssueSettings extends ISettings {

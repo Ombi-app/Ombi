@@ -18,6 +18,7 @@
         "user-management",
         "newsletter",
         "mass-email",
-        "issues"
+        "issues",
+        "emby"
     ]
 }
