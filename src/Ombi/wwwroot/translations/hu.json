@@ -424,7 +424,7 @@
         "previousPageLabel": "Előző oldal",
         "firstPageLabel": "Első oldal",
         "lastPageLabel": "Utolsó oldal",
-        "rangePageLabel1": "{{length}}-ból 0",
-        "rangePageLabel2": "{{length}}-ból {{startIndex}}-től {{endIndex}}-ig"
+        "rangePageLabel1": "0 ennyiből: {{length}}",
+        "rangePageLabel2": "{{startIndex}} - {{endIndex}} ennyiből: {{length}}"
     }
 }
