@@ -136,7 +136,7 @@
         "YearOfRelease": "Megjelenés éve",
         "SearchGenre": "Műfaj keresése",
         "SearchKeyword": "Keresés kulcsszóra",
-        "SearchProvider": "Search Provider",
+        "SearchProvider": "Keresési szolgáltató",
         "KeywordSearchingDisclaimer": "Please note that Keyword Searching is very hit and miss due to the inconsistent data in TheMovieDb"
     },
     "Requests": {
@@ -230,7 +230,7 @@
     },
     "Issues": {
         "Title": "Problémák",
-        "IssuesForTitle": "Issues for {{title}}",
+        "IssuesForTitle": "{{title}} problémái",
         "PendingTitle": "Várakozó problémák",
         "InProgressTitle": "Folyamatban lévő problémák",
         "ResolvedTitle": "Megoldott problémák",
@@ -263,7 +263,7 @@
         "Delete": "Delete issue",
         "DeletedIssue": "Issue has been deleted",
         "Chat": "Csevegő",
-        "EnterYourMessage": "Enter Your Message",
+        "EnterYourMessage": "Írd be az üzeneted",
         "Requested": "Requested",
         "UserOnDate": "{{user}} on {{date}}"
     },
@@ -290,7 +290,7 @@
     },
     "MediaDetails": {
         "Denied": "Megtagadva",
-        "Trailers": "Trailers",
+        "Trailers": "Előzetesek",
         "RecommendationsTitle": "Recommendations",
         "SimilarTitle": "Hasonló",
         "VideosTitle": "Videók",
@@ -327,8 +327,8 @@
         "RootFolderOverride": "Gyökér mappa felülírása:",
         "QualityOverride": "Minőség felülírása:",
         "Network": "Hálózat:",
-        "GenresLabel": "Genres:",
-        "Genres": "Genres",
+        "GenresLabel": "Műfajok:",
+        "Genres": "Műfajok",
         "FirstAired": "Első sugárzás ideje:",
         "TheatricalRelease": "Kiadás:",
         "DigitalRelease": "Digitális megjelenés:",
@@ -354,7 +354,7 @@
         "PleaseSelectUser": "Válassz egy felhasználót",
         "StreamingOn": "Streaming On:",
         "RequestedBy": "Kérte:",
-        "RequestedByOn": "Requested By {{user}} on {{date}}",
+        "RequestedByOn": "Kérte: {{user}} ekkor: {{date}}",
         "RequestDate": "Kérés ideje:",
         "DeniedReason": "Elutasítás oka:",
         "ReProcessRequest": "Re-Process Request",
@@ -409,7 +409,7 @@
         "Security": "Security",
         "Profile": "Profil",
         "UpdatedYourInformation": "Updated your information",
-        "Unsubscribed": "Unsubscribed!"
+        "Unsubscribed": "Leiratkozva!"
     },
     "UserTypeLabel": {
         "1": "Helyi felhasználó",
@@ -419,12 +419,12 @@
         "5": "Jellyfin felhasználó"
     },
     "Paginator": {
-        "itemsPerPageLabel": "Items per page:",
-        "nextPageLabel": "Next page",
-        "previousPageLabel": "Previous page",
-        "firstPageLabel": "First page",
-        "lastPageLabel": "Last page",
-        "rangePageLabel1": "0 of {{length}}",
-        "rangePageLabel2": "{{startIndex}} – {{endIndex}} of {{length}}"
+        "itemsPerPageLabel": "Elemek oldalanként:",
+        "nextPageLabel": "Következő oldal",
+        "previousPageLabel": "Előző oldal",
+        "firstPageLabel": "Első oldal",
+        "lastPageLabel": "Utolsó oldal",
+        "rangePageLabel1": "{{length}}-ból 0",
+        "rangePageLabel2": "{{length}}-ból {{startIndex}}-től {{endIndex}}-ig"
     }
 }
