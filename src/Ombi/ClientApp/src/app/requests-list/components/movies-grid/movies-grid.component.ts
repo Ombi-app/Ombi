@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild } from "@angular/core";
 import { IMovieRequests, IRequestEngineResult, IRequestsViewModel } from "../../../interfaces";
 import { NotificationService, RequestService } from "../../../services";
-import { Observable, forkJoin, merge, of as observableOf } from 'rxjs';
+import { Observable, combineLatest, forkJoin, merge, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 import { AuthService } from "../../../auth/auth.service";
@@ -164,16 +164,16 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
         if (this.selection.isEmpty()) {
             return;
         }
-        let tasks = new Array();
+        let tasks = new Array<Observable<IRequestEngineResult>>();
         this.selection.selected.forEach((selected) => {
             tasks.push(this.requestServiceV1.removeMovieRequestAsync(selected.id));
         });
 
-        await Promise.all(tasks);
-
-        this.notification.success(this.translateService.instant('Requests.RequestPanel.Deleted'))
-        this.selection.clear();
-        this.ngAfterViewInit();
+        combineLatest(tasks).subscribe(() => {
+            this.notification.success(this.translateService.instant('Requests.RequestPanel.Deleted'))
+            this.selection.clear();
+            this.ngAfterViewInit();
+        });
       }
 
       public bulkApprove() {
