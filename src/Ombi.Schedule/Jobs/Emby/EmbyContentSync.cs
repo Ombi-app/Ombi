@@ -237,7 +237,6 @@ namespace Ombi.Schedule.Jobs.Emby
                 {
                     movies = await Api.GetAllMovies(server.ApiKey, parentId, processed, AmountToTake, server.AdministratorId, server.FullUri);
                 }
-                else
                 await _repo.AddRange(mediaToAdd);
                 mediaToAdd.Clear();
             }
