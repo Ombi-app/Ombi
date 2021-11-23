@@ -1,5 +1,7 @@
 ## [4.7.3](https://github.com/Ombi-app/Ombi/compare/v4.7.2...v4.7.3) (2021-11-23)
 
+### Other
+* **settings**: 💄 Added a banner when you are using a SQLite database, to infom that MySQL database configuration is available
 
 
 ## [4.7.2](https://github.com/Ombi-app/Ombi/compare/v4.7.1...v4.7.2) (2021-11-22)
