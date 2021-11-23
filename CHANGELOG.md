@@ -1,3 +1,12 @@
+## [4.7.2](https://github.com/Ombi-app/Ombi/compare/v4.7.1...v4.7.2) (2021-11-22)
+
+
+### Bug Fixes
+
+* **request-list:** :bug: Fixed an issue where the bulk delete would not work for movie requests ([4b540fb](https://github.com/Ombi-app/Ombi/commit/4b540fb45bcc389664f0953159802288d005db9f))
+
+
+
 ## [4.7.1](https://github.com/Ombi-app/Ombi/compare/v4.7.0...v4.7.1) (2021-11-22)
 
 
@@ -193,15 +202,6 @@
 ### Bug Fixes
 
 * :bug: Fixed the issue parsing TheMovieDB dates. They have broken something... ([6e397e0](https://github.com/Ombi-app/Ombi/commit/6e397e02e95f894a92e8bf02428efdcac1275b31))
-
-
-
-## [4.2.6](https://github.com/Ombi-app/Ombi/compare/v4.2.5...v4.2.6) (2021-10-14)
-
-
-### Performance Improvements
-
-* :zap: Use ngxs store for the whole customization section of the app ([97b493d](https://github.com/Ombi-app/Ombi/commit/97b493d869feee59d360b484a6c59388a2aead1f))
 
 
 
