@@ -1,4 +1,6 @@
-﻿.mat-table {
+﻿@import "~styles/variables.scss";
+
+.mat-table {
     display: block;
   }
   
@@ -38,3 +40,12 @@
       vertical-align: baseline;
       border-radius: 0.25rem;
   }
+
+  .container-alert {
+    margin-left: 3%;
+    margin-right: 3%;
+    color: white;
+    background-color: $ombi-background-accent;
+    border-color: $warn;
+  }
+

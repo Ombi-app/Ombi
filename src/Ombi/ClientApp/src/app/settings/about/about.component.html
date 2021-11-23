@@ -1,6 +1,10 @@
 <settings-menu></settings-menu>
+<div class="alert container-alert" role="alert" *ngIf="about && usingSqliteDatabase">
+  Switching to a MySQL database can drastically improve performance and stability. See how to do that here: <a href="https://docs.ombi.app/guides/migrating-databases/" target="_blank">https://docs.ombi.app/guides/migrating-databases/</a>
+</div>
 <div *ngIf="about" class="small-middle-container">
   <legend>About</legend>
+
 <div class="row">
   <div class="col-md-8">
   <div class="mat-table">
@@ -71,23 +75,23 @@
     <div class="mat-row">
       <div class="mat-cell">Application Base Path</div>
       <div class="mat-cell">{{about.applicationBasePath}}</div>
-    </div>    
-    
+    </div>
+
     <div class="mat-row">
       <div class="mat-cell">Storage Path</div>
       <div class="mat-cell">{{about.storagePath}}</div>
-    </div> 
-    
+    </div>
+
     <div class="mat-row">
       <div class="mat-cell">Ombi Database</div>
       <div class="mat-cell">{{about.ombiDatabaseType}}</div>
-    </div> 
-    
+    </div>
+
     <div class="mat-row">
       <div class="mat-cell">External Database</div>
       <div class="mat-cell">{{about.externalDatabaseType}}</div>
-    </div> 
-    
+    </div>
+
     <div class="mat-row">
       <div class="mat-cell">Settings Database</div>
       <div class="mat-cell">{{about.settingsDatabaseType}}</div>

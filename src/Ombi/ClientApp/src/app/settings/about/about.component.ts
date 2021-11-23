@@ -1,10 +1,11 @@
 ﻿import { Component, OnInit } from "@angular/core";
+import { HubService, SettingsService, SystemService } from "../../services";
 import { IAbout, IUpdateModel } from "../../interfaces/ISettings";
-import { SettingsService, HubService, SystemService } from "../../services";
+
 import { IConnectedUser } from "../../interfaces";
-import { UpdateService } from "../../services/update.service";
 import { MatDialog } from "@angular/material/dialog";
 import { UpdateDialogComponent } from "./update-dialog.component";
+import { UpdateService } from "../../services/update.service";
 
 @Component({
     templateUrl: "./about.component.html",
@@ -16,6 +17,15 @@ export class AboutComponent implements OnInit {
     public newUpdate: boolean;
     public connectedUsers: IConnectedUser[];
     public newsHtml: string;
+
+    public get usingSqliteDatabase() {
+        if (this.about.ombiDatabaseType.toLowerCase() === 'sqlite'
+        || this.about.externalDatabaseType.toLowerCase() === 'sqlite'
+        || this.about.settingsDatabaseType.toLowerCase() === 'sqlite') {
+            return true;
+        }
+        return false;
+    }
 
     private update: IUpdateModel;
 
