@@ -19,6 +19,7 @@
         "newsletter",
         "mass-email",
         "issues",
-        "emby"
+        "emby",
+        "availability-rules"
     ]
 }

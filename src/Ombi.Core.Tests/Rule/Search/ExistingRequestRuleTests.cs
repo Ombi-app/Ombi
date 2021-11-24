@@ -130,5 +130,76 @@ namespace Ombi.Core.Tests.Rule.Search
             Assert.False(search.Approved);
             Assert.False(search.Requested);
         }
+
+        [Test]
+        public async Task ShouldBeFullyAvailable_NoFutureAiredEpisodes_NoRequest()
+        {
+            var search = new SearchTvShowViewModel()
+            {
+                Id = 999,
+                SeasonRequests = new List<SeasonRequests>
+                {
+                    new SeasonRequests
+                    {
+                        Episodes = new List<EpisodeRequests>
+                        {
+                            new EpisodeRequests
+                            {
+                                Available = true,
+                                AirDate = new System.DateTime(2020,01,01)
+                            },
+                            new EpisodeRequests
+                            {
+                                Available = true,
+                                AirDate = new System.DateTime(2020,01,02)
+                            },
+                        }
+                    }
+                }
+            };
+            var result = await Rule.Execute(search);
+
+            Assert.True(result.Success);
+            Assert.That(search.FullyAvailable, Is.True);
+            Assert.That(search.PartlyAvailable, Is.False);
+        }
+
+        [Test]
+        public async Task ShouldBeFullyAvailable_AndPartly_FutureAiredEpisodes_NoRequest()
+        {
+            var search = new SearchTvShowViewModel()
+            {
+                Id = 999,
+                SeasonRequests = new List<SeasonRequests>
+                {
+                    new SeasonRequests
+                    {
+                        Episodes = new List<EpisodeRequests>
+                        {
+                            new EpisodeRequests
+                            {
+                                Available = true,
+                                AirDate = new System.DateTime(2020,01,01)
+                            },
+                            new EpisodeRequests
+                            {
+                                Available = true,
+                                AirDate = new System.DateTime(2020,01,02)
+                            },
+                            new EpisodeRequests
+                            {
+                                Available = true,
+                                AirDate = new System.DateTime(2029,01,02)
+                            },
+                        }
+                    }
+                }
+            };
+            var result = await Rule.Execute(search);
+
+            Assert.True(result.Success);
+            Assert.That(search.FullyAvailable, Is.True);
+            Assert.That(search.PartlyAvailable, Is.True);
+        }
     }
 }
