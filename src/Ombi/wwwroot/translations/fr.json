@@ -301,7 +301,7 @@
         "ViewCollection": "Afficher la Collection",
         "NotEnoughInfo": "Malheureusement, il n'y a pas encore assez d'informations à propos de cette série !",
         "AdvancedOptions": "Options Avancées",
-        "AutoApproveOptions": "You can configure the request here, once requested it will be sent to your DVR application and will be auto approved! Please note, this is optional, just press Request to skip!",
+        "AutoApproveOptions": "Vous pouvez configurer la demande ici. Une fois demandée, elle sera envoyée à votre application de DVR et sera automatiquement approuvée ! Veuillez noter que ceci est optionnel, appuyez simplement sur \"Demander\" pour sauter !",
         "AutoApproveOptionsTv": "You can configure the request here, once requested it will be sent to your DVR application and will be auto approved! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it!  Please note, this is optional, just press Request to skip!",
         "AutoApproveOptionsTvShort": "You can configure the request here, once requested it will be sent to your DVR application! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it! Please note, this is optional, just press Request to skip!",
         "QualityProfilesSelect": "Sélectionner un Profil de Qualité",
