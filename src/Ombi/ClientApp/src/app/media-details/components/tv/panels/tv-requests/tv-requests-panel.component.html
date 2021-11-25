@@ -5,7 +5,7 @@
         <div> {{ request.requestStatus | translate }}</div>
       </mat-panel-title>
       <mat-panel-description>
-        {{'Requests.RequestedByOn' | translate: {
+        {{'MediaDetails.RequestedByOn' | translate: {
             user: request.requestedUser.userAlias,
             date: request.requestedDate | amLocal | amUserLocale | amDateFormat: 'LL' } }}
         <span *ngIf="request.denied"> - {{request.deniedReason}}</span>
