@@ -101,7 +101,7 @@ describe("Search Tests", () => {
 
   it("No Movie results, enabling Tv filter we get results", () => {
     Page.navbar.searchFilter.applyFilter(false, true, false);
-    Page.visit("It's always sunny in Philadelphia");
+    Page.visit("Dexter New Blood");
 
     cy.wait('@searchResponse');
     Page.noSearchResultMessage.should('exist');
@@ -113,7 +113,7 @@ describe("Search Tests", () => {
     const card = Page.getCard('2710', false);
 
     card.topLevelCard.realHover();
-    card.title.should('have.text', "It's Always Sunny in Philadelphia");
+    card.title.should('have.text', "Dexter: New Blood");
     card.overview.contains('Irish pub');
     card.requestType.contains('TV Show');
     card.requestButton.should('exist');
