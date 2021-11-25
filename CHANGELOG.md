@@ -1,7 +1,15 @@
+## [4.7.4](https://github.com/Ombi-app/Ombi/compare/v4.7.3...v4.7.4) (2021-11-25)
+
+
+### Bug Fixes
+
+* **availability-rules:** :bug: Fixed a small issue where some shows would not appear as Available even know they had no future unaired episodes listed ([914b096](https://github.com/Ombi-app/Ombi/commit/914b096781c9b73292a533a010a5dd05ecfd0aac))
+* **emby:** :bug: Fixed an issue where we were not properly syncing episodes ([75529dd](https://github.com/Ombi-app/Ombi/commit/75529dd972c5102f3c5234a2acf6fe664a1bcfad))
+
+
+
 ## [4.7.3](https://github.com/Ombi-app/Ombi/compare/v4.7.2...v4.7.3) (2021-11-23)
 
-### Other
-* **settings**: 💄 Added a banner when you are using a SQLite database, to infom that MySQL database configuration is available
 
 
 ## [4.7.2](https://github.com/Ombi-app/Ombi/compare/v4.7.1...v4.7.2) (2021-11-22)
@@ -189,16 +197,6 @@
 ### Bug Fixes
 
 * :fire: Really fix the base url issue this time ([9f36923](https://github.com/Ombi-app/Ombi/commit/9f36923c51bfabf9cb026f2da14f9947050af0d9))
-
-
-
-## [4.2.8](https://github.com/Ombi-app/Ombi/compare/v4.2.7...v4.2.8) (2021-10-15)
-
-
-### Bug Fixes
-
-* :adhesive_bandage: See if this fixes the proxy issue ([74d1aca](https://github.com/Ombi-app/Ombi/commit/74d1acae499707a7e21401f53eb2bb90c5bb9cfa))
-* :bug: Fixed Ombi not writing the baseUrl correctly ([e9cc8b6](https://github.com/Ombi-app/Ombi/commit/e9cc8b6fe71d3e10c1a901e70227989b3362afe3))
 
 
 
