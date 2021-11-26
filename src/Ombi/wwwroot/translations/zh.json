@@ -46,11 +46,11 @@
     },
     "LandingPage": {
         "OnlineHeading": "目前在线",
-        "OnlineParagraph": "The media server is currently online",
-        "PartiallyOnlineHeading": "Partially Online",
-        "PartiallyOnlineParagraph": "The media server is partially online.",
-        "MultipleServersUnavailable": "There are {{serversUnavailable}} servers offline out of {{totalServers}}.",
-        "SingleServerUnavailable": "There is {{serversUnavailable}} server offline out of {{totalServers}}.",
+        "OnlineParagraph": "媒体服务器当前在线",
+        "PartiallyOnlineHeading": "部分在线",
+        "PartiallyOnlineParagraph": "媒体服务器部分在线",
+        "MultipleServersUnavailable": "{{totalServers}} 个服务器中有{{serversUnavailable}} 个已离线",
+        "SingleServerUnavailable": "{{totalServers}} 个服务器中有{{serversUnavailable}} 个已离线",
         "OfflineHeading": "Currently Offline",
         "OfflineParagraph": "The media server is currently offline.",
         "CheckPageForUpdates": "Check this page for continuous site updates."
