@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from "@angular/core";
+﻿import { Component, Inject, OnInit } from "@angular/core";
 import { HubService, SettingsService, SystemService } from "../../services";
 import { IAbout, IUpdateModel } from "../../interfaces/ISettings";
 
@@ -6,6 +6,7 @@ import { IConnectedUser } from "../../interfaces";
 import { MatDialog } from "@angular/material/dialog";
 import { UpdateDialogComponent } from "./update-dialog.component";
 import { UpdateService } from "../../services/update.service";
+import { APP_BASE_HREF } from "@angular/common";
 
 @Component({
     templateUrl: "./about.component.html",
@@ -17,6 +18,7 @@ export class AboutComponent implements OnInit {
     public newUpdate: boolean;
     public connectedUsers: IConnectedUser[];
     public newsHtml: string;
+    public appstoreImage: string;
 
     public get usingSqliteDatabase() {
         if (this.about.ombiDatabaseType.toLowerCase() === 'sqlite'
@@ -33,9 +35,15 @@ export class AboutComponent implements OnInit {
         private readonly jobService: UpdateService,
         private readonly hubService: HubService,
         private readonly systemService: SystemService,
-        private readonly dialog: MatDialog) { }
+        private readonly dialog: MatDialog,
+        @Inject(APP_BASE_HREF) private readonly href:string) { }
 
     public async ngOnInit() {
+        this.appstoreImage = "../../../images/appstore.svg";
+        const base = this.href;
+        if (base) {
+            this.appstoreImage = "../../.." + base + "/images/appstore.svg";
+        }
         this.settingsService.about().subscribe(x => this.about = x);
         this.newsHtml = await this.systemService.getNews().toPromise();
 
