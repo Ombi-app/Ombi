@@ -40,7 +40,7 @@ namespace Ombi.Notifications
             Overview = req?.Overview;
             AdditionalInformation = opts?.AdditionalInformation ?? string.Empty;
 
-            var img = req?.PosterPath ?? string.Empty;    
+            var img = req?.PosterPath ?? string.Empty;
             if (img.HasValue())
             {
                 PosterImage = $"https://image.tmdb.org/t/p/w300/{req?.PosterPath?.TrimStart('/') ?? string.Empty}";
@@ -113,7 +113,14 @@ namespace Ombi.Notifications
             Type = opts.Substitutes.TryGetValue(NotificationSubstitues.RequestType, out val) && Enum.TryParse(val, out RequestType type)
                 ? HumanizeReturnType(type)
                 : string.Empty;
-            PosterImage = opts.Substitutes.TryGetValue(NotificationSubstitues.PosterPath, out val) ? $"https://image.tmdb.org/t/p/w300/{val.TrimStart('/')}" : string.Empty;
+            if (opts.Substitutes.TryGetValue(NotificationSubstitues.PosterPath, out val) && val.HasValue())
+            {
+                PosterImage = $"https://image.tmdb.org/t/p/w300/{val.TrimStart('/')}";
+            }
+            else
+            {
+                PosterImage = string.Empty;
+            }
         }
 
         private void LoadCommon(BaseRequest req, CustomizationSettings s, UserNotificationPreferences pref, NotificationOptions opts)
