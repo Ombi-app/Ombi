@@ -193,9 +193,9 @@
         "AvailableRequests": "Available Requests",
         "DeniedRequests": "Denied Requests",
         "RequestsToDisplay": "Requests to display",
-        "RequestsTitle": "Title",
+        "RequestsTitle": "标题",
         "Details": "Details",
-        "Options": "Options",
+        "Options": "选项",
         "RequestPanel": {
             "Delete": "Delete Request",
             "Approve": "Approve Request",
