@@ -51,8 +51,8 @@
         "PartiallyOnlineParagraph": "媒体服务器部分在线",
         "MultipleServersUnavailable": "{{totalServers}} 个服务器中有{{serversUnavailable}} 个已离线",
         "SingleServerUnavailable": "{{totalServers}} 个服务器中有{{serversUnavailable}} 个已离线",
-        "OfflineHeading": "Currently Offline",
-        "OfflineParagraph": "The media server is currently offline.",
+        "OfflineHeading": "当前离线",
+        "OfflineParagraph": "媒体服务器目前处于离线状态。",
         "CheckPageForUpdates": "Check this page for continuous site updates."
     },
     "ErrorPages": {
