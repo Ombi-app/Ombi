@@ -6,7 +6,7 @@
         "RememberMe": "记住我",
         "SignInWith": "使用 {{appName}} 登录",
         "SignInWithPlex": "使用 Plex 登录",
-        "ForgottenPassword": "忘记了密码？",
+        "ForgottenPassword": "忘记密码？",
         "Errors": {
             "IncorrectCredentials": "用户名或密码错误"
         }
@@ -18,12 +18,12 @@
         "Pending": "待审核",
         "PartiallyAvailable": "部分可播放",
         "Monitored": "监控中",
-        "NotAvailable": "未收录",
-        "ProcessingRequest": "处理申请",
+        "NotAvailable": "不可播放",
+        "ProcessingRequest": "处理中请求",
         "PendingApproval": "等待批准",
-        "RequestDenied": "申请被拒绝",
+        "RequestDenied": "请求被拒绝",
         "NotRequested": "未申请",
-        "Requested": "已申请",
+        "Requested": "已请求",
         "Search": "搜索",
         "Request": "申请下载",
         "Denied": "拒绝",
