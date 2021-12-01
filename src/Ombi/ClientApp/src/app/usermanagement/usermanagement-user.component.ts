@@ -66,10 +66,22 @@ export class UserManagementUserComponent implements OnInit {
         } else {
             this.identityService.getNotificationPreferences().subscribe(x => this.notificationPreferences = x);
         }
-        this.sonarrService.getQualityProfilesWithoutSettings().subscribe(x => this.sonarrQualities = x);
-        this.sonarrService.getRootFoldersWithoutSettings().subscribe(x => this.sonarrRootFolders = x);
-        this.radarrService.getQualityProfilesFromSettings().subscribe(x => this.radarrQualities = x);
-        this.radarrService.getRootFoldersFromSettings().subscribe(x => this.radarrRootFolders = x);
+        this.sonarrService.getQualityProfilesWithoutSettings().subscribe(x => {
+            this.sonarrQualities = x;
+            this.sonarrQualities.unshift({id: 0, name: "None"});
+        });
+        this.sonarrService.getRootFoldersWithoutSettings().subscribe(x => {
+            this.sonarrRootFolders = x;
+            this.sonarrRootFolders.unshift({id: 0, path: "None"});
+        });
+        this.radarrService.getQualityProfilesFromSettings().subscribe(x => {
+            this.radarrQualities = x;
+            this.radarrQualities.unshift({id: 0, name: "None"});
+        });
+        this.radarrService.getRootFoldersFromSettings().subscribe(x => {
+            this.radarrRootFolders = x;
+            this.radarrRootFolders.unshift({id: 0, path: "None"});
+        });
 
         this.identityService.getUserAccessToken(this.userId).subscribe(x => this.accessToken = x);
 
@@ -178,6 +190,7 @@ export class UserManagementUserComponent implements OnInit {
             this.notificationService.send("Please assign a role");
             return;
         }
+
 
         this.identityService.updateUser(this.user).subscribe(x => {
             if (x.successful) {
