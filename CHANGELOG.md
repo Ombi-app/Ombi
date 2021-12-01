@@ -1,3 +1,14 @@
+## [4.7.5](https://github.com/Ombi-app/Ombi/compare/v4.7.4...v4.7.5) (2021-11-28)
+
+
+### Bug Fixes
+
+* **notifications:** fixed an error that could happen when Ombi sends out a issue notification ([7442dcf](https://github.com/Ombi-app/Ombi/commit/7442dcf59da5d2190cc3087b10402e85bcfcf83b))
+* **translations:** 🌐 Fix incorrect text translation reference RequestedByOn ([#4420](https://github.com/Ombi-app/Ombi/issues/4420)) ([202d155](https://github.com/Ombi-app/Ombi/commit/202d155493c29a6ddd4c5507186bf376a28f4c1d))
+* **translations:** 🌐 New translations from Crowdin  ([473c172](https://github.com/Ombi-app/Ombi/commit/473c1724922515fe376e0b2058ac391807c923f2))
+
+
+
 ## [4.7.4](https://github.com/Ombi-app/Ombi/compare/v4.7.3...v4.7.4) (2021-11-25)
 
 
@@ -188,15 +199,6 @@
 ### Bug Fixes
 
 * :bug: Really really fix it this time? ([543d36e](https://github.com/Ombi-app/Ombi/commit/543d36e5615341bc8378cac377b843a3dbc1ef99))
-
-
-
-## [4.2.9](https://github.com/Ombi-app/Ombi/compare/v4.2.8...v4.2.9) (2021-10-15)
-
-
-### Bug Fixes
-
-* :fire: Really fix the base url issue this time ([9f36923](https://github.com/Ombi-app/Ombi/commit/9f36923c51bfabf9cb026f2da14f9947050af0d9))
 
 
 
