@@ -1,3 +1,12 @@
+## [4.7.6](https://github.com/Ombi-app/Ombi/compare/v4.7.5...v4.7.6) (2021-12-02)
+
+
+### Bug Fixes
+
+* **user-management:** :bug: Fixed an issue where you couldn't 'unset' a users custom quality and root folders ([bae96af](https://github.com/Ombi-app/Ombi/commit/bae96af17f50a80ae3ade235a5ef68d5d2dc12ba))
+
+
+
 ## [4.7.5](https://github.com/Ombi-app/Ombi/compare/v4.7.4...v4.7.5) (2021-11-28)
 
 
@@ -190,15 +199,6 @@
 
 
 ## [4.2.11](https://github.com/Ombi-app/Ombi/compare/v4.2.10...v4.2.11) (2021-10-18)
-
-
-
-## [4.2.10](https://github.com/Ombi-app/Ombi/compare/v4.2.9...v4.2.10) (2021-10-15)
-
-
-### Bug Fixes
-
-* :bug: Really really fix it this time? ([543d36e](https://github.com/Ombi-app/Ombi/commit/543d36e5615341bc8378cac377b843a3dbc1ef99))
 
 
 
