@@ -204,12 +204,12 @@
             "Approved": "A kijelölt elemek jóváhagyásra kerultek"
         },
         "SuccessfullyApproved": "Sikeresen jóváhagyva",
-        "SuccessfullyDeleted": "Request successfully deleted",
+        "SuccessfullyDeleted": "Kérés sikeresen törölve",
         "NowAvailable": "Kérés elérhető",
         "NowUnavailable": "Kérés nem elérhető",
         "SuccessfullyReprocessed": "Successfully Re-processed the request",
         "DeniedRequest": "Elutasított kérés",
-        "RequestCollection": "Request Collection",
+        "RequestCollection": "Kérés gyűjtemény",
         "CollectionSuccesfullyAdded": "The collection {{name}} has been successfully added!",
         "NeedToSelectEpisodes": "You need to select some episodes!",
         "RequestAddedSuccessfully": "Request for {{title}} has been added successfully",
@@ -218,7 +218,7 @@
             "EpisodesAlreadyRequested": "We already have episodes requested from this series",
             "NoPermissionsOnBehalf": "You do not have the correct permissions to request on behalf of users!",
             "NoPermissions": "You do not have the correct permissions!",
-            "RequestDoesNotExist": "Request does not exist",
+            "RequestDoesNotExist": "A kérés nem létezik",
             "ChildRequestDoesNotExist": "Child Request does not exist",
             "NoPermissionsRequestMovie": "You do not have permissions to Request a Movie",
             "NoPermissionsRequestTV": "You do not have permissions to Request a TV Show",
@@ -264,7 +264,7 @@
         "DeletedIssue": "Issue has been deleted",
         "Chat": "Csevegő",
         "EnterYourMessage": "Írd be az üzeneted",
-        "Requested": "Requested",
+        "Requested": "Kérve",
         "UserOnDate": "{{user}} on {{date}}"
     },
     "Filter": {
@@ -274,7 +274,7 @@
         "Approved": "Jóváhagyva",
         "PendingApproval": "Jóváhagyásra vár",
         "WatchProviders": "Watch Providers",
-        "Keywords": "Keywords"
+        "Keywords": "Kulcsszavak"
     },
     "UserManagment": {
         "TvRemaining": "TV: {{remaining}}/{{total}} maradt",
@@ -332,9 +332,9 @@
         "FirstAired": "Első sugárzás ideje:",
         "TheatricalRelease": "Kiadás:",
         "DigitalRelease": "Digitális megjelenés:",
-        "Votes": "Votes:",
-        "Runtime": "Runtime:",
-        "Minutes": "{{runtime}} Minutes",
+        "Votes": "Szavazatok:",
+        "Runtime": "Hossz:",
+        "Minutes": "{{runtime}} perc",
         "Revenue": "Bevétel:",
         "Budget": "Költségvetés:",
         "Keywords": "Kulcsszavak/Címkék:",
@@ -359,8 +359,8 @@
         "DeniedReason": "Elutasítás oka:",
         "ReProcessRequest": "Re-Process Request",
         "Music": {
-            "Type": "Type:",
-            "Country": "Country:",
+            "Type": "Típus:",
+            "Country": "Ország:",
             "StartDate": "Start Date:",
             "EndDate": "EndDate:"
         }
@@ -372,17 +372,17 @@
         "SeasonalTab": "Évadok",
         "RecentlyRequestedTab": "Recently Requested",
         "Movies": "Filmek",
-        "Combined": "Combined",
+        "Combined": "Kombinált",
         "Tv": "TV",
         "CardDetails": {
             "Availability": "Elérhetőség",
             "Studio": "Stúdió",
-            "Network": "Network",
+            "Network": "Hálózat",
             "UnknownNetwork": "Ismeretlen",
             "RequestStatus": "Kérés állapota",
             "Director": "Rendezte",
             "InCinemas": "A mozikban",
-            "FirstAired": "First Aired",
+            "FirstAired": "Első sugárzás ideje",
             "Writer": "Írta",
             "ExecProducer": "Gyártásvezető"
         },
@@ -397,8 +397,8 @@
         "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will get US related streaming information.",
         "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
         "MobileQRCode": "Mobil QR kód",
-        "LegacyApp": "Launch Legacy App",
-        "NoQrCode": "Please contact your administrator to enable QR codes",
+        "LegacyApp": "Eredeti applikáció indítása",
+        "NoQrCode": "A QR kód aktiválásához kérjük vegye fel a kapcsolatot az adminisztrátorával",
         "UserType": "User Type:",
         "ChangeDetails": "Change Details",
         "NeedCurrentPassword": "You need your current password to make any changes here",
