@@ -1,3 +1,13 @@
+## [4.7.7](https://github.com/Ombi-app/Ombi/compare/v4.7.6...v4.7.7) (2021-12-08)
+
+
+### Bug Fixes
+
+* **notifications:** 🐛 Do not notify user upon auto approval of a TV show ([#4432](https://github.com/Ombi-app/Ombi/issues/4432)) ([3ad3bdd](https://github.com/Ombi-app/Ombi/commit/3ad3bddd8313d607ee2a39a51a92e61a3673082c)), closes [#4431](https://github.com/Ombi-app/Ombi/issues/4431)
+* **translations:** 🌐 New translations from Crowdin  ([8943a97](https://github.com/Ombi-app/Ombi/commit/8943a978bf459eaeb496d50c61c4d1506c727366))
+
+
+
 ## [4.7.6](https://github.com/Ombi-app/Ombi/compare/v4.7.5...v4.7.6) (2021-12-02)
 
 
@@ -195,10 +205,6 @@
 * **newsletter:** :bug: Fixed a few small bugs in the newsletter ([21dba4c](https://github.com/Ombi-app/Ombi/commit/21dba4c524b98b9f2b883d97e7e13329425a8762))
 * **translations:** 🌐 New translations en.json from Crowdin [skip ci] ([52eda6a](https://github.com/Ombi-app/Ombi/commit/52eda6ab917a73842bc02b0d8e0c442e564ca8f0))
 * **translations:** 🌐 New translations en.json from Crowdin [skip ci] ([1095d52](https://github.com/Ombi-app/Ombi/commit/1095d524962648a1e427f0bcd8105fa734dd5b60))
-
-
-
-## [4.2.11](https://github.com/Ombi-app/Ombi/compare/v4.2.10...v4.2.11) (2021-10-18)
 
 
 
