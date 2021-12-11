@@ -225,7 +225,7 @@ Here are some of the features Ombi has:
         <a href="https://github.com/steffokeffo">
             <img src="https://avatars.githubusercontent.com/u/8499989?v=4" width="50;" alt="steffokeffo"/>
             <br />
-            <sub><b>steffokeffo</b></sub>
+            <sub><b>Steffokeffo</b></sub>
         </a>
     </td>
     <td align="center">
