@@ -1,3 +1,14 @@
+## [4.7.8](https://github.com/Ombi-app/Ombi/compare/v4.7.7...v4.7.8) (2021-12-11)
+
+
+### Bug Fixes
+
+* **notifications:** :bug: Fixed the DenyReason sometimes not appearing in the notification message [#4409](https://github.com/Ombi-app/Ombi/issues/4409) ([209e311](https://github.com/Ombi-app/Ombi/commit/209e31175c95f6ee8909d878d45bf8269a9842d9))
+* **oauth:** :lock: Fixed the issue where some users running their browsers in a different language could not open the Plex OAuth window ([d5404ea](https://github.com/Ombi-app/Ombi/commit/d5404eaad7837010d6e4563cd8f7a1009231d362)), closes [#4408](https://github.com/Ombi-app/Ombi/issues/4408)
+* **translations:** 🌐 New translations from Crowdin ([5cfb76c](https://github.com/Ombi-app/Ombi/commit/5cfb76cad7a25eed8b452bf9c01cef8c32804369))
+
+
+
 ## [4.7.7](https://github.com/Ombi-app/Ombi/compare/v4.7.6...v4.7.7) (2021-12-08)
 
 
@@ -194,17 +205,6 @@
 ### Bug Fixes
 
 * **translations:** 🌐 New translations %two_letters_code% from Crowdin [skip ci] ([8fbd267](https://github.com/Ombi-app/Ombi/commit/8fbd267b516ddaa80fd16c091bae532b860fbf45))
-
-
-
-## [4.2.12](https://github.com/Ombi-app/Ombi/compare/v4.2.11...v4.2.12) (2021-10-20)
-
-
-### Bug Fixes
-
-* **newsletter:** :bug: Fixed a few small bugs in the newsletter ([21dba4c](https://github.com/Ombi-app/Ombi/commit/21dba4c524b98b9f2b883d97e7e13329425a8762))
-* **translations:** 🌐 New translations en.json from Crowdin [skip ci] ([52eda6a](https://github.com/Ombi-app/Ombi/commit/52eda6ab917a73842bc02b0d8e0c442e564ca8f0))
-* **translations:** 🌐 New translations en.json from Crowdin [skip ci] ([1095d52](https://github.com/Ombi-app/Ombi/commit/1095d524962648a1e427f0bcd8105fa734dd5b60))
 
 
 
