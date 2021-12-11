@@ -527,10 +527,11 @@ namespace Ombi.Core.Engine
 
             request.Denied = true;
             request.DeniedReason = denyReason;
-            // We are denying a request
-            await NotificationHelper.Notify(request, NotificationType.RequestDeclined);
             await MovieRepository.Update(request);
             await _mediaCacheService.Purge();
+
+            // We are denying a request
+            await NotificationHelper.Notify(request, NotificationType.RequestDeclined);
 
             return new RequestEngineResult
             {
