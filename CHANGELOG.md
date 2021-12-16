@@ -1,3 +1,12 @@
+## [4.7.9](https://github.com/Ombi-app/Ombi/compare/v4.7.8...v4.7.9) (2021-12-16)
+
+
+### Bug Fixes
+
+* **sonarr:** :bug: Fixed an issue where we were sometimes incorrectly setting the state of episodes that are already monitored in sonarr ([fd1acb8](https://github.com/Ombi-app/Ombi/commit/fd1acb88cbc5e73f91b7f81e6e28ee06d66b277e))
+
+
+
 ## [4.7.8](https://github.com/Ombi-app/Ombi/compare/v4.7.7...v4.7.8) (2021-12-11)
 
 
@@ -196,15 +205,6 @@
 
 * **request-limits:** :sparkles: Added the new request limit options into the user importer ([01d4f4d](https://github.com/Ombi-app/Ombi/commit/01d4f4d718fe85ac181dae52565fb1b427965b4f))
 * **request-limits:** :sparkles: Added the new request limit options to the bulk edit ([03bc23a](https://github.com/Ombi-app/Ombi/commit/03bc23a74e4308aa6b4c6b25636edcdeb65c1f0e))
-
-
-
-## [4.2.13](https://github.com/Ombi-app/Ombi/compare/v4.2.12...v4.2.13) (2021-10-20)
-
-
-### Bug Fixes
-
-* **translations:** 🌐 New translations %two_letters_code% from Crowdin [skip ci] ([8fbd267](https://github.com/Ombi-app/Ombi/commit/8fbd267b516ddaa80fd16c091bae532b860fbf45))
 
 
 
