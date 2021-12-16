@@ -1,14 +1,15 @@
-import { Component, OnInit, Input } from "@angular/core";
-import { IDiscoverCardResult } from "../../interfaces";
-import { RequestType } from "../../../interfaces";
+import { Component, Input, OnInit } from "@angular/core";
 import { MessageService, RequestService, SearchV2Service } from "../../../services";
-import { TranslateService } from "@ngx-translate/core";
-import { MatDialog } from "@angular/material/dialog";
-import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
-import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
-import { EpisodeRequestComponent } from "../../../shared/episode-request/episode-request.component";
+
 import { AdminRequestDialogComponent } from "../../../shared/admin-request-dialog/admin-request-dialog.component";
 import { DiscoverType } from "../carousel-list/carousel-list.component";
+import { EpisodeRequestComponent } from "../../../shared/episode-request/episode-request.component";
+import { IDiscoverCardResult } from "../../interfaces";
+import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
+import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
+import { MatDialog } from "@angular/material/dialog";
+import { RequestType } from "../../../interfaces";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
     selector: "discover-card",
@@ -168,6 +169,7 @@ export class DiscoverCardComponent implements OnInit {
         this.result.url = "http://www.imdb.com/title/" + updated.imdbId + "/";
         this.result.available = updated.available;
         this.result.requested = updated.requested;
+        this.result.approved = updated.approved;
         this.result.rating = updated.voteAverage;
         this.result.overview = updated.overview;
         this.result.imdbid = updated.imdbId;
