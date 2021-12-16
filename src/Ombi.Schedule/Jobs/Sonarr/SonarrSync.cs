@@ -108,7 +108,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
 
                     foreach (var s in ids)
                     {
-                        if (!s.Monitored || s.EpisodeFileCount == 0) // We have files
+                        if (!s.Monitored && s.EpisodeFileCount == 0) // We have files
                         {
                             continue;
                         }
