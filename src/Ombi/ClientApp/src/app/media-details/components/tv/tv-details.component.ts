@@ -125,6 +125,10 @@ export class TvDetailsComponent implements OnInit {
         }
     }
 
+    public allEpisodesRequested(): boolean {
+        return this.tv.seasonRequests.every(e => e.episodes.every(x => x.approved));
+    }
+
     private loadAdvancedInfo() {
         const profile = this.sonarrService.getQualityProfilesWithoutSettings();
         const folders = this.sonarrService.getRootFoldersWithoutSettings();
