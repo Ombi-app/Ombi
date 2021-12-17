@@ -1,3 +1,12 @@
+## [4.7.11](https://github.com/Ombi-app/Ombi/compare/v4.7.10...v4.7.11) (2021-12-17)
+
+
+### Bug Fixes
+
+* **availability-rules:** :bug: Show the 'Requested' button when a show has all of the episodes marked as requested ([cb7ecf6](https://github.com/Ombi-app/Ombi/commit/cb7ecf684ac3ab204f329a28baecfd4f6cd408f7))
+
+
+
 ## [4.7.10](https://github.com/Ombi-app/Ombi/compare/v4.7.9...v4.7.10) (2021-12-16)
 
 
@@ -174,15 +183,6 @@
 ### Bug Fixes
 
 * **translations:** 🌐 Localization - Ensuring all of the app including backend are localized [#4366](https://github.com/Ombi-app/Ombi/issues/4366) ([5e140ab](https://github.com/Ombi-app/Ombi/commit/5e140ab6183b887a7665f5e870eb0bd05d487ace))
-
-
-
-## [4.3.1](https://github.com/Ombi-app/Ombi/compare/v4.3.0...v4.3.1) (2021-10-27)
-
-
-### Bug Fixes
-
-* :bug: Hides no results message during search. ([#4375](https://github.com/Ombi-app/Ombi/issues/4375)) ([b819b0e](https://github.com/Ombi-app/Ombi/commit/b819b0e007e578bf3d8425f19591f87029c64d06))
 
 
 
