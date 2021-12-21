@@ -38,6 +38,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MomentModule } from "ngx-moment";
 import { NgModule } from "@angular/core";
 import { SidebarModule } from "primeng/sidebar";
+import { PipeModule } from "../pipes/pipe.module";
 import { TheMovieDbService } from "../services";
 import { TranslateModule } from "@ngx-translate/core";
 import { TruncateModule } from "@yellowspot/ng-truncate";
@@ -87,6 +88,7 @@ import { WatchProvidersSelectComponent } from "./components/watch-providers-sele
     MatTreeModule,
     MatStepperModule,
     MatSnackBarModule,
+    PipeModule,
   ],
   exports: [
       TranslateModule,

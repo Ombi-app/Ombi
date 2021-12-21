@@ -13,6 +13,7 @@ import { ICustomizationSettings, ICustomPage } from "./interfaces";
 
 import { SignalRNotificationService } from './services/signlarnotification.service';
 import { DOCUMENT } from '@angular/common';
+import { CustomizationFacade } from './state/customization';
 
 
 @Component({
@@ -24,14 +25,14 @@ export class AppComponent implements OnInit {
 
     public customizationSettings: ICustomizationSettings;
     public customPageSettings: ICustomPage;
-    public user: ILocalUser;
     public showNav: boolean;
     public updateAvailable: boolean;
     public currentUrl: string;
     public voteEnabled = false;
     public applicationName: string = "Ombi"
     public isAdmin: boolean;
-    public username: string;
+    public userName: string;
+    public userEmail: string;
     public accessToken: string;
 
     private hubConnected: boolean;
@@ -42,6 +43,7 @@ export class AppComponent implements OnInit {
         public authService: AuthService,
         private readonly router: Router,
         private readonly settingsService: SettingsService,
+        private customizationFacade: CustomizationFacade,
         public readonly translate: TranslateService,
         private readonly customPageService: CustomPageService,
         public overlayContainer: OverlayContainer,
@@ -50,11 +52,9 @@ export class AppComponent implements OnInit {
         private readonly identity: IdentityService,
         @Inject(DOCUMENT) private document: HTMLDocument) {
 
-        this.translate.addLangs(["en", "de", "fr", "da", "es", "it", "nl", "sk", "sv", "no", "pl", "ru", "pt"]);
+        this.translate.addLangs(["da", "de", "en", "es", "fr", "it", "hu", "nl", "no", "pl", "pt", "sk", "sv", "bg", "ru"]);
 
         if (this.authService.loggedIn()) {
-            this.user = this.authService.claims();
-            this.username = this.user.name;
             this.identity.getAccessToken().subscribe(x => this.accessToken = x);
             if (!this.hubConnected) {
                 this.signalrNotification.initialize();
@@ -67,6 +67,8 @@ export class AppComponent implements OnInit {
                 });
             }
             this.identity.getUser().subscribe(u => {
+                this.userEmail = u.emailAddress;
+                this.userName = u.userName;
                 if (u.language) {
                     this.translate.use(u.language);
                 }
@@ -78,16 +80,13 @@ export class AppComponent implements OnInit {
 
         // See if we can match the supported langs with the current browser lang
         const browserLang: string = translate.getBrowserLang();
-        this.translate.use(browserLang.match(/en|fr|da|de|es|it|nl|ru|sk|sv|no|pl|pt/) ? browserLang : "en");
+        this.translate.use(browserLang.match(/da|de|en|es|fr|it|hu|nl|no|pl|pt|sk|sv|bg|ru/) ? browserLang : "en");
 
     }
 
     public ngOnInit() {
-        // window["loading_screen"].finish();
-
-        this.settingsService.getCustomization().subscribe(x => {
+        this.customizationFacade.settings$().subscribe(x => {
             this.customizationSettings = x;
-
             if (this.customizationSettings && this.customizationSettings.applicationName) {
                 this.applicationName = this.customizationSettings.applicationName;
                 this.document.getElementsByTagName('title')[0].innerText = this.applicationName;
@@ -116,10 +115,6 @@ export class AppComponent implements OnInit {
             if (event instanceof NavigationStart) {
                 this.isAdmin = this.authService.hasRole("admin");
                 this.showNav = this.authService.loggedIn();
-                if (this.showNav) {
-                    this.user = this.authService.claims();
-                    this.username = this.user.name;
-                }
             }
         });
     }

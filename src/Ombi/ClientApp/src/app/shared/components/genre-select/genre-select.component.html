@@ -1,6 +1,6 @@
 
 <mat-form-field  appearance="outline" floatLabel=auto class="example-chip-list">
-  <mat-label>Genres</mat-label>
+  <mat-label>{{ "MediaDetails.Genres" | translate }}</mat-label>
   <mat-chip-list #chipList aria-label="Fruit selection">
     <mat-chip
       *ngFor="let word of form.controls.genreIds.value"
@@ -10,7 +10,7 @@
       <mat-icon matChipRemove>cancel</mat-icon>
     </mat-chip>
     <input
-      placeholder="Search Keyword"
+      [placeholder]="'Search.SearchGenre' | translate"
       #keywordInput
       [formControl]="control"
       [matAutocomplete]="auto"

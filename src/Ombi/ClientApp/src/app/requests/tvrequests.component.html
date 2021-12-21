@@ -1,6 +1,6 @@
 ﻿<div class="form-group">
     <div>
-        <input type="text" id="search" class="form-control form-control-custom" placeholder="Search" (keyup)="search($event)">
+        <input type="text" id="search" class="form-control form-control-custom"  [placeholder]="'Common.Search' | translate" (keyup)="search($event)">
     </div>
 </div>
 <br />
@@ -22,7 +22,7 @@
                 <div class="col-sm-5 small-padding">
                     <div>
                         <a href="http://www.imdb.com/title/{{node.imdbId}}/" target="_blank">
-                            <h4 class="request-title">{{node.title}} ({{node.releaseDate | amLocal | amDateFormat: 'YYYY'}})</h4>
+                            <h4 class="request-title">{{node.title}} ({{node.releaseDate | amLocal| amUserLocale  | amDateFormat: 'YYYY'}})</h4>
                         </a>
                     </div>
                     <br />
@@ -32,7 +32,7 @@
                     </div>
 
 
-                    <div>Release Date: {{node.releaseDate | amLocal | amDateFormat: 'LL'}}</div>
+                    <div>Release Date: {{node.releaseDate | amLocal | amUserLocale | amDateFormat: 'LL'}}</div>
                     <div *ngIf="isAdmin">
                         <div *ngIf="node.qualityOverrideTitle" class="quality-override">{{ 'Requests.QualityOverride' | translate }}
                             <span>{{node.qualityOverrideTitle}} </span>

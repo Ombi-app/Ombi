@@ -151,6 +151,7 @@
     color:#FFF;
     font-family: 'Montserrat', sans-serif;
 
+
     .application-name{
         font-family: 'Montserrat', sans-serif;
         text-transform: uppercase;
@@ -207,6 +208,10 @@
     }
 }
 
+.sidenav {
+    width: 230px;
+}
+
 .outer-profile .profile-img-container {
     background: inherit;
 }
@@ -233,7 +238,14 @@
 }
 
 .advanced-search {
-    margin-left: 10px;
+    float:right;
+    margin-top: 6%;
+    margin-right: 10%;
+    cursor: pointer;
+}
+.active-advanced {
+    color:$ombi-background-accent;
+        background: $ombi-active;
 }
 
 ::ng-deep .dialog-responsive {
@@ -243,5 +255,11 @@
 @media only screen and (max-width: 760px) {
     ::ng-deep .dialog-responsive {
         width: 100%;
+    }
+}
+@media only screen and (min-width: 1025px) {
+
+    .content-container{
+        margin-left: 223px !important;
     }
 }

@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { TranslateService } from "@ngx-translate/core";
-import { RequestType } from "../../interfaces";
+
 import { IRemainingRequests } from "../../interfaces/IRemainingRequests";
 import { RequestService } from "../../services";
+import { RequestType } from "../../interfaces";
+import { TranslateService } from "@ngx-translate/core";
+
 @Component({
     selector: "app-remaining-requests",
     templateUrl: "remaining-requests.component.html",
@@ -43,7 +45,7 @@ export class RemainingRequestsComponent implements OnInit {
 
     private start() {
 
-        const callback = (remaining => {
+        const callback = ((remaining: IRemainingRequests) => {
             this.remaining = remaining;
             if (this.remaining && this.remaining.hasLimit) {
                 this.calculateTime();

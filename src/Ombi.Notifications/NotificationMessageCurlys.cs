@@ -33,13 +33,18 @@ namespace Ombi.Notifications
             UserNotificationPreferences pref)
         {
             LoadIssues(opts);
-            LoadCommon(req, s, pref);
+            LoadCommon(req, s, pref, opts);
             LoadTitle(opts, req);
             ProviderId = req?.TheMovieDbId.ToString() ?? string.Empty;
             Year = req?.ReleaseDate.Year.ToString();
             Overview = req?.Overview;
             AdditionalInformation = opts?.AdditionalInformation ?? string.Empty;
-            PosterImage = $"https://image.tmdb.org/t/p/w300/{req?.PosterPath?.TrimStart('/') ?? string.Empty}";
+
+            var img = req?.PosterPath ?? string.Empty;
+            if (img.HasValue())
+            {
+                PosterImage = $"https://image.tmdb.org/t/p/w300/{req?.PosterPath?.TrimStart('/') ?? string.Empty}";
+            }
             CalculateRequestStatus(req);
         }
 
@@ -47,14 +52,18 @@ namespace Ombi.Notifications
             UserNotificationPreferences pref)
         {
             LoadIssues(opts);
-            LoadCommon(req, s, pref);
+            LoadCommon(req, s, pref, opts);
             LoadTitle(opts, req);
             ProviderId = req?.ParentRequest?.ExternalProviderId.ToString() ?? string.Empty;
             Year = req?.ParentRequest?.ReleaseDate.Year.ToString();
             Overview = req?.ParentRequest?.Overview;
             AdditionalInformation = opts.AdditionalInformation;
-            PosterImage =
-                $"https://image.tmdb.org/t/p/w300/{req?.ParentRequest?.PosterPath?.TrimStart('/') ?? string.Empty}";
+            var img = req?.ParentRequest?.PosterPath ?? string.Empty;
+            if (img.HasValue())
+            {
+                PosterImage =
+                    $"https://image.tmdb.org/t/p/w300/{req?.ParentRequest?.PosterPath?.TrimStart('/') ?? string.Empty}";
+            }
 
             // Generate episode list.
             StringBuilder epSb = new StringBuilder();
@@ -83,7 +92,7 @@ namespace Ombi.Notifications
             UserNotificationPreferences pref)
         {
             LoadIssues(opts);
-            LoadCommon(req, s, pref);
+            LoadCommon(req, s, pref, opts);
             LoadTitle(opts, req);
             ProviderId = req?.ForeignArtistId ?? string.Empty;
             Year = req?.ReleaseDate.Year.ToString();
@@ -94,19 +103,27 @@ namespace Ombi.Notifications
 
         private void LoadIssues(NotificationOptions opts)
         {
-            IssueDescription = opts.Substitutes.TryGetValue("IssueDescription", out string val) ? val : string.Empty;
-            IssueCategory = opts.Substitutes.TryGetValue("IssueCategory", out val) ? val : string.Empty;
-            IssueStatus = opts.Substitutes.TryGetValue("IssueStatus", out val) ? val : string.Empty;
-            IssueSubject = opts.Substitutes.TryGetValue("IssueSubject", out val) ? val : string.Empty;
-            NewIssueComment = opts.Substitutes.TryGetValue("NewIssueComment", out val) ? val : string.Empty;
-            UserName = opts.Substitutes.TryGetValue("IssueUser", out val) ? val : string.Empty;
-            Alias = opts.Substitutes.TryGetValue("IssueUserAlias", out val) ? val : string.Empty;
-            Type = opts.Substitutes.TryGetValue("RequestType", out val) && Enum.TryParse(val, out RequestType type)
+            IssueDescription = opts.Substitutes.TryGetValue(NotificationSubstitues.IssueDescription, out string val) ? val : string.Empty;
+            IssueCategory = opts.Substitutes.TryGetValue(NotificationSubstitues.IssueCategory, out val) ? val : string.Empty;
+            IssueStatus = opts.Substitutes.TryGetValue(NotificationSubstitues.IssueStatus, out val) ? val : string.Empty;
+            IssueSubject = opts.Substitutes.TryGetValue(NotificationSubstitues.IssueSubject, out val) ? val : string.Empty;
+            NewIssueComment = opts.Substitutes.TryGetValue(NotificationSubstitues.NewIssueComment, out val) ? val : string.Empty;
+            UserName = opts.Substitutes.TryGetValue(NotificationSubstitues.IssueUser, out val) ? val : string.Empty;
+            Alias = opts.Substitutes.TryGetValue(NotificationSubstitues.IssueUserAlias, out val) ? val : string.Empty;
+            Type = opts.Substitutes.TryGetValue(NotificationSubstitues.RequestType, out val) && Enum.TryParse(val, out RequestType type)
                 ? HumanizeReturnType(type)
                 : string.Empty;
+            if (opts.Substitutes.TryGetValue(NotificationSubstitues.PosterPath, out val) && val.HasValue())
+            {
+                PosterImage = $"https://image.tmdb.org/t/p/w300/{val.TrimStart('/')}";
+            }
+            else
+            {
+                PosterImage = string.Empty;
+            }
         }
 
-        private void LoadCommon(BaseRequest req, CustomizationSettings s, UserNotificationPreferences pref)
+        private void LoadCommon(BaseRequest req, CustomizationSettings s, UserNotificationPreferences pref, NotificationOptions opts)
         {
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s.ApplicationName;
             ApplicationUrl = s?.ApplicationUrl.HasValue() ?? false ? s.ApplicationUrl : string.Empty;
@@ -136,6 +153,18 @@ namespace Ombi.Notifications
             if (pref != null)
             {
                 UserPreference = pref.Value.HasValue() ? pref.Value : Alias;
+            }
+
+            if (opts.NotificationType == NotificationType.PartiallyAvailable)
+            {
+                if (opts.Substitutes.TryGetValue("Season", out var sNumber))
+                {
+                    PartiallyAvailableSeasonNumber = sNumber;
+                }
+                if (opts.Substitutes.TryGetValue("Episodes", out var epNumber))
+                {
+                    PartiallyAvailableEpisodeNumbers = epNumber;
+                }
             }
         }
 
@@ -220,6 +249,8 @@ namespace Ombi.Notifications
         public string AvailableDate { get; set; }
         public string RequestStatus { get; set; }
         public string ProviderId { get; set; }
+        public string PartiallyAvailableEpisodeNumbers { get; set; }
+        public string PartiallyAvailableSeasonNumber { get; set; }
 
         // System Defined
         private string LongDate => DateTime.Now.ToString("D");
@@ -259,6 +290,8 @@ namespace Ombi.Notifications
             { nameof(AvailableDate), AvailableDate },
             { nameof(RequestStatus), RequestStatus },
             { nameof(ProviderId), ProviderId },
+            { nameof(PartiallyAvailableEpisodeNumbers), PartiallyAvailableEpisodeNumbers },
+            { nameof(PartiallyAvailableSeasonNumber), PartiallyAvailableSeasonNumber },
         };
     }
 }

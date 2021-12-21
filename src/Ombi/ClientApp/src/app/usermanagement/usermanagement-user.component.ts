@@ -1,9 +1,10 @@
 ﻿import { ActivatedRoute, Router } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
-import { ICheckbox, ICustomizationSettings, INotificationAgent, INotificationPreferences, IRadarrProfile, IRadarrRootFolder, ISonarrProfile, ISonarrRootFolder, IUser, UserType } from "../interfaces";
+import { ICheckbox, ICustomizationSettings, INotificationAgent, INotificationPreferences, IRadarrProfile, IRadarrRootFolder, ISonarrProfile, ISonarrRootFolder, IUser, RequestLimitType, UserType } from "../interfaces";
 import { IdentityService, MessageService, RadarrService, SettingsService, SonarrService } from "../services";
 
 import { Clipboard } from '@angular/cdk/clipboard';
+import { CustomizationFacade } from "../state/customization";
 import { Location } from "@angular/common";
 
 @Component({
@@ -27,8 +28,10 @@ export class UserManagementUserComponent implements OnInit {
     public edit: boolean;
 
     public countries: string[];
+    public requestLimitTypes: RequestLimitType[];
+    public RequestLimitType = RequestLimitType;
 
-    private customization: ICustomizationSettings;
+    private appUrl: string = this.customizationFacade.appUrl();
     private accessToken: string;
 
     constructor(private identityService: IdentityService,
@@ -39,7 +42,9 @@ export class UserManagementUserComponent implements OnInit {
                 private sonarrService: SonarrService,
                 private radarrService: RadarrService,
                 private clipboard: Clipboard,
-                private location: Location) {
+                private location: Location,
+                private customizationFacade: CustomizationFacade,
+                ) {
 
                     this.route.params.subscribe((params: any) => {
                         if(params.id) {
@@ -53,7 +58,7 @@ export class UserManagementUserComponent implements OnInit {
                  }
 
     public ngOnInit() {
-
+        this.requestLimitTypes = [RequestLimitType.Day, RequestLimitType.Week, RequestLimitType.Month];
         this.identityService.getSupportedStreamingCountries().subscribe(x => this.countries = x);
         this.identityService.getAllAvailableClaims().subscribe(x => this.availableClaims = x);
         if(this.edit) {
@@ -61,13 +66,24 @@ export class UserManagementUserComponent implements OnInit {
         } else {
             this.identityService.getNotificationPreferences().subscribe(x => this.notificationPreferences = x);
         }
-        this.sonarrService.getQualityProfilesWithoutSettings().subscribe(x => this.sonarrQualities = x);
-        this.sonarrService.getRootFoldersWithoutSettings().subscribe(x => this.sonarrRootFolders = x);
-        this.radarrService.getQualityProfilesFromSettings().subscribe(x => this.radarrQualities = x);
-        this.radarrService.getRootFoldersFromSettings().subscribe(x => this.radarrRootFolders = x);
+        this.sonarrService.getQualityProfilesWithoutSettings().subscribe(x => {
+            this.sonarrQualities = x;
+            this.sonarrQualities.unshift({id: 0, name: "None"});
+        });
+        this.sonarrService.getRootFoldersWithoutSettings().subscribe(x => {
+            this.sonarrRootFolders = x;
+            this.sonarrRootFolders.unshift({id: 0, path: "None"});
+        });
+        this.radarrService.getQualityProfilesFromSettings().subscribe(x => {
+            this.radarrQualities = x;
+            this.radarrQualities.unshift({id: 0, name: "None"});
+        });
+        this.radarrService.getRootFoldersFromSettings().subscribe(x => {
+            this.radarrRootFolders = x;
+            this.radarrRootFolders.unshift({id: 0, path: "None"});
+        });
 
-        this.settingsService.getCustomization().subscribe(x => this.customization = x);
-        this.identityService.getAccessToken().subscribe(x => this.accessToken = x);
+        this.identityService.getUserAccessToken(this.userId).subscribe(x => this.accessToken = x);
 
         if(!this.edit) {
             this.user = {
@@ -175,6 +191,7 @@ export class UserManagementUserComponent implements OnInit {
             return;
         }
 
+
         this.identityService.updateUser(this.user).subscribe(x => {
             if (x.successful) {
                 this.identityService.updateNotificationPreferences(this.notificationPreferences).subscribe();
@@ -189,7 +206,7 @@ export class UserManagementUserComponent implements OnInit {
     }
 
     public async appLink() {
-        this.clipboard.copy(`ombi://${this.customization.applicationUrl}|${this.accessToken}`);
+        this.clipboard.copy(`ombi://${this.appUrl}|${this.accessToken}`);
         this.notificationService.send("Copied!");
     }
 

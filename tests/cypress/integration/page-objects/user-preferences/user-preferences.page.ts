@@ -18,17 +18,6 @@ class ProfileTab {
     }
 }
 
-class MobileTab {
-
-    get qrCode(): Cypress.Chainable<any> {
-        return cy.get('#qrCode');
-    }
-
-    get noQrCode(): Cypress.Chainable<any> {
-        return cy.get('#noQrCode');
-    }
-}
-
 class SecurityTab {
     get currentPassword(): Cypress.Chainable<any> {
         return cy.get('#currentPassword');
@@ -62,23 +51,17 @@ class UserPreferencesPage extends BasePage {
     }
 
     get profileTab(): Cypress.Chainable<any> {
-        return cy.get('[role="tab"]').eq(0);
+        return cy.get('#mat-tab-label-0-0');
     }
 
     get securityTab(): Cypress.Chainable<any> {
-        return cy.get('[role="tab"]').eq(1);
-    }
-
-    get preferencesTab(): Cypress.Chainable<any> {
-        return cy.get('[role="tab"]').eq(2);
-    }
-
-    get mobileTab(): Cypress.Chainable<any> {
-        return cy.get('[role="tab"]').eq(3);
+        cy.waitUntil(() => {
+            return cy.get('#mat-tab-label-0-1').should('be.visible');
+        });
+        return cy.get('#mat-tab-label-0-1');
     }
 
     profile = new ProfileTab();
-    mobile = new MobileTab();
     security = new SecurityTab();
 
     constructor() {

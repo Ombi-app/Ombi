@@ -68,6 +68,7 @@ using Ombi.Api.CloudService;
 using Ombi.Api.RottenTomatoes;
 using System.Net.Http;
 using Microsoft.Extensions.Logging;
+using Ombi.Core.Services;
 
 namespace Ombi.DependencyInjection
 {
@@ -79,10 +80,10 @@ namespace Ombi.DependencyInjection
             services.RegisterEngines();
             services.RegisterEnginesV2();
             services.RegisterApi();
+            services.RegisterHttp();
             services.RegisterServices();
             services.RegisterStore();
             services.RegisterJobs();
-            services.RegisterHttp();
         }
 
         public static void RegisterEngines(this IServiceCollection services)
@@ -123,7 +124,7 @@ namespace Ombi.DependencyInjection
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IPrincipal>(sp => sp.GetService<IHttpContextAccessor>().HttpContext.User);
             services.AddHttpClient("OmbiClient", client =>
-            {                
+            {
                 client.DefaultRequestHeaders.Add("User-Agent", $"Ombi/{runtimeVersion} (https://ombi.io/)");
             }).ConfigurePrimaryHttpMessageHandler(() =>
             {
@@ -172,11 +173,12 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IRottenTomatoesApi, RottenTomatoesApi>();
         }
 
-        public static void RegisterStore(this IServiceCollection services) { 
+        public static void RegisterStore(this IServiceCollection services)
+        {
             //services.AddDbContext<OmbiContext>();
             //services.AddDbContext<SettingsContext>();
             //services.AddDbContext<ExternalContext>();
-            
+
             //services.AddScoped<OmbiContext, OmbiContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
             //services.AddScoped<ISettingsContext, SettingsContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
             //services.AddScoped<ExternalContext, ExternalContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
@@ -186,7 +188,7 @@ namespace Ombi.DependencyInjection
             services.AddScoped<IEmbyContentRepository, EmbyContentRepository>();
             services.AddScoped<IJellyfinContentRepository, JellyfinContentRepository>();
             services.AddScoped<INotificationTemplatesRepository, NotificationTemplatesRepository>();
-            
+
             services.AddScoped<ITvRequestRepository, TvRequestRepository>();
             services.AddScoped<IMovieRequestRepository, MovieRequestRepository>();
             services.AddScoped<IMusicRequestRepository, MusicRequestRepository>();
@@ -206,6 +208,7 @@ namespace Ombi.DependencyInjection
             services.AddSingleton<ICacheService, CacheService>();
             services.AddSingleton<IMediaCacheService, MediaCacheService>();
             services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<IRequestLimitService, RequestLimitService>();
 
             services.AddTransient<IDiscordNotification, DiscordNotification>();
             services.AddTransient<IEmailNotification, EmailNotification>();

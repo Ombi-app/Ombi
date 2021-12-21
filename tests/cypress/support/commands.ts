@@ -23,6 +23,7 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
 import 'cypress-wait-until';
 
 Cypress.Commands.add("landingSettings", (enabled) => {
@@ -66,7 +67,7 @@ Cypress.Commands.add('removeLogin', () => {
 });
 
 Cypress.Commands.add('verifyNotification', (text) => {
-    cy.contains(text);
+    cy.contains(text, {timeout: 10000});
 });
 
 Cypress.Commands.add('createUser', (username, password, claims) => {

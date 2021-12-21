@@ -42,21 +42,51 @@
 
   <div class="col-md-3 col-sm-12">
     <label class="control-label"><h3>Request Limits</h3></label>
-    <div>
-      <mat-form-field>
-        <input id="movieRequestLimit" matInput placeholder="Movie Request Limit" [(ngModel)]="user.movieRequestLimit">
-      </mat-form-field>
+    <div class="row">
+      <div class="col-6">
+        <mat-form-field>
+          <input id="movieRequestLimit" matInput placeholder="Movie Request Limit" [(ngModel)]="user.movieRequestLimit">
+        </mat-form-field>
+      </div>
+      <div class="col-6">
+        <mat-label>Movie Request Limit Type</mat-label>
+        <mat-select id="movieRequestLimitType" [(value)]="user.movieRequestLimitType">
+          <mat-option *ngFor="let value of requestLimitTypes" [value]="value">
+            {{RequestLimitType[value]}}
+          </mat-option>
+        </mat-select>
+      </div>
     </div>
-    <div>
-      <mat-form-field>
-        <input id="episodeRequestLimit" matInput placeholder="Episode Request Limit" [(ngModel)]="user.episodeRequestLimit">
-      </mat-form-field>
+    <div class="row">
+      <div class="col-6">
+        <mat-form-field>
+          <input id="episodeRequestLimit" matInput placeholder="Episode Request Limit" [(ngModel)]="user.episodeRequestLimit">
+        </mat-form-field>
+      </div>
+      <div class="col-6">
+        <mat-label>Episode Request Limit Type</mat-label>
+        <mat-select  id="episodeRequestLimitType" [(value)]="user.episodeRequestLimitType">
+          <mat-option *ngFor="let value of requestLimitTypes" [value]="value">
+            {{RequestLimitType[value]}}
+          </mat-option>
+        </mat-select>
+      </div>
     </div>
-    <div>
+    <div class="row">
+    <div class="col-6">
       <mat-form-field>
         <input id="musicRequestLimit" matInput placeholder="Music Request Limit" [(ngModel)]="user.musicRequestLimit">
       </mat-form-field>
     </div>
+    <div class="col-6">
+      <mat-label>Music Request Limit Type</mat-label>
+      <mat-select  id="musicRequestLimitType" [(value)]="user.musicRequestLimitType">
+        <mat-option *ngFor="let value of requestLimitTypes" [value]="value">
+          {{RequestLimitType[value]}}
+        </mat-option>
+      </mat-select>
+    </div>
+  </div>
     <label class="control-label"><h3>Quality & Root Path Preferences</h3></label>
     <mat-form-field *ngIf="sonarrQualities">
       <mat-label>Sonarr Quality Profile</mat-label>
@@ -152,7 +182,7 @@
       <button type="button" data-test="deletebtn" mat-raised-button color="warn" class="btn btn-danger-outline" (click)="delete()">Delete</button>
       <button type="button" style="float:right;" mat-raised-button color="primary" class="btn btn-info-outline" (click)="resetPassword()" matTooltip="You need your SMTP settings setup">Send
         Reset Password Link</button>
-        <button *ngIf="customization.applicationUrl" type="button" mat-raised-button color="accent" class="btn btn-info-outline" (click)="appLink()" matTooltip="Send this link to the user and they can then open the app and directly login">Copy users App Link</button>
+        <button *ngIf="appUrl" type="button" mat-raised-button color="accent" class="btn btn-info-outline" (click)="appLink()" matTooltip="Send this link to the user and they can then open the app and directly login">Copy users App Link</button>
 
     </div>
 

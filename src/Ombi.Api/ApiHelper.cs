@@ -66,6 +66,8 @@ namespace Ombi.Api
                 startingTag = builder.Query.Contains("?") ? "&" : "?";
             }
 
+            value = Uri.EscapeDataString(value);
+            
             builder.Query = hasQuery
                 ? $"{builder.Query}{startingTag}{parameter}={value}"
                 : $"{startingTag}{parameter}={value}";

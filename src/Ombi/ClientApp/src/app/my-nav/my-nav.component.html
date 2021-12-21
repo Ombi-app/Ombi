@@ -9,8 +9,7 @@
             <span  mat-list-item  *ngFor="let nav of navItems">
 
                 <div class="menu-spacing mat-ripple" mat-ripple *ngIf="(nav.requiresAdmin && isAdmin || !nav.requiresAdmin) && nav.enabled">
-
-
+                    <!-- External -->
                     <a [disableRipple]="true" mat-list-item  id="{{nav.id}}" *ngIf="nav.externalLink" [href]="nav.link" target="_blank"
                         matTooltip="{{nav.toolTipMessage | translate}}" matTooltipPosition="right"
                         [routerLinkActive]="'active-list-item'">
@@ -19,7 +18,12 @@
                             style="padding-left: 5px; padding-right: 5px;" aria-hidden="true"></i>
                         &nbsp;{{nav.name | translate}}
                     </a>
-                    <a [disableRipple]="true"  mat-list-item  id="{{nav.id}}" *ngIf="!nav.externalLink" [routerLink]="nav.link" [style]="nav.color"
+
+                    <!-- Internal -->
+                    <ng-container *ngIf="nav.id === 'nav-discover'">
+                        <em class="advanced-search fa-lg fas fa-filter " (click)="openAdvancedSearch()" [routerLinkActive]="'active-advanced'" [routerLink]="nav.link"></em>
+                    </ng-container>
+                    <a [disableRipple]="true" mat-list-item id="{{nav.id}}" *ngIf="!nav.externalLink" [routerLink]="nav.link" [style]="nav.style"
                         [routerLinkActive]="'active-list-item'">
 
                         <i class="fa-lg {{nav.icon}} icon-spacing"></i>
@@ -28,7 +32,7 @@
                 </div>
             </span>
 
-            <span mat-list-item  >
+            <span mat-list-item >
             <a mat-list-item [disableRipple]="true" id="nav-openMobile" [routerLinkActive]="'active-list-item'"
                 aria-label="Toggle sidenav" (click)="openMobileApp($event);">
                 <i class="fa-lg fas fa-mobile-alt  icon-spacing"></i>
@@ -53,7 +57,7 @@
         </div>
     </mat-sidenav>
 
-    <mat-sidenav-content class="content-container">
+    <mat-sidenav-content autosize class="content-container">
         <mat-toolbar color="primary" class="top-bar-container">
             <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
                 *ngIf="isHandset$ | async">
@@ -78,7 +82,6 @@
                         <mat-slide-toggle id="filterMusic" class="mat-menu-item slide-menu" [checked]="searchFilter.music"
                             (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Music)">
                             {{ 'NavigationBar.Filter.Music' | translate}}</mat-slide-toggle>
-                            <button class="advanced-search"  mat-raised-button color="accent" (click)="openAdvancedSearch()">Advanced Search</button>
                         <!-- <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.people"
                             (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.People)">
                             {{ 'NavigationBar.Filter.People' | translate}}</mat-slide-toggle> -->
@@ -86,8 +89,10 @@
             </div>
             <div class="profile-block">
                 <a routerLink="/user-preferences">
-                <div class="profile-username" data-test="profile-username">{{username}}</div>
-                <div class="profile-img" data-test="profile-image"><img [src]="getUserImage()" /></div>
+                <div class="profile-username" data-test="profile-username">{{userName}}</div>
+                <div class="profile-img" data-test="profile-image">
+                    <img [src]="userProfileImageUrl" (error)="onProfileImageError()" >
+                </div>
             </a>
             </div>
 

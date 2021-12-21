@@ -41,7 +41,7 @@ export class TvRequestsPanelComponent {
             });
             this.messageService.send("Request has been approved", "Ok");
         } else {
-            this.messageService.send(result.errorMessage, "Ok");
+            this.messageService.sendRequestEngineResultError(result);
         }
     }
 
@@ -104,7 +104,7 @@ export class TvRequestsPanelComponent {
             if (result.result) {
                 this.messageService.send(result.message ? result.message : "Successfully Re-processed the request", "Ok");
             } else {
-                this.messageService.send(result.errorMessage, "Ok");
+                this.messageService.sendRequestEngineResultError(result);
             }
         });
     }

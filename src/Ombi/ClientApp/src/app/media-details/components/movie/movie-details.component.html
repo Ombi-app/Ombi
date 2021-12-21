@@ -143,7 +143,7 @@
                     <div class="row" *ngIf="movie.videos?.results?.length > 0">
                         <div class="col-12">
                             <mat-card class="mat-elevation-z8">
-                                <mat-card-header>Trailers</mat-card-header>
+                                <mat-card-header>{{'MediaDetails.Trailers' | translate}}</mat-card-header>
                                 <mat-card-content>
                                     <p-carousel class="no-indicator" [numVisible]="2" [numScroll]="10" [page]="0" [value]="movie.videos?.results">
                                         <ng-template let-result pTemplate="item">

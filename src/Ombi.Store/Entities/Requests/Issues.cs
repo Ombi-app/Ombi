@@ -25,6 +25,8 @@ namespace Ombi.Store.Entities.Requests
         public string UserReportedId { get; set; }
         public OmbiUser UserReported { get; set; }
         public List<IssueComments> Comments { get; set; }
+        [NotMapped]
+        public string PosterPath { get; set; }
     }
 
     public enum IssueStatus

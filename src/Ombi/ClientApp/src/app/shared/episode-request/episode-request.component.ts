@@ -3,6 +3,7 @@ import { MatCheckboxChange } from "@angular/material/checkbox";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { ISearchTvResultV2 } from "../../interfaces/ISearchTvResultV2";
 import { MessageService } from "../../services";
+import { TranslateService } from "@ngx-translate/core";
 import { ISeasonsViewModel, IEpisodesRequests, INewSeasonRequests, ITvRequestViewModelV2, IRequestEngineResult, RequestType } from "../../interfaces";
 import { RequestServiceV2 } from "../../services/requestV2.service";
 import { AdminRequestDialogComponent } from "../admin-request-dialog/admin-request-dialog.component";
@@ -23,7 +24,8 @@ export class EpisodeRequestComponent {
     }
 
     constructor(public dialogRef: MatDialogRef<EpisodeRequestComponent>, @Inject(MAT_DIALOG_DATA) public data: EpisodeRequestData,
-        private requestService: RequestServiceV2, private notificationService: MessageService, private dialog: MatDialog) { }
+        private requestService: RequestServiceV2, private notificationService: MessageService, private dialog: MatDialog, 
+        private translate: TranslateService) { }
 
 
     public async submitRequests() {
@@ -35,7 +37,7 @@ export class EpisodeRequestComponent {
         });
 
         if (!selected && !this.data.series.requestAll && !this.data.series.firstSeason && !this.data.series.latestSeason) {
-            this.notificationService.send("You need to select some episodes!", "OK");
+            this.notificationService.send(this.translate.instant("Requests.NeedToSelectEpisodes"), "OK");
             return;
         }
 
@@ -43,7 +45,7 @@ export class EpisodeRequestComponent {
 
         const viewModel = <ITvRequestViewModelV2>{
             firstSeason: this.data.series.firstSeason, latestSeason: this.data.series.latestSeason, requestAll: this.data.series.requestAll, theMovieDbId: this.data.series.id,
-            requestOnBehalf: this.data.requestOnBehalf
+            requestOnBehalf: this.data.requestOnBehalf, languageCode: this.translate.currentLang
         };
         viewModel.seasons = [];
         this.data.series.seasonRequests.forEach((season) => {
@@ -123,7 +125,7 @@ export class EpisodeRequestComponent {
     private postRequest(requestResult: IRequestEngineResult) {
         if (requestResult.result) {
             this.notificationService.send(
-                `Request for ${this.data.series.title} has been added successfully`);
+                this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.data.series.title }));
 
             this.data.series.seasonRequests.forEach((season) => {
                 season.episodes.forEach((ep) => {
@@ -132,7 +134,7 @@ export class EpisodeRequestComponent {
             });
 
         } else {
-            this.notificationService.send(requestResult.errorMessage ? requestResult.errorMessage : requestResult.message);
+            this.notificationService.sendRequestEngineResultError(requestResult);
         }
     }
 }

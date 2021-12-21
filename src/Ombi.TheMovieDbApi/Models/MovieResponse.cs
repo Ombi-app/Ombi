@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -74,10 +75,27 @@ namespace Ombi.TheMovieDbApi.Models
 
     public class ReleaseDate
     {
-        public string Certification { get; set; }
         public string iso_639_1 { get; set; }
-        public string note { get; set; }
-        public DateTime release_date { get; set; }
+        public string release_date { get; set; }
+        [JsonIgnore]
+        public DateTime ReleaseDateTime
+        {
+            get
+            {
+                if (DateTime.TryParse(release_date,out var formattedDate))
+                {
+                    return formattedDate;
+                }
+
+                if (DateTime.TryParseExact(release_date, "yyyy-MM-dd hh:mm:ss UTC", 
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None, out var excatDate))
+                {
+                    return excatDate;
+                }
+                return DateTime.MinValue;
+            }
+        }
         public int Type { get; set; }
     }
 }

@@ -618,10 +618,20 @@ namespace Ombi.Core.Engine
         /// </summary>
         /// <param name="requestId">The request identifier.</param>
         /// <returns></returns>
-        public async Task RemoveAlbumRequest(int requestId)
+        public async Task<RequestEngineResult> RemoveAlbumRequest(int requestId)
         {
             var request = await MusicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == requestId);
+            
+            var result = await CheckCanManageRequest(request);
+            if (result.IsError)
+                return result;
+
             await MusicRepository.Delete(request);
+
+            return new RequestEngineResult
+            {
+                Result = true,
+            };
         }
 
         public async Task<bool> UserHasRequest(string userId)
@@ -647,49 +657,6 @@ namespace Ombi.Core.Engine
             {
                 Message = "Request is now unavailable",
                 Result = true
-            };
-        }
-        public async Task<RequestQuotaCountModel> GetRemainingRequests(OmbiUser user)
-        {
-            if (user == null)
-            {
-                user = await GetUser();
-
-                // If user is still null after attempting to get the logged in user, return null.
-                if (user == null)
-                {
-                    return null;
-                }
-            }
-
-            int limit = user.MusicRequestLimit ?? 0;
-
-            if (limit <= 0)
-            {
-                return new RequestQuotaCountModel()
-                {
-                    HasLimit = false,
-                    Limit = 0,
-                    Remaining = 0,
-                    NextRequest = DateTime.Now,
-                };
-            }
-
-            IQueryable<RequestLog> log = _requestLog.GetAll().Where(x => x.UserId == user.Id && x.RequestType == RequestType.Album);
-
-            int count = limit - await log.CountAsync(x => x.RequestDate >= DateTime.UtcNow.AddDays(-7));
-
-            DateTime oldestRequestedAt = await log.Where(x => x.RequestDate >= DateTime.UtcNow.AddDays(-7))
-                .OrderBy(x => x.RequestDate)
-                .Select(x => x.RequestDate)
-                .FirstOrDefaultAsync();
-
-            return new RequestQuotaCountModel()
-            {
-                HasLimit = true,
-                Limit = limit,
-                Remaining = count,
-                NextRequest = DateTime.SpecifyKind(oldestRequestedAt.AddDays(7), DateTimeKind.Utc),
             };
         }
 

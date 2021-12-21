@@ -13,13 +13,14 @@ import { AuthService } from "./auth/auth.service";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BrowserModule } from "@angular/platform-browser";
 import { ButtonModule } from "primeng/button";
+import { CUSTOMIZATION_INITIALIZER } from "./state/customization/customization-initializer";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { CookieComponent } from "./auth/cookie.component";
 import { CookieService } from "ng2-cookies";
 import { CustomPageComponent } from "./custompage/custompage.component";
+import { CustomizationState } from "./state/customization/customization.state";
 import { DataViewModule } from "primeng/dataview";
 import { DialogModule } from "primeng/dialog";
-import { FilterService } from "./discover/services/filter-service";
 import { JwtModule } from "@auth0/angular-jwt";
 import { LandingPageComponent } from "./landingpage/landingpage.component";
 import { LandingPageService } from "./services";
@@ -47,6 +48,8 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { MyNavComponent } from './my-nav/my-nav.component';
 import { NavSearchComponent } from "./my-nav/nav-search.component";
 import { NgModule } from "@angular/core";
+import { NgxsModule } from '@ngxs/store';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NotificationService } from "./services";
 import { OverlayModule } from "@angular/cdk/overlay";
 import { OverlayPanelModule } from "primeng/overlaypanel";
@@ -61,38 +64,10 @@ import { TokenResetPasswordComponent } from "./login/tokenresetpassword.componen
 import { TooltipModule } from "primeng/tooltip";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { UnauthorizedInterceptor } from "./auth/unauthorized.interceptor";
-
-// Components
-
-
-
-
-
-
-
-
-
-
-
-// Services
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import { environment } from "../environments/environment";
+import { MatPaginatorIntl } from "@angular/material/paginator";
+import { TranslateService } from "@ngx-translate/core";
+import { MatPaginatorI18n } from "./localization/MatPaginatorI18n";
 
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
@@ -186,7 +161,14 @@ export function JwtTokenGetter() {
             },
         }),
         SidebarModule,
-        MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, LayoutModule, MatSlideToggleModule
+        MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, LayoutModule, MatSlideToggleModule,
+        NgxsModule.forRoot([CustomizationState], {
+            developmentMode: !environment.production,
+        }),
+        ...environment.production ? [] : 
+        [
+            NgxsReduxDevtoolsPluginModule.forRoot(),
+        ]
     ],
     declarations: [
         AppComponent,
@@ -222,8 +204,8 @@ export function JwtTokenGetter() {
         MessageService,
         StorageService,
         RequestService,
-        FilterService,
         SignalRNotificationService,
+        CUSTOMIZATION_INITIALIZER,
         {
             provide: APP_BASE_HREF,
             useValue: window["baseHref"]
@@ -232,7 +214,11 @@ export function JwtTokenGetter() {
             provide: HTTP_INTERCEPTORS,
             useClass: UnauthorizedInterceptor,
             multi: true
-        }
+        },
+        {
+            provide: MatPaginatorIntl, deps: [TranslateService],
+            useFactory: (translateService: TranslateService) => new MatPaginatorI18n(translateService).getPaginatorIntl()
+        },
        ],
     bootstrap: [AppComponent],
 })

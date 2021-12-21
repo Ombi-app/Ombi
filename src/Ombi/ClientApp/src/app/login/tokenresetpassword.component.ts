@@ -1,15 +1,15 @@
-﻿import { PlatformLocation } from "@angular/common";
+﻿import { ActivatedRoute, Params } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { DomSanitizer } from "@angular/platform-browser";
-import { Router } from "@angular/router";
-import { ActivatedRoute, Params } from "@angular/router";
+import { IdentityService, ImageService } from "../services";
 
+import { CustomizationFacade } from "../state/customization";
+import { DomSanitizer } from "@angular/platform-browser";
 import { ICustomizationSettings } from "../interfaces";
 import { IResetPasswordToken } from "../interfaces";
-import { IdentityService, ImageService } from "../services";
 import { NotificationService } from "../services";
-import { SettingsService } from "../services";
+import { PlatformLocation } from "@angular/common";
+import { Router } from "@angular/router";
 
 @Component({
     templateUrl: "./tokenresetpassword.component.html",
@@ -23,8 +23,9 @@ export class TokenResetPasswordComponent implements OnInit {
     public baseUrl: string;
 
     constructor(private identityService: IdentityService, private router: Router, private route: ActivatedRoute, private notify: NotificationService,
-                private fb: FormBuilder, private settingsService: SettingsService, private location: PlatformLocation,
-                private images: ImageService, private sanitizer: DomSanitizer) {
+                private fb: FormBuilder, private location: PlatformLocation, private images: ImageService,
+                private sanitizer: DomSanitizer, private customizationFacade: CustomizationFacade,
+                ) {
 
         this.route.queryParams
             .subscribe((params: Params) => {
@@ -45,7 +46,7 @@ export class TokenResetPasswordComponent implements OnInit {
         if (base.length > 1) {
             this.baseUrl = base;
         }
-        this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
+        this.customizationFacade.settings$().subscribe(x => this.customizationSettings = x);
     }
 
     public onSubmit(form: FormGroup) {

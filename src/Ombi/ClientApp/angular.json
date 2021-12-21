@@ -82,7 +82,13 @@
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.hmr.ts"
                 }
-              ]
+              ],
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
           }
         },

@@ -6,10 +6,6 @@ namespace Ombi.Api.Plex.Models
     {
         public int size { get; set; }
         public int totalSize { get; set; }
-        public bool allowSync { get; set; }
-        public string identifier { get; set; }
-        public string mediaTagPrefix { get; set; }
-        public int mediaTagVersion { get; set; }
         public string title1 { get; set; }
         public List<Directory> Directory { get; set; }
         public string art { get; set; }

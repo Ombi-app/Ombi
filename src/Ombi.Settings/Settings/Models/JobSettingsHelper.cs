@@ -1,5 +1,4 @@
-﻿using System;
-using Ombi.Helpers;
+﻿using Ombi.Helpers;
 using Quartz;
 
 namespace Ombi.Settings.Settings.Models
@@ -18,7 +17,12 @@ namespace Ombi.Settings.Settings.Models
 
         public static string EmbyContent(JobSettings s)
         {
-            return ValidateCron(Get(s.EmbyContentSync, Cron.Hourly(5)));
+            return ValidateCron(Get(s.EmbyContentSync, Cron.Daily(2)));
+        }
+
+        public static string EmbyRecentlyAddedSync(JobSettings s)
+        {
+            return ValidateCron(Get(s.EmbyRecentlyAddedSync, Cron.Hourly(30)));
         }
 
         public static string JellyfinContent(JobSettings s)

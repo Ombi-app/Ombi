@@ -2,6 +2,7 @@ import { Component, Inject } from "@angular/core";
 import { IDenyDialogData } from "../interfaces/interfaces";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { RequestService, MessageService } from "../../../../services";
+import { TranslateService } from "@ngx-translate/core";
 import { RequestType, IRequestEngineResult } from "../../../../interfaces";
 
 @Component({
@@ -13,7 +14,8 @@ export class DenyDialogComponent {
         public dialogRef: MatDialogRef<DenyDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: IDenyDialogData,
         private requestService: RequestService,
-        public messageService: MessageService) {}
+        public messageService: MessageService,
+        private translate: TranslateService) {}
 
         public denyReason: string;
 
@@ -30,10 +32,10 @@ export class DenyDialogComponent {
             }
 
             if (result.result) {
-                this.messageService.send("Denied Request", "Ok");
+                this.messageService.send(this.translate.instant("Requests.DeniedRequest"), "Ok");
                 this.data.denied = true;
             } else {
-                this.messageService.send(result.errorMessage, "Ok");
+                this.messageService.sendRequestEngineResultError(result);
                 this.data.denied = false;
             }
 

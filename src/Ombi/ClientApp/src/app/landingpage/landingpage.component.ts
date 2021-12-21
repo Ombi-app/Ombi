@@ -10,6 +10,8 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { ImageService } from "../services";
 
 import { fadeInOutAnimation } from "../animations/fadeinout";
+import { CustomizationFacade } from "../state/customization";
+import { ThousandShortPipe } from "../pipes/ThousandShortPipe";
 
 @Component({
     templateUrl: "./landingpage.component.html",
@@ -29,10 +31,11 @@ export class LandingPageComponent implements OnDestroy, OnInit {
 
     constructor(private settingsService: SettingsService,
                 private images: ImageService, private sanitizer: DomSanitizer, private landingPageService: LandingPageService,
+                private customizationFacade: CustomizationFacade,
                 @Inject(APP_BASE_HREF) href :string) { this.href = href }
 
     public ngOnInit() {
-        this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
+        this.customizationFacade.settings$().subscribe(x => this.customizationSettings = x);
         this.settingsService.getLandingPage().subscribe(x => this.landingPageSettings = x);
         this.images.getRandomBackground().subscribe(x => {
             this.background = this.sanitizer.bypassSecurityTrustStyle("linear-gradient(-10deg, transparent 19%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 79%, transparent 80%), url(" + x.url + ")");

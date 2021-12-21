@@ -21,7 +21,7 @@ export class SearchV2Service extends ServiceHelpers {
     }
 
     public multiSearch(searchTerm: string, filter: SearchFilter): Observable<IMultiSearchResult[]> {
-        return this.http.post<IMultiSearchResult[]>(`${this.url}/multi/${searchTerm}`, filter);
+        return this.http.post<IMultiSearchResult[]>(`${this.url}/multi/${encodeURIComponent(searchTerm)}`, filter);
     }
     public getFullMovieDetails(theMovieDbId: number): Observable<ISearchMovieResultV2> {
         return this.http.get<ISearchMovieResultV2>(`${this.url}/Movie/${theMovieDbId}`);
@@ -130,6 +130,10 @@ export class SearchV2Service extends ServiceHelpers {
 
     public getMoviesByActor(actorId: number): Observable<IActorCredits> {
         return this.http.get<IActorCredits>(`${this.url}/actor/${actorId}/movie`, { headers: this.headers });
+    }
+
+    public getTvByActor(actorId: number): Observable<IActorCredits> {
+        return this.http.get<IActorCredits>(`${this.url}/actor/${actorId}/tv`, { headers: this.headers });
     }
 
     public getArtistInformation(artistId: string): Observable<IArtistSearchResult> {

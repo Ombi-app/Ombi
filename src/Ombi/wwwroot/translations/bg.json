@@ -14,6 +14,8 @@
     "Common": {
         "ContinueButton": "Продължаване",
         "Available": "Налично",
+        "Approved": "Approved",
+        "Pending": "Pending",
         "PartiallyAvailable": "Частично налично",
         "Monitored": "Наблюдавано",
         "NotAvailable": "Не е налично",
@@ -22,6 +24,7 @@
         "RequestDenied": "Заявката е отказана",
         "NotRequested": "Не е заявено",
         "Requested": "Заявено",
+        "Search": "Търсене",
         "Request": "Заявка",
         "Denied": "Отказано",
         "Approve": "Одобряване",
@@ -32,9 +35,10 @@
         },
         "Cancel": "Отказ",
         "Submit": "Потвърждаване",
-        "Search": "Търсене",
+        "Update": "Update",
+        "tvShow": "Тв предаване",
         "movie": "Филм",
-        "tvShow": "Тв предаване"
+        "album": "Album"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "Електронна поща",
@@ -50,6 +54,9 @@
         "OfflineHeading": "В момента извън линия",
         "OfflineParagraph": "Медийният сървър в момента е извън линия.",
         "CheckPageForUpdates": "Проверете тази страница за последни новини на сайта."
+    },
+    "ErrorPages": {
+        "NotFound": "Page not found"
     },
     "NavigationBar": {
         "Discover": "Открийте",
@@ -89,12 +96,15 @@
         "MoviesTab": "Филми",
         "TvTab": "Тв предавания",
         "MusicTab": "Музика",
+        "AdvancedSearch": "Можете да попълните някое от долупосочените, за да откриете нова медия. Всички резултати са сортирани по популярност",
+        "AdvancedSearchHeader": "Advanced Search",
         "Suggestions": "Предложения",
         "NoResults": "Съжаляваме, не намерихме никакви резултати!",
         "DigitalDate": "Дигитално издание: {{date}}",
         "TheatricalRelease": "Кино премиера: {{date}}",
         "ViewOnPlex": "Преглед в Plex",
         "ViewOnEmby": "Преглед в Emby",
+        "ViewOnJellyfin": "Преглед в Jellyfin",
         "RequestAdded": "Заявката за {{title}} е успешно добавена",
         "Similar": "Подобни",
         "Refine": "Уточнете",
@@ -122,8 +132,12 @@
             "Season": "Сезон {{seasonNumber}}",
             "SelectAllInSeason": "Избиране на всичко в сезона {{seasonNumber}}"
         },
-        "AdvancedSearch": "Можете да попълните някое от долупосочените, за да откриете нова медия. Всички резултати са сортирани по популярност",
-        "ViewOnJellyfin": "Преглед в Jellyfin"
+        "AdvancedSearchInstructions": "Please choose what type of media you are searching for:",
+        "YearOfRelease": "Year of Release",
+        "SearchGenre": "Search Genre",
+        "SearchKeyword": "Search Keyword",
+        "SearchProvider": "Search Provider",
+        "KeywordSearchingDisclaimer": "Please note that Keyword Searching is very hit and miss due to the inconsistent data in TheMovieDb"
     },
     "Requests": {
         "Title": "Заявки",
@@ -151,6 +165,7 @@
         "Remove": "Премахване",
         "Deny": "Отказване",
         "DenyReason": "Причина за отхвърляне",
+        "DeniedReason": "Причина за отхвърляне",
         "Season": "Сезон",
         "GridTitle": "Заглавие",
         "AirDate": "Дата на излъчване",
@@ -185,17 +200,42 @@
             "Delete": "Изтриване на заявка",
             "Approve": "Одобряване на заявка",
             "ChangeAvailability": "Маркиране като налично",
-            "Approved": "Избраните елементи са одобрени успешно",
-            "Deleted": "Избраните елементи са изтрити успешно"
+            "Deleted": "Избраните елементи са изтрити успешно",
+            "Approved": "Избраните елементи са одобрени успешно"
         },
-        "DeniedReason": "Причина за отхвърляне"
+        "SuccessfullyApproved": "Successfully Approved",
+        "SuccessfullyDeleted": "Request successfully deleted",
+        "NowAvailable": "Request is now available",
+        "NowUnavailable": "Request is now unavailable",
+        "SuccessfullyReprocessed": "Successfully Re-processed the request",
+        "DeniedRequest": "Denied Request",
+        "RequestCollection": "Request Collection",
+        "CollectionSuccesfullyAdded": "The collection {{name}} has been successfully added!",
+        "NeedToSelectEpisodes": "You need to select some episodes!",
+        "RequestAddedSuccessfully": "Request for {{title}} has been added successfully",
+        "ErrorCodes": {
+            "AlreadyRequested": "This has already been requested",
+            "EpisodesAlreadyRequested": "We already have episodes requested from this series",
+            "NoPermissionsOnBehalf": "You do not have the correct permissions to request on behalf of users!",
+            "NoPermissions": "You do not have the correct permissions!",
+            "RequestDoesNotExist": "Request does not exist",
+            "ChildRequestDoesNotExist": "Child Request does not exist",
+            "NoPermissionsRequestMovie": "You do not have permissions to Request a Movie",
+            "NoPermissionsRequestTV": "You do not have permissions to Request a TV Show",
+            "NoPermissionsRequestAlbum": "You do not have permissions to Request an Album",
+            "MovieRequestQuotaExceeded": "You have exceeded your Movie request quota!",
+            "TvRequestQuotaExceeded": "You have exceeded your Episode request quota!",
+            "AlbumRequestQuotaExceeded": "You have exceeded your Album request quota!"
+        }
     },
     "Issues": {
         "Title": "Проблеми",
+        "IssuesForTitle": "Issues for {{title}}",
         "PendingTitle": "Нерешени проблеми",
         "InProgressTitle": "Проблеми в процес на изпълнение",
         "ResolvedTitle": "Решени проблеми",
         "ColumnTitle": "Заглавие",
+        "Count": "Count",
         "Category": "Категория",
         "Status": "Състояние",
         "Details": "Подробности",
@@ -223,14 +263,18 @@
         "Delete": "Изтриване на проблем",
         "DeletedIssue": "Проблемът е изтрит",
         "Chat": "Чат",
-        "Requested": "Заявено"
+        "EnterYourMessage": "Enter Your Message",
+        "Requested": "Заявено",
+        "UserOnDate": "{{user}} on {{date}}"
     },
     "Filter": {
         "ClearFilter": "Изчистване на филтъра",
         "FilterHeaderAvailability": "Наличност",
         "FilterHeaderRequestStatus": "Състояние",
         "Approved": "Одобрени",
-        "PendingApproval": "Чака одобрение"
+        "PendingApproval": "Чака одобрение",
+        "WatchProviders": "Watch Providers",
+        "Keywords": "Keywords"
     },
     "UserManagment": {
         "TvRemaining": "Телевизия: {{remaining}}/{{total}} оставащи",
@@ -246,6 +290,7 @@
     },
     "MediaDetails": {
         "Denied": "Отказано",
+        "Trailers": "Trailers",
         "RecommendationsTitle": "Препоръчани",
         "SimilarTitle": "Подобни",
         "VideosTitle": "Видеоклипове",
@@ -256,23 +301,43 @@
         "ViewCollection": "Преглед на колекцията",
         "NotEnoughInfo": "За съжаление все още няма достатъчно информация за това предаване!",
         "AdvancedOptions": "Разширени настройки",
+        "AutoApproveOptions": "You can configure the request here, once requested it will be sent to your DVR application and will be auto approved! Please note, this is optional, just press Request to skip!",
+        "AutoApproveOptionsTv": "You can configure the request here, once requested it will be sent to your DVR application and will be auto approved! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it!  Please note, this is optional, just press Request to skip!",
+        "AutoApproveOptionsTvShort": "You can configure the request here, once requested it will be sent to your DVR application! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it! Please note, this is optional, just press Request to skip!",
         "QualityProfilesSelect": "Изберете профил на качеството",
         "RootFolderSelect": "Изберете основна папка",
-        "Status": "Състояние",
-        "Availability": "Наличност",
+        "LanguageProfileSelect": "Изберете езиков профил",
+        "Status": "Status:",
+        "StatusValues": {
+            "Rumored": "Rumored",
+            "Planned": "Planned",
+            "In Production": "In Production",
+            "Post Production": "Post Production",
+            "Released": "Released",
+            "Running": "Running",
+            "Returning Series": "Returning Series",
+            "Ended": "Ended",
+            "Canceled": "Canceled"
+        },
+        "Seasons": "Seasons:",
+        "Episodes": "Episodes:",
+        "Availability": "Availability:",
         "RequestStatus": "Състояние на заявката",
-        "Quality": "Качество",
-        "RootFolderOverride": "Ръчно задаване на основната папка",
-        "QualityOverride": "Ръчно задаване на качеството",
-        "Genres": "Жанрове",
-        "TheatricalRelease": "Кино премиера",
-        "DigitalRelease": "Дигитална версия",
-        "Votes": "Гласове",
-        "Runtime": "Продължителност",
+        "Quality": "Quality:",
+        "RootFolderOverride": "Root Folder Override:",
+        "QualityOverride": "Quality Override:",
+        "Network": "Network:",
+        "GenresLabel": "Genres:",
+        "Genres": "Genres",
+        "FirstAired": "First Aired:",
+        "TheatricalRelease": "Release:",
+        "DigitalRelease": "Digital Release:",
+        "Votes": "Votes:",
+        "Runtime": "Runtime:",
         "Minutes": "{{runtime}} Минути",
-        "Revenue": "Приходи",
-        "Budget": "Бюджет",
-        "Keywords": "Ключови думи/тагове",
+        "Revenue": "Revenue:",
+        "Budget": "Budget:",
+        "Keywords": "Keywords/Tags:",
         "Casts": {
             "CastTitle": "В ролите"
         },
@@ -280,23 +345,32 @@
             "AllSeasonsTooltip": "Това ще заяви всеки сезон на това предаване",
             "FirstSeasonTooltip": "Това ще заяви само първия сезон на това предаване",
             "LatestSeasonTooltip": "Това ще заяви само последния сезон на това предаване",
-            "NoEpisodes": "За съжаление все още няма данни за епизоди на това предаване!"
+            "NoEpisodes": "За съжаление все още няма данни за епизоди на това предаване!",
+            "SeasonNumber": "Season {{number}}"
         },
-        "AutoApproveOptions": "Можете да конфигурирате заявката си тук. След като бъде създадена, тя ще бъде изпратена до вашето записващо приложение (DVR) и ще бъде автоматично одобрена! Моля, обърнете внимание, че тази стъпка не е задължителна и можете да натиснете бутона Заявка за да я пропуснете!",
-        "AutoApproveOptionsTv": "Можете да конфигурирате заявката си тук. След като бъде създадена, тя ще бъде изпратена до вашето записващо приложение (DVR) и ще бъде автоматично одобрена! Ако заявката вече е обработена от Sonarr, програмата няма да промени основната папка или профила на качеството ако сте ги задали. Моля, обърнете внимание, че тази стъпка не е задължителна и можете да натиснете бутона Заявка за да я пропуснете!",
-        "AutoApproveOptionsTvShort": "Можете да конфигурирате заявката си тук. След като бъде създадена, тя ще бъде изпратена до вашето записващо приложение (DVR)! Ако заявката вече е обработена от Sonarr, програмата няма да промени основната папка или профила на качеството ако сте ги задали. Моля, обърнете внимание, че тази стъпка не е задължителна и можете да натиснете бутона Заявка за да я пропуснете!",
-        "LanguageProfileSelect": "Изберете езиков профил",
-        "PleaseSelectUser": "Моля, изберете потребител",
-        "RadarrConfiguration": "Конфигурация на Radarr",
-        "ReProcessRequest": "Повтаряне на заявка",
-        "RequestOnBehalf": "Заявете от името на",
         "SonarrConfiguration": "Конфигурация на Sonarr",
-        "StreamingOn": "Поточното изпълнение е включено"
+        "RadarrConfiguration": "Конфигурация на Radarr",
+        "RequestOnBehalf": "Заявете от името на",
+        "PleaseSelectUser": "Моля, изберете потребител",
+        "StreamingOn": "Streaming On:",
+        "RequestedBy": "Requested By:",
+        "RequestedByOn": "Requested By {{user}} on {{date}}",
+        "RequestDate": "Request Date:",
+        "DeniedReason": "Denied Reason:",
+        "ReProcessRequest": "Повтаряне на заявка",
+        "Music": {
+            "Type": "Type:",
+            "Country": "Country:",
+            "StartDate": "Start Date:",
+            "EndDate": "EndDate:"
+        }
     },
     "Discovery": {
         "PopularTab": "Популярни",
         "TrendingTab": "Актуални",
         "UpcomingTab": "Предстоящи",
+        "SeasonalTab": "Сезонни",
+        "RecentlyRequestedTab": "Наскоро заявени",
         "Movies": "Филми",
         "Combined": "Комбинирано",
         "Tv": "Телевизия",
@@ -312,20 +386,45 @@
             "Writer": "Писател",
             "ExecProducer": "Изпълнителен продуцент"
         },
-        "NoSearch": "Не са намерени съвпадения!",
-        "RecentlyRequestedTab": "Наскоро заявени",
-        "SeasonalTab": "Сезонни"
+        "NoSearch": "Не са намерени съвпадения!"
     },
     "UserPreferences": {
         "Welcome": "Добре дошли, {{username}}!",
         "OmbiLanguage": "Език",
         "DarkMode": "Тъмен режим",
-        "LanguageDescription": "Това е езикът, на който искате да се показва интерфейсът на Ombi.",
-        "LegacyApp": "Стартирайте старото приложение",
-        "MobileQRCode": "Мобилен QR код",
-        "NoQrCode": "Моля, свържете се с вашия администратор, за да активирате QR кодовете",
+        "Updated": "Обновяването е успешно",
         "StreamingCountry": "Страна на поточно предаване",
-        "StreamingCountryDescription": "Това е кодът на държавата, за който ще показваме поточна информация. Ако сте в САЩ, моля изберете САЩ и ще имате поточна информация, свързана със САЩ.",
-        "Updated": "Обновяването е успешно"
+        "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will get US related streaming information.",
+        "LanguageDescription": "Това е езикът, на който искате да се показва интерфейсът на Ombi.",
+        "MobileQRCode": "Мобилен QR код",
+        "LegacyApp": "Стартирайте старото приложение",
+        "NoQrCode": "Моля, свържете се с вашия администратор, за да активирате QR кодовете",
+        "UserType": "User Type:",
+        "ChangeDetails": "Change Details",
+        "NeedCurrentPassword": "You need your current password to make any changes here",
+        "CurrentPassword": "Current Password",
+        "EmailAddress": "Email Address",
+        "NewPassword": "New Password",
+        "NewPasswordConfirm": "New Password Confirm",
+        "Security": "Security",
+        "Profile": "Profile",
+        "UpdatedYourInformation": "Updated your information",
+        "Unsubscribed": "Unsubscribed!"
+    },
+    "UserTypeLabel": {
+        "1": "Local User",
+        "2": "Plex User",
+        "3": "Emby User",
+        "4": "Emby Connect User",
+        "5": "Jellyfin User"
+    },
+    "Paginator": {
+        "itemsPerPageLabel": "Items per page:",
+        "nextPageLabel": "Next page",
+        "previousPageLabel": "Previous page",
+        "firstPageLabel": "First page",
+        "lastPageLabel": "Last page",
+        "rangePageLabel1": "0 of {{length}}",
+        "rangePageLabel2": "{{startIndex}} – {{endIndex}} of {{length}}"
     }
 }

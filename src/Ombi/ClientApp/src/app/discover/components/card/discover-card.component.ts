@@ -1,13 +1,15 @@
-import { Component, OnInit, Input } from "@angular/core";
-import { IDiscoverCardResult } from "../../interfaces";
-import { RequestType } from "../../../interfaces";
+import { Component, Input, OnInit } from "@angular/core";
 import { MessageService, RequestService, SearchV2Service } from "../../../services";
-import { MatDialog } from "@angular/material/dialog";
-import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
-import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
-import { EpisodeRequestComponent } from "../../../shared/episode-request/episode-request.component";
+
 import { AdminRequestDialogComponent } from "../../../shared/admin-request-dialog/admin-request-dialog.component";
 import { DiscoverType } from "../carousel-list/carousel-list.component";
+import { EpisodeRequestComponent } from "../../../shared/episode-request/episode-request.component";
+import { IDiscoverCardResult } from "../../interfaces";
+import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
+import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
+import { MatDialog } from "@angular/material/dialog";
+import { RequestType } from "../../../interfaces";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
     selector: "discover-card",
@@ -31,7 +33,7 @@ export class DiscoverCardComponent implements OnInit {
     private tvSearchResult: ISearchTvResultV2;
 
     constructor(private searchService: SearchV2Service, private dialog: MatDialog, private requestService: RequestService,
-        public messageService: MessageService) { }
+        public messageService: MessageService, private translate: TranslateService) { }
 
     public ngOnInit() {
         if (this.result.type == RequestType.tvShow) {
@@ -128,13 +130,13 @@ export class DiscoverCardComponent implements OnInit {
 
     public getAvailbilityStatus(): string {
         if (this.result.available) {
-            return "Available";
+            return this.translate.instant("Common.Available");
         }
         if (this.result.approved) {
-            return "Approved";
+            return this.translate.instant("Common.Approved");
         }
         if (this.result.requested) {
-            return "Pending";
+            return this.translate.instant("Common.Pending");
         }
         return "";
     }
@@ -174,26 +176,26 @@ export class DiscoverCardComponent implements OnInit {
                     dialog.afterClosed().subscribe((result) => {
                         if (result) {
                                 this.requestService.requestMovie({ theMovieDbId: +this.result.id,
-                                    languageCode: null,
+                                    languageCode: this.translate.currentLang,
                                     qualityPathOverride: result.radarrPathId,
                                     requestOnBehalf: result.username?.id,
                                     rootFolderOverride: result.radarrFolderId, }).subscribe(x => {
                                 if (x.result) {
                                     this.result.requested = true;
-                                    this.messageService.send(x.message, "Ok");
+                                    this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.result.title }), "Ok");
                                 } else {
-                                    this.messageService.send(x.errorMessage, "Ok");
+                                    this.messageService.sendRequestEngineResultError(x);
                                 }
                             });
                         }
                     });
                 } else {
-                this.requestService.requestMovie({ theMovieDbId: +this.result.id, languageCode: null, requestOnBehalf: null, qualityPathOverride: null, rootFolderOverride: null }).subscribe(x => {
+                this.requestService.requestMovie({ theMovieDbId: +this.result.id, languageCode: this.translate.currentLang, requestOnBehalf: null, qualityPathOverride: null, rootFolderOverride: null }).subscribe(x => {
                     if (x.result) {
                         this.result.requested = true;
-                        this.messageService.send(x.message, "Ok");
+                        this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.result.title }), "Ok");
                     } else {
-                        this.messageService.send(x.errorMessage, "Ok");
+                        this.messageService.sendRequestEngineResultError(x);
                     }
                     this.loading = false;
                 });
@@ -218,7 +220,7 @@ export class DiscoverCardComponent implements OnInit {
         this.result.url = "http://www.imdb.com/title/" + updated.imdbId + "/";
         this.result.available = updated.available;
         this.result.requested = updated.requested;
-        this.result.requested = updated.requestProcessing;
+        this.result.approved = updated.approved;
         this.result.rating = updated.voteAverage;
         this.result.overview = updated.overview;
         this.result.imdbid = updated.imdbId;

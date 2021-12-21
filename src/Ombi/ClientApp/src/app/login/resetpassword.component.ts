@@ -6,6 +6,7 @@ import { fadeInOutAnimation } from "../animations/fadeinout";
 
 import { ICustomizationSettings } from "../interfaces";
 import { IdentityService, ImageService, NotificationService, SettingsService } from "../services";
+import { CustomizationFacade } from "../state/customization";
 
 @Component({
     templateUrl: "./resetpassword.component.html",
@@ -23,7 +24,7 @@ export class ResetPasswordComponent implements OnInit {
 
     constructor(private identityService: IdentityService, private notify: NotificationService,
                 private fb: FormBuilder, private settingsService: SettingsService, @Inject(APP_BASE_HREF) href:string,
-                private images: ImageService, private sanitizer: DomSanitizer) {
+                private images: ImageService, private sanitizer: DomSanitizer, private customizationFacade: CustomizationFacade) {
                     this.href = href;
         this.form = this.fb.group({
             email: ["", [Validators.required]],
@@ -38,7 +39,7 @@ export class ResetPasswordComponent implements OnInit {
         if (base.length > 1) {
             this.baseUrl = base;
         }
-        this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
+        this.customizationFacade.settings$().subscribe(x => this.customizationSettings = x);
         this.settingsService.getEmailSettingsEnabled().subscribe(x => this.emailSettingsEnabled = x);
     }
 

@@ -20,10 +20,21 @@ export interface IUser {
     userQualityProfiles: IUserQualityProfiles;
     streamingCountry: string;
 
+    movieRequestLimitType?: RequestLimitType;
+    episodeRequestLimitType?: RequestLimitType;
+    musicRequestLimitType?: RequestLimitType;
+
     // FOR UI
     episodeRequestQuota: IRemainingRequests | null;
     movieRequestQuota: IRemainingRequests | null;
     musicRequestQuota: IRemainingRequests | null;
+}
+
+export enum RequestLimitType
+{
+    Day = 0,
+    Week = 1,
+    Month = 2,
 }
 
 export interface IUserDropdown {
@@ -110,6 +121,7 @@ export interface IMassEmailModel {
     subject: string;
     body: string;
     users: IUser[];
+    bcc: boolean;
 }
 
 export interface INotificationPreferences {

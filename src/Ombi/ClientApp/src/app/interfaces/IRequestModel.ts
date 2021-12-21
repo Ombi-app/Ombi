@@ -141,6 +141,7 @@ export interface IChildRequests extends IBaseRequest {
   parentRequest: ITvRequests;
   subscribed: boolean;
   showSubscribe: boolean;
+  requestStatus: string;
 }
 
 export interface ITvUpdateModel {
@@ -179,6 +180,7 @@ export interface IEpisodesRequests {
   requested: boolean;
   approved: boolean;
   requestStatus: string;
+  denied: boolean;
   selected: boolean; // This is for the UI only
 }
 

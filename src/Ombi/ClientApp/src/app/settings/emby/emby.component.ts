@@ -93,6 +93,14 @@ export class EmbyComponent implements OnInit {
         });
     }
 
+    public runRecentlyAddedCacher(): void {
+        this.jobService.runEmbyRecentlyAddedCacher().subscribe(x => {
+            if (x) {
+                this.notificationService.success("Triggered the Emby Recently Added Sync");
+            }
+        });
+    }
+
     public clearDataAndResync(): void {
         this.jobService.clearMediaserverData().subscribe(x => {
             if (x) {

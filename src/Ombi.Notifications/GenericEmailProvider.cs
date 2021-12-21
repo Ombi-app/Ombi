@@ -64,7 +64,20 @@ namespace Ombi.Notifications
                     MessageId = messageId
                 };
                 message.From.Add(new MailboxAddress(string.IsNullOrEmpty(settings.SenderName) ? settings.SenderAddress : settings.SenderName, settings.SenderAddress));
-                message.To.Add(new MailboxAddress(model.To, model.To));
+                if (model.To.HasValue())
+                {
+                    message.To.Add(new MailboxAddress(model.To, model.To));
+                }
+
+                // Check for BCC
+                if (model.Other.TryGetValue("bcc", out var bcc))
+                {
+                    var bccList = bcc.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var item in bccList)
+                    {
+                        message.Bcc.Add(new MailboxAddress(item, item));
+                    }
+                }
                 
                 using (var client = new SmtpClient())
                 {

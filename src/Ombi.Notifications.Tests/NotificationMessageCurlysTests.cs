@@ -76,6 +76,7 @@ namespace Ombi.Notifications.Tests
                     { "IssueUser", "User" },
                     { "IssueUserAlias", "alias" },
                     { "RequestType", "Movie" },
+                    { "PosterPath", "aaaaa" }
                 }
             };
             var req = F.Build<MovieRequests>()
@@ -92,6 +93,39 @@ namespace Ombi.Notifications.Tests
             Assert.That("User", Is.EqualTo(sut.UserName));
             Assert.That("alias", Is.EqualTo(sut.Alias));
             Assert.That("Movie", Is.EqualTo(sut.Type));
+        }
+
+        [Test]
+        public void IssueNotificationTests_NoRequest()
+        {
+            var notificationOptions = new NotificationOptions
+            {
+                Substitutes = new Dictionary<string, string>
+                {
+                    { "IssueDescription", "Desc" },
+                    { "IssueCategory", "Cat" },
+                    { "IssueStatus", "state" },
+                    { "IssueSubject", "sub" },
+                    { "NewIssueComment", "a" },
+                    { "IssueUser", "User" },
+                    { "IssueUserAlias", "alias" },
+                    { "RequestType", "Movie" },
+                    { "PosterPath", "aaaaa" }
+                }
+            };
+
+            var customization = new CustomizationSettings();
+            var userPrefs = new UserNotificationPreferences();
+            sut.Setup(notificationOptions, (MovieRequests)null, customization, userPrefs);
+
+            Assert.That("Desc", Is.EqualTo(sut.IssueDescription));
+            Assert.That("Cat", Is.EqualTo(sut.IssueCategory));
+            Assert.That("state", Is.EqualTo(sut.IssueStatus));
+            Assert.That("a", Is.EqualTo(sut.NewIssueComment));
+            Assert.That("User", Is.EqualTo(sut.UserName));
+            Assert.That("alias", Is.EqualTo(sut.Alias));
+            Assert.That("Movie", Is.EqualTo(sut.Type));
+            Assert.That("https://image.tmdb.org/t/p/w300/aaaaa", Is.EqualTo(sut.PosterImage));
         }
 
         [Test]
@@ -213,7 +247,10 @@ namespace Ombi.Notifications.Tests
         [Test]
         public void TvNotificationTests()
         {
-            var notificationOptions = new NotificationOptions();
+            var notificationOptions = new NotificationOptions
+            {
+                NotificationType = Helpers.NotificationType.PartiallyAvailable
+            };
             var req = F.Build<ChildRequests>()
                 .With(x => x.RequestType, RequestType.TvShow)
                 .With(x => x.Available, true)
@@ -244,6 +281,49 @@ namespace Ombi.Notifications.Tests
             Assert.That("Available", Is.EqualTo(sut.RequestStatus));
             Assert.That("url", Is.EqualTo(sut.ApplicationUrl));
             Assert.That("name", Is.EqualTo(sut.ApplicationName));
+        }
+
+        [Test]
+        public void TvNotificationPartialAvailablilityTests()
+        {
+            var notificationOptions = new NotificationOptions { 
+                NotificationType = Helpers.NotificationType.PartiallyAvailable
+            };
+
+            notificationOptions.Substitutes.Add("Season", "1");
+            notificationOptions.Substitutes.Add("Episodes", "1, 2");
+            var req = F.Build<ChildRequests>()
+                .With(x => x.RequestType, RequestType.TvShow)
+                .With(x => x.Available, true)
+                .Create();
+            var customization = new CustomizationSettings
+            {
+                ApplicationUrl = "url",
+                ApplicationName = "name"
+            };
+            var userPrefs = new UserNotificationPreferences();
+            sut.Setup(notificationOptions, req, customization, userPrefs);
+
+            Assert.That(req.Id.ToString(), Is.EqualTo(sut.RequestId));
+            Assert.That(req.ParentRequest.ExternalProviderId.ToString(), Is.EqualTo(sut.ProviderId));
+            Assert.That(req.ParentRequest.Title.ToString(), Is.EqualTo(sut.Title));
+            Assert.That(req.RequestedUser.UserName, Is.EqualTo(sut.RequestedUser));
+            Assert.That(req.RequestedUser.Alias, Is.EqualTo(sut.Alias));
+            Assert.That(req.RequestedDate.ToString("D"), Is.EqualTo(sut.RequestedDate));
+            Assert.That("TV Show", Is.EqualTo(sut.Type));
+            Assert.That(req.ParentRequest.Overview, Is.EqualTo(sut.Overview));
+            Assert.That(req.ParentRequest.ReleaseDate.Year.ToString(), Is.EqualTo(sut.Year));
+            Assert.That(req.DeniedReason, Is.EqualTo(sut.DenyReason));
+            Assert.That(req.MarkedAsAvailable?.ToString("D"), Is.EqualTo(sut.AvailableDate));
+            Assert.That("https://image.tmdb.org/t/p/w300/" + req.ParentRequest.PosterPath, Is.EqualTo(sut.PosterImage));
+            Assert.That(req.DeniedReason, Is.EqualTo(sut.DenyReason));
+            Assert.That(req.RequestedUser.Alias, Is.EqualTo(sut.UserPreference));
+            Assert.That(null, Is.EqualTo(sut.AdditionalInformation));
+            Assert.That("Available", Is.EqualTo(sut.RequestStatus));
+            Assert.That("url", Is.EqualTo(sut.ApplicationUrl));
+            Assert.That("name", Is.EqualTo(sut.ApplicationName));
+            Assert.That(sut.PartiallyAvailableEpisodeNumbers, Is.EqualTo("1, 2"));
+            Assert.That(sut.PartiallyAvailableSeasonNumber, Is.EqualTo("1"));
         }
 
         [Test]

@@ -1,4 +1,5 @@
 ﻿import { ISettings } from "./ICommon";
+import { RequestLimitType } from ".";
 
 export interface IExternalSettings extends ISettings {
   ssl: boolean;
@@ -18,6 +19,12 @@ export interface IOmbiSettings extends ISettings {
   disableHealthChecks: boolean;
   autoDeleteAvailableRequests: boolean;
   autoDeleteAfterDays: number;
+  branch: Branch;
+}
+
+export enum Branch {
+  Stable = 1,
+  Develop = 0
 }
 
 export interface IUpdateSettings extends ISettings {
@@ -205,6 +212,7 @@ export interface IJobSettings {
   retryRequests: string;
   mediaDatabaseRefresh: string;
   autoDeleteRequests: string;
+  embyRecentlyAddedSync: string;
 }
 
 export interface IIssueSettings extends ISettings {
@@ -241,10 +249,14 @@ export interface IUserManagementSettings extends ISettings {
   defaultRoles: string[];
   movieRequestLimit: number;
   episodeRequestLimit: number;
+  musicRequestLimit: number;
   bannedPlexUserIds: string[];
   bannedEmbyUserIds: string[];
   bannedJellyfinUserIds: string[];
   defaultStreamingCountry: string;
+  movieRequestLimitType: RequestLimitType;
+  episodeRequestLimitType: RequestLimitType;
+  musicRequestLimitType: RequestLimitType;
 }
 
 export interface IAbout {

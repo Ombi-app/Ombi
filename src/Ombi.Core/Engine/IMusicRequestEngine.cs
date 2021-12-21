@@ -18,11 +18,14 @@ namespace Ombi.Core.Engine
         Task<int> GetTotal();
         Task<RequestEngineResult> MarkAvailable(int modelId);
         Task<RequestEngineResult> MarkUnavailable(int modelId);
-        Task RemoveAlbumRequest(int requestId);
+        Task<RequestEngineResult> RemoveAlbumRequest(int requestId);
         Task<RequestEngineResult> RequestAlbum(MusicAlbumRequestViewModel model);
         Task<RequestEngineResult> RequestArtist(MusicArtistRequestViewModel model);
         Task<IEnumerable<MusicRequests>> SearchAlbumRequest(string search);
         Task<bool> UserHasRequest(string userId);
+        Task<RequestsViewModel<AlbumRequest>> GetRequestsByStatus(int count, int position, string sort, string sortOrder, RequestStatus available);
+        Task<RequestsViewModel<AlbumRequest>> GetRequests(int count, int position, string sort, string sortOrder);
+
         Task<RequestQuotaCountModel> GetRemainingRequests(OmbiUser user = null);
         Task<RequestsViewModel<MusicRequests>> GetRequestsByStatus(int count, int position, string sort, string sortOrder, RequestStatus available);
         Task<RequestsViewModel<MusicRequests>> GetRequests(int count, int position, string sort, string sortOrder);

@@ -12,6 +12,7 @@ export class MassEmailComponent implements OnInit {
     public users: IMassEmailUserModel[] = [];
     public message: string;
     public subject: string;
+    public bcc: boolean;
 
     public missingSubject = false;
 
@@ -26,17 +27,19 @@ export class MassEmailComponent implements OnInit {
     public ngOnInit(): void {
        this.identityService.getUsers().subscribe(x => {
         x.forEach(u => {
-            this.users.push({
-                user: u,
-                selected: false,
-            });
+            if (u.emailAddress) {
+                this.users.push({
+                    user: u,
+                    selected: false,
+                });
+            }
         });
        });
        this.settingsService.getEmailSettingsEnabled().subscribe(x => this.emailEnabled = x);
     }
 
-    public selectAllUsers() {
-        this.users.forEach(u => u.selected = !u.selected);
+    public selectAllUsers(event: any) {
+        this.users.forEach(u => u.selected = event.checked);
     }
 
     public send() {
@@ -44,10 +47,10 @@ export class MassEmailComponent implements OnInit {
             this.missingSubject = true;
             return;
         }
-        if(!this.emailEnabled) {
-            this.notification.error("You have not yet setup your email notifications, do that first!");
-            return;
-        }
+        // if(!this.emailEnabled) {
+        //     this.notification.error("You have not yet setup your email notifications, do that first!");
+        //     return;
+        // }
         this.missingSubject = false;
         // Where(x => x.selected).Select(x => x.user)
         const selectedUsers = this.users.filter(u => {
@@ -63,6 +66,7 @@ export class MassEmailComponent implements OnInit {
             users: selectedUsers,
             subject: this.subject,
             body: this.message,
+            bcc: this.bcc,
         };
         this.notification.info("Sending","Sending mass email... Please wait");
         this.notificationMessageService.sendMassEmail(model).subscribe(x => {

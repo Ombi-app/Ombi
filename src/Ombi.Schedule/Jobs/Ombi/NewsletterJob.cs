@@ -208,13 +208,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 if (!test)
                 {
-                    // Get the users to send it to
-                    var users = await _userManager.GetUsersInRoleAsync(OmbiRoles.ReceivesNewsletter);
-                    if (!users.Any())
-                    {
-                        return;
-                    }
-
+                    var users = new List<OmbiUser>();
                     foreach (var emails in settings.ExternalEmails)
                     {
                         users.Add(new OmbiUser
@@ -224,11 +218,23 @@ namespace Ombi.Schedule.Jobs.Ombi
                         });
                     }
 
+                    // Get the users to send it to
+                    users.AddRange(await _userManager.GetUsersInRoleAsync(OmbiRoles.ReceivesNewsletter));
+                    if (!users.Any())
+                    {
+                        return;
+                    }                    
+
                     var messageContent = ParseTemplate(template, customization);
                     var email = new NewsletterTemplate();
 
-                    foreach (var user in users)
-                    {
+                    foreach (var user in users.DistinctBy(x => x.Email))
+                    {                        // Get the users to send it to
+                        if (user.Email.IsNullOrEmpty())
+                        {
+                            continue;
+                        }
+
                         var url = GenerateUnsubscribeLink(customization.ApplicationUrl, user.Id);
                         var html = email.LoadTemplate(messageContent.Subject, messageContent.Message, body, customization.Logo, url);
 
@@ -243,11 +249,6 @@ namespace Ombi.Schedule.Jobs.Ombi
                             Subject = messageContent.Subject
                         };
 
-                        // Get the users to send it to
-                        if (user.Email.IsNullOrEmpty())
-                        {
-                            continue;
-                        }
                         // Send the message to the user
                         message.To.Add(new MailboxAddress(user.Email.Trim(), user.Email.Trim()));
 
@@ -391,7 +392,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         public static string GenerateUnsubscribeLink(string applicationUrl, string id)
         {
-            if (!applicationUrl.HasValue())
+            if (!applicationUrl.HasValue() || !id.HasValue())
             {
                 return string.Empty;
             }
@@ -583,7 +584,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 sb.Append("<tr>");
                 if (plexSettings.Enable)
                 {
-                    await ProcessPlexMovies(plexMovies, sb, ombiSettings.DefaultLanguageCode);
+                    await ProcessPlexMovies(plexMovies, sb, ombiSettings.DefaultLanguageCode, plexSettings.Servers.FirstOrDefault().ServerHostname ?? string.Empty);
                 }
 
                 if (embySettings.Enable)
@@ -614,17 +615,17 @@ namespace Ombi.Schedule.Jobs.Ombi
                 sb.Append("<tr>");
                 if (plexSettings.Enable)
                 {
-                    await ProcessPlexTv(plexEpisodes, sb);
+                    await ProcessPlexTv(plexEpisodes, sb, ombiSettings.DefaultLanguageCode, plexSettings.Servers.FirstOrDefault().ServerHostname ?? string.Empty);
                 }
 
                 if (embySettings.Enable)
                 {
-                    await ProcessEmbyTv(embyEp, sb, embySettings.Servers.FirstOrDefault()?.ServerHostname ?? string.Empty);
+                    await ProcessEmbyTv(embyEp, sb, ombiSettings.DefaultLanguageCode, embySettings.Servers.FirstOrDefault()?.ServerHostname ?? string.Empty);
                 }
 
                 if (jellyfinSettings.Enable)
                 {
-                    await ProcessJellyfinTv(jellyfinEp, sb, jellyfinSettings.Servers.FirstOrDefault()?.ServerHostname ?? string.Empty);
+                    await ProcessJellyfinTv(jellyfinEp, sb, ombiSettings.DefaultLanguageCode, jellyfinSettings.Servers.FirstOrDefault()?.ServerHostname ?? string.Empty);
                 }
 
                 sb.Append("</tr>");
@@ -655,7 +656,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             return sb.ToString();
         }
 
-        private async Task ProcessPlexMovies(IQueryable<PlexServerContent> plexContentToSend, StringBuilder sb, string defaultLanguageCode)
+        private async Task ProcessPlexMovies(IQueryable<PlexServerContent> plexContentToSend, StringBuilder sb, string defaultLanguageCode, string mediaServerUrl)
         {
             int count = 0;
             var ordered = plexContentToSend.OrderByDescending(x => x.AddedAt);
@@ -667,7 +668,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     continue;
                 }
                 var info = await _movieApi.GetMovieInformationWithExtraInfo(movieDbId, defaultLanguageCode);
-                var mediaurl = content.Url;
+                var mediaurl = PlexHelper.BuildPlexMediaUrl(content.Url, mediaServerUrl);
                 if (info == null)
                 {
                     continue;
@@ -907,7 +908,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             AddGenres(sb, $"Type: {info.albumType}");
         }
 
-        private async Task ProcessPlexTv(HashSet<PlexEpisode> plexContent, StringBuilder sb)
+        private async Task ProcessPlexTv(HashSet<PlexEpisode> plexContent, StringBuilder sb, string languageCode, string serverHostname)
         {
             var series = new List<PlexServerContent>();
             foreach (var plexEpisode in plexContent)
@@ -974,7 +975,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         banner = banner.ToHttpsUrl(); // Always use the Https banners
                     }
 
-                    var tvInfo = await _movieApi.GetTVInfo(t.TheMovieDbId);
+                    var tvInfo = await _movieApi.GetTVInfo(t.TheMovieDbId, languageCode);
                     if (tvInfo != null && tvInfo.backdrop_path.HasValue())
                     {
 
@@ -985,19 +986,10 @@ namespace Ombi.Schedule.Jobs.Ombi
                         AddBackgroundInsideTable(sb, $"https://image.tmdb.org/t/p/w1280/");
                     }
                     AddPosterInsideTable(sb, banner);
-                    AddMediaServerUrl(sb, t.Url, banner);
+                    AddMediaServerUrl(sb, PlexHelper.BuildPlexMediaUrl(t.Url, serverHostname), banner);
                     AddInfoTable(sb);
 
-                    var title = "";
-                    if (!string.IsNullOrEmpty(info.premiered) && info.premiered.Length > 4)
-                    {
-                        title = $"{t.Title} ({info.premiered.Remove(4)})";
-                    }
-                    else
-                    {
-                        title = $"{t.Title}";
-                    }
-                    AddTitle(sb, $"https://www.imdb.com/title/{info.externals.imdb}/", title);
+                    AddTvTitle(sb, info, tvInfo);
 
                     // Group by the season number
                     var results = t.Episodes.GroupBy(p => p.SeasonNumber,
@@ -1020,18 +1012,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         finalsb.Append("<br />");
                     }
 
-                    var summary = info.summary;
-                    if (summary.Length > 280)
-                    {
-                        summary = summary.Remove(280);
-                        summary = summary + "...</p>";
-                    }
-                    AddTvParagraph(sb, finalsb.ToString(), summary);
-
-                    if (info.genres.Any())
-                    {
-                        AddGenres(sb, $"Genres: {string.Join(", ", info.genres.Select(x => x.ToString()).ToArray())}");
-                    }
+                    AddTvEpisodesSummaryGenres(sb, finalsb.ToString(), tvInfo);
 
                 }
                 catch (Exception e)
@@ -1055,7 +1036,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
 
 
-        private async Task ProcessEmbyTv(HashSet<EmbyEpisode> embyContent, StringBuilder sb, string serverUrl)
+        private async Task ProcessEmbyTv(HashSet<EmbyEpisode> embyContent, StringBuilder sb, string languageCode,  string serverUrl)
         {
             var series = new List<EmbyContent>();
             foreach (var episode in embyContent)
@@ -1099,7 +1080,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         banner = banner.ToHttpsUrl(); // Always use the Https banners
                     }
 
-                    var tvInfo = await _movieApi.GetTVInfo(t.TheMovieDbId);
+                    var tvInfo = await _movieApi.GetTVInfo(t.TheMovieDbId, languageCode);
                     if (tvInfo != null && tvInfo.backdrop_path.HasValue())
                     {
 
@@ -1113,16 +1094,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     AddMediaServerUrl(sb, serverUrl.HasValue() ? serverUrl : t.Url, banner);
                     AddInfoTable(sb);
 
-                    var title = "";
-                    if (!String.IsNullOrEmpty(info.premiered) && info.premiered.Length > 4)
-                    {
-                        title = $"{t.Title} ({info.premiered.Remove(4)})";
-                    }
-                    else
-                    {
-                        title = $"{t.Title}";
-                    }
-                    AddTitle(sb, $"https://www.imdb.com/title/{info.externals.imdb}/", title);
+                    AddTvTitle(sb, info, tvInfo);
 
                     // Group by the season number
                     var results = t.Episodes?.GroupBy(p => p.SeasonNumber,
@@ -1145,18 +1117,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         finalsb.Append("<br />");
                     }
 
-                    var summary = info.summary;
-                    if (summary.Length > 280)
-                    {
-                        summary = summary.Remove(280);
-                        summary = summary + "...</p>";
-                    }
-                    AddTvParagraph(sb, finalsb.ToString(), summary);
-
-                    if (info.genres.Any())
-                    {
-                        AddGenres(sb, $"Genres: {string.Join(", ", info.genres.Select(x => x.ToString()).ToArray())}");
-                    }
+                    AddTvEpisodesSummaryGenres(sb, finalsb.ToString(), tvInfo);
 
                 }
                 catch (Exception e)
@@ -1178,10 +1139,10 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
-        private async Task ProcessJellyfinTv(HashSet<JellyfinEpisode> embyContent, StringBuilder sb, string serverUrl)
+        private async Task ProcessJellyfinTv(HashSet<JellyfinEpisode> jellyfinContent, StringBuilder sb, string languageCode, string serverUrl)
         {
             var series = new List<JellyfinContent>();
-            foreach (var episode in embyContent)
+            foreach (var episode in jellyfinContent)
             {
                 var alreadyAdded = series.FirstOrDefault(x => x.JellyfinId == episode.Series.JellyfinId);
                 if (alreadyAdded != null)
@@ -1222,7 +1183,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         banner = banner.ToHttpsUrl(); // Always use the Https banners
                     }
 
-                    var tvInfo = await _movieApi.GetTVInfo(t.TheMovieDbId);
+                    var tvInfo = await _movieApi.GetTVInfo(t.TheMovieDbId, languageCode);
                     if (tvInfo != null && tvInfo.backdrop_path.HasValue())
                     {
 
@@ -1236,16 +1197,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     AddMediaServerUrl(sb, serverUrl.HasValue() ? serverUrl : t.Url, banner);
                     AddInfoTable(sb);
 
-                    var title = "";
-                    if (!String.IsNullOrEmpty(info.premiered) && info.premiered.Length > 4)
-                    {
-                        title = $"{t.Title} ({info.premiered.Remove(4)})";
-                    }
-                    else
-                    {
-                        title = $"{t.Title}";
-                    }
-                    AddTitle(sb, $"https://www.imdb.com/title/{info.externals.imdb}/", title);
+                    AddTvTitle(sb, info, tvInfo);
 
                     // Group by the season number
                     var results = t.Episodes?.GroupBy(p => p.SeasonNumber,
@@ -1268,18 +1220,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         finalsb.Append("<br />");
                     }
 
-                    var summary = info.summary;
-                    if (summary.Length > 280)
-                    {
-                        summary = summary.Remove(280);
-                        summary = summary + "...</p>";
-                    }
-                    AddTvParagraph(sb, finalsb.ToString(), summary);
-
-                    if (info.genres.Any())
-                    {
-                        AddGenres(sb, $"Genres: {string.Join(", ", info.genres.Select(x => x.ToString()).ToArray())}");
-                    }
+                    AddTvEpisodesSummaryGenres(sb, finalsb.ToString(), tvInfo);
 
                 }
                 catch (Exception e)
@@ -1298,6 +1239,36 @@ namespace Ombi.Schedule.Jobs.Ombi
                     sb.Append("</tr>");
                     sb.Append("<tr>");
                 }
+            }
+        }
+
+        private void AddTvTitle(StringBuilder sb, Api.TvMaze.Models.TvMazeShow info, TvInfo tvInfo)
+        {
+            var title = "";
+            if (!String.IsNullOrEmpty(info.premiered) && info.premiered.Length > 4)
+            {
+                title = $"{tvInfo.name} ({info.premiered.Remove(4)})";
+            }
+            else
+            {
+                title = $"{tvInfo.name}";
+            }
+            AddTitle(sb, $"https://www.imdb.com/title/{info.externals.imdb}/", title);
+        }
+
+        private void AddTvEpisodesSummaryGenres(StringBuilder sb, string episodes, TvInfo tvInfo)
+        {
+            var summary = tvInfo.overview;
+            if (summary.Length > 280)
+            {
+                summary = summary.Remove(280);
+                summary = summary + "...</p>";
+            }
+            AddTvParagraph(sb, episodes, summary);
+
+            if (tvInfo.genres.Any())
+            {
+                AddGenres(sb, $"Genres: {string.Join(", ", tvInfo.genres.Select(x => x.name.ToString()).ToArray())}");
             }
         }
 

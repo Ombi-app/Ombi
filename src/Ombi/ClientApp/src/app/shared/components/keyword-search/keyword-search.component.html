@@ -1,5 +1,5 @@
 <mat-form-field class="example-chip-list"  appearance="outline" floatLabel=auto>
-  <mat-label>Keywords</mat-label>
+  <mat-label>{{ "Filter.Keywords" | translate }}</mat-label>
   <mat-chip-list #chipList aria-label="Fruit selection">
     <mat-chip
       *ngFor="let word of form.controls.keywordIds.value"
@@ -9,7 +9,7 @@
       <mat-icon matChipRemove>cancel</mat-icon>
     </mat-chip>
     <input
-      placeholder="Search Keyword"
+    [placeholder]="'Search.SearchKeyword' | translate"
       #keywordInput
       [formControl]="control"
       [matAutocomplete]="auto"

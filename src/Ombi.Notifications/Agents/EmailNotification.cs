@@ -219,6 +219,25 @@ namespace Ombi.Notifications.Agents
 
         }
 
+        protected override async Task PartiallyAvailable(NotificationOptions model, EmailNotificationSettings settings)
+        {
+            var message = await LoadTemplate(NotificationType.PartiallyAvailable, model, settings);
+            if (message == null)
+            {
+                return;
+            }
+
+            var plaintext = await LoadPlainTextMessage(NotificationType.PartiallyAvailable, model, settings);
+            message.Other.Add("PlainTextBody", plaintext);
+
+            await SendToSubscribers(settings, message);
+            message.To = model.RequestType == RequestType.Movie
+                ? MovieRequest.RequestedUser.Email
+                : TvRequest.RequestedUser.Email;
+
+            await Send(message, settings);
+        }
+
         protected override async Task RequestApproved(NotificationOptions model, EmailNotificationSettings settings)
         {
             var message = await LoadTemplate(NotificationType.RequestApproved, model, settings);

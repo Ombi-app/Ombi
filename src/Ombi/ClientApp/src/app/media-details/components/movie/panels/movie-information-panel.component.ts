@@ -28,8 +28,8 @@ export class MovieInformationPanelComponent implements OnInit {
         if (this.internalBaseUrl.length > 1) {
             this.baseUrl = this.internalBaseUrl;
         }
-        this.searchService.getRottenMovieRatings(this.movie.title, +this.movie.releaseDate.toString().substring(0,4))
-            .subscribe(x => this.ratings = x);
+        // this.searchService.getRottenMovieRatings(this.movie.title, +this.movie.releaseDate.toString().substring(0,4))
+        //     .subscribe(x => this.ratings = x);
 
             this.searchService.getMovieStreams(this.movie.id).subscribe(x => this.streams = x);
     }

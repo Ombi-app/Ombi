@@ -90,6 +90,10 @@ namespace Ombi.Notifications.Agents
         {
             await Run(model, settings, NotificationType.RequestAvailable);
         }
+        protected override async Task PartiallyAvailable(NotificationOptions model, MattermostNotificationSettings settings)
+        {
+            await Run(model, settings, NotificationType.PartiallyAvailable);
+        }
 
         protected override async Task Send(NotificationMessage model, MattermostNotificationSettings settings)
         {

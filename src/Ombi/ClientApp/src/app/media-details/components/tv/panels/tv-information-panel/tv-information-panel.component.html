@@ -11,7 +11,7 @@
         <div *ngIf="streams?.length > 0" id="streamingContainer" class="streaming-on-container">
             <hr>
             <div class="streaming-on-content">
-                <span class="label">{{'MediaDetails.StreamingOn' | translate }}:</span>
+                <span class="label">{{'MediaDetails.StreamingOn' | translate }}</span>
                 <div>
                     <span *ngFor="let stream of sortBy('order')">
                         <img class="stream-small" id="stream{{stream.streamingProvider}}" [matTooltip]="stream.streamingProvider" src="https://image.tmdb.org/t/p/original{{stream.logo}}">
@@ -21,44 +21,44 @@
         </div>
         <hr>
         <div *ngIf="tv.status">
-            <span  class="label">{{'MediaDetails.Status' | translate }}:</span>
-                <span id="status"> {{tv.status}}</span>
+            <span  class="label">{{'MediaDetails.Status' | translate }}</span>
+                <span id="status"> {{ tv.status | translateStatus }}</span>
         </div>
-        <span class="label">First Aired:</span>
-            {{tv.firstAired | date: 'mediumDate'}}
+        <span class="label">{{'MediaDetails.FirstAired' | translate }}</span>
+            {{tv.firstAired | amLocal | amUserLocale | amDateFormat: 'LL' }}
     </div>
 
     <div *ngIf="seasonCount">
-        <span class="label">Seasons:</span>
+        <span class="label">{{'MediaDetails.Seasons' | translate }}</span>
             {{seasonCount}}
     </div>
     <div *ngIf="totalEpisodes">
-        <span class="label">Episodes:</span>
+        <span class="label">{{'MediaDetails.Episodes' | translate }}</span>
             {{totalEpisodes}}
     </div>
 
     <div *ngIf="advancedOptions && request?.rootPathOverrideTitle">
-        <span class="label">{{'MediaDetails.RootFolderOverride' | translate }}:</span>
+        <span class="label">{{'MediaDetails.RootFolderOverride' | translate }}</span>
         <div>{{request.rootPathOverrideTitle}}</div>
     </div>
     <div *ngIf="advancedOptions && request?.qualityOverrideTitle">
-        <span class="label">{{'MediaDetails.QualityOverride' | translate }}:</span>
+        <span class="label">{{'MediaDetails.QualityOverride' | translate }}</span>
         <div>{{request.qualityOverrideTitle}}</div>
     </div>
 
     <div>
-        <span class="label">{{'MediaDetails.Runtime' | translate }}:</span>
+        <span class="label">{{'MediaDetails.Runtime' | translate }}</span>
             {{'MediaDetails.Minutes' | translate:{ runtime: tv.runtime} }}
     </div>
 
     <div *ngIf="tv.network">
-        <span class="label">Network:</span>
+        <span class="label">{{'MediaDetails.Network' | translate }}</span>
             {{tv.network.name}}
     </div>
 
 
     <div class="genre-button-container" *ngIf="tv.genres">
-        <span class="label">{{'MediaDetails.Genres' | translate }}:</span>
+        <span class="label">{{'MediaDetails.GenresLabel' | translate }}</span>
         <div>
             <mat-chip-list>
                 <mat-chip selected *ngFor="let genre of tv.genres">
@@ -70,7 +70,7 @@
 
     <hr />
     <div class="keyword-button-container" *ngIf="tv?.keywords?.keywordsValue?.length > 0">
-        <span class="label">{{'MediaDetails.Keywords' | translate }}:</span>
+        <span class="label">{{'MediaDetails.Keywords' | translate }}</span>
         <mat-chip-list>
             <mat-chip selected *ngFor="let keyword of tv.keywords.keywordsValue">
                 {{keyword.name}}

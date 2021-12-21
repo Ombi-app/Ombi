@@ -14,6 +14,7 @@ export interface IIssues {
     comments: IIssueComments[];
     requestId: number | undefined;
     userReported: IUser | undefined;
+    posterPath: string;
 }
 
 export enum IssueStatus {

@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild } from "@angular/core";
 import { IMovieRequests, IRequestEngineResult, IRequestsViewModel } from "../../../interfaces";
 import { NotificationService, RequestService } from "../../../services";
-import { Observable, forkJoin, merge, of as observableOf } from 'rxjs';
+import { Observable, combineLatest, forkJoin, merge, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 import { AuthService } from "../../../auth/auth.service";
@@ -31,6 +31,7 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     public defaultOrder: string = "desc";
     public currentFilter: RequestFilterType = RequestFilterType.All;
     public selection = new SelectionModel<IMovieRequests>(true, []);
+    public userName: string;
 
     public RequestFilter = RequestFilterType;
 
@@ -46,10 +47,11 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort) sort: MatSort;
 
     constructor(private requestService: RequestServiceV2, private ref: ChangeDetectorRef,
-                private auth: AuthService, private storageService: StorageService,
-                private requestServiceV1: RequestService, private notification: NotificationService,
-                private translateService: TranslateService) {
+        private auth: AuthService, private storageService: StorageService,
+        private requestServiceV1: RequestService, private notification: NotificationService,
+        private translateService: TranslateService) {
 
+        this.userName = auth.claims().name;
     }
 
     public ngOnInit() {
@@ -162,16 +164,16 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
         if (this.selection.isEmpty()) {
             return;
         }
-        let tasks = new Array();
+        let tasks = new Array<Observable<IRequestEngineResult>>();
         this.selection.selected.forEach((selected) => {
             tasks.push(this.requestServiceV1.removeMovieRequestAsync(selected.id));
         });
 
-        await Promise.all(tasks);
-
-        this.notification.success(this.translateService.instant('Requests.RequestPanel.Deleted'))
-        this.selection.clear();
-        this.ngAfterViewInit();
+        combineLatest(tasks).subscribe(() => {
+            this.notification.success(this.translateService.instant('Requests.RequestPanel.Deleted'))
+            this.selection.clear();
+            this.ngAfterViewInit();
+        });
       }
 
       public bulkApprove() {
