@@ -80,8 +80,9 @@ export class IssuesDetailsComponent implements OnInit {
                 this.router.navigate(['/details/movie/', this.providerId]);
                 return;
 
-            case RequestType.album:
-                this.router.navigate(['/details/artist/', this.providerId]);
+
+            case RequestType.artist:
+                this.router.navigate(['/details/artist/', firstIssue.providerId]);
                 return;
 
             case RequestType.tvShow:

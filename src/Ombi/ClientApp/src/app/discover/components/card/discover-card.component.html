@@ -11,7 +11,7 @@
     </div>
         <img [routerLink]="generateDetailsLink()" id="cardImage" src="{{result.posterPath}}" class="image"
             alt="{{result.title}}">
-        <div [ngClass]="result.posterPath.includes('images/') ? 'middle-show' : 'middle'">
+            <div [ngClass]="result.posterPath.includes('images/') ? 'middle-show' : 'middle'">
             <a class="poster-overlay" [routerLink]="generateDetailsLink()">
                 <div class="summary">
                     <div class="title" id="title{{result.id}}">{{result.title}}</div>
@@ -25,6 +25,10 @@
                     <i *ngIf="!loading" class="fa-lg fas fa-cloud-download-alt"></i>
                     <i *ngIf="loading" class="fas fa-spinner fa-pulse fa-2x fa-fw" aria-hidden="true"></i>
                     {{'Common.Request' | translate }}
+                </button>
+                <button id="requestButton{{result.id}}{{result.type}}{{discoverType}}" *ngIf="monitored" mat-raised-button
+                    class="btn-spacing full-width poster-request-btn" color="accent" [disabled]>
+                    <i class="fa-lg fas fa-check"></i> {{'Common.Monitored' | translate }}
                 </button>
             </div>
         </div>

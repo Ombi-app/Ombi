@@ -34,7 +34,7 @@ namespace Ombi.Store.Context
         public DbSet<NotificationTemplates> NotificationTemplates { get; set; }
 
         public DbSet<MovieRequests> MovieRequests { get; set; }
-        public DbSet<AlbumRequest> AlbumRequests { get; set; }
+        public DbSet<MusicRequests> MusicRequests { get; set; }
         public DbSet<TvRequests> TvRequests { get; set; }
         public DbSet<ChildRequests> ChildRequests { get; set; }
         public DbSet<EpisodeRequests> EpisodeRequests { get; set; }

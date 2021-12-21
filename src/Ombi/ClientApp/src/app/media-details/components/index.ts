@@ -1,4 +1,20 @@
-﻿import { IssuesService, RadarrService, RequestService, SearchService, SonarrService } from "../../services";
+
+﻿import { MovieDetailsComponent } from "./movie/movie-details.component";
+import { YoutubeTrailerComponent } from "./shared/youtube-trailer.component";
+import { TvDetailsComponent } from "./tv/tv-details.component";
+import { MovieInformationPanelComponent } from "./movie/panels/movie-information-panel.component";
+import { TvInformationPanelComponent } from "./tv/panels/tv-information-panel/tv-information-panel.component";
+import { TopBannerComponent } from "./shared/top-banner/top-banner.component";
+import { SocialIconsComponent } from "./shared/social-icons/social-icons.component";
+import { MediaPosterComponent } from "./shared/media-poster/media-poster.component";
+import { CastCarouselComponent } from "./shared/cast-carousel/cast-carousel.component";
+import { DenyDialogComponent } from "./shared/deny-dialog/deny-dialog.component";
+import { TvRequestsPanelComponent } from "./tv/panels/tv-requests/tv-requests-panel.component";
+import { MovieAdvancedOptionsComponent } from "./movie/panels/movie-advanced-options/movie-advanced-options.component";
+import { SearchService, RequestService, RadarrService, IssuesService, SonarrService } from "../../services";
+import { RequestServiceV2 } from "../../services/requestV2.service";
+import { NewIssueComponent } from "./shared/new-issue/new-issue.component";
+import { AlbumDetailsComponent } from "./album/album-details.component";
 
 import { ArtistDetailsComponent } from "./artist/artist-details.component";
 import { ArtistInformationPanel } from "./artist/panels/artist-information-panel/artist-information-panel.component";
@@ -37,6 +53,7 @@ export const components: any[] = [
     MovieAdvancedOptionsComponent,
     TvAdvancedOptionsComponent,
     NewIssueComponent,
+    AlbumDetailsComponent,
     ArtistDetailsComponent,
     ArtistInformationPanel,
     ArtistReleasePanel,

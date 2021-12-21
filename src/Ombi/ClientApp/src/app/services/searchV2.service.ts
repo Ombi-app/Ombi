@@ -9,7 +9,7 @@ import { ServiceHelpers } from "./service.helpers";
 
 import { ISearchMovieResultV2 } from "../interfaces/ISearchMovieResultV2";
 import { ISearchTvResultV2, IMovieCollectionsViewModel, IActorCredits } from "../interfaces/ISearchTvResultV2";
-import { IArtistSearchResult, IAlbumArt, IReleaseGroups } from "../interfaces/IMusicSearchResultV2";
+import { IArtistSearchResult, IAlbumSearchResult, IAlbumArt, IReleaseGroups } from "../interfaces/IMusicSearchResultV2";
 import { SearchFilter } from "../my-nav/SearchFilter";
 import { IMovieRatings, ITvRatings } from "../interfaces/IRatings";
 import { IStreamingData } from "../interfaces/IStreams";
@@ -138,6 +138,10 @@ export class SearchV2Service extends ServiceHelpers {
 
     public getArtistInformation(artistId: string): Observable<IArtistSearchResult> {
         return this.http.get<IArtistSearchResult>(`${this.url}/artist/${artistId}`);
+    }
+
+    public getAlbumInformation(albumId: string): Observable<IAlbumSearchResult> {
+        return this.http.get<IAlbumSearchResult>(`${this.url}/artist/album/${albumId}`);
     }
 
     public getReleaseGroupArt(mbid: string): Observable<IAlbumArt> {

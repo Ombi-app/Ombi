@@ -28,7 +28,6 @@
     <ProjectReference Include="..\Ombi.Api.Jellyfin\Ombi.Api.Jellyfin.csproj" />
     <ProjectReference Include="..\Ombi.Api.FanartTv\Ombi.Api.FanartTv.csproj" />
     <ProjectReference Include="..\Ombi.Api.Lidarr\Ombi.Api.Lidarr.csproj" />
-    <ProjectReference Include="..\Ombi.Api.MusicBrainz\Ombi.Api.MusicBrainz.csproj" />
     <ProjectReference Include="..\Ombi.Api.Plex\Ombi.Api.Plex.csproj" />
     <ProjectReference Include="..\Ombi.Api.Radarr\Ombi.Api.Radarr.csproj" />
     <ProjectReference Include="..\Ombi.Api.SickRage\Ombi.Api.SickRage.csproj" />

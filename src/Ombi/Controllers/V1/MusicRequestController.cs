@@ -18,7 +18,7 @@ using ILogger = Microsoft.Extensions.Logging.ILogger;
 namespace Ombi.Controllers.V1
 {
     [Authorize]
-    [Route("api/v1/request/music")]
+    [Route("api/v1/request")]
     [Produces("application/json")]
     [ApiController]
     public class MusicRequestController : ControllerBase
@@ -45,7 +45,7 @@ namespace Ombi.Controllers.V1
         /// <param name="statusType"></param>
         /// <param name="availabilityType"></param>
         [HttpGet("{count:int}/{position:int}/{orderType:int}/{statusType:int}/{availabilityType:int}")]
-        public async Task<RequestsViewModel<AlbumRequest>> GetRequests(int count, int position, int orderType, int statusType, int availabilityType)
+        public async Task<RequestsViewModel<MusicRequests>> GetRequests(int count, int position, int orderType, int statusType, int availabilityType)
         {
             return await _engine.GetRequests(count, position, new OrderFilterModel
             {
@@ -68,7 +68,7 @@ namespace Ombi.Controllers.V1
         /// Gets all album requests.
         /// </summary>
         [HttpGet]
-        public async Task<IEnumerable<AlbumRequest>> GetRequests()
+        public async Task<IEnumerable<MusicRequests>> GetRequests()
         {
             return await _engine.GetRequests();
         }
@@ -78,7 +78,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="album">The album.</param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost("album")]
         public async Task<RequestEngineResult> RequestAlbum([FromBody] MusicAlbumRequestViewModel album)
         {
             album.RequestedByAlias = GetApiAlias();
@@ -96,12 +96,35 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
+        /// Requests a artist.
+        /// </summary>
+        /// <param name="artist">The artist.</param>
+        /// <returns></returns>
+        [HttpPost("artist")]
+        public async Task<RequestEngineResult> RequestArtist([FromBody] MusicArtistRequestViewModel artist)
+        {
+            Console.Write(artist);
+            artist.RequestedByAlias = GetApiAlias();
+            var result = await _engine.RequestArtist(artist);
+            if (result.Result)
+            {
+                var voteResult = await _voteEngine.UpVote(result.RequestId, RequestType.Artist);
+                if (voteResult.IsError)
+                {
+                    _log.LogError("Couldn't automatically add the vote for the artist {0} because {1}", artist.ForeignArtistId, voteResult.ErrorMessage);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Searches for a specific album request
         /// </summary>
         /// <param name="searchTerm">The search term.</param>
         /// <returns></returns>
         [HttpGet("search/{searchTerm}")]
-        public async Task<IEnumerable<AlbumRequest>> Search(string searchTerm)
+        public async Task<IEnumerable<MusicRequests>> Search(string searchTerm)
         {
             return await _engine.SearchAlbumRequest(searchTerm);
         }

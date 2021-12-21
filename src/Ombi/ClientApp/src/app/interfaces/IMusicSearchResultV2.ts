@@ -15,6 +15,29 @@ export interface IArtistSearchResult {
     links: IArtistLinks;
     members: IBandMembers[];
     overview: string;
+    monitored: boolean;
+
+    background: any;
+}
+
+export interface IAlbumSearchResult {
+    title: string;
+    id: string;
+    startYear: string;
+    endYear: string;
+    type: string;
+    country: string;
+    region: string;
+    disambiguation: string;
+    banner: string;
+    logo: string;
+    cover: string;
+    fanArt: string;
+    releaseGroups: IReleaseGroups[];
+    links: IArtistLinks;
+    members: IBandMembers[];
+    overview: string;
+    monitored: boolean;
 
     background: any;
 }

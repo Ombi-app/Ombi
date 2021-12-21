@@ -28,8 +28,9 @@ export class RequestOptionsComponent {
     if (this.data.type === RequestType.tvShow) {
       request = this.requestService.deleteChild(this.data.id);
     }
-    if (this.data.type === RequestType.album) {
-      request = this.requestService.removeAlbumRequest(this.data.id);
+
+    if (this.data.type === RequestType.artist) {
+      await this.requestService.removeAlbumRequest(this.data.id).toPromise();
     }
     request.subscribe(result => {
       if (result.result) {
@@ -49,7 +50,7 @@ export class RequestOptionsComponent {
     if (this.data.type === RequestType.tvShow) {
       await this.requestService.approveChild({id: this.data.id}).toPromise();
     }
-    if (this.data.type === RequestType.album) {
+    if (this.data.type === RequestType.artist) {
       await this.requestService.approveAlbum({id: this.data.id}).toPromise();
     }
 
@@ -61,7 +62,7 @@ export class RequestOptionsComponent {
     if (this.data.type === RequestType.movie) {
       await this.requestService.markMovieAvailable({id: this.data.id}).toPromise();
     }
-    if (this.data.type === RequestType.album) {
+    if (this.data.type === RequestType.artist) {
       await this.requestService.markAlbumAvailable({id: this.data.id}).toPromise();
     }
 

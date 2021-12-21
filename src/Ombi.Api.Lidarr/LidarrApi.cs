@@ -36,6 +36,15 @@ namespace Ombi.Api.Lidarr
             return _api.Request<List<LidarrRootFolder>>(request);
         }
 
+        public async Task<List<Search>> Search(string searchTerm, string apiKey, string baseUrl)
+        {
+            var request = new Request($"{ApiVersion}/search", baseUrl, HttpMethod.Get);
+            request.AddQueryString("term", searchTerm);
+
+            AddHeaders(request, apiKey);
+            return await _api.Request<List<Search>>(request);
+        }
+
         public async Task<List<ArtistLookup>> ArtistLookup(string searchTerm, string apiKey, string baseUrl)
         {
             var request = new Request($"{ApiVersion}/Artist/lookup", baseUrl, HttpMethod.Get);
@@ -83,7 +92,7 @@ namespace Ombi.Api.Lidarr
 
         public Task<AlbumByArtistResponse> GetAlbumsByArtist(string foreignArtistId)
         {
-            var request = new Request(string.Empty, $"https://api.lidarr.audio/api/v0.4/artist/{foreignArtistId}",
+            var request = new Request(string.Empty, $"https://api.lidarr.audio/api/v1/artist/{foreignArtistId}",
                 HttpMethod.Get) {IgnoreBaseUrlAppend = true};
             return _api.Request<AlbumByArtistResponse>(request);
         }

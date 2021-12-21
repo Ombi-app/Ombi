@@ -81,7 +81,23 @@ namespace Ombi.Schedule.Jobs.Ombi
                         await _requestQueue.SaveChangesAsync();
                         continue;
                     }
-                    var result = await _musicSender.Send(musicRequest);
+                    var result = await _musicSender.SendAlbum(musicRequest);
+                    if (result.Success)
+                    {
+                        request.Completed = DateTime.UtcNow;
+                        await _requestQueue.SaveChangesAsync();
+                    }
+                }
+                if (request.Type == RequestType.Artist)
+                {
+                    var musicRequest = await _musicRequestRepository.GetAll().FirstOrDefaultAsync(x => x.Id == request.RequestId);
+                    if (musicRequest == null)
+                    {
+                        await _requestQueue.Delete(request);
+                        await _requestQueue.SaveChangesAsync();
+                        continue;
+                    }
+                    var result = await _musicSender.SendArtist(musicRequest);
                     if (result.Success)
                     {
                         request.Completed = DateTime.UtcNow;

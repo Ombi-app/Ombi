@@ -5,6 +5,7 @@ namespace Ombi.Core.Senders
 {
     public interface IMusicSender
     {
-        Task<SenderResult> Send(AlbumRequest model);
+        Task<SenderResult> SendAlbum(MusicRequests model);
+        Task<SenderResult> SendArtist(MusicRequests model);
     }
 }

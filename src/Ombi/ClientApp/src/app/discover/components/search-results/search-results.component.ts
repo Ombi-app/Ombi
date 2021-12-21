@@ -87,6 +87,8 @@ export class DiscoverSearchResultsComponent implements OnInit {
             } else if (m.mediaType == "tv") {
                 mediaType = RequestType.tvShow;
             } else if (m.mediaType == "Artist") {
+                mediaType = RequestType.artist;
+            } else if (m.mediaType == "Album") {
                 mediaType = RequestType.album;
             }
 
@@ -98,10 +100,13 @@ export class DiscoverSearchResultsComponent implements OnInit {
                 if (mediaType === RequestType.tvShow) {
                     poster = "images/default_tv_poster.png"
                 }
+                if (mediaType === RequestType.album || mediaType === RequestType.artist) {
+                    poster = "images/default-music-placeholder.png";
+                }
             }
 
             this.discoverResults.push({
-                posterPath: mediaType !== RequestType.album ? poster : "images/default-music-placeholder.png",
+                posterPath: poster,
                 requested: false,
                 title: m.title,
                 type: mediaType,
@@ -153,6 +158,9 @@ export class DiscoverSearchResultsComponent implements OnInit {
                 }
                 if (mediaType === RequestType.tvShow) {
                     poster = "images/default_tv_poster.png"
+                }
+                if (mediaType === RequestType.album || mediaType === RequestType.artist) {
+                    poster = "images/default-music-placeholder.png";
                 }
             }
 

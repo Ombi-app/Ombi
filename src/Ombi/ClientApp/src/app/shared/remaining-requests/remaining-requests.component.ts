@@ -63,7 +63,7 @@ export class RemainingRequestsComponent implements OnInit {
                 this.matIcon = "fas fa-tv";
 
                 break;
-            case RequestType.album:
+            case RequestType.artist:
                 this.requestService.getRemainingMusicRequests().subscribe(callback);
                 this.matIcon = "fas fa-music";
 

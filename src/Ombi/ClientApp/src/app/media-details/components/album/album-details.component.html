@@ -1,0 +1,205 @@
+<div *ngIf="!album" class="justify-content-md-center top-spacing loading-spinner">
+    <mat-spinner [color]="'accent'"></mat-spinner>
+</div>
+
+<div *ngIf="album" class="dark-theme">
+
+    <top-banner [title]="album.title" [background]="getBackground()" [tagline]="album.disambiguation"></top-banner>
+
+    <section id="info-wrapper">
+        <div class="small-middle-container">
+
+            <div class="row">
+
+                <media-poster [posterPath]="album.cover"></media-poster>
+
+                <!--Next to poster-->
+                <!-- <div class="col-12 col-lg-3 col-xl-3 media-row">
+
+                    <social-icons [homepage]="artist.links?.homePage" [doNotAppend]="true" [imdbId]="artist.links?.imdb" [twitter]="artist.links?.twitter" [facebook]="artist.links?.facebook" [instagram]="artist.links?.instagram"></social-icons>
+
+                </div> -->
+
+                <div class="col-12 col-lg-6 col-xl-6 media-row">
+
+                    <button *ngIf="!album.monitored" mat-raised-button class="btn-spacing" color="primary" (click)="requestAlbum()">
+              <i class="fas fa-plus"></i> {{ 'MediaDetails.RequestAlbum' | translate }}</button>
+
+
+
+                    <button mat-raised-button class="btn-green btn-spacing" *ngIf="album.monitored"> {{ 
+            'Common.Requested' | translate }}</button>
+                    <span *ngIf="!album.monitored">
+            <span *ngIf="album.monitored; then requestedBtn else notRequestedBtn"></span> 
+
+            <!-- <ng-template #requestedBtn>
+              <button mat-raised-button *ngIf="!hasRequest || hasRequest && movieRequest && !movieRequest.denied"
+                class="btn-spacing" color="warn" [disabled]><i class="fas fa-check"></i>
+                {{ 'Common.Requested' | translate }}</button>
+            </ng-template>
+            <ng-template #notRequestedBtn>
+              <button mat-raised-button class="btn-spacing" color="primary" (click)="request()">
+                <i *ngIf="movie.requestProcessing" class="fas fa-circle-notch fa-spin fa-fw"></i> <i
+                  *ngIf="!movie.requestProcessing && !movie.processed" class="fas fa-plus"></i>
+                <i *ngIf="movie.processed && !movie.requestProcessing" class="fas fa-check"></i> {{
+                'Common.Request' | translate }}</button>
+            <!-- </ng-template> -->
+          </span>
+                    <!-- <span *ngIf="isAdmin && hasRequest">
+            <button (click)="approve()" mat-raised-button class="btn-spacing" color="accent">
+              <i class="fas fa-plus"></i> {{ 'Common.Approve' | translate }}
+            </button>
+            <button *ngIf="!movie.available" (click)="markAvailable()" mat-raised-button class="btn-spacing"
+              color="accent">
+              <i class="fas fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}
+            </button>
+
+            <button *ngIf="movieRequest && !movieRequest.denied" mat-raised-button class="btn-spacing" color="warn"
+              (click)="deny()">
+              <i class="fas fa-times"></i> {{
+                    'Requests.Deny' | translate }}</button>
+            <button *ngIf="movieRequest && movieRequest.denied" [matTooltip]="movieRequest.deniedReason"
+              mat-raised-button class="btn-spacing" color="warn">
+              <i class="fas fa-times"></i> {{
+                            'MediaDetails.Denied' | translate }}</button>
+          </span> -->
+
+                    <!-- <button *ngIf="(hasRequest && movieRequest) || movie.available" mat-raised-button class="btn-spacing"
+            color="danger" (click)="issue()">
+            <i class="fas fa-exclamation"></i> {{
+                'Requests.ReportIssue' | translate }}</button> -->
+
+
+
+
+                </div>
+            </div>
+
+            <div class="row">
+
+                <!-- <div class="col-12 col-md-2">
+
+                    <mat-card class="mat-elevation-z8">
+                        <mat-card-content class="medium-font">
+                            <album-information-panel [album]="album"></album-information-panel>
+                        </mat-card-content>
+                    </mat-card>
+
+
+                </div> -->
+
+                <div class="col-12 col-md-10">
+                    <div class="row">
+                        <div class="col-12">
+                            <mat-card class=" mat-elevation-z8 spacing-below">
+                                <mat-card-content>
+                                    <h1>{{album.title}} - {{album.disambiguation}}</h1>
+                                    <br />
+                                    {{album.overview}}
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                    </div>
+
+                    <!-- <div class="row">
+                        <div class="col-12">
+                            <div class="issuesPanel" *ngIf="album.requestId">
+                                <issues-panel [requestId]="album.requestId" [isAdmin]="isAdmin"></issues-panel>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <!-- <div class="row">
+            <div class="col-12">
+              <mat-accordion class="mat-elevation-z8  spacing-below">
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      {{'MediaDetails.RecommendationsTitle' | translate}}
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+
+                  <div class="row card-spacer" *ngIf="movie.recommendations.results.length > 0">
+
+                    <div class="col-md-2" *ngFor="let r of movie.recommendations.results">
+                      <div class="sidebar affixable affix-top preview-poster">
+                        <div class="poster">
+                          <a [routerLink]="'/details/movie/'+r.id">
+                            <img class="real grow" matTooltip="{{r.title}}"
+                              src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}" alt="Poster"
+                              style="display: block;">
+                          </a>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </mat-expansion-panel>
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      {{'MediaDetails.SimilarTitle' | translate}}
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+
+                  <div class="row card-spacer" *ngIf="movie.similar.results.length > 0">
+
+                    <div class="col-md-2" *ngFor="let r of movie.similar.results">
+                      <div class="sidebar affixable affix-top preview-poster">
+                        <div class="poster ">
+                          <a [routerLink]="'/details/movie/'+r.id">
+                            <img class="real grow" matTooltip="{{r.title}}"
+                              src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}" alt="Poster"
+                              style="display: block;">
+                          </a>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </mat-expansion-panel>
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      {{'MediaDetails.VideosTitle' | translate}}
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+
+                  <div class="row card-spacer" *ngIf="movie.videos.results.length > 0">
+
+                    <div class="col-md-6" *ngFor="let video of movie.videos.results">
+                      <iframe width="100%" height="315px" [src]="'https://www.youtube.com/embed/' + video.key | safe"
+                        frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                    </div>
+                  </div>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </div>
+          </div> -->
+
+
+
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+
+
+
+        <div class="bottom-page-gap">
+        </div>
+    </section>
+
+
+
+
+
+
+
+
+</div>

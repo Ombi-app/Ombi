@@ -38,7 +38,8 @@
         "Update": "Update",
 		"tvShow": "TV Show",
         "movie": "Movie",
-        "album": "Album"
+        "album": "Album",
+        "artist": "Artist"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "Email Address",
@@ -298,6 +299,7 @@
         "RequestAllAlbums": "Request All Albums",
         "ClearSelection": "Clear Selection",
         "RequestSelectedAlbums": "Request Selected Albums",
+        "RequestAlbum": "Request Album",
         "ViewCollection":"View Collection",
         "NotEnoughInfo": "Unfortunately there is not enough information about this show yet!",
         "AdvancedOptions":"Advanced Options",

@@ -63,7 +63,6 @@ using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Schedule.Jobs.SickRage;
 using Ombi.Schedule.Processor;
 using Quartz.Spi;
-using Ombi.Api.MusicBrainz;
 using Ombi.Api.Twilio;
 using Ombi.Api.CloudService;
 using Ombi.Api.RottenTomatoes;
@@ -167,7 +166,6 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IOneSignalApi, OneSignalApi>();
             services.AddTransient<ILidarrApi, LidarrApi>();
             services.AddTransient<IGroupMeApi, GroupMeApi>();
-            services.AddTransient<IMusicBrainzApi, MusicBrainzApi>();
             services.AddTransient<IWhatsAppApi, WhatsAppApi>();
             services.AddTransient<ICloudMobileNotification, CloudMobileNotification>();
             services.AddTransient<IEmbyApiFactory, EmbyApiFactory>();

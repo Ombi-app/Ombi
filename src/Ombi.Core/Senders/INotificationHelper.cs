@@ -10,10 +10,10 @@ namespace Ombi.Core
     {
         Task NewRequest(FullBaseRequest model);
         Task NewRequest(ChildRequests model);
-        Task NewRequest(AlbumRequest model);
+        Task NewRequest(MusicRequests model);
         Task Notify(MovieRequests model, NotificationType type);
         Task Notify(ChildRequests model, NotificationType type);
-        Task Notify(AlbumRequest model, NotificationType type);
+        Task Notify(MusicRequests model, NotificationType type);
         Task Notify(NotificationOptions model);
     }
 }

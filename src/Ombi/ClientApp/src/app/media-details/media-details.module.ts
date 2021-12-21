@@ -11,6 +11,7 @@ import { PipeModule } from "../pipes/pipe.module";
 import * as fromComponents from './components';
 import { AuthGuard } from "../auth/auth.guard";
 import { ArtistDetailsComponent } from "./components/artist/artist-details.component";
+import { AlbumDetailsComponent } from "./components/album/album-details.component";
 import { ReactiveFormsModule } from "@angular/forms";
 
 
@@ -19,6 +20,7 @@ const routes: Routes = [
     { path: "tv/:tvdbId/:search", component: TvDetailsComponent, canActivate: [AuthGuard] },
     { path: "tv/:tvdbId", component: TvDetailsComponent, canActivate: [AuthGuard] },
     { path: "artist/:artistId", component: ArtistDetailsComponent, canActivate: [AuthGuard] },
+    { path: "album/:albumId", component: AlbumDetailsComponent, canActivate: [AuthGuard] },
 ];
 @NgModule({
     imports: [

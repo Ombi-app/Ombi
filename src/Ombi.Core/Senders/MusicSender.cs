@@ -33,14 +33,14 @@ namespace Ombi.Core.Senders
         private readonly IRepository<RequestQueue> _requestQueueRepository;
         private readonly INotificationHelper _notificationHelper;
 
-        public async Task<SenderResult> Send(AlbumRequest model)
+        public async Task<SenderResult> SendAlbum(MusicRequests model)
         {
             try
             {
                 var settings = await _lidarrSettings.GetSettingsAsync();
                 if (settings.Enabled)
                 {
-                    return await SendToLidarr(model, settings);
+                    return await SendAlbumToLidarr(model, settings);
                 }
 
                 return new SenderResult { Success = false, Sent = false, Message = "Lidarr is not enabled" };
@@ -73,7 +73,47 @@ namespace Ombi.Core.Senders
             return new SenderResult { Success = false, Sent = false, Message = "Something went wrong!" };
         }
 
-        private async Task<SenderResult> SendToLidarr(AlbumRequest model, LidarrSettings settings)
+        public async Task<SenderResult> SendArtist(MusicRequests model)
+        {
+            try
+            {
+                var settings = await _lidarrSettings.GetSettingsAsync();
+                if (settings.Enabled)
+                {
+                    return await SendArtistToLidarr(model, settings);
+                }
+
+                return new SenderResult { Success = false, Sent = false, Message = "Lidarr is not enabled" };
+            }
+            catch (Exception e)
+            {
+                _log.LogError(e, "Exception thrown when sending a music to DVR app, added to the request queue");
+                var existingQueue = await _requestQueueRepository.FirstOrDefaultAsync(x => x.RequestId == model.Id);
+                if (existingQueue != null)
+                {
+                    existingQueue.RetryCount++;
+                    existingQueue.Error = e.Message;
+                    await _requestQueueRepository.SaveChangesAsync();
+                }
+                else
+                {
+                    await _requestQueueRepository.Add(new RequestQueue
+                    {
+                        Dts = DateTime.UtcNow,
+                        Error = e.Message,
+                        RequestId = model.Id,
+                        Type = RequestType.Album,
+                        RetryCount = 0
+                    });
+                    await _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
+                }
+            }
+
+
+            return new SenderResult { Success = false, Sent = false, Message = "Something went wrong!" };
+        }
+
+        private async Task<SenderResult> SendAlbumToLidarr(MusicRequests model, LidarrSettings settings)
         {
             var qualityToUse = int.Parse(settings.DefaultQualityProfile);
             //if (model.QualityOverride > 0)
@@ -99,9 +139,9 @@ namespace Ombi.Core.Senders
                     foreignArtistId = model.ForeignArtistId,
                     addOptions = new Addoptions
                     {
-                        monitored = true,
-                        monitor = MonitorTypes.None,
-                        searchForMissingAlbums = false,
+                        monitored = model.Monitored,
+                        monitor = model.Monitor,
+                        searchForMissingAlbums = model.SearchForMissingAlbums,
                         AlbumsToMonitor = new[] {model.ForeignAlbumId}
                     },
                     added = DateTime.Now,
@@ -160,7 +200,46 @@ namespace Ombi.Core.Senders
             return new SenderResult { Success = false, Sent = false, Message = "Album is already monitored" };
         }
 
-        private async Task<SenderResult> SetupAlbum(AlbumRequest model, ArtistResult artist, LidarrSettings settings)
+        private async Task<SenderResult> SendArtistToLidarr(MusicRequests model, LidarrSettings settings)
+        {
+            var qualityToUse = int.Parse(settings.DefaultQualityProfile);
+            //if (model.QualityOverride > 0)
+            //{
+            //    qualityToUse = model.QualityOverride;
+            //}
+
+            var rootFolderPath = /*model.RootPathOverride <= 0 ?*/ settings.DefaultRootPath /*: await RadarrRootPath(model.RootPathOverride, settings)*/;
+
+            EnsureArg.IsNotNullOrEmpty(model.ForeignArtistId, nameof(model.ForeignArtistId));
+            EnsureArg.IsNotNullOrEmpty(rootFolderPath, nameof(rootFolderPath));
+
+            // Create artist
+            var newArtist = new ArtistAdd
+            {
+                foreignArtistId = model.ForeignArtistId,
+                addOptions = new Addoptions
+                {
+                    monitor = model.Monitor,
+                    searchForMissingAlbums = model.SearchForMissingAlbums
+                },
+                artistName = model.ArtistName,
+                added = DateTime.Now,
+                monitored = model.Monitored,
+                metadataProfileId = settings.MetadataProfileId,
+                qualityProfileId = qualityToUse,
+                rootFolderPath = rootFolderPath,
+            };
+// Console.Write(newArtist);
+            var result = await _lidarrApi.AddArtist(newArtist, settings.ApiKey, settings.FullUri);
+            if (result != null && result.id > 0)
+            {
+                return new SenderResult { Message = "Artist has been requested!", Sent = true, Success = true };
+            }
+
+            return new SenderResult { Success = false, Sent = false, Message = "Artist is already monitored" };
+        }
+
+        private async Task<SenderResult> SetupAlbum(MusicRequests model, ArtistResult artist, LidarrSettings settings)
         {
             // Get the album id
             var albums = await _lidarrApi.GetAllAlbumsByArtistId(artist.id, settings.ApiKey, settings.FullUri);

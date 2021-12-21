@@ -27,7 +27,7 @@ export class DenyDialogComponent {
             if(this.data.requestType == RequestType.tvShow) {
                 result = await this.requestService.denyChild({id: this.data.requestId, reason: this.denyReason }).toPromise();
             }
-            if(this.data.requestType == RequestType.album) {
+            if(this.data.requestType == RequestType.artist) {
                 result = await this.requestService.denyAlbum({id: this.data.requestId, reason: this.denyReason }).toPromise();
             }
 

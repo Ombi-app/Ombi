@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ombi.Store.Entities.Requests
 {
-    [Table("AlbumRequests")]
-    public class AlbumRequest : BaseRequest
+    [Table("MusicRequests")]
+    public class MusicRequests : BaseRequest
     {
         public string ForeignAlbumId { get; set; }
         public string ForeignArtistId { get; set; }
@@ -17,6 +17,9 @@ namespace Ombi.Store.Entities.Requests
         public bool Subscribed { get; set; }
         [NotMapped]
         public bool ShowSubscribe { get; set; }
+        public bool Monitored { get; set; }
+        public string Monitor { get; set; }
+        public bool SearchForMissingAlbums { get; set; }
 
         
         [NotMapped]

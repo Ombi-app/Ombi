@@ -197,7 +197,7 @@ namespace Ombi.Notifications.Tests
         public void MusicNotificationTests()
         {
             var notificationOptions = new NotificationOptions();
-            var req = F.Build<AlbumRequest>()
+            var req = F.Build<MusicRequests>()
                 .With(x => x.RequestType, RequestType.Album)
                 .With(x => x.Available, true)
                 .Create();
@@ -232,7 +232,7 @@ namespace Ombi.Notifications.Tests
         public string MusicNotificationTests_RequestStatus(bool available, bool denied, bool approved)
         {
             var notificationOptions = new NotificationOptions();
-            var req = F.Build<AlbumRequest>()
+            var req = F.Build<MusicRequests>()
                 .With(x => x.RequestType, RequestType.Album)
                 .With(x => x.Available, available)
                 .With(x => x.Denied, denied)

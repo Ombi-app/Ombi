@@ -151,31 +151,31 @@ namespace Ombi.Controllers.V2
         }
 
         [HttpGet("album/available/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<AlbumRequest>> GetAvailableAlbumRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<MusicRequests>> GetAvailableAlbumRequests(int count, int position, string sort, string sortOrder)
         {
             return await _musicRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.Available);
         }
         
         [HttpGet("album/processing/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<AlbumRequest>> GetProcessingAlbumRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<MusicRequests>> GetProcessingAlbumRequests(int count, int position, string sort, string sortOrder)
         {
             return await _musicRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.ProcessingRequest);
         }
         
         [HttpGet("album/pending/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<AlbumRequest>> GetPendingAlbumRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<MusicRequests>> GetPendingAlbumRequests(int count, int position, string sort, string sortOrder)
         {
             return await _musicRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.PendingApproval);
         }
         
         [HttpGet("album/denied/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<AlbumRequest>> GetDeniedAlbumRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<MusicRequests>> GetDeniedAlbumRequests(int count, int position, string sort, string sortOrder)
         {
             return await _musicRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.Denied);
         }
 
         [HttpGet("album/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<AlbumRequest>> GetAlbumRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<MusicRequests>> GetAlbumRequests(int count, int position, string sort, string sortOrder)
         {
             return await _musicRequestEngine.GetRequests(count, position, sort, sortOrder);
         }
