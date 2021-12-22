@@ -34,11 +34,8 @@
               "node_modules/@fortawesome/fontawesome-free/scss/brands.scss",
               "node_modules/primeng/resources/primeng.min.css",
               "node_modules/primeicons/primeicons.css",
-              "node_modules/please-wait/src/please-wait.scss",
               "node_modules/@fullcalendar/core/main.min.css",
-              "node_modules/@fullcalendar/daygrid/main.min.css",
-              "node_modules/spinkit/scss/spinners/11-folding-cube.scss",
-              "node_modules/spinkit/scss/spinkit.scss"
+              "node_modules/@fullcalendar/daygrid/main.min.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",

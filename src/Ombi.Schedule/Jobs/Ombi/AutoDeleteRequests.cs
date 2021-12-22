@@ -16,14 +16,16 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly ISettingsService<OmbiSettings> _ombiSettings;
         private readonly IMovieRequestRepository _movieRequests;
         private readonly ITvRequestRepository _tvRequestRepository;
+        private readonly IMusicRequestRepository _musicRequestRepository;
         private readonly ILogger<AutoDeleteRequests> _logger;
 
         public AutoDeleteRequests(ISettingsService<OmbiSettings> ombiSettings, IMovieRequestRepository movieRequest,
-            ILogger<AutoDeleteRequests> logger, ITvRequestRepository tvRequestRepository)
+            ILogger<AutoDeleteRequests> logger, ITvRequestRepository tvRequestRepository, IMusicRequestRepository musicRequestRepository)
         {
             _ombiSettings = ombiSettings;
             _movieRequests = movieRequest;
             _tvRequestRepository = tvRequestRepository;
+            _musicRequestRepository = _musicRequestRepository;
             _logger = logger;
         }
 
@@ -37,6 +39,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             var date = DateTime.UtcNow.AddDays(-settings.AutoDeleteAfterDays).Date;
             await ProcessMovieRequests(date);
             await ProcessTvRequests(date);
+            await ProcessMusicRequests(date);
         }
 
         private async Task ProcessMovieRequests(DateTime date)
@@ -64,6 +67,20 @@ namespace Ombi.Schedule.Jobs.Ombi
             var parentRequests = await _tvRequestRepository.Get().Where(x => !x.ChildRequests.Any()).ToListAsync();
 
             await _tvRequestRepository.DeleteRange(parentRequests);
+        }
+
+        private async Task ProcessMusicRequests(DateTime date)
+        {
+            var requestsToDelete = await _musicRequestRepository.GetAll().Where(x => x.Available && x.MarkedAsAvailable.HasValue && x.MarkedAsAvailable.Value < date).ToListAsync();
+
+            _logger.LogInformation($"Deleting {requestsToDelete.Count} music requests that have now been scheduled for deletion, All available requests before {date::MM/dd/yyyy} will be deleted");
+            foreach (var r in requestsToDelete)
+            {
+                _logger.LogInformation($"Deleting music title {r.Title} as it was approved on {r.MarkedAsApproved:MM/dd/yyyy hh:mm tt}");
+            }
+
+            await _musicRequestRepository.DeleteRange(requestsToDelete);
+
         }
 
         private bool _disposed;

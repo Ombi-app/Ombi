@@ -72,6 +72,12 @@
                                         {{'Common.Request' | translate }}
                                     </button>
                                 </ng-template>
+                                <span *ngIf="!isAdmin && movie.showSubscribe" >
+                                    <button *ngIf="!movie.subscribed" (click)="notify()" id="notifyBtn" mat-raised-button  class="btn-spacing" >  <i class="fas fa-bell"></i>
+                                        {{ 'Requests.Notify' | translate }}</button>
+                                    <button *ngIf="movie.subscribed" (click)="unNotify()" id="unnotifyBtn" mat-raised-button  class="btn-spacing" >  <i class="fas fa-bell-slash"></i>
+                                        {{ 'Requests.RemoveNotification' | translate }}</button>
+                                    </span>
                             </span>
                             <span *ngIf="isAdmin && hasRequest">
                                 <button id="approveBtn" *ngIf="!movie.approved " (click)="approve()" mat-raised-button class="btn-spacing" color="accent">

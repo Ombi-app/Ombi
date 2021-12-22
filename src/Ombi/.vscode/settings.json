@@ -20,6 +20,7 @@
         "mass-email",
         "issues",
         "emby",
-        "availability-rules"
+        "availability-rules",
+        "details"
     ]
 }
