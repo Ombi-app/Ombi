@@ -226,7 +226,12 @@
             "MovieRequestQuotaExceeded": "Hai superato la tua quota di richieste di Film!",
             "TvRequestQuotaExceeded": "Hai superato la tua quota di richieste di Episodi!",
             "AlbumRequestQuotaExceeded": "Hai superato la tua quota di richieste di Album!"
-        }
+        },
+        "Notify": "Notify",
+        "RemoveNotification": "Remove Notifications",
+        "SuccessfulNotify": "You will now be notified for title {{title}}",
+        "SuccessfulUnNotify": "You will no longer be notified for title {{title}}",
+        "CouldntNotify": "Couldn't notify title {{title}}"
     },
     "Issues": {
         "Title": "Problemi",
