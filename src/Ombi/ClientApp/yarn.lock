@@ -6191,11 +6191,6 @@ pkg-dir@^4.1.0:
   dependencies:
     find-up "^4.0.0"
 
-please-wait@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/please-wait/-/please-wait-0.0.5.tgz#67098ce6260e92e0809e2d3b7c23f1d167dad960"
-  integrity sha1-ZwmM5iYOkuCAni07fCPx0Wfa2WA=
-
 pngjs@^3.3.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/pngjs/-/pngjs-3.4.0.tgz#99ca7d725965fb655814eaf65f38f12bbdbf555f"
@@ -7699,11 +7694,6 @@ spdy@^4.0.2:
     http-deceiver "^1.2.7"
     select-hose "^2.0.0"
     spdy-transport "^3.0.0"
-
-spinkit@^1.2.5:
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/spinkit/-/spinkit-1.2.5.tgz#90f9f466a20e8e39ef24da959c1e611c2a30dd54"
-  integrity sha1-kPn0ZqIOjjnvJNqVnB5hHCow3VQ=
 
 split-string@^3.0.1, split-string@^3.0.2:
   version "3.1.0"
