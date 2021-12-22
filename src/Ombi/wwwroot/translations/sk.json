@@ -226,7 +226,12 @@
             "MovieRequestQuotaExceeded": "Prekročili ste limit požiadaviek na filmy!",
             "TvRequestQuotaExceeded": "Prekročili ste limit požiadaviek na epizódy!",
             "AlbumRequestQuotaExceeded": "Prekročili ste limit požiadaviek na albumy!"
-        }
+        },
+        "Notify": "Notify",
+        "RemoveNotification": "Remove Notifications",
+        "SuccessfulNotify": "You will now be notified for title {{title}}",
+        "SuccessfulUnNotify": "You will no longer be notified for title {{title}}",
+        "CouldntNotify": "Couldn't notify title {{title}}"
     },
     "Issues": {
         "Title": "Problémy",
