@@ -226,7 +226,12 @@
             "MovieRequestQuotaExceeded": "Túllépted a megszabott film kérési kereted!",
             "TvRequestQuotaExceeded": "Túllépted a megszabott epizód kérési kereted!",
             "AlbumRequestQuotaExceeded": "Túllépted a megszabott album kérési kereted!"
-        }
+        },
+        "Notify": "Notify",
+        "RemoveNotification": "Remove Notifications",
+        "SuccessfulNotify": "You will now be notified for title {{title}}",
+        "SuccessfulUnNotify": "You will no longer be notified for title {{title}}",
+        "CouldntNotify": "Couldn't notify title {{title}}"
     },
     "Issues": {
         "Title": "Problémák",
