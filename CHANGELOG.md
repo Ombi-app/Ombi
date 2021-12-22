@@ -1,3 +1,17 @@
+# [4.8.0](https://github.com/Ombi-app/Ombi/compare/v4.7.11...v4.8.0) (2021-12-22)
+
+
+### Bug Fixes
+
+* **auto-delete:** :bug: We now also auto delete music requests, this was previously missing ([9fe1f8e](https://github.com/Ombi-app/Ombi/commit/9fe1f8e988aa31d36e7a685ae19f72d9c8414dc0))
+
+
+### Features
+
+* **details:** :sparkles: Added the notify button back into the details pages for requests ([8b33cdc](https://github.com/Ombi-app/Ombi/commit/8b33cdccef83db8794414b247438214b00860fac))
+
+
+
 ## [4.7.11](https://github.com/Ombi-app/Ombi/compare/v4.7.10...v4.7.11) (2021-12-17)
 
 
@@ -174,15 +188,6 @@
 ### Features
 
 * **mass-email:** :sparkles: Added the ability to configure the Mass Email, we can now send BCC and we are less likely to be rate limited when not using bcc [#4377](https://github.com/Ombi-app/Ombi/issues/4377) ([ca655ae](https://github.com/Ombi-app/Ombi/commit/ca655ae57042dec44106a2f2ef5ba2e6f1019ee4))
-
-
-
-## [4.3.2](https://github.com/Ombi-app/Ombi/compare/v4.3.1...v4.3.2) (2021-11-02)
-
-
-### Bug Fixes
-
-* **translations:** 🌐 Localization - Ensuring all of the app including backend are localized [#4366](https://github.com/Ombi-app/Ombi/issues/4366) ([5e140ab](https://github.com/Ombi-app/Ombi/commit/5e140ab6183b887a7665f5e870eb0bd05d487ace))
 
 
 
