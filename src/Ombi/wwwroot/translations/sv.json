@@ -227,11 +227,11 @@
             "TvRequestQuotaExceeded": "You have exceeded your Episode request quota!",
             "AlbumRequestQuotaExceeded": "You have exceeded your Album request quota!"
         },
-        "Notify": "Notify",
-        "RemoveNotification": "Remove Notifications",
-        "SuccessfulNotify": "You will now be notified for title {{title}}",
-        "SuccessfulUnNotify": "You will no longer be notified for title {{title}}",
-        "CouldntNotify": "Couldn't notify title {{title}}"
+        "Notify": "Avisering",
+        "RemoveNotification": "Ta bort avisering",
+        "SuccessfulNotify": "Du kommer nu att aviseras för titel {{title}}",
+        "SuccessfulUnNotify": "Du kommer inte längre att aviseras för titel {{title}}",
+        "CouldntNotify": "Kunde inte avisera för {{title}}"
     },
     "Issues": {
         "Title": "Problem",
