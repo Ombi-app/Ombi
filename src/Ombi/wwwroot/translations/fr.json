@@ -227,11 +227,11 @@
             "TvRequestQuotaExceeded": "Vous avez dépassé votre quota de demandes d'épisodes !",
             "AlbumRequestQuotaExceeded": "Vous avez dépassé votre quota de demandes d'albums !"
         },
-        "Notify": "Notify",
-        "RemoveNotification": "Remove Notifications",
-        "SuccessfulNotify": "You will now be notified for title {{title}}",
-        "SuccessfulUnNotify": "You will no longer be notified for title {{title}}",
-        "CouldntNotify": "Couldn't notify title {{title}}"
+        "Notify": "Notifier",
+        "RemoveNotification": "Supprimer les notifications",
+        "SuccessfulNotify": "Vous allez maintenant être notifié pour {{title}}",
+        "SuccessfulUnNotify": "Vous ne serez plus notifié pour {{title}}",
+        "CouldntNotify": "Impossible de notifier {{title}}"
     },
     "Issues": {
         "Title": "Problèmes",
