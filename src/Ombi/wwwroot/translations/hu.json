@@ -62,7 +62,7 @@
         "Discover": "Felfedezés",
         "Search": "Keresés",
         "Requests": "Kérések",
-        "UserManagement": "Felhasználók kezelése",
+        "UserManagement": "Felhasználók",
         "Issues": "Problémák",
         "Vote": "Szavazás",
         "Donate": "Adakozás!",
@@ -219,7 +219,7 @@
             "NoPermissionsOnBehalf": "Nincs jogosultságod más felhasználók nevében kérni!",
             "NoPermissions": "Nincs megfelelő jogosultságod!",
             "RequestDoesNotExist": "A kérés nem létezik",
-            "ChildRequestDoesNotExist": "Child Request does not exist",
+            "ChildRequestDoesNotExist": "Gyerek kérés nem létezik",
             "NoPermissionsRequestMovie": "Nincs jogosultságod filmet kérni",
             "NoPermissionsRequestTV": "Nincs jogosultságod sorozatot kérni",
             "NoPermissionsRequestAlbum": "Nincs jogosultságod albumot kérni",
@@ -227,11 +227,11 @@
             "TvRequestQuotaExceeded": "Túllépted a megszabott epizód kérési kereted!",
             "AlbumRequestQuotaExceeded": "Túllépted a megszabott album kérési kereted!"
         },
-        "Notify": "Notify",
-        "RemoveNotification": "Remove Notifications",
-        "SuccessfulNotify": "You will now be notified for title {{title}}",
-        "SuccessfulUnNotify": "You will no longer be notified for title {{title}}",
-        "CouldntNotify": "Couldn't notify title {{title}}"
+        "Notify": "Értesítés",
+        "RemoveNotification": "Értesítések törlése",
+        "SuccessfulNotify": "Mostantól értesítve leszel erről: {{title}}",
+        "SuccessfulUnNotify": "Mostantól nem leszel értesítve erről: {{title}}",
+        "CouldntNotify": "Nem lehetett értesíteni erről: {{title}}"
     },
     "Issues": {
         "Title": "Problémák",
