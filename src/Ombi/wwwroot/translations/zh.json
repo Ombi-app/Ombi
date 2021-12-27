@@ -227,10 +227,10 @@
             "TvRequestQuotaExceeded": "您的剧集请求已超出配额！",
             "AlbumRequestQuotaExceeded": "您的专辑请求已超出配额！"
         },
-        "Notify": "Notify",
-        "RemoveNotification": "Remove Notifications",
-        "SuccessfulNotify": "You will now be notified for title {{title}}",
-        "SuccessfulUnNotify": "You will no longer be notified for title {{title}}",
+        "Notify": "通知",
+        "RemoveNotification": "删除通知",
+        "SuccessfulNotify": "您将收到标题为 {{title}} 的通知",
+        "SuccessfulUnNotify": "您将不再收到标题为 {{title}} 的通知",
         "CouldntNotify": "Couldn't notify title {{title}}"
     },
     "Issues": {
