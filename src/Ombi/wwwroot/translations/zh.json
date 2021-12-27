@@ -231,7 +231,7 @@
         "RemoveNotification": "删除通知",
         "SuccessfulNotify": "您将收到标题为 {{title}} 的通知",
         "SuccessfulUnNotify": "您将不再收到标题为 {{title}} 的通知",
-        "CouldntNotify": "Couldn't notify title {{title}}"
+        "CouldntNotify": "无法通知标题 {{title}}"
     },
     "Issues": {
         "Title": "问题",
