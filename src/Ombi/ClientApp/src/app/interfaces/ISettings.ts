@@ -1,4 +1,4 @@
-﻿import { ISettings } from "./ICommon";
+import { ISettings } from "./ICommon";
 import { RequestLimitType } from ".";
 
 export interface IExternalSettings extends ISettings {
@@ -193,6 +193,7 @@ export interface ICustomizationSettings extends ISettings {
   recentlyAddedPage: boolean;
   useCustomPage: boolean;
   hideAvailableFromDiscover: boolean;
+  favicon: string;
 }
 
 export interface IJobSettings {

@@ -23,6 +23,12 @@
         appName = "Ombi";
     }
 
+    var favicon = customization.Favicon;
+    if (string.IsNullOrEmpty(favicon))
+    {
+        favicon = "images/favicon/favicon.ico";
+    }
+
 
 }
 <!DOCTYPE html>
