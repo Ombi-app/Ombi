@@ -315,7 +315,7 @@
         "Status": "Statut :",
         "StatusValues": {
             "Rumored": "Rumeur",
-            "Planned": "Planifié",
+            "Planned": "Prévu",
             "In Production": "En Production",
             "Post Production": "Post-production",
             "Released": "Sorti",
@@ -335,7 +335,7 @@
         "GenresLabel": "Genres :",
         "Genres": "Genres",
         "FirstAired": "Première diffusion :",
-        "TheatricalRelease": "Sortie :",
+        "TheatricalRelease": "Sortie en salle :",
         "DigitalRelease": "Sortie numérique :",
         "Votes": "Votes :",
         "Runtime": "Durée :",
