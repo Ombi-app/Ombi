@@ -1,85 +1,91 @@
-﻿<settings-menu></settings-menu>
+<settings-menu></settings-menu>
 <div class="small-middle-container">
 <wiki></wiki>
 <fieldset *ngIf="form">
     <legend>Ombi Configuration</legend>
     <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
-        <div class="col-md-12 col-12 col-sm-12">
-            <div class="md-form-field">
-                <mat-form-field appearance="outline" >
-                    <mat-label>Base URL</mat-label>
-                    <input matInput  formControlName="baseUrl">
-                </mat-form-field>
-            </div>
-            <div class="md-form-field">
-                <mat-form-field appearance="outline">
-                    <mat-label>Api Key</mat-label>
-                    <input matInput id="ApiKey" name="ApiKey"  formControlName="apiKey" readonly="readonly">
-                    <button type="button" matSuffix (click)="refreshApiKey()" style="display:inline-block;">
-                        <i class="fas fa-sync-alt fa-lg"></i>
-                    </button>
-
-                </mat-form-field>
-            </div>
-            <div>
-                <mat-form-field>
-                    <mat-select placeholder="Branch" formControlName="branch" matTooltip="This will not update your current version, but only control the update checks on the About page">
-                        <mat-option [value]="Branch.Stable">
-                            Stable
-                        </mat-option>
-                        <mat-option [value]="Branch.Develop">
-                            Develop
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div>
-                <mat-slide-toggle formControlName="doNotSendNotificationsForAutoApprove">
-                    Do not send Notifications if a User has the Auto Approve permission</mat-slide-toggle>
-            </div>
-            <div>
-                <mat-slide-toggle formControlName="hideRequestsUsers">
-                    Hide requests from other users
-                </mat-slide-toggle>
-            </div>
-            <div>
-                <mat-slide-toggle formControlName="autoDeleteAvailableRequests">
-                    Auto Delete Available Requests
-                </mat-slide-toggle>
-            </div>
-            <div *ngIf="form.get('autoDeleteAvailableRequests').value">
-                <mat-form-field appearance="outline" >
-                    <mat-label>Delete After Days of Availbility</mat-label>
-                    <input matInput formControlName="autoDeleteAfterDays">
-                </mat-form-field>
-            </div>
-            <div>
-                <mat-slide-toggle formControlName="collectAnalyticData" matTooltip="This will allow us to have a better understanding of the userbase so we know what we should be supporting (Uses Google Analytics)">
-                    Allow us to collect anonymous analytical data e.g. browser used
-                </mat-slide-toggle>
-            </div>
-            <!-- <div>
-                <mat-slide-toggle formControlName="disableHealthChecks">
-                    Disable the health checks page
-                    <a href="/healthchecks-ui" target="_blank">/healthchecks-ui</a>
-                </mat-slide-toggle>
-            </div> -->
-            <div>
-                <mat-form-field *ngIf="langauges">
-                    <mat-select matTooltip="This is the default site language for search results, the user can override this in their preferences page" placeholder="Language" formControlName="defaultLanguageCode">
-                        <mat-option>--</mat-option>
-                        <mat-option *ngFor="let lang of langauges" [value]="lang.code">
-                            {{lang.nativeName}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="form-group">
-                <div>
-                    <button mat-raised-button [disabled]="form.invalid" type="submit" id="save" class="mat-stroked-button accent mat-accent">Submit</button>
-                </div>
-            </div>
+      <div class="col-md-12 col-12 col-sm-12">
+        <div class="md-form-field">
+          <mat-form-field appearance="outline">
+            <mat-label>Base URL</mat-label>
+            <input matInput formControlName="baseUrl">
+          </mat-form-field>
         </div>
+        <div class="md-form-field">
+          <mat-form-field appearance="outline">
+            <mat-label>Api Key</mat-label>
+            <input matInput id="ApiKey" name="ApiKey" formControlName="apiKey" readonly="readonly">
+            <button type="button" matSuffix (click)="refreshApiKey()" style="display:inline-block;">
+              <i class="fas fa-sync-alt fa-lg"></i>
+            </button>
+
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-select placeholder="Branch" formControlName="branch" matTooltip="This will not update your current version, but only control the update checks on the About page">
+              <mat-option [value]="Branch.Stable">
+                Stable
+              </mat-option>
+              <mat-option [value]="Branch.Develop">
+                Develop
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-slide-toggle formControlName="doNotSendNotificationsForAutoApprove">
+            Do not send Notifications if a User has the Auto Approve permission
+          </mat-slide-toggle>
+        </div>
+        <div>
+          <mat-slide-toggle formControlName="hideRequestsUsers">
+            Hide requests from other users
+          </mat-slide-toggle>
+        </div>
+        <div>
+          <mat-slide-toggle formControlName="anonimizeRequests">
+            Anonimize requests for other users
+          </mat-slide-toggle>
+        </div>  
+        <div>
+          <mat-slide-toggle formControlName="autoDeleteAvailableRequests">
+            Auto Delete Available Requests
+          </mat-slide-toggle>
+        </div>
+        <div *ngIf="form.get('autoDeleteAvailableRequests').value">
+          <mat-form-field appearance="outline">
+            <mat-label>Delete After Days of Availbility</mat-label>
+            <input matInput formControlName="autoDeleteAfterDays">
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-slide-toggle formControlName="collectAnalyticData" matTooltip="This will allow us to have a better understanding of the userbase so we know what we should be supporting (Uses Google Analytics)">
+            Allow us to collect anonymous analytical data e.g. browser used
+          </mat-slide-toggle>
+        </div>
+        <!-- <div>
+      <mat-slide-toggle formControlName="disableHealthChecks">
+          Disable the health checks page
+          <a href="/healthchecks-ui" target="_blank">/healthchecks-ui</a>
+      </mat-slide-toggle>
+  </div> -->
+        <div>
+          <mat-form-field *ngIf="langauges">
+            <mat-select matTooltip="This is the default site language for search results, the user can override this in their preferences page" placeholder="Language" formControlName="defaultLanguageCode">
+              <mat-option>--</mat-option>
+              <mat-option *ngFor="let lang of langauges" [value]="lang.code">
+                {{lang.nativeName}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <div>
+            <button mat-raised-button [disabled]="form.invalid" type="submit" id="save" class="mat-stroked-button accent mat-accent">Submit</button>
+          </div>
+        </div>
+      </div>
     </form>
 </fieldset>
 </div>

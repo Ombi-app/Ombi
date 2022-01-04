@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 
 import { Branch, ILanguageRefine, IOmbiSettings } from "../../interfaces";
@@ -29,6 +29,7 @@ export class OmbiComponent implements OnInit {
                 baseUrl: [x.baseUrl],
                 doNotSendNotificationsForAutoApprove: [x.doNotSendNotificationsForAutoApprove],
                 hideRequestsUsers: [x.hideRequestsUsers],
+                anonimizeRequests: [x.anonimizeRequests],
                 defaultLanguageCode: [x.defaultLanguageCode],
                 disableHealthChecks: [x.disableHealthChecks],
                 autoDeleteAvailableRequests: [x.autoDeleteAvailableRequests],

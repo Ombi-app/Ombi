@@ -179,7 +179,7 @@ namespace Ombi.Core.Engine
             {
                 allRequests =
                     MovieRepository
-                        .GetWithUser(); //.Skip(position).Take(count).OrderByDescending(x => x.ReleaseDate).ToListAsync();
+                        .GetWithUser(shouldHide.Anonimize); //.Skip(position).Take(count).OrderByDescending(x => x.ReleaseDate).ToListAsync();
             }
 
             switch (orderFilter.AvailabilityFilter)
@@ -240,8 +240,8 @@ namespace Ombi.Core.Engine
             {
                 allRequests =
                     MovieRepository
-                        .GetWithUser();
-            }
+                        .GetWithUser(shouldHide.Anonimize);
+            }            
 
             var prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(sortProperty, true);
 
@@ -284,7 +284,7 @@ namespace Ombi.Core.Engine
             {
                 allRequests =
                     MovieRepository
-                        .GetWithUser();
+                        .GetWithUser(shouldHide.Anonimize);
             }
 
             switch (status)
@@ -346,7 +346,7 @@ namespace Ombi.Core.Engine
             {
                 allRequests =
                     MovieRepository
-                        .GetWithUser().Where(x => !x.Available && x.Approved);
+                        .GetWithUser(shouldHide.Anonimize).Where(x => !x.Available && x.Approved);
             }
 
             var prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(sortProperty, true);
@@ -428,7 +428,7 @@ namespace Ombi.Core.Engine
             }
             else
             {
-                return await MovieRepository.GetWithUser().CountAsync();
+                return await MovieRepository.GetWithUser(shouldHide.Anonimize).CountAsync();
             }
         }
 
@@ -446,7 +446,7 @@ namespace Ombi.Core.Engine
             }
             else
             {
-                allRequests = await MovieRepository.GetWithUser().ToListAsync();
+                allRequests = await MovieRepository.GetWithUser(shouldHide.Anonimize).ToListAsync();
             }
 
             await CheckForSubscription(shouldHide, allRequests);
@@ -456,7 +456,8 @@ namespace Ombi.Core.Engine
 
         public async Task<MovieRequests> GetRequest(int requestId)
         {
-            var request = await MovieRepository.GetWithUser().Where(x => x.Id == requestId).FirstOrDefaultAsync();
+            var shouldHide = await HideFromOtherUsers();
+            var request = await MovieRepository.GetWithUser(shouldHide.Anonimize).Where(x => x.Id == requestId).FirstOrDefaultAsync();
             await CheckForSubscription(new HideResult(), new List<MovieRequests> { request });
 
             return request;
@@ -499,7 +500,7 @@ namespace Ombi.Core.Engine
             }
             else
             {
-                allRequests = await MovieRepository.GetWithUser().ToListAsync();
+                allRequests = await MovieRepository.GetWithUser(shouldHide.Anonimize).ToListAsync();
             }
 
             var results = allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase)).ToList();
@@ -630,7 +631,8 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<MovieRequests> UpdateMovieRequest(MovieRequests request)
         {
-            var allRequests = await MovieRepository.GetWithUser().ToListAsync();
+            var shouldHide = await HideFromOtherUsers();
+            var allRequests = await MovieRepository.GetWithUser(shouldHide.Anonimize).ToListAsync();
             var results = allRequests.FirstOrDefault(x => x.Id == request.Id);
 
             results.Approved = request.Approved;

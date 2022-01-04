@@ -1,4 +1,4 @@
-﻿import { ISettings } from "./ICommon";
+import { ISettings } from "./ICommon";
 import { RequestLimitType } from ".";
 
 export interface IExternalSettings extends ISettings {
@@ -15,6 +15,7 @@ export interface IOmbiSettings extends ISettings {
   apiKey: string;
   doNotSendNotificationsForAutoApprove: boolean;
   hideRequestsUsers: boolean;
+  anonimizeRequests: boolean;
   defaultLanguageCode: string;
   disableHealthChecks: boolean;
   autoDeleteAvailableRequests: boolean;

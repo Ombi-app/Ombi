@@ -23,8 +23,9 @@ namespace Ombi.Core.Engine
 
         public async Task<UserStatsSummary> GetSummary(SummaryRequest request)
         {
+            
             // get all movie requests
-            var movies = _movieRequest.GetWithUser();
+            var movies = _movieRequest.GetWithUser(false);
             var filteredMovies = movies.Where(x => x.RequestedDate >= request.From && x.RequestedDate <= request.To);
             var tv = _tvRequest.GetLite();
             var children = tv.SelectMany(x =>
