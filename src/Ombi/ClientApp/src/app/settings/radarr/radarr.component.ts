@@ -62,7 +62,6 @@ export class RadarrComponent implements OnInit {
             { name: "Announced", value: "Announced" },
             { name: "In Cinemas", value: "InCinemas" },
             { name: "Physical / Web", value: "Released" },
-            { name: "PreDb", value: "PreDb" },
         ];
 
     }
