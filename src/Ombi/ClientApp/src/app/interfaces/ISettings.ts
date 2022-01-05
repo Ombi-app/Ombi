@@ -194,6 +194,7 @@ export interface ICustomizationSettings extends ISettings {
   recentlyAddedPage: boolean;
   useCustomPage: boolean;
   hideAvailableFromDiscover: boolean;
+  favicon: string;
 }
 
 export interface IJobSettings {

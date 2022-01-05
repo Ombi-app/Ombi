@@ -12,6 +12,7 @@
         public bool RecentlyAddedPage { get; set; }
         public bool UseCustomPage { get; set; }
         public bool HideAvailableFromDiscover { get; set; }
+        public string Favicon { get; set; }
 
         public string AddToUrl(string part)
         {
