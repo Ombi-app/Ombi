@@ -109,7 +109,10 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
                     }
                     if (this.anonimized) {
                       this.displayedColumns.forEach((element, index) => {
-                        if (element == 'requestedUser.requestedBy') this.displayedColumns.splice(index, 1);
+                        if (element === 'requestedUser.requestedBy')
+                        {
+                            this.displayedColumns.splice(index, 1);
+                        }
                       });
                     }
                     return data.collection;
