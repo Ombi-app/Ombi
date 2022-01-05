@@ -48,17 +48,16 @@ namespace Ombi.Store.Repository.Requests
 
         public IQueryable<MovieRequests> GetWithUser(bool anonimize)
         {
-            var allRequests = Db.MovieRequests
-                .Include(x => x.RequestedUser)
-                .ThenInclude(x => x.NotificationUserIds)
-                .ToList();
-
-            if (anonimize)
+            if (!anonimize)
             {
-                allRequests.ForEach(x => x.RequestedUser = null);
-                allRequests.ForEach(x => x.RequestedUserId = null);
-            }
-            return allRequests.AsQueryable();
+                return Db.MovieRequests
+                    .Include(x => x.RequestedUser)
+                    .ThenInclude(x => x.NotificationUserIds)
+                    .AsQueryable();
+            } else
+            {
+                return Db.MovieRequests.AsQueryable(); //This still populates the RequestedUser for the logged in user (or so it seems...)
+            }            
         }
 
         public async Task MarkAsAvailable(int id)
