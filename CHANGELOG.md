@@ -1,3 +1,12 @@
+# [4.9.0](https://github.com/Ombi-app/Ombi/compare/v4.8.1...v4.9.0) (2022-01-05)
+
+
+### Features
+
+* **customization:** :sparkles: Added possibility for custom favicons ([40af659](https://github.com/Ombi-app/Ombi/commit/40af6593b668d4712327c18f92f5b7b5a0a65e26))
+
+
+
 ## [4.8.1](https://github.com/Ombi-app/Ombi/compare/v4.8.0...v4.8.1) (2022-01-04)
 
 
@@ -169,15 +178,6 @@
 * :bug: Fixed the MySQL issue after .net 6 upgrade [#4393](https://github.com/Ombi-app/Ombi/issues/4393) ([fea7ff0](https://github.com/Ombi-app/Ombi/commit/fea7ff05139e9ff50c8097fa5389b4ef9ad21a15))
 * **translations:** 🌐 New translations from Crowdin [skip ci] ([c6acb45](https://github.com/Ombi-app/Ombi/commit/c6acb45f8d3f371c0b4024c4272849d0d0cc867f))
 * **translations:** 🌐 New translations from Crowdin [skip ci] ([18c220a](https://github.com/Ombi-app/Ombi/commit/18c220a0cd0d19e45a07d0c319da2b9512778a8a))
-
-
-
-# [4.6.0](https://github.com/Ombi-app/Ombi/compare/v4.4.0...v4.6.0) (2021-11-09)
-
-
-### Features
-
-* :sparkles: Upgrade Ombi to .NET 6 ([#4390](https://github.com/Ombi-app/Ombi/issues/4390)) ([719eb7d](https://github.com/Ombi-app/Ombi/commit/719eb7dbe37b3a72d264e2f670067518eef70694)), closes [#4392](https://github.com/Ombi-app/Ombi/issues/4392)
 
 
 
