@@ -101,9 +101,6 @@ export class TvGridComponent implements OnInit, AfterViewInit {
                       });
                   }
 
-                  console.log(this.anonimized);
-                  console.log(data.collection);
-
                     return data.collection;
                 }),
                 catchError((err) => {

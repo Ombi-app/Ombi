@@ -1,7 +1,7 @@
 <settings-menu></settings-menu>
 <div class="small-middle-container">
-<wiki></wiki>
-<fieldset *ngIf="form">
+  <wiki></wiki>
+  <fieldset *ngIf="form">
     <legend>Ombi Configuration</legend>
     <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
       <div class="col-md-12 col-12 col-sm-12">
@@ -87,5 +87,5 @@
         </div>
       </div>
     </form>
-</fieldset>
+  </fieldset>
 </div>
