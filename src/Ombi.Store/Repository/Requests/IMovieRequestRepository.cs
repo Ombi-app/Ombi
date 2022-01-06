@@ -11,7 +11,7 @@ namespace Ombi.Store.Repository.Requests
         Task Update(MovieRequests request);
         Task Save();
         Task MarkAsAvailable(int id);
-        IQueryable<MovieRequests> GetWithUser(bool anonimize);
+        IQueryable<MovieRequests> GetWithUser(bool anonimize = false);
         IQueryable<MovieRequests> GetWithUser(string userId);
         IQueryable<MovieRequests> GetAll(string userId);
     }

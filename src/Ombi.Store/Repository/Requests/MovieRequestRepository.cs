@@ -46,7 +46,7 @@ namespace Ombi.Store.Repository.Requests
                 .FirstOrDefault();
         }
 
-        public IQueryable<MovieRequests> GetWithUser(bool anonimize)
+        public IQueryable<MovieRequests> GetWithUser(bool anonimize = false)
         {
             if (!anonimize)
             {
@@ -56,7 +56,7 @@ namespace Ombi.Store.Repository.Requests
                     .AsQueryable();
             } else
             {
-                return Db.MovieRequests.AsQueryable(); //This still populates the RequestedUser for the logged in user (or so it seems...)
+                return Db.MovieRequests.AsNoTracking().AsQueryable();
             }            
         }
 
