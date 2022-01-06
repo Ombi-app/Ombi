@@ -369,7 +369,7 @@ namespace Ombi.Core.Engine
             }
             else
             {
-                allRequests = await TvRepository.GetChild().ToListAsync();
+                allRequests = await TvRepository.GetChild(shouldHide.Anonimize).ToListAsync();
 
             }
 
@@ -424,7 +424,7 @@ namespace Ombi.Core.Engine
             }
             else
             {
-                allRequests = await TvRepository.GetChild().ToListAsync();
+                allRequests = await TvRepository.GetChild(shouldHide.Anonimize).ToListAsync();
 
             }
 
