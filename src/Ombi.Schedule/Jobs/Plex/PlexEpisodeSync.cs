@@ -83,7 +83,7 @@ namespace Ombi.Schedule.Jobs.Plex
             var sections = await _api.GetLibrarySections(settings.PlexAuthToken, settings.FullUri);
 
             // Filter the libSections
-            var tvSections = sections.MediaContainer.Directory.Where(x => x.type.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase));
+            var tvSections = sections.MediaContainer.Directory.Where(x => x.type.Equals(MediaType.Series.ToString(), StringComparison.CurrentCultureIgnoreCase));
 
             foreach (var section in tvSections)
             {

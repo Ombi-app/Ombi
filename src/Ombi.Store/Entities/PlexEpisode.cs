@@ -3,7 +3,7 @@
 namespace Ombi.Store.Entities
 {
     [Table("PlexEpisode")]
-    public class PlexEpisode : Entity
+    public class PlexEpisode : Entity, IMediaServerEpisode<PlexServerContent>
     {
         public int EpisodeNumber { get; set; }
         public int SeasonNumber { get; set; }

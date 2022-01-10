@@ -32,7 +32,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 namespace Ombi.Store.Entities
 {
     [Table("EmbyEpisode")]
-    public class EmbyEpisode : Entity
+    public class EmbyEpisode : Entity, IMediaServerEpisode<EmbyContent>
     {
         public string Title { get; set; }
         public string EmbyId { get; set; }

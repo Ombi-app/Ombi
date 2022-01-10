@@ -12,7 +12,7 @@ namespace Ombi.Store.Repository
     {
         Task<bool> ContentExists(string providerId);
         Task<PlexServerContent> Get(string providerId, ProviderType type);
-        Task<PlexServerContent> GetByType(string providerId, ProviderType type, PlexMediaTypeEntity plexType);
+        Task<PlexServerContent> GetByType(string providerId, ProviderType type, MediaType plexType);
         Task<PlexServerContent> GetByKey(int key);
         Task Update(PlexServerContent existingContent);
         IQueryable<PlexEpisode> GetAllEpisodes();

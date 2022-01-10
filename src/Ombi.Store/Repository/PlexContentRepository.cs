@@ -79,7 +79,7 @@ namespace Ombi.Store.Repository
             return null;
         }
 
-        public async Task<PlexServerContent> GetByType(string providerId, ProviderType type, PlexMediaTypeEntity plexType)
+        public async Task<PlexServerContent> GetByType(string providerId, ProviderType type, MediaType plexType)
         {
             switch (type)
             {

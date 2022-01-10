@@ -32,17 +32,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Ombi.Store.Entities
 {
     [Table("PlexServerContent")]
-    public class PlexServerContent : Entity
+    public class PlexServerContent : Entity, IMediaServerContent<PlexEpisode>
     {
         public string Title { get; set; }
         public string ReleaseYear { get; set; }
         public string ImdbId { get; set; }
         public string TvDbId { get; set; }
         public string TheMovieDbId { get; set; }
-        public PlexMediaTypeEntity Type { get; set; }
+        public MediaType Type { get; set; }
 
         public string Url { get; set; }
         
+        //public IMediaServerEpisode Episode { get; set; }
         public ICollection<PlexEpisode> Episodes { get; set; }
         public ICollection<PlexSeasonsContent> Seasons { get; set; }
 
@@ -72,11 +73,5 @@ namespace Ombi.Store.Entities
         public int SeasonNumber { get; set; }
         public int SeasonKey { get; set; }
         public int ParentKey { get; set; }
-    }
-
-    public enum PlexMediaTypeEntity
-    {
-        Movie = 0,
-        Show = 1
     }
 }

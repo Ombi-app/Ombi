@@ -32,7 +32,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Ombi.Store.Entities
 {
     [Table("JellyfinContent")]
-    public class JellyfinContent : Entity
+    public class JellyfinContent : Entity, IMediaServerContent<JellyfinEpisode>
     {
         public string Title { get; set; }
 
@@ -41,7 +41,7 @@ namespace Ombi.Store.Entities
         /// </summary>
         public string ProviderId { get; set; }
         public string JellyfinId { get; set; }
-        public JellyfinMediaType Type { get; set; }
+        public MediaType Type { get; set; }
         public DateTime AddedAt { get; set; }
 
         public string ImdbId { get; set; }
@@ -62,10 +62,4 @@ namespace Ombi.Store.Entities
         public bool HasTheMovieDb => !string.IsNullOrEmpty(TheMovieDbId);
     }
 
-    public enum JellyfinMediaType
-    {
-        Movie = 0,
-        Series = 1,
-        Music = 2
-    }
 }

@@ -16,7 +16,7 @@ using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Quartz;
-using EmbyMediaType = Ombi.Store.Entities.EmbyMediaType;
+using MediaType = Ombi.Store.Entities.MediaType;
 
 namespace Ombi.Schedule.Jobs.Emby
 {
@@ -165,7 +165,7 @@ namespace Ombi.Schedule.Jobs.Emby
                             ImdbId = tvShow.ProviderIds?.Imdb,
                             TheMovieDbId = tvShow.ProviderIds?.Tmdb,
                             Title = tvShow.Name,
-                            Type = EmbyMediaType.Series,
+                            Type = MediaType.Series,
                             EmbyId = tvShow.Id,
                             Url = EmbyHelper.GetEmbyMediaUrl(tvShow.Id, server?.ServerId, server.ServerHostname),
                             AddedAt = DateTime.UtcNow
@@ -255,7 +255,7 @@ namespace Ombi.Schedule.Jobs.Emby
                     ImdbId = movieInfo.ProviderIds.Imdb,
                     TheMovieDbId = movieInfo.ProviderIds?.Tmdb,
                     Title = movieInfo.Name,
-                    Type = EmbyMediaType.Movie,
+                    Type = MediaType.Movie,
                     EmbyId = movieInfo.Id,
                     Url = EmbyHelper.GetEmbyMediaUrl(movieInfo.Id, server?.ServerId, server.ServerHostname),
                     AddedAt = DateTime.UtcNow,

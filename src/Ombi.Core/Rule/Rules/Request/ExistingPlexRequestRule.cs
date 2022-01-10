@@ -32,7 +32,7 @@ namespace Ombi.Core.Rule.Rules.Request
             {
                 var tvRequest = (ChildRequests) obj;
                 
-                var tvContent = _plexContent.GetAll().Include(x => x.Episodes).Where(x => x.Type == PlexMediaTypeEntity.Show);
+                var tvContent = _plexContent.GetAll().Include(x => x.Episodes).Where(x => x.Type == MediaType.Series);
                 // We need to do a check on the TVDBId
                 var anyMovieDbMatches = await tvContent.FirstOrDefaultAsync(x => x.TheMovieDbId.Length > 0 && x.TheMovieDbId == tvRequest.Id.ToString()); 
                 if (anyMovieDbMatches == null)

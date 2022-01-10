@@ -32,7 +32,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 namespace Ombi.Store.Entities
 {
     [Table("JellyfinEpisode")]
-    public class JellyfinEpisode : Entity
+    public class JellyfinEpisode : Entity, IMediaServerEpisode<JellyfinContent>
     {
         public string Title { get; set; }
         public string JellyfinId { get; set; }

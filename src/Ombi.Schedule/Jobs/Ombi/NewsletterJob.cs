@@ -145,9 +145,10 @@ namespace Ombi.Schedule.Jobs.Ombi
 
 
                 // Filter out the ones that we haven't sent yet
-                var plexContentLocalDataset = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
-                var embyContentLocalDataset = embyContent.Where(x => x.Type == EmbyMediaType.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
-                var jellyfinContentLocalDataset = jellyfinContent.Where(x => x.Type == JellyfinMediaType.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
+                var plexContentLocalDataset = plexContent.Where(x => x.Type == MediaType.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
+                var embyContentLocalDataset = embyContent.Where(x => x.Type == MediaType.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
+                var jellyfinContentLocalDataset = jellyfinContent.Where(x => x.Type == MediaType.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
+                
                 var plexContentMoviesToSend = plexContentLocalDataset.Where(x => !addedPlexMovieLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId))).ToHashSet();
                 var embyContentMoviesToSend = embyContentLocalDataset.Where(x => !addedEmbyMoviesLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId))).ToHashSet();
                 var jellyfinContentMoviesToSend = jellyfinContentLocalDataset.Where(x => !addedJellyfinMoviesLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId))).ToHashSet();
@@ -158,9 +159,9 @@ namespace Ombi.Schedule.Jobs.Ombi
                 _log.LogInformation("Albums to send: {0}", lidarrContentAlbumsToSend.Count());
 
                 // Find the movies that do not yet have MovieDbIds
-                var needsMovieDbPlex = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
-                var needsMovieDbEmby = embyContent.Where(x => x.Type == EmbyMediaType.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
-                var needsMovieDbJellyfin = jellyfinContent.Where(x => x.Type == JellyfinMediaType.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
+                var needsMovieDbPlex = plexContent.Where(x => x.Type == MediaType.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
+                var needsMovieDbEmby = embyContent.Where(x => x.Type == MediaType.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
+                var needsMovieDbJellyfin = jellyfinContent.Where(x => x.Type == MediaType.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
                 var newPlexMovies = await GetMoviesWithoutId(addedPlexMovieLogIds, needsMovieDbPlex);
                 var newEmbyMovies = await GetMoviesWithoutId(addedEmbyMoviesLogIds, needsMovieDbEmby);
                 var newJellyfinMovies = await GetMoviesWithoutId(addedJellyfinMoviesLogIds, needsMovieDbJellyfin);
@@ -188,9 +189,9 @@ namespace Ombi.Schedule.Jobs.Ombi
                 var body = string.Empty;
                 if (test)
                 {
-                    var plexm = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie).OrderByDescending(x => x.AddedAt).Take(10);
-                    var embym = embyContent.Where(x => x.Type == EmbyMediaType.Movie).OrderByDescending(x => x.AddedAt).Take(10);
-                    var jellyfinm = jellyfinContent.Where(x => x.Type == JellyfinMediaType.Movie).OrderByDescending(x => x.AddedAt).Take(10);
+                    var plexm = plexContent.Where(x => x.Type == MediaType.Movie).OrderByDescending(x => x.AddedAt).Take(10);
+                    var embym = embyContent.Where(x => x.Type == MediaType.Movie).OrderByDescending(x => x.AddedAt).Take(10);
+                    var jellyfinm = jellyfinContent.Where(x => x.Type == MediaType.Movie).OrderByDescending(x => x.AddedAt).Take(10);
                     var plext = _plex.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.Series.AddedAt).Take(10).ToHashSet();
                     var embyt = _emby.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.AddedAt).Take(10).ToHashSet();
                     var jellyfint = _jellyfin.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.AddedAt).Take(10).ToHashSet();
@@ -284,7 +285,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     }
                     foreach (var e in embyContentMoviesToSend)
                     {
-                        if (e.Type == EmbyMediaType.Movie)
+                        if (e.Type == MediaType.Movie)
                         {
                             recentlyAddedLog.Add(new RecentlyAddedLog
                             {
@@ -311,7 +312,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                     foreach (var e in jellyfinContentMoviesToSend)
                     {
-                        if (e.Type == JellyfinMediaType.Movie)
+                        if (e.Type == MediaType.Movie)
                         {
                             recentlyAddedLog.Add(new RecentlyAddedLog
                             {
@@ -570,9 +571,9 @@ namespace Ombi.Schedule.Jobs.Ombi
             var ombiSettings = await _ombiSettings.GetSettingsAsync();
             var sb = new StringBuilder();
 
-            var plexMovies = plexContentToSend.Where(x => x.Type == PlexMediaTypeEntity.Movie);
-            var embyMovies = embyContentToSend.Where(x => x.Type == EmbyMediaType.Movie);
-            var jellyfinMovies = jellyfinContentToSend.Where(x => x.Type == JellyfinMediaType.Movie);
+            var plexMovies = plexContentToSend.Where(x => x.Type == MediaType.Movie);
+            var embyMovies = embyContentToSend.Where(x => x.Type == MediaType.Movie);
+            var jellyfinMovies = jellyfinContentToSend.Where(x => x.Type == MediaType.Movie);
             if ((plexMovies.Any() || embyMovies.Any() || jellyfinMovies.Any()) && !settings.DisableMovies)
             {
                 sb.Append("<h1 style=\"text-align: center; max-width: 1042px;\">New Movies</h1><br /><br />");

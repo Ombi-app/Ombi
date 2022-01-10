@@ -33,7 +33,7 @@ namespace Ombi.Core.Rule.Rules.Search
             var useId = false;
             var useTvDb = false;
 
-            PlexMediaTypeEntity type = ConvertType(obj.Type);
+            MediaType type = ConvertType(obj.Type);
 
             if (obj.ImdbId.HasValue())
             {
@@ -115,12 +115,12 @@ namespace Ombi.Core.Rule.Rules.Search
             return Success();
         }
 
-        private PlexMediaTypeEntity ConvertType(RequestType type) =>
+        private MediaType ConvertType(RequestType type) =>
             type switch
             {
-                RequestType.Movie => PlexMediaTypeEntity.Movie,
-                RequestType.TvShow => PlexMediaTypeEntity.Show,
-                _ => PlexMediaTypeEntity.Movie,
+                RequestType.Movie => MediaType.Movie,
+                RequestType.TvShow => MediaType.Series,
+                _ => MediaType.Movie,
             };
     }
 }
