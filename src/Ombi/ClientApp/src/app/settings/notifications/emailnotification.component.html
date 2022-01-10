@@ -21,6 +21,10 @@
                                 <mat-slide-toggle formControlName="disableCertificateChecking">Disable Certificate
                                     Checking</mat-slide-toggle>
                             </div>
+                            <div class="md-form-field">
+                                <mat-slide-toggle formControlName="sendNewRequestToPowerUsers">Send New Request 
+                                    To Power Users</mat-slide-toggle>
+                            </div>
                         </div>
                     </div>
 
@@ -61,7 +65,7 @@
                         <div class="md-form-field">
                             <mat-form-field appearance="outline">
                                 <mat-label>Admin Email</mat-label>
-                                <input matInput formControlName="adminEmail" matTooltip="The administrator email will be used to send emails for admin only notifications (e.g. New Requests that require approvals)">
+                                <input matInput formControlName="adminEmail" matTooltip="The administrator email will be used to send emails for admin only notifications (e.g. raised issues)">
                                 <mat-error *ngIf="emailForm.get('adminEmail').hasError('required')">
                                     Admin Email is <strong>required</strong>
                                   </mat-error>

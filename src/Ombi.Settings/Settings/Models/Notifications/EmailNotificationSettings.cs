@@ -13,5 +13,6 @@
         public string AdminEmail { get; set; }
         public bool DisableTLS { get; set; }
         public bool DisableCertificateChecking { get; set; }
+        public bool SendNewRequestToPowerUsers{ get; set; }
     }
 }
