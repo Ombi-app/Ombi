@@ -302,5 +302,41 @@ namespace Ombi.Core.Authentication
 
             return newUser;
         }
+        private async Task<bool> CheckLdapPasswordAsync(OmbiUser user, string password)
+        {
+            var ldapSettings = await _ldapUserManager.GetSettings();
+            if (!ldapSettings.IsEnabled)
+            {
+                return false;
+            }
+
+            return await _ldapUserManager.Authenticate(user, password);
+        }
+
+        public async Task<OmbiUser> CreateOmbiUserFromLdapEntry(LdapEntry entry)
+        {
+            var newUser = await _ldapUserManager.LdapEntryToOmbiUser(entry);
+            var userManagementSettings = await _userManagementSettings.GetSettingsAsync();
+
+            var result = await CreateAsync(newUser);
+            if (!result.Succeeded)
+            {
+                foreach (var identityError in result.Errors)
+                {
+                    Logger.LogError(LoggingEvents.Authentication, identityError.Description);
+                }
+                return null;
+            }
+
+            if (userManagementSettings.DefaultRoles.Any())
+            {
+                foreach (var defaultRole in userManagementSettings.DefaultRoles)
+                {
+                    await AddToRoleAsync(newUser, defaultRole);
+                }
+            }
+
+            return newUser;
+        }
     }
 }

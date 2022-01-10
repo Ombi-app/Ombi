@@ -36,11 +36,11 @@ export interface IUpdateSettings extends ISettings {
 
 export interface IEmbySettings extends ISettings {
   enable: boolean;
-  isJellyfin: boolean;
   servers: IEmbyServer[];
 }
 
 export interface IEmbyServer extends IExternalSettings {
+  serverId: string;
   name: string;
   apiKey: string;
   administratorId: string;
@@ -49,8 +49,27 @@ export interface IEmbyServer extends IExternalSettings {
 }
 
 export interface IPublicInfo {
+  id: string;
   serverName: string;
-  isJellyfin: boolean;
+}
+
+export interface IJellyfinSettings extends ISettings {
+  enable: boolean;
+  servers: IJellyfinServer[];
+}
+
+export interface IJellyfinServer extends IExternalSettings {
+  serverId: string;
+  name: string;
+  apiKey: string;
+  administratorId: string;
+  enableEpisodeSearching: boolean;
+  serverHostname: string;
+}
+
+export interface IPublicInfo {
+  id: string;
+  serverName: string;
 }
 
 export interface IPlexSettings extends ISettings {
@@ -97,6 +116,7 @@ export interface IRadarrSettings extends IExternalSettings {
   addOnly: boolean;
   minimumAvailability: string;
   scanForAvailability: boolean;
+  v3: boolean;
 }
 
 export interface ILidarrSettings extends IExternalSettings {
@@ -138,6 +158,7 @@ export interface ICustomizationSettings extends ISettings {
 
 export interface IJobSettings {
   embyContentSync: string;
+  jellyfinContentSync: string;
   sonarrSync: string;
   radarrSync: string;
   plexContentSync: string;
@@ -199,12 +220,15 @@ export interface IUserManagementSettings extends ISettings {
   importPlexUsers: boolean;
   importPlexAdmin: boolean;
   importEmbyUsers: boolean;
+  importJellyfinUsers: boolean;
   importLdapUsers: boolean;
   defaultRoles: string[];
   movieRequestLimit: number;
   episodeRequestLimit: number;
   bannedPlexUserIds: string[];
   bannedEmbyUserIds: string[];
+  bannedJellyfinUserIds: string[];
+  defaultStreamingCountry: string;
 }
 
 export interface IAbout {

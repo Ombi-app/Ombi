@@ -114,6 +114,16 @@ namespace Ombi.Controllers.V1
             return true;
         }
 
+        /// Runs the LDAP User importer
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("ldapuserimporter")]
+        public async Task<bool> LdapUserImporter()
+        {
+            await OmbiQuartz.TriggerJob(nameof(ILdapUserImporter), "LDAP");
+            return true;
+        }
+
         /// <summary>
         /// Runs the LDAP User importer
         /// </summary>
