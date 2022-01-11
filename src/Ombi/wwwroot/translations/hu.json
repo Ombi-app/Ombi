@@ -62,7 +62,7 @@
         "Discover": "Felfedezés",
         "Search": "Keresés",
         "Requests": "Kérések",
-        "UserManagement": "Felhasználók kezelése",
+        "UserManagement": "Felhasználók",
         "Issues": "Problémák",
         "Vote": "Szavazás",
         "Donate": "Adakozás!",
@@ -78,7 +78,7 @@
         "ChangeTheme": "Téma váltása",
         "Calendar": "Naptár",
         "UserPreferences": "Beállítások",
-        "FeatureSuggestion": "Feature Suggestion",
+        "FeatureSuggestion": "Funkciójavaslás",
         "FeatureSuggestionTooltip": "Van egy jó ötleted? Oszd meg itt!",
         "Filter": {
             "Movies": "Filmek",
@@ -219,14 +219,19 @@
             "NoPermissionsOnBehalf": "Nincs jogosultságod más felhasználók nevében kérni!",
             "NoPermissions": "Nincs megfelelő jogosultságod!",
             "RequestDoesNotExist": "A kérés nem létezik",
-            "ChildRequestDoesNotExist": "Child Request does not exist",
+            "ChildRequestDoesNotExist": "Gyerek kérés nem létezik",
             "NoPermissionsRequestMovie": "Nincs jogosultságod filmet kérni",
             "NoPermissionsRequestTV": "Nincs jogosultságod sorozatot kérni",
             "NoPermissionsRequestAlbum": "Nincs jogosultságod albumot kérni",
             "MovieRequestQuotaExceeded": "Túllépted a megszabott film kérési kereted!",
             "TvRequestQuotaExceeded": "Túllépted a megszabott epizód kérési kereted!",
             "AlbumRequestQuotaExceeded": "Túllépted a megszabott album kérési kereted!"
-        }
+        },
+        "Notify": "Értesítés",
+        "RemoveNotification": "Értesítések törlése",
+        "SuccessfulNotify": "Mostantól értesítve leszel erről: {{title}}",
+        "SuccessfulUnNotify": "Mostantól nem leszel értesítve erről: {{title}}",
+        "CouldntNotify": "Nem lehetett értesíteni erről: {{title}}"
     },
     "Issues": {
         "Title": "Problémák",

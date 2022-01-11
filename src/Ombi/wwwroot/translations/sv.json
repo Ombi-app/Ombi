@@ -226,7 +226,12 @@
             "MovieRequestQuotaExceeded": "You have exceeded your Movie request quota!",
             "TvRequestQuotaExceeded": "You have exceeded your Episode request quota!",
             "AlbumRequestQuotaExceeded": "You have exceeded your Album request quota!"
-        }
+        },
+        "Notify": "Avisering",
+        "RemoveNotification": "Ta bort avisering",
+        "SuccessfulNotify": "Du kommer nu att aviseras för titel {{title}}",
+        "SuccessfulUnNotify": "Du kommer inte längre att aviseras för titel {{title}}",
+        "CouldntNotify": "Kunde inte avisera för {{title}}"
     },
     "Issues": {
         "Title": "Problem",
