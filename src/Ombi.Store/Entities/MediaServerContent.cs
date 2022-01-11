@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ombi.Store.Entities
 {
-    public interface IMediaServerContent
+    public abstract class MediaServerContent: Entity, IMediaServerContent
     {
         public string Title { get; set; }
         public string ImdbId { get; set; }
@@ -28,27 +28,12 @@ namespace Ombi.Store.Entities
         public bool HasTheMovieDb => !string.IsNullOrEmpty(TheMovieDbId);
     }
 
-    public interface IMediaServerEpisode
+    public abstract class MediaServerEpisode: Entity, IMediaServerEpisode
     {
         public int EpisodeNumber { get; set; }
         public int SeasonNumber { get; set; }
         public string Title { get; set; }
-        /// <summary>
-        /// The Season key
-        /// </summary>
-        /// <value>
-        /// The parent key.
-        /// </value>
-
 
         public IMediaServerContent Series { get; set; }
-    }
-
-    public enum MediaType
-    {
-        Movie = 0,
-        Series = 1,
-        Music = 2,
-        Episode = 3
     }
 }

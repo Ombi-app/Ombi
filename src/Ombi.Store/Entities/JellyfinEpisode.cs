@@ -32,12 +32,9 @@ using Microsoft.EntityFrameworkCore.Metadata;
 namespace Ombi.Store.Entities
 {
     [Table("JellyfinEpisode")]
-    public class JellyfinEpisode : Entity, IMediaServerEpisode<JellyfinContent>
+    public class JellyfinEpisode : MediaServerEpisode
     {
-        public string Title { get; set; }
         public string JellyfinId { get; set; }
-        public int EpisodeNumber { get; set; }
-        public int SeasonNumber { get; set; }
         public string ParentId { get; set; }
         /// <summary>
         /// NOT USED
@@ -47,7 +44,11 @@ namespace Ombi.Store.Entities
         public string TvDbId { get; set; }
         public string ImdbId { get; set; }
         public string TheMovieDbId { get; set; }
-
-        public JellyfinContent Series { get; set; }
+        [NotMapped]
+        public JellyfinContent JellyfinSeries
+        {
+            get => (JellyfinContent)Series;
+            set => Series = value;
+        }
     }
 }

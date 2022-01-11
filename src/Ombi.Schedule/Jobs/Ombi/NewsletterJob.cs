@@ -914,10 +914,10 @@ namespace Ombi.Schedule.Jobs.Ombi
             var series = new List<PlexServerContent>();
             foreach (var plexEpisode in plexContent)
             {
-                var alreadyAdded = series.FirstOrDefault(x => x.Key == plexEpisode.Series.Key);
+                var alreadyAdded = series.FirstOrDefault(x => x.Key == plexEpisode.PlexSeries.Key);
                 if (alreadyAdded != null)
                 {
-                    var episodeExists = alreadyAdded.Episodes.Any(x => x.Key == plexEpisode.Key);
+                    var episodeExists = alreadyAdded.PlexEpisodes.Any(x => x.Key == plexEpisode.Key);
                     if (!episodeExists)
                     {
                         alreadyAdded.Episodes.Add(plexEpisode);
@@ -925,8 +925,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
                 else
                 {
-                    plexEpisode.Series.Episodes = new List<PlexEpisode> { plexEpisode };
-                    series.Add(plexEpisode.Series);
+                    plexEpisode.Series.Episodes = new List<IMediaServerEpisode> { plexEpisode };
+                    series.Add(plexEpisode.PlexSeries);
                 }
             }
 
@@ -1042,18 +1042,18 @@ namespace Ombi.Schedule.Jobs.Ombi
             var series = new List<EmbyContent>();
             foreach (var episode in embyContent)
             {
-                var alreadyAdded = series.FirstOrDefault(x => x.EmbyId == episode.Series.EmbyId);
+                var alreadyAdded = series.FirstOrDefault(x => x.EmbyId == episode.EmbySeries.EmbyId);
                 if (alreadyAdded != null)
                 {
                     alreadyAdded.Episodes.Add(episode);
                 }
                 else
                 {
-                    episode.Series.Episodes = new List<EmbyEpisode>
+                    episode.Series.Episodes = new List<IMediaServerEpisode>
                     {
                         episode
                     };
-                    series.Add(episode.Series);
+                    series.Add(episode.EmbySeries);
                 }
             }
 
@@ -1145,18 +1145,18 @@ namespace Ombi.Schedule.Jobs.Ombi
             var series = new List<JellyfinContent>();
             foreach (var episode in jellyfinContent)
             {
-                var alreadyAdded = series.FirstOrDefault(x => x.JellyfinId == episode.Series.JellyfinId);
+                var alreadyAdded = series.FirstOrDefault(x => x.JellyfinId == episode.JellyfinSeries.JellyfinId);
                 if (alreadyAdded != null)
                 {
                     alreadyAdded.Episodes.Add(episode);
                 }
                 else
                 {
-                    episode.Series.Episodes = new List<JellyfinEpisode>
+                    episode.Series.Episodes = new List<IMediaServerEpisode>
                     {
                         episode
                     };
-                    series.Add(episode.Series);
+                    series.Add(episode.JellyfinSeries);
                 }
             }
 

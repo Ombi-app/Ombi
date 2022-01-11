@@ -32,12 +32,9 @@ using Microsoft.EntityFrameworkCore.Metadata;
 namespace Ombi.Store.Entities
 {
     [Table("EmbyEpisode")]
-    public class EmbyEpisode : Entity, IMediaServerEpisode<EmbyContent>
+    public class EmbyEpisode : MediaServerEpisode
     {
-        public string Title { get; set; }
         public string EmbyId { get; set; }
-        public int EpisodeNumber { get; set; }
-        public int SeasonNumber { get; set; }
         public string ParentId { get; set; }
         /// <summary>
         /// NOT USED
@@ -47,7 +44,11 @@ namespace Ombi.Store.Entities
         public string TvDbId { get; set; }
         public string ImdbId { get; set; }
         public string TheMovieDbId { get; set; }
-
-        public EmbyContent Series { get; set; }
+        [NotMapped]
+        public EmbyContent EmbySeries
+        {
+            get => (EmbyContent)Series;
+            set => Series = value;
+        }
     }
 }
