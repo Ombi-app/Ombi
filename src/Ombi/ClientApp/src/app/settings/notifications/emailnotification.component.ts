@@ -38,7 +38,6 @@ export class EmailNotificationComponent implements OnInit {
                 adminEmail: [x.adminEmail, [Validators.required, Validators.email]],
                 disableTLS: [x.disableTLS],
                 disableCertificateChecking: [x.disableCertificateChecking],
-                sendNewRequestToPowerUsers: [x.sendNewRequestToPowerUsers],
             });
 
             if (x.authentication) {

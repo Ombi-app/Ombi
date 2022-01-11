@@ -116,10 +116,7 @@ namespace Ombi.Notifications.Agents
             message.Other.Add("PlainTextBody", plaintext);
 
             IEnumerable<OmbiUser> recipients = await _userManager.GetUsersInRoleAsync(OmbiRoles.Admin);
-            if (settings.SendNewRequestToPowerUsers)
-            {
-                recipients = recipients.Concat(await _userManager.GetUsersInRoleAsync(OmbiRoles.PowerUser));
-            }
+            recipients = recipients.Concat(await _userManager.GetUsersInRoleAsync(OmbiRoles.PowerUser));
             foreach (var recipient in recipients.DistinctBy(x => x.Email))
             {
                 if (recipient.Email.IsNullOrEmpty())
