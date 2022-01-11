@@ -10,6 +10,7 @@ using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
 using Ombi.Api.Telegram;
+using Microsoft.AspNetCore.Identity;
 
 namespace Ombi.Notifications.Agents
 {
@@ -19,7 +20,7 @@ namespace Ombi.Notifications.Agents
                                     INotificationTemplatesRepository r, IMovieRequestRepository m, 
                                     ITvRequestRepository t, ISettingsService<CustomizationSettings> s
             , IRepository<RequestSubscription> sub, IMusicRequestRepository music,
-            IRepository<UserNotificationPreferences> userPref) : base(sn, r, m, t,s,log, sub, music, userPref)
+            IRepository<UserNotificationPreferences> userPref, UserManager<OmbiUser> um) : base(sn, r, m, t,s,log, sub, music, userPref, um)
         {
             Api = api;
             Logger = log;

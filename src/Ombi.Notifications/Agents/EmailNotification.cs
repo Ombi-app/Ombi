@@ -23,7 +23,7 @@ namespace Ombi.Notifications.Agents
     {
         public EmailNotification(ISettingsService<EmailNotificationSettings> settings, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t, IEmailProvider prov, ISettingsService<CustomizationSettings> c,
             ILogger<EmailNotification> log, UserManager<OmbiUser> um, IRepository<RequestSubscription> sub, IMusicRequestRepository music,
-            IRepository<UserNotificationPreferences> userPref) : base(settings, r, m, t, c, log, sub, music, userPref)
+            IRepository<UserNotificationPreferences> userPref) : base(settings, r, m, t, c, log, sub, music, userPref, um)
         {
             EmailProvider = prov;
             Logger = log;
@@ -115,9 +115,7 @@ namespace Ombi.Notifications.Agents
             var plaintext = await LoadPlainTextMessage(NotificationType.NewRequest, model, settings);
             message.Other.Add("PlainTextBody", plaintext);
 
-            IEnumerable<OmbiUser> recipients = await _userManager.GetUsersInRoleAsync(OmbiRoles.Admin);
-            recipients = recipients.Concat(await _userManager.GetUsersInRoleAsync(OmbiRoles.PowerUser));
-            foreach (var recipient in recipients.DistinctBy(x => x.Email))
+            foreach (var recipient in (await GetPowerUsers()).DistinctBy(x => x.Email))
             {
                 if (recipient.Email.IsNullOrEmpty())
                 {

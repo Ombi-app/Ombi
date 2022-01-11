@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Settings;
@@ -19,7 +21,7 @@ namespace Ombi.Notifications
     {
         protected BaseNotification(ISettingsService<T> settings, INotificationTemplatesRepository templateRepo, IMovieRequestRepository movie, ITvRequestRepository tv,
             ISettingsService<CustomizationSettings> customization, ILogger<BaseNotification<T>> log, IRepository<RequestSubscription> sub, IMusicRequestRepository album,
-            IRepository<UserNotificationPreferences> notificationUserPreferences)
+            IRepository<UserNotificationPreferences> notificationUserPreferences, UserManager<OmbiUser> um)
         {
             Settings = settings;
             TemplateRepository = templateRepo;
@@ -30,6 +32,7 @@ namespace Ombi.Notifications
             _log = log;
             AlbumRepository = album;
             UserNotificationPreferences = notificationUserPreferences;
+            _userManager = um;
             Settings.ClearCache();
         }
 
@@ -43,6 +46,7 @@ namespace Ombi.Notifications
         protected IRepository<UserNotificationPreferences> UserNotificationPreferences { get; set; }
         private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
         private readonly ILogger<BaseNotification<T>> _log;
+        private readonly UserManager<OmbiUser> _userManager;
 
 
         protected ChildRequests TvRequest { get; set; }
@@ -208,6 +212,13 @@ namespace Ombi.Notifications
         {
             return UserNotificationPreferences.GetAll()
                 .FirstOrDefault(x => x.Agent == agent && x.UserId == userId);
+        }
+
+        protected async Task<IEnumerable<OmbiUser>> GetPowerUsers()
+        {
+            IEnumerable<OmbiUser> recipients = await _userManager.GetUsersInRoleAsync(OmbiRoles.Admin);
+            recipients = recipients.Concat(await _userManager.GetUsersInRoleAsync(OmbiRoles.PowerUser));
+            return recipients;
         }
 
         private NotificationMessageContent Parse(NotificationOptions model, NotificationTemplates template, NotificationAgent agent)
