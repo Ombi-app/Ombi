@@ -113,7 +113,7 @@ namespace Ombi.Schedule.Jobs.Plex
         {
             var currentPosition = 0;
             var resultCount = settings.EpisodeBatchSize == 0 ? 150 : settings.EpisodeBatchSize;
-            var currentEpisodes = _repo.GetAllEpisodes();
+            var currentEpisodes = _repo.GetAllEpisodes().Cast<PlexEpisode>();
             var episodes = await _api.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, section.key, currentPosition, resultCount);
             _log.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Total Epsiodes found for {episodes.MediaContainer.librarySectionTitle} = {episodes.MediaContainer.totalSize}");
 

@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Ombi.Store.Repository;
 
 namespace Ombi.Store.Entities
 {
     public interface IMediaServerContent
     {
+        public int Id { get; set; }
         public string Title { get; set; }
         public string ImdbId { get; set; }
         public string TvDbId { get; set; }
@@ -42,6 +44,8 @@ namespace Ombi.Store.Entities
 
 
         public IMediaServerContent Series { get; set; }
+        public IMediaServerContent SeriesIsIn(List<IMediaServerContent> content);
+        public bool IsIn(IMediaServerContent content);
     }
 
     public enum MediaType

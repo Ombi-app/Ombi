@@ -114,14 +114,14 @@ namespace Ombi.Store.Repository
                 .FirstOrDefaultAsync(predicate);
         }
 
-        public async Task Update(PlexServerContent existingContent)
+        public async Task Update(IMediaServerContent existingContent)
         {
-            Db.PlexServerContent.Update(existingContent);
+            Db.PlexServerContent.Update((PlexServerContent)existingContent);
             await InternalSaveChanges();
         }
-        public void UpdateWithoutSave(PlexServerContent existingContent)
+        public void UpdateWithoutSave(IMediaServerContent existingContent)
         {
-            Db.PlexServerContent.Update(existingContent);
+            Db.PlexServerContent.Update((PlexServerContent)existingContent);
         }
 
         public async Task UpdateRange(IEnumerable<PlexServerContent> existingContent)
@@ -130,7 +130,7 @@ namespace Ombi.Store.Repository
             await InternalSaveChanges();
         }
 
-        public IQueryable<PlexEpisode> GetAllEpisodes()
+        public IQueryable<IMediaServerEpisode> GetAllEpisodes()
         {
             return Db.PlexEpisode.Include(x => x.Series).AsQueryable();
         }
@@ -145,9 +145,9 @@ namespace Ombi.Store.Repository
             Db.PlexEpisode.Remove(content);
         }
 
-        public async Task<PlexEpisode> Add(PlexEpisode content)
+        public async Task<IMediaServerEpisode> Add(IMediaServerEpisode content)
         {
-            await Db.PlexEpisode.AddAsync(content);
+            await Db.PlexEpisode.AddAsync((PlexEpisode)content);
             await InternalSaveChanges();
             return content;
         }
@@ -162,9 +162,9 @@ namespace Ombi.Store.Repository
         {
             return await Db.PlexEpisode.FirstOrDefaultAsync(x => x.Key == key);
         }
-        public async Task AddRange(IEnumerable<PlexEpisode> content)
+        public async Task AddRange(IEnumerable<IMediaServerEpisode> content)
         {
-            Db.PlexEpisode.AddRange(content);
+            Db.PlexEpisode.AddRange((PlexEpisode)content);
             await InternalSaveChanges();
         }
     }

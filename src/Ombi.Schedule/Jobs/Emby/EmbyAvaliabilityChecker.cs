@@ -124,7 +124,7 @@ namespace Ombi.Schedule.Jobs.Emby
 
                 var tvDbId = child.ParentRequest.TvDbId;
                 var imdbId = child.ParentRequest.ImdbId;
-                IQueryable<EmbyEpisode> seriesEpisodes = null;
+                IQueryable<IMediaServerEpisode> seriesEpisodes = null;
                 if (useImdb)
                 {
                     seriesEpisodes = embyEpisodes.Where(x => x.Series.ImdbId == imdbId.ToString());

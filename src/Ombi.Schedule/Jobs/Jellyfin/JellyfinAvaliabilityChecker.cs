@@ -151,7 +151,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
 
                 var tvDbId = child.ParentRequest.TvDbId;
                 var imdbId = child.ParentRequest.ImdbId;
-                IQueryable<JellyfinEpisode> seriesEpisodes = null;
+                IQueryable<IMediaServerEpisode> seriesEpisodes = null;
                 if (useImdb)
                 {
                     seriesEpisodes = jellyfinEpisodes.Where(x => x.Series.ImdbId == imdbId.ToString());

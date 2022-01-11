@@ -26,7 +26,9 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Ombi.Store.Entities
@@ -49,6 +51,16 @@ namespace Ombi.Store.Entities
         {
             get => (JellyfinContent)Series;
             set => Series = value;
+        }
+        
+        public override IMediaServerContent SeriesIsIn(List<IMediaServerContent> content)
+        {
+            return content.Cast<JellyfinContent>().FirstOrDefault(
+                x => x.JellyfinId == this.JellyfinSeries.JellyfinId);
+        }
+        public override bool IsIn(IMediaServerContent content)
+        {
+            return content.Episodes.Cast<JellyfinEpisode>().Any(x => x.JellyfinId == this.JellyfinId);
         }
     }
 }

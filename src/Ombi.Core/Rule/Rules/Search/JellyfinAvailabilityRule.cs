@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Settings;
@@ -13,13 +14,15 @@ namespace Ombi.Core.Rule.Rules.Search
 {
     public class JellyfinAvailabilityRule : BaseSearchRule, IRules<SearchViewModel>
     {
-        public JellyfinAvailabilityRule(IJellyfinContentRepository repo, ISettingsService<JellyfinSettings> s)
+        public JellyfinAvailabilityRule(IJellyfinContentRepository repo, ILogger<JellyfinAvailabilityRule> log, ISettingsService<JellyfinSettings> s)
         {
             JellyfinContentRepository = repo;
+            Log = log;
             JellyfinSettings = s;
         }
 
         private IJellyfinContentRepository JellyfinContentRepository { get; }
+        private ILogger Log { get; }
         private ISettingsService<JellyfinSettings> JellyfinSettings { get; }
 
         public async Task<RuleResult> Execute(SearchViewModel obj)
@@ -104,7 +107,7 @@ namespace Ombi.Core.Rule.Rules.Search
                         {
                             foreach (var episode in season.Episodes)
                             {
-                                await AvailabilityRuleHelper.SingleEpisodeCheck(useImdb, allEpisodes, episode, season, item, useTheMovieDb, useTvDb);
+                                await AvailabilityRuleHelper.SingleEpisodeCheck(useImdb, allEpisodes, episode, season, item, useTheMovieDb, useTvDb, Log);
                             }
                         }
                     }

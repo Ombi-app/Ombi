@@ -86,7 +86,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
                 var tvDbId = child.ParentRequest.TvDbId;
                 var imdbId = child.ParentRequest.ImdbId;
-                IQueryable<PlexEpisode> seriesEpisodes = null;
+                IQueryable<IMediaServerEpisode> seriesEpisodes = null;
                 if (useImdb)
                 {
                     seriesEpisodes = plexEpisodes.Where(x => x.Series.ImdbId == imdbId.ToString());
@@ -105,8 +105,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     // Let's try and match the series by name
                     seriesEpisodes = plexEpisodes.Where(x =>
-                        x.Series.Title == child.Title &&
-                        x.PlexSeries.ReleaseYear == child.ParentRequest.ReleaseDate.Year.ToString());
+                        x.Series.Title == child.Title);
 
                 }
 

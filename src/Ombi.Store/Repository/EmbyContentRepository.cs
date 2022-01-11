@@ -69,20 +69,20 @@ namespace Ombi.Store.Repository
             return await Db.EmbyContent./*Include(x => x.Seasons).*/FirstOrDefaultAsync(x => x.EmbyId == embyId);
         }
 
-        public async Task Update(EmbyContent existingContent)
+        public async Task Update(IMediaServerContent existingContent)
         {
-            Db.EmbyContent.Update(existingContent);
+            Db.EmbyContent.Update((EmbyContent)existingContent);
             await InternalSaveChanges();
         }
 
-        public IQueryable<EmbyEpisode> GetAllEpisodes()
+        public IQueryable<IMediaServerEpisode> GetAllEpisodes()
         {
             return Db.EmbyEpisode.AsQueryable();
         }
 
-        public async Task<EmbyEpisode> Add(EmbyEpisode content)
+        public async Task<IMediaServerEpisode> Add(IMediaServerEpisode content)
         {
-            await Db.EmbyEpisode.AddAsync(content);
+            await Db.EmbyEpisode.AddAsync((EmbyEpisode)content);
             await InternalSaveChanges();
             return content;
         }
@@ -91,15 +91,15 @@ namespace Ombi.Store.Repository
             return await Db.EmbyEpisode.FirstOrDefaultAsync(x => x.EmbyId == key);
         }
 
-        public async Task AddRange(IEnumerable<EmbyEpisode> content)
+        public async Task AddRange(IEnumerable<IMediaServerEpisode> content)
         {
-            Db.EmbyEpisode.AddRange(content);
+            Db.EmbyEpisode.AddRange((EmbyEpisode)content);
             await InternalSaveChanges();
         }
 
-        public void UpdateWithoutSave(EmbyContent existingContent)
+        public void UpdateWithoutSave(IMediaServerContent existingContent)
         {
-            Db.EmbyContent.Update(existingContent);
+            Db.EmbyContent.Update((EmbyContent)existingContent);
         }
         
     }

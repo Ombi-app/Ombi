@@ -26,8 +26,9 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore.Metadata;
+using System.Linq;
 
 namespace Ombi.Store.Entities
 {
@@ -50,5 +51,16 @@ namespace Ombi.Store.Entities
             get => (EmbyContent)Series;
             set => Series = value;
         }
+        
+        public override IMediaServerContent SeriesIsIn(List<IMediaServerContent> content)
+        {
+            return content.Cast<EmbyContent>().FirstOrDefault(
+                x => x.EmbyId == this.EmbySeries.EmbyId);
+        }
+        public override bool IsIn(IMediaServerContent content)
+        {
+            return content.Episodes.Cast<EmbyEpisode>().Any(x => x.EmbyId == this.EmbyId);
+        }
+
     }
 }

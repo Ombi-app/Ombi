@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace Ombi.Store.Entities
 {
@@ -20,5 +22,17 @@ namespace Ombi.Store.Entities
             get => (PlexServerContent)Series;
             set => Series = value;
         }
+
+        public override IMediaServerContent SeriesIsIn(List<IMediaServerContent> content)
+        {
+            return content.Cast<PlexServerContent>().FirstOrDefault(
+                 x => x.Key == this.PlexSeries.Key);
+        }
+
+        public override bool IsIn(IMediaServerContent content)
+        {
+            return content.Episodes.Cast<PlexEpisode>().Any(x => x.Key == this.Key);
+        }
+
     }
 }

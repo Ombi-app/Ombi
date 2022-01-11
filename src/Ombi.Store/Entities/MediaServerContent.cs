@@ -35,5 +35,8 @@ namespace Ombi.Store.Entities
         public string Title { get; set; }
 
         public IMediaServerContent Series { get; set; }
+
+        public abstract IMediaServerContent SeriesIsIn(List<IMediaServerContent> content);
+        public abstract bool IsIn(IMediaServerContent content);
     }
 }

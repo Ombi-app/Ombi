@@ -226,7 +226,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     await Repo.SaveChangesAsync();
                     if (content.Metadata != null)
                     {
-                        var episodesAdded = await EpisodeSync.ProcessEpsiodes(content.Metadata, allEps);
+                        var episodesAdded = await EpisodeSync.ProcessEpsiodes(content.Metadata, (IQueryable<PlexEpisode>)allEps);
                         episodesProcessed.AddRange(episodesAdded.Select(x => x.Id));
                     }
                 }
@@ -463,7 +463,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     Repo.DeleteWithoutSave(existingContent);
 
                     // Because we have changed the rating key, we need to change all children too
-                    var episodeToChange = Repo.GetAllEpisodes().Where(x => x.GrandparentKey == oldKey);
+                    var episodeToChange = Repo.GetAllEpisodes().Cast<PlexEpisode>().Where(x => x.GrandparentKey == oldKey);
                     if (episodeToChange.Any())
                     {
                         foreach (var e in episodeToChange)

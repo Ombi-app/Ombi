@@ -69,20 +69,20 @@ namespace Ombi.Store.Repository
             return await Db.JellyfinContent./*Include(x => x.Seasons).*/FirstOrDefaultAsync(x => x.JellyfinId == jellyfinId);
         }
 
-        public async Task Update(JellyfinContent existingContent)
+        public async Task Update(IMediaServerContent existingContent)
         {
-            Db.JellyfinContent.Update(existingContent);
+            Db.JellyfinContent.Update((JellyfinContent)existingContent);
             await InternalSaveChanges();
         }
 
-        public IQueryable<JellyfinEpisode> GetAllEpisodes()
+        public IQueryable<IMediaServerEpisode> GetAllEpisodes()
         {
             return Db.JellyfinEpisode.AsQueryable();
         }
 
-        public async Task<JellyfinEpisode> Add(JellyfinEpisode content)
+        public async Task<IMediaServerEpisode> Add(IMediaServerEpisode content)
         {
-            await Db.JellyfinEpisode.AddAsync(content);
+            await Db.JellyfinEpisode.AddAsync((JellyfinEpisode)content);
             await InternalSaveChanges();
             return content;
         }
@@ -91,15 +91,15 @@ namespace Ombi.Store.Repository
             return await Db.JellyfinEpisode.FirstOrDefaultAsync(x => x.JellyfinId == key);
         }
 
-        public async Task AddRange(IEnumerable<JellyfinEpisode> content)
+        public async Task AddRange(IEnumerable<IMediaServerEpisode> content)
         {
-            Db.JellyfinEpisode.AddRange(content);
+            Db.JellyfinEpisode.AddRange((JellyfinEpisode)content);
             await InternalSaveChanges();
         }
 
-        public void UpdateWithoutSave(JellyfinContent existingContent)
+        public void UpdateWithoutSave(IMediaServerContent existingContent)
         {
-            Db.JellyfinContent.Update(existingContent);
+            Db.JellyfinContent.Update((JellyfinContent)existingContent);
         }
         
     }
