@@ -30,7 +30,7 @@ namespace Ombi.Core.Authentication
         public async Task<OmbiUser> LdapEntryToOmbiUser(LdapEntry entry)
         {
             var settings = await GetSettings();
-            var userName = GetLdapAttribute(entry, settings.UsernameAttribute).StringValue;
+            var userName = GetLdapAttribute(entry, settings.UsernameAttribute)?.StringValue;
 
             return new OmbiUser
             {
@@ -125,7 +125,7 @@ namespace Ombi.Core.Authentication
             {
                 var currentUser = ldapUsers.Next();
                 var foundUsername = GetLdapAttribute(currentUser, settings.UsernameAttribute)?.StringValue;
-                if (foundUsername == username)
+                if (foundUsername.Equals(username,StringComparison.CurrentCultureIgnoreCase))
                 {
                     return currentUser;
                 }

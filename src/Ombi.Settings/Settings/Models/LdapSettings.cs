@@ -4,18 +4,7 @@
     {
         public LdapSettings()
         {
-            IsEnabled = false;
-            CreateUsersAtLogin = true;
-            Hostname = "ldap-server.example.tld";
-            BaseDn = "o=domains,dc=example,dc=tld";
-            Port = 389;
-            UsernameAttribute = "uid";
-            SearchFilter = "(memberOf=cn=Users,dc=example,dc=tld)";
-            BindUserDn = "cn=BindUser,dc=example,dc=tld";
-            BindUserPassword = "password";
-            UseSsl = true;
-            UseStartTls = false;
-            SkipSslVerify = false;
+
         }
 
         /// <summary>

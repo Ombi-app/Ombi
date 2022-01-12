@@ -52,8 +52,8 @@ namespace Ombi.Schedule.Jobs.Ldap
             while (allLdapUsers.HasMore())
             {
                 var currentUser = allLdapUsers.Next();
-                var existingEmbyUser = allUsers.FirstOrDefault(x => x.ProviderUserId == currentUser.Dn);
-                if (existingEmbyUser != null)
+                var existingLdapUser = allUsers.FirstOrDefault(x => x.ProviderUserId == currentUser.Dn);
+                if (existingLdapUser != null)
                 {
                     continue;
                 }
