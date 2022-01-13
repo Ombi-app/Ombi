@@ -122,7 +122,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, 0, AmountToTake, server.AdministratorId, server.FullUri);
             }
             var total = allEpisodes.TotalRecordCount;
-            var processed = 1;
+            var processed = 0;
             var epToAdd = new HashSet<EmbyEpisode>();
             while (processed < total)
             {
