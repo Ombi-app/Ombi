@@ -98,7 +98,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
         {
             var allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, 0, 200, server.AdministratorId, server.FullUri);
             var total = allEpisodes.TotalRecordCount;
-            var processed = 1;
+            var processed = 0;
             var epToAdd = new HashSet<JellyfinEpisode>();
             while (processed < total)
             {
