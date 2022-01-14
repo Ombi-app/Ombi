@@ -88,7 +88,7 @@
 
                 <div class="form-group cronBox">
                     <mat-form-field appearance="outline" floatLabel=always>
-                        <mat-label for="plexRecentlyAddedSync" class="control-mat-label">Emby Recently Added Sync</mat-label>              
+                        <mat-label for="embyRecentlyAddedSync" class="control-mat-label">Emby Recently Added Sync</mat-label>              
                         <input type="text" matInput [ngClass]="{'form-error': form.get('embyRecentlyAddedSync').hasError('required')}" id="embyRecentlyAddedSync" name="embyRecentlyAddedSync" formControlName="embyRecentlyAddedSync">
                         <small *ngIf="form.get('embyRecentlyAddedSync').hasError('required')" class="error-text">The Emby Recently Added Sync is required</small></mat-form-field>
                         <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('embyRecentlyAddedSync')?.value)">Test</button>
