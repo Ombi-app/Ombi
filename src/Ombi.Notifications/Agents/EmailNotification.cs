@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
@@ -22,7 +23,7 @@ namespace Ombi.Notifications.Agents
     {
         public EmailNotification(ISettingsService<EmailNotificationSettings> settings, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t, IEmailProvider prov, ISettingsService<CustomizationSettings> c,
             ILogger<EmailNotification> log, UserManager<OmbiUser> um, IRepository<RequestSubscription> sub, IMusicRequestRepository music,
-            IRepository<UserNotificationPreferences> userPref) : base(settings, r, m, t, c, log, sub, music, userPref)
+            IRepository<UserNotificationPreferences> userPref) : base(settings, r, m, t, c, log, sub, music, userPref, um)
         {
             EmailProvider = prov;
             Logger = log;
@@ -114,7 +115,15 @@ namespace Ombi.Notifications.Agents
             var plaintext = await LoadPlainTextMessage(NotificationType.NewRequest, model, settings);
             message.Other.Add("PlainTextBody", plaintext);
 
-            await Send(message, settings);
+            foreach (var recipient in (await GetPrivilegedUsers()).DistinctBy(x => x.Email))
+            {
+                if (recipient.Email.IsNullOrEmpty())
+                {
+                    continue;
+                }
+                message.To = recipient.Email;
+                await Send(message, settings);
+            }
         }
 
         protected override async Task NewIssue(NotificationOptions model, EmailNotificationSettings settings)

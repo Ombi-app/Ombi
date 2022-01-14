@@ -23,7 +23,7 @@ namespace Ombi.Notifications.Agents
         public MobileNotification(ICloudMobileNotification api, ISettingsService<MobileNotificationSettings> sn, ILogger<MobileNotification> log, INotificationTemplatesRepository r,
             IMovieRequestRepository m, ITvRequestRepository t, ISettingsService<CustomizationSettings> s, IRepository<MobileDevices> notification,
             UserManager<OmbiUser> um, IRepository<RequestSubscription> sub, IMusicRequestRepository music, IRepository<Issues> issueRepository,
-            IRepository<UserNotificationPreferences> userPref) : base(sn, r, m, t, s, log, sub, music, userPref)
+            IRepository<UserNotificationPreferences> userPref) : base(sn, r, m, t, s, log, sub, music, userPref, um)
         {
             _api = api;
             _logger = log;
@@ -62,7 +62,7 @@ namespace Ombi.Notifications.Agents
             };
 
             // Get admin devices
-            var playerIds = await GetAdmins(NotificationType.NewRequest);
+            var playerIds = await GetPrivilegedUsersPlayerIds();
             await Send(playerIds, notification, settings, model, true);
         }
 
@@ -82,7 +82,7 @@ namespace Ombi.Notifications.Agents
             };
 
             // Get admin devices
-            var playerIds = await GetAdmins(NotificationType.Issue);
+            var playerIds = await GetAdmins();
             await Send(playerIds, notification, settings, model);
         }
 
@@ -112,7 +112,7 @@ namespace Ombi.Notifications.Agents
                 else
                 {
                     // Send to admin
-                    var playerIds = await GetAdmins(NotificationType.IssueComment);
+                    var playerIds = await GetAdmins();
                     await Send(playerIds, notification, settings, model);
                 }
             }
@@ -157,7 +157,7 @@ namespace Ombi.Notifications.Agents
             };
 
             // Get admin devices
-            var playerIds = await GetAdmins(NotificationType.Test);
+            var playerIds = await GetAdmins();
             await Send(playerIds, notification, settings, model);
         }
 
@@ -279,15 +279,25 @@ namespace Ombi.Notifications.Agents
             await Send(playerIds, notification, settings, model);
         }
 
-        private async Task<List<string>> GetAdmins(NotificationType type)
+        private async Task<List<string>> GetAdmins()
         {
-            var adminUsers = (await _userManager.GetUsersInRoleAsync(OmbiRoles.Admin)).Select(x => x.Id).ToList();
+            return await GetNotificationRecipients(await _userManager.GetUsersInRoleAsync(OmbiRoles.Admin));
+        }
+        private async Task<List<string>> GetPrivilegedUsersPlayerIds()
+        {
+            return await GetNotificationRecipients(await GetPrivilegedUsers());
+        }
+
+        private async Task<List<string>> GetNotificationRecipients(IEnumerable<OmbiUser> users)
+        {
+            
+            var adminUsers = users.Select(x => x.Id).ToList();
             var notificationUsers = _notifications.GetAll().Include(x => x.User).Where(x => adminUsers.Contains(x.UserId));
             var playerIds = await notificationUsers.Select(x => x.Token).ToListAsync();
             if (!playerIds.Any())
             {
                 _logger.LogInformation(
-                    $"there are no admins to send a notification for {type}, for agent {NotificationAgent.Mobile}");
+                    $"there are no users to send a notification for agent {NotificationAgent.Mobile}");
                 return null;
             }
             return playerIds;
@@ -377,7 +387,7 @@ namespace Ombi.Notifications.Agents
             };
 
             // Get admin devices
-            var playerIds = await GetAdmins(NotificationType.PartiallyAvailable);
+            var playerIds = await GetAdmins();
             await Send(playerIds, notification, settings, model, true);
         }
     }

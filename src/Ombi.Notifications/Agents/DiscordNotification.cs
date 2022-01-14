@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Discord;
 using Ombi.Api.Discord.Models;
@@ -21,8 +22,8 @@ namespace Ombi.Notifications.Agents
         public DiscordNotification(IDiscordApi api, ISettingsService<DiscordNotificationSettings> sn,
                                    ILogger<DiscordNotification> log, INotificationTemplatesRepository r,
                                    IMovieRequestRepository m, ITvRequestRepository t, ISettingsService<CustomizationSettings> s, IRepository<RequestSubscription> sub, IMusicRequestRepository music,
-                                   IRepository<UserNotificationPreferences> userPref)
-            : base(sn, r, m, t, s, log, sub, music, userPref)
+                                   IRepository<UserNotificationPreferences> userPref, UserManager<OmbiUser> um)
+            : base(sn, r, m, t, s, log, sub, music, userPref, um)
         {
             Api = api;
             Logger = log;
