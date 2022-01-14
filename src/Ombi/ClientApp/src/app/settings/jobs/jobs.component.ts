@@ -36,7 +36,7 @@ export class JobsComponent implements OnInit {
                 retryRequests:            [x.retryRequests, Validators.required],
                 mediaDatabaseRefresh:     [x.mediaDatabaseRefresh, Validators.required],
                 autoDeleteRequests:       [x.autoDeleteRequests, Validators.required],
-                EmbyRecentlyAddedSync:    [x.embyRecentlyAddedSync, Validators.required],
+                embyRecentlyAddedSync:    [x.embyRecentlyAddedSync, Validators.required],
             });
         });
     }
