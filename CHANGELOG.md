@@ -1,3 +1,14 @@
+## [4.9.1](https://github.com/Ombi-app/Ombi/compare/v4.9.0...v4.9.1) (2022-01-14)
+
+
+### Bug Fixes
+
+* **discover:** 🌐 Localize episodes names in TV details ([#4467](https://github.com/Ombi-app/Ombi/issues/4467)) [skip ci] ([35806ea](https://github.com/Ombi-app/Ombi/commit/35806ea2d2c866d628cf08577026a02ab04e49d9))
+* **email-notifications:** :bug: Fixed the issue where legacy requests were showing broken poster images [#4452](https://github.com/Ombi-app/Ombi/issues/4452) ([0ece2fd](https://github.com/Ombi-app/Ombi/commit/0ece2fd6e0eb01e0b7d4d2a01e1a276c7a9c5a51))
+* **emby/jellyfin:** :bug: A more reliable Emby and Jellyfin sync [skip ci] ([ad677fa](https://github.com/Ombi-app/Ombi/commit/ad677fa02eb75633014e9c9791c21ed2d6a23229))
+
+
+
 # [4.9.0](https://github.com/Ombi-app/Ombi/compare/v4.8.1...v4.9.0) (2022-01-05)
 
 
@@ -167,17 +178,6 @@
 ### Bug Fixes
 
 * **discover:** TV shows now display on the Actor Pages ([#4388](https://github.com/Ombi-app/Ombi/issues/4388)) ([6b716e7](https://github.com/Ombi-app/Ombi/commit/6b716e722076e3d1e6bf2097c5263645d5ea9edf))
-
-
-
-## [4.6.1](https://github.com/Ombi-app/Ombi/compare/v4.6.0...v4.6.1) (2021-11-10)
-
-
-### Bug Fixes
-
-* :bug: Fixed the MySQL issue after .net 6 upgrade [#4393](https://github.com/Ombi-app/Ombi/issues/4393) ([fea7ff0](https://github.com/Ombi-app/Ombi/commit/fea7ff05139e9ff50c8097fa5389b4ef9ad21a15))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([c6acb45](https://github.com/Ombi-app/Ombi/commit/c6acb45f8d3f371c0b4024c4272849d0d0cc867f))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([18c220a](https://github.com/Ombi-app/Ombi/commit/18c220a0cd0d19e45a07d0c319da2b9512778a8a))
 
 
 
