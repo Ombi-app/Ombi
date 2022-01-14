@@ -124,14 +124,14 @@ namespace Ombi.Schedule.Jobs.Ombi
 
 
                 var customization = await _customizationSettings.GetSettingsAsync();
-                // MOVIES
                 var plexContent = (IQueryable<IMediaServerContent>)_plex.GetAll().Include(x => x.Episodes).AsNoTracking();
                 var embyContent = (IQueryable<IMediaServerContent>)_emby.GetAll().Include(x => x.Episodes).AsNoTracking();
                 var jellyfinContent = (IQueryable<IMediaServerContent>)_jellyfin.GetAll().Include(x => x.Episodes).AsNoTracking();
 
-                var plexContentMoviesToSend = await getMoviesContent(plexContent, RecentlyAddedType.Plex);
-                var embyContentMoviesToSend = await getMoviesContent(embyContent, RecentlyAddedType.Emby);
-                var jellyfinContentMoviesToSend = await getMoviesContent(jellyfinContent, RecentlyAddedType.Jellyfin);
+                // MOVIES
+                var plexContentMoviesToSend = await GetMoviesContent(plexContent, RecentlyAddedType.Plex);
+                var embyContentMoviesToSend = await GetMoviesContent(embyContent, RecentlyAddedType.Emby);
+                var jellyfinContentMoviesToSend = await GetMoviesContent(jellyfinContent, RecentlyAddedType.Jellyfin);
 
                 // MUSIC
                 var lidarrContent = _lidarrAlbumRepository.GetAll().AsNoTracking().ToList().Where(x => x.FullyAvailable);
@@ -383,7 +383,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             addedAlbumLogIds = lidarrParent != null && lidarrParent.Any() ? (lidarrParent?.Select(x => x.AlbumId)?.ToHashSet() ?? new HashSet<string>()) : new HashSet<string>();
         }
 
-        private async Task<HashSet<IMediaServerContent>> getMoviesContent(IQueryable<IMediaServerContent> content, RecentlyAddedType recentlyAddedType)
+        private async Task<HashSet<IMediaServerContent>> GetMoviesContent(IQueryable<IMediaServerContent> content, RecentlyAddedType recentlyAddedType)
         {
             var localDataset = content.Where(x => x.Type == MediaType.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
             // Filter out the ones that we haven't sent yet
