@@ -226,7 +226,12 @@
             "MovieRequestQuotaExceeded": "您的电影请求已超出配额！",
             "TvRequestQuotaExceeded": "您的剧集请求已超出配额！",
             "AlbumRequestQuotaExceeded": "您的专辑请求已超出配额！"
-        }
+        },
+        "Notify": "通知",
+        "RemoveNotification": "删除通知",
+        "SuccessfulNotify": "您将收到标题为 {{title}} 的通知",
+        "SuccessfulUnNotify": "您将不再收到标题为 {{title}} 的通知",
+        "CouldntNotify": "无法通知标题 {{title}}"
     },
     "Issues": {
         "Title": "问题",

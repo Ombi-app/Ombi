@@ -213,6 +213,28 @@ export class MovieDetailsComponent {
         });
     }
 
+    public notify() {
+        this.requestService.subscribeToMovie(this.movieRequest.id).subscribe(result => {
+            if (result) {
+                this.movie.subscribed = true;
+                this.messageService.send(this.translate.instant("Requests.SuccessfulNotify", {title: this.movie.title}), "Ok");
+            } else {
+                this.messageService.send(this.translate.instant("Requests.CouldntNotify", {title: this.movie.title}), "Ok");
+            }
+        });
+    }
+
+    public unNotify() {
+        this.requestService.unSubscribeToMovie(this.movieRequest.id).subscribe(result => {
+            if (result) {
+                this.movie.subscribed = false;
+                this.messageService.send(this.translate.instant("Requests.SuccessfulUnNotify", {title: this.movie.title}), "Ok");
+            } else {
+                this.messageService.send(this.translate.instant("Requests.CouldntNotify", {title: this.movie.title}), "Ok");
+            }
+        });
+    }
+
     private loadBanner() {
         this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
             if (!this.movie.backdropPath) {

@@ -226,7 +226,12 @@
             "MovieRequestQuotaExceeded": "Hai superato la tua quota di richieste di Film!",
             "TvRequestQuotaExceeded": "Hai superato la tua quota di richieste di Episodi!",
             "AlbumRequestQuotaExceeded": "Hai superato la tua quota di richieste di Album!"
-        }
+        },
+        "Notify": "Notifica",
+        "RemoveNotification": "Rimuovi Notifiche",
+        "SuccessfulNotify": "Sarai notificato per il titolo {{title}}",
+        "SuccessfulUnNotify": "Non sarai più notificato per il titolo {{title}}",
+        "CouldntNotify": "Impossibile notificare il titolo {{title}}"
     },
     "Issues": {
         "Title": "Problemi",
@@ -273,7 +278,7 @@
         "FilterHeaderRequestStatus": "Stato",
         "Approved": "Approvato",
         "PendingApproval": "In attesa di approvazione",
-        "WatchProviders": "Watch Providers",
+        "WatchProviders": "Guarda i Fornitori",
         "Keywords": "Parole Chiave"
     },
     "UserManagment": {

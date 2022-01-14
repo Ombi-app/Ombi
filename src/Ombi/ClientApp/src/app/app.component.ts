@@ -1,4 +1,4 @@
-﻿import { OverlayContainer } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 import { Component, OnInit, HostBinding, Inject } from "@angular/core";
 import { NavigationStart, Router } from "@angular/router";
@@ -34,6 +34,7 @@ export class AppComponent implements OnInit {
     public userName: string;
     public userEmail: string;
     public accessToken: string;
+    public favicon: string;
 
     private hubConnected: boolean;
 
@@ -88,9 +89,15 @@ export class AppComponent implements OnInit {
         this.customizationFacade.settings$().subscribe(x => {
             this.customizationSettings = x;
             if (this.customizationSettings && this.customizationSettings.applicationName) {
-                this.applicationName = this.customizationSettings.applicationName;
-                this.document.getElementsByTagName('title')[0].innerText = this.applicationName;
+                this.applicationName = this.customizationSettings.applicationName;              
+                this.document.getElementsByTagName('title')[0].innerText = this.applicationName;              
             }
+
+            if (this.customizationSettings && this.customizationSettings.favicon) {                
+                this.favicon = this.customizationSettings.favicon;
+                this.document.getElementById('favicon').setAttribute('href', this.favicon);
+            }
+
             if (this.customizationSettings && this.customizationSettings.customCss) {
                 var dom = this.document.getElementsByTagName('head')[0];
                 var css = document.createElement("style");
