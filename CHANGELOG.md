@@ -1,3 +1,14 @@
+## [4.9.2](https://github.com/Ombi-app/Ombi/compare/v4.9.1...v4.9.2) (2022-01-14)
+
+
+### Bug Fixes
+
+* :bug: Add UI for Emby recently added cronjob settings ([#4469](https://github.com/Ombi-app/Ombi/issues/4469)) ([7d47bbe](https://github.com/Ombi-app/Ombi/commit/7d47bbe92204855bf75d70b8fa548f9c3f3612bc))
+* **sonarr:** :bug: Fixed an issue where we could attempt to add a series to sonarr before sonarr has got all the metadata [#4459](https://github.com/Ombi-app/Ombi/issues/4459) ([5c691dc](https://github.com/Ombi-app/Ombi/commit/5c691dc98437a4cd24560ff625414fe05dd22f89))
+* **wizard:** :bug: Fixed the issue where the Application Url wasn't validated in the wizard ([33b8d11](https://github.com/Ombi-app/Ombi/commit/33b8d1111a1c6663d8c0bbd912be4660da7d013f)), closes [#4417](https://github.com/Ombi-app/Ombi/issues/4417)
+
+
+
 ## [4.9.1](https://github.com/Ombi-app/Ombi/compare/v4.9.0...v4.9.1) (2022-01-14)
 
 
@@ -169,15 +180,6 @@
 * **discover:** :bug: Display TV + movies on actor page in user language ([#4395](https://github.com/Ombi-app/Ombi/issues/4395)) ([fe635c7](https://github.com/Ombi-app/Ombi/commit/fe635c7106bc487ff879bdc8a73bab16cb389b97))
 * **permissions:** :bug: Improved the security around the role "Manage Own Requests" ([#4397](https://github.com/Ombi-app/Ombi/issues/4397)) ([334a32b](https://github.com/Ombi-app/Ombi/commit/334a32bca42f90198d9b720d2bdb710a583be47f)), closes [#4391](https://github.com/Ombi-app/Ombi/issues/4391)
 * **search:** Fixed some cases where search wouldn't work correctly ([#4398](https://github.com/Ombi-app/Ombi/issues/4398)) ([4410790](https://github.com/Ombi-app/Ombi/commit/4410790bc096826bc11554098f846e3acb59589a))
-
-
-
-## [4.6.2](https://github.com/Ombi-app/Ombi/compare/v4.6.1...v4.6.2) (2021-11-10)
-
-
-### Bug Fixes
-
-* **discover:** TV shows now display on the Actor Pages ([#4388](https://github.com/Ombi-app/Ombi/issues/4388)) ([6b716e7](https://github.com/Ombi-app/Ombi/commit/6b716e722076e3d1e6bf2097c5263645d5ea9edf))
 
 
 
