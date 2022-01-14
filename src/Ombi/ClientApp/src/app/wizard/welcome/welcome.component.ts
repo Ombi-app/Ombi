@@ -1,11 +1,11 @@
 ﻿import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
-import { Router } from "@angular/router";
+import { IdentityService, NotificationService, SettingsService } from "../../services";
+
 import { ICreateWizardUser } from "../../interfaces";
-import { IdentityService, NotificationService } from "../../services";
 import { IOmbiConfigModel } from "../models/OmbiConfigModel";
-import { WizardService } from "../services/wizard.service";
 import { MatHorizontalStepper } from'@angular/material/stepper';
-import { StepperSelectionEvent } from "@angular/cdk/stepper";
+import { Router } from "@angular/router";
+import { WizardService } from "../services/wizard.service";
 
 @Component({
     templateUrl: "./welcome.component.html",
@@ -18,7 +18,8 @@ export class WelcomeComponent implements OnInit {
     public config: IOmbiConfigModel;
 
     constructor(private router: Router, private identityService: IdentityService,
-        private notificationService: NotificationService, private WizardService: WizardService) { }
+        private notificationService: NotificationService, private WizardService: WizardService,
+        private settingsService: SettingsService) { }
 
     public ngOnInit(): void {
         this.localUser = {
@@ -34,20 +35,39 @@ export class WelcomeComponent implements OnInit {
     }
 
     public createUser() {
-        this.WizardService.addOmbiConfig(this.config).subscribe(config => {
-            if(config != null) {
-                this.identityService.createWizardUser(this.localUser).subscribe(x => {
-                if (x.result) {
-                // save the config
-                this.router.navigate(["login"]);
+        if (this.config.applicationUrl) {
+            this.settingsService.verifyUrl(this.config.applicationUrl).subscribe(x => {
+                    if (!x) {
+                        this.notificationService.error(`The URL "${this.config.applicationUrl}" is not valid. Please format it correctly e.g. http://www.google.com/`);
+                        this.stepper.selectedIndex = 3;
+                        return;
+                    }
+                    this.saveConfig();
+                });
             } else {
-                if (x.errors.length > 0) {
-                    this.notificationService.error(x.errors[0]);
-                    this.stepper.previous();
-                }
+                this.saveConfig();
             }
-        });
     }
-    }, configErr => this.notificationService.error(configErr));
+
+    private saveConfig() {
+        this.WizardService.addOmbiConfig(this.config).subscribe({
+            next: (config) => {
+                    if(config != null) {
+                    this.identityService.createWizardUser(this.localUser).subscribe(x => {
+                    if (x.result) {
+                    // save the config
+                    this.router.navigate(["login"]);
+                } else {
+                    if (x.errors.length > 0) {
+                        this.notificationService.error(x.errors[0]);
+                        this.stepper.previous();
+                    }
+                }
+            });
+        }
+    },
+    error: (configErr) => this.notificationService.error(configErr)
+    });
     }
+
 }

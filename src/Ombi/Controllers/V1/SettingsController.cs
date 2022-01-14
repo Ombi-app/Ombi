@@ -334,6 +334,7 @@ namespace Ombi.Controllers.V1
 
         [ApiExplorerSettings(IgnoreApi = true)]
         [HttpPost("customization/urlverify")]
+        [AllowAnonymous]
         public bool VerifyUrl([FromBody]UrlVerifyModel url)
         {
             return Uri.TryCreate(url.Url, UriKind.Absolute, out var __);
