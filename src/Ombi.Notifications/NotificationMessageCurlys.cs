@@ -43,7 +43,17 @@ namespace Ombi.Notifications
             var img = req?.PosterPath ?? string.Empty;
             if (img.HasValue())
             {
-                PosterImage = $"https://image.tmdb.org/t/p/w300/{req?.PosterPath?.TrimStart('/') ?? string.Empty}";
+                if (img.StartsWith("http"))
+                {
+                    // This means it's a legacy request from when we used TvMaze as a provider.
+                    // The poster url is the fully qualified address, so just use it
+                    PosterImage = img;
+                }
+                else
+                {
+                    PosterImage =
+                        $"https://image.tmdb.org/t/p/w300/{img?.TrimStart('/') ?? string.Empty}";
+                }
             }
             CalculateRequestStatus(req);
         }
@@ -61,8 +71,17 @@ namespace Ombi.Notifications
             var img = req?.ParentRequest?.PosterPath ?? string.Empty;
             if (img.HasValue())
             {
-                PosterImage =
-                    $"https://image.tmdb.org/t/p/w300/{req?.ParentRequest?.PosterPath?.TrimStart('/') ?? string.Empty}";
+                if (img.StartsWith("http"))
+                {
+                    // This means it's a legacy request from when we used TvMaze as a provider.
+                    // The poster url is the fully qualified address, so just use it
+                    PosterImage = img;
+                }
+                else
+                {
+                    PosterImage =
+                        $"https://image.tmdb.org/t/p/w300/{img?.TrimStart('/') ?? string.Empty}";
+                }
             }
 
             // Generate episode list.
