@@ -1,3 +1,12 @@
+# [4.10.0](https://github.com/Ombi-app/Ombi/compare/v4.9.2...v4.10.0) (2022-01-14)
+
+
+### Features
+
+* **notifications:** :sparkles: Send new request email notifications to power users ([#4462](https://github.com/Ombi-app/Ombi/issues/4462)) ([10cc0c0](https://github.com/Ombi-app/Ombi/commit/10cc0c0951f13221179516f8ff5c44dbecc9a0fd))
+
+
+
 ## [4.9.2](https://github.com/Ombi-app/Ombi/compare/v4.9.1...v4.9.2) (2022-01-14)
 
 
@@ -169,17 +178,6 @@
 
 
 ## [4.6.4](https://github.com/Ombi-app/Ombi/compare/v4.6.3...v4.6.4) (2021-11-12)
-
-
-
-## [4.6.3](https://github.com/Ombi-app/Ombi/compare/v4.6.2...v4.6.3) (2021-11-11)
-
-
-### Bug Fixes
-
-* **discover:** :bug: Display TV + movies on actor page in user language ([#4395](https://github.com/Ombi-app/Ombi/issues/4395)) ([fe635c7](https://github.com/Ombi-app/Ombi/commit/fe635c7106bc487ff879bdc8a73bab16cb389b97))
-* **permissions:** :bug: Improved the security around the role "Manage Own Requests" ([#4397](https://github.com/Ombi-app/Ombi/issues/4397)) ([334a32b](https://github.com/Ombi-app/Ombi/commit/334a32bca42f90198d9b720d2bdb710a583be47f)), closes [#4391](https://github.com/Ombi-app/Ombi/issues/4391)
-* **search:** Fixed some cases where search wouldn't work correctly ([#4398](https://github.com/Ombi-app/Ombi/issues/4398)) ([4410790](https://github.com/Ombi-app/Ombi/commit/4410790bc096826bc11554098f846e3acb59589a))
 
 
 
