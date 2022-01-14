@@ -1,6 +1,7 @@
 ﻿import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { IdentityService, NotificationService, SettingsService } from "../../services";
 
+import { CustomizationFacade } from "../../state/customization/customization.facade";
 import { ICreateWizardUser } from "../../interfaces";
 import { IOmbiConfigModel } from "../models/OmbiConfigModel";
 import { MatHorizontalStepper } from'@angular/material/stepper';
@@ -19,7 +20,7 @@ export class WelcomeComponent implements OnInit {
 
     constructor(private router: Router, private identityService: IdentityService,
         private notificationService: NotificationService, private WizardService: WizardService,
-        private settingsService: SettingsService) { }
+        private settingsService: SettingsService, private customizationFacade: CustomizationFacade) { }
 
     public ngOnInit(): void {
         this.localUser = {
@@ -55,6 +56,7 @@ export class WelcomeComponent implements OnInit {
                     if(config != null) {
                     this.identityService.createWizardUser(this.localUser).subscribe(x => {
                     if (x.result) {
+                        this.customizationFacade.loadCustomziationSettings().subscribe();
                     // save the config
                     this.router.navigate(["login"]);
                 } else {
