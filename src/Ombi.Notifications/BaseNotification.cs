@@ -214,7 +214,7 @@ namespace Ombi.Notifications
                 .FirstOrDefault(x => x.Agent == agent && x.UserId == userId);
         }
 
-        protected async Task<IEnumerable<OmbiUser>> GetPowerUsers()
+        protected async Task<IEnumerable<OmbiUser>> GetPrivilegedUsers()
         {
             IEnumerable<OmbiUser> recipients = await _userManager.GetUsersInRoleAsync(OmbiRoles.Admin);
             recipients = recipients.Concat(await _userManager.GetUsersInRoleAsync(OmbiRoles.PowerUser));

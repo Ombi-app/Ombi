@@ -115,7 +115,7 @@ namespace Ombi.Notifications.Agents
             var plaintext = await LoadPlainTextMessage(NotificationType.NewRequest, model, settings);
             message.Other.Add("PlainTextBody", plaintext);
 
-            foreach (var recipient in (await GetPowerUsers()).DistinctBy(x => x.Email))
+            foreach (var recipient in (await GetPrivilegedUsers()).DistinctBy(x => x.Email))
             {
                 if (recipient.Email.IsNullOrEmpty())
                 {

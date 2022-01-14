@@ -62,7 +62,7 @@ namespace Ombi.Notifications.Agents
             };
 
             // Get admin devices
-            var playerIds = await GetAdmins();
+            var playerIds = await GetPrivilegedUsersPlayerIds();
             await Send(playerIds, notification, settings, model, true);
         }
 
@@ -281,14 +281,14 @@ namespace Ombi.Notifications.Agents
 
         private async Task<List<string>> GetAdmins()
         {
-            return await UsersToPlayerIds(await _userManager.GetUsersInRoleAsync(OmbiRoles.Admin));
+            return await GetNotificationRecipients(await _userManager.GetUsersInRoleAsync(OmbiRoles.Admin));
         }
-        private async Task<List<string>> GetPowerUsersPlayerIds()
+        private async Task<List<string>> GetPrivilegedUsersPlayerIds()
         {
-            return await UsersToPlayerIds(await GetPowerUsers());
+            return await GetNotificationRecipients(await GetPrivilegedUsers());
         }
 
-        private async Task<List<string>> UsersToPlayerIds(IEnumerable<OmbiUser> users)
+        private async Task<List<string>> GetNotificationRecipients(IEnumerable<OmbiUser> users)
         {
             
             var adminUsers = users.Select(x => x.Id).ToList();
