@@ -74,7 +74,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             _refreshMetadata = refreshMetadata;
         }
 
-        private readonly IPlexContentRepository _plex;
+        private readonly IMediaServerContentRepository<PlexServerContent> _plex;
         private readonly IEmbyContentRepository _emby;
         private readonly IJellyfinContentRepository _jellyfin;
         private readonly IRepository<RecentlyAddedLog> _recentlyAddedLog;
@@ -130,11 +130,9 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 // MOVIES
                 var moviesContents = new List<IQueryable<IMediaServerContent>>();
-                // these explicit casts won't work because:
-                // Unable to cast object of type 'PlexServerContentRepository' to type 'IMediaServerContentRepository`1[IMediaServerContent]
-                moviesContents.Add((await GetMoviesContent((IMediaServerContentRepository<IMediaServerContent>)_plex)).AsQueryable());
-                moviesContents.Add((await GetMoviesContent((IMediaServerContentRepository<IMediaServerContent>)_emby)).AsQueryable());
-                moviesContents.Add((await GetMoviesContent((IMediaServerContentRepository<IMediaServerContent>)_jellyfin)).AsQueryable());
+                moviesContents.Add((await GetMoviesContent(_plex)).AsQueryable());
+                moviesContents.Add((await GetMoviesContent(_emby)).AsQueryable());
+                moviesContents.Add((await GetMoviesContent(_jellyfin)).AsQueryable());
 
                 // MUSIC
                 var lidarrContent = _lidarrAlbumRepository.GetAll().AsNoTracking().ToList().Where(x => x.FullyAvailable);
@@ -363,9 +361,9 @@ namespace Ombi.Schedule.Jobs.Ombi
             addedAlbumLogIds = lidarrParent != null && lidarrParent.Any() ? (lidarrParent?.Select(x => x.AlbumId)?.ToHashSet() ?? new HashSet<string>()) : new HashSet<string>();
         }
 
-        private async Task<HashSet<IMediaServerContent>> GetMoviesContent(IMediaServerContentRepository<IMediaServerContent> repository)
+        private async Task<HashSet<IMediaServerContent>> GetMoviesContent<T>(IMediaServerContentRepository<T> repository) where T : class, IMediaServerContent
         {
-            var content = repository.GetAll().Include(x => x.Episodes).AsNoTracking();
+            IQueryable<IMediaServerContent> content = repository.GetAll().Include(x => x.Episodes).AsNoTracking();
             var localDataset = content.Where(x => x.Type == MediaType.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
             // Filter out the ones that we haven't sent yet
             var addedLog = _recentlyAddedLog.GetAll().ToList();
@@ -399,7 +397,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             return b.ToString();
         }
 
-        private async Task<HashSet<IMediaServerContent>> GetMoviesWithoutId(HashSet<int> addedMovieLogIds, HashSet<IMediaServerContent> needsMovieDb, IMediaServerContentRepository<IMediaServerContent> repository)
+        private async Task<HashSet<IMediaServerContent>> GetMoviesWithoutId<T>(HashSet<int> addedMovieLogIds, HashSet<IMediaServerContent> needsMovieDb, IMediaServerContentRepository<T> repository) where T : class, IMediaServerContent
         {
             foreach (var movie in needsMovieDb)
             {
@@ -413,7 +411,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             return result.ToHashSet();
         }
 
-        private async Task UpdateTheMovieDbId(IEnumerable<IMediaServerContent> content, IMediaServerContentRepository<IMediaServerContent> repository)
+        private async Task UpdateTheMovieDbId<T>(IEnumerable<IMediaServerContent> content, IMediaServerContentRepository<T> repository) where T : class, IMediaServerContent
         {
             foreach (var movie in content)
             {
