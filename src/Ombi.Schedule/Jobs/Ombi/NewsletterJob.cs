@@ -75,8 +75,8 @@ namespace Ombi.Schedule.Jobs.Ombi
         }
 
         private readonly IMediaServerContentRepository<PlexServerContent> _plex;
-        private readonly IEmbyContentRepository _emby;
-        private readonly IJellyfinContentRepository _jellyfin;
+        private readonly IMediaServerContentRepository<EmbyContent> _emby;
+        private readonly IMediaServerContentRepository<JellyfinContent> _jellyfin;
         private readonly IRepository<RecentlyAddedLog> _recentlyAddedLog;
         private readonly IMovieDbApi _movieApi;
         private readonly ITvMazeApi _tvApi;
