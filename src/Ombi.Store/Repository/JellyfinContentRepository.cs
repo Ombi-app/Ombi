@@ -35,17 +35,13 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
 {
-    public class JellyfinContentRepository : ExternalRepository<JellyfinContent>, IJellyfinContentRepository
+    public class JellyfinContentRepository : MediaServerContentRepository<JellyfinContent>, IJellyfinContentRepository
     {
 
         public JellyfinContentRepository(ExternalContext db):base(db)
         {
-            Db = db;
         }
 
-        private ExternalContext Db { get; }
-
-        
         public async Task<JellyfinContent> GetByImdbId(string imdbid)
         {
             return await Db.JellyfinContent.FirstOrDefaultAsync(x => x.ImdbId == imdbid);
@@ -69,18 +65,18 @@ namespace Ombi.Store.Repository
             return await Db.JellyfinContent./*Include(x => x.Seasons).*/FirstOrDefaultAsync(x => x.JellyfinId == jellyfinId);
         }
 
-        public async Task Update(IMediaServerContent existingContent)
+        public override async Task Update(IMediaServerContent existingContent)
         {
             Db.JellyfinContent.Update((JellyfinContent)existingContent);
             await InternalSaveChanges();
         }
 
-        public IQueryable<IMediaServerEpisode> GetAllEpisodes()
+        public override IQueryable<IMediaServerEpisode> GetAllEpisodes()
         {
             return Db.JellyfinEpisode.AsQueryable();
         }
 
-        public async Task<IMediaServerEpisode> Add(IMediaServerEpisode content)
+        public override async Task<IMediaServerEpisode> Add(IMediaServerEpisode content)
         {
             await Db.JellyfinEpisode.AddAsync((JellyfinEpisode)content);
             await InternalSaveChanges();
@@ -91,16 +87,17 @@ namespace Ombi.Store.Repository
             return await Db.JellyfinEpisode.FirstOrDefaultAsync(x => x.JellyfinId == key);
         }
 
-        public async Task AddRange(IEnumerable<IMediaServerEpisode> content)
+        public override async Task AddRange(IEnumerable<IMediaServerEpisode> content)
         {
             Db.JellyfinEpisode.AddRange((JellyfinEpisode)content);
             await InternalSaveChanges();
         }
 
-        public void UpdateWithoutSave(IMediaServerContent existingContent)
+        public override void UpdateWithoutSave(IMediaServerContent existingContent)
         {
             Db.JellyfinContent.Update((JellyfinContent)existingContent);
         }
-        
+
+        public override RecentlyAddedType RecentlyAddedType => RecentlyAddedType.Jellyfin;
     }
 }

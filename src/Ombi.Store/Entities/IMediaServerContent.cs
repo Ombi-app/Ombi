@@ -5,14 +5,14 @@ using Ombi.Store.Repository;
 
 namespace Ombi.Store.Entities
 {
-    public interface IMediaServerContent
+    public interface IMediaServerContent: IEntity
     {
-        public int Id { get; set; }
         public string Title { get; set; }
         public string ImdbId { get; set; }
         public string TvDbId { get; set; }
         public string TheMovieDbId { get; set; }
         public MediaType Type { get; set; }
+        public IMediaServerContentRepositoryLight Repository { get; }
 
         public string Url { get; set; }
         

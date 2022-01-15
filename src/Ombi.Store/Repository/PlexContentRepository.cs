@@ -37,16 +37,12 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
 {
-    public class PlexServerContentRepository : ExternalRepository<PlexServerContent>, IPlexContentRepository
+    public class PlexServerContentRepository : MediaServerContentRepository<PlexServerContent>, IPlexContentRepository
     {
-
+        public override RecentlyAddedType RecentlyAddedType => RecentlyAddedType.Plex;
         public PlexServerContentRepository(ExternalContext db) : base(db)
         {
-            Db = db;
         }
-
-        private ExternalContext Db { get; }
-
 
         public async Task<bool> ContentExists(string providerId)
         {
@@ -114,12 +110,12 @@ namespace Ombi.Store.Repository
                 .FirstOrDefaultAsync(predicate);
         }
 
-        public async Task Update(IMediaServerContent existingContent)
+        public override async Task Update(IMediaServerContent existingContent)
         {
             Db.PlexServerContent.Update((PlexServerContent)existingContent);
             await InternalSaveChanges();
         }
-        public void UpdateWithoutSave(IMediaServerContent existingContent)
+        public override void UpdateWithoutSave(IMediaServerContent existingContent)
         {
             Db.PlexServerContent.Update((PlexServerContent)existingContent);
         }
@@ -130,7 +126,7 @@ namespace Ombi.Store.Repository
             await InternalSaveChanges();
         }
 
-        public IQueryable<IMediaServerEpisode> GetAllEpisodes()
+        public override IQueryable<IMediaServerEpisode> GetAllEpisodes()
         {
             return Db.PlexEpisode.Include(x => x.Series).AsQueryable();
         }
@@ -145,7 +141,7 @@ namespace Ombi.Store.Repository
             Db.PlexEpisode.Remove(content);
         }
 
-        public async Task<IMediaServerEpisode> Add(IMediaServerEpisode content)
+        public override async Task<IMediaServerEpisode> Add(IMediaServerEpisode content)
         {
             await Db.PlexEpisode.AddAsync((PlexEpisode)content);
             await InternalSaveChanges();
@@ -162,10 +158,11 @@ namespace Ombi.Store.Repository
         {
             return await Db.PlexEpisode.FirstOrDefaultAsync(x => x.Key == key);
         }
-        public async Task AddRange(IEnumerable<IMediaServerEpisode> content)
+        public override async Task AddRange(IEnumerable<IMediaServerEpisode> content)
         {
             Db.PlexEpisode.AddRange((PlexEpisode)content);
             await InternalSaveChanges();
         }
+
     }
 }

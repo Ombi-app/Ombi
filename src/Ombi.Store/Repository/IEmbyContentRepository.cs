@@ -6,7 +6,7 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
 {
-    public interface IEmbyContentRepository : IMediaServerContentRepository<EmbyContent, EmbyEpisode>
+    public interface IEmbyContentRepository : IMediaServerContentRepository<EmbyContent>
     {
         Task<EmbyContent> GetByEmbyId(string embyId);
         Task<EmbyEpisode> GetEpisodeByEmbyId(string key);

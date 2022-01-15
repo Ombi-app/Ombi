@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Ombi.Store.Repository;
 
 namespace Ombi.Store.Entities
 {
@@ -26,6 +27,9 @@ namespace Ombi.Store.Entities
 
         [NotMapped]
         public bool HasTheMovieDb => !string.IsNullOrEmpty(TheMovieDbId);
+        
+        [NotMapped] //TODO: instantiate this variable upon read // something in ExternalContext.cs?
+        public IMediaServerContentRepositoryLight Repository { get; set; }
     }
 
     public abstract class MediaServerEpisode: Entity, IMediaServerEpisode

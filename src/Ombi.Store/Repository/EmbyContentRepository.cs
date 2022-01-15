@@ -35,17 +35,13 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
 {
-    public class EmbyContentRepository : ExternalRepository<EmbyContent>, IEmbyContentRepository
+    public class EmbyContentRepository : MediaServerContentRepository<EmbyContent>, IEmbyContentRepository
     {
 
         public EmbyContentRepository(ExternalContext db):base(db)
         {
-            Db = db;
         }
 
-        private ExternalContext Db { get; }
-
-        
         public async Task<EmbyContent> GetByImdbId(string imdbid)
         {
             return await Db.EmbyContent.FirstOrDefaultAsync(x => x.ImdbId == imdbid);
@@ -69,18 +65,18 @@ namespace Ombi.Store.Repository
             return await Db.EmbyContent./*Include(x => x.Seasons).*/FirstOrDefaultAsync(x => x.EmbyId == embyId);
         }
 
-        public async Task Update(IMediaServerContent existingContent)
+        public override async Task Update(IMediaServerContent existingContent)
         {
             Db.EmbyContent.Update((EmbyContent)existingContent);
             await InternalSaveChanges();
         }
 
-        public IQueryable<IMediaServerEpisode> GetAllEpisodes()
+        public override IQueryable<IMediaServerEpisode> GetAllEpisodes()
         {
             return Db.EmbyEpisode.AsQueryable();
         }
 
-        public async Task<IMediaServerEpisode> Add(IMediaServerEpisode content)
+        public override async Task<IMediaServerEpisode> Add(IMediaServerEpisode content)
         {
             await Db.EmbyEpisode.AddAsync((EmbyEpisode)content);
             await InternalSaveChanges();
@@ -91,16 +87,17 @@ namespace Ombi.Store.Repository
             return await Db.EmbyEpisode.FirstOrDefaultAsync(x => x.EmbyId == key);
         }
 
-        public async Task AddRange(IEnumerable<IMediaServerEpisode> content)
+        public override async Task AddRange(IEnumerable<IMediaServerEpisode> content)
         {
             Db.EmbyEpisode.AddRange((EmbyEpisode)content);
             await InternalSaveChanges();
         }
 
-        public void UpdateWithoutSave(IMediaServerContent existingContent)
+        public override void UpdateWithoutSave(IMediaServerContent existingContent)
         {
             Db.EmbyContent.Update((EmbyContent)existingContent);
         }
         
+        public override RecentlyAddedType RecentlyAddedType => RecentlyAddedType.Emby;
     }
 }

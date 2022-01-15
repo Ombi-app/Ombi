@@ -6,7 +6,7 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
 {
-    public interface IJellyfinContentRepository : IMediaServerContentRepository<JellyfinContent, JellyfinEpisode>
+    public interface IJellyfinContentRepository : IMediaServerContentRepository<JellyfinContent>
     {
         Task<JellyfinContent> GetByJellyfinId(string jellyfinId);
         Task<JellyfinEpisode> GetEpisodeByJellyfinId(string key);

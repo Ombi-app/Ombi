@@ -353,7 +353,8 @@ namespace Ombi.Schedule.Jobs.Plex
                         Title = movie.title,
                         Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, movie.ratingKey),
                         Seasons = new List<PlexSeasonsContent>(),
-                        Quality = movie.Media?.FirstOrDefault()?.videoResolution ?? string.Empty
+                        Quality = movie.Media?.FirstOrDefault()?.videoResolution ?? string.Empty,
+                        Repository = Repo
                     };
                     if (providerIds.ImdbId.HasValue())
                     {
@@ -556,7 +557,8 @@ namespace Ombi.Schedule.Jobs.Plex
                         Type = MediaType.Series,
                         Title = show.title,
                         Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, show.ratingKey),
-                        Seasons = new List<PlexSeasonsContent>()
+                        Seasons = new List<PlexSeasonsContent>(),
+                        Repository = Repo
                     };
                     await GetProviderIds(showMetadata, item);
 
