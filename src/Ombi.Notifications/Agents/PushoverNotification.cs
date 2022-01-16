@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Pushbullet;
 using Ombi.Api.Pushover;
@@ -18,7 +19,7 @@ namespace Ombi.Notifications.Agents
     {
         public PushoverNotification(IPushoverApi api, ISettingsService<PushoverSettings> sn, ILogger<PushoverNotification> log, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t,
             ISettingsService<CustomizationSettings> s, IRepository<RequestSubscription> sub, IMusicRequestRepository music,
-            IRepository<UserNotificationPreferences> userPref) : base(sn, r, m, t, s, log, sub, music, userPref)
+            IRepository<UserNotificationPreferences> userPref, UserManager<OmbiUser> um) : base(sn, r, m, t, s, log, sub, music, userPref, um)
         {
             Api = api;
             Logger = log;

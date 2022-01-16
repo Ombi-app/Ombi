@@ -110,11 +110,11 @@ describe("Search Tests", () => {
     Page.navbar.searchFilter.tvToggle.click();
 
     cy.wait('@searchResponse');
-    const card = Page.getCard('2710', false);
+    const card = Page.getCard('131927', false);
 
     card.topLevelCard.realHover();
     card.title.should('have.text', "Dexter: New Blood");
-    card.overview.contains('Irish pub');
+    card.overview.contains('Iron Lake');
     card.requestType.contains('TV Show');
     card.requestButton.should('exist');
   });

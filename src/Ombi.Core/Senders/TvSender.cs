@@ -309,6 +309,22 @@ namespace Ombi.Core.Senders
 
         private async Task SendToSonarr(ChildRequests model, SonarrSeries result, SonarrSettings s)
         {
+            // Check to ensure we have the all the seasons, ensure the Sonarr metadata has grabbed all the data
+            Season existingSeason = null;
+            foreach (var season in model.SeasonRequests)
+            {
+                var attempt = 0;
+                existingSeason = result.seasons.FirstOrDefault(x => x.seasonNumber == season.SeasonNumber);
+                while (existingSeason == null && attempt < 5)
+                {
+                    attempt++;
+                    Logger.LogInformation("There was no season numer {0} in Sonarr for title {1}. Will try again as the metadata did not get created", season.SeasonNumber, model.ParentRequest.Title);
+                    result = await SonarrApi.GetSeriesById(result.id, s.ApiKey, s.FullUri);
+                    existingSeason = result.seasons.FirstOrDefault(x => x.seasonNumber == season.SeasonNumber);
+                    await Task.Delay(500);
+                }
+            }
+
             var episodesToUpdate = new List<Episode>();
             // Ok, now let's sort out the episodes.
 
@@ -327,24 +343,20 @@ namespace Ombi.Core.Senders
                 await Task.Delay(500);
             }
 
+            var seriesChanges = false;
 
-            foreach (var req in model.SeasonRequests)
+            foreach (var season in model.SeasonRequests)
             {
-                foreach (var ep in req.Episodes)
+                foreach (var ep in season.Episodes)
                 {
                     var sonarrEp = sonarrEpList.FirstOrDefault(x =>
-                        x.episodeNumber == ep.EpisodeNumber && x.seasonNumber == req.SeasonNumber);
+                        x.episodeNumber == ep.EpisodeNumber && x.seasonNumber == season.SeasonNumber);
                     if (sonarrEp != null && !sonarrEp.monitored)
                     {
                         sonarrEp.monitored = true;
                         episodesToUpdate.Add(sonarrEp);
                     }
                 }
-            }
-            var seriesChanges = false;
-
-            foreach (var season in model.SeasonRequests)
-            {
                 var sonarrEpisodeList = sonarrEpList.Where(x => x.seasonNumber == season.SeasonNumber).ToList();
                 var sonarrEpCount = sonarrEpisodeList.Count; 
                 var ourRequestCount = season.Episodes.Count;
@@ -356,15 +368,7 @@ namespace Ombi.Core.Senders
                 //// NOTE, not sure if needed since ombi ui displays future episodes anyway...
                 //ourEpisodes.AddRange(unairedEpisodes);
                 //var distinctEpisodes = ourEpisodes.Distinct().ToList();
-                //var missingEpisodes = Enumerable.Range(distinctEpisodes.Min(), distinctEpisodes.Count).Except(distinctEpisodes);
-
-                var existingSeason =
-                    result.seasons.FirstOrDefault(x => x.seasonNumber == season.SeasonNumber);
-                if (existingSeason == null)
-                {
-                    Logger.LogError("There was no season numer {0} in Sonarr for title {1}", season.SeasonNumber, model.ParentRequest.Title);
-                    continue;
-                }
+                //var missingEpisodes = Enumerable.Range(distinctEpisodes.Min(), distinctEpisodes.Count).Except(distinctEpisodes);     
 
 
                 if (sonarrEpCount == ourRequestCount /*|| !missingEpisodes.Any()*/)

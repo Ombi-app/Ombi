@@ -136,17 +136,17 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/bernarden">
-            <img src="https://avatars.githubusercontent.com/u/12289537?v=4" width="50;" alt="bernarden"/>
-            <br />
-            <sub><b>Victor Usoltsev</b></sub>
-        </a>
-    </td>
-    <td align="center">
         <a href="https://github.com/sephrat">
             <img src="https://avatars.githubusercontent.com/u/34862846?v=4" width="50;" alt="sephrat"/>
             <br />
             <sub><b>Sephrat</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/bernarden">
+            <img src="https://avatars.githubusercontent.com/u/12289537?v=4" width="50;" alt="bernarden"/>
+            <br />
+            <sub><b>Victor Usoltsev</b></sub>
         </a>
     </td>
     <td align="center">
@@ -731,6 +731,13 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/maartenheebink">
+            <img src="https://avatars.githubusercontent.com/u/28894544?v=4" width="50;" alt="maartenheebink"/>
+            <br />
+            <sub><b>Maartenheebink</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/masterhuck">
             <img src="https://avatars.githubusercontent.com/u/4671442?v=4" width="50;" alt="masterhuck"/>
             <br />
@@ -750,15 +757,15 @@ Here are some of the features Ombi has:
             <br />
             <sub><b>Tdorsey</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/thegame3202">
             <img src="https://avatars.githubusercontent.com/u/22148848?v=4" width="50;" alt="thegame3202"/>
             <br />
             <sub><b>Mike</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/zobe123">
             <img src="https://avatars.githubusercontent.com/u/13840542?v=4" width="50;" alt="zobe123"/>

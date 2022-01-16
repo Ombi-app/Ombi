@@ -118,7 +118,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
             var mediaToAdd = new HashSet<JellyfinContent>();
             var tv = await Api.GetAllShows(server.ApiKey, parentId, 0, 200, server.AdministratorId, server.FullUri);
             var totalTv = tv.TotalRecordCount;
-            var processed = 1;
+            var processed = 0;
             while (processed < totalTv)
             {
                 foreach (var tvShow in tv.Items)
@@ -178,7 +178,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
         {
             var movies = await Api.GetAllMovies(server.ApiKey, parentId, 0, 200, server.AdministratorId, server.FullUri);
             var totalCount = movies.TotalRecordCount;
-            var processed = 1;
+            var processed = 0;
             var mediaToAdd = new HashSet<JellyfinContent>();
             while (processed < totalCount)
             {

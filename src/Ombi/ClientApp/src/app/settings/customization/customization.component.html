@@ -34,6 +34,15 @@
                 </div>
             </div>
         </div>
+        <mat-hint>
+            The favicon url should be an externally accesible URL. Leave blank for default.
+        </mat-hint>
+        <div class="md-form-field">
+            <mat-form-field appearance="outline">
+                <mat-label>Custom Favicon</mat-label>
+                <input matInput type="url" [(ngModel)]="settings.favicon">
+            </mat-form-field>
+        </div>
         <div class="md-form-field">
             <mat-slide-toggle [(ngModel)]="settings.hideAvailableFromDiscover" matTooltip="Any media content that is available will now be hidden on the discover page, the user still can search for it">
                 Hide Available Content On The Discover Page

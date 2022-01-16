@@ -226,7 +226,12 @@
             "MovieRequestQuotaExceeded": "Vous avez dépassé votre quota de demandes de films !",
             "TvRequestQuotaExceeded": "Vous avez dépassé votre quota de demandes d'épisodes !",
             "AlbumRequestQuotaExceeded": "Vous avez dépassé votre quota de demandes d'albums !"
-        }
+        },
+        "Notify": "Notifier",
+        "RemoveNotification": "Supprimer les notifications",
+        "SuccessfulNotify": "Vous allez maintenant être notifié pour {{title}}",
+        "SuccessfulUnNotify": "Vous ne serez plus notifié pour {{title}}",
+        "CouldntNotify": "Impossible de notifier {{title}}"
     },
     "Issues": {
         "Title": "Problèmes",
@@ -310,13 +315,13 @@
         "Status": "Statut :",
         "StatusValues": {
             "Rumored": "Rumeur",
-            "Planned": "Planifié",
+            "Planned": "Prévu",
             "In Production": "En Production",
             "Post Production": "Post-production",
             "Released": "Sorti",
             "Running": "En cours",
             "Returning Series": "Série en cours",
-            "Ended": "Finie",
+            "Ended": "Terminée",
             "Canceled": "Annulée"
         },
         "Seasons": "Saisons :",
@@ -324,13 +329,13 @@
         "Availability": "Disponibilité :",
         "RequestStatus": "Statut de la Demande",
         "Quality": "Qualité :",
-        "RootFolderOverride": "Remplacement du répertoire racine :",
-        "QualityOverride": "Remplacement de la qualité :",
+        "RootFolderOverride": "Répertoire racine remplacé :",
+        "QualityOverride": "Qualité remplacée :",
         "Network": "Diffuseur :",
         "GenresLabel": "Genres :",
         "Genres": "Genres",
         "FirstAired": "Première diffusion :",
-        "TheatricalRelease": "Sortie :",
+        "TheatricalRelease": "Sortie en salle :",
         "DigitalRelease": "Sortie numérique :",
         "Votes": "Votes :",
         "Runtime": "Durée :",
