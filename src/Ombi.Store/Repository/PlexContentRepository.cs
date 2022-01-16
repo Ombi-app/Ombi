@@ -160,7 +160,7 @@ namespace Ombi.Store.Repository
         }
         public override async Task AddRange(IEnumerable<IMediaServerEpisode> content)
         {
-            Db.PlexEpisode.AddRange((PlexEpisode)content);
+            Db.PlexEpisode.AddRange((IEnumerable<PlexEpisode>)content);
             await InternalSaveChanges();
         }
 

@@ -89,7 +89,7 @@ namespace Ombi.Store.Repository
 
         public override async Task AddRange(IEnumerable<IMediaServerEpisode> content)
         {
-            Db.JellyfinEpisode.AddRange((JellyfinEpisode)content);
+            Db.JellyfinEpisode.AddRange((IEnumerable<JellyfinEpisode>)content);
             await InternalSaveChanges();
         }
 

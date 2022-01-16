@@ -89,7 +89,7 @@ namespace Ombi.Store.Repository
 
         public override async Task AddRange(IEnumerable<IMediaServerEpisode> content)
         {
-            Db.EmbyEpisode.AddRange((EmbyEpisode)content);
+            Db.EmbyEpisode.AddRange((IEnumerable<EmbyEpisode>)content);
             await InternalSaveChanges();
         }
 
