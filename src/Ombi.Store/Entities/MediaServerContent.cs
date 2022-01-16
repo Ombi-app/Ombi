@@ -30,6 +30,10 @@ namespace Ombi.Store.Entities
         
         [NotMapped] //TODO: instantiate this variable upon read // something in ExternalContext.cs?
         public IMediaServerContentRepositoryLight Repository { get; set; }
+
+        public string GetExternalUrl() {
+            return string.Empty; // TODO
+        }
     }
 
     public abstract class MediaServerEpisode: Entity, IMediaServerEpisode

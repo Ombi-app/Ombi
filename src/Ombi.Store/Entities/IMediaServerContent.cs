@@ -15,6 +15,7 @@ namespace Ombi.Store.Entities
         public IMediaServerContentRepositoryLight Repository { get; }
 
         public string Url { get; set; }
+        public string GetExternalUrl();
         
         public ICollection<IMediaServerEpisode> Episodes { get; set; }
 
