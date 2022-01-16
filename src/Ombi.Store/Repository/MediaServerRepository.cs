@@ -17,11 +17,6 @@ namespace Ombi.Store.Repository
         }
 
         public abstract Task Update(IMediaServerContent existingContent);
-
-        // TOOD: this smells: trying to wrap ExternalRepository methods in IMediaServerContentRepositoryLight for generic consumption
-        public IQueryable<IMediaServerContent> GetAllContent() => (IQueryable<IMediaServerContent>)GetAll();
-        public async Task<IMediaServerContent> FindContent(object key) => (IMediaServerContent)await Find(key);
-
         public abstract IQueryable<IMediaServerEpisode> GetAllEpisodes();
         public abstract Task<IMediaServerEpisode> Add(IMediaServerEpisode content);
         public abstract Task AddRange(IEnumerable<IMediaServerEpisode> content);

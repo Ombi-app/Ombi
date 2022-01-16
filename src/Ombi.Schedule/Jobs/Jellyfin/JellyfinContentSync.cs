@@ -146,8 +146,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                                 Type = MediaType.Series,
                                 JellyfinId = tvShow.Id,
                                 Url = JellyfinHelper.GetJellyfinMediaUrl(tvShow.Id, server?.ServerId, server.ServerHostname),
-                                AddedAt = DateTime.UtcNow,
-                                Repository = _repo
+                                AddedAt = DateTime.UtcNow
                             });
                         }
                         else
@@ -227,8 +226,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                     Type = MediaType.Movie,
                     JellyfinId = movieInfo.Id,
                     Url = JellyfinHelper.GetJellyfinMediaUrl(movieInfo.Id, server?.ServerId, server.ServerHostname),
-                    AddedAt = DateTime.UtcNow,
-                    Repository = _repo
+                    AddedAt = DateTime.UtcNow
                 });
             }
             else

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using Ombi.Store.Repository;
 
 namespace Ombi.Store.Entities
 {
@@ -12,10 +11,9 @@ namespace Ombi.Store.Entities
         public string TvDbId { get; set; }
         public string TheMovieDbId { get; set; }
         public MediaType Type { get; set; }
-        public IMediaServerContentRepositoryLight Repository { get; }
+        public RecentlyAddedType RecentlyAddedType{ get; }
 
         public string Url { get; set; }
-        public string GetExternalUrl();
         
         public ICollection<IMediaServerEpisode> Episodes { get; set; }
 

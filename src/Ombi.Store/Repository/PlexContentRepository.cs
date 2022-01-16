@@ -75,16 +75,16 @@ namespace Ombi.Store.Repository
             return null;
         }
 
-        public async Task<PlexServerContent> GetByType(string providerId, ProviderType type, MediaType plexType)
+        public async Task<PlexServerContent> GetByType(string providerId, ProviderType type, MediaType mediaType)
         {
             switch (type)
             {
                 case ProviderType.ImdbId:
-                    return await Db.PlexServerContent.FirstOrDefaultAsync(x => x.ImdbId == providerId && x.Type == plexType);
+                    return await Db.PlexServerContent.FirstOrDefaultAsync(x => x.ImdbId == providerId && x.Type == mediaType);
                 case ProviderType.TheMovieDbId:
-                    return await Db.PlexServerContent.FirstOrDefaultAsync(x => x.TheMovieDbId == providerId && x.Type == plexType);
+                    return await Db.PlexServerContent.FirstOrDefaultAsync(x => x.TheMovieDbId == providerId && x.Type == mediaType);
                 case ProviderType.TvDbId:
-                    return await Db.PlexServerContent.FirstOrDefaultAsync(x => x.TvDbId == providerId && x.Type == plexType);
+                    return await Db.PlexServerContent.FirstOrDefaultAsync(x => x.TvDbId == providerId && x.Type == mediaType);
                 default:
                     break;
             }

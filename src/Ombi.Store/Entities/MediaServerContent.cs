@@ -27,13 +27,9 @@ namespace Ombi.Store.Entities
 
         [NotMapped]
         public bool HasTheMovieDb => !string.IsNullOrEmpty(TheMovieDbId);
-        
-        [NotMapped] //TODO: instantiate this variable upon read // something in ExternalContext.cs?
-        public IMediaServerContentRepositoryLight Repository { get; set; }
 
-        public string GetExternalUrl() {
-            return string.Empty; // TODO
-        }
+        [NotMapped]
+        public abstract RecentlyAddedType RecentlyAddedType { get; }
     }
 
     public abstract class MediaServerEpisode: Entity, IMediaServerEpisode

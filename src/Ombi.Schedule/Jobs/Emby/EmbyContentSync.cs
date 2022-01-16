@@ -169,7 +169,6 @@ namespace Ombi.Schedule.Jobs.Emby
                             EmbyId = tvShow.Id,
                             Url = EmbyHelper.GetEmbyMediaUrl(tvShow.Id, server?.ServerId, server.ServerHostname),
                             AddedAt = DateTime.UtcNow,
-                            Repository = _repo
                         });
                     }
                     else
@@ -259,8 +258,7 @@ namespace Ombi.Schedule.Jobs.Emby
                     Type = MediaType.Movie,
                     EmbyId = movieInfo.Id,
                     Url = EmbyHelper.GetEmbyMediaUrl(movieInfo.Id, server?.ServerId, server.ServerHostname),
-                    AddedAt = DateTime.UtcNow,
-                    Repository = _repo
+                    AddedAt = DateTime.UtcNow
                 });
             }
             else

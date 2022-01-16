@@ -51,6 +51,8 @@ namespace Ombi.Store.Entities
             get => (ICollection<PlexEpisode>)Episodes;
             set => Episodes = (ICollection<IMediaServerEpisode>)value;
         }
+
+        public override RecentlyAddedType RecentlyAddedType => RecentlyAddedType.Plex;
     }
 
     [Table("PlexSeasonsContent")]

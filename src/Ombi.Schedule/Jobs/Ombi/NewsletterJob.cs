@@ -250,7 +250,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 recentlyAddedLog.Add(new RecentlyAddedLog
                 {
                     AddedAt = DateTime.Now,
-                    Type = p.Repository?.RecentlyAddedType ?? RecentlyAddedType.Plex, // TODO
+                    Type = p.RecentlyAddedType,
                     ContentType = ContentType.Parent,
                     ContentId = StringHelper.IntParseLinq(p.TheMovieDbId),
                 });
@@ -264,7 +264,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 recentlyAddedLog.Add(new RecentlyAddedLog
                 {
                     AddedAt = DateTime.Now,
-                    Type = p.Series.Repository?.RecentlyAddedType ?? RecentlyAddedType.Plex, // TODO
+                    Type = p.Series.RecentlyAddedType, 
                     ContentType = ContentType.Episode,
                     ContentId = StringHelper.IntParseLinq(p.Series.TvDbId),
                     EpisodeNumber = p.EpisodeNumber,
@@ -510,7 +510,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     continue;
                 }
                 var info = await _movieApi.GetMovieInformationWithExtraInfo(movieDbId, defaultLanguageCode);
-                var mediaurl = content.GetExternalUrl();
+                var mediaurl = content.Url;
                 if (info == null)
                 {
                     continue;
@@ -720,7 +720,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         AddBackgroundInsideTable($"https://image.tmdb.org/t/p/w1280/");
                     }
                     AddPosterInsideTable(banner);
-                    AddMediaServerUrl(t.GetExternalUrl(), banner);
+                    AddMediaServerUrl(t.Url, banner);
                     AddInfoTable();
 
                     AddTvTitle(info, tvInfo);

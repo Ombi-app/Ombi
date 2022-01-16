@@ -40,6 +40,7 @@ namespace Ombi.Store.Entities
         /// </summary>
         public string ProviderId { get; set; }
         public string EmbyId { get; set; }
+        public override RecentlyAddedType RecentlyAddedType => RecentlyAddedType.Emby;
     }
 
 }
