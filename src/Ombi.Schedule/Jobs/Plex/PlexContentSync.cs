@@ -182,7 +182,7 @@ namespace Ombi.Schedule.Jobs.Plex
             foreach (var content in allContent.OrderByDescending(x => x.viewGroup))
             {
                 Logger.LogDebug($"Got type '{content.viewGroup}' to process");
-                if (content.viewGroup.Equals(MediaType.Episode.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                if (content.viewGroup.Equals(PlexMediaType.Episode.ToString(), StringComparison.InvariantCultureIgnoreCase))
                 {
                     Logger.LogDebug("Found some episodes, this must be a recently added sync");
                     var count = 0;
@@ -230,7 +230,7 @@ namespace Ombi.Schedule.Jobs.Plex
                         episodesProcessed.AddRange(episodesAdded.Select(x => x.Id));
                     }
                 }
-                if (content.viewGroup.Equals(MediaType.Series.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                if (content.viewGroup.Equals(PlexMediaType.Show.ToString(), StringComparison.InvariantCultureIgnoreCase))
                 {
                     // Process Shows
                     Logger.LogDebug("Processing TV Shows");
@@ -260,7 +260,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
                     await Repo.SaveChangesAsync();
                 }
-                if (content.viewGroup.Equals(MediaType.Movie.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                if (content.viewGroup.Equals(PlexMediaType.Movie.ToString(), StringComparison.InvariantCultureIgnoreCase))
                 {
                     await MovieLoop(servers, content, contentToAdd, contentProcessed);
                 }
