@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Ombi.Core.Models.Search;
@@ -18,12 +19,14 @@ namespace Ombi.Core.Tests.Rule.Search
         public void Setup()
         {
             ContextMock = new Mock<IEmbyContentRepository>();
+            LoggerMock = new Mock<ILogger<EmbyAvailabilityRule>>();
             SettingsMock = new Mock<ISettingsService<EmbySettings>>();
-            Rule = new EmbyAvailabilityRule(ContextMock.Object, SettingsMock.Object);
+            Rule = new EmbyAvailabilityRule(ContextMock.Object, LoggerMock.Object, SettingsMock.Object);
         }
 
         private EmbyAvailabilityRule Rule { get; set; }
         private Mock<IEmbyContentRepository> ContextMock { get; set; }
+        private Mock<ILogger<EmbyAvailabilityRule>> LoggerMock { get; set; }
         private Mock<ISettingsService<EmbySettings>> SettingsMock { get; set; }
 
         [Test]

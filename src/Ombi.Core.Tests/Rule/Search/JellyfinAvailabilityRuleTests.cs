@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Ombi.Core.Models.Search;
@@ -18,12 +19,14 @@ namespace Ombi.Core.Tests.Rule.Search
         public void Setup()
         {
             ContextMock = new Mock<IJellyfinContentRepository>();
+            LoggerMock = new Mock<ILogger<JellyfinAvailabilityRule>>();
             SettingsMock = new Mock<ISettingsService<JellyfinSettings>>();
-            Rule = new JellyfinAvailabilityRule(ContextMock.Object, SettingsMock.Object);
+            Rule = new JellyfinAvailabilityRule(ContextMock.Object, LoggerMock.Object, SettingsMock.Object);
         }
 
         private JellyfinAvailabilityRule Rule { get; set; }
         private Mock<IJellyfinContentRepository> ContextMock { get; set; }
+        private Mock<ILogger<JellyfinAvailabilityRule>> LoggerMock { get; set; }
         private Mock<ISettingsService<JellyfinSettings>> SettingsMock { get; set; }
 
         [Test]

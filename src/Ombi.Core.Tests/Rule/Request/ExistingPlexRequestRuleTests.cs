@@ -186,7 +186,7 @@ namespace Ombi.Core.Tests.Rule.Request
                     TheMovieDbId = "1",
                     Title = "Test",
                     ReleaseYear = "2001",
-                    Episodes = new List<PlexEpisode>
+                    Episodes = new List<IMediaServerEpisode>
                     {
                         new PlexEpisode
                         {
