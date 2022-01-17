@@ -7,8 +7,11 @@ frontend:
 install-frontend: 
 	cd src/Ombi/ClientApp && yarn
 
-install-tests: 
+install-frontend-tests: 
 	cd tests && yarn
 
-tests: 
-	cd tests && npx cypress open
+frontend-tests: 
+	cd tests && npx cypress run
+
+backend-tests:
+	cd src/Ombi.Core.Tests && dotnet test
