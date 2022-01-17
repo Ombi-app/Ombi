@@ -23,9 +23,9 @@ namespace Ombi.Store.Entities
             set => Series = value;
         }
 
-        public override IMediaServerContent SeriesIsIn(List<IMediaServerContent> content)
+        public override IMediaServerContent SeriesIsIn(ICollection<IMediaServerContent> content)
         {
-            return content.Cast<PlexServerContent>().FirstOrDefault(
+            return content.OfType<PlexServerContent>().FirstOrDefault(
                  x => x.Key == this.PlexSeries.Key);
         }
 

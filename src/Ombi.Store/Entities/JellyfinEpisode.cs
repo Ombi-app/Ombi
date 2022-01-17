@@ -53,11 +53,12 @@ namespace Ombi.Store.Entities
             set => Series = value;
         }
         
-        public override IMediaServerContent SeriesIsIn(List<IMediaServerContent> content)
+        public override IMediaServerContent SeriesIsIn(ICollection<IMediaServerContent> content)
         {
-            return content.Cast<JellyfinContent>().FirstOrDefault(
+            return content.OfType<JellyfinContent>().FirstOrDefault(
                 x => x.JellyfinId == this.JellyfinSeries.JellyfinId);
         }
+        
         public override bool IsIn(IMediaServerContent content)
         {
             return content.Episodes.Cast<JellyfinEpisode>().Any(x => x.JellyfinId == this.JellyfinId);

@@ -43,7 +43,7 @@ namespace Ombi.Store.Entities
 
 
         public IMediaServerContent Series { get; set; }
-        public IMediaServerContent SeriesIsIn(List<IMediaServerContent> content);
+        public IMediaServerContent SeriesIsIn(ICollection<IMediaServerContent> content);
         public bool IsIn(IMediaServerContent content);
     }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using Ombi.Store.Repository;
 
@@ -40,7 +41,7 @@ namespace Ombi.Store.Entities
 
         public IMediaServerContent Series { get; set; }
 
-        public abstract IMediaServerContent SeriesIsIn(List<IMediaServerContent> content);
+        public abstract IMediaServerContent SeriesIsIn(ICollection<IMediaServerContent> content);
         public abstract bool IsIn(IMediaServerContent content);
     }
 }
