@@ -443,7 +443,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             var ombiSettings = await _ombiSettings.GetSettingsAsync();
             sb = new StringBuilder();
 
-            if (!settings.DisableMovies)
+            if (movies.Any() && !settings.DisableMovies)
             {
                 sb.Append("<h1 style=\"text-align: center; max-width: 1042px;\">New Movies</h1><br /><br />");
                 sb.Append(
@@ -460,7 +460,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 sb.Append("</table>");
             }
 
-            if (!settings.DisableTv)
+            if (episodes.Any() && !settings.DisableTv)
             {
                 sb.Append("<br /><br /><h1 style=\"text-align: center; max-width: 1042px;\">New TV</h1><br /><br />");
                 sb.Append(
