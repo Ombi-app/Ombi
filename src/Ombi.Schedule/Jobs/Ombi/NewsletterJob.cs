@@ -12,7 +12,6 @@ using Ombi.Api.Lidarr;
 using Ombi.Api.Lidarr.Models;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
-using Ombi.Api.TvMaze;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
@@ -33,7 +32,7 @@ namespace Ombi.Schedule.Jobs.Ombi
     public class NewsletterJob : HtmlTemplateGenerator, INewsletterJob
     {
         public NewsletterJob(IPlexContentRepository plex, IEmbyContentRepository emby, IJellyfinContentRepository jellyfin, IRepository<RecentlyAddedLog> addedLog,
-            IMovieDbApi movieApi, ITvMazeApi tvApi, IEmailProvider email, ISettingsService<CustomizationSettings> custom,
+            IMovieDbApi movieApi, IEmailProvider email, ISettingsService<CustomizationSettings> custom,
             ISettingsService<EmailNotificationSettings> emailSettings, INotificationTemplatesRepository templateRepo,
             UserManager<OmbiUser> um, ISettingsService<NewsletterSettings> newsletter, ILogger<NewsletterJob> log,
             ILidarrApi lidarrApi, IExternalRepository<LidarrAlbumCache> albumCache, ISettingsService<LidarrSettings> lidarrSettings,
@@ -45,7 +44,6 @@ namespace Ombi.Schedule.Jobs.Ombi
             _jellyfin = jellyfin;
             _recentlyAddedLog = addedLog;
             _movieApi = movieApi;
-            _tvApi = tvApi;
             _email = email;
             _customizationSettings = custom;
             _templateRepo = templateRepo;
@@ -73,7 +71,6 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly IMediaServerContentRepository<JellyfinContent> _jellyfin;
         private readonly IRepository<RecentlyAddedLog> _recentlyAddedLog;
         private readonly IMovieDbApi _movieApi;
-        private readonly ITvMazeApi _tvApi;
         private readonly IEmailProvider _email;
         private readonly ISettingsService<CustomizationSettings> _customizationSettings;
         private readonly INotificationTemplatesRepository _templateRepo;
@@ -264,7 +261,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 recentlyAddedLog.Add(new RecentlyAddedLog
                 {
                     AddedAt = DateTime.Now,
-                    Type = p.Series.RecentlyAddedType, 
+                    Type = p.Series.RecentlyAddedType,
                     ContentType = ContentType.Episode,
                     ContentId = StringHelper.IntParseLinq(p.Series.TvDbId),
                     EpisodeNumber = p.EpisodeNumber,
@@ -311,7 +308,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private HashSet<IMediaServerEpisode> GetSeriesContent<T>(IMediaServerContentRepository<T> repository, bool test) where T : class, IMediaServerContent
         {
             var content = repository.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.Series.AddedAt).AsNoTracking();
-            
+
             HashSet<IMediaServerEpisode> episodesToSend;
             if (test)
             {
@@ -692,23 +689,16 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 }
 
-                int.TryParse(t.TvDbId, out var tvdbId);
-                var info = await _tvApi.ShowLookupByTheTvDbId(tvdbId);
-                if (info == null)
-                {
-                    continue;
-                }
-
                 try
                 {
-                    var banner = info.image?.original;
-                    if (!string.IsNullOrEmpty(banner))
+                    var tvInfo = await _movieApi.GetTVInfo(t.TheMovieDbId, languageCode);
+                    if (tvInfo == null)
                     {
-                        banner = banner.ToHttpsUrl(); // Always use the Https banners
+                        continue;
                     }
 
-                    var tvInfo = await _movieApi.GetTVInfo(t.TheMovieDbId, languageCode);
-                    if (tvInfo != null && tvInfo.backdrop_path.HasValue())
+
+                    if (tvInfo.backdrop_path.HasValue())
                     {
 
                         AddBackgroundInsideTable($"https://image.tmdb.org/t/p/w500{tvInfo.backdrop_path}");
@@ -717,11 +707,18 @@ namespace Ombi.Schedule.Jobs.Ombi
                     {
                         AddBackgroundInsideTable($"https://image.tmdb.org/t/p/w1280/");
                     }
+
+                    var banner = tvInfo.poster_path;
+                    if (!string.IsNullOrEmpty(banner))
+                    {
+                        banner = $"https://image.tmdb.org/t/p/w300/{banner?.TrimStart('/') ?? string.Empty}";
+                    };
                     AddPosterInsideTable(banner);
                     AddMediaServerUrl(t.Url, banner);
+
                     AddInfoTable();
 
-                    AddTvTitle(info, tvInfo);
+                    AddTvTitle(tvInfo);
 
                     // Group by the season number
                     var results = t.Episodes.GroupBy(p => p.SeasonNumber,
@@ -766,18 +763,18 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
-        private void AddTvTitle(Api.TvMaze.Models.TvMazeShow info, TvInfo tvInfo)
+        private void AddTvTitle(TvInfo tvInfo)
         {
             var title = "";
-            if (!String.IsNullOrEmpty(info.premiered) && info.premiered.Length > 4)
+            if (!String.IsNullOrEmpty(tvInfo.first_air_date) && tvInfo.first_air_date.Length > 4)
             {
-                title = $"{tvInfo.name} ({info.premiered.Remove(4)})";
+                title = $"{tvInfo.name} ({tvInfo.first_air_date.Remove(4)})";
             }
             else
             {
                 title = $"{tvInfo.name}";
             }
-            AddTitle($"https://www.imdb.com/title/{info.externals.imdb}/", title);
+            AddTitle($"https://www.themoviedb.org/tv/{tvInfo.id}/", title);
         }
 
         private void AddTvEpisodesSummaryGenres(string episodes, TvInfo tvInfo)
