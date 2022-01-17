@@ -104,11 +104,11 @@ namespace Ombi.Helpers
             return new ProviderId();
         }
 
-        public static string GetPlexMediaUrl(string machineId, int mediaId)
+        public static string GetPlexMediaUrl(string machineId, int mediaId, string plexHost)
         {
             var url =
                 $"web/#!/server/{machineId}/details?key=%2flibrary%2Fmetadata%2F{mediaId}";
-            return url;
+            return BuildPlexMediaUrl(url, plexHost);
         }
 
         public static string BuildPlexMediaUrl(string savedUrl, string plexHost)

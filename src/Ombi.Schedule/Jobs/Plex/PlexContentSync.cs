@@ -351,7 +351,7 @@ namespace Ombi.Schedule.Jobs.Plex
                         ReleaseYear = movie.year.ToString(),
                         Type = MediaType.Movie,
                         Title = movie.title,
-                        Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, movie.ratingKey),
+                        Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, movie.ratingKey, servers.ServerHostname),
                         Seasons = new List<PlexSeasonsContent>(),
                         Quality = movie.Media?.FirstOrDefault()?.videoResolution ?? string.Empty
                     };
@@ -555,7 +555,7 @@ namespace Ombi.Schedule.Jobs.Plex
                         ReleaseYear = show.year.ToString(),
                         Type = MediaType.Series,
                         Title = show.title,
-                        Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, show.ratingKey),
+                        Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, show.ratingKey, servers.ServerHostname),
                         Seasons = new List<PlexSeasonsContent>()
                     };
                     await GetProviderIds(showMetadata, item);
