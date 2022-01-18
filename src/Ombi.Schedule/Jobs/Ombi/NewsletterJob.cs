@@ -316,8 +316,6 @@ namespace Ombi.Schedule.Jobs.Ombi
             if (test)
             {
                 var count = repository.GetAllEpisodes().Count();
-                _log.LogCritical($"Episodes test mode  {count}");
-                _log.LogCritical(nameof(repository));
                 episodesToSend = content.Take(10).ToHashSet();
             }
             else
