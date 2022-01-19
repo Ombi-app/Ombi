@@ -67,19 +67,7 @@ namespace Ombi.Core.Rule.Rules.Search
             if (item != null)
             {
                 obj.Available = true;
-                var s = await EmbySettings.GetSettingsAsync();
-                if (s.Enable)
-                {
-                    var server = s.Servers.FirstOrDefault();
-                    if ((server?.ServerHostname ?? string.Empty).HasValue())
-                    {
-                        obj.EmbyUrl = EmbyHelper.GetEmbyMediaUrl(item.EmbyId, server?.ServerId, server?.ServerHostname);
-                    }
-                    else
-                    {
-                        obj.EmbyUrl = EmbyHelper.GetEmbyMediaUrl(item.EmbyId, server?.ServerId, null);
-                    }
-                }
+                obj.EmbyUrl = item.Url;
 
                 if (obj.Type == RequestType.TvShow)
                 {

@@ -90,7 +90,7 @@ namespace Ombi.Core.Rule.Rules.Search
                     useTheMovieDb = true;
                 }
                 obj.Available = true;
-                obj.PlexUrl = PlexHelper.BuildPlexMediaUrl(item.Url, host);
+                obj.PlexUrl = item.Url;
                 obj.Quality = item.Quality;
                 
                 if (obj.Type == RequestType.TvShow)
