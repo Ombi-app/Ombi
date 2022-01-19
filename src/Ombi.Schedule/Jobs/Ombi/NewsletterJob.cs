@@ -502,12 +502,14 @@ namespace Ombi.Schedule.Jobs.Ombi
                 int.TryParse(content.TheMovieDbId, out var movieDbId);
                 if (movieDbId <= 0)
                 {
+                    _log.LogWarning($"{content.Title} does not have a TMDB ID, it won't be published.");
                     continue;
                 }
                 var info = await _movieApi.GetMovieInformationWithExtraInfo(movieDbId, defaultLanguageCode);
                 var mediaurl = content.Url;
                 if (info == null)
                 {
+                    _log.LogWarning($"TMDB does not know movie {content.Title}, it won't be published.");
                     continue;
                 }
                 try
@@ -671,6 +673,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                         var externals = await _movieApi.GetTvExternals(movieId);
                         if (externals == null || externals.tvdb_id <= 0)
                         {
+                            // needed later for recently added log
+                            _log.LogWarning($"{t.Title} has no TVDB ID, it won't be published.");
                             continue;
                         }
                         t.TvDbId = externals.tvdb_id.ToString();
@@ -694,6 +698,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     var tvInfo = await _movieApi.GetTVInfo(t.TheMovieDbId, languageCode);
                     if (tvInfo == null)
                     {
+                        _log.LogWarning($"TMDB does not know series {t.Title}, it won't be published.");
                         continue;
                     }
 
