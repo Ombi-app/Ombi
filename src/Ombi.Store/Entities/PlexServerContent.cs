@@ -45,13 +45,6 @@ namespace Ombi.Store.Entities
 
         public int? RequestId { get; set; }
         
-        [NotMapped]
-        public ICollection<PlexEpisode> PlexEpisodes
-        {
-            get => (ICollection<PlexEpisode>)Episodes;
-            set => Episodes = (ICollection<IMediaServerEpisode>)value;
-        }
-
         public override RecentlyAddedType RecentlyAddedType => RecentlyAddedType.Plex;
     }
 
