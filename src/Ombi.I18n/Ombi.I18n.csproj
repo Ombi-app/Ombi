@@ -13,5 +13,18 @@
     <Content Include="Resources\*.*">
        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
- </ItemGroup>  
+ </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources\Texts.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Texts.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="Resources\Texts.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Texts.Designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>  
 </Project>
