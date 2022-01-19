@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ombi.Helpers\Ombi.Helpers.csproj" />
+    <ProjectReference Include="..\Ombi.I18n\Ombi.I18n.csproj" />
     <ProjectReference Include="..\Ombi.Store\Ombi.Store.csproj" />
   </ItemGroup>
 
