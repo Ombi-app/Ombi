@@ -1,3 +1,7 @@
+## [4.10.2](https://github.com/Ombi-app/Ombi/compare/v4.10.1...v4.10.2) (2022-01-22)
+
+
+
 ## [4.10.1](https://github.com/Ombi-app/Ombi/compare/v4.10.0...v4.10.1) (2022-01-22)
 
 
@@ -367,16 +371,6 @@
 
 
 ## [4.2.5](https://github.com/Ombi-app/Ombi/compare/v4.2.4...v4.2.5) (2021-10-14)
-
-
-
-## [4.2.4](https://github.com/Ombi-app/Ombi/compare/v4.2.3...v4.2.4) (2021-10-13)
-
-
-### Bug Fixes
-
-* **#4344:** :bug: Fixed an issue where we errored on Plex Episode Scan ([cd5532f](https://github.com/Ombi-app/Ombi/commit/cd5532fa8f7ebbfaf942841398672bafb9a405d4))
-* **#4345:** :bug: Fixed the issue where denied requests we not appearing correctly ([5a2f652](https://github.com/Ombi-app/Ombi/commit/5a2f652a28f5699dd667afef8dde129817e53392))
 
 
 
