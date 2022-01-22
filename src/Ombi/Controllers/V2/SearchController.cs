@@ -52,7 +52,7 @@ namespace Ombi.Controllers.V2
         [HttpPost("multi/{searchTerm}")]
         public async Task<List<MultiSearchResult>> MultiSearch(string searchTerm, [FromBody] MultiSearchFilter filter)
         {
-            return await _multiSearchEngine.MultiSearch(searchTerm, filter, Request.HttpContext.RequestAborted);
+            return await _multiSearchEngine.MultiSearch(Uri.UnescapeDataString(searchTerm), filter, Request.HttpContext.RequestAborted);
         }
 
         /// <summary>
@@ -394,6 +394,19 @@ namespace Ombi.Controllers.V2
         public async Task<ActorCredits> GetMoviesByActor(int actorId)
         {
             return await _movieEngineV2.GetMoviesByActor(actorId, null);
+        }
+        
+        /// <summary>
+        /// Returns all the tv shows that is by the actor id 
+        /// </summary>
+        /// <param name="actorId">TheMovieDb Actor ID</param>
+        /// <returns></returns>
+        [HttpGet("actor/{actorId}/tv")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<ActorCredits> GetTvByActor(int actorId)
+        {
+            return await _tvEngineV2.GetTvByActor(actorId, null);
         }
 
 

@@ -55,6 +55,9 @@
         "OfflineParagraph": "Medieserveren er for øyeblikket utilgjengelig.",
         "CheckPageForUpdates": "Sjekk denne siden for kontinuerlige oppdateringer."
     },
+    "ErrorPages": {
+        "NotFound": "Page not found"
+    },
     "NavigationBar": {
         "Discover": "Discover",
         "Search": "Søk",
@@ -131,6 +134,9 @@
         },
         "AdvancedSearchInstructions": "Please choose what type of media you are searching for:",
         "YearOfRelease": "Year of Release",
+        "SearchGenre": "Search Genre",
+        "SearchKeyword": "Search Keyword",
+        "SearchProvider": "Search Provider",
         "KeywordSearchingDisclaimer": "Please note that Keyword Searching is very hit and miss due to the inconsistent data in TheMovieDb"
     },
     "Requests": {
@@ -198,6 +204,7 @@
             "Approved": "Successfully approved selected items"
         },
         "SuccessfullyApproved": "Successfully Approved",
+        "SuccessfullyDeleted": "Request successfully deleted",
         "NowAvailable": "Request is now available",
         "NowUnavailable": "Request is now unavailable",
         "SuccessfullyReprocessed": "Successfully Re-processed the request",
@@ -219,10 +226,16 @@
             "MovieRequestQuotaExceeded": "You have exceeded your Movie request quota!",
             "TvRequestQuotaExceeded": "You have exceeded your Episode request quota!",
             "AlbumRequestQuotaExceeded": "You have exceeded your Album request quota!"
-        }
+        },
+        "Notify": "Notify",
+        "RemoveNotification": "Remove Notifications",
+        "SuccessfulNotify": "You will now be notified for title {{title}}",
+        "SuccessfulUnNotify": "You will no longer be notified for title {{title}}",
+        "CouldntNotify": "Couldn't notify title {{title}}"
     },
     "Issues": {
         "Title": "Mangler",
+        "IssuesForTitle": "Issues for {{title}}",
         "PendingTitle": "Ventende løsninger",
         "InProgressTitle": "Mangler under behandling",
         "ResolvedTitle": "Løste mangler",
@@ -255,6 +268,7 @@
         "Delete": "Delete issue",
         "DeletedIssue": "Issue has been deleted",
         "Chat": "Chat",
+        "EnterYourMessage": "Enter Your Message",
         "Requested": "Requested",
         "UserOnDate": "{{user}} on {{date}}"
     },
@@ -281,6 +295,7 @@
     },
     "MediaDetails": {
         "Denied": "Avslått",
+        "Trailers": "Trailers",
         "RecommendationsTitle": "Recommendations",
         "SimilarTitle": "Lignende",
         "VideosTitle": "Videos",
@@ -291,9 +306,9 @@
         "ViewCollection": "View Collection",
         "NotEnoughInfo": "Unfortunately there is not enough information about this show yet!",
         "AdvancedOptions": "Advanced Options",
-        "AutoApproveOptions": "You can configure the request here, once requested it will be send to your DVR application and will be auto approved! Please note, this is optional, just press Request to skip!",
-        "AutoApproveOptionsTv": "You can configure the request here, once requested it will be send to your DVR application and will be auto approved! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it!  Please note, this is optional, just press Request to skip!",
-        "AutoApproveOptionsTvShort": "You can configure the request here, once requested it will be send to your DVR application! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it! Please note, this is optional, just press Request to skip!",
+        "AutoApproveOptions": "You can configure the request here, once requested it will be sent to your DVR application and will be auto approved! Please note, this is optional, just press Request to skip!",
+        "AutoApproveOptionsTv": "You can configure the request here, once requested it will be sent to your DVR application and will be auto approved! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it!  Please note, this is optional, just press Request to skip!",
+        "AutoApproveOptionsTvShort": "You can configure the request here, once requested it will be sent to your DVR application! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it! Please note, this is optional, just press Request to skip!",
         "QualityProfilesSelect": "Select A Quality Profile",
         "RootFolderSelect": "Select A Root Folder",
         "LanguageProfileSelect": "Select A Language Profile",
@@ -317,7 +332,8 @@
         "RootFolderOverride": "Root Folder Override:",
         "QualityOverride": "Quality Override:",
         "Network": "Network:",
-        "Genres": "Genres:",
+        "GenresLabel": "Genres:",
+        "Genres": "Genres",
         "FirstAired": "First Aired:",
         "TheatricalRelease": "Release:",
         "DigitalRelease": "Digital Release:",
@@ -343,6 +359,7 @@
         "PleaseSelectUser": "Please select a user",
         "StreamingOn": "Streaming On:",
         "RequestedBy": "Requested By:",
+        "RequestedByOn": "Requested By {{user}} on {{date}}",
         "RequestDate": "Request Date:",
         "DeniedReason": "Denied Reason:",
         "ReProcessRequest": "Re-Process Request",
@@ -382,7 +399,7 @@
         "DarkMode": "Dark Mode",
         "Updated": "Successfully Updated",
         "StreamingCountry": "Streaming Country",
-        "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will have US related streaming information.",
+        "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will get US related streaming information.",
         "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
         "MobileQRCode": "Mobile QR Code",
         "LegacyApp": "Launch Legacy App",
@@ -396,7 +413,8 @@
         "NewPasswordConfirm": "New Password Confirm",
         "Security": "Security",
         "Profile": "Profile",
-        "UpdatedYourInformation": "Updated your information"
+        "UpdatedYourInformation": "Updated your information",
+        "Unsubscribed": "Unsubscribed!"
     },
     "UserTypeLabel": {
         "1": "Local User",
@@ -404,5 +422,14 @@
         "3": "Emby User",
         "4": "Emby Connect User",
         "5": "Jellyfin User"
+    },
+    "Paginator": {
+        "itemsPerPageLabel": "Items per page:",
+        "nextPageLabel": "Next page",
+        "previousPageLabel": "Previous page",
+        "firstPageLabel": "First page",
+        "lastPageLabel": "Last page",
+        "rangePageLabel1": "0 of {{length}}",
+        "rangePageLabel2": "{{startIndex}} – {{endIndex}} of {{length}}"
     }
 }

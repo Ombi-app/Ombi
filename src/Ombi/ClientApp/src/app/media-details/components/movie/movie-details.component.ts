@@ -145,7 +145,7 @@ export class MovieDetailsComponent {
         }
         const dialogRef = this.dialog.open(NewIssueComponent, {
             width: '500px',
-            data: { requestId: this.movieRequest ? this.movieRequest.id : null, requestType: RequestType.movie, providerId: provider, title: this.movie.title }
+            data: { requestId: this.movieRequest ? this.movieRequest.id : null, requestType: RequestType.movie, providerId: provider, title: this.movie.title, posterPath: this.movie.posterPath }
         });
     }
 
@@ -209,6 +209,28 @@ export class MovieDetailsComponent {
                 this.messageService.send(result.message ? result.message : this.translate.instant("Requests.SuccessfullyReprocessed"), "Ok");
             } else {
                 this.messageService.sendRequestEngineResultError(result);
+            }
+        });
+    }
+
+    public notify() {
+        this.requestService.subscribeToMovie(this.movieRequest.id).subscribe(result => {
+            if (result) {
+                this.movie.subscribed = true;
+                this.messageService.send(this.translate.instant("Requests.SuccessfulNotify", {title: this.movie.title}), "Ok");
+            } else {
+                this.messageService.send(this.translate.instant("Requests.CouldntNotify", {title: this.movie.title}), "Ok");
+            }
+        });
+    }
+
+    public unNotify() {
+        this.requestService.unSubscribeToMovie(this.movieRequest.id).subscribe(result => {
+            if (result) {
+                this.movie.subscribed = false;
+                this.messageService.send(this.translate.instant("Requests.SuccessfulUnNotify", {title: this.movie.title}), "Ok");
+            } else {
+                this.messageService.send(this.translate.instant("Requests.CouldntNotify", {title: this.movie.title}), "Ok");
             }
         });
     }

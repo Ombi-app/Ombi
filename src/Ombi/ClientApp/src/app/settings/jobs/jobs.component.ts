@@ -1,7 +1,6 @@
 ﻿import { Component, OnInit } from "@angular/core";
-
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { NotificationService, SettingsService, JobService } from "../../services";
+import { JobService, NotificationService, SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./jobs.component.html",
@@ -36,7 +35,8 @@ export class JobsComponent implements OnInit {
                 issuesPurge:              [x.issuesPurge, Validators.required],
                 retryRequests:            [x.retryRequests, Validators.required],
                 mediaDatabaseRefresh:     [x.mediaDatabaseRefresh, Validators.required],
-                autoDeleteRequests:     [x.autoDeleteRequests, Validators.required]
+                autoDeleteRequests:       [x.autoDeleteRequests, Validators.required],
+                embyRecentlyAddedSync:    [x.embyRecentlyAddedSync, Validators.required],
             });
         });
     }

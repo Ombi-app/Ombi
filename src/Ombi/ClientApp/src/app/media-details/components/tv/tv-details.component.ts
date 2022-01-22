@@ -84,7 +84,7 @@ export class TvDetailsComponent implements OnInit {
     public async issue() {
         const dialogRef = this.dialog.open(NewIssueComponent, {
             width: '500px',
-            data: { requestId: this.tvRequest ? this.tv.requestId : null, requestType: RequestType.tvShow, providerId: this.tv.theTvDbId, title: this.tv.title }
+            data: { requestId: this.tvRequest ? this.tv.requestId : null, requestType: RequestType.tvShow, providerId: this.tv.id, title: this.tv.title, posterPath: this.tv.images.original }
         });
     }
 
@@ -123,6 +123,10 @@ export class TvDetailsComponent implements OnInit {
         if (data.languageId) {
             this.showRequest.languageOverrideTitle =  data.languages.filter(x => x.id == data.languageId)[0].name;
         }
+    }
+
+    public allEpisodesRequested(): boolean {
+        return this.tv.seasonRequests.every(e => e.episodes.every(x => x.approved));
     }
 
     private loadAdvancedInfo() {

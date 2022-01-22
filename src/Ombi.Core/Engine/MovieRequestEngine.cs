@@ -527,10 +527,11 @@ namespace Ombi.Core.Engine
 
             request.Denied = true;
             request.DeniedReason = denyReason;
-            // We are denying a request
-            await NotificationHelper.Notify(request, NotificationType.RequestDeclined);
             await MovieRepository.Update(request);
             await _mediaCacheService.Purge();
+
+            // We are denying a request
+            await NotificationHelper.Notify(request, NotificationType.RequestDeclined);
 
             return new RequestEngineResult
             {
@@ -654,11 +655,20 @@ namespace Ombi.Core.Engine
         /// </summary>
         /// <param name="requestId">The request identifier.</param>
         /// <returns></returns>
-        public async Task RemoveMovieRequest(int requestId)
+        public async Task<RequestEngineResult> RemoveMovieRequest(int requestId)
         {
             var request = await MovieRepository.GetAll().FirstOrDefaultAsync(x => x.Id == requestId);
+
+            var result = await CheckCanManageRequest(request);
+            if (result.IsError)
+                return result;
+                
             await MovieRepository.Delete(request);
             await _mediaCacheService.Purge();
+            return new RequestEngineResult
+            {
+                Result = true,
+            };
         }
 
         public async Task RemoveAllMovieRequests()

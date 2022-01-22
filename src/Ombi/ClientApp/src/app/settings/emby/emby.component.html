@@ -105,12 +105,29 @@
                                     <button mat-raised-button id="discover" type="button" (click)="discoverServerInfo(server)" class="mat-focus-indicator mat-stroked-button mat-button-base">Discover Server Information <div id="spinner"></div></button>
                                 </div>
                             </div>
+                                <div class="form-group">
+                                    <div>
+                                        <button mat-raised-button (click)="runCacher()" type="button" id="save" class="mat-focus-indicator mat-stroked-button mat-button-base">Manually Run Full Sync</button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button mat-raised-button (click)="runRecentlyAddedCacher()" type="button" id="recentlyAddedSync"
+                                        class="mat-focus-indicator mat-stroked-button mat-button-base">Manually Run Recently
+                                        Added Sync</button>
+                                </div>
+                                <div class="form-group">
+                                    <button mat-raised-button (click)="clearDataAndResync()" type="button" id="clearData"
+                                        class="mat-focus-indicator mat-stroked-button mat-button-base">
+                                        Clear Data And Resync
+                                    </button>
+                                </div>
                         </div>
             </mat-tab>
             <mat-tab label="" disabled=true> </mat-tab>
             <mat-tab label="Add Server" position=100> </mat-tab>
                   
         </mat-tab-group>
+        <div class="row">
         <div class="col-md-2">
             <div class="form-group">
                 <div>
@@ -118,19 +135,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-2">
-            <div class="form-group">
-                <div>
-                    <button mat-raised-button (click)="runCacher()" type="button" id="save" class="mat-focus-indicator mat-stroked-button mat-button-base">Manually Run Cacher</button>
-                </div>
-            </div>
-            <div class="form-group">
-                <button mat-raised-button (click)="clearDataAndResync()" type="button" id="clearData"
-                    class="mat-focus-indicator mat-stroked-button mat-button-base">
-                    Clear Data And Resync
-                </button>
-            </div>
-        </div>
+
+    </div>
     </fieldset>
 </div>
 </div>

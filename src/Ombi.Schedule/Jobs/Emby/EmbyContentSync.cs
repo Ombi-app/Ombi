@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Emby;
+using Ombi.Api.Emby.Models;
+using Ombi.Api.Emby.Models.Media.Tv;
 using Ombi.Api.Emby.Models.Movie;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
@@ -36,24 +38,33 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly IEmbyContentRepository _repo;
         private readonly IHubContext<NotificationHub> _notification;
 
+        private const int AmountToTake = 100;
+
         private IEmbyApi Api { get; set; }
 
-        public async Task Execute(IJobExecutionContext job)
+        public async Task Execute(IJobExecutionContext context)
         {
+            JobDataMap dataMap = context.JobDetail.JobDataMap;
+            var recentlyAddedSearch = false;
+            if (dataMap.TryGetValue(JobDataKeys.EmbyRecentlyAddedSearch, out var recentlyAddedObj))
+            {
+                recentlyAddedSearch = Convert.ToBoolean(recentlyAddedObj);
+            }
+
             var embySettings = await _settings.GetSettingsAsync();
             if (!embySettings.Enable)
                 return;
-            
+
             Api = _apiFactory.CreateClient(embySettings);
 
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Emby Content Sync Started");
+                .SendAsync(NotificationHub.NotificationEvent, recentlyAddedSearch ? "Emby Recently Added Started" : "Emby Content Sync Started");
 
             foreach (var server in embySettings.Servers)
             {
                 try
                 {
-                    await StartServerCache(server, embySettings);
+                    await StartServerCache(server, recentlyAddedSearch);
                 }
                 catch (Exception e)
                 {
@@ -67,11 +78,12 @@ namespace Ombi.Schedule.Jobs.Emby
                 .SendAsync(NotificationHub.NotificationEvent, "Emby Content Sync Finished");
             // Episodes
 
-            await OmbiQuartz.TriggerJob(nameof(IEmbyEpisodeSync), "Emby");
+
+            await OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IEmbyEpisodeSync), "Emby"), new JobDataMap(new Dictionary<string, string> { { JobDataKeys.EmbyRecentlyAddedSearch, recentlyAddedSearch.ToString() } }));
         }
 
 
-        private async Task StartServerCache(EmbyServers server, EmbySettings settings)
+        private async Task StartServerCache(EmbyServers server, bool recentlyAdded)
         {
             if (!ValidateSettings(server))
                 return;
@@ -86,14 +98,14 @@ namespace Ombi.Schedule.Jobs.Emby
                 foreach (var movieParentIdFilder in movieLibsToFilter)
                 {
                     _logger.LogInformation($"Scanning Lib '{movieParentIdFilder.Title}'");
-                    await ProcessMovies(server, movieParentIdFilder.Key);
+                    await ProcessMovies(server, recentlyAdded, movieParentIdFilder.Key);
                 }
 
                 var tvLibsToFilter = server.EmbySelectedLibraries.Where(x => x.Enabled && x.CollectionType == "tvshows");
                 foreach (var tvParentIdFilter in tvLibsToFilter)
                 {
                     _logger.LogInformation($"Scanning Lib '{tvParentIdFilter.Title}'");
-                    await ProcessTv(server, tvParentIdFilter.Key);
+                    await ProcessTv(server, recentlyAdded, tvParentIdFilter.Key);
                 }
 
 
@@ -101,68 +113,74 @@ namespace Ombi.Schedule.Jobs.Emby
                 foreach (var m in mixedLibs)
                 {
                     _logger.LogInformation($"Scanning Lib '{m.Title}'");
-                    await ProcessTv(server, m.Key);
-                    await ProcessMovies(server, m.Key);
+                    await ProcessTv(server, recentlyAdded, m.Key);
+                    await ProcessMovies(server, recentlyAdded, m.Key);
                 }
             }
             else
             {
-                await ProcessMovies(server);
-                await ProcessTv(server);
+                await ProcessMovies(server, recentlyAdded);
+                await ProcessTv(server, recentlyAdded);
             }
         }
 
-        private async Task ProcessTv(EmbyServers server, string parentId = default)
+        private async Task ProcessTv(EmbyServers server, bool recentlyAdded, string parentId = default)
         {
             // TV Time
             var mediaToAdd = new HashSet<EmbyContent>();
-            var tv = await Api.GetAllShows(server.ApiKey, parentId, 0, 200, server.AdministratorId, server.FullUri);
+            EmbyItemContainer<EmbySeries> tv;
+            if (recentlyAdded)
+            {
+                var recentlyAddedAmountToTake = AmountToTake / 2;
+                tv = await Api.RecentlyAddedShows(server.ApiKey, parentId, 0, recentlyAddedAmountToTake, server.AdministratorId, server.FullUri);
+                if (tv.TotalRecordCount > recentlyAddedAmountToTake)
+                {
+                    tv.TotalRecordCount = recentlyAddedAmountToTake;
+                }
+            }
+            else
+            {
+                tv = await Api.GetAllShows(server.ApiKey, parentId, 0, AmountToTake, server.AdministratorId, server.FullUri);
+            }
             var totalTv = tv.TotalRecordCount;
-            var processed = 1;
+            var processed = 0;
             while (processed < totalTv)
             {
                 foreach (var tvShow in tv.Items)
                 {
-                    try
+                    processed++;
+                    if (string.IsNullOrEmpty(tvShow.ProviderIds?.Tvdb))
                     {
-
-                        processed++;
-                        if (string.IsNullOrEmpty(tvShow.ProviderIds?.Tvdb))
-                        {
-                            _logger.LogInformation("Provider Id on tv {0} is null", tvShow.Name);
-                            continue;
-                        }
-
-                        var existingTv = await _repo.GetByEmbyId(tvShow.Id);
-                        if (existingTv == null)
-                        {
-                            _logger.LogDebug("Adding new TV Show {0}", tvShow.Name);
-                            mediaToAdd.Add(new EmbyContent
-                            {
-                                TvDbId = tvShow.ProviderIds?.Tvdb,
-                                ImdbId = tvShow.ProviderIds?.Imdb,
-                                TheMovieDbId = tvShow.ProviderIds?.Tmdb,
-                                Title = tvShow.Name,
-                                Type = EmbyMediaType.Series,
-                                EmbyId = tvShow.Id,
-                                Url = EmbyHelper.GetEmbyMediaUrl(tvShow.Id, server?.ServerId, server.ServerHostname),
-                                AddedAt = DateTime.UtcNow
-                            });
-                        }
-                        else
-                        {
-                            _logger.LogDebug("We already have TV Show {0}", tvShow.Name);
-                        }
-
+                        _logger.LogInformation("Provider Id on tv {0} is null", tvShow.Name);
+                        continue;
                     }
-                    catch (Exception)
-                    {
 
-                        throw;
+                    var existingTv = await _repo.GetByEmbyId(tvShow.Id);
+                    if (existingTv == null)
+                    {
+                        _logger.LogDebug("Adding new TV Show {0}", tvShow.Name);
+                        mediaToAdd.Add(new EmbyContent
+                        {
+                            TvDbId = tvShow.ProviderIds?.Tvdb,
+                            ImdbId = tvShow.ProviderIds?.Imdb,
+                            TheMovieDbId = tvShow.ProviderIds?.Tmdb,
+                            Title = tvShow.Name,
+                            Type = EmbyMediaType.Series,
+                            EmbyId = tvShow.Id,
+                            Url = EmbyHelper.GetEmbyMediaUrl(tvShow.Id, server?.ServerId, server.ServerHostname),
+                            AddedAt = DateTime.UtcNow
+                        });
+                    }
+                    else
+                    {
+                        _logger.LogDebug("We already have TV Show {0}", tvShow.Name);
                     }
                 }
                 // Get the next batch
-                tv = await Api.GetAllShows(server.ApiKey, parentId, processed, 200, server.AdministratorId, server.FullUri);
+                if (!recentlyAdded)
+                {
+                    tv = await Api.GetAllShows(server.ApiKey, parentId, processed, AmountToTake, server.AdministratorId, server.FullUri);
+                }
                 await _repo.AddRange(mediaToAdd);
                 mediaToAdd.Clear();
             }
@@ -171,11 +189,25 @@ namespace Ombi.Schedule.Jobs.Emby
                 await _repo.AddRange(mediaToAdd);
         }
 
-        private async Task ProcessMovies(EmbyServers server, string parentId = default)
+        private async Task ProcessMovies(EmbyServers server, bool recentlyAdded, string parentId = default)
         {
-            var movies = await Api.GetAllMovies(server.ApiKey, parentId, 0, 200, server.AdministratorId, server.FullUri);
+            EmbyItemContainer<EmbyMovie> movies;
+            if (recentlyAdded)
+            {
+                var recentlyAddedAmountToTake = AmountToTake / 2;
+                movies = await Api.RecentlyAddedMovies(server.ApiKey, parentId, 0, recentlyAddedAmountToTake, server.AdministratorId, server.FullUri);
+                // Setting this so we don't attempt to grab more than we need
+                if (movies.TotalRecordCount > recentlyAddedAmountToTake)
+                {
+                    movies.TotalRecordCount = recentlyAddedAmountToTake;
+                }
+            }
+            else
+            {
+                movies = await Api.GetAllMovies(server.ApiKey, parentId, 0, AmountToTake, server.AdministratorId, server.FullUri);
+            }
             var totalCount = movies.TotalRecordCount;
-            var processed = 1;
+            var processed = 0;
             var mediaToAdd = new HashSet<EmbyContent>();
             while (processed < totalCount)
             {
@@ -189,22 +221,24 @@ namespace Ombi.Schedule.Jobs.Emby
                         {
                             await ProcessMovies(item, mediaToAdd, server);
                         }
-
-                        processed++;
                     }
                     else
                     {
-                        processed++;
                         // Regular movie
                         await ProcessMovies(movie, mediaToAdd, server);
                     }
+
+                    processed++;
                 }
 
                 // Get the next batch
-                movies = await Api.GetAllMovies(server.ApiKey, parentId, processed, 200, server.AdministratorId, server.FullUri);
+                // Recently Added should never be checked as the TotalRecords should equal the amount to take
+                if (!recentlyAdded)
+                {
+                    movies = await Api.GetAllMovies(server.ApiKey, parentId, processed, AmountToTake, server.AdministratorId, server.FullUri);
+                }
                 await _repo.AddRange(mediaToAdd);
                 mediaToAdd.Clear();
-
             }
         }
 

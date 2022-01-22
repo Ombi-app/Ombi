@@ -11,4 +11,5 @@ export interface IIssueDialogData {
     requestId: number;
     providerId: string;
     title: string;
+    posterPath: string;
 }

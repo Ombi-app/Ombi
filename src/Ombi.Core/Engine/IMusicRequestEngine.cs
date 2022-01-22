@@ -18,7 +18,7 @@ namespace Ombi.Core.Engine
         Task<int> GetTotal();
         Task<RequestEngineResult> MarkAvailable(int modelId);
         Task<RequestEngineResult> MarkUnavailable(int modelId);
-        Task RemoveAlbumRequest(int requestId);
+        Task<RequestEngineResult> RemoveAlbumRequest(int requestId);
         Task<RequestEngineResult> RequestAlbum(MusicAlbumRequestViewModel model);
         Task<IEnumerable<AlbumRequest>> SearchAlbumRequest(string search);
         Task<bool> UserHasRequest(string userId);

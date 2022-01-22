@@ -10,13 +10,17 @@
     "cSpell.words": [
         "usermanagement"
     ],
-    "discord.enabled": true,
     "conventionalCommits.scopes": [
         "discover",
         "request-limits",
         "notifications",
         "settings",
         "user-management",
-        "newsletter"
+        "newsletter",
+        "mass-email",
+        "issues",
+        "emby",
+        "availability-rules",
+        "details"
     ]
 }

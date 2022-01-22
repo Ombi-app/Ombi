@@ -89,7 +89,7 @@ namespace Ombi.Core.Engine.V2
 
             foreach (var tvSeason in show.seasons.Where(x => x.season_number != 0)) // skip the first season
             {
-                var seasonEpisodes = (await _movieApi.GetSeasonEpisodes(show.id, tvSeason.season_number, token));
+                var seasonEpisodes = (await _movieApi.GetSeasonEpisodes(show.id, tvSeason.season_number, token, langCode));
 
                 MapSeasons(mapped.SeasonRequests, tvSeason, seasonEpisodes);
             }
@@ -147,6 +147,13 @@ namespace Ombi.Core.Engine.V2
             return await processed;
         }
 
+        public async Task<ActorCredits> GetTvByActor(int actorId, string langCode)
+        {
+            langCode = await DefaultLanguageCode(langCode);
+            var result = await Cache.GetOrAddAsync(nameof(GetTvByActor) + actorId + langCode,
+                () =>  _movieApi.GetActorTvCredits(actorId, langCode), DateTimeOffset.Now.AddHours(12));
+            return result;
+        }
 
         public async Task<IEnumerable<StreamingData>> GetStreamInformation(int movieDbId, CancellationToken cancellationToken)
         {

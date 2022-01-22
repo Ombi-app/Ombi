@@ -1,10 +1,8 @@
-﻿import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Injectable, Inject } from "@angular/core";
-
-import { Observable } from "rxjs";
+﻿import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 import { IPlexPin } from "../../interfaces";
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
 
 @Injectable()
 export class PlexTvService {
@@ -13,7 +11,7 @@ export class PlexTvService {
     }
 
     public GetPin(clientId: string, applicationName: string): Observable<IPlexPin> {
-        const headers = new HttpHeaders({"Content-Type": "application/json",
+        const headers = new HttpHeaders({"Content-Type": "application/json; charset=ISO-8859-1",
         "X-Plex-Client-Identifier": clientId,
         "X-Plex-Product": applicationName,
         "X-Plex-Version": "3",

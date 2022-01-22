@@ -61,9 +61,13 @@
                                         <i class="far fa-play-circle fa-2x"></i>
                                     </a>
                                 </ng-container>
-                                <button *ngIf="!tv.fullyAvailable" mat-raised-button id="requestBtn" class="btn-spacing" color="primary"
+                                <button *ngIf="!tv.fullyAvailable && !allEpisodesRequested()" mat-raised-button id="requestBtn" class="btn-spacing" color="primary"
                                     (click)="request()"><i class="fas fa-plus"></i>
                                     {{ 'Common.Request' | translate }}</button>
+
+                                    <button *ngIf="allEpisodesRequested()" mat-raised-button class="btn-spacing" color="warn" [disabled]>
+                                        <i class="fas fa-check"></i>
+                                        {{ 'Common.Requested' | translate }}</button>
 
                                     <button *ngIf="tv.fullyAvailable && !tv.partlyAvailable" id="availableBtn" mat-raised-button class="btn-spacing" color="accent"
                                     [disabled]>
@@ -131,7 +135,7 @@
                         </div>
                         <div class="col-12 col-md-10">
                             <div class="issuesPanel">
-                                <issues-panel [providerId]="tv.theTvDbId" [isAdmin]="isAdmin"></issues-panel>
+                                <issues-panel [providerId]="tv.id" [isAdmin]="isAdmin"></issues-panel>
                             </div>
                             <mat-accordion id="requests-panel">
                                 <mat-expansion-panel>

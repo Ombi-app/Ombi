@@ -1,6 +1,10 @@
 <settings-menu></settings-menu>
+<div class="alert container-alert" role="alert" *ngIf="about && usingSqliteDatabase">
+  Switching to a MySQL database can drastically improve performance and stability. See how to do that here: <a href="https://docs.ombi.app/guides/migrating-databases/" target="_blank">https://docs.ombi.app/guides/migrating-databases/</a>
+</div>
 <div *ngIf="about" class="small-middle-container">
   <legend>About</legend>
+
 <div class="row">
   <div class="col-md-8">
   <div class="mat-table">
@@ -71,23 +75,23 @@
     <div class="mat-row">
       <div class="mat-cell">Application Base Path</div>
       <div class="mat-cell">{{about.applicationBasePath}}</div>
-    </div>    
-    
+    </div>
+
     <div class="mat-row">
       <div class="mat-cell">Storage Path</div>
       <div class="mat-cell">{{about.storagePath}}</div>
-    </div> 
-    
+    </div>
+
     <div class="mat-row">
       <div class="mat-cell">Ombi Database</div>
       <div class="mat-cell">{{about.ombiDatabaseType}}</div>
-    </div> 
-    
+    </div>
+
     <div class="mat-row">
       <div class="mat-cell">External Database</div>
       <div class="mat-cell">{{about.externalDatabaseType}}</div>
-    </div> 
-    
+    </div>
+
     <div class="mat-row">
       <div class="mat-cell">Settings Database</div>
       <div class="mat-cell">{{about.settingsDatabaseType}}</div>
@@ -97,6 +101,10 @@
   </div>
   </div>
   <div class="col-md-4">
+    <div>
+      <a target="_blank" href='https://play.google.com/store/apps/details?id=com.tidusjar.Ombi&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img width="200px" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
+      <a target="_blank" href='https://apps.apple.com/us/app/ombi/id1335260043'><img width="155px" alt='Get it on App Store' [src]="appstoreImage"/></a>
+    </div>
     <h2>News</h2>
     <div [innerHTML]="newsHtml"></div>
   </div>

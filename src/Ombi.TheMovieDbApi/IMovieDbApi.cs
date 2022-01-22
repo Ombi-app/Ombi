@@ -31,6 +31,7 @@ namespace Ombi.Api.TheMovieDb
         Task<TvInfo> GetTVInfo(string themoviedbid, string langCode = "en");
         Task<TheMovieDbContainer<ActorResult>> SearchByActor(string searchTerm, string langCode);
         Task<ActorCredits> GetActorMovieCredits(int actorId, string langCode);
+        Task<ActorCredits> GetActorTvCredits(int actorId, string langCode);
         Task<TheMovieDbContainer<MultiSearch>> MultiSearch(string searchTerm, string languageCode, CancellationToken cancellationToken);
         Task<TheMovieDbContainer<DiscoverMovies>> DiscoverMovies(string langCode, int keywordId);
         Task<FullMovieInfo> GetFullMovieInfo(int movieId, CancellationToken cancellationToken, string langCode);

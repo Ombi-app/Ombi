@@ -177,6 +177,7 @@ export class LoginComponent implements OnDestroy, OnInit {
     if (this.oAuthWindow) {
       this.oAuthWindow.close();
     }
+
     this.oAuthWindow = window.open(
       window.location.toString(),
       "_blank",
@@ -214,6 +215,11 @@ export class LoginComponent implements OnDestroy, OnInit {
   }
 
   public getPinResult(pinId: number) {
+    if (this.oAuthWindow.closed) {
+        if (this.pinTimer) {
+          clearInterval(this.pinTimer);
+        }
+    }
     this.authService.oAuth(pinId).subscribe(
       (x) => {
         if (x.access_token) {

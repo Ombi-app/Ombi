@@ -1,13 +1,13 @@
-import { Component, Inject, OnInit, ViewEncapsulation } from "@angular/core";
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from "@angular/router";
-import { TranslateService } from "@ngx-translate/core";
-import { AuthService } from "../../../auth/auth.service";
-import { IIssues, IIssueSettings, IIssuesSummary, IssueStatus, RequestType } from "../../../interfaces";
+import { Component, Inject, OnInit, ViewEncapsulation } from "@angular/core";
+import { IIssueSettings, IIssues, IIssuesSummary, IssueStatus, RequestType } from "../../../interfaces";
 import { IssuesService, NotificationService, SettingsService } from "../../../services";
-import { IssuesV2Service } from "../../../services/issuesv2.service";
-import { IssueChatComponent } from "../issue-chat/issue-chat.component";
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 
+import { AuthService } from "../../../auth/auth.service";
+import { IssueChatComponent } from "../issue-chat/issue-chat.component";
+import { IssuesV2Service } from "../../../services/issuesv2.service";
+import { TranslateService } from "@ngx-translate/core";
 
 export interface IssuesDetailsGroupData {
     issues: IIssues[];
@@ -77,15 +77,15 @@ export class IssuesDetailsComponent implements OnInit {
         const firstIssue = this.details.issues[0];
         switch(firstIssue.requestType) {
             case RequestType.movie:
-                this.router.navigate(['/details/movie/', firstIssue.providerId]);
+                this.router.navigate(['/details/movie/', this.providerId]);
                 return;
 
             case RequestType.album:
-                this.router.navigate(['/details/artist/', firstIssue.providerId]);
+                this.router.navigate(['/details/artist/', this.providerId]);
                 return;
 
             case RequestType.tvShow:
-                this.router.navigate(['/details/tv/', firstIssue.providerId]);
+                this.router.navigate(['/details/tv/', this.providerId]);
                 return;
         }
     }

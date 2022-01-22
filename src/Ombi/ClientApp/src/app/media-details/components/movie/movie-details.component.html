@@ -72,6 +72,12 @@
                                         {{'Common.Request' | translate }}
                                     </button>
                                 </ng-template>
+                                <span *ngIf="!isAdmin && movie.showSubscribe" >
+                                    <button *ngIf="!movie.subscribed" (click)="notify()" id="notifyBtn" mat-raised-button  class="btn-spacing" >  <i class="fas fa-bell"></i>
+                                        {{ 'Requests.Notify' | translate }}</button>
+                                    <button *ngIf="movie.subscribed" (click)="unNotify()" id="unnotifyBtn" mat-raised-button  class="btn-spacing" >  <i class="fas fa-bell-slash"></i>
+                                        {{ 'Requests.RemoveNotification' | translate }}</button>
+                                    </span>
                             </span>
                             <span *ngIf="isAdmin && hasRequest">
                                 <button id="approveBtn" *ngIf="!movie.approved " (click)="approve()" mat-raised-button class="btn-spacing" color="accent">
@@ -143,7 +149,7 @@
                     <div class="row" *ngIf="movie.videos?.results?.length > 0">
                         <div class="col-12">
                             <mat-card class="mat-elevation-z8">
-                                <mat-card-header>Trailers</mat-card-header>
+                                <mat-card-header>{{'MediaDetails.Trailers' | translate}}</mat-card-header>
                                 <mat-card-content>
                                     <p-carousel class="no-indicator" [numVisible]="2" [numScroll]="10" [page]="0" [value]="movie.videos?.results">
                                         <ng-template let-result pTemplate="item">

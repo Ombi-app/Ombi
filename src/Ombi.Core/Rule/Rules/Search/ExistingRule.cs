@@ -85,9 +85,16 @@ namespace Ombi.Core.Rule.Rules.Search
                 {
                     request.FullyAvailable = true;
                 }
-                if (request.SeasonRequests.Any() && request.SeasonRequests.All(x => x.Episodes.Any(e => e.Available && e.AirDate > DateTime.MinValue)))
+                if (request.SeasonRequests.Any() && request.SeasonRequests.All(x => x.Episodes.Any(e => e.Available && e.AirDate > DateTime.MinValue  && e.AirDate <= DateTime.UtcNow)))
                 {
                     request.PartlyAvailable = true;
+                }
+
+                var hasUnairedRequests = request.SeasonRequests.Any() && request.SeasonRequests.All(x => x.Episodes.Any(e => e.AirDate >= DateTime.UtcNow));
+
+                if (request.FullyAvailable)
+                {
+                    request.PartlyAvailable = hasUnairedRequests;
                 }
 
                 return Success();

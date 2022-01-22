@@ -244,9 +244,9 @@ namespace Ombi.Controllers.V1
 
             var isAdmin = await _userManager.IsInRoleAsync(user, OmbiRoles.Admin) || user.IsSystemUser;
             AddIssueNotificationSubstitutes(notificationModel, issue, user.UserName, user.UserAlias);
-            notificationModel.Substitutes.Add("NewIssueComment", comment.Comment);
-            notificationModel.Substitutes.Add("IssueId", comment.IssueId.ToString());
-            notificationModel.Substitutes.Add("AdminComment", isAdmin.ToString());
+            notificationModel.Substitutes.Add(NotificationSubstitues.NewIssueComment, comment.Comment);
+            notificationModel.Substitutes.Add(NotificationSubstitues.IssueId, comment.IssueId.ToString());
+            notificationModel.Substitutes.Add(NotificationSubstitues.AdminComment, isAdmin.ToString());
 
             if (isAdmin)
             {
@@ -331,14 +331,15 @@ namespace Ombi.Controllers.V1
 
         private static void AddIssueNotificationSubstitutes(NotificationOptions notificationModel, Issues issue, string issueReportedUsername, string alias)
         {
-            notificationModel.Substitutes.Add("Title", issue.Title);
-            notificationModel.Substitutes.Add("IssueDescription", issue.Description);
-            notificationModel.Substitutes.Add("IssueCategory", issue.IssueCategory?.Value);
-            notificationModel.Substitutes.Add("IssueStatus", issue.Status.ToString());
-            notificationModel.Substitutes.Add("IssueSubject", issue.Subject);
-            notificationModel.Substitutes.Add("IssueUser", issueReportedUsername);
-            notificationModel.Substitutes.Add("IssueUserAlias", alias);
-            notificationModel.Substitutes.Add("RequestType", notificationModel.RequestType.ToString());
+            notificationModel.Substitutes.Add(NotificationSubstitues.Title, issue.Title);
+            notificationModel.Substitutes.Add(NotificationSubstitues.IssueDescription, issue.Description);
+            notificationModel.Substitutes.Add(NotificationSubstitues.IssueCategory, issue.IssueCategory?.Value);
+            notificationModel.Substitutes.Add(NotificationSubstitues.IssueStatus, issue.Status.ToString());
+            notificationModel.Substitutes.Add(NotificationSubstitues.IssueSubject, issue.Subject);
+            notificationModel.Substitutes.Add(NotificationSubstitues.IssueUser, issueReportedUsername);
+            notificationModel.Substitutes.Add(NotificationSubstitues.IssueUserAlias, alias);
+            notificationModel.Substitutes.Add(NotificationSubstitues.RequestType, notificationModel.RequestType.ToString());
+            notificationModel.Substitutes.Add(NotificationSubstitues.PosterPath, issue.PosterPath);
         }
     }
 }

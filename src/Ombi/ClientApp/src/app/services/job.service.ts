@@ -43,6 +43,10 @@ export class JobService extends ServiceHelpers {
         return this.http.post<boolean>(`${this.url}plexrecentlyadded/`, {headers: this.headers});
     }
 
+    public runEmbyRecentlyAddedCacher(): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}embyrecentlyadded/`, {headers: this.headers});
+    }
+
     public clearMediaserverData(): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}clearmediaserverdata/`, {headers: this.headers});
     }
