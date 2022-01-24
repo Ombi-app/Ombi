@@ -3,7 +3,12 @@
         [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
         [opened]="!(isHandset$ | async)">
 
-        <mat-toolbar class="application-name" id="nav-applicationName"><a class="application-name-link" [href]="applicationUrl">{{applicationName}}</a></mat-toolbar>
+        <mat-toolbar class="application-name" id="nav-applicationName">
+            <a *ngIf="applicationUrl; else noApplicationUrlLogo" class="application-name-link" [href]="applicationUrl">{{applicationName}}</a>
+        </mat-toolbar>
+        <ng-template #noApplicationUrlLogo>
+            {{applicationName}}
+        </ng-template>
 
         <mat-nav-list>
             <span  mat-list-item  *ngFor="let nav of navItems">
