@@ -204,7 +204,7 @@
             "Approved": "Los elementos seleccionados ha sido aprobados correctamente"
         },
         "SuccessfullyApproved": "Se ha aprobado con éxito",
-        "SuccessfullyDeleted": "Request successfully deleted",
+        "SuccessfullyDeleted": "Solicitud eliminada con éxito",
         "NowAvailable": "La solicitud está disponible",
         "NowUnavailable": "La solicitud no está disponible",
         "SuccessfullyReprocessed": "La solicitud ha sido procesada correctamente",
@@ -214,7 +214,7 @@
         "NeedToSelectEpisodes": "¡Necesitas seleccionar algunos episodios!",
         "RequestAddedSuccessfully": "La solicitud de {{title}} se ha añadido correctamente",
         "ErrorCodes": {
-            "AlreadyRequested": "This has already been requested",
+            "AlreadyRequested": "Ya se ha solicitado",
             "EpisodesAlreadyRequested": "We already have episodes requested from this series",
             "NoPermissionsOnBehalf": "You do not have the correct permissions to request on behalf of users!",
             "NoPermissions": "You do not have the correct permissions!",
