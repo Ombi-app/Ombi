@@ -90,9 +90,17 @@ namespace Ombi.Core.Rule.Rules.Search
                     useTheMovieDb = true;
                 }
                 obj.Available = true;
-                obj.PlexUrl = item.Url;
+                if (item.Url.StartsWith("http"))
+                {
+                    obj.PlexUrl = item.Url;
+                }
+                else
+                {
+                    // legacy content
+                    obj.PlexUrl = PlexHelper.BuildPlexMediaUrl(item.Url, host);
+                }
                 obj.Quality = item.Quality;
-                
+
                 if (obj.Type == RequestType.TvShow)
                 {
                     var search = (SearchTvShowViewModel)obj;
