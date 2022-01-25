@@ -215,17 +215,17 @@
         "RequestAddedSuccessfully": "La solicitud de {{title}} se ha añadido correctamente",
         "ErrorCodes": {
             "AlreadyRequested": "Ya se ha solicitado",
-            "EpisodesAlreadyRequested": "We already have episodes requested from this series",
-            "NoPermissionsOnBehalf": "You do not have the correct permissions to request on behalf of users!",
-            "NoPermissions": "You do not have the correct permissions!",
+            "EpisodesAlreadyRequested": "Ya tenemos episodios solicitados de esta serie",
+            "NoPermissionsOnBehalf": "No tienes los permisos correctos para solicitar en nombre de los usuarios!",
+            "NoPermissions": "¡No tienes los permisos apropiados!",
             "RequestDoesNotExist": "Esta petición no existe",
-            "ChildRequestDoesNotExist": "Child Request does not exist",
-            "NoPermissionsRequestMovie": "You do not have permissions to Request a Movie",
+            "ChildRequestDoesNotExist": "Esta petición no existe",
+            "NoPermissionsRequestMovie": "No tienes permiso para solicitar una película",
             "NoPermissionsRequestTV": "No tienes permiso para solicitar un Programa de televisión",
             "NoPermissionsRequestAlbum": "No tienes permiso para solicitar un Álbum",
             "MovieRequestQuotaExceeded": "¡Has superado tu cuota de solicitudes de películas!",
-            "TvRequestQuotaExceeded": "You have exceeded your Episode request quota!",
-            "AlbumRequestQuotaExceeded": "You have exceeded your Album request quota!"
+            "TvRequestQuotaExceeded": "¡Has superado tu cuota de solicitudes de series!",
+            "AlbumRequestQuotaExceeded": "¡Has superado tu cuota de solicitudes de álbumes!"
         },
         "Notify": "Notificar",
         "RemoveNotification": "Eliminar notificación",
@@ -330,7 +330,7 @@
         "RequestStatus": "Estado de solicitud",
         "Quality": "Calidad:",
         "RootFolderOverride": "Root Folder Override:",
-        "QualityOverride": "Quality Override:",
+        "QualityOverride": "Sobreescribir calidad:",
         "Network": "Cadena:",
         "GenresLabel": "Géneros:",
         "Genres": "Géneros",
@@ -357,17 +357,17 @@
         "RadarrConfiguration": "Configuración de Radarr",
         "RequestOnBehalf": "Solicitar en nombre de",
         "PleaseSelectUser": "Seleccione un usuario",
-        "StreamingOn": "Streaming On:",
+        "StreamingOn": "Emitido en:",
         "RequestedBy": "Solicitado por:",
         "RequestedByOn": "Solicitado por {{user}} el {{date}}",
         "RequestDate": "Fecha de solicitud:",
         "DeniedReason": "Denied Reason:",
-        "ReProcessRequest": "Re-Process Request",
+        "ReProcessRequest": "Re-procesar solicitud",
         "Music": {
             "Type": "Tipo:",
             "Country": "País:",
-            "StartDate": "Start Date:",
-            "EndDate": "EndDate:"
+            "StartDate": "Fecha de inicio:",
+            "EndDate": "Fecha de finalización:"
         }
     },
     "Discovery": {
