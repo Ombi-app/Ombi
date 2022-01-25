@@ -165,6 +165,15 @@
         display: flex;
         white-space: normal;
         word-break: break-word;
+
+        .application-name-link {
+            text-decoration: none;
+            color: inherit;
+
+            &:active, &:hover, &:focus {
+                color: inherit;
+            }
+        }
     }
 
     .outer-profile {
