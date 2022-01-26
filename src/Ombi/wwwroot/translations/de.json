@@ -4,8 +4,8 @@
         "UsernamePlaceholder": "Benutzername",
         "PasswordPlaceholder": "Passwort",
         "RememberMe": "Eingeloggt bleiben",
-        "SignInWith": "Sign in with {{appName}}",
-        "SignInWithPlex": "Sign in with Plex",
+        "SignInWith": "Mit {{appName}} anmelden",
+        "SignInWithPlex": "Mit Plex anmelden",
         "ForgottenPassword": "Passwort vergessen?",
         "Errors": {
             "IncorrectCredentials": "Falscher Benutzername oder falsches Passwort"
@@ -36,8 +36,8 @@
         "Cancel": "Cancel",
         "Submit": "Submit",
         "Update": "Update",
-        "tvShow": "TV Show",
-        "movie": "Movie",
+        "tvShow": "TV-Serie",
+        "movie": "Filme",
         "album": "Album"
     },
     "PasswordReset": {
@@ -56,7 +56,7 @@
         "CheckPageForUpdates": "Überprüfe diese Seite für kontinuierliche Website-Updates."
     },
     "ErrorPages": {
-        "NotFound": "Page not found"
+        "NotFound": "Seite nicht gefunden"
     },
     "NavigationBar": {
         "Discover": "Entdecken",
@@ -86,9 +86,9 @@
             "Music": "Musik",
             "People": "People"
         },
-        "MorningWelcome": "Good morning!",
-        "AfternoonWelcome": "Good afternoon!",
-        "EveningWelcome": "Good evening!"
+        "MorningWelcome": "Guten Morgen!",
+        "AfternoonWelcome": "Guten Tag!",
+        "EveningWelcome": "Guten Abend!"
     },
     "Search": {
         "Title": "Suche",
@@ -97,14 +97,14 @@
         "TvTab": "Serien",
         "MusicTab": "Musik",
         "AdvancedSearch": "You can fill in any of the below to discover new media. All of the results are sorted by popularity",
-        "AdvancedSearchHeader": "Advanced Search",
+        "AdvancedSearchHeader": "Erweiterte Suche",
         "Suggestions": "Vorschläge",
         "NoResults": "Es tut uns leid, wir haben keine Ergebnisse gefunden!",
         "DigitalDate": "Veröffentlichung der digitalen Version: {{date}}",
         "TheatricalRelease": "Kinostart: {{date}}",
         "ViewOnPlex": "In Plex anschauen",
         "ViewOnEmby": "In Emby anschauen",
-        "ViewOnJellyfin": "Play On Jellyfin",
+        "ViewOnJellyfin": "Auf Jellyfin ansehen",
         "RequestAdded": "Anfrage für {{title}} wurde erfolgreich hinzugefügt",
         "Similar": "Ähnliche",
         "Refine": "Auswahl verfeinern",
@@ -198,17 +198,17 @@
         "Options": "Options",
         "RequestPanel": {
             "Delete": "Delete Request",
-            "Approve": "Approve Request",
-            "ChangeAvailability": "Mark Available",
-            "Deleted": "Successfully deleted selected items",
-            "Approved": "Successfully approved selected items"
+            "Approve": "Anfrage genehmigen",
+            "ChangeAvailability": "Als verfügbar markieren",
+            "Deleted": "Ausgewählte Elemente erfolgreich gelöscht",
+            "Approved": "Ausgewählte Elemente erfolgreich freigegeben"
         },
-        "SuccessfullyApproved": "Successfully Approved",
-        "SuccessfullyDeleted": "Request successfully deleted",
-        "NowAvailable": "Request is now available",
-        "NowUnavailable": "Request is now unavailable",
+        "SuccessfullyApproved": "Erfolgreich genehmigt",
+        "SuccessfullyDeleted": "Anfrage erfolgreich gelöscht",
+        "NowAvailable": "Anfrage ist jetzt verfügbar",
+        "NowUnavailable": "Anfrage ist jetzt verfügbar",
         "SuccessfullyReprocessed": "Successfully Re-processed the request",
-        "DeniedRequest": "Denied Request",
+        "DeniedRequest": "Abgelehnte Anfrage",
         "RequestCollection": "Request Collection",
         "CollectionSuccesfullyAdded": "The collection {{name}} has been successfully added!",
         "NeedToSelectEpisodes": "You need to select some episodes!",
