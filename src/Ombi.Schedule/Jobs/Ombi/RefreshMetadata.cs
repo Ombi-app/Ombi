@@ -116,12 +116,12 @@ namespace Ombi.Schedule.Jobs.Ombi
         {
             // Ensure we check that we have not linked this item to a request
             var allMovies = await _plexRepo.GetAll().Where(x =>
-               x.Type == PlexMediaTypeEntity.Movie && x.RequestId == null && (x.TheMovieDbId == null || x.ImdbId == null)).ToListAsync();
+               x.Type == MediaType.Movie && x.RequestId == null && (x.TheMovieDbId == null || x.ImdbId == null)).ToListAsync();
             await StartPlexMovies(allMovies);
 
             // Now Tv
             var allTv = await _plexRepo.GetAll().Where(x =>
-                x.Type == PlexMediaTypeEntity.Show && x.RequestId == null && (x.TheMovieDbId == null || x.ImdbId == null || x.TvDbId == null)).ToListAsync();
+                x.Type == MediaType.Series && x.RequestId == null && (x.TheMovieDbId == null || x.ImdbId == null || x.TvDbId == null)).ToListAsync();
             await StartPlexTv(allTv);
         }
 
@@ -178,7 +178,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private async Task StartEmbyTv()
         {
             var allTv = await _embyRepo.GetAll().Where(x =>
-                x.Type == EmbyMediaType.Series && (x.TheMovieDbId == null || x.ImdbId == null || x.TvDbId == null)).ToListAsync();
+                x.Type == MediaType.Series && (x.TheMovieDbId == null || x.ImdbId == null || x.TvDbId == null)).ToListAsync();
 
             foreach (var show in allTv)
             {
@@ -213,7 +213,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private async Task StartJellyfinTv()
         {
             var allTv = await _jellyfinRepo.GetAll().Where(x =>
-                x.Type == JellyfinMediaType.Series && (x.TheMovieDbId == null || x.ImdbId == null || x.TvDbId == null)).ToListAsync();
+                x.Type == MediaType.Series && (x.TheMovieDbId == null || x.ImdbId == null || x.TvDbId == null)).ToListAsync();
 
             foreach (var show in allTv)
             {
@@ -278,7 +278,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private async Task StartEmbyMovies(EmbySettings settings)
         {
             var allMovies = await _embyRepo.GetAll().Where(x =>
-                x.Type == EmbyMediaType.Movie && (x.TheMovieDbId == null || x.ImdbId == null)).ToListAsync();
+                x.Type == MediaType.Movie && (x.TheMovieDbId == null || x.ImdbId == null)).ToListAsync();
             foreach (var movie in allMovies)
             {
                 movie.ImdbId.HasValue();
@@ -333,7 +333,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private async Task StartJellyfinMovies(JellyfinSettings settings)
         {
             var allMovies = await _jellyfinRepo.GetAll().Where(x =>
-                x.Type == JellyfinMediaType.Movie && (x.TheMovieDbId == null || x.ImdbId == null)).ToListAsync();
+                x.Type == MediaType.Movie && (x.TheMovieDbId == null || x.ImdbId == null)).ToListAsync();
             foreach (var movie in allMovies)
             {
                 movie.ImdbId.HasValue();

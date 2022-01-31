@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Settings;
@@ -13,13 +14,15 @@ namespace Ombi.Core.Rule.Rules.Search
 {
     public class JellyfinAvailabilityRule : BaseSearchRule, IRules<SearchViewModel>
     {
-        public JellyfinAvailabilityRule(IJellyfinContentRepository repo, ISettingsService<JellyfinSettings> s)
+        public JellyfinAvailabilityRule(IJellyfinContentRepository repo, ILogger<JellyfinAvailabilityRule> log, ISettingsService<JellyfinSettings> s)
         {
             JellyfinContentRepository = repo;
+            Log = log;
             JellyfinSettings = s;
         }
 
         private IJellyfinContentRepository JellyfinContentRepository { get; }
+        private ILogger Log { get; }
         private ISettingsService<JellyfinSettings> JellyfinSettings { get; }
 
         public async Task<RuleResult> Execute(SearchViewModel obj)
@@ -78,20 +81,7 @@ namespace Ombi.Core.Rule.Rules.Search
                     useTheMovieDb = true;
                 }
                 obj.Available = true;
-                var s = await JellyfinSettings.GetSettingsAsync();
-                if (s.Enable)
-                {
-                    var server = s.Servers.FirstOrDefault(x => x.ServerHostname != null);
-                    if ((server?.ServerHostname ?? string.Empty).HasValue())
-                    {
-                        obj.JellyfinUrl = JellyfinHelper.GetJellyfinMediaUrl(item.JellyfinId, server?.ServerId, server?.ServerHostname);
-                    }
-                    else
-                    {
-                        var firstServer = s.Servers?.FirstOrDefault();
-                        obj.JellyfinUrl = JellyfinHelper.GetJellyfinMediaUrl(item.JellyfinId, firstServer.ServerId, firstServer.FullUri);
-                    }
-                }
+                obj.JellyfinUrl = item.Url;
 
                 if (obj.Type == RequestType.TvShow)
                 {
@@ -104,7 +94,7 @@ namespace Ombi.Core.Rule.Rules.Search
                         {
                             foreach (var episode in season.Episodes)
                             {
-                                await AvailabilityRuleHelper.SingleEpisodeCheck(useImdb, allEpisodes, episode, season, item, useTheMovieDb, useTvDb);
+                                await AvailabilityRuleHelper.SingleEpisodeCheck(useImdb, allEpisodes, episode, season, item, useTheMovieDb, useTvDb, Log);
                             }
                         }
                     }

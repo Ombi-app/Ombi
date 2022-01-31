@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Ombi.Core.Models.Search;
@@ -18,12 +19,14 @@ namespace Ombi.Core.Tests.Rule.Search
         public void Setup()
         {
             ContextMock = new Mock<IJellyfinContentRepository>();
+            LoggerMock = new Mock<ILogger<JellyfinAvailabilityRule>>();
             SettingsMock = new Mock<ISettingsService<JellyfinSettings>>();
-            Rule = new JellyfinAvailabilityRule(ContextMock.Object, SettingsMock.Object);
+            Rule = new JellyfinAvailabilityRule(ContextMock.Object, LoggerMock.Object, SettingsMock.Object);
         }
 
         private JellyfinAvailabilityRule Rule { get; set; }
         private Mock<IJellyfinContentRepository> ContextMock { get; set; }
+        private Mock<ILogger<JellyfinAvailabilityRule>> LoggerMock { get; set; }
         private Mock<ISettingsService<JellyfinSettings>> SettingsMock { get; set; }
 
         [Test]
@@ -42,36 +45,6 @@ namespace Ombi.Core.Tests.Rule.Search
 
             Assert.True(result.Success);
             Assert.True(search.Available);
-        }
-
-        [Test]
-        public async Task Movie_Has_Custom_Url_When_Specified_In_Settings()
-        {
-            SettingsMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new JellyfinSettings
-            {
-                Enable = true,
-                Servers = new List<JellyfinServers>
-                {
-                    new JellyfinServers
-                    {
-                        ServerHostname = "http://test.com/",
-                        ServerId = "8"
-                    }
-                }
-            });
-            ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new JellyfinContent
-            {
-                ProviderId = "123",
-                JellyfinId = 1.ToString(),
-            });
-            var search = new SearchMovieViewModel()
-            {
-                TheMovieDbId = "123",
-            };
-            var result = await Rule.Execute(search);
-
-            Assert.True(result.Success);
-            Assert.That(search.JellyfinUrl, Is.EqualTo("http://test.com/web/index.html#!/details?id=1&serverId=8"));
         }
 
         [Test]

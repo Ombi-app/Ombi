@@ -46,10 +46,10 @@ namespace Ombi.Core.Rule.Rules.Search
             }
         }
 
-        public static async Task SingleEpisodeCheck(bool useImdb, IQueryable<PlexEpisode> allEpisodes, EpisodeRequests episode,
-            SeasonRequests season, PlexServerContent item, bool useTheMovieDb, bool useTvDb, ILogger log)
+        public static async Task SingleEpisodeCheck(bool useImdb, IQueryable<IMediaServerEpisode> allEpisodes, EpisodeRequests episode,
+            SeasonRequests season, IMediaServerContent item, bool useTheMovieDb, bool useTvDb, ILogger log)
         {
-            PlexEpisode epExists = null;
+            IMediaServerEpisode epExists = null;
             try
             {
 
@@ -77,66 +77,6 @@ namespace Ombi.Core.Rule.Rules.Search
             catch (Exception e)
             {
                 log.LogError(e, "Exception thrown when attempting to check if something is available");
-            }
-
-            if (epExists != null)
-            {
-                episode.Available = true;
-            }
-        }
-        public static async Task SingleEpisodeCheck(bool useImdb, IQueryable<EmbyEpisode> allEpisodes, EpisodeRequests episode,
-            SeasonRequests season, EmbyContent item, bool useTheMovieDb, bool useTvDb)
-        {
-            EmbyEpisode epExists = null;
-            if (useImdb)
-            {
-                epExists = await allEpisodes.FirstOrDefaultAsync(x =>
-                    x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
-                    x.Series.ImdbId == item.ImdbId);
-            }
-
-            if (useTheMovieDb)
-            {
-                epExists = await allEpisodes.FirstOrDefaultAsync(x =>
-                    x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
-                    x.Series.TheMovieDbId == item.TheMovieDbId);
-            }
-
-            if (useTvDb)
-            {
-                epExists = await allEpisodes.FirstOrDefaultAsync(x =>
-                    x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
-                    x.Series.TvDbId == item.TvDbId);
-            }
-
-            if (epExists != null)
-            {
-                episode.Available = true;
-            }
-        }
-        public static async Task SingleEpisodeCheck(bool useImdb, IQueryable<JellyfinEpisode> allEpisodes, EpisodeRequests episode,
-            SeasonRequests season, JellyfinContent item, bool useTheMovieDb, bool useTvDb)
-        {
-            JellyfinEpisode epExists = null;
-            if (useImdb)
-            {
-                epExists = await allEpisodes.FirstOrDefaultAsync(x =>
-                    x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
-                    x.Series.ImdbId == item.ImdbId);
-            }
-
-            if (useTheMovieDb)
-            {
-                epExists = await allEpisodes.FirstOrDefaultAsync(x =>
-                    x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
-                    x.Series.TheMovieDbId == item.TheMovieDbId);
-            }
-
-            if (useTvDb)
-            {
-                epExists = await allEpisodes.FirstOrDefaultAsync(x =>
-                    x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
-                    x.Series.TvDbId == item.TvDbId);
             }
 
             if (epExists != null)

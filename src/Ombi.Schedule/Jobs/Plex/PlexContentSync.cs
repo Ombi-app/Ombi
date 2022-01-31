@@ -226,7 +226,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     await Repo.SaveChangesAsync();
                     if (content.Metadata != null)
                     {
-                        var episodesAdded = await EpisodeSync.ProcessEpsiodes(content.Metadata, allEps);
+                        var episodesAdded = await EpisodeSync.ProcessEpsiodes(content.Metadata, (IQueryable<PlexEpisode>)allEps);
                         episodesProcessed.AddRange(episodesAdded.Select(x => x.Id));
                     }
                 }
@@ -301,7 +301,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     var existing = await Repo.GetFirstContentByCustom(x => x.Title == movie.title
                                                                            && x.ReleaseYear == movie.year.ToString()
-                                                                           && x.Type == PlexMediaTypeEntity.Movie);
+                                                                           && x.Type == MediaType.Movie);
                     // The rating key keeps changing
                     //var existing = await Repo.GetByKey(movie.ratingKey);
                     if (existing != null)
@@ -349,9 +349,9 @@ namespace Ombi.Schedule.Jobs.Plex
                         AddedAt = DateTime.Now,
                         Key = movie.ratingKey,
                         ReleaseYear = movie.year.ToString(),
-                        Type = PlexMediaTypeEntity.Movie,
+                        Type = MediaType.Movie,
                         Title = movie.title,
-                        Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, movie.ratingKey),
+                        Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, movie.ratingKey, servers.ServerHostname),
                         Seasons = new List<PlexSeasonsContent>(),
                         Quality = movie.Media?.FirstOrDefault()?.videoResolution ?? string.Empty
                     };
@@ -411,7 +411,7 @@ namespace Ombi.Schedule.Jobs.Plex
             // Let's try and match 
             var existingContent = await Repo.GetFirstContentByCustom(x => x.Title == show.title
                                                                           && x.ReleaseYear == show.year.ToString()
-                                                                          && x.Type == PlexMediaTypeEntity.Show);
+                                                                          && x.Type == MediaType.Series);
 
             // Just double check the rating key, since this is our unique constraint
             var existingKey = await Repo.GetByKey(show.ratingKey);
@@ -463,7 +463,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     Repo.DeleteWithoutSave(existingContent);
 
                     // Because we have changed the rating key, we need to change all children too
-                    var episodeToChange = Repo.GetAllEpisodes().Where(x => x.GrandparentKey == oldKey);
+                    var episodeToChange = Repo.GetAllEpisodes().Cast<PlexEpisode>().Where(x => x.GrandparentKey == oldKey);
                     if (episodeToChange.Any())
                     {
                         foreach (var e in episodeToChange)
@@ -553,9 +553,9 @@ namespace Ombi.Schedule.Jobs.Plex
                         AddedAt = DateTime.Now,
                         Key = show.ratingKey,
                         ReleaseYear = show.year.ToString(),
-                        Type = PlexMediaTypeEntity.Show,
+                        Type = MediaType.Series,
                         Title = show.title,
-                        Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, show.ratingKey),
+                        Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, show.ratingKey, servers.ServerHostname),
                         Seasons = new List<PlexSeasonsContent>()
                     };
                     await GetProviderIds(showMetadata, item);
@@ -567,19 +567,19 @@ namespace Ombi.Schedule.Jobs.Plex
                     if (item.ImdbId.HasValue())
                     {
                         existingImdb = await Repo.GetAll().AnyAsync(x =>
-                            x.ImdbId == item.ImdbId && x.Type == PlexMediaTypeEntity.Show);
+                            x.ImdbId == item.ImdbId && x.Type == MediaType.Series);
                     }
 
                     if (item.TheMovieDbId.HasValue())
                     {
                         existingMovieDbId = await Repo.GetAll().AnyAsync(x =>
-                            x.TheMovieDbId == item.TheMovieDbId && x.Type == PlexMediaTypeEntity.Show);
+                            x.TheMovieDbId == item.TheMovieDbId && x.Type == MediaType.Series);
                     }
 
                     if (item.TvDbId.HasValue())
                     {
                         existingTvDbId = await Repo.GetAll().AnyAsync(x =>
-                            x.TvDbId == item.TvDbId && x.Type == PlexMediaTypeEntity.Show);
+                            x.TvDbId == item.TvDbId && x.Type == MediaType.Series);
                     }
 
                     if (existingImdb || existingTvDbId || existingMovieDbId)

@@ -32,37 +32,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Ombi.Store.Entities
 {
     [Table("PlexServerContent")]
-    public class PlexServerContent : Entity
+    public class PlexServerContent : MediaServerContent
     {
-        public string Title { get; set; }
         public string ReleaseYear { get; set; }
-        public string ImdbId { get; set; }
-        public string TvDbId { get; set; }
-        public string TheMovieDbId { get; set; }
-        public PlexMediaTypeEntity Type { get; set; }
-
-        public string Url { get; set; }
-        
-        public ICollection<PlexEpisode> Episodes { get; set; }
         public ICollection<PlexSeasonsContent> Seasons { get; set; }
 
         /// <summary>
         /// Plex's internal ID for this item
         /// </summary>
         public int Key { get; set; }
-        public DateTime AddedAt { get; set; }
         public string Quality { get; set; }
 
         public int? RequestId { get; set; }
-
-        [NotMapped]
-        public bool HasImdb => !string.IsNullOrEmpty(ImdbId);
-
-        [NotMapped]
-        public bool HasTvDb => !string.IsNullOrEmpty(TvDbId);
-
-        [NotMapped]
-        public bool HasTheMovieDb => !string.IsNullOrEmpty(TheMovieDbId);
+        
+        public override RecentlyAddedType RecentlyAddedType => RecentlyAddedType.Plex;
     }
 
     [Table("PlexSeasonsContent")]
@@ -72,11 +55,5 @@ namespace Ombi.Store.Entities
         public int SeasonNumber { get; set; }
         public int SeasonKey { get; set; }
         public int ParentKey { get; set; }
-    }
-
-    public enum PlexMediaTypeEntity
-    {
-        Movie = 0,
-        Show = 1
     }
 }

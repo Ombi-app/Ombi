@@ -26,18 +26,17 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Ombi.Store.Entities
 {
     [Table("JellyfinEpisode")]
-    public class JellyfinEpisode : Entity
+    public class JellyfinEpisode : MediaServerEpisode
     {
-        public string Title { get; set; }
         public string JellyfinId { get; set; }
-        public int EpisodeNumber { get; set; }
-        public int SeasonNumber { get; set; }
         public string ParentId { get; set; }
         /// <summary>
         /// NOT USED
@@ -47,7 +46,22 @@ namespace Ombi.Store.Entities
         public string TvDbId { get; set; }
         public string ImdbId { get; set; }
         public string TheMovieDbId { get; set; }
-
-        public JellyfinContent Series { get; set; }
+        [NotMapped]
+        public JellyfinContent JellyfinSeries
+        {
+            get => (JellyfinContent)Series;
+            set => Series = value;
+        }
+        
+        public override IMediaServerContent SeriesIsIn(ICollection<IMediaServerContent> content)
+        {
+            return content.OfType<JellyfinContent>().FirstOrDefault(
+                x => x.JellyfinId == this.JellyfinSeries.JellyfinId);
+        }
+        
+        public override bool IsIn(IMediaServerContent content)
+        {
+            return content.Episodes.Cast<JellyfinEpisode>().Any(x => x.JellyfinId == this.JellyfinId);
+        }
     }
 }

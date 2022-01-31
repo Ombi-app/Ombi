@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using MailKit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MimeKit;
-using Ombi.Api.CouchPotato.Models;
 using Ombi.Api.Lidarr;
 using Ombi.Api.Lidarr.Models;
 using Ombi.Api.TheMovieDb;
@@ -30,7 +25,6 @@ using Ombi.Settings.Settings.Models.External;
 using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
-using Org.BouncyCastle.Utilities.Collections;
 using Quartz;
 using ContentType = Ombi.Store.Entities.ContentType;
 
@@ -74,9 +68,9 @@ namespace Ombi.Schedule.Jobs.Ombi
             _refreshMetadata = refreshMetadata;
         }
 
-        private readonly IPlexContentRepository _plex;
-        private readonly IEmbyContentRepository _emby;
-        private readonly IJellyfinContentRepository _jellyfin;
+        private readonly IMediaServerContentRepository<PlexServerContent> _plex;
+        private readonly IMediaServerContentRepository<EmbyContent> _emby;
+        private readonly IMediaServerContentRepository<JellyfinContent> _jellyfin;
         private readonly IRepository<RecentlyAddedLog> _recentlyAddedLog;
         private readonly IMovieDbApi _movieApi;
         private readonly ITvMazeApi _tvApi;
@@ -122,88 +116,37 @@ namespace Ombi.Schedule.Jobs.Ombi
             try
             {
 
-
-                var customization = await _customizationSettings.GetSettingsAsync();
-                // Get the Content
-                var plexContent = _plex.GetAll().Include(x => x.Episodes).AsNoTracking();
-                var embyContent = _emby.GetAll().Include(x => x.Episodes).AsNoTracking();
-                var jellyfinContent = _jellyfin.GetAll().Include(x => x.Episodes).AsNoTracking();
-                var lidarrContent = _lidarrAlbumRepository.GetAll().AsNoTracking().ToList().Where(x => x.FullyAvailable);
-
-                var addedLog = _recentlyAddedLog.GetAll().ToList();
-
-                HashSet<int> addedPlexMovieLogIds, addedEmbyMoviesLogIds, addedJellyfinMoviesLogIds;
-                HashSet<string> addedAlbumLogIds;
-                GetRecentlyAddedMoviesData(addedLog, out addedPlexMovieLogIds, out addedEmbyMoviesLogIds, out addedJellyfinMoviesLogIds, out addedAlbumLogIds);
-
-                var addedPlexEpisodesLogIds =
-                addedLog.Where(x => x.Type == RecentlyAddedType.Plex && x.ContentType == ContentType.Episode);
-                var addedEmbyEpisodesLogIds =
-                    addedLog.Where(x => x.Type == RecentlyAddedType.Emby && x.ContentType == ContentType.Episode);
-                var addedJellyfinEpisodesLogIds =
-                    addedLog.Where(x => x.Type == RecentlyAddedType.Jellyfin && x.ContentType == ContentType.Episode);
-
-
-                // Filter out the ones that we haven't sent yet
-                var plexContentLocalDataset = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
-                var embyContentLocalDataset = embyContent.Where(x => x.Type == EmbyMediaType.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
-                var jellyfinContentLocalDataset = jellyfinContent.Where(x => x.Type == JellyfinMediaType.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
-                var plexContentMoviesToSend = plexContentLocalDataset.Where(x => !addedPlexMovieLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId))).ToHashSet();
-                var embyContentMoviesToSend = embyContentLocalDataset.Where(x => !addedEmbyMoviesLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId))).ToHashSet();
-                var jellyfinContentMoviesToSend = jellyfinContentLocalDataset.Where(x => !addedJellyfinMoviesLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId))).ToHashSet();
-                var lidarrContentAlbumsToSend = lidarrContent.Where(x => !addedAlbumLogIds.Contains(x.ForeignAlbumId)).ToHashSet();
-                _log.LogInformation("Plex Movies to send: {0}", plexContentMoviesToSend.Count());
-                _log.LogInformation("Emby Movies to send: {0}", embyContentMoviesToSend.Count());
-                _log.LogInformation("Jellyfin Movies to send: {0}", jellyfinContentMoviesToSend.Count());
-                _log.LogInformation("Albums to send: {0}", lidarrContentAlbumsToSend.Count());
-
-                // Find the movies that do not yet have MovieDbIds
-                var needsMovieDbPlex = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
-                var needsMovieDbEmby = embyContent.Where(x => x.Type == EmbyMediaType.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
-                var needsMovieDbJellyfin = jellyfinContent.Where(x => x.Type == JellyfinMediaType.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
-                var newPlexMovies = await GetMoviesWithoutId(addedPlexMovieLogIds, needsMovieDbPlex);
-                var newEmbyMovies = await GetMoviesWithoutId(addedEmbyMoviesLogIds, needsMovieDbEmby);
-                var newJellyfinMovies = await GetMoviesWithoutId(addedJellyfinMoviesLogIds, needsMovieDbJellyfin);
-                plexContentMoviesToSend = plexContentMoviesToSend.Union(newPlexMovies).ToHashSet();
-                embyContentMoviesToSend = embyContentMoviesToSend.Union(newEmbyMovies).ToHashSet();
-                jellyfinContentMoviesToSend = jellyfinContentMoviesToSend.Union(newJellyfinMovies).ToHashSet();
-
-                plexContentMoviesToSend = plexContentMoviesToSend.DistinctBy(x => x.Id).ToHashSet();
-                embyContentMoviesToSend = embyContentMoviesToSend.DistinctBy(x => x.Id).ToHashSet();
-                jellyfinContentMoviesToSend = jellyfinContentMoviesToSend.DistinctBy(x => x.Id).ToHashSet();
-
-                var plexEpisodesToSend =
-                    FilterPlexEpisodes(_plex.GetAllEpisodes().Include(x => x.Series).AsNoTracking(), addedPlexEpisodesLogIds);
-                var embyEpisodesToSend = FilterEmbyEpisodes(_emby.GetAllEpisodes().Include(x => x.Series).AsNoTracking(),
-                    addedEmbyEpisodesLogIds);
-                var jellyfinEpisodesToSend = FilterJellyfinEpisodes(_jellyfin.GetAllEpisodes().Include(x => x.Series).AsNoTracking(),
-                    addedJellyfinEpisodesLogIds);
-
-                _log.LogInformation("Plex Episodes to send: {0}", plexEpisodesToSend.Count());
-                _log.LogInformation("Emby Episodes to send: {0}", embyEpisodesToSend.Count());
-                _log.LogInformation("Jellyfin Episodes to send: {0}", jellyfinEpisodesToSend.Count());
                 var plexSettings = await _plexSettings.GetSettingsAsync();
                 var embySettings = await _embySettings.GetSettingsAsync();
                 var jellyfinSettings = await _jellyfinSettings.GetSettingsAsync();
-                var body = string.Empty;
-                if (test)
+
+                var customization = await _customizationSettings.GetSettingsAsync();
+
+                var moviesContents = new List<IMediaServerContent>();
+                var seriesContents = new List<IMediaServerEpisode>();
+                if (plexSettings.Enable)
                 {
-                    var plexm = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie).OrderByDescending(x => x.AddedAt).Take(10);
-                    var embym = embyContent.Where(x => x.Type == EmbyMediaType.Movie).OrderByDescending(x => x.AddedAt).Take(10);
-                    var jellyfinm = jellyfinContent.Where(x => x.Type == JellyfinMediaType.Movie).OrderByDescending(x => x.AddedAt).Take(10);
-                    var plext = _plex.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.Series.AddedAt).Take(10).ToHashSet();
-                    var embyt = _emby.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.AddedAt).Take(10).ToHashSet();
-                    var jellyfint = _jellyfin.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.AddedAt).Take(10).ToHashSet();
-                    var lidarr = lidarrContent.OrderByDescending(x => x.AddedAt).Take(10).ToHashSet();
-                    body = await BuildHtml(plexm, embym, jellyfinm, plext, embyt, jellyfint, lidarr, settings, embySettings, jellyfinSettings, plexSettings);
+                    moviesContents.AddRange(await GetMoviesContent(_plex, test));
+                    seriesContents.AddRange(GetSeriesContent(_plex, test));
                 }
-                else
+                if (embySettings.Enable)
                 {
-                    body = await BuildHtml(plexContentMoviesToSend.AsQueryable(), embyContentMoviesToSend.AsQueryable(), jellyfinContentMoviesToSend.AsQueryable(), plexEpisodesToSend, embyEpisodesToSend, jellyfinEpisodesToSend, lidarrContentAlbumsToSend, settings, embySettings, jellyfinSettings, plexSettings);
-                    if (body.IsNullOrEmpty())
-                    {
-                        return;
-                    }
+                    moviesContents.AddRange(await GetMoviesContent(_emby, test));
+                    seriesContents.AddRange(GetSeriesContent(_emby, test));
+                }
+                if (jellyfinSettings.Enable)
+                {
+                    moviesContents.AddRange(await GetMoviesContent(_jellyfin, test));
+                    seriesContents.AddRange(GetSeriesContent(_jellyfin, test));
+                }
+
+                var albumsContents = GetMusicContent(_lidarrAlbumRepository, test);
+
+                var body = await BuildHtml(moviesContents, seriesContents, albumsContents, settings);
+
+                if (body.IsNullOrEmpty())
+                {
+                    return;
                 }
 
                 if (!test)
@@ -223,7 +166,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     if (!users.Any())
                     {
                         return;
-                    }                    
+                    }
 
                     var messageContent = ParseTemplate(template, customization);
                     var email = new NewsletterTemplate();
@@ -258,84 +201,8 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                     // Now add all of this to the Recently Added log
                     var recentlyAddedLog = new HashSet<RecentlyAddedLog>();
-                    foreach (var p in plexContentMoviesToSend)
-                    {
-                        recentlyAddedLog.Add(new RecentlyAddedLog
-                        {
-                            AddedAt = DateTime.Now,
-                            Type = RecentlyAddedType.Plex,
-                            ContentType = ContentType.Parent,
-                            ContentId = StringHelper.IntParseLinq(p.TheMovieDbId),
-                        });
-
-                    }
-
-                    foreach (var p in plexEpisodesToSend)
-                    {
-                        recentlyAddedLog.Add(new RecentlyAddedLog
-                        {
-                            AddedAt = DateTime.Now,
-                            Type = RecentlyAddedType.Plex,
-                            ContentType = ContentType.Episode,
-                            ContentId = StringHelper.IntParseLinq(p.Series.TvDbId),
-                            EpisodeNumber = p.EpisodeNumber,
-                            SeasonNumber = p.SeasonNumber
-                        });
-                    }
-                    foreach (var e in embyContentMoviesToSend)
-                    {
-                        if (e.Type == EmbyMediaType.Movie)
-                        {
-                            recentlyAddedLog.Add(new RecentlyAddedLog
-                            {
-                                AddedAt = DateTime.Now,
-                                Type = RecentlyAddedType.Emby,
-                                ContentType = ContentType.Parent,
-                                ContentId = StringHelper.IntParseLinq(e.TheMovieDbId),
-                            });
-                        }
-                    }
-
-                    foreach (var p in embyEpisodesToSend)
-                    {
-                        recentlyAddedLog.Add(new RecentlyAddedLog
-                        {
-                            AddedAt = DateTime.Now,
-                            Type = RecentlyAddedType.Emby,
-                            ContentType = ContentType.Episode,
-                            ContentId = StringHelper.IntParseLinq(p.Series.TvDbId),
-                            EpisodeNumber = p.EpisodeNumber,
-                            SeasonNumber = p.SeasonNumber
-                        });
-                    }
-
-                    foreach (var e in jellyfinContentMoviesToSend)
-                    {
-                        if (e.Type == JellyfinMediaType.Movie)
-                        {
-                            recentlyAddedLog.Add(new RecentlyAddedLog
-                            {
-                                AddedAt = DateTime.Now,
-                                Type = RecentlyAddedType.Jellyfin,
-                                ContentType = ContentType.Parent,
-                                ContentId = StringHelper.IntParseLinq(e.TheMovieDbId),
-                            });
-                        }
-                    }
-
-                    foreach (var p in jellyfinEpisodesToSend)
-                    {
-                        recentlyAddedLog.Add(new RecentlyAddedLog
-                        {
-                            AddedAt = DateTime.Now,
-                            Type = RecentlyAddedType.Jellyfin,
-                            ContentType = ContentType.Episode,
-                            ContentId = StringHelper.IntParseLinq(p.Series.TvDbId),
-                            EpisodeNumber = p.EpisodeNumber,
-                            SeasonNumber = p.SeasonNumber
-                        });
-                    }
-
+                    AddToRecentlyAddedLog(moviesContents, recentlyAddedLog);
+                    AddToRecentlyAddedLog(seriesContents, recentlyAddedLog);
                     await _recentlyAddedLog.AddRange(recentlyAddedLog);
                 }
                 else
@@ -375,19 +242,116 @@ namespace Ombi.Schedule.Jobs.Ombi
                 .SendAsync(NotificationHub.NotificationEvent, "Newsletter Finished");
         }
 
-        private void GetRecentlyAddedMoviesData(List<RecentlyAddedLog> addedLog, out HashSet<int> addedPlexMovieLogIds, out HashSet<int> addedEmbyMoviesLogIds, out HashSet<int> addedJellyfinMoviesLogIds, out HashSet<string> addedAlbumLogIds)
+        private void AddToRecentlyAddedLog(ICollection<IMediaServerContent> moviesContents,
+                                           HashSet<RecentlyAddedLog> recentlyAddedLog)
         {
-            var plexParent = addedLog.Where(x => x.Type == RecentlyAddedType.Plex && x.ContentType == ContentType.Parent).ToList();
-            addedPlexMovieLogIds = plexParent != null && plexParent.Any() ? (plexParent?.Select(x => x.ContentId)?.ToHashSet() ?? new HashSet<int>()) : new HashSet<int>();
+            foreach (var p in moviesContents)
+            {
+                recentlyAddedLog.Add(new RecentlyAddedLog
+                {
+                    AddedAt = DateTime.Now,
+                    Type = p.RecentlyAddedType,
+                    ContentType = ContentType.Parent,
+                    ContentId = StringHelper.IntParseLinq(p.TheMovieDbId),
+                });
+            }
+        }
+        private void AddToRecentlyAddedLog(ICollection<IMediaServerEpisode> episodes,
+                                           HashSet<RecentlyAddedLog> recentlyAddedLog)
+        {
+            foreach (var p in episodes)
+            {
+                recentlyAddedLog.Add(new RecentlyAddedLog
+                {
+                    AddedAt = DateTime.Now,
+                    Type = p.Series.RecentlyAddedType, 
+                    ContentType = ContentType.Episode,
+                    ContentId = StringHelper.IntParseLinq(p.Series.TvDbId),
+                    EpisodeNumber = p.EpisodeNumber,
+                    SeasonNumber = p.SeasonNumber
+                });
+            }
+        }
 
-            var embyParent = addedLog.Where(x => x.Type == RecentlyAddedType.Emby && x.ContentType == ContentType.Parent);
-            addedEmbyMoviesLogIds = embyParent != null && embyParent.Any() ? (embyParent?.Select(x => x.ContentId)?.ToHashSet() ?? new HashSet<int>()) : new HashSet<int>();
-
-            var jellyFinParent = addedLog.Where(x => x.Type == RecentlyAddedType.Jellyfin && x.ContentType == ContentType.Parent);
-            addedJellyfinMoviesLogIds = jellyFinParent != null && jellyFinParent.Any() ? (jellyFinParent?.Select(x => x.ContentId)?.ToHashSet() ?? new HashSet<int>()) : new HashSet<int>();
-
+        private void GetRecentlyAddedMoviesData(List<RecentlyAddedLog> addedLog, out HashSet<string> addedAlbumLogIds)
+        {
             var lidarrParent = addedLog.Where(x => x.Type == RecentlyAddedType.Lidarr && x.ContentType == ContentType.Album);
             addedAlbumLogIds = lidarrParent != null && lidarrParent.Any() ? (lidarrParent?.Select(x => x.AlbumId)?.ToHashSet() ?? new HashSet<string>()) : new HashSet<string>();
+        }
+
+        private async Task<HashSet<IMediaServerContent>> GetMoviesContent<T>(IMediaServerContentRepository<T> repository, bool test) where T : class, IMediaServerContent
+        {
+            IQueryable<IMediaServerContent> content = repository.GetAll().Include(x => x.Episodes).AsNoTracking().Where(x => x.Type == MediaType.Movie).OrderByDescending(x => x.AddedAt);
+            var localDataset = content.Where(x => x.Type == MediaType.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
+
+            HashSet<IMediaServerContent> moviesToSend;
+            if (test)
+            {
+                moviesToSend = content.Take(10).ToHashSet();
+            }
+            else
+            {
+                // Filter out the ones that we haven't sent yet
+                var parent = _recentlyAddedLog.GetAll().Where(x => x.Type == repository.RecentlyAddedType
+                   && x.ContentType == ContentType.Parent).ToList();
+                var addedMovieLogIds = parent != null && parent.Any() ? (parent?.Select(x => x.ContentId)?.ToHashSet() ?? new HashSet<int>()) : new HashSet<int>();
+                moviesToSend = localDataset.Where(x => !addedMovieLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId))).ToHashSet();
+                _log.LogInformation("Movies to send: {0}", moviesToSend.Count());
+
+                // Find the movies that do not yet have MovieDbIds
+                var needsMovieDb = content.Where(x => x.Type == MediaType.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
+                var newMovies = await GetMoviesWithoutId(addedMovieLogIds, needsMovieDb, repository);
+                moviesToSend = moviesToSend.Union(newMovies).ToHashSet();
+            }
+
+            _log.LogInformation("Movies to send: {0}", moviesToSend.Count());
+            return moviesToSend.DistinctBy(x => x.Id).ToHashSet();
+        }
+
+        private HashSet<IMediaServerEpisode> GetSeriesContent<T>(IMediaServerContentRepository<T> repository, bool test) where T : class, IMediaServerContent
+        {
+            var content = repository.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.Series.AddedAt).AsNoTracking();
+            
+            HashSet<IMediaServerEpisode> episodesToSend;
+            if (test)
+            {
+                var count = repository.GetAllEpisodes().Count();
+                episodesToSend = content.Take(10).ToHashSet();
+            }
+            else
+            {
+                // Filter out the ones that we haven't sent yet
+                var addedEpisodesLogIds =
+                _recentlyAddedLog.GetAll().Where(x => x.Type == repository.RecentlyAddedType && x.ContentType == ContentType.Episode);
+                episodesToSend =
+                    FilterEpisodes(content, addedEpisodesLogIds);
+            }
+
+            _log.LogInformation("Episodes to send: {0}", episodesToSend.Count());
+            return episodesToSend;
+
+        }
+        private HashSet<LidarrAlbumCache> GetMusicContent(IExternalRepository<LidarrAlbumCache> repository, bool test)
+        {
+
+            var lidarrContent = repository.GetAll().AsNoTracking().ToList().Where(x => x.FullyAvailable);
+
+            HashSet<LidarrAlbumCache> albumsToSend;
+            if (test)
+            {
+                albumsToSend = lidarrContent.OrderByDescending(x => x.AddedAt).Take(10).ToHashSet();
+            }
+            else
+            {
+                // Filter out the ones that we haven't sent yet
+                var addedLog = _recentlyAddedLog.GetAll().ToList();
+                HashSet<string> addedAlbumLogIds;
+                GetRecentlyAddedMoviesData(addedLog, out addedAlbumLogIds);
+                albumsToSend = lidarrContent.Where(x => !addedAlbumLogIds.Contains(x.ForeignAlbumId)).ToHashSet();
+            }
+            _log.LogInformation("Albums to send: {0}", albumsToSend.Count());
+            return albumsToSend;
+
         }
 
         public static string GenerateUnsubscribeLink(string applicationUrl, string id)
@@ -405,49 +369,21 @@ namespace Ombi.Schedule.Jobs.Ombi
             return b.ToString();
         }
 
-        private async Task<HashSet<PlexServerContent>> GetMoviesWithoutId(HashSet<int> addedMovieLogIds, HashSet<PlexServerContent> needsMovieDbPlex)
+        private async Task<HashSet<IMediaServerContent>> GetMoviesWithoutId<T>(HashSet<int> addedMovieLogIds, HashSet<IMediaServerContent> needsMovieDb, IMediaServerContentRepository<T> repository) where T : class, IMediaServerContent
         {
-            foreach (var movie in needsMovieDbPlex)
+            foreach (var movie in needsMovieDb)
             {
                 var id = await _refreshMetadata.GetTheMovieDbId(false, true, null, movie.ImdbId, movie.Title, true);
                 movie.TheMovieDbId = id.ToString();
             }
 
-            var result = needsMovieDbPlex.Where(x => x.HasTheMovieDb && !addedMovieLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId)));
-            await UpdateTheMovieDbId(result);
+            var result = needsMovieDb.Where(x => x.HasTheMovieDb && !addedMovieLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId)));
+            await UpdateTheMovieDbId(result, repository);
             // Filter them out now
             return result.ToHashSet();
         }
 
-        private async Task<HashSet<EmbyContent>> GetMoviesWithoutId(HashSet<int> addedMovieLogIds, HashSet<EmbyContent> needsMovieDbPlex)
-        {
-            foreach (var movie in needsMovieDbPlex)
-            {
-                var id = await _refreshMetadata.GetTheMovieDbId(false, true, null, movie.ImdbId, movie.Title, true);
-                movie.TheMovieDbId = id.ToString();
-            }
-
-            var result = needsMovieDbPlex.Where(x => x.HasTheMovieDb && !addedMovieLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId)));
-            await UpdateTheMovieDbId(result);
-            // Filter them out now
-            return result.ToHashSet();
-        }
-
-        private async Task<HashSet<JellyfinContent>> GetMoviesWithoutId(HashSet<int> addedMovieLogIds, HashSet<JellyfinContent> needsMovieDbJellyfin)
-        {
-            foreach (var movie in needsMovieDbJellyfin)
-            {
-                var id = await _refreshMetadata.GetTheMovieDbId(false, true, null, movie.ImdbId, movie.Title, true);
-                movie.TheMovieDbId = id.ToString();
-            }
-
-            var result = needsMovieDbJellyfin.Where(x => x.HasTheMovieDb && !addedMovieLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId)));
-            await UpdateTheMovieDbId(result);
-            // Filter them out now
-            return result.ToHashSet();
-        }
-
-        private async Task UpdateTheMovieDbId(IEnumerable<PlexServerContent> content)
+        private async Task UpdateTheMovieDbId<T>(IEnumerable<IMediaServerContent> content, IMediaServerContentRepository<T> repository) where T : class, IMediaServerContent
         {
             foreach (var movie in content)
             {
@@ -455,45 +391,15 @@ namespace Ombi.Schedule.Jobs.Ombi
                 {
                     continue;
                 }
-                var entity = await _plex.Find(movie.Id);
+                var entity = await repository.Find(movie.Id);
                 if (entity == null)
                 {
                     return;
                 }
                 entity.TheMovieDbId = movie.TheMovieDbId;
-                _plex.UpdateWithoutSave(entity);
+                repository.UpdateWithoutSave(entity);
             }
-            await _plex.SaveChangesAsync();
-        }
-
-        private async Task UpdateTheMovieDbId(IEnumerable<EmbyContent> content)
-        {
-            foreach (var movie in content)
-            {
-                if (!movie.HasTheMovieDb)
-                {
-                    continue;
-                }
-                var entity = await _emby.Find(movie.Id);
-                entity.TheMovieDbId = movie.TheMovieDbId;
-                _emby.UpdateWithoutSave(entity);
-            }
-            await _plex.SaveChangesAsync();
-        }
-
-        private async Task UpdateTheMovieDbId(IEnumerable<JellyfinContent> content)
-        {
-            foreach (var movie in content)
-            {
-                if (!movie.HasTheMovieDb)
-                {
-                    continue;
-                }
-                var entity = await _jellyfin.Find(movie.Id);
-                entity.TheMovieDbId = movie.TheMovieDbId;
-                _jellyfin.UpdateWithoutSave(entity);
-            }
-            await _plex.SaveChangesAsync();
+            await repository.SaveChangesAsync();
         }
 
         public async Task Execute(IJobExecutionContext job)
@@ -502,43 +408,9 @@ namespace Ombi.Schedule.Jobs.Ombi
             await Start(newsletterSettings, false);
         }
 
-        private HashSet<PlexEpisode> FilterPlexEpisodes(IEnumerable<PlexEpisode> source, IEnumerable<RecentlyAddedLog> recentlyAdded)
+        private HashSet<IMediaServerEpisode> FilterEpisodes(IEnumerable<IMediaServerEpisode> source, IEnumerable<RecentlyAddedLog> recentlyAdded)
         {
-            var itemsToReturn = new HashSet<PlexEpisode>();
-            foreach (var ep in source.Where(x => x.Series.HasTvDb))
-            {
-                var tvDbId = StringHelper.IntParseLinq(ep.Series.TvDbId);
-                if (recentlyAdded.Any(x => x.ContentId == tvDbId && x.EpisodeNumber == ep.EpisodeNumber && x.SeasonNumber == ep.SeasonNumber))
-                {
-                    continue;
-                }
-
-                itemsToReturn.Add(ep);
-            }
-
-            return itemsToReturn;
-        }
-
-        private HashSet<EmbyEpisode> FilterEmbyEpisodes(IEnumerable<EmbyEpisode> source, IEnumerable<RecentlyAddedLog> recentlyAdded)
-        {
-            var itemsToReturn = new HashSet<EmbyEpisode>();
-            foreach (var ep in source.Where(x => x.Series.HasTvDb))
-            {
-                var tvDbId = StringHelper.IntParseLinq(ep.Series.TvDbId);
-                if (recentlyAdded.Any(x => x.ContentId == tvDbId && x.EpisodeNumber == ep.EpisodeNumber && x.SeasonNumber == ep.SeasonNumber))
-                {
-                    continue;
-                }
-
-                itemsToReturn.Add(ep);
-            }
-
-            return itemsToReturn;
-        }
-
-        private HashSet<JellyfinEpisode> FilterJellyfinEpisodes(IEnumerable<JellyfinEpisode> source, IEnumerable<RecentlyAddedLog> recentlyAdded)
-        {
-            var itemsToReturn = new HashSet<JellyfinEpisode>();
+            var itemsToReturn = new HashSet<IMediaServerEpisode>();
             foreach (var ep in source.Where(x => x.Series.HasTvDb))
             {
                 var tvDbId = StringHelper.IntParseLinq(ep.Series.TvDbId);
@@ -563,17 +435,13 @@ namespace Ombi.Schedule.Jobs.Ombi
             return resolver.ParseMessage(template, curlys);
         }
 
-        private async Task<string> BuildHtml(IQueryable<PlexServerContent> plexContentToSend, IQueryable<EmbyContent> embyContentToSend, IQueryable<JellyfinContent> jellyfinContentToSend,
-            HashSet<PlexEpisode> plexEpisodes, HashSet<EmbyEpisode> embyEp, HashSet<JellyfinEpisode> jellyfinEp, HashSet<LidarrAlbumCache> albums, NewsletterSettings settings, EmbySettings embySettings, JellyfinSettings jellyfinSettings,
-            PlexSettings plexSettings)
+        private async Task<string> BuildHtml(ICollection<IMediaServerContent> movies,
+            IEnumerable<IMediaServerEpisode> episodes, HashSet<LidarrAlbumCache> albums, NewsletterSettings settings)
         {
             var ombiSettings = await _ombiSettings.GetSettingsAsync();
-            var sb = new StringBuilder();
+            sb = new StringBuilder();
 
-            var plexMovies = plexContentToSend.Where(x => x.Type == PlexMediaTypeEntity.Movie);
-            var embyMovies = embyContentToSend.Where(x => x.Type == EmbyMediaType.Movie);
-            var jellyfinMovies = jellyfinContentToSend.Where(x => x.Type == JellyfinMediaType.Movie);
-            if ((plexMovies.Any() || embyMovies.Any() || jellyfinMovies.Any()) && !settings.DisableMovies)
+            if (movies.Any() && !settings.DisableMovies)
             {
                 sb.Append("<h1 style=\"text-align: center; max-width: 1042px;\">New Movies</h1><br /><br />");
                 sb.Append(
@@ -582,21 +450,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 sb.Append("<td style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-size: 14px; vertical-align: top; \">");
                 sb.Append("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; \">");
                 sb.Append("<tr>");
-                if (plexSettings.Enable)
-                {
-                    await ProcessPlexMovies(plexMovies, sb, ombiSettings.DefaultLanguageCode, plexSettings.Servers.FirstOrDefault().ServerHostname ?? string.Empty);
-                }
-
-                if (embySettings.Enable)
-                {
-                    await ProcessEmbyMovies(embyMovies, sb, ombiSettings.DefaultLanguageCode, embySettings.Servers.FirstOrDefault()?.ServerHostname ?? string.Empty);
-                }
-
-                if (jellyfinSettings.Enable)
-                {
-                    await ProcessJellyfinMovies(jellyfinMovies, sb, ombiSettings.DefaultLanguageCode, jellyfinSettings.Servers.FirstOrDefault()?.ServerHostname ?? string.Empty);
-                }
-
+                await ProcessMovies(movies, ombiSettings.DefaultLanguageCode);
                 sb.Append("</tr>");
                 sb.Append("</table>");
                 sb.Append("</td>");
@@ -604,7 +458,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 sb.Append("</table>");
             }
 
-            if ((plexEpisodes.Any() || embyEp.Any() || jellyfinEp.Any()) && !settings.DisableTv)
+            if (episodes.Any() && !settings.DisableTv)
             {
                 sb.Append("<br /><br /><h1 style=\"text-align: center; max-width: 1042px;\">New TV</h1><br /><br />");
                 sb.Append(
@@ -613,21 +467,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 sb.Append("<td style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-size: 14px; vertical-align: top; \">");
                 sb.Append("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; \">");
                 sb.Append("<tr>");
-                if (plexSettings.Enable)
-                {
-                    await ProcessPlexTv(plexEpisodes, sb, ombiSettings.DefaultLanguageCode, plexSettings.Servers.FirstOrDefault().ServerHostname ?? string.Empty);
-                }
-
-                if (embySettings.Enable)
-                {
-                    await ProcessEmbyTv(embyEp, sb, ombiSettings.DefaultLanguageCode, embySettings.Servers.FirstOrDefault()?.ServerHostname ?? string.Empty);
-                }
-
-                if (jellyfinSettings.Enable)
-                {
-                    await ProcessJellyfinTv(jellyfinEp, sb, ombiSettings.DefaultLanguageCode, jellyfinSettings.Servers.FirstOrDefault()?.ServerHostname ?? string.Empty);
-                }
-
+                await ProcessTv(episodes, ombiSettings.DefaultLanguageCode);
                 sb.Append("</tr>");
                 sb.Append("</table>");
                 sb.Append("</td>");
@@ -645,7 +485,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 sb.Append("<td style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-size: 14px; vertical-align: top; \">");
                 sb.Append("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; \">");
                 sb.Append("<tr>");
-                await ProcessAlbums(albums, sb);
+                await ProcessAlbums(albums);
                 sb.Append("</tr>");
                 sb.Append("</table>");
                 sb.Append("</td>");
@@ -656,10 +496,10 @@ namespace Ombi.Schedule.Jobs.Ombi
             return sb.ToString();
         }
 
-        private async Task ProcessPlexMovies(IQueryable<PlexServerContent> plexContentToSend, StringBuilder sb, string defaultLanguageCode, string mediaServerUrl)
+        private async Task ProcessMovies(ICollection<IMediaServerContent> plexContentToSend, string defaultLanguageCode)
         {
             int count = 0;
-            var ordered = plexContentToSend.OrderByDescending(x => x.AddedAt);
+            var ordered = plexContentToSend;
             foreach (var content in ordered)
             {
                 int.TryParse(content.TheMovieDbId, out var movieDbId);
@@ -668,23 +508,23 @@ namespace Ombi.Schedule.Jobs.Ombi
                     continue;
                 }
                 var info = await _movieApi.GetMovieInformationWithExtraInfo(movieDbId, defaultLanguageCode);
-                var mediaurl = PlexHelper.BuildPlexMediaUrl(content.Url, mediaServerUrl);
+                var mediaurl = content.Url;
                 if (info == null)
                 {
                     continue;
                 }
                 try
                 {
-                    CreateMovieHtmlContent(sb, info, mediaurl);
+                    CreateMovieHtmlContent(info, mediaurl);
                     count += 1;
                 }
                 catch (Exception e)
                 {
-                    _log.LogError(e, "Error when Processing Plex Movies {0}", info.Title);
+                    _log.LogError(e, "Error when Processing Movies {0}", info.Title);
                 }
                 finally
                 {
-                    EndLoopHtml(sb);
+                    EndLoopHtml();
                 }
 
                 if (count == 2)
@@ -695,7 +535,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
             }
         }
-        private async Task ProcessAlbums(HashSet<LidarrAlbumCache> albumsToSend, StringBuilder sb)
+        private async Task ProcessAlbums(HashSet<LidarrAlbumCache> albumsToSend)
         {
             var settings = await _lidarrSettings.GetSettingsAsync();
             int count = 0;
@@ -709,7 +549,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
                 try
                 {
-                    CreateAlbumHtmlContent(sb, info);
+                    CreateAlbumHtmlContent(info);
                     count += 1;
                 }
                 catch (Exception e)
@@ -718,7 +558,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
                 finally
                 {
-                    EndLoopHtml(sb);
+                    EndLoopHtml();
                 }
 
                 if (count == 2)
@@ -730,119 +570,13 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
-        private async Task ProcessEmbyMovies(IQueryable<EmbyContent> embyContent, StringBuilder sb, string defaultLangaugeCode, string customUrl)
+        private void CreateMovieHtmlContent(MovieResponseDto info, string mediaurl)
         {
-            int count = 0;
-            var ordered = embyContent.OrderByDescending(x => x.AddedAt);
-            foreach (var content in ordered)
-            {
-                var theMovieDbId = content.TheMovieDbId;
-                if (!content.TheMovieDbId.HasValue())
-                {
-                    var imdbId = content.ImdbId;
-                    var findResult = await _movieApi.Find(imdbId, ExternalSource.imdb_id);
-                    var result = findResult.movie_results?.FirstOrDefault();
-                    if (result == null)
-                    {
-                        continue;
-                    }
+            AddBackgroundInsideTable($"https://image.tmdb.org/t/p/w1280/{info.BackdropPath}");
+            AddPosterInsideTable($"https://image.tmdb.org/t/p/original{info.PosterPath}");
 
-                    theMovieDbId = result.id.ToString();
-                }
-
-                var mediaurl = content.Url;
-                if (customUrl.HasValue())
-                {
-                    mediaurl = customUrl;
-                }
-                var info = await _movieApi.GetMovieInformationWithExtraInfo(StringHelper.IntParseLinq(theMovieDbId), defaultLangaugeCode);
-                if (info == null)
-                {
-                    continue;
-                }
-                try
-                {
-                    CreateMovieHtmlContent(sb, info, mediaurl);
-                    count += 1;
-                }
-                catch (Exception e)
-                {
-                    _log.LogError(e, "Error when processing Emby Movies {0}", info.Title);
-                }
-                finally
-                {
-                    EndLoopHtml(sb);
-                }
-
-                if (count == 2)
-                {
-                    count = 0;
-                    sb.Append("</tr>");
-                    sb.Append("<tr>");
-                }
-            }
-        }
-
-        private async Task ProcessJellyfinMovies(IQueryable<JellyfinContent> embyContent, StringBuilder sb, string defaultLangaugeCode, string customUrl)
-        {
-            int count = 0;
-            var ordered = embyContent.OrderByDescending(x => x.AddedAt);
-            foreach (var content in ordered)
-            {
-                var theMovieDbId = content.TheMovieDbId;
-                if (!content.TheMovieDbId.HasValue())
-                {
-                    var imdbId = content.ImdbId;
-                    var findResult = await _movieApi.Find(imdbId, ExternalSource.imdb_id);
-                    var result = findResult.movie_results?.FirstOrDefault();
-                    if (result == null)
-                    {
-                        continue;
-                    }
-
-                    theMovieDbId = result.id.ToString();
-                }
-
-                var mediaurl = content.Url;
-                if (customUrl.HasValue())
-                {
-                    mediaurl = customUrl;
-                }
-                var info = await _movieApi.GetMovieInformationWithExtraInfo(StringHelper.IntParseLinq(theMovieDbId), defaultLangaugeCode);
-                if (info == null)
-                {
-                    continue;
-                }
-                try
-                {
-                    CreateMovieHtmlContent(sb, info, mediaurl);
-                    count += 1;
-                }
-                catch (Exception e)
-                {
-                    _log.LogError(e, "Error when processing Jellyfin Movies {0}", info.Title);
-                }
-                finally
-                {
-                    EndLoopHtml(sb);
-                }
-
-                if (count == 2)
-                {
-                    count = 0;
-                    sb.Append("</tr>");
-                    sb.Append("<tr>");
-                }
-            }
-        }
-
-        private void CreateMovieHtmlContent(StringBuilder sb, MovieResponseDto info, string mediaurl)
-        {
-            AddBackgroundInsideTable(sb, $"https://image.tmdb.org/t/p/w1280/{info.BackdropPath}");
-            AddPosterInsideTable(sb, $"https://image.tmdb.org/t/p/original{info.PosterPath}");
-
-            AddMediaServerUrl(sb, mediaurl, $"https://image.tmdb.org/t/p/original{info.PosterPath}");
-            AddInfoTable(sb);
+            AddMediaServerUrl(mediaurl, $"https://image.tmdb.org/t/p/original{info.PosterPath}");
+            AddInfoTable();
 
             var releaseDate = string.Empty;
             try
@@ -856,7 +590,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 // Swallow, couldn't parse the date
             }
 
-            AddTitle(sb, $"https://www.imdb.com/title/{info.ImdbId}/", $"{info.Title} {releaseDate}");
+            AddTitle($"https://www.imdb.com/title/{info.ImdbId}/", $"{info.Title} {releaseDate}");
 
             var summary = info.Overview;
             if (summary.Length > 280)
@@ -864,16 +598,15 @@ namespace Ombi.Schedule.Jobs.Ombi
                 summary = summary.Remove(280);
                 summary = summary + "...</p>";
             }
-            AddParagraph(sb, summary);
+            AddParagraph(summary);
 
             if (info.Genres.Any())
             {
-                AddGenres(sb,
-                    $"Genres: {string.Join(", ", info.Genres.Select(x => x.Name.ToString()).ToArray())}");
+                AddGenres($"Genres: {string.Join(", ", info.Genres.Select(x => x.Name.ToString()).ToArray())}");
             }
         }
 
-        private void CreateAlbumHtmlContent(StringBuilder sb, AlbumLookup info)
+        private void CreateAlbumHtmlContent(AlbumLookup info)
         {
             var cover = info.images
                 .FirstOrDefault(x => x.coverType.Equals("cover", StringComparison.InvariantCultureIgnoreCase))?.url;
@@ -881,21 +614,21 @@ namespace Ombi.Schedule.Jobs.Ombi
             {
                 cover = info.remoteCover;
             }
-            AddBackgroundInsideTable(sb, cover);
+            AddBackgroundInsideTable(cover);
             var disk = info.images
                 .FirstOrDefault(x => x.coverType.Equals("disc", StringComparison.InvariantCultureIgnoreCase))?.url;
             if (disk.IsNullOrEmpty())
             {
                 disk = info.remoteCover;
             }
-            AddPosterInsideTable(sb, disk);
+            AddPosterInsideTable(disk);
 
-            AddMediaServerUrl(sb, string.Empty, string.Empty);
-            AddInfoTable(sb);
+            AddMediaServerUrl(string.Empty, string.Empty);
+            AddInfoTable();
 
             var releaseDate = $"({info.releaseDate.Year})";
 
-            AddTitle(sb, string.Empty, $"{info.title} {releaseDate}");
+            AddTitle(string.Empty, $"{info.title} {releaseDate}");
 
             var summary = info.artist?.artistName ?? string.Empty;
             if (summary.Length > 280)
@@ -903,29 +636,28 @@ namespace Ombi.Schedule.Jobs.Ombi
                 summary = summary.Remove(280);
                 summary = summary + "...</p>";
             }
-            AddParagraph(sb, summary);
+            AddParagraph(summary);
 
-            AddGenres(sb, $"Type: {info.albumType}");
+            AddGenres($"Type: {info.albumType}");
         }
 
-        private async Task ProcessPlexTv(HashSet<PlexEpisode> plexContent, StringBuilder sb, string languageCode, string serverHostname)
+        private async Task ProcessTv(IEnumerable<IMediaServerEpisode> episodes, string languageCode)
         {
-            var series = new List<PlexServerContent>();
-            foreach (var plexEpisode in plexContent)
+            var series = new List<IMediaServerContent>();
+            foreach (var episode in episodes)
             {
-                var alreadyAdded = series.FirstOrDefault(x => x.Key == plexEpisode.Series.Key);
-                if (alreadyAdded != null)
+                var existingSeries = episode.SeriesIsIn(series);
+                if (existingSeries != null)
                 {
-                    var episodeExists = alreadyAdded.Episodes.Any(x => x.Key == plexEpisode.Key);
-                    if (!episodeExists)
+                    if (!episode.IsIn(existingSeries))
                     {
-                        alreadyAdded.Episodes.Add(plexEpisode);
+                        existingSeries.Episodes.Add(episode);
                     }
                 }
                 else
                 {
-                    plexEpisode.Series.Episodes = new List<PlexEpisode> { plexEpisode };
-                    series.Add(plexEpisode.Series);
+                    episode.Series.Episodes = new List<IMediaServerEpisode> { episode };
+                    series.Add(episode.Series);
                 }
             }
 
@@ -979,17 +711,17 @@ namespace Ombi.Schedule.Jobs.Ombi
                     if (tvInfo != null && tvInfo.backdrop_path.HasValue())
                     {
 
-                        AddBackgroundInsideTable(sb, $"https://image.tmdb.org/t/p/w500{tvInfo.backdrop_path}");
+                        AddBackgroundInsideTable($"https://image.tmdb.org/t/p/w500{tvInfo.backdrop_path}");
                     }
                     else
                     {
-                        AddBackgroundInsideTable(sb, $"https://image.tmdb.org/t/p/w1280/");
+                        AddBackgroundInsideTable($"https://image.tmdb.org/t/p/w1280/");
                     }
-                    AddPosterInsideTable(sb, banner);
-                    AddMediaServerUrl(sb, PlexHelper.BuildPlexMediaUrl(t.Url, serverHostname), banner);
-                    AddInfoTable(sb);
+                    AddPosterInsideTable(banner);
+                    AddMediaServerUrl(t.Url, banner);
+                    AddInfoTable();
 
-                    AddTvTitle(sb, info, tvInfo);
+                    AddTvTitle(info, tvInfo);
 
                     // Group by the season number
                     var results = t.Episodes.GroupBy(p => p.SeasonNumber,
@@ -1012,7 +744,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         finalsb.Append("<br />");
                     }
 
-                    AddTvEpisodesSummaryGenres(sb, finalsb.ToString(), tvInfo);
+                    AddTvEpisodesSummaryGenres(finalsb.ToString(), tvInfo);
 
                 }
                 catch (Exception e)
@@ -1021,7 +753,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
                 finally
                 {
-                    EndLoopHtml(sb);
+                    EndLoopHtml();
                     count += 1;
                 }
 
@@ -1034,215 +766,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
-
-
-        private async Task ProcessEmbyTv(HashSet<EmbyEpisode> embyContent, StringBuilder sb, string languageCode,  string serverUrl)
-        {
-            var series = new List<EmbyContent>();
-            foreach (var episode in embyContent)
-            {
-                var alreadyAdded = series.FirstOrDefault(x => x.EmbyId == episode.Series.EmbyId);
-                if (alreadyAdded != null)
-                {
-                    alreadyAdded.Episodes.Add(episode);
-                }
-                else
-                {
-                    episode.Series.Episodes = new List<EmbyEpisode>
-                    {
-                        episode
-                    };
-                    series.Add(episode.Series);
-                }
-            }
-
-            int count = 0;
-            var orderedTv = series.OrderByDescending(x => x.AddedAt);
-            foreach (var t in orderedTv)
-            {
-                if (!t.TvDbId.HasValue())
-                {
-                    continue;
-                }
-
-                int.TryParse(t.TvDbId, out var tvdbId);
-                var info = await _tvApi.ShowLookupByTheTvDbId(tvdbId);
-                if (info == null)
-                {
-                    continue;
-                }
-
-                try
-                {
-                    var banner = info.image?.original;
-                    if (!string.IsNullOrEmpty(banner))
-                    {
-                        banner = banner.ToHttpsUrl(); // Always use the Https banners
-                    }
-
-                    var tvInfo = await _movieApi.GetTVInfo(t.TheMovieDbId, languageCode);
-                    if (tvInfo != null && tvInfo.backdrop_path.HasValue())
-                    {
-
-                        AddBackgroundInsideTable(sb, $"https://image.tmdb.org/t/p/w500{tvInfo.backdrop_path}");
-                    }
-                    else
-                    {
-                        AddBackgroundInsideTable(sb, $"https://image.tmdb.org/t/p/w1280/");
-                    }
-                    AddPosterInsideTable(sb, banner);
-                    AddMediaServerUrl(sb, serverUrl.HasValue() ? serverUrl : t.Url, banner);
-                    AddInfoTable(sb);
-
-                    AddTvTitle(sb, info, tvInfo);
-
-                    // Group by the season number
-                    var results = t.Episodes?.GroupBy(p => p.SeasonNumber,
-                        (key, g) => new
-                        {
-                            SeasonNumber = key,
-                            Episodes = g.ToList(),
-                            EpisodeAirDate = tvInfo?.seasons?.Where(x => x.season_number == key)?.Select(x => x.air_date).FirstOrDefault()
-                        }
-                    );
-
-                    // Group the episodes
-                    var finalsb = new StringBuilder();
-                    foreach (var epInformation in results.OrderBy(x => x.SeasonNumber))
-                    {
-                        var orderedEpisodes = epInformation.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
-                        var episodeString = StringHelper.BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
-                        var episodeAirDate = epInformation.EpisodeAirDate;
-                        finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString} {episodeAirDate}");
-                        finalsb.Append("<br />");
-                    }
-
-                    AddTvEpisodesSummaryGenres(sb, finalsb.ToString(), tvInfo);
-
-                }
-                catch (Exception e)
-                {
-                    _log.LogError(e, "Error when processing Emby TV {0}", t.Title);
-                }
-                finally
-                {
-                    EndLoopHtml(sb);
-                    count += 1;
-                }
-
-                if (count == 2)
-                {
-                    count = 0;
-                    sb.Append("</tr>");
-                    sb.Append("<tr>");
-                }
-            }
-        }
-
-        private async Task ProcessJellyfinTv(HashSet<JellyfinEpisode> jellyfinContent, StringBuilder sb, string languageCode, string serverUrl)
-        {
-            var series = new List<JellyfinContent>();
-            foreach (var episode in jellyfinContent)
-            {
-                var alreadyAdded = series.FirstOrDefault(x => x.JellyfinId == episode.Series.JellyfinId);
-                if (alreadyAdded != null)
-                {
-                    alreadyAdded.Episodes.Add(episode);
-                }
-                else
-                {
-                    episode.Series.Episodes = new List<JellyfinEpisode>
-                    {
-                        episode
-                    };
-                    series.Add(episode.Series);
-                }
-            }
-
-            int count = 0;
-            var orderedTv = series.OrderByDescending(x => x.AddedAt);
-            foreach (var t in orderedTv)
-            {
-                if (!t.TvDbId.HasValue())
-                {
-                    continue;
-                }
-
-                int.TryParse(t.TvDbId, out var tvdbId);
-                var info = await _tvApi.ShowLookupByTheTvDbId(tvdbId);
-                if (info == null)
-                {
-                    continue;
-                }
-
-                try
-                {
-                    var banner = info.image?.original;
-                    if (!string.IsNullOrEmpty(banner))
-                    {
-                        banner = banner.ToHttpsUrl(); // Always use the Https banners
-                    }
-
-                    var tvInfo = await _movieApi.GetTVInfo(t.TheMovieDbId, languageCode);
-                    if (tvInfo != null && tvInfo.backdrop_path.HasValue())
-                    {
-
-                        AddBackgroundInsideTable(sb, $"https://image.tmdb.org/t/p/w500{tvInfo.backdrop_path}");
-                    }
-                    else
-                    {
-                        AddBackgroundInsideTable(sb, $"https://image.tmdb.org/t/p/w1280/");
-                    }
-                    AddPosterInsideTable(sb, banner);
-                    AddMediaServerUrl(sb, serverUrl.HasValue() ? serverUrl : t.Url, banner);
-                    AddInfoTable(sb);
-
-                    AddTvTitle(sb, info, tvInfo);
-
-                    // Group by the season number
-                    var results = t.Episodes?.GroupBy(p => p.SeasonNumber,
-                        (key, g) => new
-                        {
-                            SeasonNumber = key,
-                            Episodes = g.ToList(),
-                            EpisodeAirDate = tvInfo?.seasons?.Where(x => x.season_number == key)?.Select(x => x.air_date).FirstOrDefault()
-                        }
-                    );
-
-                    // Group the episodes
-                    var finalsb = new StringBuilder();
-                    foreach (var epInformation in results.OrderBy(x => x.SeasonNumber))
-                    {
-                        var orderedEpisodes = epInformation.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
-                        var episodeString = StringHelper.BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
-                        var episodeAirDate = epInformation.EpisodeAirDate;
-                        finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString} {episodeAirDate}");
-                        finalsb.Append("<br />");
-                    }
-
-                    AddTvEpisodesSummaryGenres(sb, finalsb.ToString(), tvInfo);
-
-                }
-                catch (Exception e)
-                {
-                    _log.LogError(e, "Error when processing Jellyfin TV {0}", t.Title);
-                }
-                finally
-                {
-                    EndLoopHtml(sb);
-                    count += 1;
-                }
-
-                if (count == 2)
-                {
-                    count = 0;
-                    sb.Append("</tr>");
-                    sb.Append("<tr>");
-                }
-            }
-        }
-
-        private void AddTvTitle(StringBuilder sb, Api.TvMaze.Models.TvMazeShow info, TvInfo tvInfo)
+        private void AddTvTitle(Api.TvMaze.Models.TvMazeShow info, TvInfo tvInfo)
         {
             var title = "";
             if (!String.IsNullOrEmpty(info.premiered) && info.premiered.Length > 4)
@@ -1253,10 +777,10 @@ namespace Ombi.Schedule.Jobs.Ombi
             {
                 title = $"{tvInfo.name}";
             }
-            AddTitle(sb, $"https://www.imdb.com/title/{info.externals.imdb}/", title);
+            AddTitle($"https://www.imdb.com/title/{info.externals.imdb}/", title);
         }
 
-        private void AddTvEpisodesSummaryGenres(StringBuilder sb, string episodes, TvInfo tvInfo)
+        private void AddTvEpisodesSummaryGenres(string episodes, TvInfo tvInfo)
         {
             var summary = tvInfo.overview;
             if (summary.Length > 280)
@@ -1264,15 +788,15 @@ namespace Ombi.Schedule.Jobs.Ombi
                 summary = summary.Remove(280);
                 summary = summary + "...</p>";
             }
-            AddTvParagraph(sb, episodes, summary);
+            AddTvParagraph(episodes, summary);
 
             if (tvInfo.genres.Any())
             {
-                AddGenres(sb, $"Genres: {string.Join(", ", tvInfo.genres.Select(x => x.name.ToString()).ToArray())}");
+                AddGenres($"Genres: {string.Join(", ", tvInfo.genres.Select(x => x.name.ToString()).ToArray())}");
             }
         }
 
-        private void EndLoopHtml(StringBuilder sb)
+        private void EndLoopHtml()
         {
             //NOTE: BR have to be in TD's as per html spec or it will be put outside of the table...
             //Source: http://stackoverflow.com/questions/6588638/phantom-br-tag-rendered-by-browsers-prior-to-table-tag

@@ -182,11 +182,11 @@ namespace Ombi.Core.Tests.Rule.Request
             {
                 new PlexServerContent
                 {
-                    Type = PlexMediaTypeEntity.Show,
+                    Type = MediaType.Series,
                     TheMovieDbId = "1",
                     Title = "Test",
                     ReleaseYear = "2001",
-                    Episodes = new List<PlexEpisode>
+                    Episodes = new List<IMediaServerEpisode>
                     {
                         new PlexEpisode
                         {

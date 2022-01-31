@@ -37,16 +37,12 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
 {
-    public class PlexServerContentRepository : ExternalRepository<PlexServerContent>, IPlexContentRepository
+    public class PlexServerContentRepository : MediaServerContentRepository<PlexServerContent>, IPlexContentRepository
     {
-
+        public override RecentlyAddedType RecentlyAddedType => RecentlyAddedType.Plex;
         public PlexServerContentRepository(ExternalContext db) : base(db)
         {
-            Db = db;
         }
-
-        private ExternalContext Db { get; }
-
 
         public async Task<bool> ContentExists(string providerId)
         {
@@ -79,16 +75,16 @@ namespace Ombi.Store.Repository
             return null;
         }
 
-        public async Task<PlexServerContent> GetByType(string providerId, ProviderType type, PlexMediaTypeEntity plexType)
+        public async Task<PlexServerContent> GetByType(string providerId, ProviderType type, MediaType mediaType)
         {
             switch (type)
             {
                 case ProviderType.ImdbId:
-                    return await Db.PlexServerContent.FirstOrDefaultAsync(x => x.ImdbId == providerId && x.Type == plexType);
+                    return await Db.PlexServerContent.FirstOrDefaultAsync(x => x.ImdbId == providerId && x.Type == mediaType);
                 case ProviderType.TheMovieDbId:
-                    return await Db.PlexServerContent.FirstOrDefaultAsync(x => x.TheMovieDbId == providerId && x.Type == plexType);
+                    return await Db.PlexServerContent.FirstOrDefaultAsync(x => x.TheMovieDbId == providerId && x.Type == mediaType);
                 case ProviderType.TvDbId:
-                    return await Db.PlexServerContent.FirstOrDefaultAsync(x => x.TvDbId == providerId && x.Type == plexType);
+                    return await Db.PlexServerContent.FirstOrDefaultAsync(x => x.TvDbId == providerId && x.Type == mediaType);
                 default:
                     break;
             }
@@ -114,14 +110,14 @@ namespace Ombi.Store.Repository
                 .FirstOrDefaultAsync(predicate);
         }
 
-        public async Task Update(PlexServerContent existingContent)
+        public override async Task Update(IMediaServerContent existingContent)
         {
-            Db.PlexServerContent.Update(existingContent);
+            Db.PlexServerContent.Update((PlexServerContent)existingContent);
             await InternalSaveChanges();
         }
-        public void UpdateWithoutSave(PlexServerContent existingContent)
+        public override void UpdateWithoutSave(IMediaServerContent existingContent)
         {
-            Db.PlexServerContent.Update(existingContent);
+            Db.PlexServerContent.Update((PlexServerContent)existingContent);
         }
 
         public async Task UpdateRange(IEnumerable<PlexServerContent> existingContent)
@@ -130,7 +126,7 @@ namespace Ombi.Store.Repository
             await InternalSaveChanges();
         }
 
-        public IQueryable<PlexEpisode> GetAllEpisodes()
+        public override IQueryable<IMediaServerEpisode> GetAllEpisodes()
         {
             return Db.PlexEpisode.Include(x => x.Series).AsQueryable();
         }
@@ -145,9 +141,9 @@ namespace Ombi.Store.Repository
             Db.PlexEpisode.Remove(content);
         }
 
-        public async Task<PlexEpisode> Add(PlexEpisode content)
+        public override async Task<IMediaServerEpisode> Add(IMediaServerEpisode content)
         {
-            await Db.PlexEpisode.AddAsync(content);
+            await Db.PlexEpisode.AddAsync((PlexEpisode)content);
             await InternalSaveChanges();
             return content;
         }
@@ -162,10 +158,11 @@ namespace Ombi.Store.Repository
         {
             return await Db.PlexEpisode.FirstOrDefaultAsync(x => x.Key == key);
         }
-        public async Task AddRange(IEnumerable<PlexEpisode> content)
+        public override async Task AddRange(IEnumerable<IMediaServerEpisode> content)
         {
-            Db.PlexEpisode.AddRange(content);
+            Db.PlexEpisode.AddRange((IEnumerable<PlexEpisode>)content);
             await InternalSaveChanges();
         }
+
     }
 }

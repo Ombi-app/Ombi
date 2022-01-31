@@ -30,6 +30,7 @@ namespace Ombi.Notifications.Templates
         private const string TableLocation = "{@RECENTLYADDED}";
         private const string IntroText = "{@INTRO}";
         private const string Unsubscribe = "{@UNSUBSCRIBE}";
+        private const string UnsubscribeText = "{@UNSUBSCRIBETEXT}";
 
 
         public string LoadTemplate(string subject, string intro, string tableHtml, string logo, string unsubscribeLink)
@@ -41,6 +42,7 @@ namespace Ombi.Notifications.Templates
             sb.Replace(DateKey, DateTime.Now.ToString("f"));
             sb.Replace(Logo, string.IsNullOrEmpty(logo) ? OmbiLogo : logo);
             sb.Replace(Unsubscribe, string.IsNullOrEmpty(unsubscribeLink) ? string.Empty : unsubscribeLink);
+            sb.Replace(UnsubscribeText, string.IsNullOrEmpty(unsubscribeLink) ? string.Empty : "Unsubscrible");
 
             return sb.ToString();
         }

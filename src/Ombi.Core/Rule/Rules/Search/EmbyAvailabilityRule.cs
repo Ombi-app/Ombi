@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Settings;
@@ -13,13 +14,15 @@ namespace Ombi.Core.Rule.Rules.Search
 {
     public class EmbyAvailabilityRule : BaseSearchRule, IRules<SearchViewModel>
     {
-        public EmbyAvailabilityRule(IEmbyContentRepository repo, ISettingsService<EmbySettings> s)
+        public EmbyAvailabilityRule(IEmbyContentRepository repo, ILogger<EmbyAvailabilityRule> log, ISettingsService<EmbySettings> s)
         {
             EmbyContentRepository = repo;
+            Log = log;
             EmbySettings = s;
         }
 
         private IEmbyContentRepository EmbyContentRepository { get; }
+        private ILogger Log { get; }
         private ISettingsService<EmbySettings> EmbySettings { get; }
 
         public async Task<RuleResult> Execute(SearchViewModel obj)
@@ -64,19 +67,7 @@ namespace Ombi.Core.Rule.Rules.Search
             if (item != null)
             {
                 obj.Available = true;
-                var s = await EmbySettings.GetSettingsAsync();
-                if (s.Enable)
-                {
-                    var server = s.Servers.FirstOrDefault();
-                    if ((server?.ServerHostname ?? string.Empty).HasValue())
-                    {
-                        obj.EmbyUrl = EmbyHelper.GetEmbyMediaUrl(item.EmbyId, server?.ServerId, server?.ServerHostname);
-                    }
-                    else
-                    {
-                        obj.EmbyUrl = EmbyHelper.GetEmbyMediaUrl(item.EmbyId, server?.ServerId, null);
-                    }
-                }
+                obj.EmbyUrl = item.Url;
 
                 if (obj.Type == RequestType.TvShow)
                 {
@@ -89,7 +80,7 @@ namespace Ombi.Core.Rule.Rules.Search
                         {
                             foreach (var episode in season.Episodes)
                             {
-                                await AvailabilityRuleHelper.SingleEpisodeCheck(useImdb, allEpisodes, episode, season, item, useTheMovieDb, useTvDb);
+                                await AvailabilityRuleHelper.SingleEpisodeCheck(useImdb, allEpisodes, episode, season, item, useTheMovieDb, useTvDb, Log);
                             }
                         }
                     }

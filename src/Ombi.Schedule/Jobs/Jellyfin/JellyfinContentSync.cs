@@ -14,7 +14,7 @@ using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Quartz;
-using JellyfinMediaType = Ombi.Store.Entities.JellyfinMediaType;
+using MediaType = Ombi.Store.Entities.MediaType;
 
 namespace Ombi.Schedule.Jobs.Jellyfin
 {
@@ -143,7 +143,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                                 ImdbId = tvShow.ProviderIds?.Imdb,
                                 TheMovieDbId = tvShow.ProviderIds?.Tmdb,
                                 Title = tvShow.Name,
-                                Type = JellyfinMediaType.Series,
+                                Type = MediaType.Series,
                                 JellyfinId = tvShow.Id,
                                 Url = JellyfinHelper.GetJellyfinMediaUrl(tvShow.Id, server?.ServerId, server.ServerHostname),
                                 AddedAt = DateTime.UtcNow
@@ -223,10 +223,10 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                     ImdbId = movieInfo.ProviderIds.Imdb,
                     TheMovieDbId = movieInfo.ProviderIds?.Tmdb,
                     Title = movieInfo.Name,
-                    Type = JellyfinMediaType.Movie,
+                    Type = MediaType.Movie,
                     JellyfinId = movieInfo.Id,
                     Url = JellyfinHelper.GetJellyfinMediaUrl(movieInfo.Id, server?.ServerId, server.ServerHostname),
-                    AddedAt = DateTime.UtcNow,
+                    AddedAt = DateTime.UtcNow
                 });
             }
             else

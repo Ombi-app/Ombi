@@ -26,18 +26,16 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore.Metadata;
+using System.Linq;
 
 namespace Ombi.Store.Entities
 {
     [Table("EmbyEpisode")]
-    public class EmbyEpisode : Entity
+    public class EmbyEpisode : MediaServerEpisode
     {
-        public string Title { get; set; }
         public string EmbyId { get; set; }
-        public int EpisodeNumber { get; set; }
-        public int SeasonNumber { get; set; }
         public string ParentId { get; set; }
         /// <summary>
         /// NOT USED
@@ -47,7 +45,23 @@ namespace Ombi.Store.Entities
         public string TvDbId { get; set; }
         public string ImdbId { get; set; }
         public string TheMovieDbId { get; set; }
+        [NotMapped]
+        public EmbyContent EmbySeries
+        {
+            get => (EmbyContent)Series;
+            set => Series = value;
+        }
 
-        public EmbyContent Series { get; set; }
+        public override IMediaServerContent SeriesIsIn(ICollection<IMediaServerContent> content)
+        {
+            return content.OfType<EmbyContent>().FirstOrDefault(
+                x => x.EmbyId == this.EmbySeries.EmbyId);
+        }
+
+        public override bool IsIn(IMediaServerContent content)
+        {
+            return content.Episodes.Cast<EmbyEpisode>().Any(x => x.EmbyId == this.EmbyId);
+        }
+
     }
 }

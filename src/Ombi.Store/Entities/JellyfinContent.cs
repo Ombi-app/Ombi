@@ -32,40 +32,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Ombi.Store.Entities
 {
     [Table("JellyfinContent")]
-    public class JellyfinContent : Entity
+    public class JellyfinContent : MediaServerContent
     {
-        public string Title { get; set; }
 
-        /// <summary>
-        /// OBSOLETE, Cannot delete due to DB migration issues with SQLite
-        /// </summary>
+
+        [Obsolete("Cannot delete due to DB migration issues with SQLite")]
         public string ProviderId { get; set; }
         public string JellyfinId { get; set; }
-        public JellyfinMediaType Type { get; set; }
-        public DateTime AddedAt { get; set; }
-
-        public string ImdbId { get; set; }
-        public string TheMovieDbId { get; set; }
-        public string TvDbId { get; set; }
-
-        public string Url { get; set; }
-
-        public ICollection<JellyfinEpisode> Episodes { get; set; }
-
-        [NotMapped]
-        public bool HasImdb => !string.IsNullOrEmpty(ImdbId);
-
-        [NotMapped]
-        public bool HasTvDb => !string.IsNullOrEmpty(TvDbId);
-
-        [NotMapped]
-        public bool HasTheMovieDb => !string.IsNullOrEmpty(TheMovieDbId);
+        public override RecentlyAddedType RecentlyAddedType => RecentlyAddedType.Jellyfin;
     }
 
-    public enum JellyfinMediaType
-    {
-        Movie = 0,
-        Series = 1,
-        Music = 2
-    }
 }
