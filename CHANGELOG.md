@@ -1,4 +1,10 @@
-## [4.10.2](https://github.com/Ombi-app/Ombi/compare/v4.10.1...v4.10.2) (2022-01-22)
+## [4.10.3](https://github.com/Ombi-app/Ombi/compare/v4.10.1...v4.10.3) (2022-01-31)
+
+
+### Bug Fixes
+
+* fix swagger api key auth ([#4483](https://github.com/Ombi-app/Ombi/issues/4483)) [no ci] ([32ee4e8](https://github.com/Ombi-app/Ombi/commit/32ee4e88ec05bf610150933974408fbe95ccd7bd))
+* **frontend:** add link on logo text ([6d7274a](https://github.com/Ombi-app/Ombi/commit/6d7274a94ea24343f32fc028984bd3fd5d5f2ee3))
 
 
 
