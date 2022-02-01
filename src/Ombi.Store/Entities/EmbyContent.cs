@@ -35,9 +35,7 @@ namespace Ombi.Store.Entities
     public class EmbyContent : MediaServerContent
     {
 
-        /// <summary>
-        /// OBSOLETE, Cannot delete due to DB migration issues with SQLite
-        /// </summary>
+        [Obsolete("Cannot delete due to DB migration issues with SQLite")]
         public string ProviderId { get; set; }
         public string EmbyId { get; set; }
         public override RecentlyAddedType RecentlyAddedType => RecentlyAddedType.Emby;

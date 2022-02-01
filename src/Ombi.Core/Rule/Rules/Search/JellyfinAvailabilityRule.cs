@@ -81,20 +81,7 @@ namespace Ombi.Core.Rule.Rules.Search
                     useTheMovieDb = true;
                 }
                 obj.Available = true;
-                var s = await JellyfinSettings.GetSettingsAsync();
-                if (s.Enable)
-                {
-                    var server = s.Servers.FirstOrDefault(x => x.ServerHostname != null);
-                    if ((server?.ServerHostname ?? string.Empty).HasValue())
-                    {
-                        obj.JellyfinUrl = JellyfinHelper.GetJellyfinMediaUrl(item.JellyfinId, server?.ServerId, server?.ServerHostname);
-                    }
-                    else
-                    {
-                        var firstServer = s.Servers?.FirstOrDefault();
-                        obj.JellyfinUrl = JellyfinHelper.GetJellyfinMediaUrl(item.JellyfinId, firstServer.ServerId, firstServer.FullUri);
-                    }
-                }
+                obj.JellyfinUrl = item.Url;
 
                 if (obj.Type == RequestType.TvShow)
                 {
