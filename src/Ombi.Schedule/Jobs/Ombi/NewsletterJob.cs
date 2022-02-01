@@ -16,6 +16,7 @@ using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Hubs;
+using Ombi.I18n.Resources;
 using Ombi.Notifications;
 using Ombi.Notifications.Models;
 using Ombi.Notifications.Templates;
@@ -440,7 +441,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             if (movies.Any() && !settings.DisableMovies)
             {
-                sb.Append("<h1 style=\"text-align: center; max-width: 1042px;\">New Movies</h1><br /><br />");
+                sb.Append($"<h1 style=\"text-align: center; max-width: 1042px;\">{Texts.NewMovies}</h1><br /><br />");
                 sb.Append(
                 "<table class=\"movies-table\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; \">");
                 sb.Append("<tr>");
@@ -457,7 +458,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             if (episodes.Any() && !settings.DisableTv)
             {
-                sb.Append("<br /><br /><h1 style=\"text-align: center; max-width: 1042px;\">New TV</h1><br /><br />");
+                sb.Append($"<br /><br /><h1 style=\"text-align: center; max-width: 1042px;\">{Texts.NewTV}</h1><br /><br />");
                 sb.Append(
                 "<table class=\"tv-table\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; \">");
                 sb.Append("<tr>");
@@ -475,7 +476,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             if (albums.Any() && !settings.DisableMusic)
             {
-                sb.Append("<h1 style=\"text-align: center; max-width: 1042px;\">New Albums</h1><br /><br />");
+                sb.Append($"<h1 style=\"text-align: center; max-width: 1042px;\">{Texts.NewAlbums}</h1><br /><br />");
                 sb.Append(
                     "<table class=\"movies-table\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; \">");
                 sb.Append("<tr>");
@@ -601,7 +602,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             if (info.Genres.Any())
             {
-                AddGenres($"Genres: {string.Join(", ", info.Genres.Select(x => x.Name.ToString()).ToArray())}");
+                AddGenres($"{Texts.GenresLabel} {string.Join(", ", info.Genres.Select(x => x.Name.ToString()).ToArray())}");
             }
         }
 
@@ -637,7 +638,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
             AddParagraph(summary);
 
-            AddGenres($"Type: {info.albumType}");
+            AddGenres($"{Texts.AlbumTypeLabel} {info.albumType}");
         }
 
         private async Task ProcessTv(IEnumerable<IMediaServerEpisode> episodes, string languageCode)
@@ -742,7 +743,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         var orderedEpisodes = epInformation.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
                         var episodeString = StringHelper.BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
                         var episodeAirDate = epInformation.EpisodeAirDate;
-                        finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString} {episodeAirDate}");
+                        finalsb.Append($"{Texts.SeasonLabel} {epInformation.SeasonNumber} - {Texts.EpisodesLabel} {episodeString} {episodeAirDate}");
                         finalsb.Append("<br />");
                     }
 
@@ -794,7 +795,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             if (tvInfo.genres.Any())
             {
-                AddGenres($"Genres: {string.Join(", ", tvInfo.genres.Select(x => x.name.ToString()).ToArray())}");
+                AddGenres($"{Texts.GenresLabel} {string.Join(", ", tvInfo.genres.Select(x => x.name.ToString()).ToArray())}");
             }
         }
 
