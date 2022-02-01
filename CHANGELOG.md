@@ -1,3 +1,7 @@
+## [4.10.4](https://github.com/Ombi-app/Ombi/compare/v4.10.3...v4.10.4) (2022-02-01)
+
+
+
 ## [4.10.3](https://github.com/Ombi-app/Ombi/compare/v4.10.1...v4.10.3) (2022-01-31)
 
 
@@ -373,10 +377,6 @@
 ### Performance Improvements
 
 * :zap: Use ngxs store for the whole customization section of the app ([97b493d](https://github.com/Ombi-app/Ombi/commit/97b493d869feee59d360b484a6c59388a2aead1f))
-
-
-
-## [4.2.5](https://github.com/Ombi-app/Ombi/compare/v4.2.4...v4.2.5) (2021-10-14)
 
 
 
