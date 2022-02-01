@@ -1,10 +1,10 @@
-
-commit_message: "fix(translations): 🌐 New translations from Crowdin [skip ci]"
+commit_message: "\UF09F8C90"
 append_commit_message: false
-pull_request_title: "🌐 Translations Update"
+pull_request_title: "\UF09F8C90"
 pull_request_labels:
   - translations
-
 files:
   - source: /src/Ombi/wwwroot/translations/en.json
     translation: /src/Ombi/wwwroot/translations/%two_letters_code%.json
+  - source: /src/Ombi.I18n/Resources/Texts.resx
+    translation: /src/Ombi.I18n/Resources/Texts.%two_letters_code%.resx
