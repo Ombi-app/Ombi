@@ -1,3 +1,7 @@
+## [4.11.1](https://github.com/Ombi-app/Ombi/compare/v4.11.0...v4.11.1) (2022-02-01)
+
+
+
 # [4.11.0](https://github.com/Ombi-app/Ombi/compare/v4.10.4...v4.11.0) (2022-02-01)
 
 
@@ -368,15 +372,6 @@
 
 * :adhesive_bandage: See if this fixes the proxy issue ([74d1aca](https://github.com/Ombi-app/Ombi/commit/74d1acae499707a7e21401f53eb2bb90c5bb9cfa))
 * :bug: Fixed Ombi not writing the baseUrl correctly ([e9cc8b6](https://github.com/Ombi-app/Ombi/commit/e9cc8b6fe71d3e10c1a901e70227989b3362afe3))
-
-
-
-## [4.2.7](https://github.com/Ombi-app/Ombi/compare/v4.2.6...v4.2.7) (2021-10-14)
-
-
-### Bug Fixes
-
-* :bug: Fixed the issue parsing TheMovieDB dates. They have broken something... ([6e397e0](https://github.com/Ombi-app/Ombi/commit/6e397e02e95f894a92e8bf02428efdcac1275b31))
 
 
 
