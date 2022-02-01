@@ -265,7 +265,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 recentlyAddedLog.Add(new RecentlyAddedLog
                 {
                     AddedAt = DateTime.Now,
-                    Type = p.Series.RecentlyAddedType, 
+                    Type = p.Series.RecentlyAddedType,
                     ContentType = ContentType.Episode,
                     ContentId = StringHelper.IntParseLinq(p.Series.TvDbId),
                     EpisodeNumber = p.EpisodeNumber,
@@ -312,7 +312,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private HashSet<IMediaServerEpisode> GetSeriesContent<T>(IMediaServerContentRepository<T> repository, bool test) where T : class, IMediaServerContent
         {
             var content = repository.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.Series.AddedAt).AsNoTracking();
-            
+
             HashSet<IMediaServerEpisode> episodesToSend;
             if (test)
             {
