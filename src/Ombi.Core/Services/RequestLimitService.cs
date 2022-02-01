@@ -82,7 +82,7 @@ namespace Ombi.Core.Services
             }
 
 
-            return await CalculateBasicRemaingRequests(user, limit, user.MovieRequestLimitType ?? RequestLimitType.Day, log, now);
+            return await CalculateBasicRemaingRequests(limit, user.MovieRequestLimitType ?? RequestLimitType.Day, log, now);
         }
 
         public async Task<RequestQuotaCountModel> GetRemainingMusicRequests(OmbiUser user, DateTime now = default)
@@ -136,7 +136,7 @@ namespace Ombi.Core.Services
                 };
             }
 
-            return await CalculateBasicRemaingRequests(user, limit, user.MusicRequestLimitType ?? RequestLimitType.Day, log, now);
+            return await CalculateBasicRemaingRequests(limit, user.MusicRequestLimitType ?? RequestLimitType.Day, log, now);
         }
 
         private async Task<OmbiUser> GetUser()
@@ -145,7 +145,7 @@ namespace Ombi.Core.Services
             return await _userManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
         }
 
-        private static async Task<RequestQuotaCountModel> CalculateBasicRemaingRequests(OmbiUser user, int limit, RequestLimitType type, IQueryable<RequestLog> log, DateTime now)
+        private static async Task<RequestQuotaCountModel> CalculateBasicRemaingRequests(int limit, RequestLimitType type, IQueryable<RequestLog> log, DateTime now)
         {
             int count = 0;
             DateTime oldestRequestedAt = DateTime.Now;

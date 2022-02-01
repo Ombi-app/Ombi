@@ -494,7 +494,7 @@ namespace Ombi.Core.Tests.Engine
                 MusicRequestLimitType = RequestLimitType.Month,
                 Id = "id1"
             };
-            var today = DateTime.UtcNow;
+            var today = new DateTime(2022, 2, 2, 13, 0, 0);
             var firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
             var log = new List<RequestLog>
             {
