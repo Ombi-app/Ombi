@@ -44,7 +44,7 @@ namespace Ombi.Notifications.Templates
             sb.Replace(DateKey, DateTime.Now.ToString("f"));
             sb.Replace(Logo, string.IsNullOrEmpty(logo) ? OmbiLogo : logo);
             sb.Replace(Unsubscribe, string.IsNullOrEmpty(unsubscribeLink) ? string.Empty : unsubscribeLink);
-            sb.Replace(UnsubscribeText, string.IsNullOrEmpty(unsubscribeLink) ? string.Empty : "Unsubscrible");
+            sb.Replace(UnsubscribeText, string.IsNullOrEmpty(unsubscribeLink) ? string.Empty : Texts.Unsubscribe);
             sb.Replace(PoweredByText, Texts.PoweredBy);
 
             return sb.ToString();
