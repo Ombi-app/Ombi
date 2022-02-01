@@ -51,7 +51,7 @@ export class AppComponent implements OnInit {
         private signalrNotification: SignalRNotificationService,
         private readonly snackBar: MatSnackBar,
         private readonly identity: IdentityService,
-        @Inject(DOCUMENT) private document: HTMLDocument) {
+        @Inject(DOCUMENT) private document: Document) {
 
         this.translate.addLangs(["da", "de", "en", "es", "fr", "it", "hu", "nl", "no", "pl", "pt", "sk", "sv", "bg", "ru", "cs", "zh"]);
 
