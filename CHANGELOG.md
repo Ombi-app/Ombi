@@ -1,3 +1,12 @@
+## [4.11.3](https://github.com/Ombi-app/Ombi/compare/v4.11.2...v4.11.3) (2022-02-03)
+
+
+### Bug Fixes
+
+* **API:** Fixed an issue where the API key couldn't delete a request [#4489](https://github.com/Ombi-app/Ombi/issues/4489) ([8e42dbf](https://github.com/Ombi-app/Ombi/commit/8e42dbf8f78caa51ca891bf3d702c6b0ac401f9c))
+
+
+
 ## [4.11.2](https://github.com/Ombi-app/Ombi/compare/v4.11.1...v4.11.2) (2022-02-01)
 
 
@@ -362,15 +371,6 @@
 ### Bug Fixes
 
 * :bug: Really really fix it this time? ([543d36e](https://github.com/Ombi-app/Ombi/commit/543d36e5615341bc8378cac377b843a3dbc1ef99))
-
-
-
-## [4.2.9](https://github.com/Ombi-app/Ombi/compare/v4.2.8...v4.2.9) (2021-10-15)
-
-
-### Bug Fixes
-
-* :fire: Really fix the base url issue this time ([9f36923](https://github.com/Ombi-app/Ombi/commit/9f36923c51bfabf9cb026f2da14f9947050af0d9))
 
 
 
