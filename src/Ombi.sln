@@ -124,6 +124,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.CloudService", "Om
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.RottenTomatoes", "Ombi.Api.RottenTomatoes\Ombi.Api.RottenTomatoes.csproj", "{8F19C701-7881-4BC7-8BBA-B068A6B954AD}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.I18n", "Ombi.I18n\Ombi.I18n.csproj", "{6A922D57-8622-4C36-8E6E-D5BA9E8DA6C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -431,6 +433,12 @@ Global
 		{8F19C701-7881-4BC7-8BBA-B068A6B954AD}.NonUiBuild|Any CPU.Build.0 = NonUiBuild|Any CPU
 		{8F19C701-7881-4BC7-8BBA-B068A6B954AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F19C701-7881-4BC7-8BBA-B068A6B954AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A922D57-8622-4C36-8E6E-D5BA9E8DA6C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A922D57-8622-4C36-8E6E-D5BA9E8DA6C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A922D57-8622-4C36-8E6E-D5BA9E8DA6C0}.NonUiBuild|Any CPU.ActiveCfg = NonUiBuild|Any CPU
+		{6A922D57-8622-4C36-8E6E-D5BA9E8DA6C0}.NonUiBuild|Any CPU.Build.0 = NonUiBuild|Any CPU
+		{6A922D57-8622-4C36-8E6E-D5BA9E8DA6C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A922D57-8622-4C36-8E6E-D5BA9E8DA6C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

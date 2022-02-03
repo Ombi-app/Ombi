@@ -45,7 +45,12 @@ namespace Ombi.Core.Engine.Interfaces
 
         protected async Task<bool> IsInRole(string roleName)
         {
-            return await UserManager.IsInRoleAsync(await GetUser(), roleName);
+            if (Username.Equals("API", StringComparison.CurrentCultureIgnoreCase))
+            {
+                return true;
+            }
+            var user = await GetUser();
+            return await UserManager.IsInRoleAsync(user, roleName);
         }
         
         public async Task<IEnumerable<RuleResult>> RunRequestRules(BaseRequest model)
