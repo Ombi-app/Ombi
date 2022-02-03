@@ -1,3 +1,12 @@
+## [4.11.2](https://github.com/Ombi-app/Ombi/compare/v4.11.1...v4.11.2) (2022-02-01)
+
+
+### Bug Fixes
+
+* :globe_with_meridians: Added Czech and Chinese Simplified to the language list ([68ef366](https://github.com/Ombi-app/Ombi/commit/68ef366e8525e2c349b9e81704ad8bcca6c347a0))
+
+
+
 ## [4.11.1](https://github.com/Ombi-app/Ombi/compare/v4.11.0...v4.11.1) (2022-02-01)
 
 
@@ -362,16 +371,6 @@
 ### Bug Fixes
 
 * :fire: Really fix the base url issue this time ([9f36923](https://github.com/Ombi-app/Ombi/commit/9f36923c51bfabf9cb026f2da14f9947050af0d9))
-
-
-
-## [4.2.8](https://github.com/Ombi-app/Ombi/compare/v4.2.7...v4.2.8) (2021-10-15)
-
-
-### Bug Fixes
-
-* :adhesive_bandage: See if this fixes the proxy issue ([74d1aca](https://github.com/Ombi-app/Ombi/commit/74d1acae499707a7e21401f53eb2bb90c5bb9cfa))
-* :bug: Fixed Ombi not writing the baseUrl correctly ([e9cc8b6](https://github.com/Ombi-app/Ombi/commit/e9cc8b6fe71d3e10c1a901e70227989b3362afe3))
 
 
 
