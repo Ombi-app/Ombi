@@ -66,7 +66,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
         public async Task Execute(IJobExecutionContext job)
         {
             var settings = await _settings.GetSettingsAsync();
-            
+
             Api = _apiFactory.CreateClient(settings);
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Jellyfin Episode Sync Started");
@@ -132,7 +132,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                         if (ep.IndexNumber == 0) // no check on season number, Season 0 can be Specials
                         {
                             _logger.LogWarning($"Episode {ep.Name} has no episode number. Skipping.");
-                            return;
+                            continue;
                         }
 
                         _logger.LogDebug("Adding new episode {0} to parent {1}", ep.Name, ep.SeriesName);
