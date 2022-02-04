@@ -342,6 +342,11 @@ namespace Ombi.Schedule.Jobs.Plex
                         }
                     }
 
+                    if (!guids.Any())
+                    {
+                        Logger.LogWarning($"Movie {0} has no relevant metadata. Skipping.", movie.title);
+                        continue;
+                    }
                     var providerIds = PlexHelper.GetProviderIdsFromMetadata(guids.ToArray());
 
                     var item = new PlexServerContent

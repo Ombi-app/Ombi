@@ -249,6 +249,13 @@ namespace Ombi.Schedule.Jobs.Emby
             var alreadyGoingToAdd = content.Any(x => x.EmbyId == movieInfo.Id);
             if (existingMovie == null && !alreadyGoingToAdd)
             {
+
+                if (string.IsNullOrEmpty(movieInfo.ProviderIds?.Imdb)
+                   && string.IsNullOrEmpty(movieInfo.ProviderIds?.Tmdb))
+                {
+                    _logger.LogWarning($"Movie {0} has no relevant metadata. Skipping.", movieInfo.Name);
+                    return;
+                }
                 _logger.LogDebug("Adding new movie {0}", movieInfo.Name);
                 content.Add(new EmbyContent
                 {

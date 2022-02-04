@@ -179,6 +179,13 @@ namespace Ombi.Schedule.Jobs.Plex
                         episode.grandparentRatingKey = seriesExists.Key;
                     }
 
+                    // Sanity checks
+                    if (episode.index == 0)
+                    {
+                        _log.LogWarning($"Episode {episode.title} has no episode number. Skipping.");
+                        continue;
+                    }
+
                     ep.Add(new PlexEpisode
                     {
                         EpisodeNumber = episode.index,

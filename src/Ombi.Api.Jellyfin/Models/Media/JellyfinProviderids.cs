@@ -9,5 +9,19 @@
         public string Tvdb { get; set; }
         public string Zap2It { get; set; }
         public string TvRage { get; set; }
+        
+        public bool Any()
+        {
+            if (string.IsNullOrEmpty(Imdb)
+               && string.IsNullOrEmpty(Tmdb)
+               && string.IsNullOrEmpty(Tvdb))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
