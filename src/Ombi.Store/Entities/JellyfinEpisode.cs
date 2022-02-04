@@ -58,10 +58,5 @@ namespace Ombi.Store.Entities
             return content.OfType<JellyfinContent>().FirstOrDefault(
                 x => x.JellyfinId == this.JellyfinSeries.JellyfinId);
         }
-        
-        public override bool IsIn(IMediaServerContent content)
-        {
-            return content.Episodes.Cast<JellyfinEpisode>().Any(x => x.JellyfinId == this.JellyfinId);
-        }
     }
 }
