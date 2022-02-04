@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
-using Ombi.Store.Repository;
+using System.Linq;
 
 namespace Ombi.Store.Entities
 {
@@ -42,6 +41,9 @@ namespace Ombi.Store.Entities
         public IMediaServerContent Series { get; set; }
 
         public abstract IMediaServerContent SeriesIsIn(ICollection<IMediaServerContent> content);
-        public abstract bool IsIn(IMediaServerContent content);
+        public bool IsIn(IMediaServerContent content)
+        {
+            return content.Episodes.Any(x => x.SeasonNumber == this.SeasonNumber && x.EpisodeNumber == this.EpisodeNumber);
+        }
     }
 }

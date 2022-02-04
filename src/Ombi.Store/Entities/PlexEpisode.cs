@@ -28,11 +28,5 @@ namespace Ombi.Store.Entities
             return content.OfType<PlexServerContent>().FirstOrDefault(
                  x => x.Key == this.PlexSeries.Key);
         }
-
-        public override bool IsIn(IMediaServerContent content)
-        {
-            return content.Episodes.Cast<PlexEpisode>().Any(x => x.Key == this.Key);
-        }
-
     }
 }
