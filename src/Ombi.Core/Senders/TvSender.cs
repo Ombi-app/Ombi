@@ -239,7 +239,7 @@ namespace Ombi.Core.Senders
                     languageProfileId = languageProfile;
                 }
             }
-      
+
             try
             {
                 // Does the series actually exist?
@@ -358,7 +358,7 @@ namespace Ombi.Core.Senders
                     }
                 }
                 var sonarrEpisodeList = sonarrEpList.Where(x => x.seasonNumber == season.SeasonNumber).ToList();
-                var sonarrEpCount = sonarrEpisodeList.Count; 
+                var sonarrEpCount = sonarrEpisodeList.Count;
                 var ourRequestCount = season.Episodes.Count;
 
                 var ourEpisodes = season.Episodes.Select(x => x.EpisodeNumber).ToList();
@@ -374,17 +374,12 @@ namespace Ombi.Core.Senders
                 if (sonarrEpCount == ourRequestCount /*|| !missingEpisodes.Any()*/)
                 {
                     // We have the same amount of requests as all of the episodes in the season.
+                    existingSeason.monitored = true;
+                    seriesChanges = true;
 
-                    if (!existingSeason.monitored)
-                    {
-                        existingSeason.monitored = true;
-                        seriesChanges = true;
-                    }
-                    // Now update the episodes that need updating
-                    foreach (var epToUpdate in episodesToUpdate.Where(x => x.seasonNumber == season.SeasonNumber))
-                    {
-                        await SonarrApi.UpdateEpisode(epToUpdate, s.ApiKey, s.FullUri);
-                    }
+                    // We do not need to update the episodes as marking the season as monitored will mark the episodes as monitored.
+                    var seasonToUpdate = result.seasons.FirstOrDefault(x => x.seasonNumber == season.SeasonNumber);
+                    seasonToUpdate.monitored = true; // Update by ref
                 }
                 else
                 {
@@ -442,7 +437,6 @@ namespace Ombi.Core.Senders
             var seasonsToUpdate = new List<Season>();
             for (var i = 0; i < model.ParentRequest.TotalSeasons + 1; i++)
             {
-                var index = i;
                 var sea = new Season
                 {
                     seasonNumber = i,
