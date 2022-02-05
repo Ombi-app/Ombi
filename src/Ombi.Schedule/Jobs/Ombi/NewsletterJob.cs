@@ -754,7 +754,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             if (episodes.Count >= tvInfo.number_of_episodes)
             {
                 // do not list individual episodes when the series is complete
-                return "";
+                return string.Empty;
             }
 
             var sb = new StringBuilder();
@@ -774,7 +774,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 if (season.Episodes.Count >= season.Header.episode_count)
                 {
                     // do not list individual episodes when the season is complete
-                    episodeList = "";
+                    episodeList = string.Empty;
                 }
                 else
                 {
