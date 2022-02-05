@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Ombi.Api\Ombi.Api.csproj" />
     <ProjectReference Include="..\Ombi.Helpers\Ombi.Helpers.csproj" />
+    <ProjectReference Include="..\Ombi.Api.MediaServer\Ombi.Api.MediaServer.csproj" />
   </ItemGroup>
 
 </Project>
