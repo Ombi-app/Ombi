@@ -726,28 +726,8 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                     AddTvTitle(tvInfo);
 
-                    // Group by the season number
-                    var results = t.Episodes.GroupBy(p => p.SeasonNumber,
-                        (key, g) => new
-                        {
-                            SeasonNumber = key,
-                            Episodes = g.ToList(),
-                            EpisodeAirDate = tvInfo?.seasons?.Where(x => x.season_number == key)?.Select(x => x.air_date).FirstOrDefault()
-                        }
-                    );
-
-                    // Group the episodes
-                    var finalsb = new StringBuilder();
-                    foreach (var epInformation in results.OrderBy(x => x.SeasonNumber))
-                    {
-                        var orderedEpisodes = epInformation.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
-                        var episodeString = StringHelper.BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
-                        var episodeAirDate = epInformation.EpisodeAirDate;
-                        finalsb.Append($"{Texts.SeasonLabel} {epInformation.SeasonNumber} - {Texts.EpisodesLabel} {episodeString} {episodeAirDate}");
-                        finalsb.Append("<br />");
-                    }
-
-                    AddTvEpisodesSummaryGenres(finalsb.ToString(), tvInfo);
+                    var tvEpisodesString = GetTvEpisodesString(tvInfo, t.Episodes);
+                    AddTvEpisodesSummaryGenres(tvEpisodesString, tvInfo);
 
                 }
                 catch (Exception e)
@@ -769,6 +749,44 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
+        private string GetTvEpisodesString(TvInfo tvInfo, ICollection<IMediaServerEpisode> episodes)
+        {
+            if (episodes.Count >= tvInfo.number_of_episodes)
+            {
+                // do not list individual episodes when the series is complete
+                return string.Empty;
+            }
+
+            var sb = new StringBuilder();
+            // Group by the season number
+            var seasons = episodes.GroupBy(p => p.SeasonNumber,
+                (key, g) => new
+                {
+                    SeasonNumber = key,
+                    Episodes = g.ToList(),
+                    Header = tvInfo?.seasons?.Where(x => x.season_number == key).FirstOrDefault(),
+                }
+            );
+            // Group the episodes
+            foreach (var season in seasons.OrderBy(x => x.SeasonNumber))
+            {
+                string episodeList;
+                if (season.Episodes.Count >= season.Header.episode_count)
+                {
+                    // do not list individual episodes when the season is complete
+                    episodeList = string.Empty;
+                }
+                else
+                {
+                    var orderedEpisodes = season.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
+                    episodeList = $"{Texts.EpisodesLabel} {StringHelper.BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber))}";
+                }
+                var episodeAirDate = season.Header.air_date;
+                sb.Append($"{Texts.SeasonLabel} {season.SeasonNumber} - {episodeList} {episodeAirDate}");
+                sb.Append("<br />");
+            }
+            return sb.ToString();
+        }
         private void AddTvTitle(TvInfo tvInfo)
         {
             var title = "";

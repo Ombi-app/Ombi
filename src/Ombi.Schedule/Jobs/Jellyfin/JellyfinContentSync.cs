@@ -127,7 +127,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                     {
 
                         processed++;
-                        if (string.IsNullOrEmpty(tvShow.ProviderIds?.Tvdb))
+                        if (!tvShow.ProviderIds.Any())
                         {
                             _logger.LogInformation("Provider Id on tv {0} is null", tvShow.Name);
                             continue;
@@ -217,6 +217,11 @@ namespace Ombi.Schedule.Jobs.Jellyfin
             var alreadyGoingToAdd = content.Any(x => x.JellyfinId == movieInfo.Id);
             if (existingMovie == null && !alreadyGoingToAdd)
             {
+                if (!movieInfo.ProviderIds.Any())
+                {
+                    _logger.LogWarning($"Movie {movieInfo.Name} has no relevant metadata. Skipping.");
+                    return;
+                }
                 _logger.LogDebug("Adding new movie {0}", movieInfo.Name);
                 content.Add(new JellyfinContent
                 {

@@ -152,6 +152,13 @@ namespace Ombi.Schedule.Jobs.Emby
 
                     if (existingEpisode == null && !existingInList)
                     {
+                        // Sanity checks
+                        if (ep.IndexNumber == 0)
+                        {
+                            _logger.LogWarning($"Episode {ep.Name} has no episode number. Skipping.");
+                            continue;
+                        }
+
                         _logger.LogDebug("Adding new episode {0} to parent {1}", ep.Name, ep.SeriesName);
                         // add it
                         epToAdd.Add(new EmbyEpisode

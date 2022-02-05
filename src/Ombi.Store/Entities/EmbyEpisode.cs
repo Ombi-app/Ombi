@@ -57,11 +57,5 @@ namespace Ombi.Store.Entities
             return content.OfType<EmbyContent>().FirstOrDefault(
                 x => x.EmbyId == this.EmbySeries.EmbyId);
         }
-
-        public override bool IsIn(IMediaServerContent content)
-        {
-            return content.Episodes.Cast<EmbyEpisode>().Any(x => x.EmbyId == this.EmbyId);
-        }
-
     }
 }
