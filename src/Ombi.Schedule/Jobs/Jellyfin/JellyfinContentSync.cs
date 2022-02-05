@@ -219,7 +219,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
             {
                 if (!movieInfo.ProviderIds.Any())
                 {
-                    _logger.LogWarning($"Movie {0} has no relevant metadata. Skipping.", movieInfo.Name);
+                    _logger.LogWarning($"Movie {movieInfo.Name} has no relevant metadata. Skipping.");
                     return;
                 }
                 _logger.LogDebug("Adding new movie {0}", movieInfo.Name);
