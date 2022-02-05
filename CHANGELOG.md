@@ -1,3 +1,13 @@
+## [4.11.4](https://github.com/Ombi-app/Ombi/compare/v4.11.3...v4.11.4) (2022-02-05)
+
+
+### Bug Fixes
+
+* **media-sync:** Add sanity checks upon media server sync ([#4493](https://github.com/Ombi-app/Ombi/issues/4493)) ([9915234](https://github.com/Ombi-app/Ombi/commit/9915234d38d4701c527081ccc21b566980375331)), closes [#4472](https://github.com/Ombi-app/Ombi/issues/4472)
+* **newsletter:** Fix newsletter not publishing double episodes ([#4495](https://github.com/Ombi-app/Ombi/issues/4495)) ([ddf63fb](https://github.com/Ombi-app/Ombi/commit/ddf63fbed0b9cbe458aec37318758c76b99b2de9))
+
+
+
 ## [4.11.3](https://github.com/Ombi-app/Ombi/compare/v4.11.2...v4.11.3) (2022-02-03)
 
 
@@ -362,15 +372,6 @@
 
 
 ## [4.2.11](https://github.com/Ombi-app/Ombi/compare/v4.2.10...v4.2.11) (2021-10-18)
-
-
-
-## [4.2.10](https://github.com/Ombi-app/Ombi/compare/v4.2.9...v4.2.10) (2021-10-15)
-
-
-### Bug Fixes
-
-* :bug: Really really fix it this time? ([543d36e](https://github.com/Ombi-app/Ombi/commit/543d36e5615341bc8378cac377b843a3dbc1ef99))
 
 
 
