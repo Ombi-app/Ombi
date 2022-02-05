@@ -1,3 +1,12 @@
+## [4.11.5](https://github.com/Ombi-app/Ombi/compare/v4.11.4...v4.11.5) (2022-02-05)
+
+
+### Bug Fixes
+
+* **sonarr:** Fixed where requesting all seasons would only mark the latest as monitored [#4496](https://github.com/Ombi-app/Ombi/issues/4496) ([cfb85c2](https://github.com/Ombi-app/Ombi/commit/cfb85c23d77626b9ec1d99a6cf76497c438d0338))
+
+
+
 ## [4.11.4](https://github.com/Ombi-app/Ombi/compare/v4.11.3...v4.11.4) (2022-02-05)
 
 
@@ -368,10 +377,6 @@
 * **newsletter:** :bug: Fixed a few small bugs in the newsletter ([21dba4c](https://github.com/Ombi-app/Ombi/commit/21dba4c524b98b9f2b883d97e7e13329425a8762))
 * **translations:** 🌐 New translations en.json from Crowdin [skip ci] ([52eda6a](https://github.com/Ombi-app/Ombi/commit/52eda6ab917a73842bc02b0d8e0c442e564ca8f0))
 * **translations:** 🌐 New translations en.json from Crowdin [skip ci] ([1095d52](https://github.com/Ombi-app/Ombi/commit/1095d524962648a1e427f0bcd8105fa734dd5b60))
-
-
-
-## [4.2.11](https://github.com/Ombi-app/Ombi/compare/v4.2.10...v4.2.11) (2021-10-18)
 
 
 
