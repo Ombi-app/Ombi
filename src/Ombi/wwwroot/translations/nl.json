@@ -130,7 +130,7 @@
             "Select": "Selecteer...",
             "SubmitRequest": "Vraag aan",
             "Season": "Seizoen {{seasonNumber}}",
-            "SelectAllInSeason": "Selecteer alles in het Seizoen {{seasonNumber}}"
+            "SelectAllInSeason": "Selecteer alles in Seizoen {{seasonNumber}}"
         },
         "AdvancedSearchInstructions": "Selecteer naar welke soort media je op zoek bent:",
         "YearOfRelease": "Jaar van uitgave",
@@ -182,10 +182,10 @@
         "SortStatusDesc": "Status ▼",
         "Remaining": {
             "Quota": "{{remaining}}/{{total}} resterende aanvragen",
-            "NextDays": "Een andere aanvraag zal worden toegevoegd over {{time}} Dagen",
-            "NextHours": "Een andere aanvraag zal worden toegevoegd over {{time}} Uur",
-            "NextMinutes": "Een andere aanvraag zal worden toegevoegd over {{time}} Minuten",
-            "NextMinute": "Een andere aanvraag zal worden toegevoegd over {{time}} Minuut"
+            "NextDays": "Een andere aanvraag zal worden toegevoegd over {{time}} dagen",
+            "NextHours": "Een andere aanvraag zal worden toegevoegd over {{time}} uur",
+            "NextMinutes": "Een andere aanvraag zal worden toegevoegd over {{time}} minuten",
+            "NextMinute": "Een andere aanvraag zal worden toegevoegd over {{time}} minuut"
         },
         "AllRequests": "Alle aanvragen",
         "PendingRequests": "Onder behandeling",
@@ -399,7 +399,7 @@
         "DarkMode": "Donkere modus",
         "Updated": "Update successvol",
         "StreamingCountry": "Land",
-        "StreamingCountryDescription": "Dit is het land waarvoor we de streaming-informatie zullen laten zien.",
+        "StreamingCountryDescription": "Dit is het land waarvoor Ombi de streaming-informatie zal laten zien.",
         "LanguageDescription": "Dit is de taal waarin je Ombi wilt gebruiken.",
         "MobileQRCode": "QR-code",
         "LegacyApp": "Lanceer oude app",
