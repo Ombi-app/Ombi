@@ -1,0 +1,101 @@
+﻿<div [formGroup]="form">
+            <div class="row">
+                <div class="col-md-12 col-12 col-sm-12">
+                    <div >
+                        <div class="md-form-field">
+                            <mat-slide-toggle formControlName="enabled" id="enable" (change)="toggleValidators()">Enable</mat-slide-toggle>
+                        </div>
+                        <div class="md-form-field">
+                            <mat-slide-toggle formControlName="scanForAvailability">Scan for Availability</mat-slide-toggle>
+                        </div>
+                        <div class="md-form-field" >
+                            <mat-slide-toggle formControlName="addOnly">
+                                Do not search for Movies
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="md-form-field" style="margin-top:1em;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-7 col-8 col-sm-12">
+                    <label for="username" class="control-label"><h3>Radarr Server Configuration</h3></label>
+                    <div class="md-form-field">
+                        <mat-form-field appearance="outline" >
+                            <mat-label>Hostname or IP</mat-label>
+                            <input matInput formControlName="ip">
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" >
+                            <mat-label>Port</mat-label>
+                            <input matInput formControlName="port">
+                        </mat-form-field>
+                        <mat-slide-toggle formControlName="ssl">
+                            SSL
+                        </mat-slide-toggle>
+                    </div>
+                    <div class="md-form-field" style="margin-top:1em;"></div>
+                    <div class="md-form-field">
+                        <mat-form-field appearance="outline" >
+                            <mat-label>API key</mat-label>
+                            <input matInput formControlName="apiKey">
+                        </mat-form-field>
+                    </div>
+                    <div class="md-form-field">
+                        <mat-form-field appearance="outline" >
+                            <mat-label>Base URL</mat-label>
+                            <input matInput formControlName="subDir">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-md-5 col-4 col-sm-12">
+                    <label for="username" class="control-label"><h3>Radarr Interface</h3></label>
+                    <div class="md-form-field">
+                    <div class="md-form-field" style="display:inline;">
+                        <button mat-raised-button (click)="getProfiles(form)"  type="button" color="primary">Load Profiles <span *ngIf="profilesRunning" class="fas fa-spinner fa-spin"></span></button>
+                    </div>
+                    <div class="md-form-field" style="margin-top:1em;"></div>
+                        <mat-form-field appearance="outline" >
+                            <mat-label>Quality Profiles</mat-label>
+                            <mat-select formControlName="defaultQualityProfile" required>
+                                <mat-option *ngFor="let quality of qualities" [value]="quality.id">
+                                    {{quality.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                    </div>
+                    <div class="md-form-field">
+                        <div class="md-form-field" style="display:inline;">
+                            <button mat-raised-button (click)="getRootFolders(form)" type="button" color="primary">Load Root Folders <span *ngIf="rootFoldersRunning" class="fas fa-spinner fa-spin"></span></button>
+                        </div>
+                        <div class="md-form-field" style="margin-top:1em;"></div>
+                        <mat-form-field appearance="outline" >
+                            <mat-label>Default Root Folder</mat-label>
+                            <mat-select formControlName="defaultRootPath" required>
+                                <mat-option *ngFor="let folder of rootFolders" [value]="folder.path">
+                                    {{folder.path}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                    </div>
+                    <div class="md-form-field">
+                        <mat-form-field appearance="outline" >
+                            <mat-label>Default Minimum Availability</mat-label>
+                            <mat-select formControlName="minimumAvailability" required>
+                                <mat-option *ngFor="let min of minimumAvailabilityOptions" [value]="min.value">
+                                    {{min.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="md-form-field">
+                            <button mat-raised-button type="button" [disabled]="form.invalid" (click)="test(form)">Test Connectivity <span id="spinner"></span></button>
+                        </div>
+                </div>
+            </div>
+        </div>

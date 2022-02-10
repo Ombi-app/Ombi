@@ -1,76 +1,155 @@
-import { CommonModule } from "@angular/common";
-import { NgModule } from "@angular/core";
+import {
+    CouchPotatoService,
+    EmbyService,
+    FileDownloadService,
+    IssuesService,
+    JellyfinService,
+    JobService,
+    LidarrService,
+    MobileService,
+    NotificationMessageService,
+    PlexService,
+    RadarrService,
+    RequestRetryService,
+    SonarrService,
+    SystemService,
+    TesterService,
+    TheMovieDbService,
+    ValidationService
+} from "../services";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
-// import { TagInputModule } from "ngx-chips";
-import { ClipboardModule } from "ngx-clipboard";
 
+import { AboutComponent } from "./about/about.component";
 import { AuthGuard } from "../auth/auth.guard";
 import { AuthService } from "../auth/auth.service";
-import {
-    CouchPotatoService, EmbyService, JellyfinService, IssuesService, JobService, LidarrService, MobileService, NotificationMessageService, PlexService, RadarrService,
-    RequestRetryService, SonarrService, TesterService, ValidationService, SystemService, FileDownloadService, TheMovieDbService
-} from "../services";
-
-import { PipeModule } from "../pipes/pipe.module";
-import { AboutComponent } from "./about/about.component";
 import { AuthenticationComponent } from "./authentication/authentication.component";
+import {AutoCompleteModule} from "primeng/autocomplete";
+import {CalendarModule} from "primeng/calendar";
+import { ClipboardModule } from "ngx-clipboard";
+import { CloudMobileComponent } from "./notifications/cloudmobile.coponent";
+import { CloudMobileService } from "../services/cloudmobile.service";
+import { CommonModule } from "@angular/common";
 import { CouchPotatoComponent } from "./couchpotato/couchpotato.component";
 import { CustomizationComponent } from "./customization/customization.component";
+import {DialogModule} from "primeng/dialog";
+import { DiscordComponent } from "./notifications/discord.component";
 import { DogNzbComponent } from "./dognzb/dognzb.component";
+import { EmailNotificationComponent } from "./notifications/emailnotification.component";
 import { EmbyComponent } from "./emby/emby.component";
-import { JellyfinComponent } from "./jellyfin/jellyfin.component";
 import { FailedRequestsComponent } from "./failedrequests/failedrequests.component";
+import { GotifyComponent } from "./notifications/gotify.component";
+import { HubService } from "../services/hub.service";
+import {InputSwitchModule} from "primeng/inputswitch";
+import {InputTextModule} from "primeng/inputtext";
 import { IssuesComponent } from "./issues/issues.component";
+import { JellyfinComponent } from "./jellyfin/jellyfin.component";
 import { JobsComponent } from "./jobs/jobs.component";
 import { LandingPageComponent } from "./landingpage/landingpage.component";
 import { LidarrComponent } from "./lidarr/lidarr.component";
+import { LogsComponent } from "./logs/logs.component";
 import { MassEmailComponent } from "./massemail/massemail.component";
-import { DiscordComponent } from "./notifications/discord.component";
-import { EmailNotificationComponent } from "./notifications/emailnotification.component";
-import { GotifyComponent } from "./notifications/gotify.component";
+import { MatDialogModule } from "@angular/material/dialog";
+import { MatMenuModule } from "@angular/material/menu";
 import { MattermostComponent } from "./notifications/mattermost.component";
+import {MenuModule} from "primeng/menu";
 import { MobileComponent } from "./notifications/mobile.component";
 import { NewsletterComponent } from "./notifications/newsletter.component";
+import { NgModule } from "@angular/core";
 import { NotificationTemplate } from "./notifications/notificationtemplate.component";
+import { OmbiComponent } from "./ombi/ombi.component";
+import { PipeModule } from "../pipes/pipe.module";
+import { PlexComponent } from "./plex/plex.component";
 import { PushbulletComponent } from "./notifications/pushbullet.component";
 import { PushoverComponent } from "./notifications/pushover.component";
-import { SlackComponent } from "./notifications/slack.component";
-import { TelegramComponent } from "./notifications/telegram.component";
-import { WebhookComponent } from "./notifications/webhook.component";
-import { OmbiComponent } from "./ombi/ombi.component";
-import { PlexComponent } from "./plex/plex.component";
 import { RadarrComponent } from "./radarr/radarr.component";
+import { RadarrFormComponent } from "./radarr/components/radarr-form.component";
+import {RadioButtonModule} from "primeng/radiobutton";
+import { SettingsMenuComponent } from "./settingsmenu.component";
+import { SharedModule } from "../shared/shared.module";
 import { SickRageComponent } from "./sickrage/sickrage.component";
+import { SlackComponent } from "./notifications/slack.component";
 import { SonarrComponent } from "./sonarr/sonarr.component";
+import { TelegramComponent } from "./notifications/telegram.component";
 import { TheMovieDbComponent } from "./themoviedb/themoviedb.component";
+import {TooltipModule} from "primeng/tooltip";
+import { TwilioComponent } from "./notifications/twilio/twilio.component";
 import { UpdateComponent } from "./update/update.component";
+import { UpdateDialogComponent } from "./about/update-dialog.component";
+import { UpdateService } from "../services/update.service";
 import { UserManagementComponent } from "./usermanagement/usermanagement.component";
 import { VoteComponent } from "./vote/vote.component";
+import { WebhookComponent } from "./notifications/webhook.component";
+import { WhatsAppComponent } from "./notifications/twilio/whatsapp.component";
 import { WikiComponent } from "./wiki.component";
 
-import { SettingsMenuComponent } from "./settingsmenu.component";
+// import { TagInputModule } from "ngx-chips";
 
-import {AutoCompleteModule } from "primeng/autocomplete";
-import {CalendarModule } from "primeng/calendar";
-import {InputSwitchModule } from "primeng/inputswitch";
-import {InputTextModule } from "primeng/inputtext";
-import {DialogModule } from "primeng/dialog";
-import {MenuModule } from "primeng/menu";
-import {RadioButtonModule } from "primeng/radiobutton";
-import {TooltipModule } from "primeng/tooltip";
 
-import { MatMenuModule } from "@angular/material/menu";
-import { SharedModule } from "../shared/shared.module";
-import { HubService } from "../services/hub.service";
-import { LogsComponent } from "./logs/logs.component";
-import { TwilioComponent } from "./notifications/twilio/twilio.component";
-import { WhatsAppComponent } from "./notifications/twilio/whatsapp.component";
-import { CloudMobileComponent } from "./notifications/cloudmobile.coponent";
-import { CloudMobileService } from "../services/cloudmobile.service";
-import { UpdateService } from "../services/update.service";
-import { MatDialogModule } from "@angular/material/dialog";
-import { UpdateDialogComponent } from "./about/update-dialog.component";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const routes: Routes = [
     { path: "Ombi", component: OmbiComponent, canActivate: [AuthGuard] },
@@ -145,6 +224,7 @@ const routes: Routes = [
         SonarrComponent,
         SlackComponent,
         RadarrComponent,
+        RadarrFormComponent,
         EmailNotificationComponent,
         NotificationTemplate,
         PushoverComponent,

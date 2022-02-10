@@ -158,6 +158,11 @@ export interface IRadarrSettings extends IExternalSettings {
   scanForAvailability: boolean;
 }
 
+export interface IRadarrCombined {
+  radarr: IRadarrSettings;
+  radarr4K: IRadarrSettings;
+}
+
 export interface ILidarrSettings extends IExternalSettings {
   enabled: boolean;
   apiKey: string;
