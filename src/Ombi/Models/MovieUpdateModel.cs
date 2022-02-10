@@ -29,5 +29,6 @@ namespace Ombi.Core.Models.Requests
     public class MovieUpdateModel
     {
         public int Id { get; set; }
+        public bool Is4K { get; set; }
     }
 }

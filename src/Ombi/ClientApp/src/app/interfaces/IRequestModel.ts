@@ -17,6 +17,10 @@ export interface IMovieRequests extends IFullBaseRequest {
   showSubscribe: boolean;
   requestStatus: string;
   has4KRequest: boolean;
+  approved4K: boolean;
+  available4K: boolean;
+  denied4K: boolean;
+  deniedReason4K: string;
 
   // For the UI
   rootPathOverrideTitle: string;
@@ -54,6 +58,7 @@ export interface IRequestsViewModel<T> {
 
 export interface IMovieUpdateModel {
   id: number;
+  is4K: boolean;
 }
 
 export interface IDenyMovieModel extends IMovieUpdateModel {

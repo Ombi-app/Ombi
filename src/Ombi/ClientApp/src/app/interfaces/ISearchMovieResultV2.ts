@@ -42,6 +42,11 @@
     externalIds: IExternalIds;
     keywords: IKeywords;
     belongsToCollection: ICollectionsModel;
+    has4KRequest: boolean;
+    approved4K: boolean;
+    available4K: boolean;
+    denied4K: boolean;
+    deniedReason4K: string;
 
     // for the UI
     requestProcessing: boolean;

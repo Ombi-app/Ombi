@@ -182,7 +182,7 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
         }
         let tasks = new Array<Observable<IRequestEngineResult>>();
         this.selection.selected.forEach((selected) => {
-            tasks.push(this.requestServiceV1.approveMovie({ id: selected.id }));
+            tasks.push(this.requestServiceV1.approveMovie({ id: selected.id, is4K: false }));
         });
 
         this.isLoadingResults = true;

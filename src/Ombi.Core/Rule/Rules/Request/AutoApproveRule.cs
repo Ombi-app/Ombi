@@ -28,12 +28,37 @@ namespace Ombi.Core.Rule.Rules.Request
             var user = await _manager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
             if (await _manager.IsInRoleAsync(user, OmbiRoles.Admin) || user.IsSystemUser)
             {
-                obj.Approved = true;
+                if (obj.RequestType == RequestType.Movie)
+                {
+                    var movie = (MovieRequests)obj;
+                    if (movie.Has4KRequest)
+                    {
+                        movie.Approved4K = true;
+                    }
+                    if (movie.RequestedDate != DateTime.MinValue)
+                    {
+                        obj.Approved = true;
+                    }
+                }
+                else
+                {
+                    obj.Approved = true;
+                }
                 return Success();
             }
 
             if (obj.RequestType == RequestType.Movie && await _manager.IsInRoleAsync(user, OmbiRoles.AutoApproveMovie))
-                obj.Approved = true;
+            {
+                var movie = (MovieRequests)obj;
+                if (movie.Has4KRequest)
+                {
+                    movie.Approved4K = true;
+                }
+                if (movie.RequestedDate != DateTime.MinValue)
+                {
+                    obj.Approved = true;
+                }
+            }
             if (obj.RequestType == RequestType.TvShow && await _manager.IsInRoleAsync(user, OmbiRoles.AutoApproveTv))
                 obj.Approved = true;
             if (obj.RequestType == RequestType.Album && await _manager.IsInRoleAsync(user, OmbiRoles.AutoApproveMusic))

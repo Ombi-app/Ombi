@@ -406,6 +406,13 @@ namespace Ombi.Core.Engine.V2
             mapped.Subscribed = viewMovie.Subscribed;
             mapped.ShowSubscribe = viewMovie.ShowSubscribe;
             mapped.DigitalReleaseDate = viewMovie.DigitalReleaseDate;
+            mapped.RequestedDate4k = viewMovie.RequestedDate4k;
+            mapped.Approved4K = viewMovie.Approved4K;
+            mapped.Available4K = viewMovie.Available4K;
+            mapped.Denied4K = viewMovie.Denied4K;
+            mapped.DeniedReason4K = viewMovie.DeniedReason4K;
+            mapped.Has4KRequest = viewMovie.Has4KRequest;
+            
 
             return mapped;
         }

@@ -20,13 +20,12 @@ namespace Ombi.Core.Senders
 {
     public class MovieSender : IMovieSender
     {
-        public MovieSender(ISettingsService<RadarrSettings> radarrSettings, IRadarrApi api, ILogger<MovieSender> log,
+        public MovieSender(ISettingsService<RadarrSettings> radarrSettings, ISettingsService<Radarr4KSettings> radarr4kSettings, ILogger<MovieSender> log,
             ISettingsService<DogNzbSettings> dogSettings, IDogNzbApi dogApi, ISettingsService<CouchPotatoSettings> cpSettings,
             ICouchPotatoApi cpApi, IRepository<UserQualityProfiles> userProfiles, IRepository<RequestQueue> requestQueue, INotificationHelper notify,
             IRadarrV3Api radarrV3Api)
         {
             _radarrSettings = radarrSettings;
-            _radarrV2Api = api;
             _log = log;
             _dogNzbSettings = dogSettings;
             _dogNzbApi = dogApi;
@@ -36,10 +35,11 @@ namespace Ombi.Core.Senders
             _requestQueuRepository = requestQueue;
             _notificationHelper = notify;
             _radarrV3Api = radarrV3Api;
+            _radarr4KSettings = radarr4kSettings;
         }
 
         private readonly ISettingsService<RadarrSettings> _radarrSettings;
-        private readonly IRadarrApi _radarrV2Api;
+        private readonly ISettingsService<Radarr4KSettings> _radarr4KSettings;
         private readonly ILogger<MovieSender> _log;
         private readonly IDogNzbApi _dogNzbApi;
         private readonly ISettingsService<DogNzbSettings> _dogNzbSettings;
@@ -50,16 +50,24 @@ namespace Ombi.Core.Senders
         private readonly INotificationHelper _notificationHelper;
         private readonly IRadarrV3Api _radarrV3Api;
 
-        public async Task<SenderResult> Send(MovieRequests model)
+        public async Task<SenderResult> Send(MovieRequests model, bool is4K)
         {
             try
             {
                 var cpSettings = await _couchPotatoSettings.GetSettingsAsync();
-                //var watcherSettings = await WatcherSettings.GetSettingsAsync();
-                var radarrSettings = await _radarrSettings.GetSettingsAsync();
+
+                RadarrSettings radarrSettings;
+                if (is4K)
+                {
+                    radarrSettings = await _radarr4KSettings.GetSettingsAsync();
+                }
+                else
+                {
+                    radarrSettings = await _radarrSettings.GetSettingsAsync();
+                }
                 if (radarrSettings.Enabled)
                 {
-                    return await SendToRadarr(model, radarrSettings);
+                    return await SendToRadarr(model, is4K, radarrSettings);
                 }
 
                 var dogSettings = await _dogNzbSettings.GetSettingsAsync();
@@ -123,7 +131,7 @@ namespace Ombi.Core.Senders
             return await _dogNzbApi.AddMovie(settings.ApiKey, id);
         }
 
-        private async Task<SenderResult> SendToRadarr(MovieRequests model, RadarrSettings settings)
+        private async Task<SenderResult> SendToRadarr(MovieRequests model, bool is4K, RadarrSettings settings)
         {
             var qualityToUse = int.Parse(settings.DefaultQualityProfile);
 

@@ -93,8 +93,8 @@ export class RequestServiceV2 extends ServiceHelpers {
         return this.http.post<IRequestEngineResult>(`${this.url}TV/`, JSON.stringify(tv), {headers: this.headers});
     }
 
-    public reprocessRequest(requestId: number, type: RequestType): Observable<IRequestEngineResult> {
-        return this.http.post<IRequestEngineResult>(`${this.url}reprocess/${type}/${requestId}`, undefined, { headers: this.headers });
+    public reprocessRequest(requestId: number, type: RequestType, is4K: boolean): Observable<IRequestEngineResult> {
+        return this.http.post<IRequestEngineResult>(`${this.url}reprocess/${type}/${requestId}/${is4K}`, undefined, { headers: this.headers });
     }
 
     public requestMovieCollection(collectionId: number): Observable<IRequestEngineResult> {

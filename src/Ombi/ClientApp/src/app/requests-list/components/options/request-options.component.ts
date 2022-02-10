@@ -4,7 +4,7 @@ import { MessageService, RequestService } from '../../../services';
 import { IRequestEngineResult, RequestType } from '../../../interfaces';
 import { UpdateType } from '../../models/UpdateType';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 
 @Component({
   selector: 'request-options',
@@ -43,14 +43,15 @@ export class RequestOptionsComponent {
   }
 
   public async approve() {
+    // TODO 4K
     if (this.data.type === RequestType.movie) {
-      await this.requestService.approveMovie({id: this.data.id}).toPromise();
+      await firstValueFrom(this.requestService.approveMovie({id: this.data.id, is4K: false}));
     }
     if (this.data.type === RequestType.tvShow) {
-      await this.requestService.approveChild({id: this.data.id}).toPromise();
+      await firstValueFrom(this.requestService.approveChild({id: this.data.id}));
     }
     if (this.data.type === RequestType.album) {
-      await this.requestService.approveAlbum({id: this.data.id}).toPromise();
+      await firstValueFrom(this.requestService.approveAlbum({id: this.data.id}));
     }
 
     this.bottomSheetRef.dismiss({type: UpdateType.Approve});
@@ -59,10 +60,11 @@ export class RequestOptionsComponent {
 
   public async changeAvailability() {
     if (this.data.type === RequestType.movie) {
-      await this.requestService.markMovieAvailable({id: this.data.id}).toPromise();
+      // TODO 4K
+      await firstValueFrom(this.requestService.markMovieAvailable({id: this.data.id,  is4K: false}))
     }
     if (this.data.type === RequestType.album) {
-      await this.requestService.markAlbumAvailable({id: this.data.id}).toPromise();
+      await firstValueFrom(this.requestService.markAlbumAvailable({id: this.data.id}));
     }
 
     this.bottomSheetRef.dismiss({type: UpdateType.Availability});

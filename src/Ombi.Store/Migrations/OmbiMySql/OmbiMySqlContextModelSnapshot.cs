@@ -641,7 +641,13 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<bool>("Approved")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("Approved4K")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<bool>("Available")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("Available4K")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Background")
@@ -650,17 +656,23 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<bool?>("Denied")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool?>("Denied4K")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("DeniedReason")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DeniedReason4K")
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("DigitalReleaseDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("ImdbId")
-                        .HasColumnType("longtext");
-
                     b.Property<bool>("Has4KRequest")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("ImdbId")
+                        .HasColumnType("longtext");
 
                     b.Property<int?>("IssueId")
                         .HasColumnType("int");
@@ -671,10 +683,19 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<DateTime>("MarkedAsApproved")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime>("MarkedAsApproved4K")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<DateTime?>("MarkedAsAvailable")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime?>("MarkedAsAvailable4K")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<DateTime>("MarkedAsDenied")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("MarkedAsDenied4K")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Overview")
@@ -696,6 +717,9 @@ namespace Ombi.Store.Migrations.OmbiMySql
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("RequestedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("RequestedDate4k")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("RequestedUserId")

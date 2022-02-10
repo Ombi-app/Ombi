@@ -203,15 +203,15 @@ namespace Ombi.Controllers.V2
         }
 
         [PowerUser]
-        [HttpPost("reprocess/{type}/{requestId}")]
-        public async Task<IActionResult> ReProcessRequest(RequestType type, int requestId)
+        [HttpPost("reprocess/{type}/{requestId}/{is4K}")]
+        public async Task<IActionResult> ReProcessRequest(RequestType type, int requestId, bool? is4K)
         {
             switch (type)
             {
                 case RequestType.TvShow:
-                    return Ok(await _tvRequestEngine.ReProcessRequest(requestId, HttpContext.RequestAborted));
+                    return Ok(await _tvRequestEngine.ReProcessRequest(requestId, false, HttpContext.RequestAborted));
                 case RequestType.Movie:
-                    return Ok(await _movieRequestEngine.ReProcessRequest(requestId, HttpContext.RequestAborted));
+                    return Ok(await _movieRequestEngine.ReProcessRequest(requestId, is4K ?? false, HttpContext.RequestAborted));
             }
 
             return BadRequest();
