@@ -1,12 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { ControlContainer, FormGroup, Validators } from "@angular/forms";
 
-import { IMinimumAvailability, IRadarrProfile, IRadarrRootFolder } from "../../../interfaces";
-import { IRadarrSettings } from "../../../interfaces";
-import { RadarrService } from "../../../services";
-import { TesterService } from "../../../services";
-import { NotificationService } from "../../../services";
-import { SettingsService } from "../../../services";
+import { IMinimumAvailability, IRadarrProfile, IRadarrRootFolder, IRadarrSettings } from "../../../interfaces";
+import { TesterService, NotificationService, RadarrService } from "../../../services";
+
 
 @Component({
     selector: "ombi-settings-radarr-form",
