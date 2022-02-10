@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Ombi.Store.Context.MySql;
 
+#nullable disable
+
 namespace Ombi.Store.Migrations.OmbiMySql
 {
     [DbContext(typeof(OmbiMySqlContext))]
@@ -14,8 +16,8 @@ namespace Ombi.Store.Migrations.OmbiMySql
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 64)
-                .HasAnnotation("ProductVersion", "5.0.1");
+                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -40,7 +42,7 @@ namespace Ombi.Store.Migrations.OmbiMySql
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
 
-                    b.ToTable("AspNetRoles");
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -63,7 +65,7 @@ namespace Ombi.Store.Migrations.OmbiMySql
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims");
+                    b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -86,7 +88,7 @@ namespace Ombi.Store.Migrations.OmbiMySql
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims");
+                    b.ToTable("AspNetUserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -108,7 +110,7 @@ namespace Ombi.Store.Migrations.OmbiMySql
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins");
+                    b.ToTable("AspNetUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -123,7 +125,7 @@ namespace Ombi.Store.Migrations.OmbiMySql
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles");
+                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -142,7 +144,7 @@ namespace Ombi.Store.Migrations.OmbiMySql
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens");
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Audit", b =>
@@ -342,7 +344,7 @@ namespace Ombi.Store.Migrations.OmbiMySql
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("AspNetUsers");
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.RecentlyAddedLog", b =>
@@ -404,28 +406,6 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.HasKey("Id");
 
                     b.ToTable("RequestQueue");
-                });
-
-            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("RequestId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RequestType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("RequestSubscription");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.AlbumRequest", b =>
@@ -815,6 +795,28 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.ToTable("TvRequests");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RequestSubscription");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.Tokens", b =>
                 {
                     b.Property<int>("Id")
@@ -1052,15 +1054,6 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
-                {
-                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Ombi.Store.Entities.Requests.AlbumRequest", b =>
                 {
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "RequestedUser")
@@ -1137,6 +1130,15 @@ namespace Ombi.Store.Migrations.OmbiMySql
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.RequestLog", b =>
+                {
+                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
                 {
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
                         .WithMany()
