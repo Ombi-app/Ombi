@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Ombi.Store.Context.Sqlite;
 
@@ -10,9 +11,10 @@ using Ombi.Store.Context.Sqlite;
 namespace Ombi.Store.Migrations.OmbiSqlite
 {
     [DbContext(typeof(OmbiSqliteContext))]
-    partial class OmbiSqliteContextModelSnapshot : ModelSnapshot
+    [Migration("20220210200338_MovieRequest4K")]
+    partial class MovieRequest4K
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
@@ -657,7 +659,7 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.Property<string>("ImdbId")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Has4KRequest")
+                    b.Property<bool>("Is4KRequest")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("IssueId")

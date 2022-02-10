@@ -9,7 +9,7 @@ namespace Ombi.Store.Migrations.OmbiMySql
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.InsertRole(OmbiRoles.Request4KMovie);
+            migrationBuilder.InsertRoleMySql(OmbiRoles.Request4KMovie);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

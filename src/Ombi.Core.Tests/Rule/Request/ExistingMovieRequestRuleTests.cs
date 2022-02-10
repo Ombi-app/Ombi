@@ -96,5 +96,55 @@ namespace Ombi.Core.Tests.Rule.Request
             Assert.That(result.Success, Is.True);
             Assert.That(result.Message, Is.Null.Or.Empty);
         }
+
+        [Test]
+        public async Task ExistingRequestRule_Movie_HasAlready4K_Request()
+        {
+            ContextMock.Setup(x => x.GetAll()).Returns(new List<MovieRequests>
+            {
+                new MovieRequests
+                {
+                    TheMovieDbId = 2,
+                    ImdbId = "2",
+                    RequestType = RequestType.Movie,
+                    Has4KRequest = true
+                }
+            }.AsQueryable().BuildMock().Object);
+            var o = new MovieRequests
+            {
+                TheMovieDbId = 2,
+                ImdbId = "1",
+                Has4KRequest = true
+            };
+            var result = await Rule.Execute(o);
+
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.Message, Is.Not.Empty);
+        }
+
+        [Test]
+        public async Task ExistingRequestRule_Movie_4K_Request()
+        {
+            ContextMock.Setup(x => x.GetAll()).Returns(new List<MovieRequests>
+            {
+                new MovieRequests
+                {
+                    TheMovieDbId = 2,
+                    ImdbId = "2",
+                    RequestType = RequestType.Movie,
+                    Has4KRequest = false
+                }
+            }.AsQueryable().BuildMock().Object);
+            var o = new MovieRequests
+            {
+                TheMovieDbId = 2,
+                ImdbId = "1",
+                Has4KRequest = true
+            };
+            var result = await Rule.Execute(o);
+
+            Assert.That(result.Success, Is.True);
+            Assert.That(result.Message, Is.Null.Or.Empty);
+        }
     }
 }

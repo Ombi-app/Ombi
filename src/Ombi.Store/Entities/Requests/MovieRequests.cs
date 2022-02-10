@@ -25,6 +25,8 @@ namespace Ombi.Store.Entities.Requests
         public int RootPathOverride { get; set; }
         public int QualityOverride { get; set; }
 
+        public bool Has4KRequest  { get; set; }
+
         /// <summary>
         /// Only Use for setting the Language Code, Use the LanguageCode property for reading
         /// </summary>

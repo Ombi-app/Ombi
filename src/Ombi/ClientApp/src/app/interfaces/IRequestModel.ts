@@ -16,6 +16,7 @@ export interface IMovieRequests extends IFullBaseRequest {
   subscribed: boolean;
   showSubscribe: boolean;
   requestStatus: string;
+  has4KRequest: boolean;
 
   // For the UI
   rootPathOverrideTitle: string;
@@ -176,6 +177,7 @@ export interface IEpisodesRequests {
 export interface IMovieRequestModel extends BaseRequestOptions {
   theMovieDbId: number;
   languageCode: string | undefined;
+  is4KRequest?: boolean;
 }
 
 export interface IFilter {

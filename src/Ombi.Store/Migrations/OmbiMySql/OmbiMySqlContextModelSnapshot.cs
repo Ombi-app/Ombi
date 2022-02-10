@@ -659,6 +659,9 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<string>("ImdbId")
                         .HasColumnType("longtext");
 
+                    b.Property<bool>("Has4KRequest")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<int?>("IssueId")
                         .HasColumnType("int");
 

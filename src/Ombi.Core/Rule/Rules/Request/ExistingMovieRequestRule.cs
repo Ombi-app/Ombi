@@ -35,7 +35,7 @@ namespace Ombi.Core.Rule.Rules.Request
                 var existing = await movieRequests.FirstOrDefaultAsync(x => x.TheMovieDbId == movie.TheMovieDbId);
                 if (existing != null) // Do we already have a request for this?
                 {
-                    found = true;
+                    found = Check4KRequests(movie, existing);
                 }
 
                 if (!found && movie.ImdbId.HasValue())
@@ -45,15 +45,29 @@ namespace Ombi.Core.Rule.Rules.Request
                        x.ImdbId == movie.ImdbId);
                    if (existing != null)
                    {
-                       found = true;
+                       found = Check4KRequests(movie, existing);
                    }
                 }
-                if(found)
+                if (found)
                 {
                     return Fail(ErrorCode.AlreadyRequested, $"\"{obj.Title}\" has already been requested");
                 }
             }
             return Success();
+        }
+
+        private static bool Check4KRequests(MovieRequests movie,MovieRequests existing)
+        {
+            if (movie.Has4KRequest && existing.Has4KRequest)
+            {
+               return true;
+            }
+            if (!movie.Has4KRequest && !existing.Has4KRequest)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

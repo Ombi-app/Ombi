@@ -72,7 +72,8 @@ namespace Ombi.Core.Engine
             var userDetails = await GetUser();
             var canRequestOnBehalf = model.RequestOnBehalf.HasValue();
 
-            var isAdmin = await UserManager.IsInRoleAsync(userDetails, OmbiRoles.PowerUser) || await UserManager.IsInRoleAsync(userDetails, OmbiRoles.Admin);
+            var isAdmin = await UserManager.IsInRoleAsync(userDetails, OmbiRoles.PowerUser) 
+                || await UserManager.IsInRoleAsync(userDetails, OmbiRoles.Admin);
             if (canRequestOnBehalf && !isAdmin)
             {
                 return new RequestEngineResult
@@ -112,7 +113,8 @@ namespace Ombi.Core.Engine
                 LangCode = model.LanguageCode,
                 RequestedByAlias = model.RequestedByAlias,
                 RootPathOverride = model.RootFolderOverride.GetValueOrDefault(),
-                QualityOverride = model.QualityPathOverride.GetValueOrDefault()
+                QualityOverride = model.QualityPathOverride.GetValueOrDefault(),
+                Has4KRequest = model.Is4kRequest
             };
 
             var usDates = movieInfo.ReleaseDates?.Results?.FirstOrDefault(x => x.IsoCode == "US");

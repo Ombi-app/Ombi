@@ -12,5 +12,13 @@ INSERT INTO AspnetRoles(Id, ConcurrencyStamp, Name, NormalizedName)
 SELECT '{Guid.NewGuid()}','{Guid.NewGuid()}','{role}', '{role.ToUpper()}' 
 WHERE NOT EXISTS(SELECT 1 FROM AspnetRoles WHERE Name = '{role}');");
         }
+
+        public static void InsertRoleMySql(this MigrationBuilder mb, string role)
+        {
+            mb.Sql($@"
+INSERT INTO AspNetRoles(Id, ConcurrencyStamp, Name, NormalizedName) 
+SELECT '{Guid.NewGuid()}','{Guid.NewGuid()}','{role}', '{role.ToUpper()}' 
+WHERE NOT EXISTS(SELECT 1 FROM AspNetRoles WHERE Name = '{role}');");
+        }
     }
 }
