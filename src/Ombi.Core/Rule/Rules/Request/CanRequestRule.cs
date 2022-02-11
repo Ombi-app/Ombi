@@ -37,7 +37,7 @@ namespace Ombi.Core.Rule.Rules.Request
                 var hasAutoApprove = await _manager.IsInRoleAsync(user, OmbiRoles.AutoApproveMovie);
                 if (await _manager.IsInRoleAsync(user, OmbiRoles.RequestMovie) || hasAutoApprove)
                 {
-                    if (movie.Has4KRequest && !hasAutoApprove)
+                    if (movie.Is4kRequest && !hasAutoApprove)
                     {
                         var has4kPermission = await _manager.IsInRoleAsync(user, OmbiRoles.Request4KMovie);
                         if (has4kPermission)

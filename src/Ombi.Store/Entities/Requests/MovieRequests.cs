@@ -23,6 +23,13 @@ namespace Ombi.Store.Entities.Requests
         [NotMapped]
         public bool ShowSubscribe { get; set; }
 
+        /// <summary>
+        /// This is only used during the request process to identify if
+        /// it's a regular request or a 4k
+        /// </summary>
+        [NotMapped]
+        public bool Is4kRequest { get; set; }
+
         public int RootPathOverride { get; set; }
         public int QualityOverride { get; set; }
 

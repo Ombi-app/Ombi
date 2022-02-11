@@ -58,11 +58,11 @@ namespace Ombi.Core.Rule.Rules.Request
 
         private static bool Check4KRequests(MovieRequests movie,MovieRequests existing)
         {
-            if (movie.Has4KRequest && existing.Has4KRequest)
+            if (movie.Is4kRequest && existing.Has4KRequest)
             {
                return true;
             }
-            if (!movie.Has4KRequest && !existing.Has4KRequest)
+            if (!movie.Is4kRequest && !existing.Has4KRequest)
             {
                 return true;
             }

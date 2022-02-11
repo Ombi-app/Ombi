@@ -102,7 +102,7 @@ namespace Ombi.Core.Engine
             {
                 if (model.Is4kRequest)
                 {
-                    existingRequest.Has4KRequest = model.Is4kRequest;
+                    existingRequest.Is4kRequest = true;
                     existingRequest.RequestedDate4k = DateTime.Now;
                 }
                 else
@@ -134,7 +134,8 @@ namespace Ombi.Core.Engine
                     RequestedByAlias = model.RequestedByAlias,
                     RootPathOverride = model.RootFolderOverride.GetValueOrDefault(),
                     QualityOverride = model.QualityPathOverride.GetValueOrDefault(),
-                    Has4KRequest = model.Is4kRequest
+                    RequestedDate4k = model.Is4kRequest ? DateTime.Now : DateTime.MinValue,
+                    Is4kRequest = model.Is4kRequest
                 };
             }
 
@@ -155,7 +156,7 @@ namespace Ombi.Core.Engine
 
             if (requestModel.Approved) // The rules have auto approved this
             {
-                var requestEngineResult = await AddMovieRequest(requestModel, fullMovieName, model.RequestOnBehalf, isExisting);
+                var requestEngineResult = await AddMovieRequest(requestModel, fullMovieName, model.RequestOnBehalf, isExisting, model.Is4kRequest);
                 if (requestEngineResult.Result)
                 {
                     var result = await ApproveMovie(requestModel, model.Is4kRequest);
@@ -176,7 +177,7 @@ namespace Ombi.Core.Engine
                 // If there are no providers then it's successful but movie has not been sent
             }
 
-            return await AddMovieRequest(requestModel, fullMovieName, model.RequestOnBehalf, isExisting);
+            return await AddMovieRequest(requestModel, fullMovieName, model.RequestOnBehalf, isExisting, model.Is4kRequest);
         }
 
 
@@ -581,9 +582,18 @@ namespace Ombi.Core.Engine
                 };
             }
 
-            request.MarkedAsApproved = DateTime.Now;
-            request.Approved = true;
-            request.Denied = false;
+            if (is4K)
+            {
+                request.MarkedAsApproved4K = DateTime.Now;
+                request.Approved4K = true;
+                request.Denied4K = false;
+            }
+            else
+            {
+                request.MarkedAsApproved = DateTime.Now;
+                request.Approved = true;
+                request.Denied = false;
+            }
             await MovieRepository.Update(request);
 
             var canNotify = await RunSpecificRule(request, SpecificRules.CanSendNotification, string.Empty);
@@ -789,8 +799,12 @@ namespace Ombi.Core.Engine
             };
         }
 
-        private async Task<RequestEngineResult> AddMovieRequest(MovieRequests model, string movieName, string requestOnBehalf, bool isExisting)
+        private async Task<RequestEngineResult> AddMovieRequest(MovieRequests model, string movieName, string requestOnBehalf, bool isExisting, bool is4k)
         {
+            if (is4k)
+            {
+                model.Has4KRequest = true;
+            }
             if (!isExisting)
             {
                 await MovieRepository.Add(model);

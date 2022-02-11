@@ -31,11 +31,11 @@ namespace Ombi.Core.Rule.Rules.Request
                 if (obj.RequestType == RequestType.Movie)
                 {
                     var movie = (MovieRequests)obj;
-                    if (movie.Has4KRequest)
+                    if (movie.Is4kRequest)
                     {
                         movie.Approved4K = true;
                     }
-                    if (movie.RequestedDate != DateTime.MinValue)
+                    else
                     {
                         obj.Approved = true;
                     }
@@ -50,11 +50,11 @@ namespace Ombi.Core.Rule.Rules.Request
             if (obj.RequestType == RequestType.Movie && await _manager.IsInRoleAsync(user, OmbiRoles.AutoApproveMovie))
             {
                 var movie = (MovieRequests)obj;
-                if (movie.Has4KRequest)
+                if (movie.Is4kRequest)
                 {
                     movie.Approved4K = true;
-                }
-                if (movie.RequestedDate != DateTime.MinValue)
+                } 
+                else
                 {
                     obj.Approved = true;
                 }
