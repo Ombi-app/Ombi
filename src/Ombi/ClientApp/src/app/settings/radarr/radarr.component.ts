@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { FormBuilder, FormGroup, ValidationErrors } from "@angular/forms";
 
 import { IMinimumAvailability, IRadarrCombined, IRadarrProfile, IRadarrRootFolder } from "../../interfaces";
 import { NotificationService, SettingsService } from "../../services";
@@ -63,11 +63,12 @@ export class RadarrComponent implements OnInit {
         }
         const radarrForm = form.controls.radarr as FormGroup;
         const radarr4KForm = form.controls.radarr4K as FormGroup;
-        if (radarrForm.controls.enabled && (radarrForm.controls.defaultQualityProfile.value === "-1" || radarrForm.controls.defaultRootPath.value === "Please Select")) {
+
+        if (radarrForm.controls.enabled.value && (radarrForm.controls.defaultQualityProfile.value === -1 || radarrForm.controls.defaultRootPath.value === "Please Select")) {
             this.notificationService.error("Please check your entered values for Radarr");
             return;
         }
-        if (radarr4KForm.controls.enabled && (radarr4KForm.controls.defaultQualityProfile.value === "-1" || radarr4KForm.controls.defaultRootPath.value === "Please Select")) {
+        if (radarr4KForm.controls.enabled.value && (radarr4KForm.controls.defaultQualityProfile.value === -1 || radarr4KForm.controls.defaultRootPath.value === "Please Select")) {
             this.notificationService.error("Please check your entered values for Radarr 4K");
             return;
         }

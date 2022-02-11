@@ -56,7 +56,7 @@
                     <div class="md-form-field" style="margin-top:1em;"></div>
                         <mat-form-field appearance="outline" >
                             <mat-label>Quality Profiles</mat-label>
-                            <mat-select formControlName="defaultQualityProfile" required>
+                            <mat-select formControlName="defaultQualityProfile">
                                 <mat-option *ngFor="let quality of qualities" [value]="quality.id">
                                     {{quality.name}}
                                 </mat-option>
@@ -71,7 +71,7 @@
                         <div class="md-form-field" style="margin-top:1em;"></div>
                         <mat-form-field appearance="outline" >
                             <mat-label>Default Root Folder</mat-label>
-                            <mat-select formControlName="defaultRootPath" required>
+                            <mat-select formControlName="defaultRootPath">
                                 <mat-option *ngFor="let folder of rootFolders" [value]="folder.path">
                                     {{folder.path}}
                                 </mat-option>
@@ -82,7 +82,7 @@
                     <div class="md-form-field">
                         <mat-form-field appearance="outline" >
                             <mat-label>Default Minimum Availability</mat-label>
-                            <mat-select formControlName="minimumAvailability" required>
+                            <mat-select formControlName="minimumAvailability">
                                 <mat-option *ngFor="let min of minimumAvailabilityOptions" [value]="min.value">
                                     {{min.name}}
                                 </mat-option>
