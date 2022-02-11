@@ -43,6 +43,7 @@ import { TheMovieDbService } from "../services";
 import { TranslateModule } from "@ngx-translate/core";
 import { TruncateModule } from "@yellowspot/ng-truncate";
 import { WatchProvidersSelectComponent } from "./components/watch-providers-select/watch-providers-select.component";
+import { RoleModule } from "./role-directive/role.module";
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { WatchProvidersSelectComponent } from "./components/watch-providers-sele
     WatchProvidersSelectComponent,
   ],
   imports: [
+    RoleModule,
     SidebarModule,
     ReactiveFormsModule,
     FormsModule,
@@ -91,6 +93,7 @@ import { WatchProvidersSelectComponent } from "./components/watch-providers-sele
     PipeModule,
   ],
   exports: [
+      RoleModule,
       TranslateModule,
       CommonModule,
       FormsModule,

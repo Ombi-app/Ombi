@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild, ViewEncapsulation } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { ImageService, SearchV2Service, RequestService, MessageService, RadarrService, SettingsStateService } from "../../../services";
 import { ActivatedRoute } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -29,6 +29,7 @@ export class MovieDetailsComponent {
     public advancedOptions: IAdvancedData;
     public showAdvanced: boolean; // Set on the UI
     public issuesEnabled: boolean;
+    public roleName4k = "Request4KMovie";
 
     public requestType = RequestType.movie;
 

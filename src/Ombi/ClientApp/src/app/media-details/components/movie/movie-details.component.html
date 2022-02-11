@@ -78,44 +78,46 @@
 </span>
 
                             <!-- 4k Status -->
-                            <button mat-raised-button class="btn-green btn-spacing" id="availableBtn" *ngIf="movie.available4K && !movie.plexUrl && !movie.embyUrl && !movie.jellyfinUrl"> {{
-                                'Common.Available4K' | translate }}</button>
-                            <span *ngIf="!movie.available4K">
-                                <span *ngIf="movie.has4KRequest || movie.approved4K; then requestedBtn4K else notRequestedBtn4K"></span>
-                                <ng-template #requestedBtn4K>
-                                    <button id="requestedBtn4K" mat-raised-button *ngIf="!hasRequest || hasRequest && movieRequest && !movieRequest.denied4K" class="btn-spacing" color="warn" [disabled]>
-                                        <i class="fas fa-check"></i>
-                                        {{ 'Common.Requested4K' | translate }}
-                                    </button>
-                                </ng-template>
-                                <ng-template #notRequestedBtn4K>
-                                    <button *ngIf="!movie.has4KRequest" id="requestBtn4k" mat-raised-button class="btn-spacing" color="primary" (click)="request(true)">
-                                        <i *ngIf="movie.requestProcessing" class="fas fa-circle-notch fa-spin fa-fw"></i> 
-                                        <i *ngIf="!movie.requestProcessing && !movie.processed" class="fas fa-plus"></i>
-                                        <i *ngIf="movie.processed && !movie.requestProcessing" class="fas fa-check"></i> 
-                                        {{'Common.Request4K' | translate }}
-                                    </button>
-                                </ng-template>
-                                <span *ngIf="!isAdmin && movie.showSubscribe" >
-                                    <button *ngIf="!movie.subscribed" (click)="notify()" id="notifyBtn" mat-raised-button  class="btn-spacing" >  <i class="fas fa-bell"></i>
-                                        {{ 'Requests.Notify' | translate }}</button>
-                                    <button *ngIf="movie.subscribed" (click)="unNotify()" id="unnotifyBtn" mat-raised-button  class="btn-spacing" >  <i class="fas fa-bell-slash"></i>
-                                        {{ 'Requests.RemoveNotification' | translate }}</button>
-                                    </span>
+                            <span *role="roleName4k">
+                                <button mat-raised-button class="btn-green btn-spacing" id="availableBtn" *ngIf="movie.available4K && !movie.plexUrl && !movie.embyUrl && !movie.jellyfinUrl"> {{
+                                    'Common.Available4K' | translate }}</button>
+                                <span *ngIf="!movie.available4K">
+                                    <span *ngIf="movie.has4KRequest || movie.approved4K; then requestedBtn4K else notRequestedBtn4K"></span>
+                                    <ng-template #requestedBtn4K>
+                                        <button id="requestedBtn4K" mat-raised-button *ngIf="!hasRequest || hasRequest && movieRequest && !movieRequest.denied4K" class="btn-spacing" color="warn" [disabled]>
+                                            <i class="fas fa-check"></i>
+                                            {{ 'Common.Requested4K' | translate }}
+                                        </button>
+                                    </ng-template>
+                                    <ng-template #notRequestedBtn4K>
+                                        <button *ngIf="!movie.has4KRequest" id="requestBtn4k" mat-raised-button class="btn-spacing" color="primary" (click)="request(true)">
+                                            <i *ngIf="movie.requestProcessing" class="fas fa-circle-notch fa-spin fa-fw"></i> 
+                                            <i *ngIf="!movie.requestProcessing && !movie.processed" class="fas fa-plus"></i>
+                                            <i *ngIf="movie.processed && !movie.requestProcessing" class="fas fa-check"></i> 
+                                            {{'Common.Request4K' | translate }}
+                                        </button>
+                                    </ng-template>
+                                    <span *ngIf="!isAdmin && movie.showSubscribe" >
+                                        <button *ngIf="!movie.subscribed" (click)="notify()" id="notifyBtn" mat-raised-button  class="btn-spacing" >  <i class="fas fa-bell"></i>
+                                            {{ 'Requests.Notify' | translate }}</button>
+                                        <button *ngIf="movie.subscribed" (click)="unNotify()" id="unnotifyBtn" mat-raised-button  class="btn-spacing" >  <i class="fas fa-bell-slash"></i>
+                                            {{ 'Requests.RemoveNotification' | translate }}</button>
+                                        </span>
+                                </span>
                             </span>
 
                             <span *ngIf="isAdmin && hasRequest">
                                     <button id="approveBtn" *ngIf="!movie.approved && movie.requested" (click)="approve(false)" mat-raised-button class="btn-spacing" color="accent">
                                         <i class="fas fa-plus"></i> {{ 'Common.Approve' | translate }}
                                     </button>
-                                    <button id="approve4kBtn" *ngIf="!movie.approved4K && movie.has4KRequest" (click)="approve(true)" mat-raised-button class="btn-spacing" color="accent">
+                                    <button *role="roleName4k" id="approve4kBtn" *ngIf="!movie.approved4K && movie.has4KRequest" (click)="approve(true)" mat-raised-button class="btn-spacing" color="accent">
                                         <i class="fas fa-plus"></i> {{ 'Common.Approve4K' | translate }}
                                     </button>
                                     <button id="markAvailableBtn" *ngIf="!movie.available && movie.requested" (click)="markAvailable(false)" mat-raised-button class="btn-spacing"
                                         color="accent">
                                         <i class="fas fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}
                                     </button>
-                                    <button id="markAvailable4kBtn" *ngIf="!movie.available4K && movie.has4KRequest" (click)="markAvailable(true)" mat-raised-button class="btn-spacing"
+                                    <button *role="roleName4k" id="markAvailable4kBtn" *ngIf="!movie.available4K && movie.has4KRequest" (click)="markAvailable(true)" mat-raised-button class="btn-spacing"
                                         color="accent">
                                         <i class="fas fa-plus"></i> {{ 'Requests.MarkAvailable4K' | translate }}
                                     </button>
@@ -124,7 +126,7 @@
                                         color="accent">
                                         <i class="fas fa-minus"></i> {{ 'Requests.MarkUnavailable' | translate }}
                                     </button>
-                                    <button id="markUnavailable4kBtn" *ngIf="movie.available4K" (click)="markUnavailable(true)" mat-raised-button class="btn-spacing"
+                                    <button *role="roleName4k" id="markUnavailable4kBtn" *ngIf="movie.available4K" (click)="markUnavailable(true)" mat-raised-button class="btn-spacing"
                                         color="accent">
                                         <i class="fas fa-minus"></i> {{ 'Requests.MarkUnavailable4K' | translate }}
                                     </button>
