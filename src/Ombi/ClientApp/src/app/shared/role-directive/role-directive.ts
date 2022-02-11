@@ -2,14 +2,14 @@ import { Directive, Input, OnInit, TemplateRef, ViewContainerRef } from "@angula
 import { AuthService } from "../../auth/auth.service";
 
 @Directive({
-	selector: '[role]',
+	selector: '[permission]',
 })
 export class RoleDirective implements OnInit {
 	private roleName: string;
 
 	private isHidden = true;
 
-	@Input() public set role(val: string) {
+	@Input() public set permission(val: string) {
 		if (val) {
 			this.roleName = val;
 			this.updateView();
