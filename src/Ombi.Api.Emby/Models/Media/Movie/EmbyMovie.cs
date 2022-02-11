@@ -30,5 +30,6 @@ namespace Ombi.Api.Emby.Models.Movie
         public int CriticRating { get; set; }
         public string Overview { get; set; }
         public EmbyProviderids ProviderIds { get; set; }
+        public EmbyMediastream[] MediaStreams { get; set; }
     }
 }

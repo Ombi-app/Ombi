@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
@@ -86,10 +87,10 @@ namespace Ombi.Schedule.Jobs.Emby
         private async Task StartServerCache(EmbyServers server, bool recentlyAdded)
         {
             if (!ValidateSettings(server))
+            {
                 return;
+            }
 
-            //await _repo.ExecuteSql("DELETE FROM EmbyEpisode");
-            //await _repo.ExecuteSql("DELETE FROM EmbyContent");
 
             if (server.EmbySelectedLibraries.Any() && server.EmbySelectedLibraries.Any(x => x.Enabled))
             {
@@ -256,6 +257,12 @@ namespace Ombi.Schedule.Jobs.Emby
                     return;
                 }
                 _logger.LogDebug("Adding new movie {0}", movieInfo.Name);
+                var quality = movieInfo.MediaStreams?.FirstOrDefault()?.DisplayTitle ?? string.Empty;
+                if (quality.Contains("4K", CompareOptions.IgnoreCase))
+                {
+                    quality = "4K";
+                }
+
                 content.Add(new EmbyContent
                 {
                     ImdbId = movieInfo.ProviderIds.Imdb,
@@ -264,7 +271,8 @@ namespace Ombi.Schedule.Jobs.Emby
                     Type = MediaType.Movie,
                     EmbyId = movieInfo.Id,
                     Url = EmbyHelper.GetEmbyMediaUrl(movieInfo.Id, server?.ServerId, server.ServerHostname),
-                    AddedAt = DateTime.UtcNow
+                    AddedAt = DateTime.UtcNow,
+                    Quality = quality
                 });
             }
             else

@@ -12,7 +12,7 @@ namespace Ombi.Store.Entities
         public string TvDbId { get; set; }
         public string TheMovieDbId { get; set; }
         public MediaType Type { get; set; }
-
+        public string Quality { get; set; }
         public string Url { get; set; }
         
         public ICollection<IMediaServerEpisode> Episodes { get; set; }

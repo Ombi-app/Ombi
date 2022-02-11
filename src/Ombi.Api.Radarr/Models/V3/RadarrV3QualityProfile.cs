@@ -25,5 +25,4 @@
         public int resolution { get; set; }
         public string modifier { get; set; }
     }
-
 }
