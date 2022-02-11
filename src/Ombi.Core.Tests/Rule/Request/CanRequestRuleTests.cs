@@ -64,7 +64,7 @@ namespace Ombi.Core.Tests.Rule.Request
         {
             UserManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), OmbiRoles.RequestMovie)).ReturnsAsync(true);
             UserManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), OmbiRoles.Request4KMovie)).ReturnsAsync(false);
-            var request = new MovieRequests() { RequestType = Store.Entities.RequestType.Movie, Has4KRequest = true };
+            var request = new MovieRequests() { RequestType = Store.Entities.RequestType.Movie, Is4kRequest = true };
             var result = await Rule.Execute(request);
 
             Assert.False(result.Success);

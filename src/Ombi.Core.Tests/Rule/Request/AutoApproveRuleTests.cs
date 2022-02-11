@@ -42,7 +42,7 @@ namespace Ombi.Core.Tests.Rule.Request
         public async Task Should_ReturnSuccess_WhenAdminAndRequestMovie()
         {
             UserManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), OmbiRoles.Admin)).ReturnsAsync(true);
-            var request = new BaseRequest() { RequestType = Store.Entities.RequestType.Movie };
+            var request = new MovieRequests() { RequestType = Store.Entities.RequestType.Movie };
             var result = await Rule.Execute(request);
 
             Assert.True(result.Success);
@@ -64,7 +64,7 @@ namespace Ombi.Core.Tests.Rule.Request
         public async Task Should_ReturnSuccess_WhenAutoApproveMovieAndRequestMovie()
         {
             UserManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), OmbiRoles.AutoApproveMovie)).ReturnsAsync(true);
-            var request = new BaseRequest() { RequestType = Store.Entities.RequestType.Movie };
+            var request = new MovieRequests() { RequestType = Store.Entities.RequestType.Movie };
             var result = await Rule.Execute(request);
 
             Assert.True(result.Success);

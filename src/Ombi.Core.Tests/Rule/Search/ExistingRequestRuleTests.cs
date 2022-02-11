@@ -36,7 +36,8 @@ namespace Ombi.Core.Tests.Rule.Search
             {
                 TheMovieDbId = 123,
                 Approved = true,
-                RequestType = RequestType.Movie
+                RequestType = RequestType.Movie,
+                RequestedDate = System.DateTime.Now,
             };
 
             MovieMock.Setup(x => x.GetRequestAsync(123)).ReturnsAsync(list);
