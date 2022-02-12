@@ -180,16 +180,12 @@ namespace Ombi.Schedule.Jobs.Plex
         private async Task ProcessMovies()
         {
             // Get all non available
-            var movies = _movieRepo.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available);
+            var movies = _movieRepo.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available || (!x.Available4K && x.Has4KRequest));
             var itemsForAvailbility = new List<AvailabilityModel>();
 
             foreach (var movie in movies)
             {
-                if (movie.Available)
-                {
-                    return;
-                }
-
+                var has4kRequest = movie.Has4KRequest;
                 PlexServerContent item = null;
                 if (movie.ImdbId.HasValue())
                 {
@@ -208,9 +204,21 @@ namespace Ombi.Schedule.Jobs.Plex
                     continue;
                 }
 
-                _log.LogInformation("[PAC] - Movie request {0} is now available, sending notification", $"{movie.Title} - {movie.Id}");
-                movie.Available = true;
-                movie.MarkedAsAvailable = DateTime.UtcNow;
+                _log.LogInformation($"[PAC] - Movie request {movie.Title} - {movie.Id} is now available, sending notification");
+
+                if (has4kRequest && item.Has4K)
+                {
+                    movie.Available4K = true;
+                    movie.MarkedAsAvailable4K = DateTime.Now;
+                }
+
+                // If we have a non-4k versison then mark as available
+                if (item.Quality.HasValue())
+                {
+                    movie.Available = true;
+                    movie.MarkedAsAvailable = DateTime.Now;
+                }
+
                 itemsForAvailbility.Add(new AvailabilityModel
                 {
                     Id = movie.Id,
@@ -222,9 +230,9 @@ namespace Ombi.Schedule.Jobs.Plex
             {
                 await _movieRepo.SaveChangesAsync();
             }
-            foreach (var i in itemsForAvailbility)
-            {
 
+            foreach (var i in itemsForAvailbility.DistinctBy(x => x.Id))
+            {
                 await _notificationService.Notify(new NotificationOptions
                 {
                     DateTime = DateTime.Now,
@@ -234,8 +242,6 @@ namespace Ombi.Schedule.Jobs.Plex
                     Recipient = i.RequestedUser
                 });
             }
-
-            //await _repo.SaveChangesAsync();
         }
 
         private bool _disposed;
