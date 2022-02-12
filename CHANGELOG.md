@@ -1,3 +1,12 @@
+## [4.11.7](https://github.com/Ombi-app/Ombi/compare/v4.11.6...v4.11.7) (2022-02-12)
+
+
+### Bug Fixes
+
+* **notifications:** :bug: This is a fix for some of the duplicate notification issues [#3825](https://github.com/Ombi-app/Ombi/issues/3825) ([22bb422](https://github.com/Ombi-app/Ombi/commit/22bb4226ead2d62e8c2c2c05be47d7da621402e2))
+
+
+
 ## [4.11.6](https://github.com/Ombi-app/Ombi/compare/v4.11.5...v4.11.6) (2022-02-10)
 
 
@@ -366,15 +375,6 @@
 
 * **request-limits:** :sparkles: Added the new request limit options into the user importer ([01d4f4d](https://github.com/Ombi-app/Ombi/commit/01d4f4d718fe85ac181dae52565fb1b427965b4f))
 * **request-limits:** :sparkles: Added the new request limit options to the bulk edit ([03bc23a](https://github.com/Ombi-app/Ombi/commit/03bc23a74e4308aa6b4c6b25636edcdeb65c1f0e))
-
-
-
-## [4.2.13](https://github.com/Ombi-app/Ombi/compare/v4.2.12...v4.2.13) (2021-10-20)
-
-
-### Bug Fixes
-
-* **translations:** 🌐 New translations %two_letters_code% from Crowdin [skip ci] ([8fbd267](https://github.com/Ombi-app/Ombi/commit/8fbd267b516ddaa80fd16c091bae532b860fbf45))
 
 
 
