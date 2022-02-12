@@ -80,10 +80,11 @@ namespace Ombi.Schedule.Jobs.Jellyfin
 
         private async Task ProcessMovies()
         {
-            var movies = _movieRepo.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available);
+            var movies = _movieRepo.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available || (!x.Available4K && x.Has4KRequest));
 
             foreach (var movie in movies)
             {
+                var has4kRequest = movie.Has4KRequest;
                 JellyfinContent jellyfinContent = null;
                 if (movie.TheMovieDbId > 0)
                 {
@@ -102,8 +103,19 @@ namespace Ombi.Schedule.Jobs.Jellyfin
 
                 _log.LogInformation("We have found the request {0} on Jellyfin, sending the notification", movie?.Title ?? string.Empty);
 
-                movie.Available = true;
-                movie.MarkedAsAvailable = DateTime.Now;
+                if (has4kRequest && jellyfinContent.Has4K)
+                {
+                    movie.Available4K = true;
+                    movie.MarkedAsAvailable4K = DateTime.Now;
+                }
+
+                // If we have a non-4k versison then mark as available
+                if (jellyfinContent.Quality.HasValue())
+                {
+                    movie.Available = true;
+                    movie.MarkedAsAvailable = DateTime.Now;
+                }
+
                 if (movie.Available)
                 {
                     var recipient = movie.RequestedUser.Email.HasValue() ? movie.RequestedUser.Email : string.Empty;
