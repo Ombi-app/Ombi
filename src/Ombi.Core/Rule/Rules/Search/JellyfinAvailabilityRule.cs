@@ -80,8 +80,26 @@ namespace Ombi.Core.Rule.Rules.Search
                     obj.TheMovieDbId = obj.Id.ToString();
                     useTheMovieDb = true;
                 }
-                obj.Available = true;
-                obj.JellyfinUrl = item.Url;
+                if (obj is SearchMovieViewModel movie)
+                {
+                    if (item.Has4K)
+                    {
+                        movie.Available4K = true;
+                        obj.JellyfinUrl = item.Url;
+                    }
+
+                    if (item.Quality.HasValue())
+                    {
+                        obj.Available = true;
+                        obj.EmbyUrl = item.Url;
+                        obj.Quality = item.Quality;
+                    }
+                }
+                else
+                {
+                    obj.Available = true;
+                    obj.JellyfinUrl = item.Url;
+                }
 
                 if (obj.Type == RequestType.TvShow)
                 {

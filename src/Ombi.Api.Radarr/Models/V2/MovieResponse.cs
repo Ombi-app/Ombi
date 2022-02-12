@@ -44,7 +44,10 @@ namespace Ombi.Api.Radarr.Models
         public int id { get; set; }
     }
 
-
+    public class MovieQuality
+    {
+        public V3.Quality quality { get; set; }
+    }
     public class Moviefile
     {
         public int movieId { get; set; }
@@ -54,7 +57,7 @@ namespace Ombi.Api.Radarr.Models
         public DateTime dateAdded { get; set; }
         public string sceneName { get; set; }
         public int indexerFlags { get; set; }
-        public V3.Quality quality { get; set; }
+        public MovieQuality quality { get; set; }
         public Mediainfo mediaInfo { get; set; }
         public string originalFilePath { get; set; }
         public bool qualityCutoffNotMet { get; set; }

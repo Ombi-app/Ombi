@@ -209,6 +209,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 if (has4kRequest && item.Has4K)
                 {
                     movie.Available4K = true;
+                    movie.Approved4K = true;
                     movie.MarkedAsAvailable4K = DateTime.Now;
                 }
 
@@ -216,6 +217,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 if (item.Quality.HasValue())
                 {
                     movie.Available = true;
+                    movie.Approved = true;
                     movie.MarkedAsAvailable = DateTime.Now;
                 }
 

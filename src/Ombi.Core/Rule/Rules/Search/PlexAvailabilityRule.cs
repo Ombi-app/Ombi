@@ -89,7 +89,25 @@ namespace Ombi.Core.Rule.Rules.Search
                     obj.TheMovieDbId = obj.Id.ToString();
                     useTheMovieDb = true;
                 }
-                obj.Available = true;
+
+                if (obj is SearchMovieViewModel movie)
+                {
+                    if (item.Has4K)
+                    {
+                        movie.Available4K = true;
+                    }
+
+                    if (item.Quality.HasValue())
+                    {
+                        obj.Available = true;
+                        obj.Quality = item.Quality;
+                    }
+                }
+                else
+                {
+                    obj.Available = true;
+                }
+
                 if (item.Url.StartsWith("http"))
                 {
                     obj.PlexUrl = item.Url;
@@ -99,11 +117,9 @@ namespace Ombi.Core.Rule.Rules.Search
                     // legacy content
                     obj.PlexUrl = PlexHelper.BuildPlexMediaUrl(item.Url, host);
                 }
-                obj.Quality = item.Quality;
 
-                if (obj.Type == RequestType.TvShow)
+                if (obj is SearchTvShowViewModel search)
                 {
-                    var search = (SearchTvShowViewModel)obj;
                     // Let's go through the episodes now
                     if (search.SeasonRequests.Any())
                     {

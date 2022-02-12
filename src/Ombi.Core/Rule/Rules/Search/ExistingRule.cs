@@ -26,9 +26,8 @@ namespace Ombi.Core.Rule.Rules.Search
 
         public async Task<RuleResult> Execute(SearchViewModel obj)
         {
-            if (obj.Type == RequestType.Movie)
+            if (obj is SearchMovieViewModel movie)
             {
-                var movie = (SearchMovieViewModel)obj;
                 var movieRequests = await Movie.GetRequestAsync(obj.Id);
                 if (movieRequests != null) // Do we already have a request for this?
                 {

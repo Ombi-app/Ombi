@@ -63,11 +63,29 @@ namespace Ombi.Core.Rule.Rules.Search
                     }
                 }
             }
-            
+
             if (item != null)
             {
-                obj.Available = true;
-                obj.EmbyUrl = item.Url;
+                if (obj is SearchMovieViewModel movie)
+                {
+                    if (item.Has4K)
+                    {
+                        movie.Available4K = true;
+                        obj.EmbyUrl = item.Url;
+                    }
+
+                    if (item.Quality.HasValue())
+                    {
+                        obj.Available = true;
+                        obj.EmbyUrl = item.Url;
+                        obj.Quality = item.Quality;
+                    }
+                }
+                else
+                {
+                    obj.Available = true;
+                    obj.EmbyUrl = item.Url;
+                }
 
                 if (obj.Type == RequestType.TvShow)
                 {

@@ -79,12 +79,14 @@
 
                             <!-- 4k Status -->
                             <span *permission="roleName4k">
-                                <button mat-raised-button class="btn-green btn-spacing" id="availableBtn" *ngIf="movie.available4K && !movie.plexUrl && !movie.embyUrl && !movie.jellyfinUrl"> {{
-                                    'Common.Available4K' | translate }}</button>
+                                <button mat-raised-button class="btn-green btn-spacing" id="availableBtn4k" *ngIf="movie.available4K"> {{
+                                    'Common.Available4K' | translate }}
+                                </button>
+
                                 <span *ngIf="!movie.available4K">
                                     <span *ngIf="movie.has4KRequest || movie.approved4K; then requestedBtn4K else notRequestedBtn4K"></span>
                                     <ng-template #requestedBtn4K>
-                                        <button id="requestedBtn4K" mat-raised-button *ngIf="!hasRequest || hasRequest && movieRequest && !movieRequest.denied4K" class="btn-spacing" color="warn" [disabled]>
+                                        <button id="requestedBtn4K" mat-raised-button *ngIf="movieRequest && !movieRequest.denied4K" class="btn-spacing" color="warn" [disabled]>
                                             <i class="fas fa-check"></i>
                                             {{ 'Common.Requested4K' | translate }}
                                         </button>

@@ -64,6 +64,11 @@
         <div>{{movie.quality | quality}}</div>
     </div>
 
+    <div *ngIf="movie.available4K">
+        <span class="label">{{'MediaDetails.Quality' | translate }}&nbsp;</span>
+        <span >{{"4K" | quality}}</span>
+    </div>
+
     <div *ngIf="advancedOptions && request && request.rootPathOverrideTitle">
         <span class="label">{{'MediaDetails.RootFolderOverride' | translate }}</span>
         <div>{{request.rootPathOverrideTitle}}</div>

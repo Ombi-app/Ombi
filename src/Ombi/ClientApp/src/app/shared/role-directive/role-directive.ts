@@ -23,7 +23,7 @@ export class RoleDirective implements OnInit {
 	}
 
 	private updateView(): void {
-		if (this.auth.hasRole(this.roleName)) {
+		if (this.auth.hasRole(this.roleName) || this.auth.hasRole("admin")) {
 			if (this.isHidden) {
 				this.viewContainer.createEmbeddedView(this.templateRef);
 				this.isHidden = false;

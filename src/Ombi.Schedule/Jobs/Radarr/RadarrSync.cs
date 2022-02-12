@@ -77,7 +77,7 @@ namespace Ombi.Schedule.Jobs.Radarr
                             {
                                 if (m.tmdbId > 0)
                                 {
-                                    var is4k = m.movieFile?.quality?.resolution >= 2160;
+                                    var is4k = m.movieFile?.quality?.quality?.resolution >= 2160;
 
                                     // Do we have a cached movie for this already?
                                     var existing = await existingMovies.FirstOrDefaultAsync(x => x.TheMovieDbId == m.tmdbId);
