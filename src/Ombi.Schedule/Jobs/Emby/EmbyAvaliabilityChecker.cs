@@ -53,10 +53,11 @@ namespace Ombi.Schedule.Jobs.Emby
 
         private async Task ProcessMovies()
         {
-            var movies = _movieRepo.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available);
+            var movies = _movieRepo.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available || (!x.Available4K && x.Has4KRequest));
 
             foreach (var movie in movies)
             {
+                var has4kRequest = movie.Has4KRequest;
                 EmbyContent embyContent = null;
                 if (movie.TheMovieDbId > 0)
                 {
@@ -75,8 +76,18 @@ namespace Ombi.Schedule.Jobs.Emby
 
                 _log.LogInformation("We have found the request {0} on Emby, sending the notification", movie?.Title ?? string.Empty);
 
-                movie.Available = true;
-                movie.MarkedAsAvailable = DateTime.Now;
+                if (has4kRequest && embyContent.Has4K)
+                {
+                    movie.Available4K = true;
+                    movie.MarkedAsAvailable4K = DateTime.Now;
+                }
+
+                // If we have a non-4k versison then mark as available
+                if (embyContent.Quality.HasValue())
+                {
+                    movie.Available = true;
+                    movie.MarkedAsAvailable = DateTime.Now;
+                }
                 if (movie.Available)
                 {
                     var recipient = movie.RequestedUser.Email.HasValue() ? movie.RequestedUser.Email : string.Empty;
