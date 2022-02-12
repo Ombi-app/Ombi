@@ -12,7 +12,6 @@ namespace Ombi.Api.Plex.Models
         public string contentRating { get; set; }
         public string summary { get; set; }
         public int index { get; set; }
-        public float rating { get; set; }
         //public int viewCount { get; set; }
         //public int lastViewedAt { get; set; }
         public int year { get; set; }

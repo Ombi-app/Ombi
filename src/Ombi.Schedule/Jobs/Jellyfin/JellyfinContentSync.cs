@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
@@ -76,9 +77,6 @@ namespace Ombi.Schedule.Jobs.Jellyfin
             {
                 return;
             }
-
-            //await _repo.ExecuteSql("DELETE FROM JellyfinEpisode");
-            //await _repo.ExecuteSql("DELETE FROM JellyfinContent");
 
             if (server.JellyfinSelectedLibraries.Any() && server.JellyfinSelectedLibraries.Any(x => x.Enabled))
             {
@@ -179,6 +177,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
             var totalCount = movies.TotalRecordCount;
             var processed = 0;
             var mediaToAdd = new HashSet<JellyfinContent>();
+            var mediaToUpdate = new HashSet<JellyfinContent>();
             while (processed < totalCount)
             {
                 foreach (var movie in movies.Items)
@@ -189,7 +188,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                             await Api.GetCollection(movie.Id, server.ApiKey, server.AdministratorId, server.FullUri);
                         foreach (var item in movieInfo.Items)
                         {
-                            await ProcessMovies(item, mediaToAdd, server);
+                            await ProcessMovies(item, mediaToAdd, mediaToUpdate, server);
                         }
 
                         processed++;
@@ -198,20 +197,28 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                     {
                         processed++;
                         // Regular movie
-                        await ProcessMovies(movie, mediaToAdd, server);
+                        await ProcessMovies(movie, mediaToAdd, mediaToUpdate, server);
                     }
                 }
 
                 // Get the next batch
                 movies = await Api.GetAllMovies(server.ApiKey, parentId, processed, 200, server.AdministratorId, server.FullUri);
                 await _repo.AddRange(mediaToAdd);
+                await _repo.UpdateRange(mediaToUpdate);
                 mediaToAdd.Clear();
 
             }
         }
 
-        private async Task ProcessMovies(JellyfinMovie movieInfo, ICollection<JellyfinContent> content, JellyfinServers server)
+        private async Task ProcessMovies(JellyfinMovie movieInfo, ICollection<JellyfinContent> content, ICollection<JellyfinContent> toUpdate, JellyfinServers server)
         {
+            var quality = movieInfo.MediaStreams?.FirstOrDefault()?.DisplayTitle ?? string.Empty;
+            var has4K = false;
+            if (quality.Contains("4K", CompareOptions.IgnoreCase))
+            {
+                has4K = true;
+            }
+
             // Check if it exists
             var existingMovie = await _repo.GetByJellyfinId(movieInfo.Id);
             var alreadyGoingToAdd = content.Any(x => x.JellyfinId == movieInfo.Id);
@@ -222,7 +229,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                     _logger.LogWarning($"Movie {movieInfo.Name} has no relevant metadata. Skipping.");
                     return;
                 }
-                _logger.LogDebug("Adding new movie {0}", movieInfo.Name);
+                _logger.LogDebug($"Adding new movie {movieInfo.Name}");
                 content.Add(new JellyfinContent
                 {
                     ImdbId = movieInfo.ProviderIds.Imdb,
@@ -231,13 +238,26 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                     Type = MediaType.Movie,
                     JellyfinId = movieInfo.Id,
                     Url = JellyfinHelper.GetJellyfinMediaUrl(movieInfo.Id, server?.ServerId, server.ServerHostname),
-                    AddedAt = DateTime.UtcNow
+                    AddedAt = DateTime.UtcNow,
+                    Quality = has4K ? null : quality,
+                    Has4K = has4K
                 });
             }
             else
             {
-                // we have this
-                _logger.LogDebug("We already have movie {0}", movieInfo.Name);
+                if (!existingMovie.Quality.Equals(quality, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    _logger.LogDebug($"We have found another quality for Movie '{movieInfo.Name}', Quality: '{quality}'");
+                    existingMovie.Quality = has4K ? null : quality;
+                    existingMovie.Has4K = has4K;
+
+                    toUpdate.Add(existingMovie);
+                }
+                else
+                {
+                    // we have this
+                    _logger.LogDebug($"We already have movie {movieInfo.Name}");
+                }
             }
         }
 

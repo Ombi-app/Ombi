@@ -210,6 +210,7 @@ namespace Ombi.Schedule.Jobs.Emby
             var totalCount = movies.TotalRecordCount;
             var processed = 0;
             var mediaToAdd = new HashSet<EmbyContent>();
+            var mediaToUpdate = new HashSet<EmbyContent>();
             while (processed < totalCount)
             {
                 foreach (var movie in movies.Items)
@@ -220,13 +221,13 @@ namespace Ombi.Schedule.Jobs.Emby
                             await Api.GetCollection(movie.Id, server.ApiKey, server.AdministratorId, server.FullUri);
                         foreach (var item in movieInfo.Items)
                         {
-                            await ProcessMovies(item, mediaToAdd, server);
+                            await ProcessMovies(item, mediaToAdd, mediaToUpdate, server);
                         }
                     }
                     else
                     {
                         // Regular movie
-                        await ProcessMovies(movie, mediaToAdd, server);
+                        await ProcessMovies(movie, mediaToAdd, mediaToUpdate, server);
                     }
 
                     processed++;
@@ -239,29 +240,31 @@ namespace Ombi.Schedule.Jobs.Emby
                     movies = await Api.GetAllMovies(server.ApiKey, parentId, processed, AmountToTake, server.AdministratorId, server.FullUri);
                 }
                 await _repo.AddRange(mediaToAdd);
+                await _repo.UpdateRange(mediaToUpdate);
                 mediaToAdd.Clear();
             }
         }
 
-        private async Task ProcessMovies(EmbyMovie movieInfo, ICollection<EmbyContent> content, EmbyServers server)
+        private async Task ProcessMovies(EmbyMovie movieInfo, ICollection<EmbyContent> content, ICollection<EmbyContent> toUpdate, EmbyServers server)
         {
+            var quality = movieInfo.MediaStreams?.FirstOrDefault()?.DisplayTitle ?? string.Empty;
+            var has4K = false;
+            if (quality.Contains("4K", CompareOptions.IgnoreCase))
+            {
+                has4K = true;
+            }
+
             // Check if it exists
             var existingMovie = await _repo.GetByEmbyId(movieInfo.Id);
             var alreadyGoingToAdd = content.Any(x => x.EmbyId == movieInfo.Id);
             if (existingMovie == null && !alreadyGoingToAdd)
             {
-
                 if (!movieInfo.ProviderIds.Any())
                 {
                     _logger.LogWarning($"Movie {movieInfo.Name} has no relevant metadata. Skipping.");
                     return;
                 }
-                _logger.LogDebug("Adding new movie {0}", movieInfo.Name);
-                var quality = movieInfo.MediaStreams?.FirstOrDefault()?.DisplayTitle ?? string.Empty;
-                if (quality.Contains("4K", CompareOptions.IgnoreCase))
-                {
-                    quality = "4K";
-                }
+                _logger.LogDebug($"Adding new movie {movieInfo.Name}");
 
                 content.Add(new EmbyContent
                 {
@@ -272,13 +275,25 @@ namespace Ombi.Schedule.Jobs.Emby
                     EmbyId = movieInfo.Id,
                     Url = EmbyHelper.GetEmbyMediaUrl(movieInfo.Id, server?.ServerId, server.ServerHostname),
                     AddedAt = DateTime.UtcNow,
-                    Quality = quality
+                    Quality = has4K ? null : quality,
+                    Has4K = has4K
                 });
             }
             else
             {
-                // we have this
-                _logger.LogDebug("We already have movie {0}", movieInfo.Name);
+                if (!existingMovie.Quality.Equals(quality, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    _logger.LogDebug($"We have found another quality for Movie '{movieInfo.Name}', Quality: '{quality}'");
+                    existingMovie.Quality = has4K ? null : quality;
+                    existingMovie.Has4K = has4K;
+
+                    toUpdate.Add(existingMovie);
+                }
+                else
+                {
+                    // we have this
+                    _logger.LogDebug($"We already have movie {movieInfo.Name}");
+                }
             }
         }
 

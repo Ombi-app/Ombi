@@ -35,7 +35,7 @@ namespace Ombi.Core.Tests.Rule.Search
             SettingsMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new EmbySettings());
             ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new EmbyContent
             {
-                ProviderId = "123"
+                TheMovieDbId = "123"
             });
             var search = new SearchMovieViewModel()
             {

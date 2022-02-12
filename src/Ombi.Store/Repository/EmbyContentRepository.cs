@@ -25,7 +25,6 @@
 //  ************************************************************************/
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,7 +36,6 @@ namespace Ombi.Store.Repository
 {
     public class EmbyContentRepository : MediaServerContentRepository<EmbyContent>, IEmbyContentRepository
     {
-
         public EmbyContentRepository(ExternalContext db):base(db)
         {
         }
@@ -97,7 +95,13 @@ namespace Ombi.Store.Repository
         {
             Db.EmbyContent.Update((EmbyContent)existingContent);
         }
-        
+
+        public override Task UpdateRange(IEnumerable<IMediaServerContent> existingContent)
+        {
+            Db.EmbyContent.UpdateRange((EmbyContent)existingContent);
+            return InternalSaveChanges();
+        }
+
         public override RecentlyAddedType RecentlyAddedType => RecentlyAddedType.Emby;
     }
 }

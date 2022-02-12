@@ -46,6 +46,9 @@ namespace Ombi.Store.Migrations.ExternalMySql
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
+                    b.Property<bool>("Has4K")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("ImdbId")
                         .HasColumnType("longtext");
 
@@ -126,6 +129,9 @@ namespace Ombi.Store.Migrations.ExternalMySql
 
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("Has4K")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("ImdbId")
                         .HasColumnType("longtext");
@@ -328,6 +334,9 @@ namespace Ombi.Store.Migrations.ExternalMySql
 
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("Has4K")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("ImdbId")
                         .HasColumnType("longtext");

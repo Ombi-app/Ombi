@@ -12,7 +12,11 @@ namespace Ombi.Store.Entities
         public string TvDbId { get; set; }
         public string TheMovieDbId { get; set; }
         public MediaType Type { get; set; }
+        /// <summary>
+        /// Only populated if it's not 4k   
+        /// </summary>
         public string Quality { get; set; }
+        public bool Has4K { get; set; }
         public string Url { get; set; }
         
         public ICollection<IMediaServerEpisode> Episodes { get; set; }

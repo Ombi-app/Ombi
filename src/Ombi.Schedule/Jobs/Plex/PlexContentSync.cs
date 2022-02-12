@@ -293,7 +293,7 @@ namespace Ombi.Schedule.Jobs.Plex
             Dictionary<int, int> contentProcessed)
         {
             Logger.LogDebug("Processing Movies");
-            foreach (var movie in content?.Metadata ?? new Metadata[] { })
+            foreach (var movie in content?.Metadata ?? Array.Empty<Metadata>())
             {
                 // Let's check if we have this movie
 
@@ -302,11 +302,31 @@ namespace Ombi.Schedule.Jobs.Plex
                     var existing = await Repo.GetFirstContentByCustom(x => x.Title == movie.title
                                                                            && x.ReleaseYear == movie.year.ToString()
                                                                            && x.Type == MediaType.Movie);
-                    // The rating key keeps changing
-                    //var existing = await Repo.GetByKey(movie.ratingKey);
                     if (existing != null)
                     {
-                        Logger.LogDebug("We already have movie {0}", movie.title);
+                        // We need to see if this is a different quality,
+                        // We want to know if this is a 4k content for example
+                        var foundQualities = movie.Media?.Select(x => x.videoResolution);
+
+                        foreach (var quality in foundQualities)
+                        {
+                            if (quality.Equals(existing.Quality))
+                            {
+                                // We got it
+                                continue;
+                            }
+
+                            // We don't have this quality
+                            if (quality.Equals("4k", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                Logger.LogDebug($"We already have movie {movie.title}, But found a 4K version!");
+                                existing.Has4K = true;
+                                await Repo.Update(existing);
+                            }
+                        }
+
+
+                        Logger.LogDebug($"We already have movie {movie.title}");
                         continue;
                     }
 
@@ -349,6 +369,10 @@ namespace Ombi.Schedule.Jobs.Plex
                     }
                     var providerIds = PlexHelper.GetProviderIdsFromMetadata(guids.ToArray());
 
+                    var qualities = movie.Media?.Select(x => x.videoResolution);
+                    var is4k = qualities != null && qualities.Any(x => x.Equals("4k", StringComparison.InvariantCultureIgnoreCase));
+                    var selectedQuality = is4k ? string.Empty : qualities?.OrderBy(x => x)?.FirstOrDefault() ?? string.Empty;
+
                     var item = new PlexServerContent
                     {
                         AddedAt = DateTime.Now,
@@ -358,7 +382,8 @@ namespace Ombi.Schedule.Jobs.Plex
                         Title = movie.title,
                         Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, movie.ratingKey, servers.ServerHostname),
                         Seasons = new List<PlexSeasonsContent>(),
-                        Quality = movie.Media?.FirstOrDefault()?.videoResolution ?? string.Empty
+                        Quality = selectedQuality,
+                        Has4K = is4k,
                     };
                     if (providerIds.ImdbId.HasValue())
                     {
