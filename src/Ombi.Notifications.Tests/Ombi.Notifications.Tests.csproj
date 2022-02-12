@@ -13,6 +13,7 @@
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
     <packagereference Include="Microsoft.NET.Test.Sdk" Version="16.8.0"></packagereference>
     <PackageReference Include="Moq" Version="4.10.0" />
+	  <PackageReference Include="Moq.AutoMock" Version="0.4.0" />
   </ItemGroup>
 
   <ItemGroup>

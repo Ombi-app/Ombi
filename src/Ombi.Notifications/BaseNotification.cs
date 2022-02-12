@@ -33,7 +33,7 @@ namespace Ombi.Notifications
             AlbumRepository = album;
             UserNotificationPreferences = notificationUserPreferences;
             _userManager = um;
-            Settings.ClearCache();
+            Settings?.ClearCache();
         }
 
         protected ISettingsService<T> Settings { get; }
@@ -64,7 +64,11 @@ namespace Ombi.Notifications
 
         public async Task NotifyAsync(NotificationOptions model, Settings.Settings.Models.Settings settings)
         {
-            if (settings == null) await NotifyAsync(model);
+            if (settings == null)
+            {
+                await NotifyAsync(model);
+                return;
+            }
 
             var notificationSettings = (T)settings;
 
@@ -114,14 +118,12 @@ namespace Ombi.Notifications
                     case NotificationType.IssueComment:
                         await IssueComment(model, notificationSettings);
                         break;
-                    case NotificationType.AdminNote:
-                        break;
-                    case NotificationType.WelcomeEmail:
-                        break;
-                    case NotificationType.Newsletter:
-                        break;
                     case NotificationType.PartiallyAvailable:
                         await PartiallyAvailable(model, notificationSettings);
+                        break;
+                    case NotificationType.AdminNote:
+                    case NotificationType.WelcomeEmail:
+                    case NotificationType.Newsletter:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
