@@ -15,7 +15,7 @@ export class RequestOptionsComponent {
   public RequestType = RequestType;
 
   constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
-    private requestService: RequestService, 
+    private requestService: RequestService,
     private messageService: MessageService,
     private bottomSheetRef: MatBottomSheetRef<RequestOptionsComponent>,
     private translate: TranslateService) { }
@@ -43,7 +43,6 @@ export class RequestOptionsComponent {
   }
 
   public async approve() {
-    // TODO 4K
     if (this.data.type === RequestType.movie) {
       await firstValueFrom(this.requestService.approveMovie({id: this.data.id, is4K: false}));
     }
@@ -56,6 +55,14 @@ export class RequestOptionsComponent {
 
     this.bottomSheetRef.dismiss({type: UpdateType.Approve});
     return;
+  }
+
+  public async approve4K() {
+    if (this.data.type != RequestType.movie) {
+      return;
+    }
+
+    await firstValueFrom(this.requestService.approveMovie({id: this.data.id, is4K: true}));
   }
 
   public async changeAvailability() {

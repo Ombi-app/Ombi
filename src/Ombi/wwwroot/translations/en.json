@@ -206,6 +206,7 @@
         "RequestPanel": {
             "Delete":"Delete Request",
             "Approve":"Approve Request",
+            "Approve4K":"Approve 4K Request",
             "ChangeAvailability":"Mark Available",
             "Deleted": "Successfully deleted selected items",
             "Approved": "Successfully approved selected items"
