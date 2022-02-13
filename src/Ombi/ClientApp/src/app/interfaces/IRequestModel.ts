@@ -21,6 +21,7 @@ export interface IMovieRequests extends IFullBaseRequest {
   available4K: boolean;
   denied4K: boolean;
   deniedReason4K: string;
+  requestedDate4k: Date;
 
   // For the UI
   rootPathOverrideTitle: string;

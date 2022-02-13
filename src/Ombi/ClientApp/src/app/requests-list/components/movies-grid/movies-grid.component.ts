@@ -59,6 +59,9 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
         this.manageOwnRequests = this.auth.hasRole("ManageOwnRequests")
         if (this.isAdmin) {
             this.displayedColumns.unshift('select');
+            this.displayedColumns.splice(4,0,'has4kRequest');
+        } else if (this.auth.hasRole("Request4KMovie")) {
+            this.displayedColumns.splice(4,0,'has4kRequest');
         }
         const defaultCount = this.storageService.get(this.storageKeyGridCount);
         const defaultSort = this.storageService.get(this.storageKey);
@@ -176,13 +179,17 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
         });
       }
 
-      public bulkApprove() {
+      public bulkApprove = () => this.bulkApproveInternal(false);
+
+      public bulkApprove4K = () => this.bulkApproveInternal(true);
+
+      private bulkApproveInternal(is4k: boolean) {
         if (this.selection.isEmpty()) {
             return;
         }
         let tasks = new Array<Observable<IRequestEngineResult>>();
         this.selection.selected.forEach((selected) => {
-            tasks.push(this.requestServiceV1.approveMovie({ id: selected.id, is4K: false }));
+            tasks.push(this.requestServiceV1.approveMovie({ id: selected.id, is4K: is4k }));
         });
 
         this.isLoadingResults = true;
@@ -198,5 +205,12 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
             this.selection.clear();
             this.ngAfterViewInit();
         })
+      }
+
+      public getRequestDate(request: IMovieRequests) : Date {
+        if (new Date(request.requestedDate).getFullYear() === 1) {
+            return request.requestedDate4k;
+        }
+        return request.requestedDate;
       }
 }

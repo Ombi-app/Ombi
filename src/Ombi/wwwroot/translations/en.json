@@ -171,6 +171,7 @@
         "Remove": "Remove",
         "Deny": "Deny",
         "Deny4K": "Deny 4K",
+        "Has4KRequest": "Has 4K Request",
         "DenyReason": "Deny Reason",
         "DeniedReason": "Denied Reason",
         "Season": "Season",
