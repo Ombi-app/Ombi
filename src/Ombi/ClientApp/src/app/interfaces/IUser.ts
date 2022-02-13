@@ -146,3 +146,8 @@ export enum INotificationAgent {
     Webhook = 9,
     WhatsApp = 10
 }
+
+export interface IFeatureEnablement {
+    name: string;
+    enabled: boolean;
+}

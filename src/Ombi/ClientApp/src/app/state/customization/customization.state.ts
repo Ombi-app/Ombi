@@ -6,7 +6,6 @@ import { ICustomizationSettings } from "../../interfaces";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { SettingsService } from "../../services";
-import { produce } from 'immer';
 import { tap } from "rxjs/operators";
 
 @State({
