@@ -1,3 +1,12 @@
+## [4.11.8](https://github.com/Ombi-app/Ombi/compare/v4.11.7...v4.11.8) (2022-02-13)
+
+
+### Bug Fixes
+
+* **settings:** :bug: Fixed an issue where we were not displaying the excluded keyworks correctly in the TheMovieDbSettings page ([d3b3316](https://github.com/Ombi-app/Ombi/commit/d3b3316cbac18356b2f6b0912a3deb2c183e6534))
+
+
+
 ## [4.11.7](https://github.com/Ombi-app/Ombi/compare/v4.11.6...v4.11.7) (2022-02-12)
 
 
@@ -344,37 +353,6 @@
 ### Bug Fixes
 
 * :bug: Hides no results message during search. ([#4375](https://github.com/Ombi-app/Ombi/issues/4375)) ([b819b0e](https://github.com/Ombi-app/Ombi/commit/b819b0e007e578bf3d8425f19591f87029c64d06))
-
-
-
-# [4.3.0](https://github.com/Ombi-app/Ombi/compare/v4.2.13...v4.3.0) (2021-10-20)
-
-
-### Bug Fixes
-
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([b0f3abb](https://github.com/Ombi-app/Ombi/commit/b0f3abb9ceebdbe5d6c20af98b7355df2999eb58))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([77d017b](https://github.com/Ombi-app/Ombi/commit/77d017b3d8ffd1714a2f6efecc8c900d56d062e4))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([f6e9784](https://github.com/Ombi-app/Ombi/commit/f6e9784367d3678d899ed79bef6caa52005b6661))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([601a877](https://github.com/Ombi-app/Ombi/commit/601a87762a2ad393ee5fa2fe52052ceeeefb1bef))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([a4a80ba](https://github.com/Ombi-app/Ombi/commit/a4a80ba4da49733a65e691003646c0f349bd4c5f))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([2961319](https://github.com/Ombi-app/Ombi/commit/2961319f61e95b2871480152b86ddca3375576a1))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([fc8d108](https://github.com/Ombi-app/Ombi/commit/fc8d108b660d53f499538328bfc271b05ac47d2b))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([1e03651](https://github.com/Ombi-app/Ombi/commit/1e03651c3b0eb77e45f9f6c55d31ee672eacd51e))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([c0dd327](https://github.com/Ombi-app/Ombi/commit/c0dd327426514e305a88750d7c3deb21c194108f))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([2156129](https://github.com/Ombi-app/Ombi/commit/2156129f175335746f204bb123035c070f518e96))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([aef0368](https://github.com/Ombi-app/Ombi/commit/aef0368de3aec306245bd1b16bc0de596a20d451))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([a38090b](https://github.com/Ombi-app/Ombi/commit/a38090b8dde17d1d150af0bca2830ea45d013a0e))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([c5f1d33](https://github.com/Ombi-app/Ombi/commit/c5f1d3355758a5c3648479d44e50397c7f6c1a9d))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([3846d56](https://github.com/Ombi-app/Ombi/commit/3846d56a6e561a1b1dc65c385151d90fdd6217ee))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([dafe9c1](https://github.com/Ombi-app/Ombi/commit/dafe9c1a19d84f00c13f0a51ba90927c24282926))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([edb418a](https://github.com/Ombi-app/Ombi/commit/edb418a6f05887c68a0c24c48decc691996f97e4))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([dadabf9](https://github.com/Ombi-app/Ombi/commit/dadabf93e1582a0c39321fd9bf3de3fb11e3f406))
-
-
-### Features
-
-* **request-limits:** :sparkles: Added the new request limit options into the user importer ([01d4f4d](https://github.com/Ombi-app/Ombi/commit/01d4f4d718fe85ac181dae52565fb1b427965b4f))
-* **request-limits:** :sparkles: Added the new request limit options to the bulk edit ([03bc23a](https://github.com/Ombi-app/Ombi/commit/03bc23a74e4308aa6b4c6b25636edcdeb65c1f0e))
 
 
 
