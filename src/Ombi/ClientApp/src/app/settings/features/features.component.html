@@ -1,0 +1,23 @@
+<settings-menu></settings-menu>
+
+<div class="small-middle-container">
+  <legend>Features</legend>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="mat-table">
+      <div class="mat-row" *ngFor="let feature of features">
+        <div class="mat-cell">{{feature.name}}</div>
+        <div class="mat-cell">
+          <span *ngIf="feature.enabled">
+            <i class="fas fa-check-circle" style="color:green;"></i>
+          </span>
+          <span *ngIf="!feature.enabled">
+            <i class="fas fa-times-circle" style="color:red;"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -16,4 +16,8 @@ export class FeatureService extends ServiceHelpers {
     public getFeatures(): Observable<IFeatureEnablement[]> {
         return this.http.get<IFeatureEnablement[]>(this.url, {headers: this.headers});
     }
+
+    public update(feature: IFeatureEnablement): Observable<IFeatureEnablement[]> {
+        return this.http.post<IFeatureEnablement[]>(this.url, JSON.stringify(feature), {headers: this.headers});
+    }
 }

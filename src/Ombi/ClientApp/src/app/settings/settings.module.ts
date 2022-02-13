@@ -38,6 +38,7 @@ import { DogNzbComponent } from "./dognzb/dognzb.component";
 import { EmailNotificationComponent } from "./notifications/emailnotification.component";
 import { EmbyComponent } from "./emby/emby.component";
 import { FailedRequestsComponent } from "./failedrequests/failedrequests.component";
+import { FeaturesComponent } from "./features/features.component";
 import { GotifyComponent } from "./notifications/gotify.component";
 import { HubService } from "../services/hub.service";
 import {InputSwitchModule} from "primeng/inputswitch";
@@ -120,6 +121,7 @@ const routes: Routes = [
     { path: "FailedRequests", component: FailedRequestsComponent, canActivate: [AuthGuard] },
     { path: "Logs", component: LogsComponent, canActivate: [AuthGuard] },
     { path: "CloudMobile", component: CloudMobileComponent, canActivate: [AuthGuard] },
+    { path: "Features", component: FeaturesComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -184,6 +186,7 @@ const routes: Routes = [
         LogsComponent,
         TwilioComponent,
         WhatsAppComponent,
+        FeaturesComponent,
         CloudMobileComponent,
         UpdateDialogComponent,
     ],

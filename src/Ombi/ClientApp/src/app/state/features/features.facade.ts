@@ -1,7 +1,8 @@
+import { LoadFeatures, UpdateFeature } from "./features.actions";
+
 import { FeaturesSelectors } from "./features.selectors";
 import { IFeatureEnablement } from "../../interfaces";
 import { Injectable } from "@angular/core";
-import { LoadFeatures } from "./features.actions";
 import { Observable } from "rxjs";
 import { Store } from "@ngxs/store";
 
@@ -13,6 +14,8 @@ export class FeaturesFacade {
 	public constructor(private store: Store) {}
 
 	public features$ = (): Observable<IFeatureEnablement[]> => this.store.select(FeaturesSelectors.features);
+
+    public update = (feature: IFeatureEnablement): Observable<unknown> => this.store.dispatch(new UpdateFeature(feature));
 
     public loadFeatures = (): Observable<unknown> => this.store.dispatch(new LoadFeatures());
 
