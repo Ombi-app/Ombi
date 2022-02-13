@@ -55,9 +55,10 @@ export class TheMovieDbComponent implements OnInit {
 
             this.excludedKeywords.forEach(key => {
                 this.tmdbService.getKeyword(key.id).subscribe(keyResult => {
-                    this.excludedKeywords.filter((val, idx) => {
-                        val.name = keyResult.name;
-                    })
+                    var keyToUpdate = this.excludedKeywords.filter((val) => {
+                        return val.id == key.id;
+                    })[0];
+                    keyToUpdate.name = keyResult.name;
                 });
             });
 
