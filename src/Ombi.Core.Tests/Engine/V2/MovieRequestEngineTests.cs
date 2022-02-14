@@ -51,7 +51,7 @@ namespace Ombi.Core.Tests.Engine.V2
         [Ignore("Needs to be tested")]
         public async Task Get_UnavailableRequests()
         {
-            _movieRequestRepository.Setup(x => x.GetWithUser()).Returns(new List<MovieRequests>
+            _movieRequestRepository.Setup(x => x.GetWithUser(false)).Returns(new List<MovieRequests>
             {
                 new MovieRequests
                 {

@@ -32,6 +32,7 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     public currentFilter: RequestFilterType = RequestFilterType.All;
     public selection = new SelectionModel<IMovieRequests>(true, []);
     public userName: string;
+    public anonimized: boolean = true;
 
     public RequestFilter = RequestFilterType;
 
@@ -55,11 +56,11 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     }
 
     public ngOnInit() {
-        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+      this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");      
         this.manageOwnRequests = this.auth.hasRole("ManageOwnRequests")
         if (this.isAdmin) {
             this.displayedColumns.unshift('select');
-        }
+        }        
         const defaultCount = this.storageService.get(this.storageKeyGridCount);
         const defaultSort = this.storageService.get(this.storageKey);
         const defaultOrder = this.storageService.get(this.storageKeyOrder);
@@ -102,7 +103,18 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
                     // Flip flag to show that loading has finished.
                     this.isLoadingResults = false;
                     this.resultsLength = data.total;
-
+                    if (data.collection.filter(x => x.requestedUserId != null).length > 0 &&
+                      data.collection.filter(x => x.requestedUser != null).length > 0) {
+                      this.anonimized = false;                      
+                    }
+                    if (this.anonimized) {
+                      this.displayedColumns.forEach((element, index) => {
+                        if (element === 'requestedUser.requestedBy')
+                        {
+                            this.displayedColumns.splice(index, 1);
+                        }
+                      });
+                    }
                     return data.collection;
                 }),
                 catchError((err) => {

@@ -157,6 +157,7 @@ namespace Ombi.Core.Engine
             var result = new HideResult
             {
                 Hide = settings.HideRequestsUsers,
+                Anonimize = settings.AnonimizeRequests,
                 UserId = user.Id
             };
             return result;
@@ -245,6 +246,7 @@ namespace Ombi.Core.Engine
         public class HideResult
         {
             public bool Hide { get; set; }
+            public bool Anonimize { get; set; }
             public string UserId { get; set; }
         }
     }

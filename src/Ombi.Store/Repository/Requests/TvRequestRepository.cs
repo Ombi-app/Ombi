@@ -80,14 +80,25 @@ namespace Ombi.Store.Repository.Requests
                 .AsQueryable();
         }
 
-        public IQueryable<ChildRequests> GetChild()
+        public IQueryable<ChildRequests> GetChild(bool anonimize = false)
         {
-            return Db.ChildRequests
-                .Include(x => x.RequestedUser)
-                .Include(x => x.ParentRequest)
-                .Include(x => x.SeasonRequests)
-                .ThenInclude(x => x.Episodes)
-                .AsQueryable();
+            if (!anonimize) {
+                return Db.ChildRequests
+                    .Include(x => x.RequestedUser)
+                    .Include(x => x.ParentRequest)
+                    .Include(x => x.SeasonRequests)
+                    .ThenInclude(x => x.Episodes)
+                    .AsQueryable();
+            }
+            else
+            {
+                return Db.ChildRequests
+                    .AsNoTracking()                    
+                    .Include(x => x.ParentRequest)
+                    .Include(x => x.SeasonRequests)
+                    .ThenInclude(x => x.Episodes)
+                    .AsQueryable();
+            }
         }
 
         public IQueryable<ChildRequests> GetChild(string userId)

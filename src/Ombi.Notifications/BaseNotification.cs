@@ -145,7 +145,7 @@ namespace Ombi.Notifications
         {
             if (type == RequestType.Movie)
             {
-                MovieRequest = await MovieRepository.GetWithUser().FirstOrDefaultAsync(x => x.Id == requestId);
+                MovieRequest = await MovieRepository.GetWithUser(false).FirstOrDefaultAsync(x => x.Id == requestId);
             }
             else if (type == RequestType.TvShow)
             {

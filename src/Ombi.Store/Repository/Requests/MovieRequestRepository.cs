@@ -35,8 +35,8 @@ namespace Ombi.Store.Repository.Requests
         }
 
         public IQueryable<MovieRequests> GetAll(string userId)
-        {
-            return GetWithUser().Where(x => x.RequestedUserId == userId);
+        {            
+            return GetWithUser(false).Where(x => x.RequestedUserId == userId);
         }
 
         public MovieRequests GetRequest(int theMovieDbId)
@@ -46,12 +46,18 @@ namespace Ombi.Store.Repository.Requests
                 .FirstOrDefault();
         }
 
-        public IQueryable<MovieRequests> GetWithUser()
+        public IQueryable<MovieRequests> GetWithUser(bool anonimize = false)
         {
-            return Db.MovieRequests
-                .Include(x => x.RequestedUser)
-                .ThenInclude(x => x.NotificationUserIds)
-                .AsQueryable();
+            if (!anonimize)
+            {
+                return Db.MovieRequests
+                    .Include(x => x.RequestedUser)
+                    .ThenInclude(x => x.NotificationUserIds)
+                    .AsQueryable();
+            } else
+            {
+                return Db.MovieRequests.AsNoTracking().AsQueryable();
+            }            
         }
 
         public async Task MarkAsAvailable(int id)

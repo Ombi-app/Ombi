@@ -19,7 +19,7 @@ namespace Ombi.Store.Repository.Requests
         TvRequests GetRequest(int theMovieDbId);
         Task Update(TvRequests request);
         Task UpdateChild(ChildRequests request);
-        IQueryable<ChildRequests> GetChild();
+        IQueryable<ChildRequests> GetChild(bool anonimize = false);
         IQueryable<ChildRequests> GetChild(string userId);
         Task MarkEpisodeAsAvailable(int id);
         Task MarkChildAsAvailable(int id);

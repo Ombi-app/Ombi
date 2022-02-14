@@ -25,6 +25,7 @@ export class TvGridComponent implements OnInit, AfterViewInit {
     public defaultSort: string = "requestedDate";
     public defaultOrder: string = "desc";
     public currentFilter: RequestFilterType = RequestFilterType.All;
+    public anonimized: boolean = true;
 
     public RequestFilter = RequestFilterType;
     public manageOwnRequests: boolean;
@@ -89,6 +90,16 @@ export class TvGridComponent implements OnInit, AfterViewInit {
                     // Flip flag to show that loading has finished.
                     this.isLoadingResults = false;
                     this.resultsLength = data.total;
+
+                    if (data.collection.filter(x => x.requestedUser != null).length > 0) {
+                      this.anonimized = false;
+                    }
+
+                    if (this.anonimized) {
+                      this.displayedColumns.forEach((element, index) => {
+                        if (element == 'requestedBy') this.displayedColumns.splice(index, 1);
+                      });
+                  }
 
                     return data.collection;
                 }),

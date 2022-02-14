@@ -15,6 +15,7 @@ export interface IOmbiSettings extends ISettings {
   apiKey: string;
   doNotSendNotificationsForAutoApprove: boolean;
   hideRequestsUsers: boolean;
+  anonimizeRequests: boolean;
   defaultLanguageCode: string;
   disableHealthChecks: boolean;
   autoDeleteAvailableRequests: boolean;
