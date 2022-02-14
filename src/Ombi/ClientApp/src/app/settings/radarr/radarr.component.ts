@@ -1,8 +1,9 @@
 import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, ValidationErrors } from "@angular/forms";
+import { FormBuilder, FormGroup } from "@angular/forms";
 
 import { IMinimumAvailability, IRadarrCombined, IRadarrProfile, IRadarrRootFolder } from "../../interfaces";
 import { NotificationService, SettingsService } from "../../services";
+import { FeaturesFacade } from "../../state/features/features.facade";
 
 @Component({
     templateUrl: "./radarr.component.html",
@@ -16,12 +17,15 @@ export class RadarrComponent implements OnInit {
     public profilesRunning: boolean;
     public rootFoldersRunning: boolean;
     public form: FormGroup;
+    public is4kEnabled: boolean = false;
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
+                private featureFacade: FeaturesFacade,
                 private fb: FormBuilder) { }
 
     public ngOnInit() {
+        this.is4kEnabled = this.featureFacade.is4kEnabled();
         this.settingsService.getRadarr()
             .subscribe(x => {
                 this.form = this.fb.group({

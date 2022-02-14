@@ -78,6 +78,7 @@
                         </span>
 
                             <!-- 4k Status -->
+                            <span *ngIf="is4KEnabled">
                             <span *permission="roleName4k">
                                 <button mat-raised-button class="btn-green btn-spacing" id="availableBtn4k" *ngIf="movie.available4K"> {{
                                     'Common.Available4K' | translate }}
@@ -107,6 +108,7 @@
                                         </span>
                                 </span>
                             </span>
+                        </span>
 
                             <span *ngIf="isAdmin && hasRequest">
                                     <button id="approveBtn" *ngIf="!movie.approved && movie.requested" (click)="approve(false)" mat-raised-button class="btn-spacing" color="accent">
@@ -122,6 +124,7 @@
                                     </button>
 
                                     <!-- 4k -->
+                                    <span *ngIf="is4KEnabled">
                                     <span *permission="roleName4k">
                                         <button id="approve4kBtn" *ngIf="!movie.approved4K && movie.has4KRequest" (click)="approve(true)" mat-raised-button class="btn-spacing" color="accent">
                                             <i class="fas fa-plus"></i> {{ 'Common.Approve4K' | translate }}
@@ -135,6 +138,7 @@
                                             <i class="fas fa-minus"></i> {{ 'Requests.MarkUnavailable4K' | translate }}
                                         </button>
                                     </span>
+                                </span>
 
                                     <button id="denyBtn" *ngIf="!movieRequest.denied && movie.requested" mat-raised-button class="btn-spacing" color="warn" (click)="deny(false)">
                                         <i class="fas fa-times"></i> {{'Requests.Deny' | translate }}

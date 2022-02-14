@@ -11,7 +11,7 @@
                     formGroupName="radarr">
                     </ombi-settings-radarr-form>
                 </mat-tab>
-                <mat-tab label="Radarr 4K">
+                <mat-tab *ngIf="is4kEnabled" label="Radarr 4K">
                     <ombi-settings-radarr-form
                     formGroupName="radarr4K">
                     </ombi-settings-radarr-form>

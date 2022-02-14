@@ -15,13 +15,14 @@ import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { RequestBehalfComponent } from "../shared/request-behalf/request-behalf.component";
 import { firstValueFrom, forkJoin } from "rxjs";
 import { AdminRequestDialogComponent } from "../../../shared/admin-request-dialog/admin-request-dialog.component";
+import { FeaturesFacade } from "../../../state/features/features.facade";
 
 @Component({
     templateUrl: "./movie-details.component.html",
     styleUrls: ["../../media-details.component.scss"],
     encapsulation: ViewEncapsulation.None
 })
-export class MovieDetailsComponent {
+export class MovieDetailsComponent implements OnInit{
     public movie: ISearchMovieResultV2;
     public hasRequest: boolean;
     public movieRequest: IMovieRequests;
@@ -30,6 +31,7 @@ export class MovieDetailsComponent {
     public showAdvanced: boolean; // Set on the UI
     public issuesEnabled: boolean;
     public roleName4k = "Request4KMovie";
+    public is4KEnabled = false;
 
     public requestType = RequestType.movie;
 
@@ -42,7 +44,7 @@ export class MovieDetailsComponent {
         public dialog: MatDialog, private requestService: RequestService,
         private requestService2: RequestServiceV2, private radarrService: RadarrService,
         public messageService: MessageService, private auth: AuthService, private settingsState: SettingsStateService,
-        private translate: TranslateService) {
+        private translate: TranslateService, private featureFacade: FeaturesFacade) {
         this.route.params.subscribe(async (params: any) => {
             if (typeof params.movieDbId === 'string' || params.movieDbId instanceof String) {
                 if (params.movieDbId.startsWith("tt")) {
@@ -50,12 +52,12 @@ export class MovieDetailsComponent {
                 }
             }
             this.theMovidDbId = params.movieDbId;
-            await this.load();
         });
     }
 
-    public async load() {
+    async ngOnInit() {
 
+        this.is4KEnabled = this.featureFacade.is4kEnabled();
         this.issuesEnabled = this.settingsState.getIssue();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
 
@@ -88,6 +90,9 @@ export class MovieDetailsComponent {
     }
 
     public async request(is4K: boolean, userId?: string) {
+        if (!this.is4KEnabled) {
+            is4K = false;
+        }
         if (this.isAdmin) {
             const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.movie, id: this.movie.id }, panelClass: 'modal-panel' });
             dialog.afterClosed().subscribe(async (result) => {
