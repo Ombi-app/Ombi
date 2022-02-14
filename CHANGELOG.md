@@ -1,3 +1,12 @@
+# [4.12.0](https://github.com/Ombi-app/Ombi/compare/v4.11.8...v4.12.0) (2022-02-14)
+
+
+### Features
+
+* **radarr:** 4K Requests and Radarr 4K support  ([ba88848](https://github.com/Ombi-app/Ombi/commit/ba88848866b0a9dedb1e79b55c4d81a0fd453843))
+
+
+
 ## [4.11.8](https://github.com/Ombi-app/Ombi/compare/v4.11.7...v4.11.8) (2022-02-13)
 
 
@@ -344,15 +353,6 @@
 ### Bug Fixes
 
 * **translations:** 🌐 Localization - Ensuring all of the app including backend are localized [#4366](https://github.com/Ombi-app/Ombi/issues/4366) ([5e140ab](https://github.com/Ombi-app/Ombi/commit/5e140ab6183b887a7665f5e870eb0bd05d487ace))
-
-
-
-## [4.3.1](https://github.com/Ombi-app/Ombi/compare/v4.3.0...v4.3.1) (2021-10-27)
-
-
-### Bug Fixes
-
-* :bug: Hides no results message during search. ([#4375](https://github.com/Ombi-app/Ombi/issues/4375)) ([b819b0e](https://github.com/Ombi-app/Ombi/commit/b819b0e007e578bf3d8425f19591f87029c64d06))
 
 
 
