@@ -1,4 +1,4 @@
-import { LoadFeatures, UpdateFeature } from "./features.actions";
+import { DisableFeature, EnableFeature, LoadFeatures } from "./features.actions";
 
 import { FeaturesSelectors } from "./features.selectors";
 import { IFeatureEnablement } from "../../interfaces";
@@ -15,7 +15,9 @@ export class FeaturesFacade {
 
 	public features$ = (): Observable<IFeatureEnablement[]> => this.store.select(FeaturesSelectors.features);
 
-    public update = (feature: IFeatureEnablement): Observable<unknown> => this.store.dispatch(new UpdateFeature(feature));
+    public enable = (feature: IFeatureEnablement): Observable<unknown> => this.store.dispatch(new EnableFeature(feature));
+
+    public disable = (feature: IFeatureEnablement): Observable<unknown> => this.store.dispatch(new DisableFeature(feature));
 
     public loadFeatures = (): Observable<unknown> => this.store.dispatch(new LoadFeatures());
 

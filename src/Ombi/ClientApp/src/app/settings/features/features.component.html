@@ -3,21 +3,18 @@
 <div class="small-middle-container">
   <legend>Features</legend>
 
-<div class="row">
-  <div class="col-md-8">
-    <div class="mat-table">
-      <div class="mat-row" *ngFor="let feature of features">
-        <div class="mat-cell">{{feature.name}}</div>
-        <div class="mat-cell">
-          <span *ngIf="feature.enabled">
-            <i class="fas fa-check-circle" style="color:green;"></i>
-          </span>
-          <span *ngIf="!feature.enabled">
-            <i class="fas fa-times-circle" style="color:red;"></i>
-          </span>
+  <div class="row" style="margin-top:3em">
+    <div class="col">
+      <div *ngFor="let feature of features">
+        <div class="row">
+          <div class="col-1">
+            <mat-slide-toggle [checked]="feature.enabled" (change)="updateFeature($event, feature)" id="enable"></mat-slide-toggle>
+          </div>
+          <div class="col-2">
+            <h3>{{feature.name}}</h3>
+          </div>
         </div>
       </div>
     </div>
   </div>
-
 </div>

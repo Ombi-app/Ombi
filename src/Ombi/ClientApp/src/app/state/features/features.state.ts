@@ -1,5 +1,5 @@
 import { Action, State, StateContext } from "@ngxs/store";
-import { LoadFeatures, UpdateFeature } from "./features.actions";
+import { DisableFeature, EnableFeature, LoadFeatures } from "./features.actions";
 
 import { FEATURES_STATE_TOKEN } from "./types";
 import { FeatureService } from "../../services/feature.service";
@@ -24,9 +24,16 @@ export class FeatureState {
         );
     }
 
-    @Action(UpdateFeature)
-    public update({ setState }: StateContext<IFeatureEnablement[]>, { feature }: UpdateFeature): Observable<IFeatureEnablement[]> {
-        return this.featuresService.update(feature).pipe(
+    @Action(EnableFeature)
+    public enable({ setState }: StateContext<IFeatureEnablement[]>, { feature }: EnableFeature): Observable<IFeatureEnablement[]> {
+        return this.featuresService.enable(feature).pipe(
+            tap((result) => setState(result))
+        );
+    }
+
+    @Action(DisableFeature)
+    public disable({ setState }: StateContext<IFeatureEnablement[]>, { feature }: DisableFeature): Observable<IFeatureEnablement[]> {
+        return this.featuresService.disable(feature).pipe(
             tap((result) => setState(result))
         );
     }

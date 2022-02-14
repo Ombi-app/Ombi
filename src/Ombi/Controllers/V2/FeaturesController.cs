@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Ombi.Attributes;
 using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models;
 using System.Collections;
@@ -23,6 +24,39 @@ namespace Ombi.Controllers.V2
             var features = await _features.GetSettingsAsync();
             return PopulateFeatures(features?.Features ?? new List<FeatureEnablement>()); 
         }
+
+        [HttpPost("enable")]
+        [Admin]
+        public async Task<List<FeatureEnablement>> Enable([FromBody] FeatureEnablement feature)
+        {
+            var featureSettings = await _features.GetSettingsAsync();
+            var features = PopulateFeatures(featureSettings?.Features ?? new List<FeatureEnablement>());
+            var featureToUpdate = features.First(x => x.Name.Equals(feature.Name));
+            featureToUpdate.Enabled = true;
+
+            featureSettings.Features = features;
+
+            await _features.SaveSettingsAsync(featureSettings);
+
+            return PopulateFeatures(featureSettings?.Features ?? new List<FeatureEnablement>());
+        }
+
+        [HttpPost("disable")]
+        [Admin]
+        public async Task<List<FeatureEnablement>> Disable([FromBody] FeatureEnablement feature)
+        {
+            var featureSettings = await _features.GetSettingsAsync();
+            var features = PopulateFeatures(featureSettings?.Features ?? new List<FeatureEnablement>());
+            var featureToUpdate = features.First(x => x.Name.Equals(feature.Name));
+            featureToUpdate.Enabled = false;
+
+            featureSettings.Features = features;
+
+            await _features.SaveSettingsAsync(featureSettings);
+
+            return PopulateFeatures(featureSettings?.Features ?? new List<FeatureEnablement>());
+        }
+
 
         private List<FeatureEnablement> PopulateFeatures(List<FeatureEnablement> existingFeatures)
         {
