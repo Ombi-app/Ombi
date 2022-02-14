@@ -1,21 +1,24 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
-using Ombi.Store.Repository;
 using Ombi.Core.Engine;
 using Ombi.Store.Repository.Requests;
+using Ombi.Core.Services;
+using Ombi.Settings.Settings.Models;
 
 namespace Ombi.Core.Rule.Rules.Request
 {
     public class ExistingMovieRequestRule : BaseRequestRule, IRules<BaseRequest>
     {
-        public ExistingMovieRequestRule(IMovieRequestRepository movie)
+        private readonly IFeatureService _featureService;
+
+        public ExistingMovieRequestRule(IMovieRequestRepository movie, IFeatureService featureService)
         {
             Movie = movie;
+            _featureService = featureService;
         }
 
         private IMovieRequestRepository Movie { get; }
@@ -35,7 +38,7 @@ namespace Ombi.Core.Rule.Rules.Request
                 var existing = await movieRequests.FirstOrDefaultAsync(x => x.TheMovieDbId == movie.TheMovieDbId);
                 if (existing != null) // Do we already have a request for this?
                 {
-                    found = Check4KRequests(movie, existing);
+                    found = await Check4KRequests(movie, existing);
                 }
 
                 if (!found && movie.ImdbId.HasValue())
@@ -45,7 +48,7 @@ namespace Ombi.Core.Rule.Rules.Request
                        x.ImdbId == movie.ImdbId);
                    if (existing != null)
                    {
-                       found = Check4KRequests(movie, existing);
+                       found = await Check4KRequests(movie, existing);
                    }
                 }
                 if (found)
@@ -56,13 +59,14 @@ namespace Ombi.Core.Rule.Rules.Request
             return Success();
         }
 
-        private static bool Check4KRequests(MovieRequests movie,MovieRequests existing)
+        private async Task<bool> Check4KRequests(MovieRequests movie, MovieRequests existing)
         {
-            if (movie.Is4kRequest && existing.Has4KRequest)
+            var featureEnabled = await _featureService.FeatureEnabled(FeatureNames.Movie4KRequests);
+            if (movie.Is4kRequest && existing.Has4KRequest && featureEnabled)
             {
                return true;
             }
-            if (!movie.Is4kRequest && !existing.Has4KRequest)
+            if (!movie.Is4kRequest && !existing.Has4KRequest || !featureEnabled)
             {
                 return true;
             }

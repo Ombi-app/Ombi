@@ -22,6 +22,7 @@ using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Core.Models;
 using System.Threading;
+using Ombi.Core.Services;
 
 namespace Ombi.Core.Engine
 {
@@ -30,7 +31,8 @@ namespace Ombi.Core.Engine
         public MovieRequestEngine(IMovieDbApi movieApi, IRequestServiceMain requestService, IPrincipal user,
             INotificationHelper helper, IRuleEvaluator r, IMovieSender sender, ILogger<MovieRequestEngine> log,
             OmbiUserManager manager, IRepository<RequestLog> rl, ICacheService cache,
-            ISettingsService<OmbiSettings> ombiSettings, IRepository<RequestSubscription> sub, IMediaCacheService mediaCacheService)
+            ISettingsService<OmbiSettings> ombiSettings, IRepository<RequestSubscription> sub, IMediaCacheService mediaCacheService,
+            IFeatureService featureService)
             : base(user, requestService, r, manager, cache, ombiSettings, sub)
         {
             MovieApi = movieApi;
@@ -39,6 +41,7 @@ namespace Ombi.Core.Engine
             Logger = log;
             _requestLog = rl;
             _mediaCacheService = mediaCacheService;
+            _featureService = featureService;
         }
 
         private IMovieDbApi MovieApi { get; }
@@ -47,6 +50,7 @@ namespace Ombi.Core.Engine
         private ILogger<MovieRequestEngine> Logger { get; }
         private readonly IRepository<RequestLog> _requestLog;
         private readonly IMediaCacheService _mediaCacheService;
+        private readonly IFeatureService _featureService;
 
         /// <summary>
         /// Requests the movie.
@@ -94,11 +98,14 @@ namespace Ombi.Core.Engine
                 };
             }
 
+            var is4kFeatureEnabled = await _featureService.FeatureEnabled(FeatureNames.Movie4KRequests);
+            var is4kRequest = is4kFeatureEnabled && model.Is4kRequest;
+
             MovieRequests requestModel;
             bool isExisting = false;
             // Do we already have a request? 4k or non 4k
             var existingRequest = await MovieRepository.GetRequestAsync(movieInfo.Id);
-            if (existingRequest != null)
+            if (existingRequest != null && is4kFeatureEnabled)
             {
                 if (model.Is4kRequest)
                 {
@@ -156,7 +163,7 @@ namespace Ombi.Core.Engine
 
             if (requestModel.Approved) // The rules have auto approved this
             {
-                var requestEngineResult = await AddMovieRequest(requestModel, fullMovieName, model.RequestOnBehalf, isExisting, model.Is4kRequest);
+                var requestEngineResult = await AddMovieRequest(requestModel, fullMovieName, model.RequestOnBehalf, isExisting, is4kRequest);
                 if (requestEngineResult.Result)
                 {
                     var result = await ApproveMovie(requestModel, model.Is4kRequest);
@@ -177,7 +184,7 @@ namespace Ombi.Core.Engine
                 // If there are no providers then it's successful but movie has not been sent
             }
 
-            return await AddMovieRequest(requestModel, fullMovieName, model.RequestOnBehalf, isExisting, model.Is4kRequest);
+            return await AddMovieRequest(requestModel, fullMovieName, model.RequestOnBehalf, isExisting, is4kRequest);
         }
 
 

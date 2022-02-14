@@ -10,6 +10,7 @@ using Ombi.Test.Common;
 using System.Collections.Generic;
 using Ombi.Store.Entities;
 using System;
+using Ombi.Core.Services;
 
 namespace Ombi.Core.Tests.Rule.Request
 {
@@ -28,15 +29,17 @@ namespace Ombi.Core.Tests.Rule.Request
 
             PrincipalMock = new Mock<IPrincipal>();
             PrincipalMock.Setup(x => x.Identity.Name).Returns("abc");
+            FeatureService = new Mock<IFeatureService>();
 
             UserManager = MockHelper.MockUserManager(_users);
-            Rule = new AutoApproveRule(PrincipalMock.Object, UserManager.Object);
+            Rule = new AutoApproveRule(PrincipalMock.Object, UserManager.Object, FeatureService.Object);
         }
 
 
         private AutoApproveRule Rule { get; set; }
         private Mock<IPrincipal> PrincipalMock { get; set; }
         private Mock<OmbiUserManager> UserManager { get; set; }
+        private Mock<IFeatureService> FeatureService { get; set; }
 
         [Test]
         public async Task Should_ReturnSuccess_WhenAdminAndRequestMovie()
@@ -136,6 +139,18 @@ namespace Ombi.Core.Tests.Rule.Request
 
             Assert.True(result.Success);
             Assert.False(request.Approved);
+        }
+
+        [Test]
+        public async Task Should_ReturnFail_When4kRequestAndFeatureNotEnabled()
+        {
+            UserManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), It.IsAny<string>())).ReturnsAsync(false);
+            var request = new MovieRequests() { RequestType = Store.Entities.RequestType.Movie, Is4kRequest = true };
+            var result = await Rule.Execute(request);
+
+            Assert.True(result.Success);
+            Assert.False(request.Approved);
+            Assert.False(request.Approved4K);
         }
     }
 }

@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Authentication;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Rule.Interfaces;
+using Ombi.Core.Services;
 using Ombi.Helpers;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 
@@ -13,14 +15,16 @@ namespace Ombi.Core.Rule.Rules.Request
 {
     public class AutoApproveRule : BaseRequestRule, IRules<BaseRequest>
     {
-        public AutoApproveRule(IPrincipal principal, OmbiUserManager um)
+        public AutoApproveRule(IPrincipal principal, OmbiUserManager um, IFeatureService featureService)
         {
             User = principal;
             _manager = um;
+            _featureService = featureService;
         }
 
         private IPrincipal User { get; }
         private readonly OmbiUserManager _manager;
+        private readonly IFeatureService _featureService;
 
         public async Task<RuleResult> Execute(BaseRequest obj)
         {
@@ -28,17 +32,9 @@ namespace Ombi.Core.Rule.Rules.Request
             var user = await _manager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
             if (await _manager.IsInRoleAsync(user, OmbiRoles.Admin) || user.IsSystemUser)
             {
-                if (obj.RequestType == RequestType.Movie)
+                if (obj is MovieRequests movie)
                 {
-                    var movie = (MovieRequests)obj;
-                    if (movie.Is4kRequest)
-                    {
-                        movie.Approved4K = true;
-                    }
-                    else
-                    {
-                        obj.Approved = true;
-                    }
+                    await Check4K(movie);
                 }
                 else
                 {
@@ -50,20 +46,26 @@ namespace Ombi.Core.Rule.Rules.Request
             if (obj.RequestType == RequestType.Movie && await _manager.IsInRoleAsync(user, OmbiRoles.AutoApproveMovie))
             {
                 var movie = (MovieRequests)obj;
-                if (movie.Is4kRequest)
-                {
-                    movie.Approved4K = true;
-                } 
-                else
-                {
-                    obj.Approved = true;
-                }
+                await Check4K(movie);
             }
             if (obj.RequestType == RequestType.TvShow && await _manager.IsInRoleAsync(user, OmbiRoles.AutoApproveTv))
                 obj.Approved = true;
             if (obj.RequestType == RequestType.Album && await _manager.IsInRoleAsync(user, OmbiRoles.AutoApproveMusic))
                 obj.Approved = true;
             return Success(); // We don't really care, we just don't set the obj to approve
+        }
+
+        private async Task Check4K(MovieRequests movie)
+        {
+            var featureEnabled = await _featureService.FeatureEnabled(FeatureNames.Movie4KRequests);
+            if (movie.Is4kRequest && featureEnabled)
+            {
+                movie.Approved4K = true;
+            }
+            else
+            {
+                movie.Approved = true;
+            }
         }
     }
 }

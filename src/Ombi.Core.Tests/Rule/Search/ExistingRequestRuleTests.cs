@@ -30,7 +30,7 @@ namespace Ombi.Core.Tests.Rule.Search
 
 
         [Test]
-        public async Task ShouldBe_Requested_WhenExisitngMovie()
+        public async Task ShouldBe_Requested_WhenExistingMovie()
         {
             var list = new MovieRequests
             {
