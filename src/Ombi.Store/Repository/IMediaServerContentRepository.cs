@@ -10,6 +10,7 @@ namespace Ombi.Store.Repository
     {
         RecentlyAddedType RecentlyAddedType{ get; }
         Task Update(IMediaServerContent existingContent);
+        Task UpdateRange(IEnumerable<IMediaServerContent> existingContent);
         IQueryable<IMediaServerEpisode> GetAllEpisodes();
         Task<IMediaServerEpisode> Add(IMediaServerEpisode content);
         Task AddRange(IEnumerable<IMediaServerEpisode> content);

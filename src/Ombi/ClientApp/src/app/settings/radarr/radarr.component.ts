@@ -1,12 +1,9 @@
 import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup } from "@angular/forms";
 
-import { IMinimumAvailability, IRadarrProfile, IRadarrRootFolder } from "../../interfaces";
-import { IRadarrSettings } from "../../interfaces";
-import { RadarrService } from "../../services";
-import { TesterService } from "../../services";
-import { NotificationService } from "../../services";
-import { SettingsService } from "../../services";
+import { IMinimumAvailability, IRadarrCombined, IRadarrProfile, IRadarrRootFolder } from "../../interfaces";
+import { NotificationService, SettingsService } from "../../services";
+import { FeaturesFacade } from "../../state/features/features.facade";
 
 @Component({
     templateUrl: "./radarr.component.html",
@@ -20,102 +17,67 @@ export class RadarrComponent implements OnInit {
     public profilesRunning: boolean;
     public rootFoldersRunning: boolean;
     public form: FormGroup;
+    public is4kEnabled: boolean = false;
 
     constructor(private settingsService: SettingsService,
-                private radarrService: RadarrService,
                 private notificationService: NotificationService,
-                private fb: FormBuilder,
-                private testerService: TesterService) { }
+                private featureFacade: FeaturesFacade,
+                private fb: FormBuilder) { }
 
     public ngOnInit() {
+        this.is4kEnabled = this.featureFacade.is4kEnabled();
         this.settingsService.getRadarr()
             .subscribe(x => {
-
                 this.form = this.fb.group({
-                    enabled: [x.enabled],
-                    apiKey: [x.apiKey, [Validators.required]],
-                    defaultQualityProfile: [+x.defaultQualityProfile, [Validators.required]],
-                    defaultRootPath: [x.defaultRootPath, [Validators.required]],
-                    ssl: [x.ssl],
-                    subDir: [x.subDir],
-                    ip: [x.ip, [Validators.required]],
-                    port: [x.port, [Validators.required]],
-                    addOnly: [x.addOnly],
-                    minimumAvailability: [x.minimumAvailability, [Validators.required]],
-                    scanForAvailability: [x.scanForAvailability]
+                    radarr: this.fb.group({
+                        enabled: [x.radarr.enabled],
+                        apiKey: [x.radarr.apiKey],
+                        defaultQualityProfile: [+x.radarr.defaultQualityProfile],
+                        defaultRootPath: [x.radarr.defaultRootPath],
+                        ssl: [x.radarr.ssl],
+                        subDir: [x.radarr.subDir],
+                        ip: [x.radarr.ip],
+                        port: [x.radarr.port],
+                        addOnly: [x.radarr.addOnly],
+                        minimumAvailability: [x.radarr.minimumAvailability],
+                        scanForAvailability: [x.radarr.scanForAvailability]
+                    }),
+                    radarr4K: this.fb.group({
+                        enabled: [x.radarr4K.enabled],
+                        apiKey: [x.radarr4K.apiKey],
+                        defaultQualityProfile: [+x.radarr4K.defaultQualityProfile],
+                        defaultRootPath: [x.radarr4K.defaultRootPath],
+                        ssl: [x.radarr4K.ssl],
+                        subDir: [x.radarr4K.subDir],
+                        ip: [x.radarr4K.ip],
+                        port: [x.radarr4K.port],
+                        addOnly: [x.radarr4K.addOnly],
+                        minimumAvailability: [x.radarr4K.minimumAvailability],
+                        scanForAvailability: [x.radarr4K.scanForAvailability]
+                    }),
                 });
-
-                if (x.defaultQualityProfile) {
-                    this.getProfiles(this.form);
-                }
-                if (x.defaultRootPath) {
-                    this.getRootFolders(this.form);
-                }
             });
-
-        this.qualities = [];
-        this.qualities.push({ name: "Please Select", id: -1 });
-
-        this.rootFolders = [];
-        this.rootFolders.push({ path: "Please Select", id: -1 });
-        this.minimumAvailabilityOptions = [
-            { name: "Announced", value: "Announced" },
-            { name: "In Cinemas", value: "InCinemas" },
-            { name: "Physical / Web", value: "Released" },
-        ];
-
     }
 
-    public getProfiles(form: FormGroup) {
-         this.profilesRunning = true;
-         this.radarrService.getQualityProfiles(form.value).subscribe(x => {
-             this.qualities = x;
-             this.qualities.unshift({ name: "Please Select", id: -1 });
 
-             this.profilesRunning = false;
-             this.notificationService.success("Successfully retrieved the Quality Profiles");
-         });
-    }
-
-    public getRootFolders(form: FormGroup) {
-         this.rootFoldersRunning = true;
-         this.radarrService.getRootFolders(form.value).subscribe(x => {
-             this.rootFolders = x;
-             this.rootFolders.unshift({ path: "Please Select", id: -1 });
-
-             this.rootFoldersRunning = false;
-             this.notificationService.success("Successfully retrieved the Root Folders");
-         });
-    }
-
-    public test(form: FormGroup) {
+    public onSubmit(form: FormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;
         }
-        const settings = <IRadarrSettings> form.value;
-        this.testerService.radarrTest(settings).subscribe(result => {
-            if (result.isValid) {
-                this.notificationService.success("Successfully connected to Radarr!");
-            } else if (result.expectedSubDir) {
-                this.notificationService.error("Your Radarr Base URL must be set to " + result.expectedSubDir);
-            } else {
-                this.notificationService.error("We could not connect to Radarr!");
-            }
-        });
-    }
+        const radarrForm = form.controls.radarr as FormGroup;
+        const radarr4KForm = form.controls.radarr4K as FormGroup;
 
-public onSubmit(form: FormGroup) {
-        if (form.invalid) {
-            this.notificationService.error("Please check your entered values");
+        if (radarrForm.controls.enabled.value && (radarrForm.controls.defaultQualityProfile.value === -1 || radarrForm.controls.defaultRootPath.value === "Please Select")) {
+            this.notificationService.error("Please check your entered values for Radarr");
             return;
         }
-        if (form.controls.defaultQualityProfile.value === "-1" || form.controls.defaultRootPath.value === "Please Select") {
-            this.notificationService.error("Please check your entered values");
+        if (radarr4KForm.controls.enabled.value && (radarr4KForm.controls.defaultQualityProfile.value === -1 || radarr4KForm.controls.defaultRootPath.value === "Please Select")) {
+            this.notificationService.error("Please check your entered values for Radarr 4K");
             return;
         }
 
-        const settings = <IRadarrSettings> form.value;
+        const settings = <IRadarrCombined> form.value;
         this.settingsService.saveRadarr(settings).subscribe(x => {
             if (x) {
                 this.notificationService.success("Successfully saved Radarr settings");

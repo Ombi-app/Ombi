@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Ombi.Store.Context.Sqlite;
 
+#nullable disable
+
 namespace Ombi.Store.Migrations.OmbiSqlite
 {
     [DbContext(typeof(OmbiSqliteContext))]
@@ -13,8 +15,7 @@ namespace Ombi.Store.Migrations.OmbiSqlite
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.1");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -39,7 +40,7 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
 
-                    b.ToTable("AspNetRoles");
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -62,7 +63,7 @@ namespace Ombi.Store.Migrations.OmbiSqlite
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims");
+                    b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -85,7 +86,7 @@ namespace Ombi.Store.Migrations.OmbiSqlite
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims");
+                    b.ToTable("AspNetUserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -107,7 +108,7 @@ namespace Ombi.Store.Migrations.OmbiSqlite
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins");
+                    b.ToTable("AspNetUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -122,7 +123,7 @@ namespace Ombi.Store.Migrations.OmbiSqlite
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles");
+                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -141,7 +142,7 @@ namespace Ombi.Store.Migrations.OmbiSqlite
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens");
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Audit", b =>
@@ -341,7 +342,7 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("AspNetUsers");
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.RecentlyAddedLog", b =>
@@ -403,28 +404,6 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.HasKey("Id");
 
                     b.ToTable("RequestQueue");
-                });
-
-            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("RequestId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("RequestType")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("RequestSubscription");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.AlbumRequest", b =>
@@ -660,7 +639,13 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.Property<bool>("Approved")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("Approved4K")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("Available")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Available4K")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Background")
@@ -669,11 +654,20 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.Property<bool?>("Denied")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool?>("Denied4K")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("DeniedReason")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DeniedReason4K")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DigitalReleaseDate")
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("Has4KRequest")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ImdbId")
                         .HasColumnType("TEXT");
@@ -687,10 +681,19 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.Property<DateTime>("MarkedAsApproved")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("MarkedAsApproved4K")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime?>("MarkedAsAvailable")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("MarkedAsAvailable4K")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("MarkedAsDenied")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("MarkedAsDenied4K")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Overview")
@@ -712,6 +715,9 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("RequestedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("RequestedDate4k")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RequestedUserId")
@@ -812,6 +818,28 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.HasKey("Id");
 
                     b.ToTable("TvRequests");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("RequestId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("RequestType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RequestSubscription");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Tokens", b =>
@@ -1051,15 +1079,6 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
-                {
-                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Ombi.Store.Entities.Requests.AlbumRequest", b =>
                 {
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "RequestedUser")
@@ -1136,6 +1155,15 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.RequestLog", b =>
+                {
+                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
                 {
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
                         .WithMany()

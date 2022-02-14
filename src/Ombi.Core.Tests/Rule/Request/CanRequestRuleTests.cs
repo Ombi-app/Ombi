@@ -42,7 +42,42 @@ namespace Ombi.Core.Tests.Rule.Request
         public async Task Should_ReturnSuccess_WhenRequestingMovieWithMovieRole()
         {
             UserManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), OmbiRoles.RequestMovie)).ReturnsAsync(true);
-            var request = new BaseRequest() { RequestType = Store.Entities.RequestType.Movie };
+            var request = new MovieRequests() { RequestType = Store.Entities.RequestType.Movie };
+            var result = await Rule.Execute(request);
+
+            Assert.True(result.Success);
+        }
+
+        [Test]
+        public async Task Should_ReturnSuccess_WhenRequestingMovie4KWithMovieRole()
+        {
+            UserManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), OmbiRoles.RequestMovie)).ReturnsAsync(true);
+            UserManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), OmbiRoles.Request4KMovie)).ReturnsAsync(true);
+            var request = new MovieRequests() { RequestType = Store.Entities.RequestType.Movie, Has4KRequest = true };
+            var result = await Rule.Execute(request);
+
+            Assert.True(result.Success);
+        }
+
+        [Test]
+        public async Task Should_ReturnFailure_WhenRequestingMovie4KWithMovieRole()
+        {
+            UserManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), OmbiRoles.RequestMovie)).ReturnsAsync(true);
+            UserManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), OmbiRoles.Request4KMovie)).ReturnsAsync(false);
+            var request = new MovieRequests() { RequestType = Store.Entities.RequestType.Movie, Is4kRequest = true };
+            var result = await Rule.Execute(request);
+
+            Assert.False(result.Success);
+            Assert.False(string.IsNullOrEmpty(result.Message));
+        }
+
+        [Test]
+        public async Task Should_ReturnSuccess_WhenRequestingMovie4KWithAutoApprove()
+        {
+            UserManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), OmbiRoles.RequestMovie)).ReturnsAsync(true);
+            UserManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), OmbiRoles.AutoApproveMovie)).ReturnsAsync(true);
+            UserManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), OmbiRoles.Request4KMovie)).ReturnsAsync(false);
+            var request = new MovieRequests() { RequestType = Store.Entities.RequestType.Movie, Has4KRequest = true };
             var result = await Rule.Execute(request);
 
             Assert.True(result.Success);
@@ -52,7 +87,7 @@ namespace Ombi.Core.Tests.Rule.Request
         public async Task Should_ReturnFail_WhenRequestingMovieWithoutMovieRole()
         {
             UserManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), OmbiRoles.RequestMovie)).ReturnsAsync(false);
-            var request = new BaseRequest() { RequestType = Store.Entities.RequestType.Movie };
+            var request = new MovieRequests() { RequestType = Store.Entities.RequestType.Movie };
             var result = await Rule.Execute(request);
 
             Assert.False(result.Success);

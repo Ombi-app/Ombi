@@ -133,12 +133,88 @@ namespace Ombi.Schedule.Tests
                     }
                 }));
 
-            await _subject.MovieLoop(new PlexServers { Ip = "http://test.com/", Port = 80}, content, contentToAdd, contentProcessed);
+            await _subject.MovieLoop(new PlexServers { Ip = "http://test.com/", Port = 80 }, content, contentToAdd, contentProcessed);
 
             var first = contentToAdd.First();
             Assert.That(first.ImdbId, Is.EqualTo("tt0322259"));
 
             _mocker.Verify<IPlexApi>(x => x.GetMetadata(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
+        }
+
+        [Test]
+        public async Task UpdatesExistingMovieWhen_WeFindAnotherQuality()
+        {
+            var content = new Mediacontainer
+            {
+                Metadata = new[]
+                {
+                    new Metadata
+                    {
+                        ratingKey = 11,
+                        title = "test1",
+                        year = 2021,
+                        type = "movie",
+                        Media = new Medium[1]
+                        {
+                            new Medium
+                            {
+                                videoResolution = "4k"
+                            }
+                        }
+                    },
+                }
+            };
+            var contentToAdd = new HashSet<PlexServerContent>();
+            var contentProcessed = new Dictionary<int, int>();
+            _mocker.Setup<IPlexContentRepository>(x =>
+                    x.GetFirstContentByCustom(It.IsAny<Expression<Func<PlexServerContent, bool>>>()))
+                .Returns(Task.FromResult(new PlexServerContent
+                {
+                    Quality = "1080"
+                }));
+
+            await _subject.MovieLoop(new PlexServers(), content, contentToAdd, contentProcessed);
+
+            Assert.That(contentToAdd, Is.Empty);
+            _mocker.Verify<IPlexContentRepository>(x => x.Update(It.Is<PlexServerContent>(x => x.Quality == "1080" && x.Has4K)), Times.Once);
+        }
+
+        [Test]
+        public async Task DoesNotUpdatesExistingMovieWhen_WeFindSameQuality()
+        {
+            var content = new Mediacontainer
+            {
+                Metadata = new[]
+                {
+                    new Metadata
+                    {
+                        ratingKey = 11,
+                        title = "test1",
+                        year = 2021,
+                        type = "movie",
+                        Media = new Medium[1]
+                        {
+                            new Medium
+                            {
+                                videoResolution = "1080"
+                            }
+                        }
+                    },
+                }
+            };
+            var contentToAdd = new HashSet<PlexServerContent>();
+            var contentProcessed = new Dictionary<int, int>();
+            _mocker.Setup<IPlexContentRepository>(x =>
+                    x.GetFirstContentByCustom(It.IsAny<Expression<Func<PlexServerContent, bool>>>()))
+                .Returns(Task.FromResult(new PlexServerContent
+                {
+                    Quality = "1080"
+                }));
+
+            await _subject.MovieLoop(new PlexServers(), content, contentToAdd, contentProcessed);
+
+            Assert.That(contentToAdd, Is.Empty);
+            _mocker.Verify<IPlexContentRepository>(x => x.Update(It.IsAny<PlexServerContent>()), Times.Never);
         }
     }
 }

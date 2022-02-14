@@ -83,7 +83,7 @@ namespace Ombi.Core.Tests.Engine
             Assert.That(result.Result, Is.True);
             VoteRepository.Verify(x => x.Add(It.Is<Votes>(c => c.UserId == "abc" && c.VoteType == type)), Times.Once);
             VoteRepository.Verify(x => x.Delete(It.IsAny<Votes>()), Times.Never);
-            MovieRequestEngine.Verify(x => x.ApproveMovieById(1), Times.Never);
+            MovieRequestEngine.Verify(x => x.ApproveMovieById(1, false), Times.Never);
         }
         public static IEnumerable<TestCaseData> VoteData
         {
@@ -129,7 +129,7 @@ namespace Ombi.Core.Tests.Engine
 
             Assert.That(result.Result, Is.False);
             VoteRepository.Verify(x => x.Delete(It.IsAny<Votes>()), Times.Never);
-            MovieRequestEngine.Verify(x => x.ApproveMovieById(1), Times.Never);
+            MovieRequestEngine.Verify(x => x.ApproveMovieById(1, false), Times.Never);
         }
         public static IEnumerable<TestCaseData> AttemptedTwiceData
         {
@@ -175,7 +175,7 @@ namespace Ombi.Core.Tests.Engine
             Assert.That(result.Result, Is.True);
             VoteRepository.Verify(x => x.Delete(It.IsAny<Votes>()), Times.Once);
             VoteRepository.Verify(x => x.Add(It.Is<Votes>(v => v.VoteType == type)), Times.Once);
-            MovieRequestEngine.Verify(x => x.ApproveMovieById(1), Times.Never);
+            MovieRequestEngine.Verify(x => x.ApproveMovieById(1, false), Times.Never);
         }
         public static IEnumerable<TestCaseData> VoteConvertData
         {

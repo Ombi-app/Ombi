@@ -30,5 +30,6 @@ namespace Ombi.Api.Jellyfin.Models.Movie
         public int CriticRating { get; set; }
         public string Overview { get; set; }
         public JellyfinProviderids ProviderIds { get; set; }
+        public JellyfinMediastream[] MediaStreams { get; set; }
     }
 }

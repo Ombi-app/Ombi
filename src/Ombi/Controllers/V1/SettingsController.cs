@@ -403,9 +403,13 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <returns></returns>
         [HttpGet("radarr")]
-        public async Task<RadarrSettings> RadarrSettings()
+        public async Task<RadarrCombinedModel> RadarrSettings()
         {
-            return await Get<RadarrSettings>();
+            return new RadarrCombinedModel
+            {
+                Radarr = await Get<RadarrSettings>(),
+                Radarr4K = await Get<Radarr4KSettings>(),
+            };
         }
 
         /// <summary>
@@ -474,9 +478,11 @@ namespace Ombi.Controllers.V1
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("radarr")]
-        public async Task<bool> RadarrSettings([FromBody]RadarrSettings settings)
+        public async Task<bool> RadarrSettings([FromBody]RadarrCombinedModel settings)
         {
-            var result = await Save(settings);
+            var radarrResult = await Save(settings.Radarr);
+            var radarr4kResult = await Save(settings.Radarr4K);
+            var result = radarr4kResult && radarrResult;
             if (result)
             {
                 _cache.Remove(CacheKeys.RadarrRootProfiles);

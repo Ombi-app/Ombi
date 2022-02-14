@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Ombi.Store.Entities;
 
 namespace Ombi.Store.Context

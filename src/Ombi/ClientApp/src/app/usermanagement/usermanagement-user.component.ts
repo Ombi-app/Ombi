@@ -6,6 +6,7 @@ import { IdentityService, MessageService, RadarrService, SettingsService, Sonarr
 import { Clipboard } from '@angular/cdk/clipboard';
 import { CustomizationFacade } from "../state/customization";
 import { Location } from "@angular/common";
+import { FeaturesFacade } from "../state/features/features.facade";
 
 @Component({
     templateUrl: "./usermanagement-user.component.html",
@@ -36,7 +37,6 @@ export class UserManagementUserComponent implements OnInit {
 
     constructor(private identityService: IdentityService,
                 private notificationService: MessageService,
-                private readonly settingsService: SettingsService,
                 private router: Router,
                 private route: ActivatedRoute,
                 private sonarrService: SonarrService,
@@ -44,23 +44,33 @@ export class UserManagementUserComponent implements OnInit {
                 private clipboard: Clipboard,
                 private location: Location,
                 private customizationFacade: CustomizationFacade,
+                private featureFacade: FeaturesFacade,
                 ) {
 
                     this.route.params.subscribe((params: any) => {
                         if(params.id) {
                             this.userId = params.id;
                             this.edit = true;
-                            this.identityService.getUserById(this.userId).subscribe(x => {
-                                this.user = x;
-                               });
                         }
                     });
                  }
 
     public ngOnInit() {
+        const is4KEnabled = this.featureFacade.is4kEnabled();
+        this.identityService.getUserById(this.userId).subscribe(x => {
+            this.user = x;
+            if (!is4KEnabled) {
+             this.user.claims = this.user.claims.filter(x => x.value !== "Request4KMovie");
+         }
+           });
         this.requestLimitTypes = [RequestLimitType.Day, RequestLimitType.Week, RequestLimitType.Month];
         this.identityService.getSupportedStreamingCountries().subscribe(x => this.countries = x);
-        this.identityService.getAllAvailableClaims().subscribe(x => this.availableClaims = x);
+        this.identityService.getAllAvailableClaims().subscribe(x => {
+            this.availableClaims = x;
+            if (!is4KEnabled) {
+                this.availableClaims = this.availableClaims.filter(y => y.value !== "Request4KMovie");
+            }
+        });
         if(this.edit) {
             this.identityService.getNotificationPreferencesForUser(this.userId).subscribe(x => this.notificationPreferences = x);
         } else {

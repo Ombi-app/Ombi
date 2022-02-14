@@ -170,7 +170,7 @@ namespace Ombi.Api.Emby
 
             request.AddQueryString("Recursive", true.ToString());
             request.AddQueryString("IncludeItemTypes", type);
-            request.AddQueryString("Fields", includeOverview ? "ProviderIds,Overview" : "ProviderIds");
+            request.AddQueryString("Fields", includeOverview ? "ProviderIds,MediaStreams,Overview" : "ProviderIds,MediaStreams ");
             request.AddQueryString("startIndex", startIndex.ToString());
             request.AddQueryString("limit", count.ToString());
             request.AddQueryString("sortBy", "DateCreated");

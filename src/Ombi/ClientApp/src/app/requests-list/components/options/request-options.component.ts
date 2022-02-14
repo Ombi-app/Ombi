@@ -4,7 +4,7 @@ import { MessageService, RequestService } from '../../../services';
 import { IRequestEngineResult, RequestType } from '../../../interfaces';
 import { UpdateType } from '../../models/UpdateType';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 
 @Component({
   selector: 'request-options',
@@ -15,7 +15,7 @@ export class RequestOptionsComponent {
   public RequestType = RequestType;
 
   constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
-    private requestService: RequestService, 
+    private requestService: RequestService,
     private messageService: MessageService,
     private bottomSheetRef: MatBottomSheetRef<RequestOptionsComponent>,
     private translate: TranslateService) { }
@@ -44,25 +44,34 @@ export class RequestOptionsComponent {
 
   public async approve() {
     if (this.data.type === RequestType.movie) {
-      await this.requestService.approveMovie({id: this.data.id}).toPromise();
+      await firstValueFrom(this.requestService.approveMovie({id: this.data.id, is4K: false}));
     }
     if (this.data.type === RequestType.tvShow) {
-      await this.requestService.approveChild({id: this.data.id}).toPromise();
+      await firstValueFrom(this.requestService.approveChild({id: this.data.id}));
     }
     if (this.data.type === RequestType.album) {
-      await this.requestService.approveAlbum({id: this.data.id}).toPromise();
+      await firstValueFrom(this.requestService.approveAlbum({id: this.data.id}));
     }
 
     this.bottomSheetRef.dismiss({type: UpdateType.Approve});
     return;
   }
 
+  public async approve4K() {
+    if (this.data.type != RequestType.movie) {
+      return;
+    }
+
+    await firstValueFrom(this.requestService.approveMovie({id: this.data.id, is4K: true}));
+  }
+
   public async changeAvailability() {
     if (this.data.type === RequestType.movie) {
-      await this.requestService.markMovieAvailable({id: this.data.id}).toPromise();
+      // TODO 4K
+      await firstValueFrom(this.requestService.markMovieAvailable({id: this.data.id,  is4K: false}))
     }
     if (this.data.type === RequestType.album) {
-      await this.requestService.markAlbumAvailable({id: this.data.id}).toPromise();
+      await firstValueFrom(this.requestService.markAlbumAvailable({id: this.data.id}));
     }
 
     this.bottomSheetRef.dismiss({type: UpdateType.Availability});

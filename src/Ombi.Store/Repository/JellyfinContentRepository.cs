@@ -98,6 +98,12 @@ namespace Ombi.Store.Repository
             Db.JellyfinContent.Update((JellyfinContent)existingContent);
         }
 
+        public override Task UpdateRange(IEnumerable<IMediaServerContent> existingContent)
+        {
+            Db.JellyfinContent.UpdateRange((JellyfinContent)existingContent);
+            return InternalSaveChanges();
+        }
+
         public override RecentlyAddedType RecentlyAddedType => RecentlyAddedType.Jellyfin;
     }
 }

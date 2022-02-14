@@ -10,4 +10,15 @@
         public string MinimumAvailability { get; set; }
         public bool ScanForAvailability { get; set; }
     }
+
+    public class Radarr4KSettings : RadarrSettings
+    {
+        // no additional properties needed
+    }
+
+    public class RadarrCombinedModel
+    {
+        public RadarrSettings Radarr { get; set; }
+        public Radarr4KSettings Radarr4K { get; set; }
+    }
 }

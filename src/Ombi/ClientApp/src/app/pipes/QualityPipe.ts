@@ -6,6 +6,9 @@ export class QualityPipe implements PipeTransform {
         if (value.toUpperCase() === "4K" || value.toUpperCase() === "8K") {
             return value;
         }
+        if (value[value.length - 1].toUpperCase() === "P") {
+            return value;
+        }
         return value + "p";
     }
 }

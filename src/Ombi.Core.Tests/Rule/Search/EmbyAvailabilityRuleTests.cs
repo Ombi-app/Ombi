@@ -35,7 +35,8 @@ namespace Ombi.Core.Tests.Rule.Search
             SettingsMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new EmbySettings());
             ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new EmbyContent
             {
-                ProviderId = "123"
+                TheMovieDbId = "123",
+                Quality = "1"
             });
             var search = new SearchMovieViewModel()
             {
@@ -44,6 +45,47 @@ namespace Ombi.Core.Tests.Rule.Search
             var result = await Rule.Execute(search);
 
             Assert.True(result.Success);
+            Assert.True(search.Available);
+        }
+
+        [Test]
+        public async Task Movie_ShouldBe_Available_WhenFoundInEmby_4K()
+        {
+            SettingsMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new EmbySettings());
+            ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new EmbyContent
+            {
+                TheMovieDbId = "123",
+                Has4K = true
+            });
+            var search = new SearchMovieViewModel()
+            {
+                TheMovieDbId = "123",
+            };
+            var result = await Rule.Execute(search);
+
+            Assert.True(result.Success);
+            Assert.True(search.Available4K);
+            Assert.False(search.Available);
+        }
+
+        [Test]
+        public async Task Movie_ShouldBe_Available_WhenFoundInEmby_Both()
+        {
+            SettingsMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new EmbySettings());
+            ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new EmbyContent
+            {
+                TheMovieDbId = "123",
+                Has4K = true,
+                Quality = "1"
+            });
+            var search = new SearchMovieViewModel()
+            {
+                TheMovieDbId = "123",
+            };
+            var result = await Rule.Execute(search);
+
+            Assert.True(result.Success);
+            Assert.True(search.Available4K);
             Assert.True(search.Available);
         }
 

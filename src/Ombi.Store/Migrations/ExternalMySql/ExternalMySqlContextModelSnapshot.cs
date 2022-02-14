@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Ombi.Store.Context.MySql;
 
+#nullable disable
+
 namespace Ombi.Store.Migrations.ExternalMySql
 {
     [DbContext(typeof(ExternalMySqlContext))]
@@ -14,8 +16,8 @@ namespace Ombi.Store.Migrations.ExternalMySql
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 64)
-                .HasAnnotation("ProductVersion", "5.0.1");
+                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Ombi.Store.Entities.CouchPotatoCache", b =>
                 {
@@ -44,10 +46,16 @@ namespace Ombi.Store.Migrations.ExternalMySql
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
+                    b.Property<bool>("Has4K")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("ImdbId")
                         .HasColumnType("longtext");
 
                     b.Property<string>("ProviderId")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Quality")
                         .HasColumnType("longtext");
 
                     b.Property<string>("TheMovieDbId")
@@ -122,6 +130,9 @@ namespace Ombi.Store.Migrations.ExternalMySql
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<bool>("Has4K")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("ImdbId")
                         .HasColumnType("longtext");
 
@@ -130,6 +141,9 @@ namespace Ombi.Store.Migrations.ExternalMySql
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("ProviderId")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Quality")
                         .HasColumnType("longtext");
 
                     b.Property<string>("TheMovieDbId")
@@ -321,6 +335,9 @@ namespace Ombi.Store.Migrations.ExternalMySql
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<bool>("Has4K")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("ImdbId")
                         .HasColumnType("longtext");
 
@@ -362,7 +379,13 @@ namespace Ombi.Store.Migrations.ExternalMySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<bool>("Has4K")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<bool>("HasFile")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("HasRegular")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<int>("TheMovieDbId")

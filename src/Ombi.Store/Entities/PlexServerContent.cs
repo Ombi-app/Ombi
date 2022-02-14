@@ -41,7 +41,6 @@ namespace Ombi.Store.Entities
         /// Plex's internal ID for this item
         /// </summary>
         public int Key { get; set; }
-        public string Quality { get; set; }
 
         public int? RequestId { get; set; }
         

@@ -164,5 +164,10 @@ namespace Ombi.Store.Repository
             await InternalSaveChanges();
         }
 
+        public override Task UpdateRange(IEnumerable<IMediaServerContent> existingContent)
+        {
+            Db.PlexServerContent.UpdateRange((PlexServerContent)existingContent);
+            return InternalSaveChanges();
+        }
     }
 }

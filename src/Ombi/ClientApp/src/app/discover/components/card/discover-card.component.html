@@ -20,12 +20,24 @@
             </a>
         </div>
         <div [ngClass]="result.posterPath.includes('images/') ? 'button-request-container-show' : 'button-request-container'" class="row" *ngIf="!result.available && !result.approved && !result.requested">
-            <div class="button-request poster-overlay">
-                <button id="requestButton{{result.id}}{{result.type}}{{discoverType}}" *ngIf="requestable" mat-raised-button class="btn-ombi full-width poster-request-btn" (click)="request($event)">
+            <div *ngIf="!is4kEnabled" class="button-request poster-overlay">
+                <button id="requestButton{{result.id}}{{result.type}}{{discoverType}}" *ngIf="requestable" mat-raised-button class="btn-ombi full-width poster-request-btn" (click)="request($event, false)">
                     <i *ngIf="!loading" class="fa-lg fas fa-cloud-download-alt"></i>
                     <i *ngIf="loading" class="fas fa-spinner fa-pulse fa-2x fa-fw" aria-hidden="true"></i>
                     {{'Common.Request' | translate }}
                 </button>
             </div>
+            <div *ngIf="is4kEnabled && requestable" class="button-request poster-overlay">
+                <button [matMenuTriggerFor]="menu" id="requestButton{{result.id}}{{result.type}}{{discoverType}}" mat-raised-button class="btn-ombi full-width poster-request-btn">
+                    <i *ngIf="!loading" class="fa-lg fas fa-cloud-download-alt"></i>
+                    <i *ngIf="loading" class="fas fa-spinner fa-pulse fa-2x fa-fw" aria-hidden="true"></i>
+                    {{'Common.Request' | translate }}
+                </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item  class="btn-ombi full-width poster-request-btn" (click)="request($event, false)">{{'Common.Request' | translate }}</button>
+                    <button mat-menu-item  class="btn-ombi full-width poster-request-btn" (click)="request($event, true)">{{'Common.Request4K' | translate }}</button>
+                  </mat-menu>
+            </div>
+
         </div>
 </div>

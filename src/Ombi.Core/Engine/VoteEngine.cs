@@ -193,7 +193,7 @@ namespace Ombi.Core.Engine
                 case RequestType.Movie:
                     if (totalVotes >= voteSettings.MovieVoteMax)
                     {
-                        result = await _movieRequestEngine.ApproveMovieById(requestId);
+                        result = await _movieRequestEngine.ApproveMovieById(requestId, false);
                     }
                     break;
                 case RequestType.Album:

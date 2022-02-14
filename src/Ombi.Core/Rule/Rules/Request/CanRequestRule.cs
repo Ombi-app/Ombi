@@ -33,8 +33,23 @@ namespace Ombi.Core.Rule.Rules.Request
 
             if (obj.RequestType == RequestType.Movie)
             {
-                if (await _manager.IsInRoleAsync(user, OmbiRoles.RequestMovie) || await _manager.IsInRoleAsync(user, OmbiRoles.AutoApproveMovie))
-                    return Success();
+                var movie = (MovieRequests)obj;
+                var hasAutoApprove = await _manager.IsInRoleAsync(user, OmbiRoles.AutoApproveMovie);
+                if (await _manager.IsInRoleAsync(user, OmbiRoles.RequestMovie) || hasAutoApprove)
+                {
+                    if (movie.Is4kRequest && !hasAutoApprove)
+                    {
+                        var has4kPermission = await _manager.IsInRoleAsync(user, OmbiRoles.Request4KMovie);
+                        if (has4kPermission)
+                        {
+                            return Success();
+                        }
+                    }
+                    else
+                    {
+                        return Success();
+                    }
+                }
                 return Fail(ErrorCode.NoPermissionsRequestMovie, "You do not have permissions to Request a Movie");
             }
 

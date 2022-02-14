@@ -100,7 +100,7 @@ export class TvRequestsPanelComponent {
     }
 
     public reProcessRequest(request: IChildRequests) {
-        this.requestService2.reprocessRequest(request.id, RequestType.tvShow).subscribe(result => {
+        this.requestService2.reprocessRequest(request.id, RequestType.tvShow, false).subscribe(result => {
             if (result.result) {
                 this.messageService.send(result.message ? result.message : "Successfully Re-processed the request", "Ok");
             } else {

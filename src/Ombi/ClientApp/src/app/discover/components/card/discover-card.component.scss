@@ -293,3 +293,7 @@ a.poster-overlay:hover{
 .btn-ombi{
   background-color:#293a4c;
 }
+
+::ng-deep .mat-menu-panel {
+  min-width: 190px !important;
+}

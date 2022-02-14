@@ -25,7 +25,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             _ombiSettings = ombiSettings;
             _movieRequests = movieRequest;
             _tvRequestRepository = tvRequestRepository;
-            _musicRequestRepository = _musicRequestRepository;
+            _musicRequestRepository = musicRequestRepository;
             _logger = logger;
         }
 

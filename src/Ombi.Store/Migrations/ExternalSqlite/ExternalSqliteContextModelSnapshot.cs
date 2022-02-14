@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Ombi.Store.Context.Sqlite;
 
+#nullable disable
+
 namespace Ombi.Store.Migrations.ExternalSqlite
 {
     [DbContext(typeof(ExternalSqliteContext))]
@@ -13,8 +15,7 @@ namespace Ombi.Store.Migrations.ExternalSqlite
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.1");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
 
             modelBuilder.Entity("Ombi.Store.Entities.CouchPotatoCache", b =>
                 {
@@ -43,10 +44,16 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("Has4K")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("ImdbId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Quality")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TheMovieDbId")
@@ -121,6 +128,9 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("Has4K")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("ImdbId")
                         .HasColumnType("TEXT");
 
@@ -129,6 +139,9 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Quality")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TheMovieDbId")
@@ -320,6 +333,9 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("Has4K")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("ImdbId")
                         .HasColumnType("TEXT");
 
@@ -361,7 +377,13 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("Has4K")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("HasFile")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("HasRegular")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("TheMovieDbId")

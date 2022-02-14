@@ -6,6 +6,6 @@ namespace Ombi.Core
 {
     public interface IMovieSender
     {
-        Task<SenderResult> Send(MovieRequests model);
+        Task<SenderResult> Send(MovieRequests model, bool is4K);
     }
 }

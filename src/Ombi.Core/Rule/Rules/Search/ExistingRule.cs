@@ -26,17 +26,27 @@ namespace Ombi.Core.Rule.Rules.Search
 
         public async Task<RuleResult> Execute(SearchViewModel obj)
         {
-            if (obj.Type == RequestType.Movie)
+            if (obj is SearchMovieViewModel movie)
             {
                 var movieRequests = await Movie.GetRequestAsync(obj.Id);
                 if (movieRequests != null) // Do we already have a request for this?
                 {
-                    obj.Requested = true;
-                    obj.RequestId = movieRequests.Id;
-                    obj.Approved = movieRequests.Approved;
-                    obj.Denied = movieRequests.Denied ?? false;
-                    obj.DeniedReason = movieRequests.DeniedReason;
-                    obj.Available = movieRequests.Available;
+                    // If the RequestDate is a min value, that means there's only a 4k request
+                    movie.Requested = movieRequests.RequestedDate != DateTime.MinValue;
+                    movie.RequestId = movieRequests.Id;
+                    movie.Approved = movieRequests.Approved;
+                    movie.Denied = movieRequests.Denied ?? false;
+                    movie.DeniedReason = movieRequests.DeniedReason;
+                    movie.Available = movieRequests.Available;
+                    movie.Has4KRequest = movieRequests.Has4KRequest;
+                    movie.RequestedDate4k = movieRequests.RequestedDate4k;
+                    movie.Approved4K = movieRequests.Approved4K;
+                    movie.Available4K = movieRequests.Available4K;
+                    movie.Denied4K = movieRequests.Denied4K;
+                    movie.DeniedReason4K = movieRequests.DeniedReason4K;
+                    movie.MarkedAsApproved4K = movieRequests.MarkedAsApproved4K;
+                    movie.MarkedAsAvailable4K = movieRequests.MarkedAsAvailable4K;
+                    movie.MarkedAsDenied4K = movieRequests.MarkedAsDenied4K;
 
                     return Success();
                 }
