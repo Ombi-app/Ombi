@@ -5,6 +5,7 @@ import { SearchV2Service } from "../../../services";
 import { StorageService } from "../../../shared/storage/storage-service";
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { Carousel } from 'primeng/carousel';
+import { FeaturesFacade } from "../../../state/features/features.facade";
 
 export enum DiscoverType {
     Upcoming,
@@ -36,6 +37,7 @@ export class CarouselListComponent implements OnInit {
     public RequestType = RequestType;
     public loadingFlag: boolean;
     public DiscoverType = DiscoverType;
+    public is4kEnabled = false;
 
     get mediaTypeStorageKey() {
         return "DiscoverOptions" + this.discoverType.toString();
@@ -44,7 +46,8 @@ export class CarouselListComponent implements OnInit {
     private currentlyLoaded = 0;
 
     constructor(private searchService: SearchV2Service,
-        private storageService: StorageService) {
+        private storageService: StorageService,
+        private featureFacade: FeaturesFacade) {
         this.responsiveOptions = [
             {
                 breakpoint: '4000px',
@@ -135,6 +138,7 @@ export class CarouselListComponent implements OnInit {
     }
 
     public async ngOnInit() {
+        this.is4kEnabled = this.featureFacade.is4kEnabled();
         this.currentlyLoaded = 0;
         const localDiscoverOptions = +this.storageService.get(this.mediaTypeStorageKey);
         if (localDiscoverOptions) {

@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { SearchV2Service } from "../../../services";
 import { IActorCredits, IActorCast } from "../../../interfaces/ISearchTvResultV2";
@@ -6,30 +6,31 @@ import { IDiscoverCardResult } from "../../interfaces";
 import { RequestType } from "../../../interfaces";
 import { AuthService } from "../../../auth/auth.service";
 import { forkJoin } from "rxjs";
-import { isEqual } from "lodash";
+import { FeaturesFacade } from "../../../state/features/features.facade";
 
 @Component({
     templateUrl: "./discover-actor.component.html",
     styleUrls: ["./discover-actor.component.scss"],
 })
-export class DiscoverActorComponent {
+export class DiscoverActorComponent implements OnInit {
     public actorId: number;
     public loadingFlag: boolean;
     public isAdmin: boolean;
+    public is4kEnabled = false;
 
     public discoverResults: IDiscoverCardResult[] = [];
 
     constructor(private searchService: SearchV2Service,
         private route: ActivatedRoute,
-        private auth: AuthService) {
+        private auth: AuthService,
+        private featureService: FeaturesFacade) {
         this.route.params.subscribe((params: any) => {
             this.actorId = params.actorId;
-            this.isAdmin = this.auth.isAdmin();
-            this.search();
         });
     }
-
-    private search() {
+    ngOnInit() {
+        this.isAdmin = this.auth.isAdmin();
+        this.is4kEnabled = this.featureService.is4kEnabled();
         this.discoverResults = [];
         this.loading();
 

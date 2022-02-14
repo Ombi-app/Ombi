@@ -21,6 +21,7 @@ export class DiscoverCardComponent implements OnInit {
     @Input() public discoverType: DiscoverType;
     @Input() public result: IDiscoverCardResult;
     @Input() public isAdmin: boolean;
+    @Input() public is4kEnabled: boolean = false;
     public RequestType = RequestType;
     public hide: boolean;
     public fullyLoaded = false;
@@ -111,7 +112,7 @@ export class DiscoverCardComponent implements OnInit {
         return "";
     }
 
-    public request(event: any) {
+    public request(event: any, is4k: boolean) {
         event.preventDefault();
         this.loading = true;
         switch (this.result.type) {
@@ -121,14 +122,15 @@ export class DiscoverCardComponent implements OnInit {
                 return;
             case RequestType.movie:
                 if (this.isAdmin) {
-                    const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.movie, id: this.result.id }, panelClass: 'modal-panel' });
+                    const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.movie, id: this.result.id,  }, panelClass: 'modal-panel' });
                     dialog.afterClosed().subscribe((result) => {
                         if (result) {
                                 this.requestService.requestMovie({ theMovieDbId: +this.result.id,
                                     languageCode: this.translate.currentLang,
                                     qualityPathOverride: result.radarrPathId,
                                     requestOnBehalf: result.username?.id,
-                                    rootFolderOverride: result.radarrFolderId, }).subscribe(x => {
+                                    rootFolderOverride: result.radarrFolderId,
+                                    is4KRequest: is4k }).subscribe(x => {
                                 if (x.result) {
                                     this.result.requested = true;
                                     this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.result.title }), "Ok");
@@ -139,7 +141,7 @@ export class DiscoverCardComponent implements OnInit {
                         }
                     });
                 } else {
-                this.requestService.requestMovie({ theMovieDbId: +this.result.id, languageCode: this.translate.currentLang, requestOnBehalf: null, qualityPathOverride: null, rootFolderOverride: null }).subscribe(x => {
+                this.requestService.requestMovie({ theMovieDbId: +this.result.id, languageCode: this.translate.currentLang, requestOnBehalf: null, qualityPathOverride: null, rootFolderOverride: null, is4KRequest: is4k }).subscribe(x => {
                     if (x.result) {
                         this.result.requested = true;
                         this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.result.title }), "Ok");
