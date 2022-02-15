@@ -283,13 +283,9 @@ namespace Ombi.Controllers.V1
         {
             string username = null;
 
-            // Check if Header Auth is enabled and Proxy IP is trusted
-            // TODO
-            // var ombiSettings = await repo.GetSettingsAsync();
-            // END TODO
             var authSettings = await _authSettings.GetSettingsAsync();
             _log.LogInformation("Logging with header: " + authSettings.HeaderAuthVariable);
-            if (authSettings.HeaderAuthVariable != null)
+            if (authSettings.HeaderAuthVariable != null && authSettings.EnableHeaderAuth)
             {
                 if (Request.HttpContext?.Request?.Headers != null && Request.HttpContext.Request.Headers.ContainsKey(authSettings.HeaderAuthVariable))
                 {
