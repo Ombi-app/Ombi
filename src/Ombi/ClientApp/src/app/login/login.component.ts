@@ -1,4 +1,4 @@
-﻿import { Component, OnDestroy, OnInit, Inject } from "@angular/core";
+import { Component, OnDestroy, OnInit, Inject } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
@@ -106,7 +106,7 @@ export class LoginComponent implements OnDestroy, OnInit {
 
     this.settingsService
       .getAuthentication()
-      .subscribe((x) => (this.authenticationSettings = x));
+      .subscribe((x) => { this.authenticationSettings = x; this.headerAuth(); });
     this.settingsService.getClientId().subscribe((x) => (this.clientId = x));
     this.images.getRandomBackground().subscribe((x) => {
       this.background = this.sanitizer.bypassSecurityTrustStyle(
@@ -121,7 +121,6 @@ export class LoginComponent implements OnDestroy, OnInit {
     if (base.length > 1) {
       this.baseUrl = base;
     }
-
     this.translate
       .get("Login.Errors.IncorrectCredentials")
       .subscribe((x) => (this.errorBody = x));
@@ -253,6 +252,31 @@ export class LoginComponent implements OnDestroy, OnInit {
         this.router.navigate(["login"]);
       }
     );
+  }
+
+  public headerAuth() {
+
+    if (this.authenticationSettings.enableHeaderAuth) {
+      this.authService.headerAuth().subscribe(
+        (x) => {
+          this.store.save("id_token", x.access_token);
+
+          if (this.authService.loggedIn()) {
+            this.ngOnDestroy();
+            this.router.navigate(["/"]);
+          } else {
+            this.notify.open(this.errorBody, "OK", {
+              duration: 3000,
+            });
+          }
+        },
+        (err) => {
+          this.notify.open(this.errorBody, "OK", {
+            duration: 3000000,
+          });
+        }
+      );
+    }
   }
 
   public ngOnDestroy() {

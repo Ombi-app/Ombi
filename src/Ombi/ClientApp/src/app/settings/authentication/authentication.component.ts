@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 
 import { NotificationService } from "../../services";
@@ -26,6 +26,8 @@ export class AuthenticationComponent implements OnInit {
                 requireNonAlphanumeric: [x.requireNonAlphanumeric],
                 requireUppercase: [x.requireUppercase],
                 enableOAuth: [x.enableOAuth],
+                enableHeaderAuth: [x.enableHeaderAuth],
+                headerAuthVariable: [x.headerAuthVariable],
             });
         });
     }
