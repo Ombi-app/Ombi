@@ -272,5 +272,37 @@ namespace Ombi.Controllers.V1
 
             return ip;
         }
+
+        [HttpPost("header_auth")]
+        [ProducesResponseType(401)]
+        public async Task<IActionResult> HeaderAuth()
+        {
+            string username = null;
+
+            // Check if Header Auth is enabled and Proxy IP is trusted
+            // TODO
+            // var ombiSettings = await repo.GetSettingsAsync();
+            // END TODO
+
+
+            if (Request.HttpContext?.Request?.Headers != null && Request.HttpContext.Request.Headers.ContainsKey("X-Remote-User"))
+            {
+                username = Request.HttpContext.Request.Headers["X-Remote-User"].ToString();
+                
+                // Check if user exists
+                var user = await _userManager.FindByNameAsync(username);
+                if (user == null)
+                {
+                    return new UnauthorizedResult();
+                }
+
+                return await CreateToken(true, user);
+            }
+            else
+            {
+                return new UnauthorizedResult();
+
+            }
+        }
     }
 }
