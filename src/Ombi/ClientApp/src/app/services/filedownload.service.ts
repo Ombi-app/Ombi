@@ -1,3 +1,9 @@
+// https://github.com/microsoft/TypeScript/issues/45612
+declare global {
+    interface Navigator {
+        msSaveOrOpenBlob: (blob: Blob) => void
+      }
+}
 
 import { APP_BASE_HREF } from "@angular/common";
 import { Injectable, Inject } from "@angular/core";
