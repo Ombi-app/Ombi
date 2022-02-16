@@ -1,3 +1,12 @@
+## [4.12.2](https://github.com/Ombi-app/Ombi/compare/v4.12.1...v4.12.2) (2022-02-16)
+
+
+### Bug Fixes
+
+* **requests:** :bug: Fixed the approve 4k option on the requests list not working as expected ([c0189da](https://github.com/Ombi-app/Ombi/commit/c0189dad478ea375beda61ba3bee3f029a39b8e5))
+
+
+
 ## [4.12.1](https://github.com/Ombi-app/Ombi/compare/v4.12.0...v4.12.1) (2022-02-16)
 
 
@@ -349,10 +358,6 @@
 ### Features
 
 * **mass-email:** :sparkles: Added the ability to configure the Mass Email, we can now send BCC and we are less likely to be rate limited when not using bcc [#4377](https://github.com/Ombi-app/Ombi/issues/4377) ([ca655ae](https://github.com/Ombi-app/Ombi/commit/ca655ae57042dec44106a2f2ef5ba2e6f1019ee4))
-
-
-
-## [4.3.3](https://github.com/Ombi-app/Ombi/compare/v4.3.2...v4.3.3) (2021-11-05)
 
 
 
