@@ -1503,10 +1503,10 @@
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.6.tgz#d5e0706cf8c6acd8c6032f8d54070af261bbbb2f"
   integrity sha512-ws57AidsDvREKrZKYffXddNkyaF14iHNHm8VQnZH6t99E8gczjNN0GpvcGny0imC80yQ0tHz1xVUKk/KFQSUyA==
 
-"@fortawesome/fontawesome-free@^5.15.4":
-  version "5.15.4"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.15.4.tgz#ecda5712b61ac852c760d8b3c79c96adca5554e5"
-  integrity sha512-eYm8vijH/hpzr/6/1CJ/V/Eb1xQFW2nnUKArb3z+yUWv7HTwj6M7SP957oMjfZjAHU6qpoNc2wQvIxBLWYa/Jg==
+"@fortawesome/fontawesome-free@^6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-6.0.0.tgz#6f3bd8e42997c7d536a1246877ed8bcd4f005a54"
+  integrity sha512-6LB4PYBST1Rx40klypw1SmSDArjFOcfBf2LeX9Zg5EKJT2eXiyiJq+CyBYKeXyK0sXS2FsCJWSPr/luyhuvh0Q==
 
 "@fullcalendar/core@^4.2.0":
   version "4.4.2"
@@ -1567,12 +1567,12 @@
   resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-13.2.3.tgz#a4434eb5e2ec3cc04d7f714f20d5203114563f33"
   integrity sha512-wooUZiV92QyoeFxkhqIwH/cfiAAAn+l8fEEuaaEIfJtpjpbShvvlboEVsqb28soeGiFJfLcmsZM3mUFgsG4QBQ==
 
-"@ngu/carousel@^3.0.2":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@ngu/carousel/-/carousel-3.0.2.tgz#e0349e32344655a63fce82c580560365a06c09fd"
-  integrity sha512-EGvCs0LoStIKJoJfQWGeEs1RYHOgxZiSiqi6Thr7F9NVPvJkkwxlSh40uA6AQoWIv6WWhhNr1Imrbp27NZGs6Q==
+"@ngu/carousel@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@ngu/carousel/-/carousel-4.0.0.tgz#928937168010b36946135d86a1a90a8417a0634c"
+  integrity sha512-/L54YCTMxEZ98BwEWu3cCmH5FkQ2uG6eyw3EANp7D2QOPwry20/5YRWYjp7OkMOVTQ/nOL/pI4na0wJ/qfWD2A==
   dependencies:
-    tslib "^2.0.0"
+    tslib "^2.3.0"
 
 "@ngx-translate/core@^13.0.0":
   version "13.0.0"
@@ -1588,17 +1588,17 @@
   dependencies:
     tslib "^2.0.0"
 
-"@ngxs/devtools-plugin@^3.7.2":
-  version "3.7.2"
-  resolved "https://registry.yarnpkg.com/@ngxs/devtools-plugin/-/devtools-plugin-3.7.2.tgz#995424e5faf48df55a1b54b9e1b36ce9c47c1d52"
-  integrity sha512-kRuOx1GPXHHZZAeQMm1J1msTZxjgiAUY4NR7bzaQPn+UwSY2OgGEsd8driMM5YSTF1hOjcFHinaLCM1vmu8FmQ==
+"@ngxs/devtools-plugin@^3.7.3":
+  version "3.7.3"
+  resolved "https://registry.yarnpkg.com/@ngxs/devtools-plugin/-/devtools-plugin-3.7.3.tgz#0f8724ae15aabea4170b00edd632c594de16bd65"
+  integrity sha512-zkF2OyZKyXW8s/+WZZJgLbWpEguoDAA+EG9qWa/jlysRicYGDVCNZyoxZre4V9BkjwHvY+dQzcDHX4/Ng+Rf5w==
   dependencies:
     tslib "^1.9.0"
 
-"@ngxs/store@^3.7.2":
-  version "3.7.2"
-  resolved "https://registry.yarnpkg.com/@ngxs/store/-/store-3.7.2.tgz#1088b0669adc382d36ca7ae8438c603e55879b42"
-  integrity sha512-1cnAjHOGCovfvhjtcAWBajrMXos97Un3c8ekKoS8FIHnq3aQOzY/ePspDRNi9kTcuBJ/r/xl097JC1ssEuNbyg==
+"@ngxs/store@^3.7.3":
+  version "3.7.3"
+  resolved "https://registry.yarnpkg.com/@ngxs/store/-/store-3.7.3.tgz#74e2878d527fc12dace343ce43fd79fa1a2645af"
+  integrity sha512-JjATXC7FsxxQu2SaayP/iLe4O+5/RkRov3/J7WkaQmV6/JWFNkkdOwbEa6pDbh/po0JO7DHHMk3huIUNpDu67g==
   dependencies:
     tslib "^1.9.0"
 
@@ -1801,10 +1801,10 @@
   dependencies:
     "@types/jasmine" "*"
 
-"@types/jquery@^3.3.29":
-  version "3.5.7"
-  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.5.7.tgz#07614671f79c6ad70633bb2d8977f01cea242e27"
-  integrity sha512-Why+9t1KuqWtIqYKtbk6wgWbE1PjyXJOyGkpmTUh0RX5p4HL7nnRuBkjAO9P2r9tGQP6bLWxl77jRLew3V5xXg==
+"@types/jquery@^3.5.13":
+  version "3.5.13"
+  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.5.13.tgz#5482d3ee325d5862f77a91c09369ae0a5b082bf3"
+  integrity sha512-ZxJrup8nz/ZxcU0vantG+TPdboMhB24jad2uSap50zE7Q9rUeYlCF25kFMSmHR33qoeOgqcdHEp3roaookC0Sg==
   dependencies:
     "@types/sizzle" "*"
 
@@ -5370,10 +5370,10 @@ ngx-moment@^3.0.1:
   dependencies:
     tslib "^1.9.0"
 
-ngx-order-pipe@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/ngx-order-pipe/-/ngx-order-pipe-2.1.1.tgz#981b7ff2fac20bc88a1e9922527e2e61da0ff4f1"
-  integrity sha512-yBaG0uYWsXBlmAuCYvBedKxl3kRUSXNXsMrD0m2E4tBA8I9TJSomucp5SHFlyfMQK8V6pjRGdz17Sjb9YwLhSg==
+ngx-order-pipe@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/ngx-order-pipe/-/ngx-order-pipe-2.2.0.tgz#14ab50dfe0a679e5216138ff9a0820a83173a4fe"
+  integrity sha512-fym4A3j0XMqETskCm0tHUHQWCgB1p1MrIstFA3jCClJqNU9KjtQh/AE4C7srUkz9U3HIBIAN9D3ty2L9l/jvmA==
   dependencies:
     tslib "^2.0.0"
 
@@ -6701,12 +6701,19 @@ rxjs@6.6.7, rxjs@^6.5.3:
   dependencies:
     tslib "^1.9.0"
 
-rxjs@^7.2.0, rxjs@^7.4.0:
+rxjs@^7.2.0:
   version "7.4.0"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.4.0.tgz#a12a44d7eebf016f5ff2441b87f28c9a51cebc68"
   integrity sha512-7SQDi7xeTMCJpqViXh8gL/lebcwlp3d831F05+9B44A4B0WfsEwUQHR64gsH1kvJ+Ep/J9K2+n1hVl1CsGN23w==
   dependencies:
     tslib "~2.1.0"
+
+rxjs@^7.5.4:
+  version "7.5.4"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.5.4.tgz#3d6bd407e6b7ce9a123e76b1e770dc5761aa368d"
+  integrity sha512-h5M3Hk78r6wAheJF0a5YahB1yRQKCsZ4MsGdZ5O9ETbVtjPcScGfrMmoOq7EBsCRzd4BDkvDJ7ogP8Sz5tTFiQ==
+  dependencies:
+    tslib "^2.1.0"
 
 safe-buffer@5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"
