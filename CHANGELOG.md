@@ -1,3 +1,7 @@
+## [4.12.3](https://github.com/Ombi-app/Ombi/compare/v4.12.2...v4.12.3) (2022-02-16)
+
+
+
 ## [4.12.2](https://github.com/Ombi-app/Ombi/compare/v4.12.1...v4.12.2) (2022-02-16)
 
 
@@ -344,20 +348,6 @@
 ### Features
 
 * :sparkles: Upgrade Ombi to .NET 6 ([#4390](https://github.com/Ombi-app/Ombi/issues/4390)) ([719eb7d](https://github.com/Ombi-app/Ombi/commit/719eb7dbe37b3a72d264e2f670067518eef70694)), closes [#4392](https://github.com/Ombi-app/Ombi/issues/4392)
-
-
-
-# [4.4.0](https://github.com/Ombi-app/Ombi/compare/v4.3.3...v4.4.0) (2021-11-06)
-
-
-### Bug Fixes
-
-* **request-list:** :bug: Fixed an issue where the request options were not appearing for Music requests ([c0406a2](https://github.com/Ombi-app/Ombi/commit/c0406a2ddebafb03d98ed25cdf7d89dc9a600c7d))
-
-
-### Features
-
-* **mass-email:** :sparkles: Added the ability to configure the Mass Email, we can now send BCC and we are less likely to be rate limited when not using bcc [#4377](https://github.com/Ombi-app/Ombi/issues/4377) ([ca655ae](https://github.com/Ombi-app/Ombi/commit/ca655ae57042dec44106a2f2ef5ba2e6f1019ee4))
 
 
 
