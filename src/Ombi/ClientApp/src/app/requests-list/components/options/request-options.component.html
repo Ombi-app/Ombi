@@ -2,10 +2,10 @@
   <a id="requestDelete" *ngIf="data.isAdmin || data.manageOwnRequests" (click)="delete()" mat-list-item>
     <span mat-line>{{'Requests.RequestPanel.Delete' | translate}}</span>
   </a>
-  <a id="requestApprove" *ngIf="data.canApprove && data.isAdmin" (click)="approve()" mat-list-item>
+  <a id="requestApprove" *ngIf="data.canApprove && data.hasRegularRequest && data.isAdmin" (click)="approve()" mat-list-item>
     <span mat-line>{{'Requests.RequestPanel.Approve' | translate}}</span>
   </a>
-  <a id="requestApprove4k" *ngIf="data.canApprove && data.isAdmin && data.has4kRequest" (click)="approve4k()" mat-list-item>
+  <a id="requestApprove4k" *ngIf="data.canApprove && data.isAdmin && data.has4kRequest ?? false" (click)="approve4K()" mat-list-item>
     <span mat-line>{{'Requests.RequestPanel.Approve4K' | translate}}</span>
   </a>
   <a id="requestChangeAvailability" *ngIf="data.type !== RequestType.tvShow && data.isAdmin" (click)="changeAvailability()" mat-list-item>

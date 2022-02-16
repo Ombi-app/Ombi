@@ -63,6 +63,8 @@ export class RequestOptionsComponent {
     }
 
     await firstValueFrom(this.requestService.approveMovie({id: this.data.id, is4K: true}));
+    this.bottomSheetRef.dismiss({type: UpdateType.Approve});
+    return;
   }
 
   public async changeAvailability() {

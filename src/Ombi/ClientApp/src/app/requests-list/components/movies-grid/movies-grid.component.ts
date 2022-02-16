@@ -142,9 +142,19 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
             this.ref.detectChanges();
         };
 
-        const data = { request: request, filter: filter, onChange: onChange, manageOwnRequests: this.manageOwnRequests, isAdmin: this.isAdmin, has4kRequest: request.has4KRequest };
+        const data = { request: request, filter: filter, onChange: onChange, manageOwnRequests: this.manageOwnRequests, isAdmin: this.isAdmin, has4kRequest: request.has4KRequest, hasRegularRequest: this.checkDate(request.requestedDate) };
         this.onOpenOptions.emit(data);
     }
+
+    private checkDate(date: Date|string): boolean {
+        if (date instanceof String) {
+          return new Date(date).getFullYear() > 1;
+        }
+        if (date instanceof Date) {
+          return date.getFullYear() > 1;
+        }
+        return false;
+      }
 
     public switchFilter(type: RequestFilterType) {
         this.currentFilter = type;
