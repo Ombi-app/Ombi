@@ -321,19 +321,42 @@ namespace Ombi.Core.Engine
             switch (status)
             {
                 case RequestStatus.PendingApproval:
-                    allRequests = allRequests.Where(x => !x.Approved && !x.Available && (!x.Denied.HasValue || !x.Denied.Value));
+                    allRequests = allRequests.Where(x => 
+                            (x.RequestedDate != DateTime.MinValue && !x.Approved && !x.Available && (!x.Denied.HasValue || !x.Denied.Value)) 
+                            || 
+                            (x.Has4KRequest && !x.Approved4K && !x.Available4K && (!x.Denied4K.HasValue || !x.Denied4K.Value))
+                       );
                     break;
                 case RequestStatus.ProcessingRequest:
-                    allRequests = allRequests.Where(x => x.Approved && !x.Available && (!x.Denied.HasValue || !x.Denied.Value));
+                    allRequests = allRequests.Where(x => 
+                            (x.RequestedDate != DateTime.MinValue && x.Approved && !x.Available && (!x.Denied.HasValue || !x.Denied.Value))
+                            ||
+                            (x.Has4KRequest && x.Approved4K && !x.Available && (!x.Denied.HasValue || !x.Denied.Value))
+                        );
                     break;
                 case RequestStatus.Available:
-                    allRequests = allRequests.Where(x => x.Available);
+                    allRequests = allRequests.Where(x => x.Available || x.Available4K);
                     break;
                 case RequestStatus.Denied:
-                    allRequests = allRequests.Where(x => x.Denied.HasValue && x.Denied.Value && !x.Available);
+                    allRequests = allRequests.Where(x => 
+                            (x.Denied.HasValue && x.Denied.Value && !x.Available)
+                            ||
+                            (x.Has4KRequest && x.Denied4K.HasValue && x.Denied4K.Value && !x.Available4K)
+                        );
                     break;
                 default:
                     break;
+            }
+
+            var requests = allRequests.ToList();
+            var total = requests.Count;
+            if (total == 0)
+            {
+                return new RequestsViewModel<MovieRequests>
+                {
+                    Collection = Enumerable.Empty<MovieRequests>(),
+                    Total = total
+                };
             }
 
             var prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(sortProperty, true);
@@ -348,11 +371,11 @@ namespace Ombi.Core.Engine
                 //var secondProp = TypeDescriptor.GetProperties(propType).Find(properties[1], true);
             }
 
-            // TODO fix this so we execute this on the server
-            var requests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
+            requests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
                 ? allRequests.ToList().OrderBy(x => prop.GetValue(x)).ToList()
                 : allRequests.ToList().OrderByDescending(x => prop.GetValue(x)).ToList();
-            var total = requests.Count();
+
+            // TODO fix this so we execute this on the server
             requests = requests.Skip(position).Take(count).ToList();
 
             await CheckForSubscription(shouldHide, requests);
