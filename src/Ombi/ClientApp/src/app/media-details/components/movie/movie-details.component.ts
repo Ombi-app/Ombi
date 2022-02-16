@@ -120,7 +120,11 @@ export class MovieDetailsComponent implements OnInit{
         } else {
         const result = await firstValueFrom(this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: this.translate.currentLang, requestOnBehalf: userId, qualityPathOverride: undefined, rootFolderOverride: undefined, is4KRequest: is4K }));
         if (result.result) {
-            this.movie.requested = true;
+            if (is4K) {
+                this.movie.has4KRequest = true;
+            } else {
+                this.movie.requested = true;
+            }
             this.movie.requestId = result.requestId;
             this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
             this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.movie.title }), "Ok");

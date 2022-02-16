@@ -21,6 +21,7 @@
         "issues",
         "emby",
         "availability-rules",
-        "details"
+        "details",
+        "requests"
     ]
 }

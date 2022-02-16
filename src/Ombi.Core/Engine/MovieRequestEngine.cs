@@ -640,7 +640,7 @@ namespace Ombi.Core.Engine
 
         private async Task<RequestEngineResult> ProcessSendingMovie(MovieRequests request, bool is4K)
         {
-            if (request.Approved)
+            if (is4K ? request.Approved4K : request.Approved)
             {
                 var result = await Sender.Send(request, is4K);
                 if (result.Success && result.Sent)
