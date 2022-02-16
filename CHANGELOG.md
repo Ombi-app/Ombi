@@ -1,3 +1,12 @@
+## [4.12.1](https://github.com/Ombi-app/Ombi/compare/v4.12.0...v4.12.1) (2022-02-16)
+
+
+### Bug Fixes
+
+* **requests:** :bug: Fixed the issue where Approving a 4K Request wouldn't send it to the correct 4K radarr instance ([87cb990](https://github.com/Ombi-app/Ombi/commit/87cb9903db30e1dead25ee8c5ea34305eb084a03)), closes [#4509](https://github.com/Ombi-app/Ombi/issues/4509)
+
+
+
 # [4.12.0](https://github.com/Ombi-app/Ombi/compare/v4.11.8...v4.12.0) (2022-02-14)
 
 
@@ -344,15 +353,6 @@
 
 
 ## [4.3.3](https://github.com/Ombi-app/Ombi/compare/v4.3.2...v4.3.3) (2021-11-05)
-
-
-
-## [4.3.2](https://github.com/Ombi-app/Ombi/compare/v4.3.1...v4.3.2) (2021-11-02)
-
-
-### Bug Fixes
-
-* **translations:** 🌐 Localization - Ensuring all of the app including backend are localized [#4366](https://github.com/Ombi-app/Ombi/issues/4366) ([5e140ab](https://github.com/Ombi-app/Ombi/commit/5e140ab6183b887a7665f5e870eb0bd05d487ace))
 
 
 
