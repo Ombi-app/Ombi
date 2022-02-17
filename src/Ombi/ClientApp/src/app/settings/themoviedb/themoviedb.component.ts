@@ -113,6 +113,7 @@ export class TheMovieDbComponent implements OnInit {
             if (value) {
               return this.tmdbService.getKeywords(value);
             }
+            return [];
           })
         )
         .subscribe((r) => (this.filteredTags = r));
