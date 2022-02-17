@@ -37,13 +37,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 import { MomentModule } from "ngx-moment";
 import { NgModule } from "@angular/core";
-import { SidebarModule } from "primeng/sidebar";
 import { PipeModule } from "../pipes/pipe.module";
-import { TheMovieDbService } from "../services";
+import { RoleModule } from "./role-directive/role.module";
+import { SidebarModule } from "primeng/sidebar";
 import { TranslateModule } from "@ngx-translate/core";
 import { TruncateModule } from "@yellowspot/ng-truncate";
 import { WatchProvidersSelectComponent } from "./components/watch-providers-select/watch-providers-select.component";
-import { RoleModule } from "./role-directive/role.module";
 
 @NgModule({
   declarations: [

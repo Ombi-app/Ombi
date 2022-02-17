@@ -23,5 +23,6 @@
         "availability-rules",
         "details",
         "requests"
-    ]
+    ],
+    "rpc.enabled": true
 }
