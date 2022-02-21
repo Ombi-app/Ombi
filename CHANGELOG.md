@@ -1,3 +1,13 @@
+## [4.12.5](https://github.com/Ombi-app/Ombi/compare/v4.12.4...v4.12.5) (2022-02-21)
+
+
+### Bug Fixes
+
+* **emby:** :bug: Fixed the emby content sync [#4513](https://github.com/Ombi-app/Ombi/issues/4513) ([2927504](https://github.com/Ombi-app/Ombi/commit/2927504f0e0b4e7251e69b44e0e30c7ec9519980))
+* **emby:** :bug: Fixed the emby content sync [#4513](https://github.com/Ombi-app/Ombi/issues/4513) ([bd441cb](https://github.com/Ombi-app/Ombi/commit/bd441cb54fd77d6befb03fae321dc36c29f0de2e))
+
+
+
 ## [4.12.4](https://github.com/Ombi-app/Ombi/compare/v4.12.3...v4.12.4) (2022-02-17)
 
 
@@ -332,17 +342,6 @@
 ### Bug Fixes
 
 * **discover:** TV shows now display on the Actor Pages ([#4388](https://github.com/Ombi-app/Ombi/issues/4388)) ([6b716e7](https://github.com/Ombi-app/Ombi/commit/6b716e722076e3d1e6bf2097c5263645d5ea9edf))
-
-
-
-## [4.6.1](https://github.com/Ombi-app/Ombi/compare/v4.6.0...v4.6.1) (2021-11-10)
-
-
-### Bug Fixes
-
-* :bug: Fixed the MySQL issue after .net 6 upgrade [#4393](https://github.com/Ombi-app/Ombi/issues/4393) ([fea7ff0](https://github.com/Ombi-app/Ombi/commit/fea7ff05139e9ff50c8097fa5389b4ef9ad21a15))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([c6acb45](https://github.com/Ombi-app/Ombi/commit/c6acb45f8d3f371c0b4024c4272849d0d0cc867f))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([18c220a](https://github.com/Ombi-app/Ombi/commit/18c220a0cd0d19e45a07d0c319da2b9512778a8a))
 
 
 
