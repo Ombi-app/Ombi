@@ -98,8 +98,7 @@ namespace Ombi.Store.Repository
 
         public override Task UpdateRange(IEnumerable<IMediaServerContent> existingContent)
         {
-            var list = existingContent.ToList();
-            Db.EmbyContent.UpdateRange((List<EmbyContent>)list);
+            Db.EmbyContent.UpdateRange((IEnumerable<EmbyContent>)existingContent);
             return InternalSaveChanges();
         }
 
