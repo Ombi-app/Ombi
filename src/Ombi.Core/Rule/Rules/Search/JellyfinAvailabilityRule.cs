@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
-using Ombi.Core.Settings;
-using Ombi.Core.Settings.Models.External;
+using Ombi.Core.Services;
 using Ombi.Helpers;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 
@@ -14,16 +14,17 @@ namespace Ombi.Core.Rule.Rules.Search
 {
     public class JellyfinAvailabilityRule : BaseSearchRule, IRules<SearchViewModel>
     {
-        public JellyfinAvailabilityRule(IJellyfinContentRepository repo, ILogger<JellyfinAvailabilityRule> log, ISettingsService<JellyfinSettings> s)
+        private readonly IFeatureService _featureService;
+
+        public JellyfinAvailabilityRule(IJellyfinContentRepository repo, ILogger<JellyfinAvailabilityRule> log, IFeatureService featureService)
         {
             JellyfinContentRepository = repo;
             Log = log;
-            JellyfinSettings = s;
+            _featureService = featureService;
         }
 
         private IJellyfinContentRepository JellyfinContentRepository { get; }
         private ILogger Log { get; }
-        private ISettingsService<JellyfinSettings> JellyfinSettings { get; }
 
         public async Task<RuleResult> Execute(SearchViewModel obj)
         {
@@ -82,13 +83,13 @@ namespace Ombi.Core.Rule.Rules.Search
                 }
                 if (obj is SearchMovieViewModel movie)
                 {
-                    if (item.Has4K)
+                    var is4kEnabled = await _featureService.FeatureEnabled(FeatureNames.Movie4KRequests);
+                    if (item.Has4K && is4kEnabled)
                     {
                         movie.Available4K = true;
                         obj.JellyfinUrl = item.Url;
                     }
-
-                    if (item.Quality.HasValue())
+                    else
                     {
                         obj.Available = true;
                         obj.EmbyUrl = item.Url;

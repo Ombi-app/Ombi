@@ -245,12 +245,15 @@ namespace Ombi.Schedule.Jobs.Jellyfin
             }
             else
             {
-                if (!existingMovie.Quality.Equals(quality, StringComparison.InvariantCultureIgnoreCase))
+                if (!quality.Equals(existingMovie?.Quality, StringComparison.InvariantCultureIgnoreCase))
                 {
                     _logger.LogDebug($"We have found another quality for Movie '{movieInfo.Name}', Quality: '{quality}'");
                     existingMovie.Quality = has4K ? null : quality;
                     existingMovie.Has4K = has4K;
 
+                    // Probably could refactor here
+                    // If a 4k movie comes in (we don't store the quality on 4k)
+                    // it will always get updated even know it's not changed
                     toUpdate.Add(existingMovie);
                 }
                 else

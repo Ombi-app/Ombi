@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
-using Ombi.Core.Settings;
-using Ombi.Core.Settings.Models.External;
+using Ombi.Core.Services;
 using Ombi.Helpers;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 
@@ -14,16 +14,17 @@ namespace Ombi.Core.Rule.Rules.Search
 {
     public class EmbyAvailabilityRule : BaseSearchRule, IRules<SearchViewModel>
     {
-        public EmbyAvailabilityRule(IEmbyContentRepository repo, ILogger<EmbyAvailabilityRule> log, ISettingsService<EmbySettings> s)
+        private readonly IFeatureService _featureService;
+
+        public EmbyAvailabilityRule(IEmbyContentRepository repo, ILogger<EmbyAvailabilityRule> log, IFeatureService featureService)
         {
             EmbyContentRepository = repo;
             Log = log;
-            EmbySettings = s;
+            _featureService = featureService;
         }
 
         private IEmbyContentRepository EmbyContentRepository { get; }
         private ILogger Log { get; }
-        private ISettingsService<EmbySettings> EmbySettings { get; }
 
         public async Task<RuleResult> Execute(SearchViewModel obj)
         {
@@ -68,13 +69,14 @@ namespace Ombi.Core.Rule.Rules.Search
             {
                 if (obj is SearchMovieViewModel movie)
                 {
-                    if (item.Has4K)
+                    var is4kEnabled = await _featureService.FeatureEnabled(FeatureNames.Movie4KRequests);
+
+                    if (item.Has4K && is4kEnabled)
                     {
                         movie.Available4K = true;
                         obj.EmbyUrl = item.Url;
                     }
-
-                    if (item.Quality.HasValue())
+                    else
                     {
                         obj.Available = true;
                         obj.EmbyUrl = item.Url;

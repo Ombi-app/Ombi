@@ -5,6 +5,7 @@ using Moq;
 using NUnit.Framework;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Rules.Search;
+using Ombi.Core.Services;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Store.Entities;
@@ -20,19 +21,18 @@ namespace Ombi.Core.Tests.Rule.Search
         {
             ContextMock = new Mock<IJellyfinContentRepository>();
             LoggerMock = new Mock<ILogger<JellyfinAvailabilityRule>>();
-            SettingsMock = new Mock<ISettingsService<JellyfinSettings>>();
-            Rule = new JellyfinAvailabilityRule(ContextMock.Object, LoggerMock.Object, SettingsMock.Object);
+            FeatureMock = new Mock<IFeatureService>();
+            Rule = new JellyfinAvailabilityRule(ContextMock.Object, LoggerMock.Object, FeatureMock.Object);
         }
 
         private JellyfinAvailabilityRule Rule { get; set; }
         private Mock<IJellyfinContentRepository> ContextMock { get; set; }
         private Mock<ILogger<JellyfinAvailabilityRule>> LoggerMock { get; set; }
-        private Mock<ISettingsService<JellyfinSettings>> SettingsMock { get; set; }
+        private Mock<IFeatureService> FeatureMock { get; set; }
 
         [Test]
         public async Task Movie_ShouldBe_Available_WhenFoundInJellyfin()
         {
-            SettingsMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new JellyfinSettings());
             ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new JellyfinContent
             {
                 TheMovieDbId = "123",
@@ -51,7 +51,6 @@ namespace Ombi.Core.Tests.Rule.Search
         [Test]
         public async Task Movie_ShouldBe_Available_WhenFoundInJellyfin_4K()
         {
-            SettingsMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new JellyfinSettings());
             ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new JellyfinContent
             {
                 TheMovieDbId = "123",
@@ -71,7 +70,6 @@ namespace Ombi.Core.Tests.Rule.Search
         [Test]
         public async Task Movie_ShouldBe_Available_WhenFoundInJellyfin_Both()
         {
-            SettingsMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new JellyfinSettings());
             ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new JellyfinContent
             {
                 TheMovieDbId = "123",
@@ -92,20 +90,6 @@ namespace Ombi.Core.Tests.Rule.Search
         [Test]
         public async Task Movie_Uses_Default_Url_When()
         {
-            SettingsMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new JellyfinSettings
-            {
-                Enable = true,
-                Servers = new List<JellyfinServers>
-                {
-                    new JellyfinServers
-                    {
-                        Ip = "8080",
-                        Port = 9090,
-                        ServerHostname = string.Empty,
-                        ServerId = "8"
-                    }
-                }
-            });
             ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new JellyfinContent
             {
                 TheMovieDbId = "123",
