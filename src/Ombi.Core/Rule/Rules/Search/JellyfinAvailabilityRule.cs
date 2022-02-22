@@ -88,8 +88,15 @@ namespace Ombi.Core.Rule.Rules.Search
                     {
                         movie.Available4K = true;
                         obj.JellyfinUrl = item.Url;
-                    }
+                    } 
                     else
+                    {
+                        obj.Available = true;
+                        obj.EmbyUrl = item.Url;
+                        obj.Quality = item.Quality;
+                    }
+                    
+                    if (item.Quality.HasValue())
                     {
                         obj.Available = true;
                         obj.EmbyUrl = item.Url;

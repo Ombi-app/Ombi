@@ -82,6 +82,13 @@ namespace Ombi.Core.Rule.Rules.Search
                         obj.EmbyUrl = item.Url;
                         obj.Quality = item.Quality;
                     }
+
+                    if (item.Quality.HasValue())
+                    {
+                        obj.Available = true;
+                        obj.EmbyUrl = item.Url;
+                        obj.Quality = item.Quality;
+                    }
                 }
                 else
                 {

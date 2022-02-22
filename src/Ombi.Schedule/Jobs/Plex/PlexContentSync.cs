@@ -307,9 +307,13 @@ namespace Ombi.Schedule.Jobs.Plex
                         // We need to see if this is a different quality,
                         // We want to know if this is a 4k content for example
                         var foundQualities = movie.Media?.Select(x => x.videoResolution);
-
+                        var qualitySaved = false;
                         foreach (var quality in foundQualities)
                         {
+                            if (qualitySaved)
+                            {
+                                break;
+                            }
                             if (quality.Equals(existing.Quality))
                             {
                                 // We got it
@@ -321,6 +325,12 @@ namespace Ombi.Schedule.Jobs.Plex
                             {
                                 Logger.LogDebug($"We already have movie {movie.title}, But found a 4K version!");
                                 existing.Has4K = true;
+                                await Repo.Update(existing);
+                            } 
+                            else
+                            {
+                                qualitySaved = true;
+                                existing.Quality = quality;
                                 await Repo.Update(existing);
                             }
                         }

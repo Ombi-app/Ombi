@@ -3,9 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
+using Ombi.Core.Services;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 
@@ -14,12 +16,15 @@ namespace Ombi.Core.Rule.Rules.Search
     public class PlexAvailabilityRule : BaseSearchRule, IRules<SearchViewModel>
     {
         private readonly ISettingsService<PlexSettings> _plexSettings;
+        private readonly IFeatureService _featureService;
 
-        public PlexAvailabilityRule(IPlexContentRepository repo, ILogger<PlexAvailabilityRule> log, ISettingsService<PlexSettings> plexSettings)
+        public PlexAvailabilityRule(IPlexContentRepository repo, ILogger<PlexAvailabilityRule> log, ISettingsService<PlexSettings> plexSettings,
+            IFeatureService featureService)
         {
             PlexContentRepository = repo;
             Log = log;
             _plexSettings = plexSettings;
+            _featureService = featureService;
         }
 
         private IPlexContentRepository PlexContentRepository { get; }
@@ -92,9 +97,16 @@ namespace Ombi.Core.Rule.Rules.Search
 
                 if (obj is SearchMovieViewModel movie)
                 {
-                    if (item.Has4K)
+                    var is4kEnabled = await _featureService.FeatureEnabled(FeatureNames.Movie4KRequests);
+
+                    if (item.Has4K && is4kEnabled)
                     {
                         movie.Available4K = true;
+                    }
+                    else
+                    {
+                        obj.Available = true;
+                        obj.Quality = item.Quality;
                     }
 
                     if (item.Quality.HasValue())

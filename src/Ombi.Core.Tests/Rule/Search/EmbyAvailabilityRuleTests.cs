@@ -8,6 +8,7 @@ using Ombi.Core.Rule.Rules.Search;
 using Ombi.Core.Services;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
@@ -51,6 +52,7 @@ namespace Ombi.Core.Tests.Rule.Search
         [Test]
         public async Task Movie_ShouldBe_Available_WhenFoundInEmby_4K()
         {
+            FeatureMock.Setup(x => x.FeatureEnabled(FeatureNames.Movie4KRequests)).ReturnsAsync(true);
             ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new EmbyContent
             {
                 TheMovieDbId = "123",
@@ -70,6 +72,7 @@ namespace Ombi.Core.Tests.Rule.Search
         [Test]
         public async Task Movie_ShouldBe_Available_WhenFoundInEmby_Both()
         {
+            FeatureMock.Setup(x => x.FeatureEnabled(FeatureNames.Movie4KRequests)).ReturnsAsync(true);
             ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new EmbyContent
             {
                 TheMovieDbId = "123",
