@@ -1,3 +1,13 @@
+## [4.12.6](https://github.com/Ombi-app/Ombi/compare/v4.12.5...v4.12.6) (2022-02-22)
+
+
+### Bug Fixes
+
+* **emby/jellyfin:** :bug: Fixed another issue where we were not correctly displaying the correct status' for movies ([5c0556e](https://github.com/Ombi-app/Ombi/commit/5c0556e6f44b8997a611f3a4d8e9e4e05d08bd13))
+* **mediaserver:** fixed some more issues in the media server sync and availability checks ([f3ea979](https://github.com/Ombi-app/Ombi/commit/f3ea979b8bd77842780ce8e6928b16237dd779cf))
+
+
+
 ## [4.12.5](https://github.com/Ombi-app/Ombi/compare/v4.12.4...v4.12.5) (2022-02-21)
 
 
@@ -333,15 +343,6 @@
 * **discover:** :bug: Display TV + movies on actor page in user language ([#4395](https://github.com/Ombi-app/Ombi/issues/4395)) ([fe635c7](https://github.com/Ombi-app/Ombi/commit/fe635c7106bc487ff879bdc8a73bab16cb389b97))
 * **permissions:** :bug: Improved the security around the role "Manage Own Requests" ([#4397](https://github.com/Ombi-app/Ombi/issues/4397)) ([334a32b](https://github.com/Ombi-app/Ombi/commit/334a32bca42f90198d9b720d2bdb710a583be47f)), closes [#4391](https://github.com/Ombi-app/Ombi/issues/4391)
 * **search:** Fixed some cases where search wouldn't work correctly ([#4398](https://github.com/Ombi-app/Ombi/issues/4398)) ([4410790](https://github.com/Ombi-app/Ombi/commit/4410790bc096826bc11554098f846e3acb59589a))
-
-
-
-## [4.6.2](https://github.com/Ombi-app/Ombi/compare/v4.6.1...v4.6.2) (2021-11-10)
-
-
-### Bug Fixes
-
-* **discover:** TV shows now display on the Actor Pages ([#4388](https://github.com/Ombi-app/Ombi/issues/4388)) ([6b716e7](https://github.com/Ombi-app/Ombi/commit/6b716e722076e3d1e6bf2097c5263645d5ea9edf))
 
 
 
