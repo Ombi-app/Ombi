@@ -100,7 +100,7 @@ namespace Ombi.Store.Repository
 
         public override Task UpdateRange(IEnumerable<IMediaServerContent> existingContent)
         {
-            Db.JellyfinContent.UpdateRange((JellyfinContent)existingContent);
+            Db.JellyfinContent.UpdateRange((IEnumerable<JellyfinContent>)existingContent);
             return InternalSaveChanges();
         }
 

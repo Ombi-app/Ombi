@@ -166,7 +166,7 @@ namespace Ombi.Store.Repository
 
         public override Task UpdateRange(IEnumerable<IMediaServerContent> existingContent)
         {
-            Db.PlexServerContent.UpdateRange((PlexServerContent)existingContent);
+            Db.PlexServerContent.UpdateRange((IEnumerable<PlexServerContent>)existingContent);
             return InternalSaveChanges();
         }
     }
