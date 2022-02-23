@@ -1,3 +1,7 @@
+## [4.12.7](https://github.com/Ombi-app/Ombi/compare/v4.12.6...v4.12.7) (2022-02-23)
+
+
+
 ## [4.12.6](https://github.com/Ombi-app/Ombi/compare/v4.12.5...v4.12.6) (2022-02-22)
 
 
@@ -332,17 +336,6 @@
 
 
 ## [4.6.4](https://github.com/Ombi-app/Ombi/compare/v4.6.3...v4.6.4) (2021-11-12)
-
-
-
-## [4.6.3](https://github.com/Ombi-app/Ombi/compare/v4.6.2...v4.6.3) (2021-11-11)
-
-
-### Bug Fixes
-
-* **discover:** :bug: Display TV + movies on actor page in user language ([#4395](https://github.com/Ombi-app/Ombi/issues/4395)) ([fe635c7](https://github.com/Ombi-app/Ombi/commit/fe635c7106bc487ff879bdc8a73bab16cb389b97))
-* **permissions:** :bug: Improved the security around the role "Manage Own Requests" ([#4397](https://github.com/Ombi-app/Ombi/issues/4397)) ([334a32b](https://github.com/Ombi-app/Ombi/commit/334a32bca42f90198d9b720d2bdb710a583be47f)), closes [#4391](https://github.com/Ombi-app/Ombi/issues/4391)
-* **search:** Fixed some cases where search wouldn't work correctly ([#4398](https://github.com/Ombi-app/Ombi/issues/4398)) ([4410790](https://github.com/Ombi-app/Ombi/commit/4410790bc096826bc11554098f846e3acb59589a))
 
 
 
