@@ -17,6 +17,9 @@
     <a *ngIf="imdbId" class="media-icons imdb" [href]="doNotAppend ? imdbid : 'https://imdb.com/title/' + imdbId" target="_blank">
         <i matTooltip="Imdb" class="fab fa-imdb fa-2x grow-social"></i>
     </a>
+    <a *ngIf="theMoviedbId" class="media-icons trakt" href="https://trakt.tv/search/tmdb/{{theMoviedbId}}?id_type={{type === RequestType.movie ? 'movie' : 'show'}}" target="_blank">
+        <i matTooltip="Trakt" class="fab fa-t fa-2x grow-social"></i>
+    </a>
     <a *ngIf="twitter" class="media-icons" [href]="doNotAppend ? twitter : 'https://twitter.com/' + twitter" target="_blank">
         <i matTooltip="Twitter" class="fab fa-twitter fa-2x grow-social"></i>
     </a>
