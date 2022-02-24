@@ -64,7 +64,7 @@ namespace Ombi.Notifications.Agents
                 return null;
             }
             var email = new EmailBasicTemplate();
-            var html = email.LoadTemplate(parsed.Subject, parsed.Message, parsed.Image, Customization.Logo);
+            var html = email.LoadTemplate(parsed.Subject, parsed.Message, parsed.Image, Customization.Logo, parsed.DetailsUrl);
 
 
             var message = new NotificationMessage

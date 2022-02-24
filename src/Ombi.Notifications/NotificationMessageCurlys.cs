@@ -151,6 +151,7 @@ namespace Ombi.Notifications
             RequestId = req?.Id.ToString();
             RequestedUser = req?.RequestedUser?.UserName;
             RequestedDate = req?.RequestedDate.ToString("D");
+            DetailsUrl = GetDetailsUrl(s, req);
 
             if (Type.IsNullOrEmpty())
             {
@@ -214,6 +215,26 @@ namespace Ombi.Notifications
             }
         }
 
+        private string GetDetailsUrl(CustomizationSettings s, BaseRequest req)
+        {
+            if (string.IsNullOrEmpty(s.ApplicationUrl))
+            {
+                return string.Empty;
+            }
+
+            switch (req)
+            {
+                case MovieRequests movieRequest:
+                    return $"{s.ApplicationUrl}/details/movie/{movieRequest.TheMovieDbId}";
+                case ChildRequests tvRequest:
+                    return $"{s.ApplicationUrl}/details/tv/{tvRequest.ParentRequest.ExternalProviderId}";
+                case AlbumRequest albumRequest:
+                    return $"{s.ApplicationUrl}/details/artist/{albumRequest.ForeignArtistId}";
+                default:
+                    return string.Empty;
+            }
+        }
+
         private void CalculateRequestStatus(BaseRequest req)
         {
             RequestStatus = string.Empty;
@@ -255,6 +276,7 @@ namespace Ombi.Notifications
         public string Year { get; set; }
         public string EpisodesList { get; set; }
         public string SeasonsList { get; set; }
+        public string DetailsUrl { get; set; }
         public string PosterImage { get; set; }
         public string ApplicationName { get; set; }
         public string ApplicationUrl { get; set; }
