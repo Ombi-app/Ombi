@@ -13,6 +13,7 @@ import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { SelectionModel } from "@angular/cdk/collections";
 import { StorageService } from "../../../shared/storage/storage-service";
 import { TranslateService } from "@ngx-translate/core";
+import { FeaturesFacade } from "../../../state/features/features.facade";
 
 @Component({
     templateUrl: "./movies-grid.component.html",
@@ -26,6 +27,7 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     public displayedColumns: string[] = ['title', 'requestedUser.requestedBy',  'status', 'requestStatus','requestedDate', 'actions'];
     public gridCount: string = "15";
     public isAdmin: boolean;
+    public is4kEnabled = false;
     public manageOwnRequests: boolean;
     public defaultSort: string = "requestedDate";
     public defaultOrder: string = "desc";
@@ -49,7 +51,8 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     constructor(private requestService: RequestServiceV2, private ref: ChangeDetectorRef,
         private auth: AuthService, private storageService: StorageService,
         private requestServiceV1: RequestService, private notification: NotificationService,
-        private translateService: TranslateService) {
+        private translateService: TranslateService,
+        private featureFacade: FeaturesFacade) {
 
         this.userName = auth.claims().name;
     }
@@ -59,10 +62,14 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
         this.manageOwnRequests = this.auth.hasRole("ManageOwnRequests")
         if (this.isAdmin) {
             this.displayedColumns.unshift('select');
-            this.displayedColumns.splice(4,0,'has4kRequest');
-        } else if (this.auth.hasRole("Request4KMovie")) {
-            this.displayedColumns.splice(4,0,'has4kRequest');
+        } 
+        
+        this.is4kEnabled = this.featureFacade.is4kEnabled();
+        if ((this.isAdmin || this.auth.hasRole("Request4KMovie"))
+                && this.is4kEnabled) {
+            this.displayedColumns.splice(4, 0, 'has4kRequest');
         }
+
         const defaultCount = this.storageService.get(this.storageKeyGridCount);
         const defaultSort = this.storageService.get(this.storageKey);
         const defaultOrder = this.storageService.get(this.storageKeyOrder);
