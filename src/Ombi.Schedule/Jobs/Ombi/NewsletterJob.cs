@@ -844,7 +844,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     return false;
                 }
             }
-            if (string.IsNullOrEmpty(settings.Host) || string.IsNullOrEmpty(settings.AdminEmail) || string.IsNullOrEmpty(settings.Port.ToString()))
+            if (string.IsNullOrEmpty(settings.Host) || string.IsNullOrEmpty(settings.Port.ToString()))
             {
                 return false;
             }
