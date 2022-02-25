@@ -31,16 +31,35 @@ namespace Ombi.Notifications.Templates
         private const string DateKey = "{@DATENOW}";
         private const string Logo = "{@LOGO}";
 
-        public string LoadTemplate(string subject, string body, string imgsrc = default(string), string logo = default(string))
+        public string LoadTemplate(string subject, string body, string imgsrc = default(string), string logo = default(string), string url = default(string))
         {
             var sb = new StringBuilder(File.ReadAllText(TemplateLocation));
             sb.Replace(SubjectKey, subject);
             sb.Replace(BodyKey, body);
             sb.Replace(DateKey, DateTime.Now.ToString("f"));
-            sb.Replace(Poster, string.IsNullOrEmpty(imgsrc) ? string.Empty : $"<tr><td align=\"center\"><img src=\"{imgsrc}\" alt=\"Poster\" width=\"400px\" text-align=\"center\"/></td></tr>");
+            sb.Replace(Poster, GetPosterContent(imgsrc, url));
             sb.Replace(Logo, string.IsNullOrEmpty(logo) ? OmbiLogo : logo);
 
             return sb.ToString();
+        }
+
+        private string GetPosterContent(string imgsrc, string url) {
+            string posterContent;
+            
+            if (string.IsNullOrEmpty(imgsrc))
+            {
+                posterContent = string.Empty;
+            }
+            else
+            {
+                posterContent = $"<img src=\"{imgsrc}\" alt=\"Poster\" width=\"400px\" text-align=\"center\"/>";
+                if (!string.IsNullOrEmpty(url))
+                {
+                    posterContent = $"<a href=\"{url}\">{posterContent}</a>";
+                }
+                posterContent = $"<tr><td align=\"center\">{posterContent}</td></tr>";
+            }
+            return posterContent;
         }
     }
 }

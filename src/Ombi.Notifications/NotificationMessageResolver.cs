@@ -26,6 +26,7 @@ namespace Ombi.Notifications
         {
             var content = Resolve(notification.Message, notification.Subject, c.Curlys);
             content.Image = c.PosterImage;
+            content.DetailsUrl = c.DetailsUrl;
             return content;
         }
 
