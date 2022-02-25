@@ -14,7 +14,9 @@
     "Common": {
         "ContinueButton": "Tovább",
         "Available": "Elérhető",
+        "Available4K": "Available 4K",
         "Approved": "Jóváhagyva",
+        "Approve4K": "Approve 4K",
         "Pending": "Függőben",
         "PartiallyAvailable": "Részlegesen elérhető",
         "Monitored": "Figyelve",
@@ -24,8 +26,10 @@
         "RequestDenied": "Kérés megtagadva",
         "NotRequested": "Nincs kérve",
         "Requested": "Kérve",
+        "Requested4K": "Requested 4K",
         "Search": "Keresés",
         "Request": "Kérés",
+        "Request4K": "Request 4K",
         "Denied": "Megtagadva",
         "Approve": "Jóváhagyva",
         "PartlyAvailable": "Részlegesen elérhető",
@@ -161,9 +165,13 @@
         "ChangeRootFolder": "Gyökér mappa",
         "ChangeQualityProfile": "Minőség profil",
         "MarkUnavailable": "Megjelölés nem elérhetőnek",
+        "MarkUnavailable4K": "Mark Unavailable 4K",
         "MarkAvailable": "Megjelölés elérhetőnek",
+        "MarkAvailable4K": "Mark Available 4K",
         "Remove": "Törlés",
         "Deny": "Elutasítás",
+        "Deny4K": "Deny 4K",
+        "Has4KRequest": "Has 4K Request",
         "DenyReason": "Elutasítási ok",
         "DeniedReason": "Elutasítás oka",
         "Season": "Évad",
@@ -199,6 +207,7 @@
         "RequestPanel": {
             "Delete": "Kérés törlése",
             "Approve": "Kérés elfogadása",
+            "Approve4K": "Approve 4K Request",
             "ChangeAvailability": "Elérhetőnek jelölés",
             "Deleted": "A kijelölt elemek törlésre kerultek",
             "Approved": "A kijelölt elemek jóváhagyásra kerultek"
@@ -295,6 +304,7 @@
     },
     "MediaDetails": {
         "Denied": "Megtagadva",
+        "Denied4K": "Denied 4K",
         "Trailers": "Előzetesek",
         "RecommendationsTitle": "Ajánlások",
         "SimilarTitle": "Hasonló",
@@ -363,6 +373,7 @@
         "RequestDate": "Kérés ideje:",
         "DeniedReason": "Elutasítás oka:",
         "ReProcessRequest": "Kérés újrafeldolgozása",
+        "ReProcessRequest4K": "Re-Process 4K Request",
         "Music": {
             "Type": "Típus:",
             "Country": "Ország:",
