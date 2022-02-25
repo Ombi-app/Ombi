@@ -1,3 +1,22 @@
+# [4.13.0](https://github.com/Ombi-app/Ombi/compare/v4.12.7...v4.13.0) (2022-02-25)
+
+
+### Bug Fixes
+
+* **4k:** Hide 'Has 4K Request' column list if 4k feature is disabled ([#4521](https://github.com/Ombi-app/Ombi/issues/4521)) ([a9a6067](https://github.com/Ombi-app/Ombi/commit/a9a60678e74d22fa7ba34051a2645db86b600b4a))
+* **issues:** Fix label ID in chatbox page ([#4520](https://github.com/Ombi-app/Ombi/issues/4520)) ([76882ad](https://github.com/Ombi-app/Ombi/commit/76882adf231f92e1cdd396239933c13467c112b3))
+* **localisation:** Localize request types in notifications ([#4516](https://github.com/Ombi-app/Ombi/issues/4516)) ([e09435d](https://github.com/Ombi-app/Ombi/commit/e09435da455b12fc429f129372de31e0654da797))
+* **notifications:** Remove generic admin email in favour of admins' email ([#4519](https://github.com/Ombi-app/Ombi/issues/4519)) ([b90fc5f](https://github.com/Ombi-app/Ombi/commit/b90fc5fea771a83e6cf576c71a307066efd59ea4))
+* **tv:** Display TV show as requested if all episodes are requested ([#4518](https://github.com/Ombi-app/Ombi/issues/4518)) ([2ed8c48](https://github.com/Ombi-app/Ombi/commit/2ed8c48d128a69f0d144c5d332286dbf3b0bdf28))
+
+
+### Features
+
+* **email-notifications:** Add a link to Ombi details page in email notifications ([#4517](https://github.com/Ombi-app/Ombi/issues/4517)) ([a3e97b3](https://github.com/Ombi-app/Ombi/commit/a3e97b31e2298d95e7deebd71268095b8ed5e9dc))
+* **media-details:** Add Trakt to social icons ([#4522](https://github.com/Ombi-app/Ombi/issues/4522)) ([d6ae79c](https://github.com/Ombi-app/Ombi/commit/d6ae79ce9eddbd5b7b888ab1b9f7e342d9d9ff9e))
+
+
+
 ## [4.12.7](https://github.com/Ombi-app/Ombi/compare/v4.12.6...v4.12.7) (2022-02-23)
 
 
@@ -332,10 +351,6 @@
 * **issues:** :bug: Added the issues back to the details page for TV Shows ([0225000](https://github.com/Ombi-app/Ombi/commit/02250000c08a253e57d8a0a855c2d30b8a1e5baa))
 * **issues:** :bug: Fixed an issue where you couldn't navigate to the details page from TV issues ([1a2825b](https://github.com/Ombi-app/Ombi/commit/1a2825bf3839b891b16e1dde4030afe53efe090e))
 * **issues:** :bug: Fixed where we did not show the poster when an issue is raised for media we do not have a request for [#4402](https://github.com/Ombi-app/Ombi/issues/4402) ([15e37b5](https://github.com/Ombi-app/Ombi/commit/15e37b532a83097dbdf1a9fea3eead7d0e211898))
-
-
-
-## [4.6.4](https://github.com/Ombi-app/Ombi/compare/v4.6.3...v4.6.4) (2021-11-12)
 
 
 
