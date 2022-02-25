@@ -144,4 +144,13 @@
   <data name="Unsubscribe" xml:space="preserve">
     <value>Unsubscribe</value>
   </data>
+  <data name="Album" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="Movie" xml:space="preserve">
+    <value>Movie</value>
+  </data>
+  <data name="TvShow" xml:space="preserve">
+    <value>TV Show</value>
+  </data>
 </root>

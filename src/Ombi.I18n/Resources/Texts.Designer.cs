@@ -61,6 +61,15 @@ namespace Ombi.I18n.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Album.
+        /// </summary>
+        public static string Album {
+            get {
+                return ResourceManager.GetString("Album", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Type:.
         /// </summary>
         public static string AlbumTypeLabel {
@@ -84,6 +93,15 @@ namespace Ombi.I18n.Resources {
         public static string GenresLabel {
             get {
                 return ResourceManager.GetString("GenresLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Movie.
+        /// </summary>
+        public static string Movie {
+            get {
+                return ResourceManager.GetString("Movie", resourceCulture);
             }
         }
         
@@ -129,6 +147,15 @@ namespace Ombi.I18n.Resources {
         public static string SeasonLabel {
             get {
                 return ResourceManager.GetString("SeasonLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TV Show.
+        /// </summary>
+        public static string TvShow {
+            get {
+                return ResourceManager.GetString("TvShow", resourceCulture);
             }
         }
         

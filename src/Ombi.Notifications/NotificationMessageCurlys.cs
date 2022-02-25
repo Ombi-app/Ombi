@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Humanizer;
 using Ombi.Helpers;
+using Ombi.I18n.Resources;
 using Ombi.Notifications.Models;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
@@ -192,7 +193,9 @@ namespace Ombi.Notifications
             return requestType switch
             {
                 null => string.Empty,
-                RequestType.TvShow => "TV Show",
+                RequestType.TvShow => Texts.TvShow,
+                RequestType.Album => Texts.Album,
+                RequestType.Movie => Texts.Movie,
                 _ => requestType.Humanize()
             };
         }
