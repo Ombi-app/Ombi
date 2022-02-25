@@ -5,7 +5,7 @@ a.media-icons:hover{
 }
 
 a.media-icons:hover img{
-    filter: contrast(1);
+    filter: sepia(100%) hue-rotate(190deg) saturate(500%) brightness(190%);
 }
 
 a.media-icons img{
