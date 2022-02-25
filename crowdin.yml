@@ -1,6 +1,6 @@
-commit_message: "\UF09F8C90"
+commit_message: "fix(translations): 🌐 New translations from Crowdin [skip ci]"
 append_commit_message: false
-pull_request_title: "\UF09F8C90"
+pull_request_title: "🌐 Translations Update"
 pull_request_labels:
   - translations
 files:
