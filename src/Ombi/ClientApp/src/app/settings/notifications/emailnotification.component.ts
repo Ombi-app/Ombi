@@ -35,7 +35,6 @@ export class EmailNotificationComponent implements OnInit {
                 senderAddress: [x.senderAddress, [Validators.required, Validators.email]],
                 senderName: [x.senderName],
                 username: [x.username],
-                adminEmail: [x.adminEmail, [Validators.required, Validators.email]],
                 disableTLS: [x.disableTLS],
                 disableCertificateChecking: [x.disableCertificateChecking],
             });
