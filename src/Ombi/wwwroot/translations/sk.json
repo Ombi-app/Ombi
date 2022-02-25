@@ -14,7 +14,9 @@
     "Common": {
         "ContinueButton": "Pokračovať",
         "Available": "Dostupné",
+        "Available4K": "Available 4K",
         "Approved": "Schválené",
+        "Approve4K": "Approve 4K",
         "Pending": "Čakajúce",
         "PartiallyAvailable": "Čiastočne dostupné",
         "Monitored": "Sledované",
@@ -24,8 +26,10 @@
         "RequestDenied": "Požiadavka zamietnutá",
         "NotRequested": "Nepožiadané",
         "Requested": "Požiadané",
+        "Requested4K": "Requested 4K",
         "Search": "Hľadať",
         "Request": "Požiadať",
+        "Request4K": "Request 4K",
         "Denied": "Zamietnuté",
         "Approve": "Schválené",
         "PartlyAvailable": "Čiastočne dostupné",
@@ -161,9 +165,13 @@
         "ChangeRootFolder": "Koreňový priečinok",
         "ChangeQualityProfile": "Profil kvality",
         "MarkUnavailable": "Označiť nedostupné",
+        "MarkUnavailable4K": "Mark Unavailable 4K",
         "MarkAvailable": "Označiť dostupné",
+        "MarkAvailable4K": "Mark Available 4K",
         "Remove": "Odstrániť",
         "Deny": "Odmietnuť",
+        "Deny4K": "Deny 4K",
+        "Has4KRequest": "Has 4K Request",
         "DenyReason": "Odmietnuť dôvod",
         "DeniedReason": "Odmietnuť dôvod",
         "Season": "Séria",
@@ -199,6 +207,7 @@
         "RequestPanel": {
             "Delete": "Odstrániž požiadavku",
             "Approve": "Schváliť žiadosť",
+            "Approve4K": "Approve 4K Request",
             "ChangeAvailability": "Označiť k dispozícií",
             "Deleted": "Úspešne odstránené vybrané položky",
             "Approved": "Úspešne schválené vybrané položky"
@@ -295,6 +304,7 @@
     },
     "MediaDetails": {
         "Denied": "Zamietnuté",
+        "Denied4K": "Denied 4K",
         "Trailers": "Upútavka",
         "RecommendationsTitle": "Odporúčania",
         "SimilarTitle": "Podobné",
@@ -363,6 +373,7 @@
         "RequestDate": "Dátum požiadavky:",
         "DeniedReason": "Dôvod zamietnutia:",
         "ReProcessRequest": "Žiadosť o opätovné spracovanie",
+        "ReProcessRequest4K": "Re-Process 4K Request",
         "Music": {
             "Type": "Typ:",
             "Country": "Krajina:",

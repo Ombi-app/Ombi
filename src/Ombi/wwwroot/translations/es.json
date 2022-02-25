@@ -14,7 +14,9 @@
     "Common": {
         "ContinueButton": "Continuar",
         "Available": "Disponible",
+        "Available4K": "Disponible 4K",
         "Approved": "Aprobado",
+        "Approve4K": "Aprobar 4K",
         "Pending": "Pendiente",
         "PartiallyAvailable": "Disponible parcialmente",
         "Monitored": "Monitoreado",
@@ -24,8 +26,10 @@
         "RequestDenied": "Solicitud denegada",
         "NotRequested": "No solicitado",
         "Requested": "Solicitado",
+        "Requested4K": "Solicitado 4K",
         "Search": "Buscar",
         "Request": "Solicitar",
+        "Request4K": "Solicitar 4K",
         "Denied": "Denegado",
         "Approve": "Aprobar",
         "PartlyAvailable": "Disponible parcialmente",
@@ -161,9 +165,13 @@
         "ChangeRootFolder": "Carpeta raíz",
         "ChangeQualityProfile": "Perfil de calidad",
         "MarkUnavailable": "Marcar como no disponible",
+        "MarkUnavailable4K": "Marcar No Disponible 4K",
         "MarkAvailable": "Marcar Disponible",
+        "MarkAvailable4K": "Marcar Disponible 4K",
         "Remove": "Eliminar",
         "Deny": "Denegar",
+        "Deny4K": "Rechazar 4K",
+        "Has4KRequest": "Tiene Solicitud 4K",
         "DenyReason": "Razón Denegada",
         "DeniedReason": "Motivo de denegación",
         "Season": "Temporada",
@@ -199,6 +207,7 @@
         "RequestPanel": {
             "Delete": "Eliminar solicitud",
             "Approve": "Aprobar Solicitud",
+            "Approve4K": "Aprobar Solicitud 4K",
             "ChangeAvailability": "Marcar como disponible",
             "Deleted": "Los elementos seleccionados ha sido eliminados correctamente",
             "Approved": "Los elementos seleccionados ha sido aprobados correctamente"
@@ -295,6 +304,7 @@
     },
     "MediaDetails": {
         "Denied": "Denegado",
+        "Denied4K": "Rechazado 4K",
         "Trailers": "Trailer",
         "RecommendationsTitle": "Recomendaciones",
         "SimilarTitle": "Similar",
@@ -363,6 +373,7 @@
         "RequestDate": "Fecha de solicitud:",
         "DeniedReason": "Motivo de denegación:",
         "ReProcessRequest": "Re-procesar solicitud",
+        "ReProcessRequest4K": "Reprocesar Solicitud 4K",
         "Music": {
             "Type": "Tipo:",
             "Country": "País:",

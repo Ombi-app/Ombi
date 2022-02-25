@@ -118,39 +118,39 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="NewAlbums" xml:space="preserve">
-    <value>Nouveaux Albums</value>
+    <value>Nieuwe albums</value>
   </data>
   <data name="NewMovies" xml:space="preserve">
-    <value>Nouveaux Films</value>
+    <value>Nieuwe films</value>
   </data>
   <data name="NewTV" xml:space="preserve">
-    <value>Nouvelles séries</value>
+    <value>Nieuwe TV Series</value>
   </data>
   <data name="GenresLabel" xml:space="preserve">
-    <value>Genres :</value>
+    <value>Genres:</value>
   </data>
   <data name="AlbumTypeLabel" xml:space="preserve">
-    <value>Type :</value>
+    <value>Type:</value>
   </data>
   <data name="SeasonLabel" xml:space="preserve">
-    <value>Saison :</value>
+    <value>Seizoen:</value>
   </data>
   <data name="EpisodesLabel" xml:space="preserve">
-    <value>Épisodes :</value>
+    <value>Afleveringen:</value>
   </data>
   <data name="PoweredBy" xml:space="preserve">
-    <value>Propulsé par</value>
+    <value>Mogelijk gemaakt door</value>
   </data>
   <data name="Unsubscribe" xml:space="preserve">
-    <value>Se désinscrire</value>
+    <value>Uitschrijven</value>
   </data>
   <data name="Album" xml:space="preserve">
     <value>Album</value>
   </data>
   <data name="Movie" xml:space="preserve">
-    <value>Film</value>
+    <value>Movie</value>
   </data>
   <data name="TvShow" xml:space="preserve">
-    <value>Série</value>
+    <value>TV Show</value>
   </data>
 </root>

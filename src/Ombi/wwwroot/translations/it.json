@@ -14,7 +14,9 @@
     "Common": {
         "ContinueButton": "Continua",
         "Available": "Disponibile",
+        "Available4K": "Disponibile 4K",
         "Approved": "Approvato",
+        "Approve4K": "Approva 4K",
         "Pending": "In Sospeso",
         "PartiallyAvailable": "Parzialmente disponibile",
         "Monitored": "Monitorato",
@@ -24,8 +26,10 @@
         "RequestDenied": "Richiesta negata",
         "NotRequested": "Non richiesta",
         "Requested": "Richiesta",
+        "Requested4K": "Richiesto 4K",
         "Search": "Cerca",
         "Request": "Richiesta",
+        "Request4K": "Richiedi 4K",
         "Denied": "Negata",
         "Approve": "Approva",
         "PartlyAvailable": "Parzialmente disponibile",
@@ -161,9 +165,13 @@
         "ChangeRootFolder": "Cartella radice",
         "ChangeQualityProfile": "Profilo qualità",
         "MarkUnavailable": "Rendi non disponibile",
+        "MarkUnavailable4K": "Rendi 4K non disponibile",
         "MarkAvailable": "Rendi disponibile",
+        "MarkAvailable4K": "Rendi 4K disponibile",
         "Remove": "Rimuovi",
         "Deny": "Nega",
+        "Deny4K": "Nega 4K",
+        "Has4KRequest": "Ha una Richiesta 4K",
         "DenyReason": "Nega Motivo",
         "DeniedReason": "Motivo di Negazione",
         "Season": "Stagione",
@@ -199,6 +207,7 @@
         "RequestPanel": {
             "Delete": "Elimina Richiesta",
             "Approve": "Approva Richiesta",
+            "Approve4K": "Approva Richiesta 4K",
             "ChangeAvailability": "Segna come Disponibile",
             "Deleted": "Elementi selezionati eliminati correttamente",
             "Approved": "Elementi selezionati approvati correttamente"
@@ -295,6 +304,7 @@
     },
     "MediaDetails": {
         "Denied": "Rifiutato",
+        "Denied4K": "4K Negato",
         "Trailers": "Trailer",
         "RecommendationsTitle": "Raccomandazioni",
         "SimilarTitle": "Simili",
@@ -363,6 +373,7 @@
         "RequestDate": "Data di Richiesta:",
         "DeniedReason": "Motivo di Negazione:",
         "ReProcessRequest": "Ri-Elabora Richiesta",
+        "ReProcessRequest4K": "Ri-Elabora Richiesta 4K",
         "Music": {
             "Type": "Tipo:",
             "Country": "Paese:",
