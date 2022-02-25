@@ -126,7 +126,7 @@ export class TvDetailsComponent implements OnInit {
     }
 
     public allEpisodesRequested(): boolean {
-        return this.tv.seasonRequests.every(e => e.episodes.every(x => x.approved));
+        return this.tv.seasonRequests.every(e => e.episodes.every(x => x.approved || x.requested));
     }
 
     private loadAdvancedInfo() {
