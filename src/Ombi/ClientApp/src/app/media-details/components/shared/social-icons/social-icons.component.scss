@@ -4,6 +4,16 @@ a.media-icons:hover{
     color:$ombi-active;
 }
 
+a.media-icons:hover img{
+    filter: sepia(100%) hue-rotate(190deg) saturate(500%) brightness(190%);
+}
+
+a.media-icons img{
+    filter: contrast(0) brightness(3);
+    height: 2em;
+    padding: 0;
+}
+
 button.admin-cog{
     margin-left:40px;
     color:$ombi-active;
