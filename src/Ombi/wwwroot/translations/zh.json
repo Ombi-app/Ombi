@@ -14,7 +14,9 @@
     "Common": {
         "ContinueButton": "继续",
         "Available": "可播放",
+        "Available4K": "4K可播放",
         "Approved": "已批准",
+        "Approve4K": "批准4K",
         "Pending": "待审核",
         "PartiallyAvailable": "部分可播放",
         "Monitored": "监控中",
@@ -24,8 +26,10 @@
         "RequestDenied": "请求被拒绝",
         "NotRequested": "未请求",
         "Requested": "已请求",
+        "Requested4K": "请求4K",
         "Search": "搜索",
         "Request": "请求",
+        "Request4K": "请求4K",
         "Denied": "已拒绝",
         "Approve": "批准",
         "PartlyAvailable": "部分可播放",
@@ -161,9 +165,13 @@
         "ChangeRootFolder": "根目录",
         "ChangeQualityProfile": "画质配置文件",
         "MarkUnavailable": "标记为不可用",
+        "MarkUnavailable4K": "标记为不可播放4K",
         "MarkAvailable": "标记为可用",
+        "MarkAvailable4K": "标记为可播放4K",
         "Remove": "删除",
         "Deny": "拒绝",
+        "Deny4K": "拒绝4K",
+        "Has4KRequest": "已有4K请求",
         "DenyReason": "拒绝原因",
         "DeniedReason": "被拒绝原因",
         "Season": "季",
@@ -199,6 +207,7 @@
         "RequestPanel": {
             "Delete": "删除请求",
             "Approve": "批准请求",
+            "Approve4K": "批准4K请求",
             "ChangeAvailability": "标记为可用",
             "Deleted": "所选项目已删除",
             "Approved": "所选项目已批准"
@@ -295,6 +304,7 @@
     },
     "MediaDetails": {
         "Denied": "已拒绝",
+        "Denied4K": "拒绝4K",
         "Trailers": "预告片",
         "RecommendationsTitle": "推荐",
         "SimilarTitle": "相似",
@@ -363,6 +373,7 @@
         "RequestDate": "请求日期：",
         "DeniedReason": "被拒绝原因：",
         "ReProcessRequest": "重新处理请求",
+        "ReProcessRequest4K": "重新处理4K请求",
         "Music": {
             "Type": "类型：",
             "Country": "国家：",
