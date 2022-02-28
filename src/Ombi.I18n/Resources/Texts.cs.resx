@@ -148,7 +148,7 @@
     <value>Album</value>
   </data>
   <data name="Movie" xml:space="preserve">
-    <value>Filmy</value>
+    <value>Film</value>
   </data>
   <data name="TvShow" xml:space="preserve">
     <value>TV Pořad</value>
