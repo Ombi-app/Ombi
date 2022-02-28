@@ -145,12 +145,12 @@
     <value>Anular Suscripción</value>
   </data>
   <data name="Album" xml:space="preserve">
-    <value>Album</value>
+    <value>Álbum</value>
   </data>
   <data name="Movie" xml:space="preserve">
-    <value>Movie</value>
+    <value>Película</value>
   </data>
   <data name="TvShow" xml:space="preserve">
-    <value>TV Show</value>
+    <value>Serie TV</value>
   </data>
 </root>
