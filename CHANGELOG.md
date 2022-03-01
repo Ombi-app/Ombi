@@ -1,3 +1,12 @@
+## [4.13.2](https://github.com/Ombi-app/Ombi/compare/v4.13.1...v4.13.2) (2022-03-01)
+
+
+### Bug Fixes
+
+* **requests:** :bug: Fixed an issue where you couldn't approve movies from the request list ([1611ef9](https://github.com/Ombi-app/Ombi/commit/1611ef9198befbb7a4db50a4f0953e50f29a788f))
+
+
+
 ## [4.13.1](https://github.com/Ombi-app/Ombi/compare/v4.13.0...v4.13.1) (2022-03-01)
 
 
@@ -342,15 +351,6 @@
 ### Bug Fixes
 
 * **emby:** :bug: Fixed an issue where we slightly broke the full sync ([332d934](https://github.com/Ombi-app/Ombi/commit/332d9344d002a5ffd5aeac516c7441dcdec52248))
-
-
-
-# [4.7.0](https://github.com/Ombi-app/Ombi/compare/v4.6.5...v4.7.0) (2021-11-19)
-
-
-### Features
-
-* **emby:** :sparkles: Added a emby recently added sync! ([a0e1406](https://github.com/Ombi-app/Ombi/commit/a0e14068f4bc457f8a4a565de71707a8f16c803c))
 
 
 
