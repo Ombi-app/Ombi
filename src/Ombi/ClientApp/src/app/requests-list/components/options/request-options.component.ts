@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MessageService, RequestService } from '../../../services';
 import { IRequestEngineResult, RequestType } from '../../../interfaces';
@@ -10,7 +10,7 @@ import { firstValueFrom, Observable } from 'rxjs';
   selector: 'request-options',
   templateUrl: './request-options.component.html',
 })
-export class RequestOptionsComponent implements OnInit {
+export class RequestOptionsComponent {
 
   public RequestType = RequestType;
 
@@ -19,9 +19,6 @@ export class RequestOptionsComponent implements OnInit {
     private messageService: MessageService,
     private bottomSheetRef: MatBottomSheetRef<RequestOptionsComponent>,
     private translate: TranslateService) { }
-  ngOnInit(): void {
-    console.log(this.data);
-  }
 
   public async delete() {
     var  request: Observable<IRequestEngineResult>;

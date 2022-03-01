@@ -154,7 +154,7 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     }
 
     private checkDate(date: Date|string): boolean {
-        if (date instanceof String) {
+        if (typeof date === 'string') {
           return new Date(date).getFullYear() > 1;
         }
         if (date instanceof Date) {
