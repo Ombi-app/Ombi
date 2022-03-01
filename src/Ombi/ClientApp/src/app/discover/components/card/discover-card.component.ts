@@ -26,6 +26,7 @@ export class DiscoverCardComponent implements OnInit {
     public hide: boolean;
     public fullyLoaded = false;
     public loading: boolean;
+    public allow4KButton: boolean = false;
 
     public requestable: boolean;
 
@@ -41,6 +42,7 @@ export class DiscoverCardComponent implements OnInit {
             this.getExtraTvInfo();
         }
         if (this.result.type == RequestType.movie) {
+            this.allow4KButton = true;
             this.getExtraMovieInfo();
         }
         if (this.result.type == RequestType.album) {
@@ -169,9 +171,9 @@ export class DiscoverCardComponent implements OnInit {
 
     private updateMovieItem(updated: ISearchMovieResultV2) {
         this.result.url = "http://www.imdb.com/title/" + updated.imdbId + "/";
-        this.result.available = updated.available;
-        this.result.requested = updated.requested;
-        this.result.approved = updated.approved;
+        this.result.available = updated.available || updated.available4K;
+        this.result.requested = updated.requested || updated.has4KRequest;
+        this.result.approved = updated.approved || updated.available4K;
         this.result.rating = updated.voteAverage;
         this.result.overview = updated.overview;
         this.result.imdbid = updated.imdbId;
