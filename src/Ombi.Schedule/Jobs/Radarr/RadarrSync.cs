@@ -103,10 +103,8 @@ namespace Ombi.Schedule.Jobs.Radarr
                                 }
                             }
                         }
-
                         // Save from the updates made to the existing movies (they are in the EF Change Tracker)
                         await _radarrRepo.SaveChangesAsync();
-
                         await _radarrRepo.AddRange(movieIds);
                     }
 

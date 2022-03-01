@@ -211,6 +211,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     movie.Available4K = true;
                     movie.Approved4K = true;
                     movie.MarkedAsAvailable4K = DateTime.Now;
+                    await _movieRepo.SaveChangesAsync();
                 }
 
                 // If we have a non-4k versison then mark as available
@@ -219,6 +220,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     movie.Available = true;
                     movie.Approved = true;
                     movie.MarkedAsAvailable = DateTime.Now;
+                    await _movieRepo.SaveChangesAsync();
                 }
 
                 itemsForAvailbility.Add(new AvailabilityModel
@@ -226,11 +228,6 @@ namespace Ombi.Schedule.Jobs.Plex
                     Id = movie.Id,
                     RequestedUser = movie.RequestedUser != null ? movie.RequestedUser.Email : string.Empty
                 });
-            }
-
-            if (itemsForAvailbility.Any())
-            {
-                await _movieRepo.SaveChangesAsync();
             }
 
             foreach (var i in itemsForAvailbility.DistinctBy(x => x.Id))

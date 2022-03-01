@@ -73,23 +73,37 @@ namespace Ombi.Schedule.Jobs.Radarr
         private async Task ProcessMovies()
         {
             var availableRadarrMovies = _radarrRepo.GetAll().Where(x => x.HasFile).ToImmutableHashSet();
-            var unavailableMovieRequests = _movies.GetAll().Where(x => !x.Available).ToImmutableHashSet();
+            var unavailableMovieRequests = _movies.GetAll().Where(x => !x.Available || (!x.Available4K && x.Has4KRequest)).ToImmutableHashSet();
 
             var itemsForAvailability = new List<AvailabilityModel>();
             foreach (var movieRequest in unavailableMovieRequests)
             {
                 // Do we have an item in the radarr list
-                var available = availableRadarrMovies.Any(x => x.TheMovieDbId == movieRequest.TheMovieDbId);
-                if (available)
+                var available = availableRadarrMovies.FirstOrDefault(x => x.TheMovieDbId == movieRequest.TheMovieDbId);
+                if (available != null)
                 {
                     _logger.LogInformation($"Found move '{movieRequest.Title}' available in Radarr");
-                    movieRequest.Available = true;
-                    movieRequest.MarkedAsAvailable = DateTime.UtcNow;
-                    itemsForAvailability.Add(new AvailabilityModel
+                    if (available.Has4K && !movieRequest.Available4K)
                     {
-                        Id = movieRequest.Id,
-                        RequestedUser = movieRequest.RequestedUser != null ? movieRequest.RequestedUser.Email : string.Empty
-                    });
+                        itemsForAvailability.Add(new AvailabilityModel
+                        {
+                            Id = movieRequest.Id,
+                            RequestedUser = movieRequest.RequestedUser != null ? movieRequest.RequestedUser.Email : string.Empty
+                        });
+                        movieRequest.Available4K = true;
+                        movieRequest.MarkedAsAvailable4K = DateTime.UtcNow;
+                    }
+                    if (available.HasRegular)
+                    {
+                        itemsForAvailability.Add(new AvailabilityModel
+                        {
+                            Id = movieRequest.Id,
+                            RequestedUser = movieRequest.RequestedUser != null ? movieRequest.RequestedUser.Email : string.Empty
+                        });
+                        movieRequest.Available = true;
+                        movieRequest.MarkedAsAvailable = DateTime.UtcNow;
+                    }
+                    await _movies.SaveChangesAsync();
                 }
             }
 
@@ -97,7 +111,6 @@ namespace Ombi.Schedule.Jobs.Radarr
             {
                 await _hub.Clients.Clients(NotificationHub.AdminConnectionIds)
                     .SendAsync(NotificationHub.NotificationEvent, "Radarr Availability Checker found some new available movies!");
-                await _movies.SaveChangesAsync();
             }
             foreach (var item in itemsForAvailability)
             {
@@ -110,7 +123,6 @@ namespace Ombi.Schedule.Jobs.Radarr
                     Recipient = item.RequestedUser
                 });
             }
-
         }
 
         public async Task ProcessTvShows()
