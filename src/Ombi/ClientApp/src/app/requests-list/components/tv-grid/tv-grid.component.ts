@@ -34,7 +34,7 @@ export class TvGridComponent implements OnInit, AfterViewInit {
     private storageKeyGridCount = "Tv_DefaultGridCount";
     private storageKeyCurrentFilter = "Tv_DefaultFilter";
 
-    @Output() public onOpenOptions = new EventEmitter<{request: any, filter: any, onChange: any}>();
+    @Output() public onOpenOptions = new EventEmitter<{ request: any, filter: any, onChange: any, manageOwnRequests: boolean, isAdmin: boolean, has4kRequest: boolean, hasRegularRequest: boolean }>();
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -108,7 +108,7 @@ export class TvGridComponent implements OnInit, AfterViewInit {
             this.ref.detectChanges();
         };
 
-        const data = { request: request, filter: filter, onChange: onChange, manageOwnRequests: this.manageOwnRequests, isAdmin: this.isAdmin, has4kRequest: false  };
+        const data = { request: request, filter: filter, onChange: onChange, manageOwnRequests: this.manageOwnRequests, isAdmin: this.isAdmin, has4kRequest: false, hasRegularRequest: true  };
         this.onOpenOptions.emit(data);
     }
 

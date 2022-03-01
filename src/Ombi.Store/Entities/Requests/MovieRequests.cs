@@ -81,5 +81,8 @@ namespace Ombi.Store.Entities.Requests
                 return string.Empty;
             }
         }
+
+        [NotMapped]
+        public override bool CanApprove => !Approved && !Available || !Approved4K && !Available4K;
     }
 }

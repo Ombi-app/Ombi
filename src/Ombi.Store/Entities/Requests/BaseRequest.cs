@@ -24,6 +24,6 @@ namespace Ombi.Store.Entities.Requests
 
 
         [NotMapped]
-        public bool CanApprove => !Approved && !Available;
+        public virtual bool CanApprove => !Approved && !Available;
     }
 }

@@ -5,6 +5,7 @@ import { Observable, combineLatest, forkJoin, merge, of as observableOf } from '
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 import { AuthService } from "../../../auth/auth.service";
+import { FeaturesFacade } from "../../../state/features/features.facade";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
@@ -13,7 +14,6 @@ import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { SelectionModel } from "@angular/cdk/collections";
 import { StorageService } from "../../../shared/storage/storage-service";
 import { TranslateService } from "@ngx-translate/core";
-import { FeaturesFacade } from "../../../state/features/features.facade";
 
 @Component({
     templateUrl: "./movies-grid.component.html",
@@ -43,7 +43,7 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     private storageKeyGridCount = "Movie_DefaultGridCount";
     private storageKeyCurrentFilter = "Movie_DefaultFilter";
 
-    @Output() public onOpenOptions = new EventEmitter<{ request: any, filter: any, onChange: any, manageOwnRequests: boolean, isAdmin: boolean }>();
+    @Output() public onOpenOptions = new EventEmitter<{ request: any, filter: any, onChange: any, manageOwnRequests: boolean, isAdmin: boolean, has4kRequest: boolean, hasRegularRequest: boolean }>();
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
