@@ -42,7 +42,7 @@
                 <!--Next to poster-->
                 <div class="details-button-container">
                     <div class="col-12 media-row">
-                        <span *ngIf="movie.available">
+                        <span *ngIf="movie.available || movie.available4K">
                             <a id="viewOnPlexButton" *ngIf="movie.plexUrl" href="{{movie.plexUrl}}" mat-raised-button  target="_blank" class="btn-spacing viewon-btn plex">
                                 {{'Search.ViewOnPlex' | translate}}
                                 <i class="far fa-play-circle fa-2x"></i>
