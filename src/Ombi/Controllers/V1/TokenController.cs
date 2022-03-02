@@ -16,6 +16,8 @@ using Ombi.Models.External;
 using Ombi.Models.Identity;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Ombi.Core.Settings;
+using Ombi.Settings.Settings.Models;
 
 namespace Ombi.Controllers.V1
 {
@@ -25,13 +27,14 @@ namespace Ombi.Controllers.V1
     public class TokenController : ControllerBase
     {
         public TokenController(OmbiUserManager um, IOptions<TokenAuthentication> ta, ITokenRepository token,
-            IPlexOAuthManager oAuthManager, ILogger<TokenController> logger)
+            IPlexOAuthManager oAuthManager, ILogger<TokenController> logger, ISettingsService<AuthenticationSettings> auth)
         {
             _userManager = um;
             _tokenAuthenticationOptions = ta.Value;
             _token = token;
             _plexOAuthManager = oAuthManager;
             _log = logger;
+            _authSettings = auth;
         }
 
         private readonly TokenAuthentication _tokenAuthenticationOptions;
@@ -39,6 +42,7 @@ namespace Ombi.Controllers.V1
         private readonly OmbiUserManager _userManager;
         private readonly IPlexOAuthManager _plexOAuthManager;
         private readonly ILogger<TokenController> _log;
+        private readonly ISettingsService<AuthenticationSettings> _authSettings;
 
         /// <summary>
         /// Gets the token.
@@ -142,7 +146,6 @@ namespace Ombi.Controllers.V1
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(StartupSingleton.Instance.SecurityKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
 
             var token = new JwtSecurityToken(
                 claims: claims,
@@ -271,6 +274,39 @@ namespace Ombi.Controllers.V1
             }
 
             return ip;
+        }
+
+        [HttpPost("header_auth")]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> HeaderAuth()
+        {
+            var authSettings = await _authSettings.GetSettingsAsync();
+            _log.LogInformation("Logging with header: " + authSettings.HeaderAuthVariable);
+            if (authSettings.HeaderAuthVariable != null && authSettings.EnableHeaderAuth)
+            {
+                if (Request.HttpContext?.Request?.Headers != null && Request.HttpContext.Request.Headers.ContainsKey(authSettings.HeaderAuthVariable))
+                {
+                    var username = Request.HttpContext.Request.Headers[authSettings.HeaderAuthVariable].ToString();
+
+                    // Check if user exists
+                    var user = await _userManager.FindByNameAsync(username);
+                    if (user == null)
+                    {
+                        return new UnauthorizedResult();
+                    }
+
+                    return await CreateToken(true, user);
+                }
+                else
+                {
+                    return new UnauthorizedResult();
+                }
+            }    
+            else
+            {
+                return new UnauthorizedResult();
+            }
         }
     }
 }
