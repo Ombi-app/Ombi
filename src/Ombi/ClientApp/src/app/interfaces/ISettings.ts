@@ -238,6 +238,8 @@ export interface IAuthenticationSettings extends ISettings {
   requireNonAlphanumeric: boolean;
   requireUppercase: boolean;
   enableOAuth: boolean;
+  enableHeaderAuth: boolean;
+  headerAuthVariable: string;
 }
 
 export interface ICustomPage extends ISettings {
