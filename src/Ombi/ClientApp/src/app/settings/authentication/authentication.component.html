@@ -25,48 +25,13 @@
         </div>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" *ngIf="form.controls.enableHeaderAuth.value">
         <label for="headerAuthVariable" class="control-label">Header Authentication Variable</label>
         <div>
           <input type="text" class="form-control form-control-custom " id="headerAuthVariable" name="headerAuthVariable" formControlName="headerAuthVariable">
         </div>
       </div>
 
-      <!-- <hr/>
-  <div class="form-group">
-      <div class="checkbox">
-          <input type="checkbox" id="requiredDigit" name="requiredDigit" formControlName="requiredDigit">
-          <label for="requiredDigit">Require a digit in the password</label>
-      </div>
-  </div>
-
-  <div class="form-group">
-      <label for="requiredLength" class="control-label">Required password length</label>
-      <div>
-          <input type="text" class="form-control form-control-custom " id="requiredLength" name="requiredLength" formControlName="requiredLength">
-      </div>
-  </div>
-
-  <div class="form-group">
-      <div class="checkbox">
-          <input type="checkbox" id="requiredLowercase" name="requiredLowercase" formControlName="requiredLowercase">
-          <label for="requiredLowercase">Require a lowercase character in the password</label>
-      </div>
-  </div>
-
-  <div class="form-group">
-      <div class="checkbox">
-          <input type="checkbox" id="requireNonAlphanumeric" name="requireNonAlphanumeric" formControlName="requireNonAlphanumeric">
-          <label for="requireNonAlphanumeric">Require a NonAlphanumeric character in the password</label>
-      </div>
-  </div>
-
-  <div class="form-group">
-      <div class="checkbox">
-          <input type="checkbox" id="requireUppercase" name="requireUppercase" formControlName="requireUppercase">
-          <label for="requireUppercase">Require a uppercase character in the password</label>
-      </div>
-  </div> -->
 
       <div class="form-group">
         <div>

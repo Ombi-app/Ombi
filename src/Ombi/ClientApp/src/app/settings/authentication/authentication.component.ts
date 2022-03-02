@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
@@ -29,7 +29,17 @@ export class AuthenticationComponent implements OnInit {
                 enableHeaderAuth: [x.enableHeaderAuth],
                 headerAuthVariable: [x.headerAuthVariable],
             });
+            this.form.controls.enableHeaderAuth.valueChanges.subscribe(x => {
+                if (x) {
+                    this.form.get("headerAuthVariable").setValidators(Validators.required);
+                } else {
+                    this.form.get("headerAuthVariable").clearValidators();
+                }
+                this.form.get("headerAuthVariable").updateValueAndValidity();
+            });
         });
+
+
     }
 
     public onSubmit(form: FormGroup) {
