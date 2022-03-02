@@ -106,7 +106,10 @@ export class LoginComponent implements OnDestroy, OnInit {
 
     this.settingsService
       .getAuthentication()
-      .subscribe((x) => { this.authenticationSettings = x; this.headerAuth(); });
+      .subscribe((x) => {
+        this.authenticationSettings = x;
+        this.headerAuth();
+      });
     this.settingsService.getClientId().subscribe((x) => (this.clientId = x));
     this.images.getRandomBackground().subscribe((x) => {
       this.background = this.sanitizer.bypassSecurityTrustStyle(
@@ -255,10 +258,9 @@ export class LoginComponent implements OnDestroy, OnInit {
   }
 
   public headerAuth() {
-
     if (this.authenticationSettings.enableHeaderAuth) {
-      this.authService.headerAuth().subscribe(
-        (x) => {
+      this.authService.headerAuth().subscribe({
+        next: (x) => {
           this.store.save("id_token", x.access_token);
 
           if (this.authService.loggedIn()) {
@@ -270,11 +272,13 @@ export class LoginComponent implements OnDestroy, OnInit {
             });
           }
         },
-        (err) => {
+        error: (e) => {
           this.notify.open(this.errorBody, "OK", {
             duration: 3000000,
           });
+          console.error(e);
         }
+      }
       );
     }
   }

@@ -147,7 +147,6 @@ namespace Ombi.Controllers.V1
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(StartupSingleton.Instance.SecurityKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-
             var token = new JwtSecurityToken(
                 claims: claims,
                 expires: rememberMe ? DateTime.Now.AddYears(1) : DateTime.Now.AddDays(7),
@@ -279,17 +278,16 @@ namespace Ombi.Controllers.V1
 
         [HttpPost("header_auth")]
         [ProducesResponseType(401)]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> HeaderAuth()
         {
-            string username = null;
-
             var authSettings = await _authSettings.GetSettingsAsync();
             _log.LogInformation("Logging with header: " + authSettings.HeaderAuthVariable);
             if (authSettings.HeaderAuthVariable != null && authSettings.EnableHeaderAuth)
             {
                 if (Request.HttpContext?.Request?.Headers != null && Request.HttpContext.Request.Headers.ContainsKey(authSettings.HeaderAuthVariable))
                 {
-                    username = Request.HttpContext.Request.Headers[authSettings.HeaderAuthVariable].ToString();
+                    var username = Request.HttpContext.Request.Headers[authSettings.HeaderAuthVariable].ToString();
 
                     // Check if user exists
                     var user = await _userManager.FindByNameAsync(username);
