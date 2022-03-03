@@ -1,3 +1,7 @@
+## [4.14.1](https://github.com/Ombi-app/Ombi/compare/v4.14.0...v4.14.1) (2022-03-03)
+
+
+
 # [4.14.0](https://github.com/Ombi-app/Ombi/compare/v4.13.2...v4.14.0) (2022-03-02)
 
 
@@ -337,15 +341,6 @@
 
 
 ## [4.7.3](https://github.com/Ombi-app/Ombi/compare/v4.7.2...v4.7.3) (2021-11-23)
-
-
-
-## [4.7.2](https://github.com/Ombi-app/Ombi/compare/v4.7.1...v4.7.2) (2021-11-22)
-
-
-### Bug Fixes
-
-* **request-list:** :bug: Fixed an issue where the bulk delete would not work for movie requests ([4b540fb](https://github.com/Ombi-app/Ombi/commit/4b540fb45bcc389664f0953159802288d005db9f))
 
 
 
