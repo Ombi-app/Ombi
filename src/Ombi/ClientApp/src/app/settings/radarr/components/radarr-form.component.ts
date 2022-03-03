@@ -39,6 +39,14 @@ export class RadarrFormComponent implements OnInit {
             { name: "In Cinemas", value: "InCinemas" },
             { name: "Physical / Web", value: "Released" },
         ];
+
+        if (this.form.controls.defaultQualityProfile.value) {
+            this.getProfiles(this.form);
+        }
+
+        if (this.form.controls.defaultRootPath.value) {
+            this.getRootFolders(this.form);
+        }
     }
 
     public toggleValidators() {
