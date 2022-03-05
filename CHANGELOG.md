@@ -1,3 +1,12 @@
+## [4.14.2](https://github.com/Ombi-app/Ombi/compare/v4.14.1...v4.14.2) (2022-03-05)
+
+
+### Bug Fixes
+
+* **Sonarr:** :bug: Fixed an issue where some seasons were not being monitored correctly in sonarr ([60cfd41](https://github.com/Ombi-app/Ombi/commit/60cfd41f68e9006555c1a419dcff1aaa24b3e09f)), closes [#4506](https://github.com/Ombi-app/Ombi/issues/4506)
+
+
+
 ## [4.14.1](https://github.com/Ombi-app/Ombi/compare/v4.14.0...v4.14.1) (2022-03-03)
 
 
@@ -337,10 +346,6 @@
 
 * **availability-rules:** :bug: Fixed a small issue where some shows would not appear as Available even know they had no future unaired episodes listed ([914b096](https://github.com/Ombi-app/Ombi/commit/914b096781c9b73292a533a010a5dd05ecfd0aac))
 * **emby:** :bug: Fixed an issue where we were not properly syncing episodes ([75529dd](https://github.com/Ombi-app/Ombi/commit/75529dd972c5102f3c5234a2acf6fe664a1bcfad))
-
-
-
-## [4.7.3](https://github.com/Ombi-app/Ombi/compare/v4.7.2...v4.7.3) (2021-11-23)
 
 
 
