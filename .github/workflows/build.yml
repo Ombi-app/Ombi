@@ -190,7 +190,8 @@ jobs:
         if: contains(github.ref, 'develop')
         with:
           prerelease: true
-          body: ${{ needs.versioning.outputs.changelog }}
+          generate_release_notes: true
+          # body: ${{ needs.versioning.outputs.changelog }}
           name: ${{ needs.versioning.outputs.tag }}
           tag_name: ${{ needs.versioning.outputs.tag }}
           files: |

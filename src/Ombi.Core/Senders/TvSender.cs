@@ -357,6 +357,8 @@ namespace Ombi.Core.Senders
                         episodesToUpdate.Add(sonarrEp);
                     }
                 }
+
+                existingSeason = result.seasons.FirstOrDefault(x => x.seasonNumber == season.SeasonNumber);
                 var sonarrEpisodeList = sonarrEpList.Where(x => x.seasonNumber == season.SeasonNumber).ToList();
                 var sonarrEpCount = sonarrEpisodeList.Count;
                 var ourRequestCount = season.Episodes.Count;
