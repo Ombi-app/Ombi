@@ -103,20 +103,24 @@ namespace Ombi.Schedule.Jobs.Jellyfin
 
                 _log.LogInformation("We have found the request {0} on Jellyfin, sending the notification", movie?.Title ?? string.Empty);
 
-                if (has4kRequest && jellyfinContent.Has4K)
+                var notify = false;
+
+                if (has4kRequest && jellyfinContent.Has4K && !movie.Available4K)
                 {
                     movie.Available4K = true;
                     movie.MarkedAsAvailable4K = DateTime.Now;
+                    notify = true;
                 }
 
                 // If we have a non-4k versison then mark as available
-                if (jellyfinContent.Quality.HasValue())
+                if (jellyfinContent.Quality.HasValue() && !movie.Available)
                 {
                     movie.Available = true;
                     movie.MarkedAsAvailable = DateTime.Now;
+                    notify = true;
                 }
 
-                if (movie.Available)
+                if (notify)
                 {
                     var recipient = movie.RequestedUser.Email.HasValue() ? movie.RequestedUser.Email : string.Empty;
 

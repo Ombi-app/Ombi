@@ -206,28 +206,35 @@ namespace Ombi.Schedule.Jobs.Plex
 
                 _log.LogInformation($"[PAC] - Movie request {movie.Title} - {movie.Id} is now available, sending notification");
 
-                if (has4kRequest && item.Has4K)
+                var notify = false;
+
+                if (has4kRequest && item.Has4K && !movie.Available4K)
                 {
                     movie.Available4K = true;
                     movie.Approved4K = true;
                     movie.MarkedAsAvailable4K = DateTime.Now;
                     await _movieRepo.SaveChangesAsync();
+                    notify = true;
                 }
 
                 // If we have a non-4k versison then mark as available
-                if (item.Quality.HasValue())
+                if (item.Quality.HasValue() && !movie.Available)
                 {
                     movie.Available = true;
                     movie.Approved = true;
                     movie.MarkedAsAvailable = DateTime.Now;
                     await _movieRepo.SaveChangesAsync();
+                    notify = true;
                 }
 
-                itemsForAvailbility.Add(new AvailabilityModel
+                if (notify)
                 {
-                    Id = movie.Id,
-                    RequestedUser = movie.RequestedUser != null ? movie.RequestedUser.Email : string.Empty
-                });
+                    itemsForAvailbility.Add(new AvailabilityModel
+                    {
+                        Id = movie.Id,
+                        RequestedUser = movie.RequestedUser != null ? movie.RequestedUser.Email : string.Empty
+                    });
+                }
             }
 
             foreach (var i in itemsForAvailbility.DistinctBy(x => x.Id))

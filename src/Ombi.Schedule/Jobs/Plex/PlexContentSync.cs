@@ -340,11 +340,11 @@ namespace Ombi.Schedule.Jobs.Plex
                         continue;
                     }
 
-                    var hasSameKey = await Repo.GetByKey(movie.ratingKey);
-                    if (hasSameKey != null)
-                    {
-                        await Repo.Delete(hasSameKey);
-                    }
+                    //var hasSameKey = await Repo.GetByKey(movie.ratingKey);
+                    //if (hasSameKey != null)
+                    //{
+                    //    await Repo.Delete(hasSameKey);
+                    //}
 
                     Logger.LogDebug("Adding movie {0}", movie.title);
                     var guids = new List<string>();

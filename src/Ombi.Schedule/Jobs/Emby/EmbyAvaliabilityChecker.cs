@@ -76,19 +76,23 @@ namespace Ombi.Schedule.Jobs.Emby
 
                 _log.LogInformation("We have found the request {0} on Emby, sending the notification", movie?.Title ?? string.Empty);
 
-                if (has4kRequest && embyContent.Has4K)
+                var notify = false;
+
+                if (has4kRequest && embyContent.Has4K && !movie.Available4K)
                 {
                     movie.Available4K = true;
                     movie.MarkedAsAvailable4K = DateTime.Now;
+                    notify = true;
                 }
 
                 // If we have a non-4k versison then mark as available
-                if (embyContent.Quality.HasValue())
+                if (embyContent.Quality.HasValue() && !movie.Available)
                 {
                     movie.Available = true;
                     movie.MarkedAsAvailable = DateTime.Now;
+                    notify = true;
                 }
-                if (movie.Available)
+                if (notify)
                 {
                     var recipient = movie.RequestedUser.Email.HasValue() ? movie.RequestedUser.Email : string.Empty;
 
