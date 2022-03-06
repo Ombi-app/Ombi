@@ -1,3 +1,12 @@
+## [4.14.3](https://github.com/Ombi-app/Ombi/compare/v4.14.2...v4.14.3) (2022-03-06)
+
+
+### Bug Fixes
+
+* **availability:** :bug: Fixed an issue where with 4k content, we could repeat notifications ([f9ebc1c](https://github.com/Ombi-app/Ombi/commit/f9ebc1cc2e13c7cd335121cd86295b10eda529ba))
+
+
+
 ## [4.14.2](https://github.com/Ombi-app/Ombi/compare/v4.14.1...v4.14.2) (2022-03-05)
 
 
@@ -336,16 +345,6 @@
 * **notifications:** fixed an error that could happen when Ombi sends out a issue notification ([7442dcf](https://github.com/Ombi-app/Ombi/commit/7442dcf59da5d2190cc3087b10402e85bcfcf83b))
 * **translations:** 🌐 Fix incorrect text translation reference RequestedByOn ([#4420](https://github.com/Ombi-app/Ombi/issues/4420)) ([202d155](https://github.com/Ombi-app/Ombi/commit/202d155493c29a6ddd4c5507186bf376a28f4c1d))
 * **translations:** 🌐 New translations from Crowdin  ([473c172](https://github.com/Ombi-app/Ombi/commit/473c1724922515fe376e0b2058ac391807c923f2))
-
-
-
-## [4.7.4](https://github.com/Ombi-app/Ombi/compare/v4.7.3...v4.7.4) (2021-11-25)
-
-
-### Bug Fixes
-
-* **availability-rules:** :bug: Fixed a small issue where some shows would not appear as Available even know they had no future unaired episodes listed ([914b096](https://github.com/Ombi-app/Ombi/commit/914b096781c9b73292a533a010a5dd05ecfd0aac))
-* **emby:** :bug: Fixed an issue where we were not properly syncing episodes ([75529dd](https://github.com/Ombi-app/Ombi/commit/75529dd972c5102f3c5234a2acf6fe664a1bcfad))
 
 
 
