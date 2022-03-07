@@ -145,12 +145,12 @@
     <value>取消订阅</value>
   </data>
   <data name="Album" xml:space="preserve">
-    <value>Album</value>
+    <value>专辑</value>
   </data>
   <data name="Movie" xml:space="preserve">
-    <value>Movie</value>
+    <value>电影</value>
   </data>
   <data name="TvShow" xml:space="preserve">
-    <value>TV Show</value>
+    <value>电视节目</value>
   </data>
 </root>
