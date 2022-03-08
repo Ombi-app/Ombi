@@ -427,10 +427,11 @@ namespace Ombi.Api.TheMovieDb
             return keyword == null || keyword.Id == 0 ? null : keyword;
         }
 
-        public async Task<List<Genre>> GetGenres(string media, CancellationToken cancellationToken)
+        public async Task<List<Genre>> GetGenres(string media, CancellationToken cancellationToken, string languageCode)
         {
             var request = new Request($"genre/{media}/list", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
+            request.AddQueryString("language", languageCode);
             AddRetry(request);
 
             var result = await Api.Request<GenreContainer<Genre>>(request, cancellationToken);
