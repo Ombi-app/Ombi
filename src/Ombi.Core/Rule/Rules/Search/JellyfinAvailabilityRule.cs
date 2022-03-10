@@ -92,14 +92,14 @@ namespace Ombi.Core.Rule.Rules.Search
                     else
                     {
                         obj.Available = true;
-                        obj.EmbyUrl = item.Url;
+                        obj.JellyfinUrl = item.Url;
                         obj.Quality = item.Quality;
                     }
                     
                     if (item.Quality.HasValue())
                     {
                         obj.Available = true;
-                        obj.EmbyUrl = item.Url;
+                        obj.JellyfinUrl = item.Url;
                         obj.Quality = item.Quality;
                     }
                 }
