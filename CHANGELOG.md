@@ -1,3 +1,16 @@
+## [4.14.4](https://github.com/Ombi-app/Ombi/compare/v4.14.3...v4.14.4) (2022-03-10)
+
+
+### Bug Fixes
+
+* :bug: Fixed the Request On Behalf autocomplete not filtering correctly ([a8ba2f3](https://github.com/Ombi-app/Ombi/commit/a8ba2f3544a1c01c57f217c4036a277ab0e67a09)), closes [#4539](https://github.com/Ombi-app/Ombi/issues/4539)
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([356c742](https://github.com/Ombi-app/Ombi/commit/356c7424e0ce8c1c5063b04bc6ed9b809f214d65))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([6fcaecf](https://github.com/Ombi-app/Ombi/commit/6fcaecf80b766f2d43ac7082d74364238e1638b7))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([132f4d4](https://github.com/Ombi-app/Ombi/commit/132f4d4e609b7fb7e37f38ee2f395926e2911abe))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([f292006](https://github.com/Ombi-app/Ombi/commit/f292006a08894a8d0ba899c8c6e9fe863e558dda))
+
+
+
 ## [4.14.3](https://github.com/Ombi-app/Ombi/compare/v4.14.2...v4.14.3) (2022-03-06)
 
 
@@ -334,17 +347,6 @@
 ### Bug Fixes
 
 * **user-management:** :bug: Fixed an issue where you couldn't 'unset' a users custom quality and root folders ([bae96af](https://github.com/Ombi-app/Ombi/commit/bae96af17f50a80ae3ade235a5ef68d5d2dc12ba))
-
-
-
-## [4.7.5](https://github.com/Ombi-app/Ombi/compare/v4.7.4...v4.7.5) (2021-11-28)
-
-
-### Bug Fixes
-
-* **notifications:** fixed an error that could happen when Ombi sends out a issue notification ([7442dcf](https://github.com/Ombi-app/Ombi/commit/7442dcf59da5d2190cc3087b10402e85bcfcf83b))
-* **translations:** 🌐 Fix incorrect text translation reference RequestedByOn ([#4420](https://github.com/Ombi-app/Ombi/issues/4420)) ([202d155](https://github.com/Ombi-app/Ombi/commit/202d155493c29a6ddd4c5507186bf376a28f4c1d))
-* **translations:** 🌐 New translations from Crowdin  ([473c172](https://github.com/Ombi-app/Ombi/commit/473c1724922515fe376e0b2058ac391807c923f2))
 
 
 
