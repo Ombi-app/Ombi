@@ -17,6 +17,10 @@ using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 
+// Due to conflicting Genre models in
+// Ombi.TheMovieDbApi.Models and Ombi.Api.TheMovieDb.Models   
+using Genre = Ombi.TheMovieDbApi.Models.Genre;
+
 namespace Ombi.Core.Engine.V2
 {
     public class MultiSearchEngine : BaseMediaEngine, IMultiSearchEngine
@@ -112,6 +116,12 @@ namespace Ombi.Core.Engine.V2
             }
 
             return model;
+        }
+
+        public async Task<IEnumerable<Genre>> GetGenres(string media, CancellationToken cancellationToken)
+        {
+            var lang = await DefaultLanguageCode(null);
+            return await _movieDbApi.GetGenres(media, cancellationToken, lang);
         }
     }
 }

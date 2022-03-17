@@ -16,6 +16,10 @@ using Ombi.Api.RottenTomatoes.Models;
 using Ombi.Api.RottenTomatoes;
 using Ombi.Helpers;
 
+// Due to conflicting Genre models in
+// Ombi.TheMovieDbApi.Models and Ombi.Api.TheMovieDb.Models   
+using Genre = Ombi.TheMovieDbApi.Models.Genre;
+
 namespace Ombi.Controllers.V2
 {
     public class SearchController : V2Controller
@@ -53,6 +57,16 @@ namespace Ombi.Controllers.V2
         public async Task<List<MultiSearchResult>> MultiSearch(string searchTerm, [FromBody] MultiSearchFilter filter)
         {
             return await _multiSearchEngine.MultiSearch(Uri.UnescapeDataString(searchTerm), filter, Request.HttpContext.RequestAborted);
+        }
+
+        /// <summary>
+        /// Gets the genres for either Tv or Movies depending on media type
+        /// </summary>
+        /// <param name="media">Either `tv` or `movie`.</param>
+        [HttpGet("Genres/{media}")]
+        public Task<IEnumerable<Genre>> GetGenres(string media)
+        {
+            return _multiSearchEngine.GetGenres(media, HttpContext.RequestAborted);
         }
 
         /// <summary>

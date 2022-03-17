@@ -25,10 +25,6 @@ export class TheMovieDbService extends ServiceHelpers {
             .pipe(catchError((error: HttpErrorResponse) => error.status === 404 ? empty() : throwError(error)));
     }
 
-    public getGenres(media: string): Observable<IMovieDbKeyword[]> {
-        return this.http.get<IMovieDbKeyword[]>(`${this.url}/Genres/${media}`, { headers: this.headers })
-    }
-
     public getWatchProviders(media: string): Observable<IWatchProvidersResults[]> {
         return this.http.get<IWatchProvidersResults[]>(`${this.url}/WatchProviders/${media}`, {headers: this.headers});
     }
