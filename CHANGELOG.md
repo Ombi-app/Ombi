@@ -1,3 +1,12 @@
+# [4.15.0](https://github.com/Ombi-app/Ombi/compare/v4.14.4...v4.15.0) (2022-03-17)
+
+
+### Bug Fixes
+
+* **jellyfin:** :bug: Fixed an issue where Jellyfin content was showing the Play on Emby button ([18b167d](https://github.com/Ombi-app/Ombi/commit/18b167d16a3d682b5060ee36dedbbb069bef09de)), closes [#4542](https://github.com/Ombi-app/Ombi/issues/4542)
+
+
+
 ## [4.14.4](https://github.com/Ombi-app/Ombi/compare/v4.14.3...v4.14.4) (2022-03-10)
 
 
@@ -338,15 +347,6 @@
 
 * **notifications:** 🐛 Do not notify user upon auto approval of a TV show ([#4432](https://github.com/Ombi-app/Ombi/issues/4432)) ([3ad3bdd](https://github.com/Ombi-app/Ombi/commit/3ad3bddd8313d607ee2a39a51a92e61a3673082c)), closes [#4431](https://github.com/Ombi-app/Ombi/issues/4431)
 * **translations:** 🌐 New translations from Crowdin  ([8943a97](https://github.com/Ombi-app/Ombi/commit/8943a978bf459eaeb496d50c61c4d1506c727366))
-
-
-
-## [4.7.6](https://github.com/Ombi-app/Ombi/compare/v4.7.5...v4.7.6) (2021-12-02)
-
-
-### Bug Fixes
-
-* **user-management:** :bug: Fixed an issue where you couldn't 'unset' a users custom quality and root folders ([bae96af](https://github.com/Ombi-app/Ombi/commit/bae96af17f50a80ae3ade235a5ef68d5d2dc12ba))
 
 
 
