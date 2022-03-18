@@ -1,3 +1,12 @@
+## [4.15.1](https://github.com/Ombi-app/Ombi/compare/v4.15.0...v4.15.1) (2022-03-18)
+
+
+### Bug Fixes
+
+* **mediaserver:** fixed an issue where we were not detecting available content correctly [#4542](https://github.com/Ombi-app/Ombi/issues/4542) ([9cdd6f4](https://github.com/Ombi-app/Ombi/commit/9cdd6f41cdab8825a984905c089611409c53c753))
+
+
+
 # [4.15.0](https://github.com/Ombi-app/Ombi/compare/v4.14.4...v4.15.0) (2022-03-17)
 
 
@@ -337,16 +346,6 @@
 * **notifications:** :bug: Fixed the DenyReason sometimes not appearing in the notification message [#4409](https://github.com/Ombi-app/Ombi/issues/4409) ([209e311](https://github.com/Ombi-app/Ombi/commit/209e31175c95f6ee8909d878d45bf8269a9842d9))
 * **oauth:** :lock: Fixed the issue where some users running their browsers in a different language could not open the Plex OAuth window ([d5404ea](https://github.com/Ombi-app/Ombi/commit/d5404eaad7837010d6e4563cd8f7a1009231d362)), closes [#4408](https://github.com/Ombi-app/Ombi/issues/4408)
 * **translations:** 🌐 New translations from Crowdin ([5cfb76c](https://github.com/Ombi-app/Ombi/commit/5cfb76cad7a25eed8b452bf9c01cef8c32804369))
-
-
-
-## [4.7.7](https://github.com/Ombi-app/Ombi/compare/v4.7.6...v4.7.7) (2021-12-08)
-
-
-### Bug Fixes
-
-* **notifications:** 🐛 Do not notify user upon auto approval of a TV show ([#4432](https://github.com/Ombi-app/Ombi/issues/4432)) ([3ad3bdd](https://github.com/Ombi-app/Ombi/commit/3ad3bddd8313d607ee2a39a51a92e61a3673082c)), closes [#4431](https://github.com/Ombi-app/Ombi/issues/4431)
-* **translations:** 🌐 New translations from Crowdin  ([8943a97](https://github.com/Ombi-app/Ombi/commit/8943a978bf459eaeb496d50c61c4d1506c727366))
 
 
 
