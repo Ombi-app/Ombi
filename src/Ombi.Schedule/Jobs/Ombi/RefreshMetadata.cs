@@ -447,17 +447,20 @@ namespace Ombi.Schedule.Jobs.Ombi
                         default:
                             break;
                     }
-                    
+
                 }
             }
 
             if (hasTvDbId && type == RequestType.TvShow)
             {
                 _log.LogInformation("The show {0} has tvdbid but not ImdbId, searching for ImdbId", title);
-                if (int.TryParse(tvDbId, out var id))
+
+                var result = await _movieApi.Find(tvDbId.ToString(), ExternalSource.tvdb_id);
+                var movieDbId = result.tv_results.FirstOrDefault()?.id ?? 0;
+                if (movieDbId != 0)
                 {
-                    var result = await _tvApi.ShowLookupByTheTvDbId(id);
-                    return result?.externals?.imdb;
+                    var externalsResult = await _movieApi.GetTvExternals(movieDbId);
+                    return externalsResult.imdb_id;
                 }
             }
             return string.Empty;

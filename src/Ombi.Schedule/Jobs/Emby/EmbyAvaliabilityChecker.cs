@@ -86,7 +86,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 }
 
                 // If we have a non-4k versison then mark as available
-                if (embyContent.Quality.HasValue() && !movie.Available)
+                if (embyContent.Quality != null && !movie.Available)
                 {
                     movie.Available = true;
                     movie.MarkedAsAvailable = DateTime.Now;

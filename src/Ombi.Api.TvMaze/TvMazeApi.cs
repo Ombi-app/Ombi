@@ -64,27 +64,5 @@ namespace Ombi.Api.TvMaze
                 return null;
             }
         }
-
-        public async Task<List<TvMazeSeasons>> GetSeasons(int id)
-        {
-            var request = new Request($"shows/{id}/seasons", Uri, HttpMethod.Get);
-
-            request.AddContentHeader("Content-Type", "application/json");
-
-            return await Api.Request<List<TvMazeSeasons>>(request);
-        }
-
-        public async Task<FullSearch> GetTvFullInformation(int id)
-        {
-            var request = new Request($"shows/{id}", Uri, HttpMethod.Get);
-
-            request.AddQueryString("embed[]", "cast");
-            request.AddQueryString("embed[]", "crew");
-            request.AddQueryString("embed[]", "episodes");
-
-            request.AddContentHeader("Content-Type", "application/json");
-
-            return await Api.Request<FullSearch>(request);
-        }
     }
 }

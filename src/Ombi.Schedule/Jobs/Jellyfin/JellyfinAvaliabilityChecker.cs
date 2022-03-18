@@ -111,7 +111,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                 }
 
                 // If we have a non-4k versison then mark as available
-                if (jellyfinContent.Quality.HasValue() && !movie.Available)
+                if (jellyfinContent.Quality != null && !movie.Available)
                 {
                     movie.Available = true;
                     movie.MarkedAsAvailable = DateTime.Now;

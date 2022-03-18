@@ -46,7 +46,7 @@ namespace Ombi.Core.Engine
         {
             langCode = await DefaultLanguageCode(langCode);
             var movieInfo = await Cache.GetOrAddAsync(nameof(LookupImdbInformation) + langCode + theMovieDbId,
-                () =>  MovieApi.GetMovieInformationWithExtraInfo(theMovieDbId, langCode),
+                () => MovieApi.GetMovieInformationWithExtraInfo(theMovieDbId, langCode),
                 DateTimeOffset.Now.AddHours(12));
             var viewMovie = Mapper.Map<SearchMovieViewModel>(movieInfo);
 
@@ -81,11 +81,11 @@ namespace Ombi.Core.Engine
             {
                 return resultSet;
             }
-            
+
             // Get this person movie credits
             var credits = await MovieApi.GetActorMovieCredits(person.id, langaugeCode);
             // Grab results from both cast and crew, prefer items in cast.  we can handle directors like this.
-            var movieResults = (from role in credits.cast select new  { Id = role.id, Title = role.title, ReleaseDate = role.release_date }).ToList();
+            var movieResults = (from role in credits.cast select new { Id = role.id, Title = role.title, ReleaseDate = role.release_date }).ToList();
             movieResults.AddRange((from job in credits.crew select new { Id = job.id, Title = job.title, ReleaseDate = job.release_date }).ToList());
 
             movieResults = movieResults.Take(10).ToList();
@@ -120,7 +120,7 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<IEnumerable<SearchMovieViewModel>> PopularMovies()
         {
-           
+
             var result = await Cache.GetOrAddAsync(CacheKeys.PopularMovies, async () =>
             {
                 var langCode = await DefaultLanguageCode(null);
@@ -201,7 +201,7 @@ namespace Ombi.Core.Engine
 
         protected async Task<SearchMovieViewModel> ProcessSingleMovie(SearchMovieViewModel viewMovie, bool lookupExtraInfo = false)
         {
-            if (lookupExtraInfo && viewMovie.ImdbId.IsNullOrEmpty())
+            if (lookupExtraInfo && viewMovie.ImdbId.IsNullOrEmpty() && viewMovie.Id > 0)
             {
                 var showInfo = await MovieApi.GetMovieInformation(viewMovie.Id);
                 viewMovie.Id = showInfo.Id; // TheMovieDbId
@@ -217,7 +217,7 @@ namespace Ombi.Core.Engine
 
             // This requires the rules to be run first to populate the RequestId property
             await CheckForSubscription(viewMovie);
-            
+
             return viewMovie;
         }
 

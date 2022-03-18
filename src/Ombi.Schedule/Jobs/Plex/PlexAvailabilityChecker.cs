@@ -218,7 +218,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 }
 
                 // If we have a non-4k versison then mark as available
-                if (item.Quality.HasValue() && !movie.Available)
+                if (item.Quality != null && !movie.Available)
                 {
                     movie.Available = true;
                     movie.Approved = true;
