@@ -226,7 +226,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     await Repo.SaveChangesAsync();
                     if (content.Metadata != null)
                     {
-                        var episodesAdded = await EpisodeSync.ProcessEpsiodes(content.Metadata, (IQueryable<PlexEpisode>)allEps);
+                        var episodesAdded = await EpisodeSync.ProcessEpisodes(content.Metadata.ToAsyncEnumerable(), (ICollection<PlexEpisode>)allEps.ToHashSet());
                         episodesProcessed.AddRange(episodesAdded.Select(x => x.Id));
                     }
                 }
@@ -326,7 +326,7 @@ namespace Ombi.Schedule.Jobs.Plex
                                 Logger.LogDebug($"We already have movie {movie.title}, But found a 4K version!");
                                 existing.Has4K = true;
                                 await Repo.Update(existing);
-                            } 
+                            }
                             else
                             {
                                 qualitySaved = true;

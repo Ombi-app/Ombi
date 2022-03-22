@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Ombi.Api\Ombi.Api.csproj" />
     <ProjectReference Include="..\Ombi.Helpers\Ombi.Helpers.csproj" />
+    <PackageReference Include="System.Linq.Async" Version="4.0.0" />
   </ItemGroup>
 
 </Project>

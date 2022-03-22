@@ -11,6 +11,7 @@ using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Hubs;
+using Ombi.Schedule.Jobs.MediaServer;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Store.Entities;
@@ -19,111 +20,55 @@ using Quartz;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
-    public class PlexEpisodeSync : IPlexEpisodeSync
+    public class PlexEpisodeSync : MediaServerEpisodeSync<Metadata, PlexEpisode, IPlexContentRepository, PlexServerContent>, IPlexEpisodeSync
     {
         public PlexEpisodeSync(ISettingsService<PlexSettings> s, ILogger<PlexEpisodeSync> log, IPlexApi plexApi,
-            IPlexContentRepository repo, IHubContext<NotificationHub> hub)
+            IPlexContentRepository repo, IHubContext<NotificationHub> hub) : base(log, repo, hub)
         {
             _settings = s;
-            _log = log;
             _api = plexApi;
-            _repo = repo;
-            _notification = hub;
             _settings.ClearCache();
         }
 
         private readonly ISettingsService<PlexSettings> _settings;
-        private readonly ILogger<PlexEpisodeSync> _log;
         private readonly IPlexApi _api;
-        private readonly IPlexContentRepository _repo;
-        private readonly IHubContext<NotificationHub> _notification;
 
-        public async Task Execute(IJobExecutionContext job)
+        public override async Task Execute(IJobExecutionContext job)
         {
             try
             {
-                var s = await _settings.GetSettingsAsync();
-                if (!s.Enable)
-                {
-                    return;
-                }
                 await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                     .SendAsync(NotificationHub.NotificationEvent, "Plex Episode Sync Started");
 
-                foreach (var server in s.Servers)
-                {
-                    await Cache(server);
-                }
+                await CacheEpisodes();
+                
+                _logger.LogInformation(LoggingEvents.PlexEpisodeCacher, "We have finished caching the episodes.");
+                await _repo.SaveChangesAsync();
 
             }
             catch (Exception e)
             {
                 await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                     .SendAsync(NotificationHub.NotificationEvent, "Plex Episode Sync Failed");
-                _log.LogError(LoggingEvents.Cacher, e, "Caching Episodes Failed");
+                _logger.LogError(LoggingEvents.Cacher, e, "Caching Episodes Failed");
             }
 
 
-            _log.LogInformation("Plex Episode Sync Finished - Triggering Metadata refresh");
+            _logger.LogInformation("Plex Episode Sync Finished - Triggering Metadata refresh");
             await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
 
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Plex Episode Sync Finished");
         }
 
-        private async Task Cache(PlexServers settings)
-        {
-            if (!Validate(settings))
-            {
-                _log.LogWarning("Validation failed");
-                return;
-            }
-
-            // Get the librarys and then get the tv section
-            var sections = await _api.GetLibrarySections(settings.PlexAuthToken, settings.FullUri);
-
-            // Filter the libSections
-            var tvSections = sections.MediaContainer.Directory.Where(x => x.type.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase));
-
-            foreach (var section in tvSections)
-            {
-                if (settings.PlexSelectedLibraries.Any())
-                {
-                    // Are any enabled?
-                    if (settings.PlexSelectedLibraries.Any(x => x.Enabled))
-                    {
-                        // Make sure we have enabled this 
-                        var keys = settings.PlexSelectedLibraries.Where(x => x.Enabled).Select(x => x.Key.ToString())
-                            .ToList();
-                        if (!keys.Contains(section.key))
-                        {
-                            // We are not monitoring this lib
-                            continue;
-                        }
-                    }
-                }
-
-                // Get the episodes
-                await GetEpisodes(settings, section);
-            }
-
-        }
-
-        private async Task GetEpisodes(PlexServers settings, Directory section)
+        private async IAsyncEnumerable<Metadata> GetEpisodes(PlexServers settings, Directory section)
         {
             var currentPosition = 0;
             var resultCount = settings.EpisodeBatchSize == 0 ? 150 : settings.EpisodeBatchSize;
             var currentEpisodes = _repo.GetAllEpisodes().Cast<PlexEpisode>();
             var episodes = await _api.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, section.key, currentPosition, resultCount);
-            _log.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Total Epsiodes found for {episodes.MediaContainer.librarySectionTitle} = {episodes.MediaContainer.totalSize}");
+            _logger.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Total Epsiodes found for {episodes.MediaContainer.librarySectionTitle} = {episodes.MediaContainer.totalSize}");
 
-            // Delete all the episodes because we cannot uniquly match an episode to series every time, 
-            // see comment below.
-
-            // 12.03.2017 - I think we should be able to match them now
-            //await _repo.ExecuteSql("DELETE FROM PlexEpisode");
-
-            await ProcessEpsiodes(episodes?.MediaContainer?.Metadata ?? new Metadata[] { }, currentEpisodes);
             currentPosition += resultCount;
 
             while (currentPosition < episodes.MediaContainer.totalSize)
@@ -131,35 +76,8 @@ namespace Ombi.Schedule.Jobs.Plex
                 var ep = await _api.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, section.key, currentPosition,
                     resultCount);
 
-                await ProcessEpsiodes(ep?.MediaContainer?.Metadata ?? new Metadata[] { }, currentEpisodes);
-                _log.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Processed {resultCount} more episodes. Total Remaining {episodes.MediaContainer.totalSize - currentPosition}");
-                currentPosition += resultCount;
-            }
-
-            // we have now finished.
-            _log.LogInformation(LoggingEvents.PlexEpisodeCacher, "We have finished caching the episodes.");
-            await _repo.SaveChangesAsync();
-        }
-
-        public async Task<HashSet<PlexEpisode>> ProcessEpsiodes(Metadata[] episodes, IQueryable<PlexEpisode> currentEpisodes)
-        {
-            var ep = new HashSet<PlexEpisode>();
-            try
-            {
-                foreach (var episode in episodes)
+                foreach (var episode in ep.MediaContainer.Metadata)
                 {
-                    // I don't think we need to get the metadata, we only need to get the metadata if we need the provider id (TheTvDbid). Why do we need it for episodes?
-                    // We have the parent and grandparent rating keys to link up to the season and series
-                    //var metadata = _api.GetEpisodeMetaData(server.PlexAuthToken, server.FullUri, episode.ratingKey);
-
-                    // This does seem to work, it looks like we can somehow get different rating, grandparent and parent keys with episodes. Not sure how.
-                    var epExists = currentEpisodes.Any(x => episode.ratingKey == x.Key &&
-                                                              episode.grandparentRatingKey == x.GrandparentKey);
-                    if (epExists)
-                    {
-                        continue;
-                    }
-
                     // Let's check if we have the parent
                     var seriesExists = await _repo.GetByKey(episode.grandparentRatingKey);
                     if (seriesExists == null)
@@ -169,7 +87,7 @@ namespace Ombi.Schedule.Jobs.Plex
                             x.Title == episode.grandparentTitle);
                         if (seriesExists == null)
                         {
-                            _log.LogWarning(
+                            _logger.LogWarning(
                                 "The episode title {0} we cannot find the parent series. The episode grandparentKey = {1}, grandparentTitle = {2}",
                                 episode.title, episode.grandparentRatingKey, episode.grandparentTitle);
                             continue;
@@ -178,34 +96,15 @@ namespace Ombi.Schedule.Jobs.Plex
                         // Set the rating key to the correct one
                         episode.grandparentRatingKey = seriesExists.Key;
                     }
+                    yield return episode;
 
-                    // Sanity checks
-                    if (episode.index == 0)
-                    {
-                        _log.LogWarning($"Episode {episode.title} has no episode number. Skipping.");
-                        continue;
-                    }
-
-                    ep.Add(new PlexEpisode
-                    {
-                        EpisodeNumber = episode.index,
-                        SeasonNumber = episode.parentIndex,
-                        GrandparentKey = episode.grandparentRatingKey,
-                        ParentKey = episode.parentRatingKey,
-                        Key = episode.ratingKey,
-                        Title = episode.title
-                    });
                 }
+                _logger.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Processed {resultCount} more episodes. Total Remaining {episodes.MediaContainer.totalSize - currentPosition}");
+                currentPosition += resultCount;
+            }
 
-                await _repo.AddRange(ep);
-                return ep;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
         }
+
 
         private bool Validate(PlexServers settings)
         {
@@ -217,23 +116,76 @@ namespace Ombi.Schedule.Jobs.Plex
             return true;
         }
 
-        private bool _disposed;
-        protected virtual void Dispose(bool disposing)
+        protected override async IAsyncEnumerable<Metadata> GetMediaServerEpisodes()
         {
-            if (_disposed)
-                return;
-
-            if (disposing)
+            var s = await _settings.GetSettingsAsync();
+            if (!s.Enable)
             {
-                //_settings?.Dispose();
+                yield break;
             }
-            _disposed = true;
+            foreach (var server in s.Servers)
+            {
+                if (!Validate(server))
+                {
+                    _logger.LogWarning("Validation failed");
+                    continue;
+                }
+
+                // Get the librarys and then get the tv section
+                var sections = await _api.GetLibrarySections(server.PlexAuthToken, server.FullUri);
+
+                // Filter the libSections
+                var tvSections = sections.MediaContainer.Directory.Where(x => x.type.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase));
+
+                foreach (var section in tvSections)
+                {
+                    if (server.PlexSelectedLibraries.Any())
+                    {
+                        // Are any enabled?
+                        if (server.PlexSelectedLibraries.Any(x => x.Enabled))
+                        {
+                            // Make sure we have enabled this 
+                            var keys = server.PlexSelectedLibraries.Where(x => x.Enabled).Select(x => x.Key.ToString())
+                                .ToList();
+                            if (!keys.Contains(section.key))
+                            {
+                                // We are not monitoring this lib
+                                continue;
+                            }
+                        }
+                    }
+
+                    // Get the episodes
+                    await foreach (var ep in GetEpisodes(server, section))
+                    {
+                        yield return ep;
+                    }
+                }
+            }
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+        protected override Task<PlexEpisode> GetExistingEpisode(Metadata ep)
+        { 
+            return _repo.GetEpisodeByKey(ep.ratingKey);
         }
+
+        protected override bool IsIn(Metadata ep, ICollection<PlexEpisode> list)
+        {
+            return false; // That check was never needed in Plex before refactoring
+        }
+
+        protected override void addEpisode(Metadata ep, ICollection<PlexEpisode> epToAdd)
+        {
+            epToAdd.Add(new PlexEpisode
+            {
+                EpisodeNumber = ep.index,
+                SeasonNumber = ep.parentIndex,
+                GrandparentKey = ep.grandparentRatingKey,
+                ParentKey = ep.parentRatingKey,
+                Key = ep.ratingKey,
+                Title = ep.title
+            });
+        }
+
     }
 }

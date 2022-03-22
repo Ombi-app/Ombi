@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using Ombi.Api.MediaServer.Models.Media.Tv;
 
 namespace Ombi.Api.Plex.Models
 {
-    public class Metadata
+    public class Metadata : IMediaServerEpisodes
     {
         public int ratingKey { get; set; }
         public string key { get; set; }
@@ -39,6 +40,8 @@ namespace Ombi.Api.Plex.Models
         public string chapterSource { get; set; }
         public Medium[] Media { get; set; }
         public List<PlexGuids> Guid { get; set; } = new List<PlexGuids>();
+        int IMediaServerEpisodes.EpisodeNumber => index;
+        public string Name => title;
     }
 
     public class PlexGuids

@@ -1,9 +1,10 @@
 ﻿using Ombi.Api.Jellyfin.Models.Movie;
+using Ombi.Api.MediaServer.Models.Media.Tv;
 using System;
 
 namespace Ombi.Api.Jellyfin.Models.Media.Tv
 {
-    public class JellyfinEpisodes
+    public class JellyfinEpisodes : IMediaServerEpisodes
     {
         public string Name { get; set; }
         public string ServerId { get; set; }
@@ -41,5 +42,6 @@ namespace Ombi.Api.Jellyfin.Models.Media.Tv
         public string MediaType { get; set; }
         public bool HasSubtitles { get; set; }
         public JellyfinProviderids ProviderIds { get; set; }
+        int IMediaServerEpisodes.EpisodeNumber => IndexNumber;
     }
 }

@@ -1,9 +1,10 @@
 ﻿using Ombi.Api.Emby.Models.Movie;
+using Ombi.Api.MediaServer.Models.Media.Tv;
 using System;
 
 namespace Ombi.Api.Emby.Models.Media.Tv
 {
-    public class EmbyEpisodes
+    public class EmbyEpisodes : IMediaServerEpisodes
     {
         public string Name { get; set; }
         public string ServerId { get; set; }
@@ -41,5 +42,6 @@ namespace Ombi.Api.Emby.Models.Media.Tv
         public string MediaType { get; set; }
         public bool HasSubtitles { get; set; }
         public EmbyProviderids ProviderIds { get; set; }
+        int IMediaServerEpisodes.EpisodeNumber => IndexNumber;
     }
 }

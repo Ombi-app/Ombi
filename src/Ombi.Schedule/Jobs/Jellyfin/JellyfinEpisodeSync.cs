@@ -40,36 +40,51 @@ using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Quartz;
 using Ombi.Schedule.Jobs.Ombi;
+using Ombi.Schedule.Jobs.MediaServer;
+using Ombi.Api.Jellyfin.Models.Media.Tv;
 
 namespace Ombi.Schedule.Jobs.Jellyfin
 {
-    public class JellyfinEpisodeSync : IJellyfinEpisodeSync
+    public class JellyfinEpisodeSync : MediaServerEpisodeSync<JellyfinEpisodes, JellyfinEpisode, IJellyfinContentRepository, JellyfinContent>, IJellyfinEpisodeSync
     {
-        public JellyfinEpisodeSync(ISettingsService<JellyfinSettings> s, IJellyfinApiFactory api, ILogger<JellyfinEpisodeSync> l, IJellyfinContentRepository repo
-            , IHubContext<NotificationHub> notification)
+
+
+        public JellyfinEpisodeSync(
+            ISettingsService<JellyfinSettings> s,
+            IJellyfinApiFactory api,
+            ILogger<MediaServerEpisodeSync<JellyfinEpisodes, JellyfinEpisode, IJellyfinContentRepository, JellyfinContent>> l,
+            IJellyfinContentRepository repo,
+            IHubContext<NotificationHub> notification) : base(l, repo, notification)
         {
             _apiFactory = api;
-            _logger = l;
             _settings = s;
-            _repo = repo;
-            _notification = notification;
         }
-
         private readonly ISettingsService<JellyfinSettings> _settings;
         private readonly IJellyfinApiFactory _apiFactory;
-        private readonly ILogger<JellyfinEpisodeSync> _logger;
-        private readonly IJellyfinContentRepository _repo;
-        private readonly IHubContext<NotificationHub> _notification;
         private IJellyfinApi Api { get; set; }
 
-
-        public async Task Execute(IJobExecutionContext job)
+        public override async Task Execute(IJobExecutionContext job)
         {
             var settings = await _settings.GetSettingsAsync();
 
             Api = _apiFactory.CreateClient(settings);
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Jellyfin Episode Sync Started");
+
+            await CacheEpisodes();
+
+            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, "Jellyfin Episode Sync Finished");
+            _logger.LogInformation("Jellyfin Episode Sync Finished - Triggering Metadata refresh");
+            await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
+        }
+
+        private int packageSize = 200;
+        protected override async IAsyncEnumerable<JellyfinEpisodes> GetMediaServerEpisodes()
+        {
+            var settings = await _settings.GetSettingsAsync();
+            Api = _apiFactory.CreateClient(settings);
+
             foreach (var server in settings.Servers)
             {
 
@@ -79,27 +94,27 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                     foreach (var tvParentIdFilter in tvLibsToFilter)
                     {
                         _logger.LogInformation($"Scanning Lib for episodes '{tvParentIdFilter.Title}'");
-                        await CacheEpisodes(server, tvParentIdFilter.Key);
+                        await foreach (var ep in GetEpisodesFromLibrary(server, tvParentIdFilter.Key))
+                        {
+                            yield return ep;
+                        }
                     }
                 }
                 else
                 {
-                    await CacheEpisodes(server, string.Empty);
+                    await foreach (var ep in GetEpisodesFromLibrary(server, string.Empty))
+                    {
+                        yield return ep;
+                    }
                 }
             }
-
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Jellyfin Episode Sync Finished");
-            _logger.LogInformation("Jellyfin Episode Sync Finished - Triggering Metadata refresh");
-            await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
         }
-
-        private async Task CacheEpisodes(JellyfinServers server, string parentIdFilter)
+        private async IAsyncEnumerable<JellyfinEpisodes> GetEpisodesFromLibrary(JellyfinServers server, string parentIdFilter)
         {
-            var allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, 0, 200, server.AdministratorId, server.FullUri);
-            var total = allEpisodes.TotalRecordCount;
             var processed = 0;
-            var epToAdd = new HashSet<JellyfinEpisode>();
+            var allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, processed, packageSize, server.AdministratorId, server.FullUri);
+
+            var total = allEpisodes.TotalRecordCount;
             while (processed < total)
             {
                 foreach (var ep in allEpisodes.Items)
@@ -121,81 +136,55 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                             ep.Name);
                         continue;
                     }
-
-                    var existingEpisode = await _repo.GetEpisodeByJellyfinId(ep.Id);
-                    // Make sure it's not in the hashset too
-                    var existingInList = epToAdd.Any(x => x.JellyfinId == ep.Id);
-
-                    if (existingEpisode == null && !existingInList)
-                    {
-                        // Sanity checks
-                        if (ep.IndexNumber == 0) // no check on season number, Season 0 can be Specials
-                        {
-                            _logger.LogWarning($"Episode {ep.Name} has no episode number. Skipping.");
-                            continue;
-                        }
-
-                        _logger.LogDebug("Adding new episode {0} to parent {1}", ep.Name, ep.SeriesName);
-                        // add it
-                        epToAdd.Add(new JellyfinEpisode
-                        {
-                            JellyfinId = ep.Id,
-                            EpisodeNumber = ep.IndexNumber,
-                            SeasonNumber = ep.ParentIndexNumber,
-                            ParentId = ep.SeriesId,
-                            TvDbId = ep.ProviderIds.Tvdb,
-                            TheMovieDbId = ep.ProviderIds.Tmdb,
-                            ImdbId = ep.ProviderIds.Imdb,
-                            Title = ep.Name,
-                            AddedAt = DateTime.UtcNow
-                        });
-
-                        if (ep.IndexNumberEnd.HasValue && ep.IndexNumberEnd.Value != ep.IndexNumber)
-                        {
-                            epToAdd.Add(new JellyfinEpisode
-                            {
-                                JellyfinId = ep.Id,
-                                EpisodeNumber = ep.IndexNumberEnd.Value,
-                                SeasonNumber = ep.ParentIndexNumber,
-                                ParentId = ep.SeriesId,
-                                TvDbId = ep.ProviderIds.Tvdb,
-                                TheMovieDbId = ep.ProviderIds.Tmdb,
-                                ImdbId = ep.ProviderIds.Imdb,
-                                Title = ep.Name,
-                                AddedAt = DateTime.UtcNow
-                            });
-                        }
-                    }
+                    yield return ep;
                 }
-
-                await _repo.AddRange(epToAdd);
-                epToAdd.Clear();
-                allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, processed, 200, server.AdministratorId, server.FullUri);
-            }
-
-            if (epToAdd.Any())
-            {
-                await _repo.AddRange(epToAdd);
+                allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, processed, packageSize, server.AdministratorId, server.FullUri);
             }
         }
 
-        private bool _disposed;
-        protected virtual void Dispose(bool disposing)
+        protected override void addEpisode(JellyfinEpisodes ep, ICollection<JellyfinEpisode> epToAdd)
         {
-            if (_disposed)
-                return;
 
-            if (disposing)
+            _logger.LogDebug("Adding new episode {0} to parent {1}", ep.Name, ep.SeriesName);
+            // add it
+            epToAdd.Add(new JellyfinEpisode
             {
-                //_settings?.Dispose();
+                JellyfinId = ep.Id,
+                EpisodeNumber = ep.IndexNumber,
+                SeasonNumber = ep.ParentIndexNumber,
+                ParentId = ep.SeriesId,
+                TvDbId = ep.ProviderIds.Tvdb,
+                TheMovieDbId = ep.ProviderIds.Tmdb,
+                ImdbId = ep.ProviderIds.Imdb,
+                Title = ep.Name,
+                AddedAt = DateTime.UtcNow
+            });
+
+            if (ep.IndexNumberEnd.HasValue && ep.IndexNumberEnd.Value != ep.IndexNumber)
+            {
+                epToAdd.Add(new JellyfinEpisode
+                {
+                    JellyfinId = ep.Id,
+                    EpisodeNumber = ep.IndexNumberEnd.Value,
+                    SeasonNumber = ep.ParentIndexNumber,
+                    ParentId = ep.SeriesId,
+                    TvDbId = ep.ProviderIds.Tvdb,
+                    TheMovieDbId = ep.ProviderIds.Tmdb,
+                    ImdbId = ep.ProviderIds.Imdb,
+                    Title = ep.Name,
+                    AddedAt = DateTime.UtcNow
+                });
             }
-            _disposed = true;
         }
 
-        public void Dispose()
+        protected override async Task<JellyfinEpisode> GetExistingEpisode(JellyfinEpisodes ep)
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            return await _repo.GetEpisodeByJellyfinId(ep.Id);
+        }
+
+        protected override bool IsIn(JellyfinEpisodes ep, ICollection<JellyfinEpisode> list)
+        {
+            return list.Any(x => x.JellyfinId == ep.Id);
         }
     }
 }

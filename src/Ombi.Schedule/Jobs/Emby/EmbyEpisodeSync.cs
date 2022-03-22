@@ -42,46 +42,51 @@ using Quartz;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Api.Emby.Models;
 using Ombi.Api.Emby.Models.Media.Tv;
+using Ombi.Schedule.Jobs.MediaServer;
 
 namespace Ombi.Schedule.Jobs.Emby
 {
-    public class EmbyEpisodeSync : IEmbyEpisodeSync
+    public class EmbyEpisodeSync : MediaServerEpisodeSync<EmbyEpisodes, EmbyEpisode, IEmbyContentRepository, EmbyContent>, IEmbyEpisodeSync
     {
         public EmbyEpisodeSync(ISettingsService<EmbySettings> s, IEmbyApiFactory api, ILogger<EmbyEpisodeSync> l, IEmbyContentRepository repo
-            , IHubContext<NotificationHub> notification)
+            , IHubContext<NotificationHub> notification) : base(l, repo, notification)
         {
             _apiFactory = api;
-            _logger = l;
             _settings = s;
-            _repo = repo;
-            _notification = notification;
         }
 
         private readonly ISettingsService<EmbySettings> _settings;
         private readonly IEmbyApiFactory _apiFactory;
-        private readonly ILogger<EmbyEpisodeSync> _logger;
-        private readonly IEmbyContentRepository _repo;
-        private readonly IHubContext<NotificationHub> _notification;
+        private bool _recentlyAddedSearch = false;
 
         private const int AmountToTake = 100;
 
         private IEmbyApi Api { get; set; }
 
 
-        public async Task Execute(IJobExecutionContext context)
+        public override async Task Execute(IJobExecutionContext context)
         {
             JobDataMap dataMap = context.MergedJobDataMap;
-            var recentlyAddedSearch = false;
             if (dataMap.TryGetValue(JobDataKeys.EmbyRecentlyAddedSearch, out var recentlyAddedObj))
             {
-                recentlyAddedSearch = Convert.ToBoolean(recentlyAddedObj);
+                _recentlyAddedSearch = Convert.ToBoolean(recentlyAddedObj);
             }
+            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, "Emby Episode Sync Started");
 
+            await CacheEpisodes();
+
+            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, "Emby Episode Sync Finished");
+            _logger.LogInformation("Emby Episode Sync Finished - Triggering Metadata refresh");
+            await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
+        }
+
+        protected async override IAsyncEnumerable<EmbyEpisodes> GetMediaServerEpisodes()
+        {
             var settings = await _settings.GetSettingsAsync();
 
             Api = _apiFactory.CreateClient(settings);
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Emby Episode Sync Started");
             foreach (var server in settings.Servers)
             {
                 if (server.EmbySelectedLibraries.Any() && server.EmbySelectedLibraries.Any(x => x.Enabled))
@@ -90,25 +95,26 @@ namespace Ombi.Schedule.Jobs.Emby
                     foreach (var tvParentIdFilter in tvLibsToFilter)
                     {
                         _logger.LogInformation($"Scanning Lib for episodes '{tvParentIdFilter.Title}'");
-                        await CacheEpisodes(server, recentlyAddedSearch, tvParentIdFilter.Key);
+                        await foreach (var ep in GetEpisodesFromLibrary(server, tvParentIdFilter.Key))
+                        {
+                            yield return ep;
+                        }
                     }
                 }
                 else
                 {
-                    await CacheEpisodes(server, recentlyAddedSearch, string.Empty);
+                    await foreach (var ep in GetEpisodesFromLibrary(server, string.Empty))
+                    {
+                        yield return ep;
+                    }
                 }
             }
 
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Emby Episode Sync Finished");
-            _logger.LogInformation("Emby Episode Sync Finished - Triggering Metadata refresh");
-            await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
         }
-
-        private async Task CacheEpisodes(EmbyServers server, bool recentlyAdded, string parentIdFilter)
+        private async IAsyncEnumerable<EmbyEpisodes> GetEpisodesFromLibrary(EmbyServers server, string parentIdFilter)
         {
             EmbyItemContainer<EmbyEpisodes> allEpisodes;
-            if (recentlyAdded)
+            if (_recentlyAddedSearch)
             {
                 var recentlyAddedAmountToTake = AmountToTake;
                 allEpisodes = await Api.RecentlyAddedEpisodes(server.ApiKey, parentIdFilter, 0, recentlyAddedAmountToTake, server.AdministratorId, server.FullUri);
@@ -123,7 +129,6 @@ namespace Ombi.Schedule.Jobs.Emby
             }
             var total = allEpisodes.TotalRecordCount;
             var processed = 0;
-            var epToAdd = new HashSet<EmbyEpisode>();
             while (processed < total)
             {
                 foreach (var ep in allEpisodes.Items)
@@ -145,84 +150,55 @@ namespace Ombi.Schedule.Jobs.Emby
                             ep.Name);
                         continue;
                     }
-
-                    var existingEpisode = await _repo.GetEpisodeByEmbyId(ep.Id);
-                    // Make sure it's not in the hashset too
-                    var existingInList = epToAdd.Any(x => x.EmbyId == ep.Id);
-
-                    if (existingEpisode == null && !existingInList)
-                    {
-                        // Sanity checks
-                        if (ep.IndexNumber == 0)
-                        {
-                            _logger.LogWarning($"Episode {ep.Name} has no episode number. Skipping.");
-                            continue;
-                        }
-
-                        _logger.LogDebug("Adding new episode {0} to parent {1}", ep.Name, ep.SeriesName);
-                        // add it
-                        epToAdd.Add(new EmbyEpisode
-                        {
-                            EmbyId = ep.Id,
-                            EpisodeNumber = ep.IndexNumber,
-                            SeasonNumber = ep.ParentIndexNumber,
-                            ParentId = ep.SeriesId,
-                            TvDbId = ep.ProviderIds.Tvdb,
-                            TheMovieDbId = ep.ProviderIds.Tmdb,
-                            ImdbId = ep.ProviderIds.Imdb,
-                            Title = ep.Name,
-                            AddedAt = DateTime.UtcNow
-                        });
-
-                        if (ep.IndexNumberEnd.HasValue && ep.IndexNumberEnd.Value != ep.IndexNumber)
-                        {
-                            epToAdd.Add(new EmbyEpisode
-                            {
-                                EmbyId = ep.Id,
-                                EpisodeNumber = ep.IndexNumberEnd.Value,
-                                SeasonNumber = ep.ParentIndexNumber,
-                                ParentId = ep.SeriesId,
-                                TvDbId = ep.ProviderIds.Tvdb,
-                                TheMovieDbId = ep.ProviderIds.Tmdb,
-                                ImdbId = ep.ProviderIds.Imdb,
-                                Title = ep.Name,
-                                AddedAt = DateTime.UtcNow
-                            });
-                        }
-                    }
+                    yield return ep;
                 }
-
-                await _repo.AddRange(epToAdd);
-                epToAdd.Clear();
-                if (!recentlyAdded)
+                if (!_recentlyAddedSearch)
                 {
                     allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, processed, AmountToTake, server.AdministratorId, server.FullUri);
                 }
             }
-
-            if (epToAdd.Any())
-            {
-                await _repo.AddRange(epToAdd);
-            }
         }
 
-        private bool _disposed;
-        protected virtual void Dispose(bool disposing)
+        protected override async Task<EmbyEpisode> GetExistingEpisode(EmbyEpisodes ep)
         {
-            if (_disposed)
-                return;
-
-            if (disposing)
-            {
-                //_settings?.Dispose();
-            }
-            _disposed = true;
+            return await _repo.GetEpisodeByEmbyId(ep.Id);
         }
 
-        public void Dispose()
+        protected override bool IsIn(EmbyEpisodes ep, ICollection<EmbyEpisode> list)
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            return list.Any(x => x.EmbyId == ep.Id);
+        }
+
+        protected override void addEpisode(EmbyEpisodes ep, ICollection<EmbyEpisode> epToAdd)
+        {
+            epToAdd.Add(new EmbyEpisode
+            {
+                EmbyId = ep.Id,
+                EpisodeNumber = ep.IndexNumber,
+                SeasonNumber = ep.ParentIndexNumber,
+                ParentId = ep.SeriesId,
+                TvDbId = ep.ProviderIds.Tvdb,
+                TheMovieDbId = ep.ProviderIds.Tmdb,
+                ImdbId = ep.ProviderIds.Imdb,
+                Title = ep.Name,
+                AddedAt = DateTime.UtcNow
+            });
+
+            if (ep.IndexNumberEnd.HasValue && ep.IndexNumberEnd.Value != ep.IndexNumber)
+            {
+                epToAdd.Add(new EmbyEpisode
+                {
+                    EmbyId = ep.Id,
+                    EpisodeNumber = ep.IndexNumberEnd.Value,
+                    SeasonNumber = ep.ParentIndexNumber,
+                    ParentId = ep.SeriesId,
+                    TvDbId = ep.ProviderIds.Tvdb,
+                    TheMovieDbId = ep.ProviderIds.Tmdb,
+                    ImdbId = ep.ProviderIds.Imdb,
+                    Title = ep.Name,
+                    AddedAt = DateTime.UtcNow
+                });
+            }
         }
     }
 }
