@@ -379,6 +379,12 @@ namespace Ombi.Schedule.Jobs.Plex
                     }
                     var providerIds = PlexHelper.GetProviderIdsFromMetadata(guids.ToArray());
 
+                    if (!providerIds.Any())
+                    {
+                        Logger.LogWarning($"Movie {movie.title} has no External Ids in Plex (ImdbId, TheMovieDbId). Skipping.");
+                        continue;
+                    }
+
                     var qualities = movie.Media?.Select(x => x.videoResolution);
                     var is4k = qualities != null && qualities.Any(x => x.Equals("4k", StringComparison.InvariantCultureIgnoreCase));
                     var selectedQuality = is4k ? null : qualities?.OrderBy(x => x)?.FirstOrDefault() ?? string.Empty;

@@ -180,6 +180,8 @@ namespace Ombi.Helpers
         public string ImdbId { get; set; }
         public bool Plex { get; set; }
 
+        public bool Any() => TheTvDb.HasValue() || TheMovieDb.HasValue() || ImdbId.HasValue();
+
         public ProviderType Type
         {
             get
