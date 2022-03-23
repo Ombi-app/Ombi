@@ -1,3 +1,12 @@
+## [4.15.2](https://github.com/Ombi-app/Ombi/compare/v4.15.1...v4.15.2) (2022-03-23)
+
+
+### Bug Fixes
+
+* **metadata:** improved the metadata job to also lookup the media in Plex to see if it has any more uptodate metadata ([83d1a15](https://github.com/Ombi-app/Ombi/commit/83d1a15cc9d0ee91be73bd91c4672cf1bcf2728a))
+
+
+
 ## [4.15.1](https://github.com/Ombi-app/Ombi/compare/v4.15.0...v4.15.1) (2022-03-18)
 
 
@@ -335,17 +344,6 @@
 ### Bug Fixes
 
 * **sonarr:** :bug: Fixed an issue where we were sometimes incorrectly setting the state of episodes that are already monitored in sonarr ([fd1acb8](https://github.com/Ombi-app/Ombi/commit/fd1acb88cbc5e73f91b7f81e6e28ee06d66b277e))
-
-
-
-## [4.7.8](https://github.com/Ombi-app/Ombi/compare/v4.7.7...v4.7.8) (2021-12-11)
-
-
-### Bug Fixes
-
-* **notifications:** :bug: Fixed the DenyReason sometimes not appearing in the notification message [#4409](https://github.com/Ombi-app/Ombi/issues/4409) ([209e311](https://github.com/Ombi-app/Ombi/commit/209e31175c95f6ee8909d878d45bf8269a9842d9))
-* **oauth:** :lock: Fixed the issue where some users running their browsers in a different language could not open the Plex OAuth window ([d5404ea](https://github.com/Ombi-app/Ombi/commit/d5404eaad7837010d6e4563cd8f7a1009231d362)), closes [#4408](https://github.com/Ombi-app/Ombi/issues/4408)
-* **translations:** 🌐 New translations from Crowdin ([5cfb76c](https://github.com/Ombi-app/Ombi/commit/5cfb76cad7a25eed8b452bf9c01cef8c32804369))
 
 
 
