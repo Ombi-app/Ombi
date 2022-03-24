@@ -1,3 +1,7 @@
+## [4.15.3](https://github.com/Ombi-app/Ombi/compare/v4.15.2...v4.15.3) (2022-03-24)
+
+
+
 ## [4.15.2](https://github.com/Ombi-app/Ombi/compare/v4.15.1...v4.15.2) (2022-03-23)
 
 
@@ -335,15 +339,6 @@
 ### Bug Fixes
 
 * **discover:** :bug: Fixed an issue where monitored movies in radarr were not correctly represented on the search results ([75b15bc](https://github.com/Ombi-app/Ombi/commit/75b15bc7cba21f0a14a18c8e64fd52482f5c6325))
-
-
-
-## [4.7.9](https://github.com/Ombi-app/Ombi/compare/v4.7.8...v4.7.9) (2021-12-16)
-
-
-### Bug Fixes
-
-* **sonarr:** :bug: Fixed an issue where we were sometimes incorrectly setting the state of episodes that are already monitored in sonarr ([fd1acb8](https://github.com/Ombi-app/Ombi/commit/fd1acb88cbc5e73f91b7f81e6e28ee06d66b277e))
 
 
 
