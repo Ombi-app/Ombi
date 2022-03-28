@@ -6,7 +6,7 @@
             {{ 'Common.' + RequestType[result.type] | translate }}
         </div>
         <div class="{{getStatusClass()}} top-right" id="status{{result.id}}">
-            <span class="indicator"></span><span class="indicator-text" id="availabilityStatus{{result.id}}">{{getAvailbilityStatus()}}</span>
+            <span class="indicator"></span><span class="indicator-text" id="availabilityStatus{{result.id}}">{{getAvailabilityStatus()}}</span>
         </div>
     </div>
         <img [routerLink]="generateDetailsLink()" id="cardImage" src="{{result.posterPath}}" class="image"
