@@ -92,6 +92,9 @@ export class DiscoverCardComponent implements OnInit {
         if (this.result.available) {
             return "available";
         }
+        if (this.tvSearchResult?.partlyAvailable) {
+            return "partly-available";
+        }
         if (this.result.approved) {
             return "approved";
         }
@@ -101,9 +104,12 @@ export class DiscoverCardComponent implements OnInit {
         return "";
     }
 
-    public getAvailbilityStatus(): string {
+    public getAvailabilityStatus(): string {
         if (this.result.available) {
             return this.translate.instant("Common.Available");
+        }
+        if (this.tvSearchResult?.partlyAvailable) {
+            return this.translate.instant("Common.PartlyAvailable");
         }
         if (this.result.approved) {
             return this.translate.instant("Common.Approved");
