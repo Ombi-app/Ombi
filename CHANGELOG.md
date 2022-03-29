@@ -1,3 +1,7 @@
+## [4.15.4](https://github.com/Ombi-app/Ombi/compare/v4.15.3...v4.15.4) (2022-03-29)
+
+
+
 ## [4.15.3](https://github.com/Ombi-app/Ombi/compare/v4.15.2...v4.15.3) (2022-03-24)
 
 
@@ -330,15 +334,6 @@
 ### Bug Fixes
 
 * **availability-rules:** :bug: Show the 'Requested' button when a show has all of the episodes marked as requested ([cb7ecf6](https://github.com/Ombi-app/Ombi/commit/cb7ecf684ac3ab204f329a28baecfd4f6cd408f7))
-
-
-
-## [4.7.10](https://github.com/Ombi-app/Ombi/compare/v4.7.9...v4.7.10) (2021-12-16)
-
-
-### Bug Fixes
-
-* **discover:** :bug: Fixed an issue where monitored movies in radarr were not correctly represented on the search results ([75b15bc](https://github.com/Ombi-app/Ombi/commit/75b15bc7cba21f0a14a18c8e64fd52482f5c6325))
 
 
 
