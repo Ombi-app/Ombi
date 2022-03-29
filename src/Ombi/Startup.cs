@@ -49,7 +49,7 @@ namespace Ombi
             Configuration = builder.Build();
 
             ILogger config = new LoggerConfiguration()
-                .MinimumLevel.Debug()
+                .ReadFrom.Configuration(Configuration)
                 .WriteTo.RollingFile(Path.Combine(StoragePath.StoragePath.IsNullOrEmpty() ? env.ContentRootPath : StoragePath.StoragePath, "Logs", "log-{Date}.txt"))
                 .CreateLogger();
 
