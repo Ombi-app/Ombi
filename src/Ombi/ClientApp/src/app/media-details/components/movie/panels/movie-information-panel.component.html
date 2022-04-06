@@ -36,10 +36,11 @@
     </div>
     <div *ngIf="!movie.available">
         <span class="label">{{'MediaDetails.RequestStatus' | translate }}</span>
-        <div *ngIf="movie.approved && !movie.available">{{'Common.ProcessingRequest' | translate}}</div>
-        <div *ngIf="movie.requested && !movie.approved && !movie.available">{{'Common.PendingApproval' | translate}}
+        <div *ngIf="movie.denied">{{'Common.Denied' | translate}}</div>
+        <div *ngElseIf="movie.approved && !movie.available">{{'Common.ProcessingRequest' | translate}}</div>
+        <div *ngElseIf="movie.requested && !movie.approved && !movie.available">{{'Common.PendingApproval' | translate}}
         </div>
-        <div *ngIf="!movie.requested && !movie.available && !movie.approved">{{'Common.NotRequested' | translate}}
+        <div *ngElseIf="!movie.requested && !movie.available && !movie.approved">{{'Common.NotRequested' | translate}}
         </div>
     </div>
 
