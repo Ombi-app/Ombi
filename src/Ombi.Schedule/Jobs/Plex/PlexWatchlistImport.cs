@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ombi.Schedule.Jobs.Plex
@@ -38,7 +39,6 @@ namespace Ombi.Schedule.Jobs.Plex
 
         public async Task Execute(IJobExecutionContext context)
         {
-            var token = "-DpQi6mzq2QMakYgFr2g"; // !!!!!!!!!!!!!!!!!!!! TODO REMOVE !!!!!!!!!!!!!!!!!!!!!!!
 
             var settings = await _settings.GetSettingsAsync();
             if (!settings.Enable)
@@ -47,15 +47,15 @@ namespace Ombi.Schedule.Jobs.Plex
             }
 
             var plexUsersWithTokens = _ombiUserManager.Users.Where(x => x.UserType == UserType.PlexUser && x.MediaServerToken != null).ToList();
-            foreach (var user in plexUsersWithTokens)
-            {
-                var watchlist = await _plexApi.GetWatchlist(user.MediaServerToken, context.CancellationToken);
-                if (watchlist == null || !watchlist.Metadata.Any())
+            //foreach (var user in plexUsersWithTokens)
+            //{
+                var watchlist = await _plexApi.GetWatchlist(token, context?.CancellationToken ?? CancellationToken.None);
+                if (watchlist == null || !(watchlist.MediaContainer?.Metadata?.Any() ?? false))
                 {
-                    continue;
+                    return;
                 }
 
-                var items = watchlist.Metadata;
+                var items = watchlist.MediaContainer.Metadata;
                 foreach (var item in items)
                 {
                     switch (item.type)
@@ -64,18 +64,18 @@ namespace Ombi.Schedule.Jobs.Plex
                             await ProcessShow(item);
                             break;
                         case "movie":
-                            await ProcessMovie(item, null);
+                            await ProcessMovie(token, item, null, context?.CancellationToken ?? CancellationToken.None);
                             break;
                     }
                 }
 
 
-            }
+            //}
         }
 
-        private async Task ProcessMovie(Metadata movie, PlexServers servers)
+        private async Task ProcessMovie(string authToken, Metadata movie, PlexServers servers, CancellationToken cancellationToken)
         {
-            var providerIds = await GetProviderIds(movie, servers);
+            var providerIds = await GetProviderIds(authToken, movie, servers, cancellationToken);
             if (!providerIds.TheMovieDb.HasValue())
             {
                 // We need a MovieDbId to support this;
@@ -84,13 +84,12 @@ namespace Ombi.Schedule.Jobs.Plex
             //_movieRequestEngine.RequestMovie(new() { TheMovieDbId =  });
         }
 
-        private async Task<ProviderId> GetProviderIds(Metadata movie, PlexServers servers)
+        private async Task<ProviderId> GetProviderIds(string authToken, Metadata movie, PlexServers servers, CancellationToken cancellationToken)
         {
             var guids = new List<string>();
             if (!movie.Guid.Any())
             {
-                var metaData = await _plexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
-                    movie.ratingKey);
+                var metaData = await _plexApi.GetWatchlistMetadata(movie.ratingKey, authToken, cancellationToken);
 
                 var meta = metaData.MediaContainer.Metadata.FirstOrDefault();
                 guids.Add(meta.guid);

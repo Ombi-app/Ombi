@@ -67,7 +67,7 @@ namespace Ombi.Api.Plex
         private const string FriendsUri = "https://plex.tv/pms/friends/all";
         private const string GetAccountUri = "https://plex.tv/users/account.json";
         private const string ServerUri = "https://plex.tv/pms/servers.xml";
-        private const string WatchlistUri = "https://metadata.provider.plex.tv/library/sections/watchlist/all";
+        private const string WatchlistUri = "https://metadata.provider.plex.tv/";
 
         /// <summary>
         /// Sign into the Plex API
@@ -290,12 +290,22 @@ namespace Ombi.Api.Plex
             }
         }
 
-        public async Task<PlexWatchlist> GetWatchlist(string plexToken, CancellationToken cancellationToken)
+        public async Task<PlexWatchlistContainer> GetWatchlist(string plexToken, CancellationToken cancellationToken)
         {
-            var request = new Request(string.Empty, WatchlistUri, HttpMethod.Get);
+            var request = new Request("library/sections/watchlist/all", WatchlistUri, HttpMethod.Get);
             await AddHeaders(request, plexToken);
 
-            var result = await Api.Request<PlexWatchlist>(request, cancellationToken);
+            var result = await Api.Request<PlexWatchlistContainer>(request, cancellationToken);
+
+            return result;
+        }
+        
+        public async Task<PlexWatchlistMetadataContainer> GetWatchlistMetadata(string ratingKey, string plexToken, CancellationToken cancellationToken)
+        {
+            var request = new Request($"library/metadata/{ratingKey}", WatchlistUri, HttpMethod.Get);
+            await AddHeaders(request, plexToken);
+
+            var result = await Api.Request<PlexWatchlistMetadataContainer>(request, cancellationToken);
 
             return result;
         }

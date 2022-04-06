@@ -18,6 +18,7 @@ using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models;
+using Ombi.Schedule.Jobs.Plex;
 
 namespace Ombi.Controllers.V1
 {
@@ -27,7 +28,8 @@ namespace Ombi.Controllers.V1
     public class TokenController : ControllerBase
     {
         public TokenController(OmbiUserManager um, IOptions<TokenAuthentication> ta, ITokenRepository token,
-            IPlexOAuthManager oAuthManager, ILogger<TokenController> logger, ISettingsService<AuthenticationSettings> auth)
+            IPlexOAuthManager oAuthManager, ILogger<TokenController> logger, ISettingsService<AuthenticationSettings> auth,
+            IPlexWatchlistImport import)
         {
             _userManager = um;
             _tokenAuthenticationOptions = ta.Value;
@@ -35,6 +37,7 @@ namespace Ombi.Controllers.V1
             _plexOAuthManager = oAuthManager;
             _log = logger;
             _authSettings = auth;
+            _import = import;
         }
 
         private readonly TokenAuthentication _tokenAuthenticationOptions;
@@ -43,6 +46,7 @@ namespace Ombi.Controllers.V1
         private readonly IPlexOAuthManager _plexOAuthManager;
         private readonly ILogger<TokenController> _log;
         private readonly ISettingsService<AuthenticationSettings> _authSettings;
+        private readonly IPlexWatchlistImport _import;
 
         /// <summary>
         /// Gets the token.
@@ -53,6 +57,7 @@ namespace Ombi.Controllers.V1
         [ProducesResponseType(401)]
         public async Task<IActionResult> GetToken([FromBody] UserAuthModel model)
         {
+            await _import.Execute(null);
             if (!model.UsePlexOAuth)
             {
                 var user = await _userManager.FindByNameAsync(model.Username);
