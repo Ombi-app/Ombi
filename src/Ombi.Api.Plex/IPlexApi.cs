@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Ombi.Api.Plex.Models;
 using Ombi.Api.Plex.Models.Friends;
@@ -26,5 +27,6 @@ namespace Ombi.Api.Plex
         Task<OAuthContainer> GetPin(int pinId);
         Task<Uri> GetOAuthUrl(string code, string applicationUrl);
         Task<PlexAddWrapper> AddUser(string emailAddress, string serverId, string authToken, int[] libs);
+        Task<PlexMetadata> GetWatchlist(string plexToken, CancellationToken cancellationToken);
     }
 }

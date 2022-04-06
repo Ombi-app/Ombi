@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Ombi.Api.Plex.Models;
@@ -66,6 +67,7 @@ namespace Ombi.Api.Plex
         private const string FriendsUri = "https://plex.tv/pms/friends/all";
         private const string GetAccountUri = "https://plex.tv/users/account.json";
         private const string ServerUri = "https://plex.tv/pms/servers.xml";
+        private const string WatchlistUri = "https://metadata.provider.plex.tv/library/sections/watchlist/all";
 
         /// <summary>
         /// Sign into the Plex API
@@ -286,6 +288,16 @@ namespace Ombi.Api.Plex
                 var error = Api.DeserializeXml<AddUserError>(result);
                 return new PlexAddWrapper{Error = error};
             }
+        }
+
+        public async Task<PlexMetadata> GetWatchlist(string plexToken, CancellationToken cancellationToken)
+        {
+            var request = new Request(string.Empty, WatchlistUri, HttpMethod.Get);
+            await AddHeaders(request, plexToken);
+
+            var result = await Api.Request<PlexMetadata>(request, cancellationToken);
+
+            return result;
         }
 
 
