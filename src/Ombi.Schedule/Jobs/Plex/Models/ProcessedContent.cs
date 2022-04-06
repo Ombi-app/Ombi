@@ -5,7 +5,7 @@ namespace Ombi.Schedule.Jobs.Plex.Models
 {
     public class ProcessedContent
     {
-        public IEnumerable<int> Content { get; set; }
+        public IEnumerable<string> Content { get; set; }
         public IEnumerable<int> Episodes { get; set; }
 
         public bool HasProcessedContent => Content?.Any() ?? false;

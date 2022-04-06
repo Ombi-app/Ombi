@@ -40,7 +40,7 @@ namespace Ombi.Store.Entities
         /// <summary>
         /// Plex's internal ID for this item
         /// </summary>
-        public int Key { get; set; }
+        public string Key { get; set; }
 
         public int? RequestId { get; set; }
         
@@ -50,9 +50,9 @@ namespace Ombi.Store.Entities
     [Table("PlexSeasonsContent")]
     public class PlexSeasonsContent : Entity
     {
-        public int PlexContentId { get; set; }
+        public string PlexContentId { get; set; }
         public int SeasonNumber { get; set; }
-        public int SeasonKey { get; set; }
-        public int ParentKey { get; set; }
+        public string SeasonKey { get; set; }
+        public string ParentKey { get; set; }
     }
 }

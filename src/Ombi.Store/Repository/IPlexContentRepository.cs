@@ -13,8 +13,8 @@ namespace Ombi.Store.Repository
         Task<bool> ContentExists(string providerId);
         Task<PlexServerContent> Get(string providerId, ProviderType type);
         Task<PlexServerContent> GetByType(string providerId, ProviderType type, MediaType mediaType);
-        Task<PlexServerContent> GetByKey(int key);
-        Task<PlexEpisode> GetEpisodeByKey(int key);
+        Task<PlexServerContent> GetByKey(string key);
+        Task<PlexEpisode> GetEpisodeByKey(string key);
         IEnumerable<PlexServerContent> GetWhereContentByCustom(Expression<Func<PlexServerContent, bool>> predicate);
         Task<PlexServerContent> GetFirstContentByCustom(Expression<Func<PlexServerContent, bool>> predicate);
         Task DeleteEpisode(PlexEpisode content);

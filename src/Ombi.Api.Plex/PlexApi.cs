@@ -147,21 +147,21 @@ namespace Ombi.Api.Plex
         /// <param name="authToken"></param>
         /// <param name="plexFullHost"></param>
         /// <param name="ratingKey"></param>
-        public async Task<PlexMetadata> GetEpisodeMetaData(string authToken, string plexFullHost, int ratingKey)
+        public async Task<PlexMetadata> GetEpisodeMetaData(string authToken, string plexFullHost, string ratingKey)
         {
             var request = new Request($"/library/metadata/{ratingKey}", plexFullHost, HttpMethod.Get);
             await AddHeaders(request, authToken);
             return await Api.Request<PlexMetadata>(request);
         }
 
-        public async Task<PlexMetadata> GetMetadata(string authToken, string plexFullHost, int itemId)
+        public async Task<PlexMetadata> GetMetadata(string authToken, string plexFullHost, string itemId)
         {
             var request = new Request($"library/metadata/{itemId}", plexFullHost, HttpMethod.Get);
             await AddHeaders(request, authToken);
             return await Api.Request<PlexMetadata>(request);
         }
 
-        public async Task<PlexMetadata> GetSeasons(string authToken, string plexFullHost, int ratingKey)
+        public async Task<PlexMetadata> GetSeasons(string authToken, string plexFullHost, string ratingKey)
         {
             var request = new Request($"library/metadata/{ratingKey}/children", plexFullHost, HttpMethod.Get);
             await AddHeaders(request, authToken);
@@ -290,12 +290,12 @@ namespace Ombi.Api.Plex
             }
         }
 
-        public async Task<PlexMetadata> GetWatchlist(string plexToken, CancellationToken cancellationToken)
+        public async Task<PlexWatchlist> GetWatchlist(string plexToken, CancellationToken cancellationToken)
         {
             var request = new Request(string.Empty, WatchlistUri, HttpMethod.Get);
             await AddHeaders(request, plexToken);
 
-            var result = await Api.Request<PlexMetadata>(request, cancellationToken);
+            var result = await Api.Request<PlexWatchlist>(request, cancellationToken);
 
             return result;
         }

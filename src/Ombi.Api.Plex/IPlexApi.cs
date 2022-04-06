@@ -17,9 +17,9 @@ namespace Ombi.Api.Plex
         Task<PlexServer> GetServer(string authToken);
         Task<PlexContainer> GetLibrarySections(string authToken, string plexFullHost);
         Task<PlexContainer> GetLibrary(string authToken, string plexFullHost, string libraryId);
-        Task<PlexMetadata> GetEpisodeMetaData(string authToken, string host, int ratingKey);
-        Task<PlexMetadata> GetMetadata(string authToken, string plexFullHost, int itemId);
-        Task<PlexMetadata> GetSeasons(string authToken, string plexFullHost, int ratingKey);
+        Task<PlexMetadata> GetEpisodeMetaData(string authToken, string host, string ratingKey);
+        Task<PlexMetadata> GetMetadata(string authToken, string plexFullHost, string itemId);
+        Task<PlexMetadata> GetSeasons(string authToken, string plexFullHost, string ratingKey);
         Task<PlexContainer> GetAllEpisodes(string authToken, string host, string section, int start, int retCount);
         Task<PlexFriends> GetUsers(string authToken);
         Task<PlexAccount> GetAccount(string authToken);
@@ -27,6 +27,6 @@ namespace Ombi.Api.Plex
         Task<OAuthContainer> GetPin(int pinId);
         Task<Uri> GetOAuthUrl(string code, string applicationUrl);
         Task<PlexAddWrapper> AddUser(string emailAddress, string serverId, string authToken, int[] libs);
-        Task<PlexMetadata> GetWatchlist(string plexToken, CancellationToken cancellationToken);
+        Task<PlexWatchlist> GetWatchlist(string plexToken, CancellationToken cancellationToken);
     }
 }

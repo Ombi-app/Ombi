@@ -47,7 +47,7 @@ namespace Ombi.Schedule.Tests
                 }
             };
             var contentToAdd = new HashSet<PlexServerContent>();
-            var contentProcessed = new Dictionary<int, int>();
+            var contentProcessed = new Dictionary<int, string>();
             _mocker.Setup<IPlexContentRepository>(x =>
                     x.GetFirstContentByCustom(It.IsAny<Expression<Func<PlexServerContent, bool>>>()))
                 .Returns(Task.FromResult(new PlexServerContent()));
@@ -76,18 +76,18 @@ namespace Ombi.Schedule.Tests
                                 Id = "imdb://tt0322259"
                             }
                         },
-                        ratingKey = 1
+                        ratingKey = "1"
                     },
                 }
             };
             var contentToAdd = new HashSet<PlexServerContent>();
-            var contentProcessed = new Dictionary<int, int>();
+            var contentProcessed = new Dictionary<int, string>();
 
             await _subject.MovieLoop(new PlexServers(), content, contentToAdd, contentProcessed);
 
             var first = contentToAdd.First();
             Assert.That(first.ImdbId, Is.EqualTo("tt0322259"));
-            _mocker.Verify<IPlexApi>(x => x.GetMetadata(It.IsAny<string>(), It.IsAny<string>(),It.IsAny<int>()), Times.Never);
+            _mocker.Verify<IPlexApi>(x => x.GetMetadata(It.IsAny<string>(), It.IsAny<string>(),It.IsAny<string>()), Times.Never);
         }
 
         [Test]
@@ -99,7 +99,7 @@ namespace Ombi.Schedule.Tests
                 {
                     new Metadata
                     {
-                        ratingKey = 11,
+                        ratingKey = "11",
                         title = "test1",
                         year = 2021,
                         type = "movie",
@@ -107,8 +107,8 @@ namespace Ombi.Schedule.Tests
                 }
             };
             var contentToAdd = new HashSet<PlexServerContent>();
-            var contentProcessed = new Dictionary<int, int>();
-            _mocker.Setup<IPlexApi>(x => x.GetMetadata(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
+            var contentProcessed = new Dictionary<int, string>();
+            _mocker.Setup<IPlexApi>(x => x.GetMetadata(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(new PlexMetadata
                 {
                     MediaContainer = new Mediacontainer
@@ -117,7 +117,7 @@ namespace Ombi.Schedule.Tests
                         {
                             new Metadata
                             {
-                                ratingKey = 11,
+                                ratingKey = "11",
                                 title = "test1",
                                 year = 2021,
                                 type = "movie",
@@ -138,7 +138,7 @@ namespace Ombi.Schedule.Tests
             var first = contentToAdd.First();
             Assert.That(first.ImdbId, Is.EqualTo("tt0322259"));
 
-            _mocker.Verify<IPlexApi>(x => x.GetMetadata(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
+            _mocker.Verify<IPlexApi>(x => x.GetMetadata(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
 
         [Test]
@@ -150,7 +150,7 @@ namespace Ombi.Schedule.Tests
                 {
                     new Metadata
                     {
-                        ratingKey = 11,
+                        ratingKey = "11",
                         title = "test1",
                         year = 2021,
                         type = "movie",
@@ -165,7 +165,7 @@ namespace Ombi.Schedule.Tests
                 }
             };
             var contentToAdd = new HashSet<PlexServerContent>();
-            var contentProcessed = new Dictionary<int, int>();
+            var contentProcessed = new Dictionary<int, string>();
             _mocker.Setup<IPlexContentRepository>(x =>
                     x.GetFirstContentByCustom(It.IsAny<Expression<Func<PlexServerContent, bool>>>()))
                 .Returns(Task.FromResult(new PlexServerContent
@@ -188,7 +188,7 @@ namespace Ombi.Schedule.Tests
                 {
                     new Metadata
                     {
-                        ratingKey = 11,
+                        ratingKey = "11",
                         title = "test1",
                         year = 2021,
                         type = "movie",
@@ -203,7 +203,7 @@ namespace Ombi.Schedule.Tests
                 }
             };
             var contentToAdd = new HashSet<PlexServerContent>();
-            var contentProcessed = new Dictionary<int, int>();
+            var contentProcessed = new Dictionary<int, string>();
             _mocker.Setup<IPlexContentRepository>(x =>
                     x.GetFirstContentByCustom(It.IsAny<Expression<Func<PlexServerContent, bool>>>()))
                 .Returns(Task.FromResult(new PlexServerContent
