@@ -1,3 +1,7 @@
+## [4.15.5](https://github.com/Ombi-app/Ombi/compare/v4.15.4...v4.15.5) (2022-04-06)
+
+
+
 ## [4.15.4](https://github.com/Ombi-app/Ombi/compare/v4.15.3...v4.15.4) (2022-03-29)
 
 
@@ -325,15 +329,6 @@
 ### Features
 
 * **details:** :sparkles: Added the notify button back into the details pages for requests ([8b33cdc](https://github.com/Ombi-app/Ombi/commit/8b33cdccef83db8794414b247438214b00860fac))
-
-
-
-## [4.7.11](https://github.com/Ombi-app/Ombi/compare/v4.7.10...v4.7.11) (2021-12-17)
-
-
-### Bug Fixes
-
-* **availability-rules:** :bug: Show the 'Requested' button when a show has all of the episodes marked as requested ([cb7ecf6](https://github.com/Ombi-app/Ombi/commit/cb7ecf684ac3ab204f329a28baecfd4f6cd408f7))
 
 
 
