@@ -398,6 +398,8 @@ namespace Ombi.Core.Engine.V2
 
             mapped.Available = viewMovie.Available;
             mapped.Approved = viewMovie.Approved;
+            mapped.Denied = viewMovie.Denied;
+            mapped.DeniedReason = viewMovie.DeniedReason;
             mapped.RequestId = viewMovie.RequestId;
             mapped.Requested = viewMovie.Requested;
             mapped.PlexUrl = viewMovie.PlexUrl;
