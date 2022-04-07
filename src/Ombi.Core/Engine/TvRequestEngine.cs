@@ -188,7 +188,7 @@ namespace Ombi.Core.Engine
             (await tvBuilder
                 .GetShowInfo(tv.TheMovieDbId, tv.languageCode))
                 .CreateTvList(tv)
-                .CreateChild(tv, canRequestOnBehalf ? tv.RequestOnBehalf : user.Id);
+                .CreateChild(tv, canRequestOnBehalf ? tv.RequestOnBehalf : user.Id, tv.Source);
 
             await tvBuilder.BuildEpisodes(tv);
 

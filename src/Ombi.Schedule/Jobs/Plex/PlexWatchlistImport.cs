@@ -4,6 +4,7 @@ using Ombi.Api.Plex.Models;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
+using Ombi.Core.Models.Requests;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
@@ -23,16 +24,18 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly ISettingsService<PlexSettings> _settings;
         private readonly OmbiUserManager _ombiUserManager;
         private readonly IMovieRequestEngine _movieRequestEngine;
+        private readonly ITvRequestEngine _tvRequestEngine;
         private readonly ILogger _logger;
 
         public PlexWatchlistImport(IPlexApi plexApi, ISettingsService<PlexSettings> settings, OmbiUserManager ombiUserManager,
-            IMovieRequestEngine movieRequestEngine,
+            IMovieRequestEngine movieRequestEngine, ITvRequestEngine tvRequestEngine,
             ILogger<PlexWatchlistImport> logger)
         {
             _plexApi = plexApi;
             _settings = settings;
             _ombiUserManager = ombiUserManager;
             _movieRequestEngine = movieRequestEngine;
+            _tvRequestEngine = tvRequestEngine;
             _logger = logger;
         }
 
@@ -56,29 +59,48 @@ namespace Ombi.Schedule.Jobs.Plex
                 var items = watchlist.MediaContainer.Metadata;
                 foreach (var item in items)
                 {
+                    var providerIds = await GetProviderIds(user.MediaServerToken, item, context?.CancellationToken ?? CancellationToken.None);
+                    if (!providerIds.TheMovieDb.HasValue())
+                    {
+                        // We need a MovieDbId to support this;
+                        return;
+                    }
                     switch (item.type)
                     {
                         case "show":
-                            await ProcessShow(item);
+                            await ProcessShow(int.Parse(providerIds.TheMovieDb), user, context?.CancellationToken ?? CancellationToken.None);
                             break;
                         case "movie":
-                            await ProcessMovie(user.MediaServerToken, item, user, context?.CancellationToken ?? CancellationToken.None);
+                            await ProcessMovie(int.Parse(providerIds.TheMovieDb), user, context?.CancellationToken ?? CancellationToken.None);
                             break;
                     }
                 }
             }
         }
 
-        private async Task ProcessMovie(string authToken, Metadata movie, OmbiUser user, CancellationToken cancellationToken)
+        private async Task ProcessMovie(int theMovieDbId, OmbiUser user, CancellationToken cancellationToken)
         {
-            var providerIds = await GetProviderIds(authToken, movie, cancellationToken);
-            if (!providerIds.TheMovieDb.HasValue())
-            {
-                // We need a MovieDbId to support this;
-                return;
-            }
             _movieRequestEngine.SetUser(user);
-            var response = await _movieRequestEngine.RequestMovie(new() { TheMovieDbId = int.Parse(providerIds.TheMovieDb), Source = RequestSource.PlexWatchlist});
+            var response = await _movieRequestEngine.RequestMovie(new() { TheMovieDbId = theMovieDbId, Source = RequestSource.PlexWatchlist});
+            if (response.IsError)
+            {
+                if (response.ErrorCode == ErrorCode.AlreadyRequested)
+                {
+                    return;
+                }
+                _logger.LogInformation($"Error adding title from PlexWatchlist for user '{user.UserName}'. Message: '{response.ErrorMessage}'");
+            }
+            else
+            {
+                _logger.LogInformation($"Added title from PlexWatchlist for user '{user.UserName}'. {response.Message}");
+            }
+        }
+
+
+        private async Task ProcessShow(int theMovieDbId, OmbiUser user, CancellationToken cancellationToken)
+        {
+            _tvRequestEngine.SetUser(user);
+            var response = await _tvRequestEngine.RequestTvShow(new TvRequestViewModelV2 { RequestAll = true, TheMovieDbId = theMovieDbId, Source = RequestSource.PlexWatchlist });
             if (response.IsError)
             {
                 if (response.ErrorCode == ErrorCode.AlreadyRequested)
@@ -120,11 +142,6 @@ namespace Ombi.Schedule.Jobs.Plex
             }
             var providerIds = PlexHelper.GetProviderIdsFromMetadata(guids.ToArray());
             return providerIds;
-        }
-
-        private async Task ProcessShow(Metadata metadata)
-        {
-
         }
 
         public void Dispose() { }

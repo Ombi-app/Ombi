@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { IChildRequests, RequestType } from "../../../../../interfaces";
+import { IChildRequests, RequestSource, RequestType } from "../../../../../interfaces";
 
 import { DenyDialogComponent } from "../../../shared/deny-dialog/deny-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
@@ -16,6 +16,8 @@ export class TvRequestsPanelComponent {
     @Input() public tvRequest: IChildRequests[];
     @Input() public isAdmin: boolean;
     @Input() public manageOwnRequests: boolean;
+
+    public RequestSource = RequestSource;
 
     public displayedColumns: string[] = ['number', 'title', 'airDate', 'status'];
 

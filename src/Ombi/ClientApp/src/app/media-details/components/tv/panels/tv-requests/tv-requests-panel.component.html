@@ -9,6 +9,7 @@
             user: request.requestedUser.userAlias,
             date: request.requestedDate | amLocal | amUserLocale | amDateFormat: 'LL' } }}
         <span *ngIf="request.denied"> - {{request.deniedReason}}</span>
+        <span *ngIf="request.source !== RequestSource.Ombi">{{'MediaDetails.RequestSource' | translate }} {{RequestSource[request.source]}}</span>
       </mat-panel-description>
     </mat-expansion-panel-header>
 
