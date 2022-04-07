@@ -56,6 +56,7 @@ namespace Ombi.Core.Models.Search
         public bool FullyAvailable { get; set; }
         // We only have some episodes
         public bool PartlyAvailable { get; set; }
+        public bool FullyDenied { get; set; }
         public override RequestType Type => RequestType.TvShow;
 
         public string BackdropPath { get; set; }

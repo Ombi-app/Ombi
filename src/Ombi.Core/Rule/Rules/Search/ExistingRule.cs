@@ -62,6 +62,7 @@ namespace Ombi.Core.Rule.Rules.Search
                     request.Requested = true;
                     request.Approved = tvRequests.ChildRequests.Any(x => x.Approved);
                     request.Denied = tvRequests.ChildRequests.Any(x => x.Denied ?? false);
+                    request.DeniedReason = tvRequests.ChildRequests.FirstOrDefault(x => x.Denied == true).DeniedReason;
 
                     // Let's modify the seasonsrequested to reflect what we have requested...
                     foreach (var season in request.SeasonRequests)
@@ -98,6 +99,11 @@ namespace Ombi.Core.Rule.Rules.Search
                 if (request.SeasonRequests.Any() && request.SeasonRequests.All(x => x.Episodes.Any(e => e.Available && e.AirDate > DateTime.MinValue  && e.AirDate <= DateTime.UtcNow)))
                 {
                     request.PartlyAvailable = true;
+                }
+
+                if (request.SeasonRequests.Any() && request.SeasonRequests.All(x => x.Episodes.All(e => e.Denied ?? false)))
+                {
+                    request.FullyDenied = true;
                 }
 
                 var hasUnairedRequests = request.SeasonRequests.Any() && request.SeasonRequests.All(x => x.Episodes.Any(e => e.AirDate >= DateTime.UtcNow));
