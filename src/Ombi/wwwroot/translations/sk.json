@@ -379,7 +379,8 @@
             "Country": "Krajina:",
             "StartDate": "Dátum začatia:",
             "EndDate": "Dátum ukončenia:"
-        }
+        },
+        "RequestSource": "Source:"
     },
     "Discovery": {
         "PopularTab": "Populárne",
