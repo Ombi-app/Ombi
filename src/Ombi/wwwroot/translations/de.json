@@ -228,7 +228,7 @@
             "NoPermissionsOnBehalf": "Sie haben nicht die richtigen Berechtigungen, um im Namen von Benutzern anzufragen!",
             "NoPermissions": "Sie haben nicht die nötigen Rechte!",
             "RequestDoesNotExist": "Die Anfrage existiert nicht",
-            "ChildRequestDoesNotExist": "Child Request does not exist",
+            "ChildRequestDoesNotExist": "Untergeordnete Anfrage existiert nicht",
             "NoPermissionsRequestMovie": "Sie haben keine Berechtigung, um einen Film anzufordern",
             "NoPermissionsRequestTV": "Sie haben keine Berechtigung, um eine TV-Sendung anzufordern",
             "NoPermissionsRequestAlbum": "Sie haben keine Berechtigung, um ein Album anzufordern",
@@ -380,7 +380,7 @@
             "StartDate": "Startdatum:",
             "EndDate": "Enddatum:"
         },
-        "RequestSource": "Source:"
+        "RequestSource": "Quelle:"
     },
     "Discovery": {
         "PopularTab": "Beliebt",
