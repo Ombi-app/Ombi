@@ -143,7 +143,8 @@ namespace Ombi.Core.Engine
                     RootPathOverride = model.RootFolderOverride.GetValueOrDefault(),
                     QualityOverride = model.QualityPathOverride.GetValueOrDefault(),
                     RequestedDate4k = model.Is4kRequest ? DateTime.Now : DateTime.MinValue,
-                    Is4kRequest = model.Is4kRequest
+                    Is4kRequest = model.Is4kRequest,
+                    Source = model.Source
                 };
             }
 

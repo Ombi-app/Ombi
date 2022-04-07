@@ -18,7 +18,7 @@ namespace Ombi.Core.Helpers
         {
             _principle = principle;
             _userManager = userManager;
-            Identity = _principle?.Identity;
+            Identity = _principle?.Identity ?? null;
         }
 
         public void SetUser(OmbiUser user)
@@ -26,7 +26,7 @@ namespace Ombi.Core.Helpers
             _user = user;
         }
 
-        public string Username => Identity.Name;
+        public string Username => Identity?.Name ?? _user?.UserName;
         public async Task<OmbiUser> GetUser()
         {
             if (!Username.HasValue() && _user == null)
