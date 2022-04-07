@@ -380,7 +380,7 @@
             "StartDate": "Startdato:",
             "EndDate": "Slutdato:"
         },
-        "RequestSource": "Source:"
+        "RequestSource": "Kilde:"
     },
     "Discovery": {
         "PopularTab": "Populære",
