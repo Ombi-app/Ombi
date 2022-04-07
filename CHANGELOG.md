@@ -1,3 +1,7 @@
+# [4.16.0](https://github.com/Ombi-app/Ombi/compare/v4.15.6...v4.16.0) (2022-04-07)
+
+
+
 ## [4.15.6](https://github.com/Ombi-app/Ombi/compare/v4.15.5...v4.15.6) (2022-04-07)
 
 
@@ -320,10 +324,6 @@
 ### Features
 
 * **customization:** :sparkles: Added possibility for custom favicons ([40af659](https://github.com/Ombi-app/Ombi/commit/40af6593b668d4712327c18f92f5b7b5a0a65e26))
-
-
-
-## [4.8.1](https://github.com/Ombi-app/Ombi/compare/v4.8.0...v4.8.1) (2022-01-04)
 
 
 
