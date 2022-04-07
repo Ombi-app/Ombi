@@ -1,3 +1,12 @@
+## [4.15.6](https://github.com/Ombi-app/Ombi/compare/v4.15.5...v4.15.6) (2022-04-07)
+
+
+### Bug Fixes
+
+* **radarr:** Fixed an issue where we couldn't sync radarr content [#4577](https://github.com/Ombi-app/Ombi/issues/4577) ([a5355a3](https://github.com/Ombi-app/Ombi/commit/a5355a3023e6900c4dd1b0da4722d7596c03907f))
+
+
+
 ## [4.15.5](https://github.com/Ombi-app/Ombi/compare/v4.15.4...v4.15.5) (2022-04-06)
 
 
@@ -315,20 +324,6 @@
 
 
 ## [4.8.1](https://github.com/Ombi-app/Ombi/compare/v4.8.0...v4.8.1) (2022-01-04)
-
-
-
-# [4.8.0](https://github.com/Ombi-app/Ombi/compare/v4.7.11...v4.8.0) (2021-12-22)
-
-
-### Bug Fixes
-
-* **auto-delete:** :bug: We now also auto delete music requests, this was previously missing ([9fe1f8e](https://github.com/Ombi-app/Ombi/commit/9fe1f8e988aa31d36e7a685ae19f72d9c8414dc0))
-
-
-### Features
-
-* **details:** :sparkles: Added the notify button back into the details pages for requests ([8b33cdc](https://github.com/Ombi-app/Ombi/commit/8b33cdccef83db8794414b247438214b00860fac))
 
 
 
