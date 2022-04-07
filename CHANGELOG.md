@@ -1,3 +1,7 @@
+## [4.16.1](https://github.com/Ombi-app/Ombi/compare/v4.16.0...v4.16.1) (2022-04-07)
+
+
+
 # [4.16.0](https://github.com/Ombi-app/Ombi/compare/v4.15.6...v4.16.0) (2022-04-07)
 
 
@@ -315,15 +319,6 @@
 * **discover:** 🌐 Localize episodes names in TV details ([#4467](https://github.com/Ombi-app/Ombi/issues/4467)) [skip ci] ([35806ea](https://github.com/Ombi-app/Ombi/commit/35806ea2d2c866d628cf08577026a02ab04e49d9))
 * **email-notifications:** :bug: Fixed the issue where legacy requests were showing broken poster images [#4452](https://github.com/Ombi-app/Ombi/issues/4452) ([0ece2fd](https://github.com/Ombi-app/Ombi/commit/0ece2fd6e0eb01e0b7d4d2a01e1a276c7a9c5a51))
 * **emby/jellyfin:** :bug: A more reliable Emby and Jellyfin sync [skip ci] ([ad677fa](https://github.com/Ombi-app/Ombi/commit/ad677fa02eb75633014e9c9791c21ed2d6a23229))
-
-
-
-# [4.9.0](https://github.com/Ombi-app/Ombi/compare/v4.8.1...v4.9.0) (2022-01-05)
-
-
-### Features
-
-* **customization:** :sparkles: Added possibility for custom favicons ([40af659](https://github.com/Ombi-app/Ombi/commit/40af6593b668d4712327c18f92f5b7b5a0a65e26))
 
 
 
