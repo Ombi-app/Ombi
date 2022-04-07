@@ -23,6 +23,8 @@
     homepage: string;
     imdbId: string;
     approved: boolean;
+    denied: boolean;
+    deniedReason: string;
     requested: boolean;
     requestId: number;
     available: boolean;

@@ -98,6 +98,9 @@ export class DiscoverCardComponent implements OnInit {
         if (this.result.approved) {
             return "approved";
         }
+        if (this.result.denied) {
+            return "denied";
+        }
         if (this.result.requested) {
             return "requested";
         }
@@ -113,6 +116,9 @@ export class DiscoverCardComponent implements OnInit {
         }
         if (this.result.approved) {
             return this.translate.instant("Common.Approved");
+        }
+        if (this.result.denied) {
+            return this.translate.instant("Common.Denied");
         }
         if (this.result.requested) {
             return this.translate.instant("Common.Pending");
@@ -180,6 +186,7 @@ export class DiscoverCardComponent implements OnInit {
         this.result.available = updated.available || updated.available4K;
         this.result.requested = updated.requested || updated.has4KRequest;
         this.result.approved = updated.approved || updated.available4K;
+        this.result.denied = updated.denied || updated.denied4K;
         this.result.rating = updated.voteAverage;
         this.result.overview = updated.overview;
         this.result.imdbid = updated.imdbId;

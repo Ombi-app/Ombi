@@ -216,6 +216,10 @@ small {
   background-color: #ff5722;
 }
 
+.top-right.denied span.indicator:before{
+  background-color: #ff5722;
+}
+
 .top-right.partly-available span.indicator:before{
   background-color: #ffd740;
 }
