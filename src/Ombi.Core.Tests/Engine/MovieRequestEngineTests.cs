@@ -4,6 +4,7 @@ using Moq.AutoMock;
 using NUnit.Framework;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine;
+using Ombi.Core.Helpers;
 using Ombi.Core.Models.Requests;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
@@ -35,12 +36,17 @@ namespace Ombi.Core.Tests.Engine
             var identity = new Mock<IIdentity>();
             identity.Setup(x => x.Name).Returns("Test");
             principle.Setup(x => x.Identity).Returns(identity.Object);
+            var currentUser = new Mock<ICurrentUser>();
+            currentUser.Setup(x => x.Identity).Returns(identity.Object);
+            currentUser.Setup(x => x.Username).Returns("Test");
+            currentUser.Setup(x => x.GetUser()).ReturnsAsync(new OmbiUser { NormalizedUserName = "TEST", Id = "a" });
 
             _repoMock = new Mock<IMovieRequestRepository>();
             var requestServiceMock = new Mock<IRequestServiceMain>();
             requestServiceMock.Setup(x => x.MovieRequestService).Returns(_repoMock.Object);
 
             _mocker.Use(principle.Object);
+            _mocker.Use(currentUser.Object);
             _mocker.Use(userManager.Object);
             _mocker.Use(requestServiceMock);
 

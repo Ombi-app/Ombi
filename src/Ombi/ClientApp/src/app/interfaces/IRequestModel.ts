@@ -104,6 +104,13 @@ export interface IBaseRequest {
   canApprove: boolean;
   title: string;
   requestedByAlias: string;
+  source: RequestSource;
+}
+
+export enum RequestSource
+{
+    Ombi = 0,
+    PlexWatchlist = 1
 }
 
 export interface ITvRequests {

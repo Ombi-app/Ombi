@@ -283,6 +283,9 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("MediaServerToken")
+                        .HasColumnType("longtext");
+
                     b.Property<int?>("MovieRequestLimit")
                         .HasColumnType("int");
 
@@ -468,6 +471,9 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<string>("RequestedUserId")
                         .HasColumnType("varchar(255)");
 
+                    b.Property<int>("Source")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .HasColumnType("longtext");
 
@@ -524,6 +530,9 @@ namespace Ombi.Store.Migrations.OmbiMySql
                         .HasColumnType("varchar(255)");
 
                     b.Property<int>("SeriesType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Source")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -726,6 +735,9 @@ namespace Ombi.Store.Migrations.OmbiMySql
                         .HasColumnType("varchar(255)");
 
                     b.Property<int>("RootPathOverride")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Source")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")

@@ -54,6 +54,11 @@
         {{request.requestedDate | amUserLocale | amDateFormat: 'LL'}}
     </div>
 
+    <div *ngIf="request && request.source !== RequestSource.Ombi">
+        <span class="label">{{'MediaDetails.RequestSource' | translate }}</span>
+        {{RequestSource[request.source]}}
+    </div>
+
     <div *ngIf="request && request.denied">
         <span class="label">{{'MediaDetails.DeniedReason' | translate }}</span>
         <span id="deniedReasonInfo">{{request.deniedReason}}</span>

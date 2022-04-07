@@ -70,6 +70,7 @@ using Ombi.Api.RottenTomatoes;
 using System.Net.Http;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Services;
+using Ombi.Core.Helpers;
 
 namespace Ombi.DependencyInjection
 {
@@ -124,6 +125,8 @@ namespace Ombi.DependencyInjection
             var runtimeVersion = AssemblyHelper.GetRuntimeVersion();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IPrincipal>(sp => sp.GetService<IHttpContextAccessor>().HttpContext.User);
+            // HttpContext User is null for background jobs
+            services.AddScoped<ICurrentUser, CurrentUser>(sp => new CurrentUser(sp.GetService<IHttpContextAccessor>()?.HttpContext?.User ?? null, sp.GetService<OmbiUserManager>()));
             services.AddHttpClient("OmbiClient", client =>
             {
                 client.DefaultRequestHeaders.Add("User-Agent", $"Ombi/{runtimeVersion} (https://ombi.io/)");
@@ -233,6 +236,7 @@ namespace Ombi.DependencyInjection
             services.AddSingleton<IJobFactory, IoCJobFactory>();
 
             services.AddTransient<IPlexContentSync, PlexContentSync>();
+            services.AddTransient<IPlexWatchlistImport, PlexWatchlistImport>();
             services.AddTransient<IEmbyContentSync, EmbyContentSync>();
             services.AddTransient<IEmbyEpisodeSync, EmbyEpisodeSync>();
             services.AddTransient<IEmbyAvaliabilityChecker, EmbyAvaliabilityChecker>();

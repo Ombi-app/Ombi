@@ -92,6 +92,17 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
+        /// Runs the Plex Watchlist Importer
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("plexwatchlist")]
+        public async Task<bool> PlexWatchlistImport()
+        {
+            await OmbiQuartz.TriggerJob(nameof(IPlexWatchlistImport), "Plex");
+            return true;
+        }
+
+        /// <summary>
         /// Runs the Emby User importer
         /// </summary>
         /// <returns></returns>

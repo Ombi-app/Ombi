@@ -1,42 +1,35 @@
 ﻿using System;
 using Ombi.Core.Rule;
 using System.Collections.Generic;
-using System.Security.Principal;
 using System.Threading.Tasks;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Entities;
-using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Authentication;
-using Ombi.Helpers;
+using Ombi.Core.Helpers;
 
 namespace Ombi.Core.Engine.Interfaces
 {
     public abstract class BaseEngine
     {
-        protected BaseEngine(IPrincipal user, OmbiUserManager um, IRuleEvaluator rules)
+        protected BaseEngine(ICurrentUser user, OmbiUserManager um, IRuleEvaluator rules)
         {
-            UserPrinciple = user;
+            CurrentUser = user;
             Rules = rules;
             UserManager = um;
         }
 
-        protected IPrincipal UserPrinciple { get; }
+        protected ICurrentUser CurrentUser { get; }
         protected IRuleEvaluator Rules { get; }
-        protected OmbiUserManager UserManager { get;  }
-        protected string Username => UserPrinciple.Identity.Name;
+        protected OmbiUserManager UserManager { get; }
+        protected string Username => CurrentUser.Username;
+        protected Task<OmbiUser> GetUser() => CurrentUser.GetUser();
 
-        private OmbiUser _user;
-        protected async Task<OmbiUser> GetUser()
-        {
-            if(!Username.HasValue())
-            {
-                return null;
-            }
-            var username = Username.ToUpper();
-            return _user ??= await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
-        }
+        /// <summary>
+        /// Only used for background tasks
+        /// </summary>
+        public void SetUser(OmbiUser user) => CurrentUser.SetUser(user);
 
         protected async Task<string> UserAlias()
         {
@@ -52,7 +45,7 @@ namespace Ombi.Core.Engine.Interfaces
             var user = await GetUser();
             return await UserManager.IsInRoleAsync(user, roleName);
         }
-        
+
         public async Task<IEnumerable<RuleResult>> RunRequestRules(BaseRequest model)
         {
             var ruleResults = await Rules.StartRequestRules(model);

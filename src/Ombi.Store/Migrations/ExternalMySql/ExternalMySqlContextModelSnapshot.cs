@@ -276,14 +276,14 @@ namespace Ombi.Store.Migrations.ExternalMySql
                     b.Property<int>("EpisodeNumber")
                         .HasColumnType("int");
 
-                    b.Property<int>("GrandparentKey")
-                        .HasColumnType("int");
+                    b.Property<string>("GrandparentKey")
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<int>("Key")
-                        .HasColumnType("int");
+                    b.Property<string>("Key")
+                        .HasColumnType("longtext");
 
-                    b.Property<int>("ParentKey")
-                        .HasColumnType("int");
+                    b.Property<string>("ParentKey")
+                        .HasColumnType("longtext");
 
                     b.Property<int>("SeasonNumber")
                         .HasColumnType("int");
@@ -304,17 +304,17 @@ namespace Ombi.Store.Migrations.ExternalMySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("ParentKey")
-                        .HasColumnType("int");
+                    b.Property<string>("ParentKey")
+                        .HasColumnType("longtext");
 
-                    b.Property<int>("PlexContentId")
-                        .HasColumnType("int");
+                    b.Property<string>("PlexContentId")
+                        .HasColumnType("longtext");
 
                     b.Property<int?>("PlexServerContentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SeasonKey")
-                        .HasColumnType("int");
+                    b.Property<string>("SeasonKey")
+                        .HasColumnType("longtext");
 
                     b.Property<int>("SeasonNumber")
                         .HasColumnType("int");
@@ -341,8 +341,9 @@ namespace Ombi.Store.Migrations.ExternalMySql
                     b.Property<string>("ImdbId")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("Key")
-                        .HasColumnType("int");
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Quality")
                         .HasColumnType("longtext");
@@ -498,9 +499,7 @@ namespace Ombi.Store.Migrations.ExternalMySql
                     b.HasOne("Ombi.Store.Entities.PlexServerContent", "Series")
                         .WithMany("Episodes")
                         .HasForeignKey("GrandparentKey")
-                        .HasPrincipalKey("Key")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasPrincipalKey("Key");
 
                     b.Navigation("Series");
                 });

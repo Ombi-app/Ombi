@@ -11,6 +11,7 @@ using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Config;
 using Ombi.Core.Authentication;
+using Ombi.Core.Helpers;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
@@ -24,7 +25,7 @@ namespace Ombi.Core.Engine.Demo
 {
     public class DemoMovieSearchEngine : MovieSearchEngine, IDemoMovieSearchEngine
     {
-        public DemoMovieSearchEngine(IPrincipal identity, IRequestServiceMain service, IMovieDbApi movApi, IMapper mapper, 
+        public DemoMovieSearchEngine(ICurrentUser identity, IRequestServiceMain service, IMovieDbApi movApi, IMapper mapper, 
             ILogger<MovieSearchEngine> logger, IRuleEvaluator r, OmbiUserManager um, ICacheService mem, ISettingsService<OmbiSettings> s, 
             IRepository<RequestSubscription> sub, IOptions<DemoLists> lists)
             : base(identity, service, movApi, mapper, logger, r, um, mem, s, sub)

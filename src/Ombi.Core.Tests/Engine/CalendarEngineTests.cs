@@ -10,6 +10,7 @@ using Ombi.Core.Authentication;
 using Ombi.Core.Engine.V2;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository.Requests;
+using Ombi.Core.Helpers;
 
 namespace Ombi.Core.Tests.Engine
 {
@@ -25,7 +26,7 @@ namespace Ombi.Core.Tests.Engine
         {
             MovieRepo = new Mock<IMovieRequestRepository>();
             TvRepo = new Mock<ITvRequestRepository>();
-            var principle = new Mock<IPrincipal>();
+            var principle = new Mock<ICurrentUser>();
             var identity = new Mock<IIdentity>();
             identity.Setup(x => x.Name).Returns("UnitTest");
             principle.Setup(x => x.Identity).Returns(identity.Object);

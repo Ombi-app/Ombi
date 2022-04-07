@@ -23,6 +23,7 @@ using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using System.Threading;
 using TraktSharp.Entities;
+using Ombi.Core.Helpers;
 
 namespace Ombi.Core.Engine
 {
@@ -32,7 +33,7 @@ namespace Ombi.Core.Engine
         private readonly IImageService _imageService;
         private readonly IMovieDbApi _theMovieDbApi;
 
-        public TvSearchEngine(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper,
+        public TvSearchEngine(ICurrentUser identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper,
             ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um, ISettingsService<CustomizationSettings> customizationSettings,
             ICacheService memCache, ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub, IImageService imageService,
             IMovieDbApi theMovieDbApi)

@@ -19,5 +19,6 @@
         public string RetryRequests { get; set; }
         public string MediaDatabaseRefresh { get; set; }
         public string AutoDeleteRequests { get; set; }
+        public string PlexWatchlistImport { get; set; }
     }
 }

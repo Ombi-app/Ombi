@@ -4,7 +4,7 @@ namespace Ombi.Api.Plex.Models
 {
     public class Metadata
     {
-        public int ratingKey { get; set; }
+        public string ratingKey { get; set; }
         public string key { get; set; }
         public string studio { get; set; }
         public string type { get; set; }
@@ -22,8 +22,8 @@ namespace Ombi.Api.Plex.Models
         public int childCount { get; set; }
         public Genre[] Genre { get; set; }
         public string primaryExtraKey { get; set; }
-        public int parentRatingKey { get; set; }
-        public int grandparentRatingKey { get; set; }
+        public string parentRatingKey { get; set; }
+        public string grandparentRatingKey { get; set; }
         public string guid { get; set; }
         public int librarySectionID { get; set; }
         public string librarySectionKey { get; set; }

@@ -92,7 +92,7 @@ namespace Ombi.Store.Repository
             return null;
         }
 
-        public async Task<PlexServerContent> GetByKey(int key)
+        public async Task<PlexServerContent> GetByKey(string key)
         {
             return await Db.PlexServerContent.Include(x => x.Seasons).FirstOrDefaultAsync(x => x.Key == key);
         }
@@ -154,7 +154,7 @@ namespace Ombi.Store.Repository
             await InternalSaveChanges();
         }
 
-        public async Task<PlexEpisode> GetEpisodeByKey(int key)
+        public async Task<PlexEpisode> GetEpisodeByKey(string key)
         {
             return await Db.PlexEpisode.FirstOrDefaultAsync(x => x.Key == key);
         }

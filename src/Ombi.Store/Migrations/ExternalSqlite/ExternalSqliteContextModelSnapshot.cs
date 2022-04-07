@@ -274,14 +274,14 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                     b.Property<int>("EpisodeNumber")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("GrandparentKey")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("GrandparentKey")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("Key")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Key")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("ParentKey")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("ParentKey")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("SeasonNumber")
                         .HasColumnType("INTEGER");
@@ -302,17 +302,17 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ParentKey")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("ParentKey")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("PlexContentId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("PlexContentId")
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("PlexServerContentId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("SeasonKey")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("SeasonKey")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("SeasonNumber")
                         .HasColumnType("INTEGER");
@@ -339,8 +339,9 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                     b.Property<string>("ImdbId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Key")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Quality")
                         .HasColumnType("TEXT");
@@ -496,9 +497,7 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                     b.HasOne("Ombi.Store.Entities.PlexServerContent", "Series")
                         .WithMany("Episodes")
                         .HasForeignKey("GrandparentKey")
-                        .HasPrincipalKey("Key")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasPrincipalKey("Key");
 
                     b.Navigation("Series");
                 });

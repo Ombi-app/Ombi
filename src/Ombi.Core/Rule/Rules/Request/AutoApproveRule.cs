@@ -3,6 +3,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Authentication;
+using Ombi.Core.Helpers;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Services;
@@ -15,20 +16,21 @@ namespace Ombi.Core.Rule.Rules.Request
 {
     public class AutoApproveRule : BaseRequestRule, IRules<BaseRequest>
     {
-        public AutoApproveRule(IPrincipal principal, OmbiUserManager um, IFeatureService featureService)
+        public AutoApproveRule(ICurrentUser principal, OmbiUserManager um, IFeatureService featureService)
         {
             User = principal;
             _manager = um;
             _featureService = featureService;
         }
 
-        private IPrincipal User { get; }
+        private ICurrentUser User { get; }
         private readonly OmbiUserManager _manager;
         private readonly IFeatureService _featureService;
 
         public async Task<RuleResult> Execute(BaseRequest obj)
         {
-            var username = User.Identity.Name.ToUpper();
+            var currentUser = await User.GetUser();
+            var username = currentUser.UserName.ToUpper();
             var user = await _manager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
             if (await _manager.IsInRoleAsync(user, OmbiRoles.Admin) || user.IsSystemUser)
             {

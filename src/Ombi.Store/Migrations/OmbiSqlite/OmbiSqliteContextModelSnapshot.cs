@@ -281,6 +281,9 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("MediaServerToken")
+                        .HasColumnType("TEXT");
+
                     b.Property<int?>("MovieRequestLimit")
                         .HasColumnType("INTEGER");
 
@@ -466,6 +469,9 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.Property<string>("RequestedUserId")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Source")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
@@ -522,6 +528,9 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                         .HasColumnType("TEXT");
 
                     b.Property<int>("SeriesType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Source")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
@@ -724,6 +733,9 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                         .HasColumnType("TEXT");
 
                     b.Property<int>("RootPathOverride")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Source")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Status")

@@ -6,14 +6,12 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Ombi.Core.Authentication;
 using Ombi.Helpers;
 using Ombi.Models;
 using Ombi.Models.External;
-using Ombi.Models.Identity;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Core.Settings;
@@ -26,18 +24,16 @@ namespace Ombi.Controllers.V1
     [ApiController]
     public class TokenController : ControllerBase
     {
-        public TokenController(OmbiUserManager um, IOptions<TokenAuthentication> ta, ITokenRepository token,
+        public TokenController(OmbiUserManager um, ITokenRepository token,
             IPlexOAuthManager oAuthManager, ILogger<TokenController> logger, ISettingsService<AuthenticationSettings> auth)
         {
             _userManager = um;
-            _tokenAuthenticationOptions = ta.Value;
             _token = token;
             _plexOAuthManager = oAuthManager;
             _log = logger;
             _authSettings = auth;
         }
 
-        private readonly TokenAuthentication _tokenAuthenticationOptions;
         private readonly ITokenRepository _token;
         private readonly OmbiUserManager _userManager;
         private readonly IPlexOAuthManager _plexOAuthManager;
@@ -117,6 +113,7 @@ namespace Ombi.Controllers.V1
             {
                 return Unauthorized();
             }
+            
             return await CreateToken(true, user);
         }
 

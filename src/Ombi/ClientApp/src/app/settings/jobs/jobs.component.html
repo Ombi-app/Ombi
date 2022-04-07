@@ -77,6 +77,13 @@
                         <small *ngIf="form.get('plexRecentlyAddedSync').hasError('required')" class="error-text">The Plex Sync is required</small></mat-form-field>
                         <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('plexRecentlyAddedSync')?.value)">Test</button>
                 </div>
+                <div class="form-group cronBox">
+                    <mat-form-field appearance="outline" floatLabel=always>
+                        <mat-label for="plexWatchlistImport" class="control-mat-label">Plex Watchlist Import</mat-label>              
+                        <input type="text" matInput [ngClass]="{'form-error': form.get('plexWatchlistImport').hasError('required')}" id="plexWatchlistImport" name="plexWatchlistImport" formControlName="plexWatchlistImport">
+                        <small *ngIf="form.get('plexWatchlistImport').hasError('required')" class="error-text">The Plex Watchlist Import is required</small></mat-form-field>
+                        <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('plexWatchlistImport')?.value)">Test</button>
+                </div>
 
                 <div class="form-group cronBox">
                     <mat-form-field appearance="outline" floatLabel=always>

@@ -4,6 +4,7 @@ using Ombi.Api.Trakt;
 using Ombi.Api.TvMaze;
 using Ombi.Config;
 using Ombi.Core.Authentication;
+using Ombi.Core.Helpers;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
@@ -24,7 +25,7 @@ namespace Ombi.Core.Engine.Demo
     public class DemoTvSearchEngine : TvSearchEngine, IDemoTvSearchEngine
     {
 
-        public DemoTvSearchEngine(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper,
+        public DemoTvSearchEngine(ICurrentUser identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper,
              ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um, ICacheService memCache,
             ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub, IOptions<DemoLists> lists, IImageService imageService,
             ISettingsService<CustomizationSettings> custom)

@@ -167,7 +167,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private async Task<ProcessedContent> ProcessServer(PlexServers servers, bool recentlyAddedSearch)
         {
             var retVal = new ProcessedContent();
-            var contentProcessed = new Dictionary<int, int>();
+            var contentProcessed = new Dictionary<int, string>();
             var episodesProcessed = new List<int>();
             Logger.LogDebug("Getting all content from server {0}", servers.Name);
             var allContent = await GetAllContent(servers, recentlyAddedSearch);
@@ -290,7 +290,7 @@ namespace Ombi.Schedule.Jobs.Plex
         }
 
         public async Task MovieLoop(PlexServers servers, Mediacontainer content, HashSet<PlexServerContent> contentToAdd,
-            Dictionary<int, int> contentProcessed)
+            Dictionary<int, string> contentProcessed)
         {
             Logger.LogDebug("Processing Movies");
             foreach (var movie in content?.Metadata ?? Array.Empty<Metadata>())
@@ -437,7 +437,7 @@ namespace Ombi.Schedule.Jobs.Plex
             }
         }
 
-        private async Task ProcessTvShow(PlexServers servers, Metadata show, HashSet<PlexServerContent> contentToAdd, Dictionary<int, int> contentProcessed)
+        private async Task ProcessTvShow(PlexServers servers, Metadata show, HashSet<PlexServerContent> contentToAdd, Dictionary<int, string> contentProcessed)
         {
             var seasonList = await PlexApi.GetSeasons(servers.PlexAuthToken, servers.FullUri,
                 show.ratingKey);

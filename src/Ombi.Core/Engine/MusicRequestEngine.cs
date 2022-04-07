@@ -24,12 +24,13 @@ using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using System.ComponentModel;
+using Ombi.Core.Helpers;
 
 namespace Ombi.Core.Engine
 {
     public class MusicRequestEngine : BaseMediaEngine, IMusicRequestEngine
     {
-        public MusicRequestEngine(IRequestServiceMain requestService, IPrincipal user,
+        public MusicRequestEngine(IRequestServiceMain requestService, ICurrentUser user,
             INotificationHelper helper, IRuleEvaluator r, ILogger<MusicRequestEngine> log,
             OmbiUserManager manager, IRepository<RequestLog> rl, ICacheService cache,
             ISettingsService<OmbiSettings> ombiSettings, IRepository<RequestSubscription> sub, ILidarrApi lidarr,

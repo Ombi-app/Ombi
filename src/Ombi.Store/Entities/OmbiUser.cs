@@ -36,6 +36,7 @@ namespace Ombi.Store.Entities
         public RequestLimitType? MusicRequestLimitType { get; set; }
 
         public string UserAccessToken { get; set; }
+        public string MediaServerToken { get; set; }
 
         public List<NotificationUserId> NotificationUserIds { get; set; }
         public List<UserNotificationPreferences> UserNotificationPreferences { get; set; }
