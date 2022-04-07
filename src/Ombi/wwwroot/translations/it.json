@@ -379,7 +379,8 @@
             "Country": "Paese:",
             "StartDate": "Data Iniziale:",
             "EndDate": "Data Finale:"
-        }
+        },
+        "RequestSource": "Source:"
     },
     "Discovery": {
         "PopularTab": "Popolare",
