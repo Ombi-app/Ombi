@@ -379,7 +379,8 @@
             "Country": "Ország:",
             "StartDate": "Kezdés dátuma:",
             "EndDate": "Befejezés dátuma:"
-        }
+        },
+        "RequestSource": "Source:"
     },
     "Discovery": {
         "PopularTab": "Népszerű",
