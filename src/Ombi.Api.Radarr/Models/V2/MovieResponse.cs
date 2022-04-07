@@ -77,13 +77,10 @@ namespace Ombi.Api.Radarr.Models
     public class Mediainfo
     {
         public string audioAdditionalFeatures { get; set; }
-        public int audioBitrate { get; set; }
         public float audioChannels { get; set; }
         public string audioCodec { get; set; }
         public string audioLanguages { get; set; }
         public int audioStreamCount { get; set; }
-        public int videoBitDepth { get; set; }
-        public int videoBitrate { get; set; }
         public string videoCodec { get; set; }
         public float videoFps { get; set; }
         public string resolution { get; set; }
