@@ -25,6 +25,9 @@ export interface ISearchTvResultV2 {
     seasonRequests: INewSeasonRequests[];
     requestAll: boolean;
     approved: boolean;
+    denied: boolean;
+    deniedReason: string;
+    fullyDenied: boolean;
     requested: boolean;
     available: boolean;
     plexUrl: string;

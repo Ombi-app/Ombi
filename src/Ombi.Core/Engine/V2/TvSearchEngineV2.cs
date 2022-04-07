@@ -308,6 +308,9 @@ namespace Ombi.Core.Engine.V2
             item.PartlyAvailable = oldModel.PartlyAvailable;
             item.Requested = oldModel.Requested;
             item.Available = oldModel.Available;
+            item.Denied = oldModel.Denied;
+            item.DeniedReason = oldModel.DeniedReason;
+            item.FullyDenied = oldModel.FullyDenied;
             item.Approved = oldModel.Approved;
             item.SeasonRequests = oldModel.SeasonRequests;
             item.RequestId = oldModel.RequestId;
