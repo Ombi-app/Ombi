@@ -433,7 +433,7 @@
         "2": "Plex User",
         "3": "Emby User",
         "4": "Emby Connect User",
-        "5": "Jellyfin User"
+        "5": "Jellyfin Server"
     },
     "Paginator": {
         "itemsPerPageLabel": "Elemente pro Seite:",
