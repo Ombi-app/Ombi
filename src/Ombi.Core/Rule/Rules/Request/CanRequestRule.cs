@@ -10,23 +10,25 @@ using Ombi.Core.Engine;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Helpers;
 using Ombi.Store.Entities.Requests;
+using Ombi.Core.Helpers;
 
 namespace Ombi.Core.Rule.Rules.Request
 {
     public class CanRequestRule : BaseRequestRule, IRules<BaseRequest>
     {
-        public CanRequestRule(IPrincipal principal, OmbiUserManager manager)
+        public CanRequestRule(ICurrentUser principal, OmbiUserManager manager)
         {
             User = principal;
             _manager = manager;
         }
 
-        private IPrincipal User { get; }
+        private ICurrentUser User { get; }
         private readonly OmbiUserManager _manager;
 
         public async Task<RuleResult> Execute(BaseRequest obj)
         {
-            var username = User.Identity.Name.ToUpper();
+            var currentUser = await User.GetUser();
+            var username = currentUser.UserName.ToUpper();
             var user = await _manager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
             if (await _manager.IsInRoleAsync(user, OmbiRoles.Admin) || user.IsSystemUser)
                 return Success();

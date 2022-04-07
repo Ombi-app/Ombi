@@ -25,5 +25,6 @@ namespace Ombi.Core.Engine.Interfaces
         Task UnSubscribeRequest(int requestId, RequestType type);
         Task SubscribeToRequest(int requestId, RequestType type);
         Task<RequestEngineResult> ReProcessRequest(int requestId, bool is4K, CancellationToken cancellationToken);
+        void SetUser(OmbiUser user);
     }
 }

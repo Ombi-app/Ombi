@@ -23,12 +23,13 @@ using Ombi.Store.Repository;
 using Ombi.Core.Models;
 using System.Threading;
 using Ombi.Core.Services;
+using Ombi.Core.Helpers;
 
 namespace Ombi.Core.Engine
 {
     public class MovieRequestEngine : BaseMediaEngine, IMovieRequestEngine
     {
-        public MovieRequestEngine(IMovieDbApi movieApi, IRequestServiceMain requestService, IPrincipal user,
+        public MovieRequestEngine(IMovieDbApi movieApi, IRequestServiceMain requestService, ICurrentUser user,
             INotificationHelper helper, IRuleEvaluator r, IMovieSender sender, ILogger<MovieRequestEngine> log,
             OmbiUserManager manager, IRepository<RequestLog> rl, ICacheService cache,
             ISettingsService<OmbiSettings> ombiSettings, IRepository<RequestSubscription> sub, IMediaCacheService mediaCacheService,

@@ -32,7 +32,7 @@ namespace Ombi.Core.Engine
 {
     public class TvRequestEngine : BaseMediaEngine, ITvRequestEngine
     {
-        public TvRequestEngine(ITvMazeApi tvApi, IMovieDbApi movApi, IRequestServiceMain requestService, IPrincipal user,
+        public TvRequestEngine(ITvMazeApi tvApi, IMovieDbApi movApi, IRequestServiceMain requestService, ICurrentUser user,
             INotificationHelper helper, IRuleEvaluator rule, OmbiUserManager manager, ILogger<TvRequestEngine> logger,
             ITvSender sender, IRepository<RequestLog> rl, ISettingsService<OmbiSettings> settings, ICacheService cache,
             IRepository<RequestSubscription> sub, IMediaCacheService mediaCacheService) : base(user, requestService, rule, manager, cache, settings, sub)

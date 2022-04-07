@@ -25,6 +25,7 @@ using Ombi.Api.TheMovieDb.Models;
 using System.Diagnostics;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.UI;
+using Ombi.Core.Helpers;
 
 namespace Ombi.Core.Engine.V2
 {
@@ -37,7 +38,7 @@ namespace Ombi.Core.Engine.V2
         private readonly ISettingsService<CustomizationSettings> _customization;
         private readonly ITvRequestEngine _requestEngine;
 
-        public TvSearchEngineV2(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper,
+        public TvSearchEngineV2(ICurrentUser identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper,
             ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um, ICacheService memCache, ISettingsService<OmbiSettings> s,
             IRepository<RequestSubscription> sub, IMovieDbApi movieApi, ISettingsService<CustomizationSettings> customization, ITvRequestEngine requestEngine)
             : base(identity, service, r, um, memCache, s, sub)

@@ -626,6 +626,7 @@ namespace Ombi.Controllers.V1
             j.MediaDatabaseRefresh = j.MediaDatabaseRefresh.HasValue() ? j.MediaDatabaseRefresh : JobSettingsHelper.MediaDatabaseRefresh(j);
             j.AutoDeleteRequests = j.AutoDeleteRequests.HasValue() ? j.AutoDeleteRequests : JobSettingsHelper.AutoDeleteRequests(j);
             j.EmbyRecentlyAddedSync = j.EmbyRecentlyAddedSync.HasValue() ? j.EmbyRecentlyAddedSync : JobSettingsHelper.EmbyRecentlyAddedSync(j);
+            j.PlexWatchlistImport = j.PlexWatchlistImport.HasValue() ? j.PlexWatchlistImport : JobSettingsHelper.PlexWatchlistImport(j);
 
             return j;
         }

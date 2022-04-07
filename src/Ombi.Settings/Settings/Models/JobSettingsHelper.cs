@@ -54,6 +54,11 @@ namespace Ombi.Settings.Settings.Models
         {
             return ValidateCron(Get(s.UserImporter, Cron.Daily()));
         }
+        
+        public static string PlexWatchlistImport(JobSettings s)
+        {
+            return ValidateCron(Get(s.PlexWatchlistImport, Cron.Daily()));
+        }
 
         public static string Newsletter(JobSettings s)
         {

@@ -7,6 +7,7 @@ namespace Ombi.Core.Settings.Models.External
     public sealed class PlexSettings : Ombi.Settings.Settings.Models.Settings
     {
         public bool Enable { get; set; }
+        public bool EnableWatchlistImport { get; set; }
         /// <summary>
         /// This is the ClientId for OAuth
         /// </summary>

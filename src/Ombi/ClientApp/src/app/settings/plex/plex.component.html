@@ -10,6 +10,12 @@
                     </mat-slide-toggle>
                 </div>
                 <div class="md-form-field">
+                    <mat-slide-toggle [(ngModel)]="settings.enableWatchlistImport" [checked]="settings.enableWatchlistImport">Enable User Watchlist Requests
+                    </mat-slide-toggle>
+                    <p>When a Plex User adds something to their watchlist in Plex, it will turn up in Ombi as a Request if enabled. This <b>only</b> applies to users that are logging in with their Plex Account</p>
+                    <p>Request limits if set are all still applied etc.</p>
+                </div>
+                <div class="md-form-field">
                     <mat-slide-toggle [(ngModel)]="advanced">Advanced</mat-slide-toggle>
                 </div>
  
@@ -181,6 +187,12 @@
                                 <button mat-raised-button (click)="clearDataAndResync()" type="button" id="clearData"
                                     class="mat-focus-indicator mat-stroked-button mat-button-base">
                                     Clear Data And Resync
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <button mat-raised-button (click)="runWatchlistImport()" type="button" id="watchlistImport"
+                                    class="mat-focus-indicator mat-stroked-button mat-button-base">
+                                    Run Watchlist Import
                                 </button>
                             </div>
                         </div>

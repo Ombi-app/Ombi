@@ -112,6 +112,7 @@ export interface IPublicInfo {
 
 export interface IPlexSettings extends ISettings {
   enable: boolean;
+  enableWatchlistImport: boolean;
   servers: IPlexServer[];
 }
 
@@ -219,6 +220,7 @@ export interface IJobSettings {
   mediaDatabaseRefresh: string;
   autoDeleteRequests: string;
   embyRecentlyAddedSync: string;
+  plexWatchlistImport: string;
 }
 
 export interface IIssueSettings extends ISettings {

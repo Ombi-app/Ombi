@@ -116,16 +116,25 @@ namespace Ombi.Core.Authentication
         public async Task<OmbiUser> GetOmbiUserFromPlexToken(string plexToken)
         {
             var plexAccount = await _plexApi.GetAccount(plexToken);
-
+            
             // Check for a ombi user
-            if (plexAccount?.user != null)
+            if (plexAccount?.user == null)
             {
-                var potentialOmbiUser = await Users.FirstOrDefaultAsync(x =>
-                    x.ProviderUserId == plexAccount.user.id);
-                return potentialOmbiUser;
+                return null;
             }
 
-            return null;
+            var potentialOmbiUser = await Users.FirstOrDefaultAsync(x =>
+                x.ProviderUserId == plexAccount.user.id);
+            // Update ombi user with the token
+
+            if (potentialOmbiUser != null)
+            {
+                potentialOmbiUser.MediaServerToken = plexAccount.user.authentication_token;
+                await UpdateAsync(potentialOmbiUser);
+            }
+
+            return potentialOmbiUser;            
+
         }
         
 
@@ -142,6 +151,10 @@ namespace Ombi.Core.Authentication
             var result = await _plexApi.SignIn(new UserRequest { password = password, login = login });
             if (result.user?.authentication_token != null)
             {
+                // Update ombi user with the token
+                user.MediaServerToken = result.user?.authentication_token;
+                await UpdateAsync(user);
+                
                 return true;
             }
             return false;

@@ -7,6 +7,7 @@ using Moq;
 using NUnit.Framework;
 using Ombi.Api.TheMovieDb;
 using Ombi.Core.Engine;
+using Ombi.Core.Helpers;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Services;
@@ -33,7 +34,7 @@ namespace Ombi.Core.Tests.Engine.V2
             var requestService = new Mock<IRequestServiceMain>();
             _movieRequestRepository = new Mock<IMovieRequestRepository>();
             requestService.Setup(x => x.MovieRequestService).Returns(_movieRequestRepository.Object);
-            var user = new Mock<IPrincipal>();
+            var user = new Mock<ICurrentUser>();
             var notificationHelper = new Mock<INotificationHelper>();
             var rules = new Mock<IRuleEvaluator>();
             var movieSender = new Mock<IMovieSender>();

@@ -11,6 +11,7 @@ using Ombi.Api.Lidarr.Models;
 using Ombi.Api.MusicBrainz;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Interfaces;
+using Ombi.Core.Helpers;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search.V2.Music;
 using Ombi.Core.Rule.Interfaces;
@@ -31,7 +32,7 @@ namespace Ombi.Core.Engine.V2
         private readonly ISettingsService<LidarrSettings> _lidarrSettings;
         private readonly ILidarrApi _lidarrApi;
 
-        public MusicSearchEngineV2(IPrincipal identity, IRequestServiceMain requestService, IRuleEvaluator rules,
+        public MusicSearchEngineV2(ICurrentUser identity, IRequestServiceMain requestService, IRuleEvaluator rules,
             OmbiUserManager um, ICacheService cache, ISettingsService<OmbiSettings> ombiSettings,
             IRepository<RequestSubscription> sub, IMusicBrainzApi musicBrainzApi, ISettingsService<LidarrSettings> lidarrSettings,
             ILidarrApi lidarrApi)

@@ -22,6 +22,8 @@ namespace Ombi.Store.Entities.Requests
         [ForeignKey(nameof(RequestedUserId))]
         public OmbiUser RequestedUser { get; set; }
 
+        public RequestSource Source { get; set; } = RequestSource.Ombi;
+
 
         [NotMapped]
         public virtual bool CanApprove => !Approved && !Available;

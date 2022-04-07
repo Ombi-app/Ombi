@@ -27,6 +27,10 @@ export class JobService extends ServiceHelpers {
         return this.http.post<boolean>(`${this.url}plexUserImporter/`, {headers: this.headers});
     }
 
+    public runPlexWatchlistImport(): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}plexwatchlist/`, {headers: this.headers});
+    }
+
     public runEmbyImporter(): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}embyUserImporter/`, {headers: this.headers});
     }
