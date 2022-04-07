@@ -379,7 +379,8 @@
             "Country": "国家：",
             "StartDate": "开始日期：",
             "EndDate": "结束日期："
-        }
+        },
+        "RequestSource": "Source:"
     },
     "Discovery": {
         "PopularTab": "热门",
