@@ -200,6 +200,9 @@ namespace Ombi.Controllers.V1
                 }
             }
 
+            user.MediaServerToken = account.user.authentication_token;
+            await  _userManager.UpdateAsync(user);
+
             return await CreateToken(true, user);
         }
 
