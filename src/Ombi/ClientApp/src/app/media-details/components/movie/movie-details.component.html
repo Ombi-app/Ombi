@@ -108,11 +108,11 @@
                             </span>
                         </span>
                         
-                        <span *ngIf="!isAdmin && movie.showSubscribe">
-                            <button *ngIf="!movie.subscribed" (click)="notify()" id="notifyBtn"
+                        <span *ngIf="!isAdmin && movieRequest.showSubscribe">
+                            <button *ngIf="!movieRequest.subscribed" (click)="notify()" id="notifyBtn"
                                 mat-raised-button class="btn-spacing"> <i class="fas fa-bell"></i>
                                 {{ 'Requests.Notify' | translate }}</button>
-                            <button *ngIf="movie.subscribed" (click)="unNotify()" id="unnotifyBtn"
+                            <button *ngIf="movieRequest.subscribed" (click)="unNotify()" id="unnotifyBtn"
                                 mat-raised-button class="btn-spacing"> <i class="fas fa-bell-slash"></i>
                                 {{ 'Requests.RemoveNotification' | translate }}</button>
                         </span>
