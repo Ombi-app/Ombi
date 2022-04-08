@@ -251,7 +251,7 @@ namespace Ombi.Core.Engine
             var requests = await (OrderMovies(allRequests, orderFilter.OrderType)).Skip(position).Take(count)
                 .ToListAsync();
 
-            await CheckForSubscription(shouldHide, requests);
+            await CheckForSubscription(shouldHide.UserId, requests);
             return new RequestsViewModel<MovieRequests>
             {
                 Collection = requests,
@@ -295,7 +295,7 @@ namespace Ombi.Core.Engine
             var total = requests.Count();
             requests = requests.Skip(position).Take(count).ToList();
 
-            await CheckForSubscription(shouldHide, requests);
+            await CheckForSubscription(shouldHide.UserId, requests);
             return new RequestsViewModel<MovieRequests>
             {
                 Collection = requests,
@@ -380,7 +380,7 @@ namespace Ombi.Core.Engine
             // TODO fix this so we execute this on the server
             requests = requests.Skip(position).Take(count).ToList();
 
-            await CheckForSubscription(shouldHide, requests);
+            await CheckForSubscription(shouldHide.UserId, requests);
             return new RequestsViewModel<MovieRequests>
             {
                 Collection = requests,
@@ -423,7 +423,7 @@ namespace Ombi.Core.Engine
             var total = requests.Count();
             requests = requests.Skip(position).Take(count).ToList();
 
-            await CheckForSubscription(shouldHide, requests);
+            await CheckForSubscription(shouldHide.UserId, requests);
             return new RequestsViewModel<MovieRequests>
             {
                 Collection = requests,
@@ -505,7 +505,7 @@ namespace Ombi.Core.Engine
                 allRequests = await MovieRepository.GetWithUser().ToListAsync();
             }
 
-            await CheckForSubscription(shouldHide, allRequests);
+            await CheckForSubscription(shouldHide.UserId, allRequests);
 
             return allRequests;
         }
@@ -513,21 +513,21 @@ namespace Ombi.Core.Engine
         public async Task<MovieRequests> GetRequest(int requestId)
         {
             var request = await MovieRepository.GetWithUser().Where(x => x.Id == requestId).FirstOrDefaultAsync();
-            await CheckForSubscription(new HideResult(), new List<MovieRequests> { request });
+            await CheckForSubscription((await GetUser()).Id, new List<MovieRequests> { request });
 
             return request;
         }
 
-        private async Task CheckForSubscription(HideResult shouldHide, List<MovieRequests> movieRequests)
+        private async Task CheckForSubscription(string UserId, List<MovieRequests> movieRequests)
         {
             var requestIds = movieRequests.Select(x => x.Id);
             var sub = await _subscriptionRepository.GetAll().Where(s =>
-                s.UserId == shouldHide.UserId && requestIds.Contains(s.RequestId) && s.RequestType == RequestType.Movie)
+                s.UserId == UserId && requestIds.Contains(s.RequestId) && s.RequestType == RequestType.Movie)
                 .ToListAsync();
             foreach (var x in movieRequests)
             {
                 x.PosterPath = PosterPathHelper.FixPosterPath(x.PosterPath);
-                if (shouldHide.UserId == x.RequestedUserId)
+                if (UserId == x.RequestedUserId)
                 {
                     x.ShowSubscribe = false;
                 }
@@ -559,7 +559,7 @@ namespace Ombi.Core.Engine
             }
 
             var results = allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase)).ToList();
-            await CheckForSubscription(shouldHide, results);
+            await CheckForSubscription(shouldHide.UserId, results);
 
             return results;
         }
