@@ -67,7 +67,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     if (watchlist == null || !(watchlist.MediaContainer?.Metadata?.Any() ?? false))
                     {
                         _logger.LogDebug($"No watchlist found for {user.UserName}");
-                        return;
+                        continue;
                     }
 
                     var items = watchlist.MediaContainer.Metadata;
@@ -80,7 +80,7 @@ namespace Ombi.Schedule.Jobs.Plex
                         {
                             _logger.LogWarning($"No TheMovieDb Id found for {item.title}, could not import via Plex WatchList");
                             // We need a MovieDbId to support this;
-                            return;
+                            continue;
                         }
                         switch (item.type)
                         {
