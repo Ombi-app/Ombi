@@ -5,6 +5,8 @@ import { IRequestEngineResult, RequestType } from '../../../interfaces';
 import { UpdateType } from '../../models/UpdateType';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Observable } from 'rxjs';
+import { DenyDialogComponent } from '../../../media-details/components/shared/deny-dialog/deny-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'request-options',
@@ -17,6 +19,7 @@ export class RequestOptionsComponent {
   constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
     private requestService: RequestService,
     private messageService: MessageService,
+    public dialog: MatDialog,
     private bottomSheetRef: MatBottomSheetRef<RequestOptionsComponent>,
     private translate: TranslateService) { }
 
@@ -33,11 +36,11 @@ export class RequestOptionsComponent {
     }
     request.subscribe(result => {
       if (result.result) {
-          this.messageService.send(this.translate.instant("Requests.SuccessfullyDeleted"));
-          this.bottomSheetRef.dismiss({type: UpdateType.Delete});
-          return;
+        this.messageService.send(this.translate.instant("Requests.SuccessfullyDeleted"));
+        this.bottomSheetRef.dismiss({type: UpdateType.Delete});
+        return;
       } else {
-          this.messageService.sendRequestEngineResultError(result);
+        this.messageService.sendRequestEngineResultError(result);
       }
     });
   }
@@ -55,6 +58,24 @@ export class RequestOptionsComponent {
 
     this.bottomSheetRef.dismiss({type: UpdateType.Approve});
     return;
+  }
+
+  public deny = () => this.denyInternal(false);
+
+  public deny4K = () => this.denyInternal(true);
+
+  private async denyInternal(is4K: boolean) {
+    const dialogRef = this.dialog.open(DenyDialogComponent, {
+      width: '250px',
+      data: { requestId: this.data.id, is4K: is4K, requestType: this.data.type }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result.denied) {
+        this.bottomSheetRef.dismiss({ type: UpdateType.Deny });
+
+      }
+    });
   }
 
   public async approve4K() {
