@@ -61,8 +61,6 @@ namespace Ombi.Core.Rule.Rules.Search
                     request.RequestId = tvRequests.Id;
                     request.Requested = true;
                     request.Approved = tvRequests.ChildRequests.Any(x => x.Approved);
-                    request.Denied = tvRequests.ChildRequests.Any(x => x.Denied ?? false);
-                    request.DeniedReason = tvRequests.ChildRequests.FirstOrDefault(x => x.Denied ?? false)?.DeniedReason;
 
                     // Let's modify the seasonsrequested to reflect what we have requested...
                     foreach (var season in request.SeasonRequests)
@@ -86,7 +84,8 @@ namespace Ombi.Core.Rule.Rules.Search
                                 episodeSearching.Requested = true;
                                 episodeSearching.Available = ep.Available;
                                 episodeSearching.Approved = ep.Season.ChildRequest.Approved;
-                                episodeSearching.Denied = request.Denied;
+                                episodeSearching.Denied = ep.Season.ChildRequest.Denied;
+                                episodeSearching.DeniedReason = ep.Season.ChildRequest.DeniedReason;
                             }
                         }
                     }
@@ -103,7 +102,8 @@ namespace Ombi.Core.Rule.Rules.Search
 
                 if (request.SeasonRequests.Any() && request.SeasonRequests.All(x => x.Episodes.All(e => e.Denied ?? false)))
                 {
-                    request.FullyDenied = true;
+                    request.Denied = true;
+                    request.DeniedReason = tvRequests.ChildRequests.FirstOrDefault(x => x.Denied ?? false)?.DeniedReason;
                 }
 
                 var hasUnairedRequests = request.SeasonRequests.Any() && request.SeasonRequests.All(x => x.Episodes.Any(e => e.AirDate >= DateTime.UtcNow));
@@ -123,7 +123,7 @@ namespace Ombi.Core.Rule.Rules.Search
                     if (albumRequest != null) // Do we already have a request for this?
                     {
                         obj.Requested = true;
-                        obj.RequestId = albumRequest.Id; 
+                        obj.RequestId = albumRequest.Id;
                         obj.Denied = albumRequest.Denied;
                         obj.DeniedReason = albumRequest.DeniedReason;
                         obj.Approved = albumRequest.Approved;
