@@ -213,7 +213,7 @@ export class DiscoverCardComponent implements OnInit {
         this.result.overview = updated.overview;
         this.result.approved = updated.approved;
         this.result.available = updated.fullyAvailable;
-        this.result.denied = updated.fullyDenied;
+        this.result.denied = updated.denied;
 
         this.fullyLoaded = true;
     }
