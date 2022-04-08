@@ -31,7 +31,7 @@
   
   .top-right.approved span:before{
     display: inline-block;
-    background-color: #ff5722;
+    background-color: #ffd740;
   }
   
   .top-right.requested span {
@@ -40,10 +40,10 @@
   
   .top-right.requested span:before{
     display: inline-block;
-    background-color: #ffd740;
+    background-color: #ff5722;
   }
 
   .top-right.denied span:before{
     display: inline-block;
-    background-color: #ff4040;
+    background-color: #660202;
   }
