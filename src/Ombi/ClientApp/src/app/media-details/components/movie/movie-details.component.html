@@ -108,7 +108,7 @@
                             </span>
                         </span>
                         
-                        <span *ngIf="!isAdmin && movieRequest.showSubscribe">
+                        <span *ngIf="movieRequest.showSubscribe">
                             <button *ngIf="!movieRequest.subscribed" (click)="notify()" id="notifyBtn"
                                 mat-raised-button class="btn-spacing"> <i class="fas fa-bell"></i>
                                 {{ 'Requests.Notify' | translate }}</button>
