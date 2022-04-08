@@ -1,3 +1,12 @@
+## [4.16.3](https://github.com/Ombi-app/Ombi/compare/v4.16.2...v4.16.3) (2022-04-08)
+
+
+### Bug Fixes
+
+* **plex-watchlist:** :bug: Fixed the issue where the watchlist didn't work for users logging in via OAuth ([6398f6a](https://github.com/Ombi-app/Ombi/commit/6398f6a4f7755281ebeac537e3ff623df5cfa0f3))
+
+
+
 ## [4.16.2](https://github.com/Ombi-app/Ombi/compare/v4.16.1...v4.16.2) (2022-04-07)
 
 
@@ -306,17 +315,6 @@
 ### Features
 
 * **notifications:** :sparkles: Send new request email notifications to power users ([#4462](https://github.com/Ombi-app/Ombi/issues/4462)) ([10cc0c0](https://github.com/Ombi-app/Ombi/commit/10cc0c0951f13221179516f8ff5c44dbecc9a0fd))
-
-
-
-## [4.9.2](https://github.com/Ombi-app/Ombi/compare/v4.9.1...v4.9.2) (2022-01-14)
-
-
-### Bug Fixes
-
-* :bug: Add UI for Emby recently added cronjob settings ([#4469](https://github.com/Ombi-app/Ombi/issues/4469)) ([7d47bbe](https://github.com/Ombi-app/Ombi/commit/7d47bbe92204855bf75d70b8fa548f9c3f3612bc))
-* **sonarr:** :bug: Fixed an issue where we could attempt to add a series to sonarr before sonarr has got all the metadata [#4459](https://github.com/Ombi-app/Ombi/issues/4459) ([5c691dc](https://github.com/Ombi-app/Ombi/commit/5c691dc98437a4cd24560ff625414fe05dd22f89))
-* **wizard:** :bug: Fixed the issue where the Application Url wasn't validated in the wizard ([33b8d11](https://github.com/Ombi-app/Ombi/commit/33b8d1111a1c6663d8c0bbd912be4660da7d013f)), closes [#4417](https://github.com/Ombi-app/Ombi/issues/4417)
 
 
 
