@@ -65,7 +65,7 @@
                                     (click)="request()"><i class="fas fa-plus"></i>
                                     {{ 'Common.Request' | translate }}</button>
 
-                                    <button *ngIf="!tv.fullyDenied && allEpisodesRequested()" mat-raised-button class="btn-spacing" color="warn" [disabled]>
+                                    <button *ngIf="!tv.denied && allEpisodesRequested()" mat-raised-button class="btn-spacing" color="warn" [disabled]>
                                         <i class="fas fa-check"></i>
                                         {{ 'Common.Requested' | translate }}</button>
 
@@ -83,7 +83,7 @@
                                     <i class="fas fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
                                     <!-- end unaired episodes-->
                                     
-                                    <button id="deniedButton" *ngIf="tv.fullyDenied" [matTooltip]="tv.deniedReason" mat-raised-button class="btn-spacing" color="warn">
+                                    <button id="deniedButton" *ngIf="tv.denied" [matTooltip]="tv.deniedReason" mat-raised-button class="btn-spacing" color="warn">
                                         <i class="fas fa-times"></i> {{'Common.Denied' | translate }}
                                     </button>
 

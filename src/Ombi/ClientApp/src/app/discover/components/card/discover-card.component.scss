@@ -213,11 +213,11 @@ small {
 }
 
 .top-right.approved span.indicator:before{
-  background-color: #ff5722;
+  background-color: #ffd740;
 }
 
 .top-right.denied span.indicator:before{
-  background-color: #ff5722;
+  background-color: #660202;
 }
 
 .top-right.partly-available span.indicator:before{
@@ -225,7 +225,7 @@ small {
 }
 
 .top-right.requested span.indicator:before{
-  background-color: #ffd740;
+  background-color: #ff5722;
 }
 
 ::ng-deep a.poster-overlay{
