@@ -1,3 +1,7 @@
+## [4.16.4](https://github.com/Ombi-app/Ombi/compare/v4.16.3...v4.16.4) (2022-04-08)
+
+
+
 ## [4.16.3](https://github.com/Ombi-app/Ombi/compare/v4.16.2...v4.16.3) (2022-04-08)
 
 
@@ -306,15 +310,6 @@
 
 
 ## [4.3.3](https://github.com/Ombi-app/Ombi/compare/v4.3.2...v4.3.3) (2021-11-05)
-
-
-
-# [4.10.0](https://github.com/Ombi-app/Ombi/compare/v4.9.2...v4.10.0) (2022-01-14)
-
-
-### Features
-
-* **notifications:** :sparkles: Send new request email notifications to power users ([#4462](https://github.com/Ombi-app/Ombi/issues/4462)) ([10cc0c0](https://github.com/Ombi-app/Ombi/commit/10cc0c0951f13221179516f8ff5c44dbecc9a0fd))
 
 
 
