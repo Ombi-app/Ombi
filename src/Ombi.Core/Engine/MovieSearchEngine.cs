@@ -16,6 +16,7 @@ using Ombi.Store.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace Ombi.Core.Engine
@@ -215,9 +216,34 @@ namespace Ombi.Core.Engine
 
             await RunSearchRules(viewMovie);
 
+            // This requires the rules to be run first to populate the RequestId property
+            await CheckForSubscription(viewMovie);
+
             return viewMovie;
         }
 
+        private async Task CheckForSubscription(SearchMovieViewModel viewModel)
+        {
+            // Check if this user requested it
+            var user = await GetUser();
+            if (user == null)
+            {
+                return;
+            }
+            var request = await RequestService.MovieRequestService.GetAll()
+                .AnyAsync(x => x.RequestedUserId.Equals(user.Id) && x.TheMovieDbId == viewModel.Id);
+            if (request || viewModel.Available)
+            {
+                viewModel.ShowSubscribe = false;
+            }
+            else
+            {
+                viewModel.ShowSubscribe = true;
+                var sub = await _subscriptionRepository.GetAll().FirstOrDefaultAsync(s => s.UserId == user.Id
+                                                                                          && s.RequestId == viewModel.RequestId && s.RequestType == RequestType.Movie);
+                viewModel.Subscribed = sub != null;
+            }
+        }
 
         private async Task<SearchMovieViewModel> ProcessSingleMovie(MovieDbSearchResult movie)
         {
