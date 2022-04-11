@@ -354,7 +354,7 @@ namespace Ombi.Core.Senders
                     {
                         sonarrEp.monitored = true;
                         episodesToUpdate.Add(sonarrEp);
-                        Task updateTask = SonarrApi.UpdateEpisode(sonarrEp, s.ApiKey, s.FullUri);
+                        await SonarrApi.UpdateEpisode(sonarrEp, s.ApiKey, s.FullUri);
                     }
                 }
             }
