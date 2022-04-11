@@ -372,6 +372,20 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                     b.ToTable("PlexServerContent");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.PlexWatchlistHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("TmdbId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PlexWatchlistHistory");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.RadarrCache", b =>
                 {
                     b.Property<int>("Id")

@@ -12,6 +12,7 @@ using Ombi.Helpers;
 using Ombi.Hubs;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
+using Ombi.Store.Repository;
 using Quartz;
 using System;
 using System.Collections.Generic;
@@ -30,10 +31,11 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly ITvRequestEngine _tvRequestEngine;
         private readonly IHubContext<NotificationHub> _hub;
         private readonly ILogger _logger;
+        private readonly IExternalRepository<PlexWatchlistHistory> _watchlistRepo;
 
         public PlexWatchlistImport(IPlexApi plexApi, ISettingsService<PlexSettings> settings, OmbiUserManager ombiUserManager,
             IMovieRequestEngine movieRequestEngine, ITvRequestEngine tvRequestEngine, IHubContext<NotificationHub> hub,
-            ILogger<PlexWatchlistImport> logger)
+            ILogger<PlexWatchlistImport> logger, IExternalRepository<PlexWatchlistHistory> watchlistRepo)
         {
             _plexApi = plexApi;
             _settings = settings;
@@ -42,6 +44,7 @@ namespace Ombi.Schedule.Jobs.Plex
             _tvRequestEngine = tvRequestEngine;
             _hub = hub;
             _logger = logger;
+            _watchlistRepo = watchlistRepo;
         }
 
         public async Task Execute(IJobExecutionContext context)
@@ -82,6 +85,15 @@ namespace Ombi.Schedule.Jobs.Plex
                             // We need a MovieDbId to support this;
                             continue;
                         }
+
+                        // Check to see if we have already imported this item
+                        var alreadyImported = _watchlistRepo.GetAll().Any(x => x.TmdbId == providerIds.TheMovieDb);
+                        if (alreadyImported)
+                        {
+                            _logger.LogDebug($"{item.title} already imported via Plex WatchList, skipping");
+                            continue;
+                        }
+
                         switch (item.type)
                         {
                             case "show":
@@ -118,6 +130,13 @@ namespace Ombi.Schedule.Jobs.Plex
             }
             else
             {
+                // Add to the watchlist history
+                var history = new PlexWatchlistHistory
+                {
+                    TmdbId = theMovieDbId.ToString()
+                };
+                await _watchlistRepo.Add(history);
+                
                 _logger.LogInformation($"Added title from PlexWatchlist for user '{user.UserName}'. {response.Message}");
             }
         }
@@ -138,6 +157,12 @@ namespace Ombi.Schedule.Jobs.Plex
             }
             else
             {
+                // Add to the watchlist history
+                var history = new PlexWatchlistHistory
+                {
+                    TmdbId = theMovieDbId.ToString()
+                };
+                await _watchlistRepo.Add(history);
                 _logger.LogInformation($"Added title from PlexWatchlist for user '{user.UserName}'. {response.Message}");
             }
         }
