@@ -47,8 +47,8 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()), Times.Never);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
             _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()), Times.Never);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Never);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
         }
         [Test]
         public async Task TerminatesWhenWatchlistIsNotEnabled()
@@ -58,8 +58,8 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()), Times.Never);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
             _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()), Times.Never);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Never);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
         }
 
         [Test]
@@ -71,8 +71,8 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()), Times.Never);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
             _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()), Times.Never);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Never);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
         }
 
         [Test]
@@ -94,8 +94,8 @@ namespace Ombi.Schedule.Tests
             await _subject.Execute(_context.Object);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
             _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()), Times.Never);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Never);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
         }
 
 
@@ -117,8 +117,8 @@ namespace Ombi.Schedule.Tests
             await _subject.Execute(_context.Object);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Exactly(5));
             _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()), Times.Never);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Never);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
         }
 
 
@@ -167,8 +167,8 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.Is<MovieRequestViewModel>(x => x.TheMovieDbId == 123)), Times.Once);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistMetadata("abc", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
             _mocker.Verify<IMovieRequestEngine>(x => x.SetUser(It.Is<OmbiUser>(x => x.Id == "abc")), Times.Once);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Once);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Once);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Once);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Once);
         }
 
 
@@ -217,8 +217,8 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<ITvRequestEngine>(x => x.RequestTvShow(It.Is<TvRequestViewModelV2>(x => x.TheMovieDbId == 123)), Times.Once);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistMetadata("abc", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
             _mocker.Verify<ITvRequestEngine>(x => x.SetUser(It.Is<OmbiUser>(x => x.Id == "abc")), Times.Once);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Once);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Once);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Once);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Once);
         }
 
         [Test]
@@ -266,8 +266,8 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.Is<MovieRequestViewModel>(x => x.TheMovieDbId == 123)), Times.Once);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistMetadata("abc", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
             _mocker.Verify<IMovieRequestEngine>(x => x.SetUser(It.Is<OmbiUser>(x => x.Id == "abc")), Times.Once);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Once);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Once);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
         }
 
         [Test]
@@ -315,8 +315,8 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<ITvRequestEngine>(x => x.RequestTvShow(It.Is<TvRequestViewModelV2>(x => x.TheMovieDbId == 123)), Times.Once);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistMetadata("abc", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
             _mocker.Verify<ITvRequestEngine>(x => x.SetUser(It.Is<OmbiUser>(x => x.Id == "abc")), Times.Once);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Once);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Once);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
         }
 
         [Test]
@@ -364,8 +364,8 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()), Times.Never);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistMetadata("abc", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
             _mocker.Verify<IMovieRequestEngine>(x => x.SetUser(It.Is<OmbiUser>(x => x.Id == "abc")), Times.Never);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Never);
         }
 
         [Test]
@@ -413,8 +413,8 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<ITvRequestEngine>(x => x.RequestTvShow(It.IsAny<TvRequestViewModelV2>()), Times.Never);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistMetadata("abc", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
             _mocker.Verify<ITvRequestEngine>(x => x.SetUser(It.Is<OmbiUser>(x => x.Id == "abc")), Times.Never);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Never);
         }
 
         [Test]
@@ -456,13 +456,13 @@ namespace Ombi.Schedule.Tests
 
                     }
                 });
-            _mocker.Setup<IRepository<PlexWatchlistHistory>, IQueryable<PlexWatchlistHistory>>(x => x.GetAll()).Returns(new List<PlexWatchlistHistory> { new PlexWatchlistHistory { Id = 1, TmdbId = "123" } }.AsQueryable());
+            _mocker.Setup<IExternalRepository<PlexWatchlistHistory>, IQueryable<PlexWatchlistHistory>>(x => x.GetAll()).Returns(new List<PlexWatchlistHistory> { new PlexWatchlistHistory { Id = 1, TmdbId = "123" } }.AsQueryable());
             await _subject.Execute(_context.Object);
             _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()), Times.Never);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistMetadata("abc", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
             _mocker.Verify<IMovieRequestEngine>(x => x.SetUser(It.Is<OmbiUser>(x => x.Id == "abc")), Times.Never);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
-            _mocker.Verify<IRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Once);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Once);
         }
     }
 }

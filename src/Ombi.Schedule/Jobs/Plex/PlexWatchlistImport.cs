@@ -31,11 +31,11 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly ITvRequestEngine _tvRequestEngine;
         private readonly IHubContext<NotificationHub> _hub;
         private readonly ILogger _logger;
-        private readonly IRepository<PlexWatchlistHistory> _watchlistRepo;
+        private readonly IExternalRepository<PlexWatchlistHistory> _watchlistRepo;
 
         public PlexWatchlistImport(IPlexApi plexApi, ISettingsService<PlexSettings> settings, OmbiUserManager ombiUserManager,
             IMovieRequestEngine movieRequestEngine, ITvRequestEngine tvRequestEngine, IHubContext<NotificationHub> hub,
-            ILogger<PlexWatchlistImport> logger, IRepository<PlexWatchlistHistory> watchlistRepo)
+            ILogger<PlexWatchlistImport> logger, IExternalRepository<PlexWatchlistHistory> watchlistRepo)
         {
             _plexApi = plexApi;
             _settings = settings;
