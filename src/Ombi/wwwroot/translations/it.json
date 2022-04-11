@@ -14,7 +14,7 @@
     "Common": {
         "ContinueButton": "Continua",
         "Available": "Disponibile",
-        "Available4K": "Disponibile 4K",
+        "Available4K": "Disponibile in 4K",
         "Approved": "Approvato",
         "Approve4K": "Approva 4K",
         "Pending": "In Sospeso",
@@ -66,7 +66,7 @@
         "Discover": "Scopri",
         "Search": "Cerca",
         "Requests": "Richieste",
-        "UserManagement": "Gestione degli utenti",
+        "UserManagement": "Utenti",
         "Issues": "Problemi",
         "Vote": "Vota",
         "Donate": "Dona!",
@@ -74,7 +74,7 @@
         "DonateTooltip": "Questo è come convinco mia moglie a farmi spendere il mio tempo libero nello sviluppo di Ombi ;)",
         "UpdateAvailableTooltip": "Aggiornamento disponibile!",
         "Settings": "Impostazioni",
-        "Welcome": "Ti diamo il benvenuto {{username}}",
+        "Welcome": "Benvenuto {{username}}",
         "UpdateDetails": "Aggiorna dettagli",
         "Logout": "Esci",
         "OpenMobileApp": "Apri l'app Mobile",
@@ -90,9 +90,9 @@
             "Music": "Musica",
             "People": "Persone"
         },
-        "MorningWelcome": "Buona mattina!",
+        "MorningWelcome": "Buongiorno!",
         "AfternoonWelcome": "Buon pomeriggio!",
-        "EveningWelcome": "Buona sera!"
+        "EveningWelcome": "Buonasera!"
     },
     "Search": {
         "Title": "Cerca",
@@ -103,7 +103,7 @@
         "AdvancedSearch": "Puoi compilare uno dei seguenti per scoprire nuovi media. Tutti i risultati sono ordinati per popolarità",
         "AdvancedSearchHeader": "Ricerca Avanzata",
         "Suggestions": "Suggerimenti",
-        "NoResults": "Spiacenti, non abbiamo trovato nulla!",
+        "NoResults": "Nessun risultato trovato!",
         "DigitalDate": "Uscita in digitale: {{date}}",
         "TheatricalRelease": "Uscita nei cinema: {{date}}",
         "ViewOnPlex": "Guarda su Plex",
