@@ -54,6 +54,15 @@ namespace Ombi.Core.Rule.Rules.Request
                 // looks like we have a match on the TVDbID
                 return CheckExistingContent(tvRequest, anyMovieDbMatches);
             }
+            if (obj.RequestType == RequestType.Movie)
+            {
+                var movie = (MovieRequests)obj;
+                var exists = _plexContent.GetAll().Where(x => x.Type == MediaType.Movie).Any(x => x.TheMovieDbId == movie.Id.ToString() || x.TheMovieDbId == movie.TheMovieDbId.ToString());
+                if (exists)
+                {
+                    return Fail(ErrorCode.AlreadyRequested, "This movie is already available." );
+                }
+            }
             return Success();
         }
 

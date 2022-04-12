@@ -124,23 +124,18 @@ namespace Ombi.Schedule.Jobs.Plex
                 if (response.ErrorCode == ErrorCode.AlreadyRequested)
                 {
                     _logger.LogDebug($"Movie already requested for user '{user.UserName}'");
+                    await AddToHistory(theMovieDbId);
                     return;
                 }
                 _logger.LogInformation($"Error adding title from PlexWatchlist for user '{user.UserName}'. Message: '{response.ErrorMessage}'");
             }
             else
             {
-                // Add to the watchlist history
-                var history = new PlexWatchlistHistory
-                {
-                    TmdbId = theMovieDbId.ToString()
-                };
-                await _watchlistRepo.Add(history);
-                
+                await AddToHistory(theMovieDbId);
+
                 _logger.LogInformation($"Added title from PlexWatchlist for user '{user.UserName}'. {response.Message}");
             }
         }
-
 
         private async Task ProcessShow(int theMovieDbId, OmbiUser user)
         {
@@ -151,20 +146,26 @@ namespace Ombi.Schedule.Jobs.Plex
                 if (response.ErrorCode == ErrorCode.AlreadyRequested)
                 {
                     _logger.LogDebug($"Show already requested for user '{user.UserName}'");
+                    await AddToHistory(theMovieDbId);
                     return;
                 }
                 _logger.LogInformation($"Error adding title from PlexWatchlist for user '{user.UserName}'. Message: '{response.ErrorMessage}'");
             }
             else
             {
-                // Add to the watchlist history
-                var history = new PlexWatchlistHistory
-                {
-                    TmdbId = theMovieDbId.ToString()
-                };
-                await _watchlistRepo.Add(history);
+                await AddToHistory(theMovieDbId);
                 _logger.LogInformation($"Added title from PlexWatchlist for user '{user.UserName}'. {response.Message}");
             }
+        }
+        private async Task AddToHistory(int theMovieDbId)
+        {
+
+            // Add to the watchlist history
+            var history = new PlexWatchlistHistory
+            {
+                TmdbId = theMovieDbId.ToString()
+            };
+            await _watchlistRepo.Add(history);
         }
 
         private async Task<ProviderId> GetProviderIds(string authToken, Metadata movie, CancellationToken cancellationToken)
