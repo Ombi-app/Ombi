@@ -1,3 +1,7 @@
+## [4.16.7](https://github.com/Ombi-app/Ombi/compare/v4.16.6...v4.16.7) (2022-04-12)
+
+
+
 ## [4.16.6](https://github.com/Ombi-app/Ombi/compare/v4.16.5...v4.16.6) (2022-04-11)
 
 
@@ -301,10 +305,6 @@
 ### Features
 
 * **newsletter:** Started to localize the newsletter ([#4485](https://github.com/Ombi-app/Ombi/issues/4485)) ([b5ec556](https://github.com/Ombi-app/Ombi/commit/b5ec5562435021ea4b8af07c9b64a3f7249b570a))
-
-
-
-## [4.10.4](https://github.com/Ombi-app/Ombi/compare/v4.10.3...v4.10.4) (2022-02-01)
 
 
 
