@@ -1,3 +1,7 @@
+## [4.16.10](https://github.com/Ombi-app/Ombi/compare/v4.16.9...v4.16.10) (2022-04-13)
+
+
+
 ## [4.16.9](https://github.com/Ombi-app/Ombi/compare/v4.16.8...v4.16.9) (2022-04-13)
 
 
@@ -301,15 +305,6 @@
 ### Bug Fixes
 
 * **API:** Fixed an issue where the API key couldn't delete a request [#4489](https://github.com/Ombi-app/Ombi/issues/4489) ([8e42dbf](https://github.com/Ombi-app/Ombi/commit/8e42dbf8f78caa51ca891bf3d702c6b0ac401f9c))
-
-
-
-## [4.11.2](https://github.com/Ombi-app/Ombi/compare/v4.11.1...v4.11.2) (2022-02-01)
-
-
-### Bug Fixes
-
-* :globe_with_meridians: Added Czech and Chinese Simplified to the language list ([68ef366](https://github.com/Ombi-app/Ombi/commit/68ef366e8525e2c349b9e81704ad8bcca6c347a0))
 
 
 
