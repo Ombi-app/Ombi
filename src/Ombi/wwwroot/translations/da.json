@@ -207,10 +207,13 @@
         "RequestPanel": {
             "Delete": "Slet Anmodning",
             "Approve": "Godkend Andmodning",
+            "Deny": "Deny Request",
             "Approve4K": "Godkend 4K Anmodning",
+            "Deny4K": "Deny 4K Request",
             "ChangeAvailability": "Markér som tilgængelig",
             "Deleted": "De valgte elementer blev slettet",
-            "Approved": "De valgte elementer blev godkendt"
+            "Approved": "De valgte elementer blev godkendt",
+            "Denied": "Successfully denied selected items"
         },
         "SuccessfullyApproved": "Godkendt",
         "SuccessfullyDeleted": "Anmodningen blev slettet",
