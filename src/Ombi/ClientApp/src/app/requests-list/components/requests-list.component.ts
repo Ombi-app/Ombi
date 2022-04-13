@@ -35,6 +35,11 @@ export class RequestsListComponent {
                 event.onChange();
                 return;
             }
+            if (result.type == UpdateType.Deny) {
+                event.request.requestStatus = 'Common.Denied';
+                event.onChange();
+                return;
+            }
         });
     }
 }
