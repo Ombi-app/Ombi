@@ -1,3 +1,12 @@
+## [4.16.9](https://github.com/Ombi-app/Ombi/compare/v4.16.8...v4.16.9) (2022-04-13)
+
+
+### Bug Fixes
+
+* **plex-watchlist:** Only request the latest season when importing from the watchlist ([77a47ff](https://github.com/Ombi-app/Ombi/commit/77a47ff157c6c5feafe3f2a29a3fcba8df4fdfef))
+
+
+
 ## [4.16.8](https://github.com/Ombi-app/Ombi/compare/v4.16.7...v4.16.8) (2022-04-13)
 
 
@@ -301,10 +310,6 @@
 ### Bug Fixes
 
 * :globe_with_meridians: Added Czech and Chinese Simplified to the language list ([68ef366](https://github.com/Ombi-app/Ombi/commit/68ef366e8525e2c349b9e81704ad8bcca6c347a0))
-
-
-
-## [4.11.1](https://github.com/Ombi-app/Ombi/compare/v4.11.0...v4.11.1) (2022-02-01)
 
 
 
