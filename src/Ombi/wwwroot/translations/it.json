@@ -207,13 +207,13 @@
         "RequestPanel": {
             "Delete": "Elimina Richiesta",
             "Approve": "Approva Richiesta",
-            "Deny": "Deny Request",
+            "Deny": "Rifiuta Richiesta",
             "Approve4K": "Approva Richiesta 4K",
-            "Deny4K": "Deny 4K Request",
+            "Deny4K": "Rifiuta Richiesta 4K",
             "ChangeAvailability": "Segna come Disponibile",
             "Deleted": "Elementi selezionati eliminati correttamente",
             "Approved": "Elementi selezionati approvati correttamente",
-            "Denied": "Successfully denied selected items"
+            "Denied": "Elementi selezionati rifiutati con successo"
         },
         "SuccessfullyApproved": "Approvata",
         "SuccessfullyDeleted": "Richiesta eliminata correttamente",
