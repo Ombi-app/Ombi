@@ -140,7 +140,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private async Task ProcessShow(int theMovieDbId, OmbiUser user)
         {
             _tvRequestEngine.SetUser(user);
-            var response = await _tvRequestEngine.RequestTvShow(new TvRequestViewModelV2 { RequestAll = true, TheMovieDbId = theMovieDbId, Source = RequestSource.PlexWatchlist });
+            var response = await _tvRequestEngine.RequestTvShow(new TvRequestViewModelV2 { LatestSeason = true, TheMovieDbId = theMovieDbId, Source = RequestSource.PlexWatchlist });
             if (response.IsError)
             {
                 if (response.ErrorCode == ErrorCode.AlreadyRequested)
