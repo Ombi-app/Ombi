@@ -1,3 +1,12 @@
+## [4.16.8](https://github.com/Ombi-app/Ombi/compare/v4.16.7...v4.16.8) (2022-04-13)
+
+
+### Bug Fixes
+
+* **availability:** Fixed an issue where we wouldn't mark a available 4k movie as available (when 4K request feature is disabled) ([b492699](https://github.com/Ombi-app/Ombi/commit/b49269961d4830a530e3054976a47f519524948b))
+
+
+
 ## [4.16.7](https://github.com/Ombi-app/Ombi/compare/v4.16.6...v4.16.7) (2022-04-12)
 
 
@@ -296,15 +305,6 @@
 
 
 ## [4.11.1](https://github.com/Ombi-app/Ombi/compare/v4.11.0...v4.11.1) (2022-02-01)
-
-
-
-# [4.11.0](https://github.com/Ombi-app/Ombi/compare/v4.10.4...v4.11.0) (2022-02-01)
-
-
-### Features
-
-* **newsletter:** Started to localize the newsletter ([#4485](https://github.com/Ombi-app/Ombi/issues/4485)) ([b5ec556](https://github.com/Ombi-app/Ombi/commit/b5ec5562435021ea4b8af07c9b64a3f7249b570a))
 
 
 
