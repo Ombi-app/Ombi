@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core;
+using Ombi.Core.Services;
 using Ombi.Helpers;
 using Ombi.Hubs;
 using Ombi.Notifications.Models;
 using Ombi.Schedule.Jobs.Plex.Models;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
@@ -21,7 +23,7 @@ namespace Ombi.Schedule.Jobs.Plex
     public class PlexAvailabilityChecker : IPlexAvailabilityChecker
     {
         public PlexAvailabilityChecker(IPlexContentRepository repo, ITvRequestRepository tvRequest, IMovieRequestRepository movies,
-            INotificationHelper notification, ILogger<PlexAvailabilityChecker> log, IHubContext<NotificationHub> hub)
+            INotificationHelper notification, ILogger<PlexAvailabilityChecker> log, IHubContext<NotificationHub> hub, IFeatureService featureService)
         {
             _tvRepo = tvRequest;
             _repo = repo;
@@ -29,6 +31,7 @@ namespace Ombi.Schedule.Jobs.Plex
             _notificationService = notification;
             _log = log;
             _notification = hub;
+            _featureService = featureService;
         }
 
         private readonly ITvRequestRepository _tvRepo;
@@ -37,6 +40,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly INotificationHelper _notificationService;
         private readonly ILogger _log;
         private readonly IHubContext<NotificationHub> _notification;
+        private readonly IFeatureService _featureService;
 
         public async Task Execute(IJobExecutionContext job)
         {
@@ -179,6 +183,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
         private async Task ProcessMovies()
         {
+            var feature4kEnabled = await _featureService.FeatureEnabled(FeatureNames.Movie4KRequests);
             // Get all non available
             var movies = _movieRepo.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available || (!x.Available4K && x.Has4KRequest));
             var itemsForAvailbility = new List<AvailabilityModel>();
@@ -208,11 +213,19 @@ namespace Ombi.Schedule.Jobs.Plex
 
                 var notify = false;
 
-                if (has4kRequest && item.Has4K && !movie.Available4K)
+                if (has4kRequest && item.Has4K && !movie.Available4K && feature4kEnabled)
                 {
                     movie.Available4K = true;
                     movie.Approved4K = true;
                     movie.MarkedAsAvailable4K = DateTime.Now;
+                    await _movieRepo.SaveChangesAsync();
+                    notify = true;
+                }
+
+                if (!feature4kEnabled && !movie.Available)
+                {
+                    movie.Available = true;
+                    movie.MarkedAsAvailable = DateTime.Now;
                     await _movieRepo.SaveChangesAsync();
                     notify = true;
                 }
