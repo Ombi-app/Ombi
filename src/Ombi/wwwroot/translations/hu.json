@@ -207,10 +207,13 @@
         "RequestPanel": {
             "Delete": "Kérés törlése",
             "Approve": "Kérés elfogadása",
+            "Deny": "Deny Request",
             "Approve4K": "Approve 4K Request",
+            "Deny4K": "Deny 4K Request",
             "ChangeAvailability": "Elérhetőnek jelölés",
             "Deleted": "A kijelölt elemek törlésre kerultek",
-            "Approved": "A kijelölt elemek jóváhagyásra kerultek"
+            "Approved": "A kijelölt elemek jóváhagyásra kerultek",
+            "Denied": "Successfully denied selected items"
         },
         "SuccessfullyApproved": "Sikeresen jóváhagyva",
         "SuccessfullyDeleted": "Kérés sikeresen törölve",
@@ -379,7 +382,8 @@
             "Country": "Ország:",
             "StartDate": "Kezdés dátuma:",
             "EndDate": "Befejezés dátuma:"
-        }
+        },
+        "RequestSource": "Source:"
     },
     "Discovery": {
         "PopularTab": "Népszerű",

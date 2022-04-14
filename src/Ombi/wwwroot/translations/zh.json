@@ -207,10 +207,13 @@
         "RequestPanel": {
             "Delete": "删除请求",
             "Approve": "批准请求",
+            "Deny": "Deny Request",
             "Approve4K": "批准4K请求",
+            "Deny4K": "Deny 4K Request",
             "ChangeAvailability": "标记为可用",
             "Deleted": "所选项目已删除",
-            "Approved": "所选项目已批准"
+            "Approved": "所选项目已批准",
+            "Denied": "Successfully denied selected items"
         },
         "SuccessfullyApproved": "批准成功",
         "SuccessfullyDeleted": "删除请求成功",
@@ -379,7 +382,8 @@
             "Country": "国家：",
             "StartDate": "开始日期：",
             "EndDate": "结束日期："
-        }
+        },
+        "RequestSource": "Source:"
     },
     "Discovery": {
         "PopularTab": "热门",

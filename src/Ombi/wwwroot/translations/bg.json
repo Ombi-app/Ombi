@@ -207,10 +207,13 @@
         "RequestPanel": {
             "Delete": "Изтриване на заявка",
             "Approve": "Одобряване на заявка",
+            "Deny": "Deny Request",
             "Approve4K": "Approve 4K Request",
+            "Deny4K": "Deny 4K Request",
             "ChangeAvailability": "Маркиране като налично",
             "Deleted": "Избраните елементи са изтрити успешно",
-            "Approved": "Избраните елементи са одобрени успешно"
+            "Approved": "Избраните елементи са одобрени успешно",
+            "Denied": "Successfully denied selected items"
         },
         "SuccessfullyApproved": "Successfully Approved",
         "SuccessfullyDeleted": "Request successfully deleted",
@@ -379,7 +382,8 @@
             "Country": "Country:",
             "StartDate": "Start Date:",
             "EndDate": "EndDate:"
-        }
+        },
+        "RequestSource": "Source:"
     },
     "Discovery": {
         "PopularTab": "Популярни",
