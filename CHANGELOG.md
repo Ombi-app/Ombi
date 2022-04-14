@@ -1,3 +1,4 @@
+
 ## [4.16.10](https://github.com/Ombi-app/Ombi/compare/v4.16.9...v4.16.10) (2022-04-13)
 
 
@@ -298,13 +299,11 @@
 * **newsletter:** Fix newsletter not publishing double episodes ([#4495](https://github.com/Ombi-app/Ombi/issues/4495)) ([ddf63fb](https://github.com/Ombi-app/Ombi/commit/ddf63fbed0b9cbe458aec37318758c76b99b2de9))
 
 
-
 ## [4.11.3](https://github.com/Ombi-app/Ombi/compare/v4.11.2...v4.11.3) (2022-02-03)
 
 
 ### Bug Fixes
 
 * **API:** Fixed an issue where the API key couldn't delete a request [#4489](https://github.com/Ombi-app/Ombi/issues/4489) ([8e42dbf](https://github.com/Ombi-app/Ombi/commit/8e42dbf8f78caa51ca891bf3d702c6b0ac401f9c))
-
 
 
