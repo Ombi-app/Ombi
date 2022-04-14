@@ -36,7 +36,7 @@ export class TvRequestGridComponent {
         // Make sure something has been selected
         const selected = this.selection.hasValue();
         if (!selected && !this.tv.requestAll && !this.tv.firstSeason && !this.tv.latestSeason) {
-            this.notificationService.send("You need to select some episodes!", "OK");
+            this.notificationService.send(this.translate.instant("Requests.NeedToSelectEpisodes"));
             return;
         }
 

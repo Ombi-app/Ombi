@@ -6,6 +6,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { MessageService } from "../../../../../services";
 import { RequestService } from "../../../../../services/request.service";
 import { RequestServiceV2 } from "../../../../../services/requestV2.service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
     templateUrl: "./tv-requests-panel.component.html",
@@ -24,7 +25,8 @@ export class TvRequestsPanelComponent {
     constructor(private requestService: RequestService,
         private requestService2: RequestServiceV2,
         private messageService: MessageService,
-        public dialog: MatDialog) {
+        public dialog: MatDialog, 
+        private translateService: TranslateService) {
 
     }
 
@@ -41,7 +43,7 @@ export class TvRequestsPanelComponent {
                     ep.approved = true;
                 });
             });
-            this.messageService.send("Request has been approved", "Ok");
+            this.messageService.send(this.translateService.instant("Requests.SuccessfullyApproved"));
         } else {
             this.messageService.sendRequestEngineResultError(result);
         }
@@ -52,7 +54,7 @@ export class TvRequestsPanelComponent {
 
         if (result) {
             this.tvRequest.splice(this.tvRequest.indexOf(request),1);
-            this.messageService.send("Request has been Deleted", "Ok");
+            this.messageService.send(this.translateService.instant("Requests.SuccessfullyDeleted"));
         }
     }
 
@@ -67,9 +69,9 @@ export class TvRequestsPanelComponent {
             this.requestService.markTvAvailable({ id: request.id }).subscribe(x => {
                 if (x.result) {
                     this.messageService.send(
-                        `This request is now available`);
+                        this.translateService.instant("Requests.NowAvailable"));
                 } else {
-                    this.messageService.send("Request Available", x.message ? x.message : x.errorMessage);
+                    this.messageService.sendRequestEngineResultError(x);
                     request.approved = false;
                 }
             });
@@ -77,9 +79,9 @@ export class TvRequestsPanelComponent {
             this.requestService.markTvUnavailable({ id: request.id }).subscribe(x => {
                 if (x.result) {
                     this.messageService.send(
-                    `This request is now unavailable`);
+                        this.translateService.instant("Requests.NowUnavailable"));
                 } else {
-                    this.messageService.send("Request Available", x.message ? x.message : x.errorMessage);
+                    this.messageService.sendRequestEngineResultError(x);
                     request.approved = false;
                 }
             });
@@ -102,11 +104,11 @@ export class TvRequestsPanelComponent {
     }
 
     public reProcessRequest(request: IChildRequests) {
-        this.requestService2.reprocessRequest(request.id, RequestType.tvShow, false).subscribe(result => {
-            if (result.result) {
-                this.messageService.send(result.message ? result.message : "Successfully Re-processed the request", "Ok");
+        this.requestService2.reprocessRequest(request.id, RequestType.tvShow, false).subscribe(x => {
+            if (x.result) {
+                this.messageService.send(this.translateService.instant("Requests.SuccessfullyReprocessed"));
             } else {
-                this.messageService.sendRequestEngineResultError(result);
+                this.messageService.sendRequestEngineResultError(x);
             }
         });
     }
