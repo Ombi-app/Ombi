@@ -112,6 +112,7 @@ export interface IPublicInfo {
 
 export interface IPlexSettings extends ISettings {
   enable: boolean;
+  enableWatchlistImport: boolean;
   servers: IPlexServer[];
 }
 
@@ -156,6 +157,11 @@ export interface IRadarrSettings extends IExternalSettings {
   addOnly: boolean;
   minimumAvailability: string;
   scanForAvailability: boolean;
+}
+
+export interface IRadarrCombined {
+  radarr: IRadarrSettings;
+  radarr4K: IRadarrSettings;
 }
 
 export interface ILidarrSettings extends IExternalSettings {
@@ -214,6 +220,7 @@ export interface IJobSettings {
   mediaDatabaseRefresh: string;
   autoDeleteRequests: string;
   embyRecentlyAddedSync: string;
+  plexWatchlistImport: string;
 }
 
 export interface IIssueSettings extends ISettings {
@@ -233,6 +240,8 @@ export interface IAuthenticationSettings extends ISettings {
   requireNonAlphanumeric: boolean;
   requireUppercase: boolean;
   enableOAuth: boolean;
+  enableHeaderAuth: boolean;
+  headerAuthVariable: string;
 }
 
 export interface ICustomPage extends ISettings {

@@ -21,10 +21,12 @@ export class DiscoverCardComponent implements OnInit {
     @Input() public discoverType: DiscoverType;
     @Input() public result: IDiscoverCardResult;
     @Input() public isAdmin: boolean;
+    @Input() public is4kEnabled: boolean = false;
     public RequestType = RequestType;
     public hide: boolean;
     public fullyLoaded = false;
     public loading: boolean;
+    public allow4KButton: boolean = false;
 
     public requestable: boolean;
 
@@ -40,6 +42,7 @@ export class DiscoverCardComponent implements OnInit {
             this.getExtraTvInfo();
         }
         if (this.result.type == RequestType.movie) {
+            this.allow4KButton = true;
             this.getExtraMovieInfo();
         }
         if (this.result.type == RequestType.album) {
@@ -89,8 +92,14 @@ export class DiscoverCardComponent implements OnInit {
         if (this.result.available) {
             return "available";
         }
+        if (this.tvSearchResult?.partlyAvailable) {
+            return "partly-available";
+        }
         if (this.result.approved) {
             return "approved";
+        }
+        if (this.result.denied) {
+            return "denied";
         }
         if (this.result.requested) {
             return "requested";
@@ -98,12 +107,18 @@ export class DiscoverCardComponent implements OnInit {
         return "";
     }
 
-    public getAvailbilityStatus(): string {
+    public getAvailabilityStatus(): string {
         if (this.result.available) {
             return this.translate.instant("Common.Available");
         }
+        if (this.tvSearchResult?.partlyAvailable) {
+            return this.translate.instant("Common.PartlyAvailable");
+        }
         if (this.result.approved) {
             return this.translate.instant("Common.Approved");
+        }
+        if (this.result.denied) {
+            return this.translate.instant("Common.Denied");
         }
         if (this.result.requested) {
             return this.translate.instant("Common.Pending");
@@ -111,7 +126,7 @@ export class DiscoverCardComponent implements OnInit {
         return "";
     }
 
-    public request(event: any) {
+    public request(event: any, is4k: boolean) {
         event.preventDefault();
         this.loading = true;
         switch (this.result.type) {
@@ -121,14 +136,15 @@ export class DiscoverCardComponent implements OnInit {
                 return;
             case RequestType.movie:
                 if (this.isAdmin) {
-                    const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.movie, id: this.result.id }, panelClass: 'modal-panel' });
+                    const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.movie, id: this.result.id,  }, panelClass: 'modal-panel' });
                     dialog.afterClosed().subscribe((result) => {
                         if (result) {
                                 this.requestService.requestMovie({ theMovieDbId: +this.result.id,
                                     languageCode: this.translate.currentLang,
                                     qualityPathOverride: result.radarrPathId,
                                     requestOnBehalf: result.username?.id,
-                                    rootFolderOverride: result.radarrFolderId, }).subscribe(x => {
+                                    rootFolderOverride: result.radarrFolderId,
+                                    is4KRequest: is4k }).subscribe(x => {
                                 if (x.result) {
                                     this.result.requested = true;
                                     this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.result.title }), "Ok");
@@ -139,7 +155,7 @@ export class DiscoverCardComponent implements OnInit {
                         }
                     });
                 } else {
-                this.requestService.requestMovie({ theMovieDbId: +this.result.id, languageCode: this.translate.currentLang, requestOnBehalf: null, qualityPathOverride: null, rootFolderOverride: null }).subscribe(x => {
+                this.requestService.requestMovie({ theMovieDbId: +this.result.id, languageCode: this.translate.currentLang, requestOnBehalf: null, qualityPathOverride: null, rootFolderOverride: null, is4KRequest: is4k }).subscribe(x => {
                     if (x.result) {
                         this.result.requested = true;
                         this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.result.title }), "Ok");
@@ -167,9 +183,10 @@ export class DiscoverCardComponent implements OnInit {
 
     private updateMovieItem(updated: ISearchMovieResultV2) {
         this.result.url = "http://www.imdb.com/title/" + updated.imdbId + "/";
-        this.result.available = updated.available;
-        this.result.requested = updated.requested;
-        this.result.approved = updated.approved;
+        this.result.available = updated.available || updated.available4K;
+        this.result.requested = updated.requested || updated.has4KRequest;
+        this.result.approved = updated.approved || updated.available4K;
+        this.result.denied = updated.denied || updated.denied4K;
         this.result.rating = updated.voteAverage;
         this.result.overview = updated.overview;
         this.result.imdbid = updated.imdbId;
@@ -196,6 +213,7 @@ export class DiscoverCardComponent implements OnInit {
         this.result.overview = updated.overview;
         this.result.approved = updated.approved;
         this.result.available = updated.fullyAvailable;
+        this.result.denied = updated.denied;
 
         this.fullyLoaded = true;
     }

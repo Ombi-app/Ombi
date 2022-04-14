@@ -32,7 +32,7 @@ namespace Ombi.Core.Rule.Rules.Request
             {
                 var tvRequest = (ChildRequests) obj;
                 
-                var tvContent = _plexContent.GetAll().Include(x => x.Episodes).Where(x => x.Type == PlexMediaTypeEntity.Show);
+                var tvContent = _plexContent.GetAll().Include(x => x.Episodes).Where(x => x.Type == MediaType.Series);
                 // We need to do a check on the TVDBId
                 var anyMovieDbMatches = await tvContent.FirstOrDefaultAsync(x => x.TheMovieDbId.Length > 0 && x.TheMovieDbId == tvRequest.Id.ToString()); 
                 if (anyMovieDbMatches == null)
@@ -53,6 +53,15 @@ namespace Ombi.Core.Rule.Rules.Request
                 }
                 // looks like we have a match on the TVDbID
                 return CheckExistingContent(tvRequest, anyMovieDbMatches);
+            }
+            if (obj.RequestType == RequestType.Movie)
+            {
+                var movie = (MovieRequests)obj;
+                var exists = _plexContent.GetAll().Where(x => x.Type == MediaType.Movie).Any(x => x.TheMovieDbId == movie.Id.ToString() || x.TheMovieDbId == movie.TheMovieDbId.ToString());
+                if (exists)
+                {
+                    return Fail(ErrorCode.AlreadyRequested, "This movie is already available." );
+                }
             }
             return Success();
         }

@@ -6,7 +6,7 @@
     <FileVersion>3.0.0.0</FileVersion>
     <Version></Version>
     <PackageVersion></PackageVersion>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>latest</LangVersion>
     <Configurations>Debug;Release;NonUiBuild</Configurations>
   </PropertyGroup>
 
@@ -36,6 +36,7 @@
     <ProjectReference Include="..\Ombi.Api.Trakt\Ombi.Api.Trakt.csproj" />
     <ProjectReference Include="..\Ombi.Api.TvMaze\Ombi.Api.TvMaze.csproj" />
     <ProjectReference Include="..\Ombi.Helpers\Ombi.Helpers.csproj" />
+    <ProjectReference Include="..\Ombi.I18n\Ombi.I18n.csproj" />
     <ProjectReference Include="..\Ombi.Notifications\Ombi.Notifications.csproj" />
     <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
     <ProjectReference Include="..\Ombi.Store\Ombi.Store.csproj" />

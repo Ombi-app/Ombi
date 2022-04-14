@@ -33,7 +33,7 @@ namespace Ombi.Core.Engine.V2
         public async Task<IEnumerable<IssuesSummaryModel>> GetIssues(int position, int take, IssueStatus status, CancellationToken token)
         {
             var issues = await _issues.GetAll().Where(x => x.Status == status && x.ProviderId != null).Skip(position).Take(take).OrderBy(x => x.Title).ToListAsync(token);
-            var grouped = issues.GroupBy(x => x.Title, (key, g) => new { Title = key, Issues = g });
+            var grouped = issues.GroupBy(x => new { x.Title, x.ProviderId }, (key, g) => new { key = key, Issues = g });
             
             var model = new List<IssuesSummaryModel>();
 
@@ -42,8 +42,8 @@ namespace Ombi.Core.Engine.V2
                 model.Add(new IssuesSummaryModel
                 {
                     Count = group.Issues.Count(),
-                    Title = group.Title,
-                    ProviderId = group.Issues.FirstOrDefault()?.ProviderId
+                    Title = group.key.Title,
+                    ProviderId = group.key.ProviderId
                 });
             }
 

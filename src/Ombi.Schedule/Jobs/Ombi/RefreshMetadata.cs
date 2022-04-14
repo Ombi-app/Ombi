@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Emby;
 using Ombi.Api.Jellyfin;
+using Ombi.Api.Plex;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Api.TvMaze;
@@ -30,7 +31,8 @@ namespace Ombi.Schedule.Jobs.Ombi
             IMovieDbApi movieApi,
             ISettingsService<EmbySettings> embySettings, IEmbyApiFactory embyApi,
             ISettingsService<JellyfinSettings> jellyfinSettings, IJellyfinApiFactory jellyfinApi,
-            IHubContext<NotificationHub> notification, IMediaCacheService mediaCacheService)
+            IHubContext<NotificationHub> notification, IMediaCacheService mediaCacheService,
+            IPlexApi plexApi)
         {
             _plexRepo = plexRepo;
             _embyRepo = embyRepo;
@@ -45,6 +47,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             _jellyfinApiFactory = jellyfinApi;
             _notification = notification;
             _mediaCacheService = mediaCacheService;
+            _plexApi = plexApi;
         }
 
         private readonly IPlexContentRepository _plexRepo;
@@ -60,6 +63,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly IJellyfinApiFactory _jellyfinApiFactory;
         private readonly IHubContext<NotificationHub> _notification;
         private readonly IMediaCacheService _mediaCacheService;
+        private readonly IPlexApi _plexApi;
 
         private IEmbyApi EmbyApi { get; set; }
         private IJellyfinApi JellyfinApi { get; set; }
@@ -75,7 +79,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 var settings = await _plexSettings.GetSettingsAsync();
                 if (settings.Enable)
                 {
-                    await StartPlex();
+                    await StartPlex(settings);
 
                     await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
                 }
@@ -112,16 +116,16 @@ namespace Ombi.Schedule.Jobs.Ombi
                 .SendAsync(NotificationHub.NotificationEvent, "Metadata Refresh Finished");
         }
 
-        private async Task StartPlex()
+        private async Task StartPlex(PlexSettings settings)
         {
             // Ensure we check that we have not linked this item to a request
             var allMovies = await _plexRepo.GetAll().Where(x =>
-               x.Type == PlexMediaTypeEntity.Movie && x.RequestId == null && (x.TheMovieDbId == null || x.ImdbId == null)).ToListAsync();
-            await StartPlexMovies(allMovies);
+               x.Type == MediaType.Movie && x.RequestId == null && ((x.TheMovieDbId == null || x.TheMovieDbId == string.Empty ) || (x.ImdbId == null || x.ImdbId == string.Empty))).ToListAsync();
+            await StartPlexMovies(allMovies, settings);
 
             // Now Tv
             var allTv = await _plexRepo.GetAll().Where(x =>
-                x.Type == PlexMediaTypeEntity.Show && x.RequestId == null && (x.TheMovieDbId == null || x.ImdbId == null || x.TvDbId == null)).ToListAsync();
+                x.Type == MediaType.Series && x.RequestId == null && (x.TheMovieDbId == null || x.ImdbId == null || x.TvDbId == null)).ToListAsync();
             await StartPlexTv(allTv);
         }
 
@@ -178,7 +182,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private async Task StartEmbyTv()
         {
             var allTv = await _embyRepo.GetAll().Where(x =>
-                x.Type == EmbyMediaType.Series && (x.TheMovieDbId == null || x.ImdbId == null || x.TvDbId == null)).ToListAsync();
+                x.Type == MediaType.Series && (x.TheMovieDbId == null || x.ImdbId == null || x.TvDbId == null)).ToListAsync();
 
             foreach (var show in allTv)
             {
@@ -213,7 +217,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private async Task StartJellyfinTv()
         {
             var allTv = await _jellyfinRepo.GetAll().Where(x =>
-                x.Type == JellyfinMediaType.Series && (x.TheMovieDbId == null || x.ImdbId == null || x.TvDbId == null)).ToListAsync();
+                x.Type == MediaType.Series && (x.TheMovieDbId == null || x.ImdbId == null || x.TvDbId == null)).ToListAsync();
 
             foreach (var show in allTv)
             {
@@ -245,7 +249,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
-        private async Task StartPlexMovies(List<PlexServerContent> allMovies)
+        private async Task StartPlexMovies(List<PlexServerContent> allMovies, PlexSettings settings)
         {
             foreach (var movie in allMovies)
             {
@@ -261,14 +265,58 @@ namespace Ombi.Schedule.Jobs.Ombi
                 if (!hasImdb)
                 {
                     var imdbId = await GetImdbId(hasTheMovieDb, false, movie.Title, movie.TheMovieDbId, string.Empty, RequestType.Movie);
-                    movie.ImdbId = imdbId;
-                    _plexRepo.UpdateWithoutSave(movie);
+                    if (imdbId.HasValue())
+                    {
+                        movie.ImdbId = imdbId;
+                        hasImdb = true;
+                        _plexRepo.UpdateWithoutSave(movie);
+                    }
                 }
                 if (!hasTheMovieDb)
                 {
                     var id = await GetTheMovieDbId(false, hasImdb, string.Empty, movie.ImdbId, movie.Title, true);
-                    movie.TheMovieDbId = id;
-                    _plexRepo.UpdateWithoutSave(movie);
+                    if (id.HasValue())
+                    {
+                        movie.TheMovieDbId = id;
+                        hasTheMovieDb = true;
+                        _plexRepo.UpdateWithoutSave(movie);
+                    }
+                }
+                if (!hasTheMovieDb || !hasImdb)
+                {
+                    // Check to see if the Plex item has anything
+                    if (!settings.Servers.Any())
+                    {
+                        continue;
+                    }
+                    var servers = settings.Servers[0];
+                    var metaData = await _plexApi.GetMetadata(servers.PlexAuthToken, settings.Servers[0].FullUri, movie.Key);
+                    var guids = new List<string>();
+
+                    var meta = metaData.MediaContainer.Metadata.FirstOrDefault();
+                    guids.Add(meta.guid);
+                    if (meta.Guid != null)
+                    {
+                        foreach (var g in meta.Guid)
+                        {
+                            guids.Add(g.Id);
+                        }
+                    }
+
+                    var providerIds = PlexHelper.GetProviderIdsFromMetadata(guids.ToArray());
+                    if (providerIds.Any())
+                    {
+                        if (providerIds.TheMovieDb.HasValue() && !hasTheMovieDb)
+                        {
+                            movie.TheMovieDbId = providerIds.TheMovieDb;
+                            _plexRepo.UpdateWithoutSave(movie);
+                        }
+                        if (providerIds.ImdbId.HasValue() && !hasImdb)
+                        {
+                            movie.ImdbId = providerIds.ImdbId;
+                            _plexRepo.UpdateWithoutSave(movie);
+                        }
+                    }
                 }
 
                 await _plexRepo.SaveChangesAsync();
@@ -278,7 +326,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private async Task StartEmbyMovies(EmbySettings settings)
         {
             var allMovies = await _embyRepo.GetAll().Where(x =>
-                x.Type == EmbyMediaType.Movie && (x.TheMovieDbId == null || x.ImdbId == null)).ToListAsync();
+                x.Type == MediaType.Movie && (x.TheMovieDbId == null || x.ImdbId == null)).ToListAsync();
             foreach (var movie in allMovies)
             {
                 movie.ImdbId.HasValue();
@@ -333,7 +381,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private async Task StartJellyfinMovies(JellyfinSettings settings)
         {
             var allMovies = await _jellyfinRepo.GetAll().Where(x =>
-                x.Type == JellyfinMediaType.Movie && (x.TheMovieDbId == null || x.ImdbId == null)).ToListAsync();
+                x.Type == MediaType.Movie && (x.TheMovieDbId == null || x.ImdbId == null)).ToListAsync();
             foreach (var movie in allMovies)
             {
                 movie.ImdbId.HasValue();
@@ -447,17 +495,20 @@ namespace Ombi.Schedule.Jobs.Ombi
                         default:
                             break;
                     }
-                    
+
                 }
             }
 
             if (hasTvDbId && type == RequestType.TvShow)
             {
                 _log.LogInformation("The show {0} has tvdbid but not ImdbId, searching for ImdbId", title);
-                if (int.TryParse(tvDbId, out var id))
+
+                var result = await _movieApi.Find(tvDbId.ToString(), ExternalSource.tvdb_id);
+                var movieDbId = result.tv_results.FirstOrDefault()?.id ?? 0;
+                if (movieDbId != 0)
                 {
-                    var result = await _tvApi.ShowLookupByTheTvDbId(id);
-                    return result?.externals?.imdb;
+                    var externalsResult = await _movieApi.GetTvExternals(movieDbId);
+                    return externalsResult.imdb_id;
                 }
             }
             return string.Empty;

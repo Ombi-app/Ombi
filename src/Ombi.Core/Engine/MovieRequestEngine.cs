@@ -22,15 +22,18 @@ using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Core.Models;
 using System.Threading;
+using Ombi.Core.Services;
+using Ombi.Core.Helpers;
 
 namespace Ombi.Core.Engine
 {
     public class MovieRequestEngine : BaseMediaEngine, IMovieRequestEngine
     {
-        public MovieRequestEngine(IMovieDbApi movieApi, IRequestServiceMain requestService, IPrincipal user,
+        public MovieRequestEngine(IMovieDbApi movieApi, IRequestServiceMain requestService, ICurrentUser user,
             INotificationHelper helper, IRuleEvaluator r, IMovieSender sender, ILogger<MovieRequestEngine> log,
             OmbiUserManager manager, IRepository<RequestLog> rl, ICacheService cache,
-            ISettingsService<OmbiSettings> ombiSettings, IRepository<RequestSubscription> sub, IMediaCacheService mediaCacheService)
+            ISettingsService<OmbiSettings> ombiSettings, IRepository<RequestSubscription> sub, IMediaCacheService mediaCacheService,
+            IFeatureService featureService)
             : base(user, requestService, r, manager, cache, ombiSettings, sub)
         {
             MovieApi = movieApi;
@@ -39,6 +42,7 @@ namespace Ombi.Core.Engine
             Logger = log;
             _requestLog = rl;
             _mediaCacheService = mediaCacheService;
+            _featureService = featureService;
         }
 
         private IMovieDbApi MovieApi { get; }
@@ -47,6 +51,7 @@ namespace Ombi.Core.Engine
         private ILogger<MovieRequestEngine> Logger { get; }
         private readonly IRepository<RequestLog> _requestLog;
         private readonly IMediaCacheService _mediaCacheService;
+        private readonly IFeatureService _featureService;
 
         /// <summary>
         /// Requests the movie.
@@ -72,7 +77,8 @@ namespace Ombi.Core.Engine
             var userDetails = await GetUser();
             var canRequestOnBehalf = model.RequestOnBehalf.HasValue();
 
-            var isAdmin = await UserManager.IsInRoleAsync(userDetails, OmbiRoles.PowerUser) || await UserManager.IsInRoleAsync(userDetails, OmbiRoles.Admin);
+            var isAdmin = await UserManager.IsInRoleAsync(userDetails, OmbiRoles.PowerUser)
+                || await UserManager.IsInRoleAsync(userDetails, OmbiRoles.Admin);
             if (canRequestOnBehalf && !isAdmin)
             {
                 return new RequestEngineResult
@@ -93,27 +99,54 @@ namespace Ombi.Core.Engine
                 };
             }
 
-            var requestModel = new MovieRequests
+            var is4kFeatureEnabled = await _featureService.FeatureEnabled(FeatureNames.Movie4KRequests);
+            var is4kRequest = is4kFeatureEnabled && model.Is4kRequest;
+
+            MovieRequests requestModel;
+            bool isExisting = false;
+            // Do we already have a request? 4k or non 4k
+            var existingRequest = await MovieRepository.GetRequestAsync(movieInfo.Id);
+            if (existingRequest != null && is4kFeatureEnabled)
             {
-                TheMovieDbId = movieInfo.Id,
-                RequestType = RequestType.Movie,
-                Overview = movieInfo.Overview,
-                ImdbId = movieInfo.ImdbId,
-                PosterPath = PosterPathHelper.FixPosterPath(movieInfo.PosterPath),
-                Title = movieInfo.Title,
-                ReleaseDate = !string.IsNullOrEmpty(movieInfo.ReleaseDate)
-                    ? DateTime.Parse(movieInfo.ReleaseDate)
-                    : DateTime.MinValue,
-                Status = movieInfo.Status,
-                RequestedDate = DateTime.UtcNow,
-                Approved = false,
-                RequestedUserId = canRequestOnBehalf ? model.RequestOnBehalf : userDetails.Id,
-                Background = movieInfo.BackdropPath,
-                LangCode = model.LanguageCode,
-                RequestedByAlias = model.RequestedByAlias,
-                RootPathOverride = model.RootFolderOverride.GetValueOrDefault(),
-                QualityOverride = model.QualityPathOverride.GetValueOrDefault()
-            };
+                if (model.Is4kRequest)
+                {
+                    existingRequest.Is4kRequest = true;
+                    existingRequest.RequestedDate4k = DateTime.Now;
+                }
+                else
+                {
+                    existingRequest.RequestedDate = DateTime.Now;
+                }
+                isExisting = true;
+                requestModel = existingRequest;
+            }
+            else
+            {
+                requestModel = new MovieRequests
+                {
+                    TheMovieDbId = movieInfo.Id,
+                    RequestType = RequestType.Movie,
+                    Overview = movieInfo.Overview,
+                    ImdbId = movieInfo.ImdbId,
+                    PosterPath = PosterPathHelper.FixPosterPath(movieInfo.PosterPath),
+                    Title = movieInfo.Title,
+                    ReleaseDate = !string.IsNullOrEmpty(movieInfo.ReleaseDate)
+                        ? DateTime.Parse(movieInfo.ReleaseDate)
+                        : DateTime.MinValue,
+                    Status = movieInfo.Status,
+                    RequestedDate = model.Is4kRequest ? DateTime.MinValue : DateTime.Now,
+                    Approved = false,
+                    RequestedUserId = canRequestOnBehalf ? model.RequestOnBehalf : userDetails.Id,
+                    Background = movieInfo.BackdropPath,
+                    LangCode = model.LanguageCode,
+                    RequestedByAlias = model.RequestedByAlias,
+                    RootPathOverride = model.RootFolderOverride.GetValueOrDefault(),
+                    QualityOverride = model.QualityPathOverride.GetValueOrDefault(),
+                    RequestedDate4k = model.Is4kRequest ? DateTime.Now : DateTime.MinValue,
+                    Is4kRequest = model.Is4kRequest,
+                    Source = model.Source
+                };
+            }
 
             var usDates = movieInfo.ReleaseDates?.Results?.FirstOrDefault(x => x.IsoCode == "US");
             requestModel.DigitalReleaseDate = usDates?.ReleaseDate
@@ -132,10 +165,10 @@ namespace Ombi.Core.Engine
 
             if (requestModel.Approved) // The rules have auto approved this
             {
-                var requestEngineResult = await AddMovieRequest(requestModel, fullMovieName, model.RequestOnBehalf);
+                var requestEngineResult = await AddMovieRequest(requestModel, fullMovieName, model.RequestOnBehalf, isExisting, is4kRequest);
                 if (requestEngineResult.Result)
                 {
-                    var result = await ApproveMovie(requestModel);
+                    var result = await ApproveMovie(requestModel, model.Is4kRequest);
                     if (result.IsError)
                     {
                         Logger.LogWarning("Tried auto sending movie but failed. Message: {0}", result.Message);
@@ -153,7 +186,7 @@ namespace Ombi.Core.Engine
                 // If there are no providers then it's successful but movie has not been sent
             }
 
-            return await AddMovieRequest(requestModel, fullMovieName, model.RequestOnBehalf);
+            return await AddMovieRequest(requestModel, fullMovieName, model.RequestOnBehalf, isExisting, is4kRequest);
         }
 
 
@@ -218,7 +251,7 @@ namespace Ombi.Core.Engine
             var requests = await (OrderMovies(allRequests, orderFilter.OrderType)).Skip(position).Take(count)
                 .ToListAsync();
 
-            await CheckForSubscription(shouldHide, requests);
+            await CheckForSubscription(shouldHide.UserId, requests);
             return new RequestsViewModel<MovieRequests>
             {
                 Collection = requests,
@@ -262,7 +295,7 @@ namespace Ombi.Core.Engine
             var total = requests.Count();
             requests = requests.Skip(position).Take(count).ToList();
 
-            await CheckForSubscription(shouldHide, requests);
+            await CheckForSubscription(shouldHide.UserId, requests);
             return new RequestsViewModel<MovieRequests>
             {
                 Collection = requests,
@@ -290,19 +323,42 @@ namespace Ombi.Core.Engine
             switch (status)
             {
                 case RequestStatus.PendingApproval:
-                    allRequests = allRequests.Where(x => !x.Approved && !x.Available && (!x.Denied.HasValue || !x.Denied.Value));
+                    allRequests = allRequests.Where(x => 
+                            (x.RequestedDate != DateTime.MinValue && !x.Approved && !x.Available && (!x.Denied.HasValue || !x.Denied.Value)) 
+                            || 
+                            (x.Has4KRequest && !x.Approved4K && !x.Available4K && (!x.Denied4K.HasValue || !x.Denied4K.Value))
+                       );
                     break;
                 case RequestStatus.ProcessingRequest:
-                    allRequests = allRequests.Where(x => x.Approved && !x.Available && (!x.Denied.HasValue || !x.Denied.Value));
+                    allRequests = allRequests.Where(x => 
+                            (x.RequestedDate != DateTime.MinValue && x.Approved && !x.Available && (!x.Denied.HasValue || !x.Denied.Value))
+                            ||
+                            (x.Has4KRequest && x.Approved4K && !x.Available && (!x.Denied.HasValue || !x.Denied.Value))
+                        );
                     break;
                 case RequestStatus.Available:
-                    allRequests = allRequests.Where(x => x.Available);
+                    allRequests = allRequests.Where(x => x.Available || x.Available4K);
                     break;
                 case RequestStatus.Denied:
-                    allRequests = allRequests.Where(x => x.Denied.HasValue && x.Denied.Value && !x.Available);
+                    allRequests = allRequests.Where(x => 
+                            (x.Denied.HasValue && x.Denied.Value && !x.Available)
+                            ||
+                            (x.Has4KRequest && x.Denied4K.HasValue && x.Denied4K.Value && !x.Available4K)
+                        );
                     break;
                 default:
                     break;
+            }
+
+            var requests = allRequests.ToList();
+            var total = requests.Count;
+            if (total == 0)
+            {
+                return new RequestsViewModel<MovieRequests>
+                {
+                    Collection = Enumerable.Empty<MovieRequests>(),
+                    Total = total
+                };
             }
 
             var prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(sortProperty, true);
@@ -317,14 +373,14 @@ namespace Ombi.Core.Engine
                 //var secondProp = TypeDescriptor.GetProperties(propType).Find(properties[1], true);
             }
 
-            // TODO fix this so we execute this on the server
-            var requests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
+            requests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
                 ? allRequests.ToList().OrderBy(x => prop.GetValue(x)).ToList()
                 : allRequests.ToList().OrderByDescending(x => prop.GetValue(x)).ToList();
-            var total = requests.Count();
+
+            // TODO fix this so we execute this on the server
             requests = requests.Skip(position).Take(count).ToList();
 
-            await CheckForSubscription(shouldHide, requests);
+            await CheckForSubscription(shouldHide.UserId, requests);
             return new RequestsViewModel<MovieRequests>
             {
                 Collection = requests,
@@ -367,7 +423,7 @@ namespace Ombi.Core.Engine
             var total = requests.Count();
             requests = requests.Skip(position).Take(count).ToList();
 
-            await CheckForSubscription(shouldHide, requests);
+            await CheckForSubscription(shouldHide.UserId, requests);
             return new RequestsViewModel<MovieRequests>
             {
                 Collection = requests,
@@ -449,7 +505,7 @@ namespace Ombi.Core.Engine
                 allRequests = await MovieRepository.GetWithUser().ToListAsync();
             }
 
-            await CheckForSubscription(shouldHide, allRequests);
+            await CheckForSubscription(shouldHide.UserId, allRequests);
 
             return allRequests;
         }
@@ -457,21 +513,21 @@ namespace Ombi.Core.Engine
         public async Task<MovieRequests> GetRequest(int requestId)
         {
             var request = await MovieRepository.GetWithUser().Where(x => x.Id == requestId).FirstOrDefaultAsync();
-            await CheckForSubscription(new HideResult(), new List<MovieRequests> { request });
+            await CheckForSubscription((await GetUser()).Id, new List<MovieRequests> { request });
 
             return request;
         }
 
-        private async Task CheckForSubscription(HideResult shouldHide, List<MovieRequests> movieRequests)
+        private async Task CheckForSubscription(string UserId, List<MovieRequests> movieRequests)
         {
             var requestIds = movieRequests.Select(x => x.Id);
             var sub = await _subscriptionRepository.GetAll().Where(s =>
-                s.UserId == shouldHide.UserId && requestIds.Contains(s.RequestId) && s.RequestType == RequestType.Movie)
+                s.UserId == UserId && requestIds.Contains(s.RequestId) && s.RequestType == RequestType.Movie)
                 .ToListAsync();
             foreach (var x in movieRequests)
             {
                 x.PosterPath = PosterPathHelper.FixPosterPath(x.PosterPath);
-                if (shouldHide.UserId == x.RequestedUserId)
+                if (UserId == x.RequestedUserId)
                 {
                     x.ShowSubscribe = false;
                 }
@@ -503,18 +559,18 @@ namespace Ombi.Core.Engine
             }
 
             var results = allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase)).ToList();
-            await CheckForSubscription(shouldHide, results);
+            await CheckForSubscription(shouldHide.UserId, results);
 
             return results;
         }
 
-        public async Task<RequestEngineResult> ApproveMovieById(int requestId)
+        public async Task<RequestEngineResult> ApproveMovieById(int requestId, bool is4K)
         {
             var request = await MovieRepository.Find(requestId);
-            return await ApproveMovie(request);
+            return await ApproveMovie(request, is4K);
         }
 
-        public async Task<RequestEngineResult> DenyMovieById(int modelId, string denyReason)
+        public async Task<RequestEngineResult> DenyMovieById(int modelId, string denyReason, bool is4K)
         {
             var request = await MovieRepository.Find(modelId);
             if (request == null)
@@ -525,8 +581,16 @@ namespace Ombi.Core.Engine
                 };
             }
 
-            request.Denied = true;
-            request.DeniedReason = denyReason;
+            if (is4K)
+            {
+                request.Denied4K = true;
+                request.DeniedReason4K = denyReason;
+            }
+            else
+            {
+                request.Denied = true;
+                request.DeniedReason = denyReason;
+            }
             await MovieRepository.Update(request);
             await _mediaCacheService.Purge();
 
@@ -540,7 +604,7 @@ namespace Ombi.Core.Engine
             };
         }
 
-        public async Task<RequestEngineResult> ApproveMovie(MovieRequests request)
+        public async Task<RequestEngineResult> ApproveMovie(MovieRequests request, bool is4K)
         {
             if (request == null)
             {
@@ -550,9 +614,18 @@ namespace Ombi.Core.Engine
                 };
             }
 
-            request.MarkedAsApproved = DateTime.Now;
-            request.Approved = true;
-            request.Denied = false;
+            if (is4K)
+            {
+                request.MarkedAsApproved4K = DateTime.Now;
+                request.Approved4K = true;
+                request.Denied4K = false;
+            }
+            else
+            {
+                request.MarkedAsApproved = DateTime.Now;
+                request.Approved = true;
+                request.Denied = false;
+            }
             await MovieRepository.Update(request);
 
             var canNotify = await RunSpecificRule(request, SpecificRules.CanSendNotification, string.Empty);
@@ -562,7 +635,7 @@ namespace Ombi.Core.Engine
             }
             await _mediaCacheService.Purge();
 
-            return await ProcessSendingMovie(request);
+            return await ProcessSendingMovie(request, is4K);
         }
 
         public async Task<RequestEngineResult> RequestCollection(int collectionId, CancellationToken cancellationToken)
@@ -590,11 +663,11 @@ namespace Ombi.Core.Engine
             return new RequestEngineResult { Result = true, Message = $"The collection {collections.name} has been successfully added!", RequestId = results.FirstOrDefault().RequestId };
         }
 
-        private async Task<RequestEngineResult> ProcessSendingMovie(MovieRequests request)
+        private async Task<RequestEngineResult> ProcessSendingMovie(MovieRequests request, bool is4K)
         {
-            if (request.Approved)
+            if (is4K ? request.Approved4K : request.Approved)
             {
-                var result = await Sender.Send(request);
+                var result = await Sender.Send(request, is4K);
                 if (result.Success && result.Sent)
                 {
                     return new RequestEngineResult
@@ -662,7 +735,7 @@ namespace Ombi.Core.Engine
             var result = await CheckCanManageRequest(request);
             if (result.IsError)
                 return result;
-                
+
             await MovieRepository.Delete(request);
             await _mediaCacheService.Purge();
             return new RequestEngineResult
@@ -683,7 +756,7 @@ namespace Ombi.Core.Engine
             return await MovieRepository.GetAll().AnyAsync(x => x.RequestedUserId == userId);
         }
 
-        public async Task<RequestEngineResult> ReProcessRequest(int requestId, CancellationToken cancellationToken)
+        public async Task<RequestEngineResult> ReProcessRequest(int requestId, bool is4K, CancellationToken cancellationToken)
         {
             var request = await MovieRepository.Find(requestId);
             if (request == null)
@@ -695,10 +768,10 @@ namespace Ombi.Core.Engine
                 };
             }
 
-            return await ProcessSendingMovie(request);
+            return await ProcessSendingMovie(request, is4K);
         }
 
-        public async Task<RequestEngineResult> MarkUnavailable(int modelId)
+        public async Task<RequestEngineResult> MarkUnavailable(int modelId, bool is4K)
         {
             var request = await MovieRepository.Find(modelId);
             if (request == null)
@@ -709,7 +782,14 @@ namespace Ombi.Core.Engine
                 };
             }
 
-            request.Available = false;
+            if (is4K)
+            {
+                request.Available4K = false;
+            }
+            else
+            {
+                request.Available = false;
+            }
             await MovieRepository.Update(request);
             await _mediaCacheService.Purge();
 
@@ -720,7 +800,7 @@ namespace Ombi.Core.Engine
             };
         }
 
-        public async Task<RequestEngineResult> MarkAvailable(int modelId)
+        public async Task<RequestEngineResult> MarkAvailable(int modelId, bool is4K)
         {
             var request = await MovieRepository.Find(modelId);
             if (request == null)
@@ -730,9 +810,16 @@ namespace Ombi.Core.Engine
                     ErrorMessage = "Request does not exist"
                 };
             }
-
-            request.Available = true;
-            request.MarkedAsAvailable = DateTime.Now;
+            if (!is4K)
+            {
+                request.Available = true;
+                request.MarkedAsAvailable = DateTime.Now;
+            }
+            else
+            {
+                request.Available4K = true;
+                request.MarkedAsAvailable4K = DateTime.Now;
+            }
             await NotificationHelper.Notify(request, NotificationType.RequestAvailable);
             await MovieRepository.Update(request);
             await _mediaCacheService.Purge();
@@ -744,9 +831,20 @@ namespace Ombi.Core.Engine
             };
         }
 
-        private async Task<RequestEngineResult> AddMovieRequest(MovieRequests model, string movieName, string requestOnBehalf)
+        private async Task<RequestEngineResult> AddMovieRequest(MovieRequests model, string movieName, string requestOnBehalf, bool isExisting, bool is4k)
         {
-            await MovieRepository.Add(model);
+            if (is4k)
+            {
+                model.Has4KRequest = true;
+            }
+            if (!isExisting)
+            {
+                await MovieRepository.Add(model);
+            }
+            else
+            {
+                await MovieRepository.Update(model);
+            }
 
             var result = await RunSpecificRule(model, SpecificRules.CanSendNotification, requestOnBehalf);
             if (result.Success)

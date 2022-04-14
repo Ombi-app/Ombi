@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Humanizer;
 using Ombi.Helpers;
+using Ombi.I18n.Resources;
 using Ombi.Notifications.Models;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
@@ -151,6 +152,7 @@ namespace Ombi.Notifications
             RequestId = req?.Id.ToString();
             RequestedUser = req?.RequestedUser?.UserName;
             RequestedDate = req?.RequestedDate.ToString("D");
+            DetailsUrl = GetDetailsUrl(s, req);
 
             if (Type.IsNullOrEmpty())
             {
@@ -192,7 +194,9 @@ namespace Ombi.Notifications
             return requestType switch
             {
                 null => string.Empty,
-                RequestType.TvShow => "TV Show",
+                RequestType.TvShow => Texts.TvShow,
+                RequestType.Album => Texts.Album,
+                RequestType.Movie => Texts.Movie,
                 _ => requestType.Humanize()
             };
         }
@@ -211,6 +215,26 @@ namespace Ombi.Notifications
                 default:
                     Title = req.Title;
                     break;
+            }
+        }
+
+        private string GetDetailsUrl(CustomizationSettings s, BaseRequest req)
+        {
+            if (string.IsNullOrEmpty(s.ApplicationUrl))
+            {
+                return string.Empty;
+            }
+
+            switch (req)
+            {
+                case MovieRequests movieRequest:
+                    return $"{s.ApplicationUrl}/details/movie/{movieRequest.TheMovieDbId}";
+                case ChildRequests tvRequest:
+                    return $"{s.ApplicationUrl}/details/tv/{tvRequest.ParentRequest.ExternalProviderId}";
+                case AlbumRequest albumRequest:
+                    return $"{s.ApplicationUrl}/details/artist/{albumRequest.ForeignArtistId}";
+                default:
+                    return string.Empty;
             }
         }
 
@@ -255,6 +279,7 @@ namespace Ombi.Notifications
         public string Year { get; set; }
         public string EpisodesList { get; set; }
         public string SeasonsList { get; set; }
+        public string DetailsUrl { get; set; }
         public string PosterImage { get; set; }
         public string ApplicationName { get; set; }
         public string ApplicationUrl { get; set; }

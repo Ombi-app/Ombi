@@ -4,6 +4,7 @@ using Moq.AutoMock;
 using NUnit.Framework;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine;
+using Ombi.Core.Helpers;
 using Ombi.Core.Models;
 using Ombi.Core.Services;
 using Ombi.Helpers;
@@ -33,7 +34,12 @@ namespace Ombi.Core.Tests.Engine
             var identityMock = new Mock<IIdentity>();
             identityMock.SetupGet(x => x.Name).Returns("Test");
             principleMock.SetupGet(x => x.Identity).Returns(identityMock.Object);
+            var currentUser = new Mock<ICurrentUser>();
+            currentUser.Setup(x => x.Identity).Returns(identityMock.Object);
+            currentUser.Setup(x => x.Username).Returns("Test");
+            currentUser.Setup(x => x.GetUser()).ReturnsAsync(new OmbiUser { UserName = "Test", NormalizedUserName = "TEST", Id = "a" });
             _mocker.Use(principleMock.Object);
+            _mocker.Use(currentUser.Object);
 
             _subject = _mocker.CreateInstance<RequestLimitService>();
         }

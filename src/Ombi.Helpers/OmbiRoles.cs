@@ -16,5 +16,6 @@
         public const string ReceivesNewsletter = nameof(ReceivesNewsletter);
         public const string ManageOwnRequests = nameof(ManageOwnRequests);
         public const string EditCustomPage = nameof(EditCustomPage);
+        public const string Request4KMovie = nameof(Request4KMovie);
     }
 }

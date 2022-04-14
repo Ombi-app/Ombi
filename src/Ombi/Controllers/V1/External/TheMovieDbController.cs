@@ -40,14 +40,6 @@ namespace Ombi.Controllers.External
         }
 
         /// <summary>
-        /// Gets the genres for either Tv or Movies depending on media type
-        /// </summary>
-        /// <param name="media">Either `tv` or `movie`.</param>
-        [HttpGet("Genres/{media}")]
-        public async Task<IEnumerable<Genre>> GetGenres(string media) =>
-            await TmdbApi.GetGenres(media, HttpContext.RequestAborted);
-
-        /// <summary>
         /// Searches for the watch providers matching the specified term.
         /// </summary>
         /// <param name="searchTerm">The search term.</param>

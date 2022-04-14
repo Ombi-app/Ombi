@@ -5,7 +5,7 @@ import { IMovieDbKeyword, ITheMovieDbSettings } from "../../interfaces";
 import { debounceTime, switchMap } from "rxjs/operators";
 
 import { MatAutocomplete } from "@angular/material/autocomplete";
-import { NotificationService } from "../../services";
+import { NotificationService, SearchV2Service } from "../../services";
 import { SettingsService } from "../../services";
 import { TheMovieDbService } from "../../services";
 
@@ -33,6 +33,7 @@ export class TheMovieDbComponent implements OnInit {
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
                 private tmdbService: TheMovieDbService,
+                private searchService: SearchV2Service,
                 private fb: FormBuilder) { }
 
     public ngOnInit() {
@@ -55,9 +56,10 @@ export class TheMovieDbComponent implements OnInit {
 
             this.excludedKeywords.forEach(key => {
                 this.tmdbService.getKeyword(key.id).subscribe(keyResult => {
-                    this.excludedKeywords.filter((val, idx) => {
-                        val.name = keyResult.name;
-                    })
+                    var keyToUpdate = this.excludedKeywords.filter((val) => {
+                        return val.id == key.id;
+                    })[0];
+                    keyToUpdate.name = keyResult.name;
                 });
             });
 
@@ -70,7 +72,7 @@ export class TheMovieDbComponent implements OnInit {
                 }))
                 : [];
 
-            this.tmdbService.getGenres("movie").subscribe(results => {
+            this.searchService.getGenres("movie").subscribe(results => {
                 this.filteredMovieGenres = results;
 
                 this.excludedMovieGenres.forEach(genre => {
@@ -91,7 +93,7 @@ export class TheMovieDbComponent implements OnInit {
                 }))
                 : [];
 
-            this.tmdbService.getGenres("tv").subscribe(results => {
+            this.searchService.getGenres("tv").subscribe(results => {
                 this.filteredTvGenres = results;
 
                 this.excludedTvGenres.forEach(genre => {
@@ -112,6 +114,7 @@ export class TheMovieDbComponent implements OnInit {
             if (value) {
               return this.tmdbService.getKeywords(value);
             }
+            return [];
           })
         )
         .subscribe((r) => (this.filteredTags = r));

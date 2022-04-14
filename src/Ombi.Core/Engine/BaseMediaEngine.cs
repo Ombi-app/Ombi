@@ -26,7 +26,7 @@ namespace Ombi.Core.Engine
         private Dictionary<int, MovieRequests> _dbMovies;
         private Dictionary<int, TvRequests> _dbTv;
 
-        protected BaseMediaEngine(IPrincipal identity, IRequestServiceMain requestService,
+        protected BaseMediaEngine(ICurrentUser identity, IRequestServiceMain requestService,
             IRuleEvaluator rules, OmbiUserManager um, ICacheService cache, ISettingsService<OmbiSettings> ombiSettings, IRepository<RequestSubscription> sub) : base(identity, um, rules)
         {
             RequestService = requestService;

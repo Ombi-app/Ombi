@@ -39,6 +39,7 @@ import {
     IVoteSettings,
     ITwilioSettings,
     IWebhookNotificationSettings,
+    IRadarrCombined,
 } from "../interfaces";
 
 import { ServiceHelpers } from "./service.helpers";
@@ -101,11 +102,11 @@ export class SettingsService extends ServiceHelpers {
         return this.http.post<boolean>(`${this.url}/Sonarr`, JSON.stringify(settings), {headers: this.headers});
     }
 
-    public getRadarr(): Observable<IRadarrSettings> {
-        return this.http.get<IRadarrSettings>(`${this.url}/Radarr`, {headers: this.headers});
+    public getRadarr(): Observable<IRadarrCombined> {
+        return this.http.get<IRadarrCombined>(`${this.url}/Radarr`, {headers: this.headers});
     }
 
-    public saveRadarr(settings: IRadarrSettings): Observable<boolean> {
+    public saveRadarr(settings: IRadarrCombined): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}/Radarr`, JSON.stringify(settings), {headers: this.headers});
     }
 

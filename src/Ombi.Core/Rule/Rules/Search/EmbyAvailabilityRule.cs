@@ -1,11 +1,12 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
-using Ombi.Core.Settings;
-using Ombi.Core.Settings.Models.External;
+using Ombi.Core.Services;
 using Ombi.Helpers;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 
@@ -13,14 +14,17 @@ namespace Ombi.Core.Rule.Rules.Search
 {
     public class EmbyAvailabilityRule : BaseSearchRule, IRules<SearchViewModel>
     {
-        public EmbyAvailabilityRule(IEmbyContentRepository repo, ISettingsService<EmbySettings> s)
+        private readonly IFeatureService _featureService;
+
+        public EmbyAvailabilityRule(IEmbyContentRepository repo, ILogger<EmbyAvailabilityRule> log, IFeatureService featureService)
         {
             EmbyContentRepository = repo;
-            EmbySettings = s;
+            Log = log;
+            _featureService = featureService;
         }
 
         private IEmbyContentRepository EmbyContentRepository { get; }
-        private ISettingsService<EmbySettings> EmbySettings { get; }
+        private ILogger Log { get; }
 
         public async Task<RuleResult> Execute(SearchViewModel obj)
         {
@@ -60,22 +64,36 @@ namespace Ombi.Core.Rule.Rules.Search
                     }
                 }
             }
-            
+
             if (item != null)
             {
-                obj.Available = true;
-                var s = await EmbySettings.GetSettingsAsync();
-                if (s.Enable)
+                if (obj is SearchMovieViewModel movie)
                 {
-                    var server = s.Servers.FirstOrDefault();
-                    if ((server?.ServerHostname ?? string.Empty).HasValue())
+                    var is4kEnabled = await _featureService.FeatureEnabled(FeatureNames.Movie4KRequests);
+
+                    if (item.Has4K && is4kEnabled)
                     {
-                        obj.EmbyUrl = EmbyHelper.GetEmbyMediaUrl(item.EmbyId, server?.ServerId, server?.ServerHostname);
+                        movie.Available4K = true;
+                        obj.EmbyUrl = item.Url;
                     }
                     else
                     {
-                        obj.EmbyUrl = EmbyHelper.GetEmbyMediaUrl(item.EmbyId, server?.ServerId, null);
+                        obj.Available = true;
+                        obj.EmbyUrl = item.Url;
+                        obj.Quality = item.Quality;
                     }
+
+                    if (item.Quality.HasValue())
+                    {
+                        obj.Available = true;
+                        obj.EmbyUrl = item.Url;
+                        obj.Quality = item.Quality;
+                    }
+                }
+                else
+                {
+                    obj.Available = true;
+                    obj.EmbyUrl = item.Url;
                 }
 
                 if (obj.Type == RequestType.TvShow)
@@ -89,7 +107,7 @@ namespace Ombi.Core.Rule.Rules.Search
                         {
                             foreach (var episode in season.Episodes)
                             {
-                                await AvailabilityRuleHelper.SingleEpisodeCheck(useImdb, allEpisodes, episode, season, item, useTheMovieDb, useTvDb);
+                                await AvailabilityRuleHelper.SingleEpisodeCheck(useImdb, allEpisodes, episode, season, item, useTheMovieDb, useTvDb, Log);
                             }
                         }
                     }

@@ -172,6 +172,14 @@ export class PlexComponent implements OnInit, OnDestroy {
         });
     }
 
+    public runWatchlistImport(): void {
+        this.jobService.runPlexWatchlistImport().subscribe(x => {
+            if (x) {
+                this.notificationService.success("Triggered the Watchlist Import");
+            }
+        });
+    }
+
     public ngOnDestroy() {
         this.subscriptions.next();
         this.subscriptions.complete();

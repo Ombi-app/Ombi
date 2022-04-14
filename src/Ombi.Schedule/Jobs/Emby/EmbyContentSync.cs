@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
@@ -16,7 +17,7 @@ using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Quartz;
-using EmbyMediaType = Ombi.Store.Entities.EmbyMediaType;
+using MediaType = Ombi.Store.Entities.MediaType;
 
 namespace Ombi.Schedule.Jobs.Emby
 {
@@ -86,10 +87,10 @@ namespace Ombi.Schedule.Jobs.Emby
         private async Task StartServerCache(EmbyServers server, bool recentlyAdded)
         {
             if (!ValidateSettings(server))
+            {
                 return;
+            }
 
-            //await _repo.ExecuteSql("DELETE FROM EmbyEpisode");
-            //await _repo.ExecuteSql("DELETE FROM EmbyContent");
 
             if (server.EmbySelectedLibraries.Any() && server.EmbySelectedLibraries.Any(x => x.Enabled))
             {
@@ -149,7 +150,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 foreach (var tvShow in tv.Items)
                 {
                     processed++;
-                    if (string.IsNullOrEmpty(tvShow.ProviderIds?.Tvdb))
+                    if (!tvShow.ProviderIds.Any())
                     {
                         _logger.LogInformation("Provider Id on tv {0} is null", tvShow.Name);
                         continue;
@@ -165,10 +166,10 @@ namespace Ombi.Schedule.Jobs.Emby
                             ImdbId = tvShow.ProviderIds?.Imdb,
                             TheMovieDbId = tvShow.ProviderIds?.Tmdb,
                             Title = tvShow.Name,
-                            Type = EmbyMediaType.Series,
+                            Type = MediaType.Series,
                             EmbyId = tvShow.Id,
                             Url = EmbyHelper.GetEmbyMediaUrl(tvShow.Id, server?.ServerId, server.ServerHostname),
-                            AddedAt = DateTime.UtcNow
+                            AddedAt = DateTime.UtcNow,
                         });
                     }
                     else
@@ -209,6 +210,7 @@ namespace Ombi.Schedule.Jobs.Emby
             var totalCount = movies.TotalRecordCount;
             var processed = 0;
             var mediaToAdd = new HashSet<EmbyContent>();
+            var mediaToUpdate = new HashSet<EmbyContent>();
             while (processed < totalCount)
             {
                 foreach (var movie in movies.Items)
@@ -219,13 +221,13 @@ namespace Ombi.Schedule.Jobs.Emby
                             await Api.GetCollection(movie.Id, server.ApiKey, server.AdministratorId, server.FullUri);
                         foreach (var item in movieInfo.Items)
                         {
-                            await ProcessMovies(item, mediaToAdd, server);
+                            await ProcessMovies(item, mediaToAdd, mediaToUpdate, server);
                         }
                     }
                     else
                     {
                         // Regular movie
-                        await ProcessMovies(movie, mediaToAdd, server);
+                        await ProcessMovies(movie, mediaToAdd, mediaToUpdate, server);
                     }
 
                     processed++;
@@ -238,33 +240,63 @@ namespace Ombi.Schedule.Jobs.Emby
                     movies = await Api.GetAllMovies(server.ApiKey, parentId, processed, AmountToTake, server.AdministratorId, server.FullUri);
                 }
                 await _repo.AddRange(mediaToAdd);
+                await _repo.UpdateRange(mediaToUpdate);
                 mediaToAdd.Clear();
             }
         }
 
-        private async Task ProcessMovies(EmbyMovie movieInfo, ICollection<EmbyContent> content, EmbyServers server)
+        private async Task ProcessMovies(EmbyMovie movieInfo, ICollection<EmbyContent> content, ICollection<EmbyContent> toUpdate, EmbyServers server)
         {
+            var quality = movieInfo.MediaStreams?.FirstOrDefault()?.DisplayTitle ?? string.Empty;
+            var has4K = false;
+            if (quality.Contains("4K", CompareOptions.IgnoreCase))
+            {
+                has4K = true;
+            }
+
             // Check if it exists
             var existingMovie = await _repo.GetByEmbyId(movieInfo.Id);
             var alreadyGoingToAdd = content.Any(x => x.EmbyId == movieInfo.Id);
             if (existingMovie == null && !alreadyGoingToAdd)
             {
-                _logger.LogDebug("Adding new movie {0}", movieInfo.Name);
+                if (!movieInfo.ProviderIds.Any())
+                {
+                    _logger.LogWarning($"Movie {movieInfo.Name} has no relevant metadata. Skipping.");
+                    return;
+                }
+                _logger.LogDebug($"Adding new movie {movieInfo.Name}");
+
                 content.Add(new EmbyContent
                 {
                     ImdbId = movieInfo.ProviderIds.Imdb,
                     TheMovieDbId = movieInfo.ProviderIds?.Tmdb,
                     Title = movieInfo.Name,
-                    Type = EmbyMediaType.Movie,
+                    Type = MediaType.Movie,
                     EmbyId = movieInfo.Id,
                     Url = EmbyHelper.GetEmbyMediaUrl(movieInfo.Id, server?.ServerId, server.ServerHostname),
                     AddedAt = DateTime.UtcNow,
+                    Quality = has4K ? null : quality,
+                    Has4K = has4K
                 });
             }
             else
             {
-                // we have this
-                _logger.LogDebug("We already have movie {0}", movieInfo.Name);
+                if (!quality.Equals(existingMovie?.Quality, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    _logger.LogDebug($"We have found another quality for Movie '{movieInfo.Name}', Quality: '{quality}'");
+                    existingMovie.Quality = has4K ? null : quality;
+                    existingMovie.Has4K = has4K;
+
+                    // Probably could refactor here
+                    // If a 4k movie comes in (we don't store the quality on 4k)
+                    // it will always get updated even know it's not changed
+                    toUpdate.Add(existingMovie);
+                }
+                else
+                {
+                    // we have this
+                    _logger.LogDebug($"We already have movie {movieInfo.Name}");
+                }
             }
         }
 

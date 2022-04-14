@@ -9,7 +9,7 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
 {
-    public interface IExternalRepository<T> where T : Entity
+    public interface IExternalRepository<T> where T : IEntity
     {
         Task<T> Find(object key);
         IQueryable<T> GetAll();
@@ -25,6 +25,5 @@ namespace Ombi.Store.Repository
             where TEntity : class;
 
         Task ExecuteSql(string sql);
-        DbSet<T> _db { get; }
     }
 }

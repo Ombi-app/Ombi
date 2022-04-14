@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { Observable } from "rxjs";
+import { firstValueFrom, Observable } from "rxjs";
 import { startWith, map } from "rxjs/operators";
 import { ILanguageProfiles, IRadarrProfile, IRadarrRootFolder, ISonarrProfile, ISonarrRootFolder, ISonarrSettings, IUserDropdown, RequestType } from "../../interfaces";
 import { IdentityService, MessageService, RadarrService, RequestService, SettingsService, SonarrService } from "../../services";
@@ -55,7 +55,7 @@ export class AdminRequestDialogComponent implements OnInit {
         radarrFolderId: [null]
     })
 
-    this.options = await this.identityService.getUsersDropdown().toPromise();
+    this.options = await firstValueFrom(this.identityService.getUsersDropdown());
 
     this.filteredOptions = this.form.controls['username'].valueChanges.pipe(
       startWith(""),
@@ -96,7 +96,10 @@ export class AdminRequestDialogComponent implements OnInit {
   public displayFn(user: IUserDropdown): string {
     const username = user?.username ? user.username : "";
     const email = user?.email ? `(${user.email})` : "";
-    return `${username} ${email}`;
+    if (username && email) {
+      return `${username} ${email}`;
+    }
+    return '';
   }
 
   private _filter(value: string | IUserDropdown): IUserDropdown[] {

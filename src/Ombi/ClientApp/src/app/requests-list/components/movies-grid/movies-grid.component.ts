@@ -5,6 +5,7 @@ import { Observable, combineLatest, forkJoin, merge, of as observableOf } from '
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 import { AuthService } from "../../../auth/auth.service";
+import { FeaturesFacade } from "../../../state/features/features.facade";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
@@ -26,6 +27,7 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     public displayedColumns: string[] = ['title', 'requestedUser.requestedBy',  'status', 'requestStatus','requestedDate', 'actions'];
     public gridCount: string = "15";
     public isAdmin: boolean;
+    public is4kEnabled = false;
     public manageOwnRequests: boolean;
     public defaultSort: string = "requestedDate";
     public defaultOrder: string = "desc";
@@ -41,7 +43,7 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     private storageKeyGridCount = "Movie_DefaultGridCount";
     private storageKeyCurrentFilter = "Movie_DefaultFilter";
 
-    @Output() public onOpenOptions = new EventEmitter<{ request: any, filter: any, onChange: any, manageOwnRequests: boolean, isAdmin: boolean }>();
+    @Output() public onOpenOptions = new EventEmitter<{ request: any, filter: any, onChange: any, manageOwnRequests: boolean, isAdmin: boolean, has4kRequest: boolean, hasRegularRequest: boolean }>();
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -49,7 +51,8 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     constructor(private requestService: RequestServiceV2, private ref: ChangeDetectorRef,
         private auth: AuthService, private storageService: StorageService,
         private requestServiceV1: RequestService, private notification: NotificationService,
-        private translateService: TranslateService) {
+        private translateService: TranslateService,
+        private featureFacade: FeaturesFacade) {
 
         this.userName = auth.claims().name;
     }
@@ -60,6 +63,13 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
         if (this.isAdmin) {
             this.displayedColumns.unshift('select');
         }
+
+        this.is4kEnabled = this.featureFacade.is4kEnabled();
+        if ((this.isAdmin || this.auth.hasRole("Request4KMovie"))
+            && this.is4kEnabled) {
+            this.displayedColumns.splice(4, 0, 'has4kRequest');
+        }
+
         const defaultCount = this.storageService.get(this.storageKeyGridCount);
         const defaultSort = this.storageService.get(this.storageKey);
         const defaultOrder = this.storageService.get(this.storageKeyOrder);
@@ -139,8 +149,18 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
             this.ref.detectChanges();
         };
 
-        const data = { request: request, filter: filter, onChange: onChange, manageOwnRequests: this.manageOwnRequests, isAdmin: this.isAdmin };
+        const data = { request: request, filter: filter, onChange: onChange, manageOwnRequests: this.manageOwnRequests, isAdmin: this.isAdmin, has4kRequest: request.has4KRequest, hasRegularRequest: this.checkDate(request.requestedDate) };
         this.onOpenOptions.emit(data);
+    }
+
+    private checkDate(date: Date|string): boolean {
+        if (typeof date === 'string') {
+            return new Date(date).getFullYear() > 1;
+        }
+        if (date instanceof Date) {
+            return date.getFullYear() > 1;
+        }
+        return false;
     }
 
     public switchFilter(type: RequestFilterType) {
@@ -152,15 +172,15 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
         const numSelected = this.selection.selected.length;
         const numRows = this.dataSource.data.length;
         return numSelected === numRows;
-      }
+    }
 
-      public masterToggle() {
+    public masterToggle() {
         this.isAllSelected() ?
             this.selection.clear() :
             this.dataSource.data.forEach(row => this.selection.select(row));
-      }
+    }
 
-      public async bulkDelete() {
+    public async bulkDelete() {
         if (this.selection.isEmpty()) {
             return;
         }
@@ -174,15 +194,19 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
             this.selection.clear();
             this.ngAfterViewInit();
         });
-      }
+    }
 
-      public bulkApprove() {
+    public bulkApprove = () => this.bulkApproveInternal(false);
+
+    public bulkApprove4K = () => this.bulkApproveInternal(true);
+
+    private bulkApproveInternal(is4k: boolean) {
         if (this.selection.isEmpty()) {
             return;
         }
         let tasks = new Array<Observable<IRequestEngineResult>>();
         this.selection.selected.forEach((selected) => {
-            tasks.push(this.requestServiceV1.approveMovie({ id: selected.id }));
+            tasks.push(this.requestServiceV1.approveMovie({ id: selected.id, is4K: is4k }));
         });
 
         this.isLoadingResults = true;
@@ -198,5 +222,45 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
             this.selection.clear();
             this.ngAfterViewInit();
         })
-      }
+    }
+
+    public bulkDeny = () => this.bulkDenyInternal(false);
+
+    public bulkDeny4K = () => this.bulkDenyInternal(true);
+
+    private bulkDenyInternal(is4k: boolean) {
+        if (this.selection.isEmpty()) {
+            return;
+        }
+        let tasks = new Array<Observable<IRequestEngineResult>>();
+        this.selection.selected.forEach((selected) => {
+
+            tasks.push(this.requestServiceV1.denyMovie({
+                id: selected.id,
+                is4K: is4k,
+                reason: `` // TOOD: reuse DenyDialog to allow for a reason to be entered
+            }));
+        });
+
+        this.isLoadingResults = true;
+        forkJoin(tasks).subscribe((result: IRequestEngineResult[]) => {
+            this.isLoadingResults = false;
+            const failed = result.filter(x => !x.result);
+            if (failed.length > 0) {
+                this.notification.error("Some requests failed to deny: " + failed[0].errorMessage);
+                this.selection.clear();
+                return;
+            }
+            this.notification.success(this.translateService.instant('Requests.RequestPanel.Denied'));
+            this.selection.clear();
+            this.ngAfterViewInit();
+        })
+    }
+
+    public getRequestDate(request: IMovieRequests): Date {
+        if (new Date(request.requestedDate).getFullYear() === 1) {
+            return request.requestedDate4k;
+        }
+        return request.requestedDate;
+    }
 }

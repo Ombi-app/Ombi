@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { IChildRequests, RequestType } from "../../../../../interfaces";
+import { IChildRequests, RequestSource, RequestType } from "../../../../../interfaces";
 
 import { DenyDialogComponent } from "../../../shared/deny-dialog/deny-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
@@ -16,6 +16,8 @@ export class TvRequestsPanelComponent {
     @Input() public tvRequest: IChildRequests[];
     @Input() public isAdmin: boolean;
     @Input() public manageOwnRequests: boolean;
+
+    public RequestSource = RequestSource;
 
     public displayedColumns: string[] = ['number', 'title', 'airDate', 'status'];
 
@@ -100,7 +102,7 @@ export class TvRequestsPanelComponent {
     }
 
     public reProcessRequest(request: IChildRequests) {
-        this.requestService2.reprocessRequest(request.id, RequestType.tvShow).subscribe(result => {
+        this.requestService2.reprocessRequest(request.id, RequestType.tvShow, false).subscribe(result => {
             if (result.result) {
                 this.messageService.send(result.message ? result.message : "Successfully Re-processed the request", "Ok");
             } else {

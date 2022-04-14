@@ -40,7 +40,7 @@ namespace Ombi.Api.TheMovieDb
         Task<TheMovidDbKeyValue> GetKeyword(int keywordId);
         Task<WatchProviders> GetMovieWatchProviders(int theMoviedbId, CancellationToken token);
         Task<WatchProviders> GetTvWatchProviders(int theMoviedbId, CancellationToken token);
-        Task<List<Genre>> GetGenres(string media, CancellationToken cancellationToken);
+        Task<List<Genre>> GetGenres(string media, CancellationToken cancellationToken, string languageCode);
         Task<List<WatchProvidersResults>> SearchWatchProviders(string media, string searchTerm, CancellationToken cancellationToken);
         Task<List<MovieDbSearchResult>> AdvancedSearch(DiscoverModel model, CancellationToken cancellationToken);
     }

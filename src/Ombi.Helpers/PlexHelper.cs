@@ -104,11 +104,11 @@ namespace Ombi.Helpers
             return new ProviderId();
         }
 
-        public static string GetPlexMediaUrl(string machineId, int mediaId)
+        public static string GetPlexMediaUrl(string machineId, string mediaId, string plexHost)
         {
             var url =
                 $"web/#!/server/{machineId}/details?key=%2flibrary%2Fmetadata%2F{mediaId}";
-            return url;
+            return BuildPlexMediaUrl(url, plexHost);
         }
 
         public static string BuildPlexMediaUrl(string savedUrl, string plexHost)
@@ -179,6 +179,8 @@ namespace Ombi.Helpers
         public string TheMovieDb { get; set; }
         public string ImdbId { get; set; }
         public bool Plex { get; set; }
+
+        public bool Any() => TheTvDb.HasValue() || TheMovieDb.HasValue() || ImdbId.HasValue();
 
         public ProviderType Type
         {

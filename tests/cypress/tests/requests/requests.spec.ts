@@ -9,22 +9,27 @@ describe("Requests Tests", () => {
     cy.intercept("token").as("login");
     cy.login();
 
-    cy.requestAllTv(60735); // The Flash
+    const dbID = 60735; // The Flash
+    cy.requestAllTv(dbID);
 
     Page.visit();
 
     Page.tvTab.click();
-    const row = Page.tv.getGridRow(60735);
+    cy.waitUntil(() => {
+      const row = Page.tv.getGridRow(dbID);
+      return row.detailsButton.should("be.visible");
+    });
+    const row = Page.tv.getGridRow(dbID);
     row.detailsButton.click();
 
-    cy.location("pathname").should("contains", "/details/tv/60735");
+    cy.location("pathname").should("contains", "/details/tv/" + dbID);
     TvPage.title.contains("The Flash");
   });
 
   it("Deleting TV requests, removes from grid", () => {
     cy.intercept("POST", "request/tv").as("tvRequest");
     cy.intercept("token").as("login");
-    cy.intercept('DELETE', 'Request/tv/child/60735').as('deleteRequest');
+    cy.intercept('DELETE','api/v1/Request/tv/child/60735').as('deleteRequest');
     cy.login();
 
     // cy.wait('@login');

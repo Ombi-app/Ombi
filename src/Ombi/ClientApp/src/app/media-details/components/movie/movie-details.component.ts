@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild, ViewEncapsulation } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { ImageService, SearchV2Service, RequestService, MessageService, RadarrService, SettingsStateService } from "../../../services";
 import { ActivatedRoute } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -13,15 +13,16 @@ import { TranslateService } from "@ngx-translate/core";
 import { MovieAdvancedOptionsComponent } from "./panels/movie-advanced-options/movie-advanced-options.component";
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { RequestBehalfComponent } from "../shared/request-behalf/request-behalf.component";
-import { forkJoin } from "rxjs";
+import { firstValueFrom, forkJoin } from "rxjs";
 import { AdminRequestDialogComponent } from "../../../shared/admin-request-dialog/admin-request-dialog.component";
+import { FeaturesFacade } from "../../../state/features/features.facade";
 
 @Component({
     templateUrl: "./movie-details.component.html",
     styleUrls: ["../../media-details.component.scss"],
     encapsulation: ViewEncapsulation.None
 })
-export class MovieDetailsComponent {
+export class MovieDetailsComponent implements OnInit{
     public movie: ISearchMovieResultV2;
     public hasRequest: boolean;
     public movieRequest: IMovieRequests;
@@ -29,6 +30,8 @@ export class MovieDetailsComponent {
     public advancedOptions: IAdvancedData;
     public showAdvanced: boolean; // Set on the UI
     public issuesEnabled: boolean;
+    public roleName4k = "Request4KMovie";
+    public is4KEnabled = false;
 
     public requestType = RequestType.movie;
 
@@ -41,7 +44,7 @@ export class MovieDetailsComponent {
         public dialog: MatDialog, private requestService: RequestService,
         private requestService2: RequestServiceV2, private radarrService: RadarrService,
         public messageService: MessageService, private auth: AuthService, private settingsState: SettingsStateService,
-        private translate: TranslateService) {
+        private translate: TranslateService, private featureFacade: FeaturesFacade) {
         this.route.params.subscribe(async (params: any) => {
             if (typeof params.movieDbId === 'string' || params.movieDbId instanceof String) {
                 if (params.movieDbId.startsWith("tt")) {
@@ -49,12 +52,12 @@ export class MovieDetailsComponent {
                 }
             }
             this.theMovidDbId = params.movieDbId;
-            await this.load();
         });
     }
 
-    public async load() {
+    async ngOnInit() {
 
+        this.is4KEnabled = this.featureFacade.is4kEnabled();
         this.issuesEnabled = this.settingsState.getIssue();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
 
@@ -86,18 +89,26 @@ export class MovieDetailsComponent {
         }
     }
 
-    public async request(userId?: string) {
+    public async request(is4K: boolean, userId?: string) {
+        if (!this.is4KEnabled) {
+            is4K = false;
+        }
         if (this.isAdmin) {
             const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.movie, id: this.movie.id }, panelClass: 'modal-panel' });
             dialog.afterClosed().subscribe(async (result) => {
                 if (result) {
-                    const requestResult = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId,
+                    const requestResult = await firstValueFrom(this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId,
                         languageCode: this.translate.currentLang,
                         qualityPathOverride: result.radarrPathId,
                         requestOnBehalf: result.username?.id,
-                        rootFolderOverride: result.radarrFolderId, }).toPromise();
+                        rootFolderOverride: result.radarrFolderId,
+                        is4KRequest: is4K }));
                     if (requestResult.result) {
-                        this.movie.requested = true;
+                        if (is4K) {
+                            this.movie.has4KRequest = true;
+                        } else {
+                            this.movie.requested = true;
+                        }
                         this.movie.requestId = requestResult.requestId;
                         this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.movie.title }), "Ok");
                         this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
@@ -107,9 +118,13 @@ export class MovieDetailsComponent {
                 }
             });
         } else {
-        const result = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: this.translate.currentLang, requestOnBehalf: userId, qualityPathOverride: undefined, rootFolderOverride: undefined }).toPromise();
+        const result = await firstValueFrom(this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: this.translate.currentLang, requestOnBehalf: userId, qualityPathOverride: undefined, rootFolderOverride: undefined, is4KRequest: is4K }));
         if (result.result) {
-            this.movie.requested = true;
+            if (is4K) {
+                this.movie.has4KRequest = true;
+            } else {
+                this.movie.requested = true;
+            }
             this.movie.requestId = result.requestId;
             this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
             this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.movie.title }), "Ok");
@@ -149,21 +164,28 @@ export class MovieDetailsComponent {
         });
     }
 
-    public async approve() {
-        this.movie.approved = true;
-        const result = await this.requestService.approveMovie({ id: this.movieRequest.id }).toPromise();
+    public async approve(is4K: boolean) {
+        const result = await firstValueFrom(this.requestService.approveMovie({ id: this.movieRequest.id, is4K }));
         if (result.result) {
+            if (is4K) {
+                this.movie.approved4K = true;
+            } else {
+                this.movie.approved = true;
+            }
             this.messageService.send(this.translate.instant("Requests.SuccessfullyApproved"), "Ok");
         } else {
-            this.movie.approved = false;
             this.messageService.sendRequestEngineResultError(result);
         }
     }
 
-    public async markAvailable() {
-        const result = await this.requestService.markMovieAvailable({ id: this.movieRequest.id }).toPromise();
+    public async markAvailable(is4K: boolean) {
+        const result = await firstValueFrom(this.requestService.markMovieAvailable({ id: this.movieRequest.id, is4K }))
         if (result.result) {
-            this.movie.available = true;
+            if (is4K) {
+                this.movie.available4K = true;
+            } else {
+                this.movie.available = true;
+            }
             this.messageService.send(this.translate.instant("Requests.NowAvailable"), "Ok");
         } else {
             this.messageService.sendRequestEngineResultError(result);
@@ -171,10 +193,14 @@ export class MovieDetailsComponent {
     }
 
 
-    public async markUnavailable() {
-        const result = await this.requestService.markMovieUnavailable({ id: this.movieRequest.id }).toPromise();
+    public async markUnavailable(is4K: boolean) {
+        const result = await firstValueFrom(this.requestService.markMovieUnavailable({ id: this.movieRequest.id, is4K }));
         if (result.result) {
-            this.movie.available = false;
+            if (is4K) {
+                this.movie.available4K = false;
+            } else {
+                this.movie.available = false;
+            }
             this.messageService.send(this.translate.instant("Requests.NowUnavailable"), "Ok");
         } else {
             this.messageService.sendRequestEngineResultError(result);
@@ -203,8 +229,8 @@ export class MovieDetailsComponent {
         });
     }
 
-    public reProcessRequest() {
-        this.requestService2.reprocessRequest(this.movieRequest.id, RequestType.movie).subscribe(result => {
+    public reProcessRequest(is4K: boolean) {
+        this.requestService2.reprocessRequest(this.movieRequest.id, RequestType.movie, is4K).subscribe(result => {
             if (result.result) {
                 this.messageService.send(result.message ? result.message : this.translate.instant("Requests.SuccessfullyReprocessed"), "Ok");
             } else {

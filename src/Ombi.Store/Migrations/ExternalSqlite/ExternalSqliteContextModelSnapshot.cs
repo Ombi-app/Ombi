@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Ombi.Store.Context.Sqlite;
 
+#nullable disable
+
 namespace Ombi.Store.Migrations.ExternalSqlite
 {
     [DbContext(typeof(ExternalSqliteContext))]
@@ -13,8 +15,7 @@ namespace Ombi.Store.Migrations.ExternalSqlite
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.1");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
 
             modelBuilder.Entity("Ombi.Store.Entities.CouchPotatoCache", b =>
                 {
@@ -43,10 +44,16 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("Has4K")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("ImdbId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Quality")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TheMovieDbId")
@@ -121,6 +128,9 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("Has4K")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("ImdbId")
                         .HasColumnType("TEXT");
 
@@ -129,6 +139,9 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Quality")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TheMovieDbId")
@@ -261,14 +274,14 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                     b.Property<int>("EpisodeNumber")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("GrandparentKey")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("GrandparentKey")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("Key")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Key")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("ParentKey")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("ParentKey")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("SeasonNumber")
                         .HasColumnType("INTEGER");
@@ -289,17 +302,17 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ParentKey")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("ParentKey")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("PlexContentId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("PlexContentId")
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("PlexServerContentId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("SeasonKey")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("SeasonKey")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("SeasonNumber")
                         .HasColumnType("INTEGER");
@@ -320,11 +333,15 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("Has4K")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("ImdbId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Key")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Quality")
                         .HasColumnType("TEXT");
@@ -355,13 +372,33 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                     b.ToTable("PlexServerContent");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.PlexWatchlistHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("TmdbId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PlexWatchlistHistory");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.RadarrCache", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("Has4K")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("HasFile")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("HasRegular")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("TheMovieDbId")
@@ -474,9 +511,7 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                     b.HasOne("Ombi.Store.Entities.PlexServerContent", "Series")
                         .WithMany("Episodes")
                         .HasForeignKey("GrandparentKey")
-                        .HasPrincipalKey("Key")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasPrincipalKey("Key");
 
                     b.Navigation("Series");
                 });

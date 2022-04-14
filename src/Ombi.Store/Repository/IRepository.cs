@@ -10,7 +10,7 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
 {
-    public interface IRepository<T> where T : Entity
+    public interface IRepository<T> where T : IEntity
     {
         Task<T> Find(object key);
         Task<T> Find(object key, CancellationToken cancellationToken);
@@ -27,6 +27,5 @@ namespace Ombi.Store.Repository
             where TEntity : class;
 
         Task ExecuteSql(string sql);
-        DbSet<T> _db { get; }
     }
 }

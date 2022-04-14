@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Rules.Search;
+using Ombi.Core.Services;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
@@ -18,21 +21,23 @@ namespace Ombi.Core.Tests.Rule.Search
         public void Setup()
         {
             ContextMock = new Mock<IEmbyContentRepository>();
-            SettingsMock = new Mock<ISettingsService<EmbySettings>>();
-            Rule = new EmbyAvailabilityRule(ContextMock.Object, SettingsMock.Object);
+            LoggerMock = new Mock<ILogger<EmbyAvailabilityRule>>();
+            FeatureMock = new Mock<IFeatureService>();
+            Rule = new EmbyAvailabilityRule(ContextMock.Object, LoggerMock.Object, FeatureMock.Object);
         }
 
         private EmbyAvailabilityRule Rule { get; set; }
         private Mock<IEmbyContentRepository> ContextMock { get; set; }
-        private Mock<ISettingsService<EmbySettings>> SettingsMock { get; set; }
+        private Mock<ILogger<EmbyAvailabilityRule>> LoggerMock { get; set; }
+        private Mock<IFeatureService> FeatureMock { get; set; }
 
         [Test]
         public async Task Movie_ShouldBe_Available_WhenFoundInEmby()
         {
-            SettingsMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new EmbySettings());
             ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new EmbyContent
             {
-                ProviderId = "123"
+                TheMovieDbId = "123",
+                Quality = "1"
             });
             var search = new SearchMovieViewModel()
             {
@@ -45,24 +50,13 @@ namespace Ombi.Core.Tests.Rule.Search
         }
 
         [Test]
-        public async Task Movie_Has_Custom_Url_When_Specified_In_Settings()
+        public async Task Movie_ShouldBe_Available_WhenFoundInEmby_4K()
         {
-            SettingsMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new EmbySettings
-            {
-                Enable = true,
-                Servers = new List<EmbyServers>
-                {
-                    new EmbyServers
-                    {
-                        ServerHostname = "http://test.com/",
-                        ServerId = "8"
-                    }
-                }
-            });
+            FeatureMock.Setup(x => x.FeatureEnabled(FeatureNames.Movie4KRequests)).ReturnsAsync(true);
             ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new EmbyContent
             {
-                ProviderId = "123",
-                EmbyId = 1.ToString(),
+                TheMovieDbId = "123",
+                Has4K = true
             });
             var search = new SearchMovieViewModel()
             {
@@ -71,28 +65,19 @@ namespace Ombi.Core.Tests.Rule.Search
             var result = await Rule.Execute(search);
 
             Assert.True(result.Success);
-            Assert.That(search.EmbyUrl, Is.EqualTo("http://test.com/web/index.html#!/item?id=1&serverId=8"));
+            Assert.True(search.Available4K);
+            Assert.False(search.Available);
         }
 
         [Test]
-        public async Task Movie_Uses_Default_Url_When()
+        public async Task Movie_ShouldBe_Available_WhenFoundInEmby_Both()
         {
-            SettingsMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new EmbySettings
-            {
-                Enable = true,
-                Servers = new List<EmbyServers>
-                {
-                    new EmbyServers
-                    {
-                        ServerHostname = string.Empty,
-                        ServerId = "8"
-                    }
-                }
-            });
+            FeatureMock.Setup(x => x.FeatureEnabled(FeatureNames.Movie4KRequests)).ReturnsAsync(true);
             ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new EmbyContent
             {
-                ProviderId = "123",
-                EmbyId = 1.ToString()
+                TheMovieDbId = "123",
+                Has4K = true,
+                Quality = "1"
             });
             var search = new SearchMovieViewModel()
             {
@@ -101,7 +86,8 @@ namespace Ombi.Core.Tests.Rule.Search
             var result = await Rule.Execute(search);
 
             Assert.True(result.Success);
-            Assert.That(search.EmbyUrl, Is.EqualTo("https://app.emby.media/web/index.html#!/item?id=1&serverId=8"));
+            Assert.True(search.Available4K);
+            Assert.True(search.Available);
         }
 
         [Test]

@@ -1,30 +1,32 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace Ombi.Store.Entities
 {
     [Table("PlexEpisode")]
-    public class PlexEpisode : Entity
+    public class PlexEpisode : MediaServerEpisode
     {
-        public int EpisodeNumber { get; set; }
-        public int SeasonNumber { get; set; }
-        public int Key { get; set; } // RatingKey
-        public string Title { get; set; }
-        /// <summary>
-        /// The Season key
-        /// </summary>
+        public string Key { get; set; } // RatingKey
         /// <value>
         /// The parent key.
         /// </value>
-        public int ParentKey { get; set; }
-        /// <summary>
-        /// The Series key
-        /// </summary>
+        public string ParentKey { get; set; }
         /// <value>
         /// The grandparent key.
         /// </value>
-        public int GrandparentKey { get; set; }
+        public string GrandparentKey { get; set; }
+        [NotMapped]
+        public PlexServerContent PlexSeries
+        {
+            get => (PlexServerContent)Series;
+            set => Series = value;
+        }
 
-
-        public PlexServerContent Series { get; set; }
+        public override IMediaServerContent SeriesIsIn(ICollection<IMediaServerContent> content)
+        {
+            return content.OfType<PlexServerContent>().FirstOrDefault(
+                 x => x.Key == this.PlexSeries.Key);
+        }
     }
 }

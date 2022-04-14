@@ -1,11 +1,12 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
-using Ombi.Core.Settings;
-using Ombi.Core.Settings.Models.External;
+using Ombi.Core.Services;
 using Ombi.Helpers;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 
@@ -13,14 +14,17 @@ namespace Ombi.Core.Rule.Rules.Search
 {
     public class JellyfinAvailabilityRule : BaseSearchRule, IRules<SearchViewModel>
     {
-        public JellyfinAvailabilityRule(IJellyfinContentRepository repo, ISettingsService<JellyfinSettings> s)
+        private readonly IFeatureService _featureService;
+
+        public JellyfinAvailabilityRule(IJellyfinContentRepository repo, ILogger<JellyfinAvailabilityRule> log, IFeatureService featureService)
         {
             JellyfinContentRepository = repo;
-            JellyfinSettings = s;
+            Log = log;
+            _featureService = featureService;
         }
 
         private IJellyfinContentRepository JellyfinContentRepository { get; }
-        private ISettingsService<JellyfinSettings> JellyfinSettings { get; }
+        private ILogger Log { get; }
 
         public async Task<RuleResult> Execute(SearchViewModel obj)
         {
@@ -77,20 +81,32 @@ namespace Ombi.Core.Rule.Rules.Search
                     obj.TheMovieDbId = obj.Id.ToString();
                     useTheMovieDb = true;
                 }
-                obj.Available = true;
-                var s = await JellyfinSettings.GetSettingsAsync();
-                if (s.Enable)
+                if (obj is SearchMovieViewModel movie)
                 {
-                    var server = s.Servers.FirstOrDefault(x => x.ServerHostname != null);
-                    if ((server?.ServerHostname ?? string.Empty).HasValue())
+                    var is4kEnabled = await _featureService.FeatureEnabled(FeatureNames.Movie4KRequests);
+                    if (item.Has4K && is4kEnabled)
                     {
-                        obj.JellyfinUrl = JellyfinHelper.GetJellyfinMediaUrl(item.JellyfinId, server?.ServerId, server?.ServerHostname);
-                    }
+                        movie.Available4K = true;
+                        obj.JellyfinUrl = item.Url;
+                    } 
                     else
                     {
-                        var firstServer = s.Servers?.FirstOrDefault();
-                        obj.JellyfinUrl = JellyfinHelper.GetJellyfinMediaUrl(item.JellyfinId, firstServer.ServerId, firstServer.FullUri);
+                        obj.Available = true;
+                        obj.JellyfinUrl = item.Url;
+                        obj.Quality = item.Quality;
                     }
+                    
+                    if (item.Quality.HasValue())
+                    {
+                        obj.Available = true;
+                        obj.JellyfinUrl = item.Url;
+                        obj.Quality = item.Quality;
+                    }
+                }
+                else
+                {
+                    obj.Available = true;
+                    obj.JellyfinUrl = item.Url;
                 }
 
                 if (obj.Type == RequestType.TvShow)
@@ -104,7 +120,7 @@ namespace Ombi.Core.Rule.Rules.Search
                         {
                             foreach (var episode in season.Episodes)
                             {
-                                await AvailabilityRuleHelper.SingleEpisodeCheck(useImdb, allEpisodes, episode, season, item, useTheMovieDb, useTvDb);
+                                await AvailabilityRuleHelper.SingleEpisodeCheck(useImdb, allEpisodes, episode, season, item, useTheMovieDb, useTvDb, Log);
                             }
                         }
                     }

@@ -2,7 +2,7 @@
 
 namespace Ombi.Store.Entities
 {
-    public abstract class Entity
+    public abstract class Entity: IEntity
     {
         [Key]
         public int Id { get; set; }

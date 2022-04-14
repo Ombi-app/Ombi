@@ -58,12 +58,20 @@
 
         <ng-container matColumnDef="requestedDate">
             <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{ 'Requests.RequestDate' | translate}} </th>
-            <td mat-cell id="requestedDate{{element.id}}" *matCellDef="let element"> {{element.requestedDate | amLocal | amUserLocale | amDateFormat: 'LL'}} </td>
+            <td mat-cell id="requestedDate{{element.id}}" *matCellDef="let element"> {{getRequestDate(element) | amLocal | amUserLocale | amDateFormat: 'LL'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="status">
             <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{ 'Requests.Status' | translate}} </th>
             <td mat-cell id="status{{element.id}}"  *matCellDef="let element"> {{element.status |translateStatus }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="has4kRequest">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{ 'Requests.Has4KRequest' | translate}} </th>
+            <td mat-cell id="has4kRequest{{element.id}}"  *matCellDef="let element">
+                <i *ngIf="element.has4KRequest" class="fas fa-check"></i>
+                <i *ngIf="!element.has4KRequest" class="fas fa-times"></i>
+            </td>
         </ng-container>
 
 
@@ -90,6 +98,9 @@
 <button id="bulkFab" *ngIf="selection.hasValue() && isAdmin" mat-fab color="accent" class="floating-fab" [matMenuTriggerFor]="aboveMenu">
     <i class="fas fa-bars"></i></button>
   <mat-menu #aboveMenu="matMenu" yPosition="above">
-    <button id="deleteFabButton" mat-menu-item (click)="bulkDelete()">{{'Requests.RequestPanel.Delete' | translate}}</button>
     <button id="approveFabButton" mat-menu-item (click)="bulkApprove()">{{'Requests.RequestPanel.Approve' | translate}}</button>
+    <button *ngIf="is4kEnabled" id="approve4kFabButton" mat-menu-item (click)="bulkApprove4K()">{{'Requests.RequestPanel.Approve4K' | translate}}</button>
+    <button id="denyFabButton" mat-menu-item (click)="bulkDeny()">{{'Requests.RequestPanel.Deny' | translate}}</button>
+    <button *ngIf="is4kEnabled" id="deny4kFabButton" mat-menu-item (click)="bulkDeny4K()">{{'Requests.RequestPanel.Deny4K' | translate}}</button>
+    <button id="deleteFabButton" mat-menu-item (click)="bulkDelete()">{{'Requests.RequestPanel.Delete' | translate}}</button>
   </mat-menu>

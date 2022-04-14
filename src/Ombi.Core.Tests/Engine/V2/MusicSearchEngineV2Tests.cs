@@ -23,6 +23,7 @@ using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Test.Common;
 using Artist = Hqub.MusicBrainz.API.Entities.Artist;
+using Ombi.Core.Helpers;
 
 namespace Ombi.Core.Tests.Engine.V2
 {
@@ -45,7 +46,7 @@ namespace Ombi.Core.Tests.Engine.V2
                 .ForEach(b => F.Behaviors.Remove(b));
             F.Behaviors.Add(new OmitOnRecursionBehavior());
 
-            var principle = new Mock<IPrincipal>();
+            var principle = new Mock<ICurrentUser>();
             var requestService = new Mock<IRequestServiceMain>();
             var ruleEval = new Mock<IRuleEvaluator>();
             var um = MockHelper.MockUserManager(new List<OmbiUser>());

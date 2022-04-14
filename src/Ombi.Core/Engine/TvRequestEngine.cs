@@ -32,7 +32,7 @@ namespace Ombi.Core.Engine
 {
     public class TvRequestEngine : BaseMediaEngine, ITvRequestEngine
     {
-        public TvRequestEngine(ITvMazeApi tvApi, IMovieDbApi movApi, IRequestServiceMain requestService, IPrincipal user,
+        public TvRequestEngine(ITvMazeApi tvApi, IMovieDbApi movApi, IRequestServiceMain requestService, ICurrentUser user,
             INotificationHelper helper, IRuleEvaluator rule, OmbiUserManager manager, ILogger<TvRequestEngine> logger,
             ITvSender sender, IRepository<RequestLog> rl, ISettingsService<OmbiSettings> settings, ICacheService cache,
             IRepository<RequestSubscription> sub, IMediaCacheService mediaCacheService) : base(user, requestService, rule, manager, cache, settings, sub)
@@ -188,7 +188,7 @@ namespace Ombi.Core.Engine
             (await tvBuilder
                 .GetShowInfo(tv.TheMovieDbId, tv.languageCode))
                 .CreateTvList(tv)
-                .CreateChild(tv, canRequestOnBehalf ? tv.RequestOnBehalf : user.Id);
+                .CreateChild(tv, canRequestOnBehalf ? tv.RequestOnBehalf : user.Id, tv.Source);
 
             await tvBuilder.BuildEpisodes(tv);
 
@@ -793,7 +793,7 @@ namespace Ombi.Core.Engine
             return await TvRepository.GetChild().AnyAsync(x => x.RequestedUserId == userId);
         }
 
-        public async Task<RequestEngineResult> MarkUnavailable(int modelId)
+        public async Task<RequestEngineResult> MarkUnavailable(int modelId, bool is4K)
         {
             var request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == modelId);
             if (request == null)
@@ -821,7 +821,7 @@ namespace Ombi.Core.Engine
             };
         }
 
-        public async Task<RequestEngineResult> MarkAvailable(int modelId)
+        public async Task<RequestEngineResult> MarkAvailable(int modelId, bool is4K)
         {
             ChildRequests request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == modelId);
             if (request == null)
@@ -918,7 +918,7 @@ namespace Ombi.Core.Engine
             return await AfterRequest(model.ChildRequests.FirstOrDefault(), requestOnBehalf);
         }
 
-        public async Task<RequestEngineResult> ReProcessRequest(int requestId, CancellationToken cancellationToken)
+        public async Task<RequestEngineResult> ReProcessRequest(int requestId, bool is4K, CancellationToken cancellationToken)
         {
             var request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == requestId, cancellationToken);
             if (request == null)

@@ -30,13 +30,14 @@ namespace Ombi.Core.Tests.Rule.Search
 
 
         [Test]
-        public async Task ShouldBe_Requested_WhenExisitngMovie()
+        public async Task ShouldBe_Requested_WhenExistingMovie()
         {
             var list = new MovieRequests
             {
                 TheMovieDbId = 123,
                 Approved = true,
-                RequestType = RequestType.Movie
+                RequestType = RequestType.Movie,
+                RequestedDate = System.DateTime.Now,
             };
 
             MovieMock.Setup(x => x.GetRequestAsync(123)).ReturnsAsync(list);

@@ -4,7 +4,7 @@ import { Injectable, Inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
-import { IDiscoverModel, IMultiSearchResult, ISearchMovieResult, ISearchTvResult } from "../interfaces";
+import { IDiscoverModel, IMovieDbKeyword, IMultiSearchResult, ISearchMovieResult, ISearchTvResult } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
 import { ISearchMovieResultV2 } from "../interfaces/ISearchMovieResultV2";
@@ -23,6 +23,11 @@ export class SearchV2Service extends ServiceHelpers {
     public multiSearch(searchTerm: string, filter: SearchFilter): Observable<IMultiSearchResult[]> {
         return this.http.post<IMultiSearchResult[]>(`${this.url}/multi/${encodeURIComponent(searchTerm)}`, filter);
     }
+    
+    public getGenres(media: string): Observable<IMovieDbKeyword[]> {
+        return this.http.get<IMovieDbKeyword[]>(`${this.url}/Genres/${media}`, { headers: this.headers })
+    }
+
     public getFullMovieDetails(theMovieDbId: number): Observable<ISearchMovieResultV2> {
         return this.http.get<ISearchMovieResultV2>(`${this.url}/Movie/${theMovieDbId}`);
     }

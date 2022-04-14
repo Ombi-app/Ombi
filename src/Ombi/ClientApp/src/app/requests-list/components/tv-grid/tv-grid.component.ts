@@ -1,14 +1,14 @@
-import { Component, AfterViewInit, ViewChild, Output, EventEmitter, ChangeDetectorRef, OnInit } from "@angular/core";
-import {  IRequestsViewModel, IChildRequests } from "../../../interfaces";
-import { MatPaginator } from "@angular/material/paginator";
-import { MatSort } from "@angular/material/sort";
-import { merge, of as observableOf, Observable } from 'rxjs';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild } from "@angular/core";
+import { IChildRequests, IRequestsViewModel } from "../../../interfaces";
+import { Observable, merge, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
-import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { AuthService } from "../../../auth/auth.service";
-import { StorageService } from "../../../shared/storage/storage-service";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSort } from "@angular/material/sort";
 import { RequestFilterType } from "../../models/RequestFilterType";
+import { RequestServiceV2 } from "../../../services/requestV2.service";
+import { StorageService } from "../../../shared/storage/storage-service";
 
 @Component({
     templateUrl: "./tv-grid.component.html",
@@ -34,7 +34,7 @@ export class TvGridComponent implements OnInit, AfterViewInit {
     private storageKeyGridCount = "Tv_DefaultGridCount";
     private storageKeyCurrentFilter = "Tv_DefaultFilter";
 
-    @Output() public onOpenOptions = new EventEmitter<{request: any, filter: any, onChange: any}>();
+    @Output() public onOpenOptions = new EventEmitter<{ request: any, filter: any, onChange: any, manageOwnRequests: boolean, isAdmin: boolean, has4kRequest: boolean, hasRegularRequest: boolean }>();
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -108,7 +108,7 @@ export class TvGridComponent implements OnInit, AfterViewInit {
             this.ref.detectChanges();
         };
 
-        const data = { request: request, filter: filter, onChange: onChange, manageOwnRequests: this.manageOwnRequests, isAdmin: this.isAdmin };
+        const data = { request: request, filter: filter, onChange: onChange, manageOwnRequests: this.manageOwnRequests, isAdmin: this.isAdmin, has4kRequest: false, hasRegularRequest: true  };
         this.onOpenOptions.emit(data);
     }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using Ombi.I18n.Resources;
 
 namespace Ombi.Notifications.Templates
 {
@@ -30,6 +31,8 @@ namespace Ombi.Notifications.Templates
         private const string TableLocation = "{@RECENTLYADDED}";
         private const string IntroText = "{@INTRO}";
         private const string Unsubscribe = "{@UNSUBSCRIBE}";
+        private const string UnsubscribeText = "{@UNSUBSCRIBETEXT}";
+        private const string PoweredByText = "{@POWEREDBYTEXT}";
 
 
         public string LoadTemplate(string subject, string intro, string tableHtml, string logo, string unsubscribeLink)
@@ -41,6 +44,8 @@ namespace Ombi.Notifications.Templates
             sb.Replace(DateKey, DateTime.Now.ToString("f"));
             sb.Replace(Logo, string.IsNullOrEmpty(logo) ? OmbiLogo : logo);
             sb.Replace(Unsubscribe, string.IsNullOrEmpty(unsubscribeLink) ? string.Empty : unsubscribeLink);
+            sb.Replace(UnsubscribeText, string.IsNullOrEmpty(unsubscribeLink) ? string.Empty : Texts.Unsubscribe);
+            sb.Replace(PoweredByText, Texts.PoweredBy);
 
             return sb.ToString();
         }

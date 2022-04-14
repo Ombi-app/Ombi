@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, Input, OnInit, Inject } from "@angular/core";
 import { ISearchMovieResultV2 } from "../../../../interfaces/ISearchMovieResultV2";
-import { IMovieRequests } from "../../../../interfaces";
+import { IMovieRequests, RequestSource } from "../../../../interfaces";
 import { SearchV2Service } from "../../../../services/searchV2.service";
 import { IMovieRatings } from "../../../../interfaces/IRatings";
 import { APP_BASE_HREF } from "@angular/common";
@@ -21,6 +21,7 @@ export class MovieInformationPanelComponent implements OnInit {
 
     public ratings: IMovieRatings;
     public streams: IStreamingData[];
+    public RequestSource = RequestSource;
 
     public baseUrl: string;
 

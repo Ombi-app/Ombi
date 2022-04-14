@@ -4,6 +4,7 @@ using Moq.AutoMock;
 using NUnit.Framework;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine;
+using Ombi.Core.Helpers;
 using Ombi.Core.Models;
 using Ombi.Core.Services;
 using Ombi.Helpers;
@@ -36,7 +37,12 @@ namespace Ombi.Core.Tests.Engine
             var identityMock = new Mock<IIdentity>();
             identityMock.SetupGet(x => x.Name).Returns("Test");
             principleMock.SetupGet(x => x.Identity).Returns(identityMock.Object);
+            var currentUser = new Mock<ICurrentUser>();
+            currentUser.Setup(x => x.Identity).Returns(identityMock.Object);
+            currentUser.Setup(x => x.Username).Returns("Test");
+            currentUser.Setup(x => x.GetUser()).ReturnsAsync(new OmbiUser { UserName = "Test", NormalizedUserName = "TEST", Id = "a" });
             _mocker.Use(principleMock.Object);
+            _mocker.Use(currentUser.Object);
 
             _subject = _mocker.CreateInstance<RequestLimitService>();
         }
@@ -494,7 +500,7 @@ namespace Ombi.Core.Tests.Engine
                 MusicRequestLimitType = RequestLimitType.Month,
                 Id = "id1"
             };
-            var today = DateTime.UtcNow;
+            var today = new DateTime(2022, 2, 2, 13, 0, 0);
             var firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
             var log = new List<RequestLog>
             {
@@ -514,7 +520,7 @@ namespace Ombi.Core.Tests.Engine
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingMusicRequests(user);
+            var result = await _subject.GetRemainingMusicRequests(user, today);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)

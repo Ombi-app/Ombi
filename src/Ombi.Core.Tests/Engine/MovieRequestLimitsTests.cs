@@ -4,6 +4,7 @@ using Moq.AutoMock;
 using NUnit.Framework;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine;
+using Ombi.Core.Helpers;
 using Ombi.Core.Models;
 using Ombi.Core.Services;
 using Ombi.Helpers;
@@ -36,6 +37,13 @@ namespace Ombi.Core.Tests.Engine
             var identityMock = new Mock<IIdentity>();
             identityMock.SetupGet(x => x.Name).Returns("Test");
             principleMock.SetupGet(x => x.Identity).Returns(identityMock.Object);
+
+            var currentUser = new Mock<ICurrentUser>();
+            currentUser.Setup(x => x.Identity).Returns(identityMock.Object);
+            currentUser.Setup(x => x.Username).Returns("Test");
+            currentUser.Setup(x => x.GetUser()).ReturnsAsync(new OmbiUser { UserName = "Test", NormalizedUserName = "TEST", Id = "a" });
+
+            _mocker.Use(currentUser.Object);
             _mocker.Use(principleMock.Object);
 
             _subject = _mocker.CreateInstance<RequestLimitService>();
@@ -429,6 +437,7 @@ namespace Ombi.Core.Tests.Engine
                 Id = "id1"
             };
             var lastWeek = new DateTime(2020, 09, 05).AddMonths(-1).AddDays(-1);
+            var today = new DateTime(2020, 09, 15, 13, 0, 0);
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -441,7 +450,7 @@ namespace Ombi.Core.Tests.Engine
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingMovieRequests(user);
+            var result = await _subject.GetRemainingMovieRequests(user, today);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -474,7 +483,7 @@ namespace Ombi.Core.Tests.Engine
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingMovieRequests(user);
+            var result = await _subject.GetRemainingMovieRequests(user, today);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
@@ -494,7 +503,7 @@ namespace Ombi.Core.Tests.Engine
                 MovieRequestLimitType = RequestLimitType.Month,
                 Id = "id1"
             };
-            var today = DateTime.UtcNow;
+            var today = new DateTime(2022,2,2,13,0,0);
             var firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
             var log = new List<RequestLog>
             {
@@ -514,7 +523,7 @@ namespace Ombi.Core.Tests.Engine
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
 
-            var result = await _subject.GetRemainingMovieRequests(user);
+            var result = await _subject.GetRemainingMovieRequests(user, today);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)

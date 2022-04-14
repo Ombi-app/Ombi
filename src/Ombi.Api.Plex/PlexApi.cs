@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Ombi.Api.Plex.Models;
@@ -66,6 +67,7 @@ namespace Ombi.Api.Plex
         private const string FriendsUri = "https://plex.tv/pms/friends/all";
         private const string GetAccountUri = "https://plex.tv/users/account.json";
         private const string ServerUri = "https://plex.tv/pms/servers.xml";
+        private const string WatchlistUri = "https://metadata.provider.plex.tv/";
 
         /// <summary>
         /// Sign into the Plex API
@@ -145,21 +147,21 @@ namespace Ombi.Api.Plex
         /// <param name="authToken"></param>
         /// <param name="plexFullHost"></param>
         /// <param name="ratingKey"></param>
-        public async Task<PlexMetadata> GetEpisodeMetaData(string authToken, string plexFullHost, int ratingKey)
+        public async Task<PlexMetadata> GetEpisodeMetaData(string authToken, string plexFullHost, string ratingKey)
         {
             var request = new Request($"/library/metadata/{ratingKey}", plexFullHost, HttpMethod.Get);
             await AddHeaders(request, authToken);
             return await Api.Request<PlexMetadata>(request);
         }
 
-        public async Task<PlexMetadata> GetMetadata(string authToken, string plexFullHost, int itemId)
+        public async Task<PlexMetadata> GetMetadata(string authToken, string plexFullHost, string itemId)
         {
             var request = new Request($"library/metadata/{itemId}", plexFullHost, HttpMethod.Get);
             await AddHeaders(request, authToken);
             return await Api.Request<PlexMetadata>(request);
         }
 
-        public async Task<PlexMetadata> GetSeasons(string authToken, string plexFullHost, int ratingKey)
+        public async Task<PlexMetadata> GetSeasons(string authToken, string plexFullHost, string ratingKey)
         {
             var request = new Request($"library/metadata/{ratingKey}/children", plexFullHost, HttpMethod.Get);
             await AddHeaders(request, authToken);
@@ -286,6 +288,26 @@ namespace Ombi.Api.Plex
                 var error = Api.DeserializeXml<AddUserError>(result);
                 return new PlexAddWrapper{Error = error};
             }
+        }
+
+        public async Task<PlexWatchlistContainer> GetWatchlist(string plexToken, CancellationToken cancellationToken)
+        {
+            var request = new Request("library/sections/watchlist/all", WatchlistUri, HttpMethod.Get);
+            await AddHeaders(request, plexToken);
+
+            var result = await Api.Request<PlexWatchlistContainer>(request, cancellationToken);
+
+            return result;
+        }
+        
+        public async Task<PlexWatchlistMetadataContainer> GetWatchlistMetadata(string ratingKey, string plexToken, CancellationToken cancellationToken)
+        {
+            var request = new Request($"library/metadata/{ratingKey}", WatchlistUri, HttpMethod.Get);
+            await AddHeaders(request, plexToken);
+
+            var result = await Api.Request<PlexWatchlistMetadataContainer>(request, cancellationToken);
+
+            return result;
         }
 
 

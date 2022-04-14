@@ -4,28 +4,18 @@
 
 <div *ngIf="movie" class="main-content-container">
 
-    <top-banner [background]="movie.background" [available]="movie.available" [title]="movie.title" [releaseDate]="movie.releaseDate" [tagline]="movie.tagline"></top-banner>
+    <top-banner [background]="movie.background" [available]="movie.available" [title]="movie.title"
+        [releaseDate]="movie.releaseDate" [tagline]="movie.tagline"></top-banner>
     <div class="social-icons-container">
 
-        <social-icons
-            [homepage]="movie.homepage"
-            [theMoviedbId]="movie.id"
-            [hasTrailer]="movie.videos?.results?.length > 0"
-            [imdbId]="movie.imdbId"
-            [twitter]="movie.externalIds.twitterId"
-            [facebook]="movie.externalIds.facebookId"
-            [instagram]="movie.externalIds.instagramId"
-            [available]="movie.available"
-            [plexUrl]="movie.plexUrl"
-            [embyUrl]="movie.embyUrl"
-            [jellyfinUrl]="movie.jellyfinUrl"
-            [isAdmin]="isAdmin"
-            [canShowAdvanced]="showAdvanced && movieRequest"
-            [type]="requestType"
-            (openTrailer)="openDialog()"
-            (onAdvancedOptions)="openAdvancedOptions()"
-            (onReProcessRequest)="reProcessRequest()"
-            >
+        <social-icons [homepage]="movie.homepage" [theMoviedbId]="movie.id"
+            [hasTrailer]="movie.videos?.results?.length > 0" [imdbId]="movie.imdbId"
+            [twitter]="movie.externalIds.twitterId" [facebook]="movie.externalIds.facebookId"
+            [instagram]="movie.externalIds.instagramId" [available]="movie.available" [plexUrl]="movie.plexUrl"
+            [embyUrl]="movie.embyUrl" [jellyfinUrl]="movie.jellyfinUrl" [isAdmin]="isAdmin"
+            [canShowAdvanced]="showAdvanced && movieRequest" [type]="requestType" [has4KRequest]="movie.has4KRequest"
+            (openTrailer)="openDialog()" (onAdvancedOptions)="openAdvancedOptions()"
+            (onReProcessRequest)="reProcessRequest(false)" (onReProcess4KRequest)="reProcessRequest(true)">
         </social-icons>
 
     </div>
@@ -40,73 +30,148 @@
                 <!--Next to poster-->
                 <div class="details-button-container">
                     <div class="col-12 media-row">
-                        <span *ngIf="movie.available">
-                            <a id="viewOnPlexButton" *ngIf="movie.plexUrl" href="{{movie.plexUrl}}" mat-raised-button  target="_blank" class="btn-spacing viewon-btn plex">
+                        <span *ngIf="movie.available || movie.available4K">
+                            <a id="viewOnPlexButton" *ngIf="movie.plexUrl" href="{{movie.plexUrl}}" mat-raised-button
+                                target="_blank" class="btn-spacing viewon-btn plex">
                                 {{'Search.ViewOnPlex' | translate}}
                                 <i class="far fa-play-circle fa-2x"></i>
                             </a>
-                            <a id="viewOnEmbyButton" *ngIf="movie.embyUrl" href="{{movie.embyUrl}}" mat-raised-button  target="_blank" class="btn-spacing viewon-btn emby">
+                            <a id="viewOnEmbyButton" *ngIf="movie.embyUrl" href="{{movie.embyUrl}}" mat-raised-button
+                                target="_blank" class="btn-spacing viewon-btn emby">
                                 {{'Search.ViewOnEmby' | translate}}
                                 <i class="far fa-play-circle fa-2x"></i>
                             </a>
-                            <a id="viewOnJellyfinButton" *ngIf="movie.jellyfinUrl" href="{{movie.jellyfinUrl}}" mat-raised-button  target="_blank" class="btn-spacing viewon-btn jellyfin">
+                            <a id="viewOnJellyfinButton" *ngIf="movie.jellyfinUrl" href="{{movie.jellyfinUrl}}"
+                                mat-raised-button target="_blank" class="btn-spacing viewon-btn jellyfin">
                                 {{'Search.ViewOnJellyfin' | translate}}
                                 <i class="far fa-play-circle fa-2x"></i>
                             </a>
                         </span>
-                            <button mat-raised-button class="btn-green btn-spacing" id="availableBtn" *ngIf="movie.available && !movie.plexUrl && !movie.embyUrl && !movie.jellyfinUrl"> {{
-                                'Common.Available' | translate }}</button>
-                            <span *ngIf="!movie.available">
-                                <span *ngIf="movie.requested || movie.approved; then requestedBtn else notRequestedBtn"></span>
-                                <ng-template #requestedBtn>
-                                    <button id="requestedBtn" mat-raised-button *ngIf="!hasRequest || hasRequest && movieRequest && !movieRequest.denied" class="btn-spacing" color="warn" [disabled]>
-                                        <i class="fas fa-check"></i>
-                                        {{ 'Common.Requested' | translate }}
-                                    </button>
-                                </ng-template>
-                                <ng-template #notRequestedBtn>
-                                    <button *ngIf="!movie.requested" id="requestBtn" mat-raised-button class="btn-spacing" color="primary" (click)="request()">
-                                        <i *ngIf="movie.requestProcessing" class="fas fa-circle-notch fa-spin fa-fw"></i> 
-                                        <i *ngIf="!movie.requestProcessing && !movie.processed" class="fas fa-plus"></i>
-                                        <i *ngIf="movie.processed && !movie.requestProcessing" class="fas fa-check"></i> 
-                                        {{'Common.Request' | translate }}
-                                    </button>
-                                </ng-template>
-                                <span *ngIf="!isAdmin && movie.showSubscribe" >
-                                    <button *ngIf="!movie.subscribed" (click)="notify()" id="notifyBtn" mat-raised-button  class="btn-spacing" >  <i class="fas fa-bell"></i>
-                                        {{ 'Requests.Notify' | translate }}</button>
-                                    <button *ngIf="movie.subscribed" (click)="unNotify()" id="unnotifyBtn" mat-raised-button  class="btn-spacing" >  <i class="fas fa-bell-slash"></i>
-                                        {{ 'Requests.RemoveNotification' | translate }}</button>
-                                    </span>
+                        <!-- Regular Movie Status -->
+                        <button mat-raised-button class="btn-green btn-spacing" id="availableBtn"
+                            *ngIf="movie.available && !movie.plexUrl && !movie.embyUrl && !movie.jellyfinUrl"> {{
+                            'Common.Available' | translate }}</button>
+                        <span *ngIf="!movie.available">
+                            <span
+                                *ngIf="movie.requested || movie.approved; then requestedBtn else notRequestedBtn"></span>
+                            <ng-template #requestedBtn>
+                                <button id="requestedBtn" mat-raised-button
+                                    *ngIf="!hasRequest || hasRequest && movieRequest && !movieRequest.denied"
+                                    class="btn-spacing" color="warn" [disabled]>
+                                    <i class="fas fa-check"></i>
+                                    {{ 'Common.Requested' | translate }}
+                                </button>
+                            </ng-template>
+                            <ng-template #notRequestedBtn>
+                                <button *ngIf="!movie.requested" id="requestBtn" mat-raised-button class="btn-spacing"
+                                    color="primary" (click)="request(false)">
+                                    <i *ngIf="movie.requestProcessing" class="fas fa-circle-notch fa-spin fa-fw"></i>
+                                    <i *ngIf="!movie.requestProcessing && !movie.processed" class="fas fa-plus"></i>
+                                    <i *ngIf="movie.processed && !movie.requestProcessing" class="fas fa-check"></i>
+                                    {{'Common.Request' | translate }}
+                                </button>
+                            </ng-template>
+                        </span>
+
+                        <!-- 4k Status -->
+                        <span *ngIf="is4KEnabled">
+                            <span *permission="roleName4k">
+                                <button mat-raised-button class="btn-green btn-spacing" id="availableBtn4k"
+                                    *ngIf="movie.available4K"> {{
+                                    'Common.Available4K' | translate }}
+                                </button>
+
+                                <span *ngIf="!movie.available4K">
+                                    <span
+                                        *ngIf="movie.has4KRequest || movie.approved4K; then requestedBtn4K else notRequestedBtn4K"></span>
+                                    <ng-template #requestedBtn4K>
+                                        <button id="requestedBtn4K" mat-raised-button
+                                            *ngIf="movieRequest && !movieRequest.denied4K" class="btn-spacing"
+                                            color="warn" [disabled]>
+                                            <i class="fas fa-check"></i>
+                                            {{ 'Common.Requested4K' | translate }}
+                                        </button>
+                                    </ng-template>
+                                    <ng-template #notRequestedBtn4K>
+                                        <button *ngIf="!movie.has4KRequest" id="requestBtn4k" mat-raised-button
+                                            class="btn-spacing" color="primary" (click)="request(true)">
+                                            <i *ngIf="movie.requestProcessing"
+                                                class="fas fa-circle-notch fa-spin fa-fw"></i>
+                                            <i *ngIf="!movie.requestProcessing && !movie.processed"
+                                                class="fas fa-plus"></i>
+                                            <i *ngIf="movie.processed && !movie.requestProcessing"
+                                                class="fas fa-check"></i>
+                                            {{'Common.Request4K' | translate }}
+                                        </button>
+                                    </ng-template>
+                                </span>
                             </span>
-                            <span *ngIf="isAdmin && hasRequest">
-                                <button id="approveBtn" *ngIf="!movie.approved " (click)="approve()" mat-raised-button class="btn-spacing" color="accent">
+                        </span>
+                        
+                        <span *ngIf="movieRequest?.showSubscribe">
+                            <button *ngIf="!movieRequest?.subscribed" (click)="notify()" id="notifyBtn"
+                                mat-raised-button class="btn-spacing"> <i class="fas fa-bell"></i>
+                                {{ 'Requests.Notify' | translate }}</button>
+                            <button *ngIf="movieRequest?.subscribed" (click)="unNotify()" id="unnotifyBtn"
+                                mat-raised-button class="btn-spacing"> <i class="fas fa-bell-slash"></i>
+                                {{ 'Requests.RemoveNotification' | translate }}</button>
+                        </span>
+
+                        <span *ngIf="isAdmin && hasRequest">
+                            <button id="approveBtn" *ngIf="!movie.approved && movie.requested" (click)="approve(false)"
+                                mat-raised-button class="btn-spacing" color="accent">
                                 <i class="fas fa-plus"></i> {{ 'Common.Approve' | translate }}
-                                </button>
-                                <button id="markAvailableBtn" *ngIf="!movie.available" (click)="markAvailable()" mat-raised-button class="btn-spacing"
-                                color="accent">
+                            </button>
+                            <button id="markAvailableBtn" *ngIf="!movie.available && movie.requested"
+                                (click)="markAvailable(false)" mat-raised-button class="btn-spacing" color="accent">
                                 <i class="fas fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}
-                                </button>
-
-                                <button id="markUnavailableBtn" *ngIf="movie.available" (click)="markUnavailable()" mat-raised-button class="btn-spacing"
-                                color="accent">
+                            </button>
+                            <button id="markUnavailableBtn" *ngIf="movie.available && movie.requested"
+                                (click)="markUnavailable(false)" mat-raised-button class="btn-spacing" color="accent">
                                 <i class="fas fa-minus"></i> {{ 'Requests.MarkUnavailable' | translate }}
-                                </button>
+                            </button>
 
-                                <button id="denyBtn" *ngIf="movieRequest && !movieRequest.denied" mat-raised-button class="btn-spacing" color="warn" (click)="deny()">
-                                    <i class="fas fa-times"></i> {{'Requests.Deny' | translate }}
-                                </button>
-                                <button id="deniedButton" *ngIf="movieRequest && movieRequest.denied" [matTooltip]="movieRequest.deniedReason" mat-raised-button class="btn-spacing" color="warn">
-                                    <i class="fas fa-times"></i> {{'MediaDetails.Denied' | translate }}
-                                </button>
+                            <!-- 4k -->
+                            <span *ngIf="is4KEnabled">
+                                <span *permission="roleName4k">
+                                    <button id="approve4kBtn" *ngIf="!movie.approved4K && movie.has4KRequest"
+                                        (click)="approve(true)" mat-raised-button class="btn-spacing" color="accent">
+                                        <i class="fas fa-plus"></i> {{ 'Common.Approve4K' | translate }}
+                                    </button>
+                                    <button id="markAvailable4kBtn" *ngIf="!movie.available4K && movie.has4KRequest"
+                                        (click)="markAvailable(true)" mat-raised-button class="btn-spacing"
+                                        color="accent">
+                                        <i class="fas fa-plus"></i> {{ 'Requests.MarkAvailable4K' | translate }}
+                                    </button>
+                                    <button id="markUnavailable4kBtn" *ngIf="movie.available4K"
+                                        (click)="markUnavailable(true)" mat-raised-button class="btn-spacing"
+                                        color="accent">
+                                        <i class="fas fa-minus"></i> {{ 'Requests.MarkUnavailable4K' | translate }}
+                                    </button>
+                                </span>
                             </span>
 
-                            <button id="reportIssueBtn" mat-raised-button class="btn-spacing" color="danger" (click)="issue()" *ngIf="issuesEnabled">
-                                <i class="fas fa-exclamation"></i> {{'Requests.ReportIssue' | translate }}
+                            <button id="denyBtn" *ngIf="!movieRequest.denied && movie.requested" mat-raised-button
+                                class="btn-spacing" color="warn" (click)="deny(false)">
+                                <i class="fas fa-times"></i> {{'Requests.Deny' | translate }}
                             </button>
-                            <button id="viewCollectionBtn" *ngIf="movie.belongsToCollection" [routerLink]="'/discover/collection/' + movie.belongsToCollection.id" mat-raised-button class="btn-spacing">
-                                <i class="fas fa-list"></i> {{'MediaDetails.ViewCollection' | translate}}
+
+                            <button id="deniedButton" *ngIf="movieRequest && movieRequest.denied"
+                                [matTooltip]="movieRequest.deniedReason" mat-raised-button class="btn-spacing"
+                                color="warn">
+                                <i class="fas fa-times"></i> {{'MediaDetails.Denied' | translate }}
                             </button>
+                        </span>
+
+                        <button id="reportIssueBtn" mat-raised-button class="btn-spacing" color="danger"
+                            (click)="issue()" *ngIf="issuesEnabled">
+                            <i class="fas fa-exclamation"></i> {{'Requests.ReportIssue' | translate }}
+                        </button>
+                        <button id="viewCollectionBtn" *ngIf="movie.belongsToCollection"
+                            [routerLink]="'/discover/collection/' + movie.belongsToCollection.id" mat-raised-button
+                            class="btn-spacing">
+                            <i class="fas fa-list"></i> {{'MediaDetails.ViewCollection' | translate}}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -115,7 +180,8 @@
                 <div class="col-12 col-md-2">
                     <mat-card class="mat-elevation-z8">
                         <mat-card-content>
-                            <movie-information-panel [movie]="movie" [request]="movieRequest" [advancedOptions]="showAdvanced"></movie-information-panel>
+                            <movie-information-panel [movie]="movie" [request]="movieRequest"
+                                [advancedOptions]="showAdvanced"></movie-information-panel>
                         </mat-card-content>
                     </mat-card>
 
@@ -151,9 +217,14 @@
                             <mat-card class="mat-elevation-z8">
                                 <mat-card-header>{{'MediaDetails.Trailers' | translate}}</mat-card-header>
                                 <mat-card-content>
-                                    <p-carousel class="no-indicator" [numVisible]="2" [numScroll]="10" [page]="0" [value]="movie.videos?.results">
+                                    <p-carousel class="no-indicator" [numVisible]="2" [numScroll]="10" [page]="0"
+                                        [value]="movie.videos?.results">
                                         <ng-template let-result pTemplate="item">
-                                            <iframe width="98%" height="315px" [src]="'https://www.youtube.com/embed/' + result.key | safe" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                            <iframe width="98%" height="315px"
+                                                [src]="'https://www.youtube.com/embed/' + result.key | safe"
+                                                frameborder="0"
+                                                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                                allowfullscreen></iframe>
                                         </ng-template>
                                     </p-carousel>
                                 </mat-card-content>
@@ -181,7 +252,9 @@
                                             <div class="sidebar affixable affix-top preview-poster">
                                                 <div class="poster">
                                                     <a [routerLink]="'/details/movie/'+r.id">
-                                                        <img class="real grow" matTooltip="{{r.title}}" src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}" alt="Poster" style="display: block;">
+                                                        <img class="real grow" matTooltip="{{r.title}}"
+                                                            src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}"
+                                                            alt="Poster" style="display: block;">
                                                     </a>
                                                 </div>
                                             </div>
@@ -201,7 +274,9 @@
                                             <div class="sidebar affixable affix-top preview-poster">
                                                 <div class="poster ">
                                                     <a [routerLink]="'/details/movie/'+r.id">
-                                                        <img class="real grow" matTooltip="{{r.title}}" src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}" alt="Poster" style="display: block;">
+                                                        <img class="real grow" matTooltip="{{r.title}}"
+                                                            src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}"
+                                                            alt="Poster" style="display: block;">
                                                     </a>
                                                 </div>
                                             </div>

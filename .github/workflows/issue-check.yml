@@ -8,9 +8,6 @@ jobs:
   issueCheck:
     runs-on: ubuntu-latest
     steps:
-      - name: Output version
-        run: |
-          echo "log: ${{ github.event.issue.body }}"
 
       - if: startsWith(github.event.issue.body , '**Describe the bug**') == false
         name: Close Issue

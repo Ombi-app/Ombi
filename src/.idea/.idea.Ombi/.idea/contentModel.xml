@@ -929,7 +929,7 @@
           <e p="EmbyConfiguration.cs" t="Include" />
           <e p="EmbyConnectUser.cs" t="Include" />
           <e p="EmbyItemContainer.cs" t="Include" />
-          <e p="EmbyMediaType.cs" t="Include" />
+          <e p="MediaType.cs" t="Include" />
           <e p="EmbyPolicy.cs" t="Include" />
           <e p="EmbySystemInfo.cs" t="Include" />
           <e p="EmbyUser.cs" t="Include" />
@@ -1876,7 +1876,7 @@
             <e p="PlexAvailabilityChecker.cs" t="Include" />
             <e p="PlexContentSync.cs" t="Include" />
             <e p="PlexEpisodeSync.cs" t="Include" />
-            <e p="PlexMediaType.cs" t="Include" />
+            <e p="MediaType.cs" t="Include" />
             <e p="PlexRecentlyAddedSync.cs" t="Include" />
             <e p="PlexUserImporter.cs" t="Include" />
           </e>

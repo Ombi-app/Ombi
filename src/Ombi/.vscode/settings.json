@@ -21,6 +21,8 @@
         "issues",
         "emby",
         "availability-rules",
-        "details"
-    ]
+        "details",
+        "requests"
+    ],
+    "rpc.enabled": true
 }

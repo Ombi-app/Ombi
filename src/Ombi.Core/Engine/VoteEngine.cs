@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Interfaces;
+using Ombi.Core.Helpers;
 using Ombi.Core.Models;
 using Ombi.Core.Models.UI;
 using Ombi.Core.Rule.Interfaces;
@@ -20,7 +21,7 @@ namespace Ombi.Core.Engine
 {
     public class VoteEngine : BaseEngine, IVoteEngine
     {
-        public VoteEngine(IRepository<Votes> votes, IPrincipal user, OmbiUserManager um, IRuleEvaluator r, ISettingsService<VoteSettings> voteSettings,
+        public VoteEngine(IRepository<Votes> votes, ICurrentUser user, OmbiUserManager um, IRuleEvaluator r, ISettingsService<VoteSettings> voteSettings,
             IMusicRequestEngine musicRequestEngine, ITvRequestEngine tvRequestEngine, IMovieRequestEngine movieRequestEngine) : base(user, um, r)
         {
             _voteRepository = votes;
@@ -193,7 +194,7 @@ namespace Ombi.Core.Engine
                 case RequestType.Movie:
                     if (totalVotes >= voteSettings.MovieVoteMax)
                     {
-                        result = await _movieRequestEngine.ApproveMovieById(requestId);
+                        result = await _movieRequestEngine.ApproveMovieById(requestId, false);
                     }
                     break;
                 case RequestType.Album:

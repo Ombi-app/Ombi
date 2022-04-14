@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
@@ -26,6 +27,7 @@ namespace Ombi.Store.Context
         public DbSet<PlexServerContent> PlexServerContent { get; set; }
         public DbSet<PlexSeasonsContent> PlexSeasonsContent { get; set; }
         public DbSet<PlexEpisode> PlexEpisode { get; set; }
+        public DbSet<PlexWatchlistHistory> PlexWatchlistHistory { get; set; }
         public DbSet<RadarrCache> RadarrCache { get; set; }
         public DbSet<CouchPotatoCache> CouchPotatoCache { get; set; }
         public DbSet<EmbyContent> EmbyContent { get; set; }
@@ -42,20 +44,20 @@ namespace Ombi.Store.Context
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<PlexServerContent>().HasMany(x => x.Episodes)
-                .WithOne(x => x.Series)
+            builder.Entity<PlexServerContent>().HasMany(x => (ICollection<PlexEpisode>) x.Episodes)
+                .WithOne(x => (PlexServerContent) x.Series)
                 .HasPrincipalKey(x => x.Key)
                 .HasForeignKey(x => x.GrandparentKey);
 
             builder.Entity<EmbyEpisode>()
-                .HasOne(p => p.Series)
-                .WithMany(b => b.Episodes)
+                .HasOne(p => (EmbyContent) p.Series)
+                .WithMany(b => (ICollection<EmbyEpisode>) b.Episodes)
                 .HasPrincipalKey(x => x.EmbyId)
                 .HasForeignKey(p => p.ParentId);
 
             builder.Entity<JellyfinEpisode>()
-                .HasOne(p => p.Series)
-                .WithMany(b => b.Episodes)
+                .HasOne(p => (JellyfinContent) p.Series)
+                .WithMany(b => (ICollection<JellyfinEpisode>) b.Episodes)
                 .HasPrincipalKey(x => x.JellyfinId)
                 .HasForeignKey(p => p.ParentId);
 

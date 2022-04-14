@@ -28,25 +28,67 @@ namespace Ombi.Core.Tests.Rule.Search
         {
             var list = new List<RadarrCache>(){new RadarrCache
             {
-                TheMovieDbId = 123
+                TheMovieDbId = 123,
+                HasRegular = true
             }}.AsQueryable();
-            
+
             ContextMock.Setup(x => x.GetAll()).Returns(list);
 
             var request = new SearchMovieViewModel { Id = 123 };
-            var result =await  Rule.Execute(request);
+            var result = await Rule.Execute(request);
 
             Assert.True(result.Success);
             Assert.True(request.Approved);
         }
 
+        [Test]
+        public async Task Should_ReturnAvailabl_WhenMovieIsInRadarr_4K()
+        {
+            var list = new List<RadarrCache>(){new RadarrCache
+            {
+                TheMovieDbId = 123,
+                Has4K = true,
+                HasFile = true
+            }}.AsQueryable();
+
+            ContextMock.Setup(x => x.GetAll()).Returns(list);
+
+            var request = new SearchMovieViewModel { Id = 123 };
+            var result = await Rule.Execute(request);
+
+            Assert.True(result.Success); 
+            Assert.False(request.Available);
+            Assert.True(request.Available4K);
+        }
+
+        [Test]
+        public async Task Should_ReturnAvailable_WhenMovieIsInRadarr_Both()
+        {
+            var list = new List<RadarrCache>(){new RadarrCache
+            {
+                TheMovieDbId = 123,
+                Has4K = true,
+                HasRegular = true,
+                HasFile = true
+            }}.AsQueryable();
+
+            ContextMock.Setup(x => x.GetAll()).Returns(list);
+
+            var request = new SearchMovieViewModel { Id = 123 };
+            var result = await Rule.Execute(request);
+
+            Assert.True(result.Success);
+            Assert.True(request.Available);
+            Assert.True(request.Available4K);
+
+        }
 
         [Test]
         public async Task Should_ReturnNotApproved_WhenMovieIsNotInRadarr()
         {
             var list = DbHelper.GetQueryableMockDbSet(new RadarrCache
             {
-                TheMovieDbId = 000012
+                TheMovieDbId = 000012,
             });
 
             ContextMock.Setup(x => x.GetAll()).Returns(list);

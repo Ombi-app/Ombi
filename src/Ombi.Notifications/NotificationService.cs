@@ -23,7 +23,7 @@ namespace Ombi.Notifications
             PopulateAgents();
         }
 
-        private List<INotification> NotificationAgents { get; }
+        protected List<INotification> NotificationAgents { get; }
         private ILogger<NotificationService> Log { get; }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Ombi.Notifications
 
         }
         
-        private void PopulateAgents()
+        protected void PopulateAgents()
         {
             var baseSearchType = typeof(BaseNotification<>).Name;
 
