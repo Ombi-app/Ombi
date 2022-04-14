@@ -207,10 +207,13 @@
         "RequestPanel": {
             "Delete": "Ta bort förfrågan",
             "Approve": "Godkänn begäran",
+            "Deny": "Deny Request",
             "Approve4K": "Godkänn 4K-begäran",
+            "Deny4K": "Deny 4K Request",
             "ChangeAvailability": "Markera Tillgänglig",
             "Deleted": "Successfully deleted selected items",
-            "Approved": "Successfully approved selected items"
+            "Approved": "Successfully approved selected items",
+            "Denied": "Successfully denied selected items"
         },
         "SuccessfullyApproved": "Successfully Approved",
         "SuccessfullyDeleted": "Request successfully deleted",
@@ -379,7 +382,8 @@
             "Country": "Country:",
             "StartDate": "Start Date:",
             "EndDate": "EndDate:"
-        }
+        },
+        "RequestSource": "Källa:"
     },
     "Discovery": {
         "PopularTab": "Populära",

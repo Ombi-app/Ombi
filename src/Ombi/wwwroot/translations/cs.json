@@ -207,10 +207,13 @@
         "RequestPanel": {
             "Delete": "Odstranit požadavek",
             "Approve": "Schválit požadavek",
+            "Deny": "Deny Request",
             "Approve4K": "Schválit 4K požadavek",
+            "Deny4K": "Deny 4K Request",
             "ChangeAvailability": "Označit jako dostupné",
             "Deleted": "Vybrané položky úspěšně odstraněny",
-            "Approved": "Vybrané položky byly úspěšně schváleny"
+            "Approved": "Vybrané položky byly úspěšně schváleny",
+            "Denied": "Successfully denied selected items"
         },
         "SuccessfullyApproved": "Úspěšně schváleno",
         "SuccessfullyDeleted": "Požadavek byl úspěšně odstraněn",
@@ -379,7 +382,8 @@
             "Country": "Stát:",
             "StartDate": "Datum zahájení:",
             "EndDate": "Datum ukončení:"
-        }
+        },
+        "RequestSource": "Source:"
     },
     "Discovery": {
         "PopularTab": "Oblíbené",

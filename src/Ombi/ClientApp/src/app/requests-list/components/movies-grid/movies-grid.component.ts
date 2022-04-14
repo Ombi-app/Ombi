@@ -62,11 +62,11 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
         this.manageOwnRequests = this.auth.hasRole("ManageOwnRequests")
         if (this.isAdmin) {
             this.displayedColumns.unshift('select');
-        } 
-        
+        }
+
         this.is4kEnabled = this.featureFacade.is4kEnabled();
         if ((this.isAdmin || this.auth.hasRole("Request4KMovie"))
-                && this.is4kEnabled) {
+            && this.is4kEnabled) {
             this.displayedColumns.splice(4, 0, 'has4kRequest');
         }
 
@@ -155,13 +155,13 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
 
     private checkDate(date: Date|string): boolean {
         if (typeof date === 'string') {
-          return new Date(date).getFullYear() > 1;
+            return new Date(date).getFullYear() > 1;
         }
         if (date instanceof Date) {
-          return date.getFullYear() > 1;
+            return date.getFullYear() > 1;
         }
         return false;
-      }
+    }
 
     public switchFilter(type: RequestFilterType) {
         this.currentFilter = type;
@@ -172,15 +172,15 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
         const numSelected = this.selection.selected.length;
         const numRows = this.dataSource.data.length;
         return numSelected === numRows;
-      }
+    }
 
-      public masterToggle() {
+    public masterToggle() {
         this.isAllSelected() ?
             this.selection.clear() :
             this.dataSource.data.forEach(row => this.selection.select(row));
-      }
+    }
 
-      public async bulkDelete() {
+    public async bulkDelete() {
         if (this.selection.isEmpty()) {
             return;
         }
@@ -194,13 +194,13 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
             this.selection.clear();
             this.ngAfterViewInit();
         });
-      }
+    }
 
-      public bulkApprove = () => this.bulkApproveInternal(false);
+    public bulkApprove = () => this.bulkApproveInternal(false);
 
-      public bulkApprove4K = () => this.bulkApproveInternal(true);
+    public bulkApprove4K = () => this.bulkApproveInternal(true);
 
-      private bulkApproveInternal(is4k: boolean) {
+    private bulkApproveInternal(is4k: boolean) {
         if (this.selection.isEmpty()) {
             return;
         }
@@ -222,12 +222,45 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
             this.selection.clear();
             this.ngAfterViewInit();
         })
-      }
+    }
 
-      public getRequestDate(request: IMovieRequests) : Date {
+    public bulkDeny = () => this.bulkDenyInternal(false);
+
+    public bulkDeny4K = () => this.bulkDenyInternal(true);
+
+    private bulkDenyInternal(is4k: boolean) {
+        if (this.selection.isEmpty()) {
+            return;
+        }
+        let tasks = new Array<Observable<IRequestEngineResult>>();
+        this.selection.selected.forEach((selected) => {
+
+            tasks.push(this.requestServiceV1.denyMovie({
+                id: selected.id,
+                is4K: is4k,
+                reason: `` // TOOD: reuse DenyDialog to allow for a reason to be entered
+            }));
+        });
+
+        this.isLoadingResults = true;
+        forkJoin(tasks).subscribe((result: IRequestEngineResult[]) => {
+            this.isLoadingResults = false;
+            const failed = result.filter(x => !x.result);
+            if (failed.length > 0) {
+                this.notification.error("Some requests failed to deny: " + failed[0].errorMessage);
+                this.selection.clear();
+                return;
+            }
+            this.notification.success(this.translateService.instant('Requests.RequestPanel.Denied'));
+            this.selection.clear();
+            this.ngAfterViewInit();
+        })
+    }
+
+    public getRequestDate(request: IMovieRequests): Date {
         if (new Date(request.requestedDate).getFullYear() === 1) {
             return request.requestedDate4k;
         }
         return request.requestedDate;
-      }
+    }
 }

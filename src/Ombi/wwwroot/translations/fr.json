@@ -207,10 +207,13 @@
         "RequestPanel": {
             "Delete": "Supprimer la demande",
             "Approve": "Approuver la demande",
+            "Deny": "Refuser la demande",
             "Approve4K": "Approuver la demande 4K",
+            "Deny4K": "Refuser la demande 4K",
             "ChangeAvailability": "Marquer comme Disponible",
             "Deleted": "Éléments sélectionnés supprimés avec succès",
-            "Approved": "Éléments sélectionnés approuvés avec succès"
+            "Approved": "Éléments sélectionnés approuvés avec succès",
+            "Denied": "Les éléments sélectionnés ont été refusés"
         },
         "SuccessfullyApproved": "Approuvée avec succès",
         "SuccessfullyDeleted": "Demande supprimée avec succès",
@@ -379,7 +382,8 @@
             "Country": "Pays :",
             "StartDate": "Date de début :",
             "EndDate": "Date de fin :"
-        }
+        },
+        "RequestSource": "Source :"
     },
     "Discovery": {
         "PopularTab": "Populaire",

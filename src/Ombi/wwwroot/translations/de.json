@@ -207,10 +207,13 @@
         "RequestPanel": {
             "Delete": "Anfrage löschen",
             "Approve": "Anfrage genehmigen",
+            "Deny": "Deny Request",
             "Approve4K": "4K Anfrage genehmigen",
+            "Deny4K": "Deny 4K Request",
             "ChangeAvailability": "Als verfügbar markieren",
             "Deleted": "Ausgewählte Elemente erfolgreich gelöscht",
-            "Approved": "Ausgewählte Elemente erfolgreich freigegeben"
+            "Approved": "Ausgewählte Elemente erfolgreich freigegeben",
+            "Denied": "Successfully denied selected items"
         },
         "SuccessfullyApproved": "Erfolgreich genehmigt",
         "SuccessfullyDeleted": "Anfrage erfolgreich gelöscht",
@@ -228,7 +231,7 @@
             "NoPermissionsOnBehalf": "Sie haben nicht die richtigen Berechtigungen, um im Namen von Benutzern anzufragen!",
             "NoPermissions": "Sie haben nicht die nötigen Rechte!",
             "RequestDoesNotExist": "Die Anfrage existiert nicht",
-            "ChildRequestDoesNotExist": "Child Request does not exist",
+            "ChildRequestDoesNotExist": "Untergeordnete Anfrage existiert nicht",
             "NoPermissionsRequestMovie": "Sie haben keine Berechtigung, um einen Film anzufordern",
             "NoPermissionsRequestTV": "Sie haben keine Berechtigung, um eine TV-Sendung anzufordern",
             "NoPermissionsRequestAlbum": "Sie haben keine Berechtigung, um ein Album anzufordern",
@@ -379,7 +382,8 @@
             "Country": "Land:",
             "StartDate": "Startdatum:",
             "EndDate": "Enddatum:"
-        }
+        },
+        "RequestSource": "Quelle:"
     },
     "Discovery": {
         "PopularTab": "Beliebt",
@@ -432,7 +436,7 @@
         "2": "Plex User",
         "3": "Emby User",
         "4": "Emby Connect User",
-        "5": "Jellyfin User"
+        "5": "Jellyfin Server"
     },
     "Paginator": {
         "itemsPerPageLabel": "Elemente pro Seite:",
