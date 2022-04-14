@@ -214,7 +214,7 @@ namespace Ombi.Schedule.Tests
             _mocker.Setup<ITvRequestEngine, Task<RequestEngineResult>>(x => x.RequestTvShow(It.IsAny<TvRequestViewModelV2>()))
                 .ReturnsAsync(new RequestEngineResult { RequestId = 1 });
             await _subject.Execute(_context.Object);
-            _mocker.Verify<ITvRequestEngine>(x => x.RequestTvShow(It.Is<TvRequestViewModelV2>(x => x.TheMovieDbId == 123)), Times.Once);
+            _mocker.Verify<ITvRequestEngine>(x => x.RequestTvShow(It.Is<TvRequestViewModelV2>(x => x.TheMovieDbId == 123 && x.LatestSeason == true)), Times.Once);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistMetadata("abc", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
             _mocker.Verify<ITvRequestEngine>(x => x.SetUser(It.Is<OmbiUser>(x => x.Id == "abc")), Times.Once);
             _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Once);
