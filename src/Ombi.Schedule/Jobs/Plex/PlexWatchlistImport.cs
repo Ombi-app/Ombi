@@ -65,6 +65,12 @@ namespace Ombi.Schedule.Jobs.Plex
                 try
                 {
 
+                    var isDisabled = await _ombiUserManager.IsInRoleAsync(user, OmbiRoles.Disabled);
+                    if (isDisabled)
+                    {
+                        return;
+                    }
+
                     _logger.LogDebug($"Starting Watchlist Import for {user.UserName} with token {user.MediaServerToken}");
                     var watchlist = await _plexApi.GetWatchlist(user.MediaServerToken, context?.CancellationToken ?? CancellationToken.None);
                     if (watchlist == null || !(watchlist.MediaContainer?.Metadata?.Any() ?? false))

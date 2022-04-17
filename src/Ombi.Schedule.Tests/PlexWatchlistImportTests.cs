@@ -3,11 +3,13 @@ using Moq.AutoMock;
 using NUnit.Framework;
 using Ombi.Api.Plex;
 using Ombi.Api.Plex.Models;
+using Ombi.Core.Authentication;
 using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
+using Ombi.Helpers;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
@@ -121,6 +123,53 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
         }
 
+        [Test]
+        public async Task MovieRequestFromWatchList_DisabledUser()
+        {
+            _mocker.Setup<OmbiUserManager, Task<bool>>(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), OmbiRoles.Disabled)).ReturnsAsync(true);
+            _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync()).ReturnsAsync(new PlexSettings { Enable = true, EnableWatchlistImport = true });
+            _mocker.Setup<IPlexApi, Task<PlexWatchlistContainer>>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new PlexWatchlistContainer
+            {
+                MediaContainer = new PlexWatchlist
+                {
+                    Metadata = new List<Metadata>
+                    {
+                        new Metadata
+                        {
+                            type = "movie",
+                            ratingKey = "abc"
+                        }
+                    }
+                }
+            });
+            _mocker.Setup<IPlexApi, Task<PlexWatchlistMetadataContainer>>(x => x.GetWatchlistMetadata("abc", It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new PlexWatchlistMetadataContainer
+                {
+                    MediaContainer = new PlexWatchlistMetadata
+                    {
+                        Metadata = new WatchlistMetadata[]
+                        {
+                            new WatchlistMetadata
+                            {
+                                Guid = new List<PlexGuids>
+                                {
+                                    new PlexGuids
+                                    {
+                                        Id = "tmdb://123"
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                });
+            await _subject.Execute(_context.Object);
+            _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.Is<MovieRequestViewModel>(x => x.TheMovieDbId == 123)), Times.Never);
+            _mocker.Verify<IPlexApi>(x => x.GetWatchlistMetadata("abc", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+            _mocker.Verify<IMovieRequestEngine>(x => x.SetUser(It.Is<OmbiUser>(x => x.Id == "abc")), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
+        }
 
         [Test]
         public async Task MovieRequestFromWatchList_NoGuid()

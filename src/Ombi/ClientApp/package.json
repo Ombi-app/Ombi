@@ -5,7 +5,10 @@
     "ng": "ng",
     "start": "ng serve --port 3578 --configuration hmr",
     "build": "node --max_old_space_size=6144 node_modules/@angular/cli/bin/ng build --prod",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "docs:json": "compodoc -p ./src/tsconfig.app.json -e json -d .",
+    "storybook": "yarn docs:json && start-storybook -p 6006",
+    "build-storybook": "yarn docs:json && build-storybook"
   },
   "private": true,
   "dependencies": {
@@ -67,9 +70,20 @@
     "@angular/cli": "~13.2.0",
     "@angular/compiler-cli": "^13.2.0",
     "@angular/language-service": "^13.2.0",
+    "@babel/core": "^7.17.9",
+    "@compodoc/compodoc": "^1.1.19",
+    "@storybook/addon-actions": "^6.4.22",
+    "@storybook/addon-essentials": "^6.4.22",
+    "@storybook/addon-interactions": "^6.4.22",
+    "@storybook/addon-links": "^6.4.22",
+    "@storybook/angular": "^6.4.22",
+    "@storybook/builder-webpack5": "^6.4.22",
+    "@storybook/manager-webpack5": "^6.4.22",
+    "@storybook/testing-library": "^0.0.9",
     "@types/jasmine": "~3.6.7",
     "@types/jasminewd2": "~2.0.8",
     "@types/node": "^16.10.9",
+    "babel-loader": "^8.2.4",
     "codelyzer": "^6.0.1",
     "typescript": "~4.5.5"
   },

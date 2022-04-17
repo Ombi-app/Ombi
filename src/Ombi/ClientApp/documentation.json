@@ -1,0 +1,90 @@
+{
+    "pipes": [],
+    "interfaces": [],
+    "injectables": [],
+    "guards": [],
+    "interceptors": [],
+    "classes": [],
+    "directives": [],
+    "components": [],
+    "modules": [],
+    "miscellaneous": {
+        "variables": [
+            {
+                "name": "bootstrap",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/main.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "() => platformBrowserDynamic().bootstrapModule(AppModule)"
+            },
+            {
+                "name": "module",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/main.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "any"
+            }
+        ],
+        "functions": [],
+        "typealiases": [],
+        "enumerations": [],
+        "groupedVariables": {
+            "src/main.ts": [
+                {
+                    "name": "bootstrap",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/main.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "() => platformBrowserDynamic().bootstrapModule(AppModule)"
+                },
+                {
+                    "name": "module",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/main.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "any"
+                }
+            ]
+        },
+        "groupedFunctions": {},
+        "groupedEnumerations": {},
+        "groupedTypeAliases": {}
+    },
+    "routes": [],
+    "coverage": {
+        "count": 0,
+        "status": "low",
+        "files": [
+            {
+                "filePath": "src/main.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "bootstrap",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/main.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "module",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            }
+        ]
+    }
+}

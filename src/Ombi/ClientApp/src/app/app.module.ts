@@ -14,6 +14,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BrowserModule } from "@angular/platform-browser";
 import { ButtonModule } from "primeng/button";
 import { CUSTOMIZATION_INITIALIZER } from "./state/customization/customization-initializer";
+import { ComponentsModule } from "./components/components.module";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { CookieComponent } from "./auth/cookie.component";
 import { CookieService } from "ng2-cookies";
@@ -150,6 +151,7 @@ export function JwtTokenGetter() {
         MatCheckboxModule,
         MatProgressSpinnerModule,
         MDBBootstrapModule.forRoot(),
+        ComponentsModule,
         JwtModule.forRoot({
             config: {
                 tokenGetter: JwtTokenGetter,

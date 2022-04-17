@@ -1,0 +1,299 @@
+@import "~styles/variables.scss";
+
+#cardImage {
+    border-radius: 5px;
+    object-fit:cover;
+}
+
+.dark-card {
+    border-radius: 8px;
+}
+
+// Changed height to 100% to make all cards the same height
+.card-spacing {
+    margin-top: 10%;
+    height: 100%;
+}
+
+
+.rating {
+    position: absolute;
+    font-weight: bold;
+}
+
+.expand {
+    text-align: center;
+}
+
+@media (min-width: 1025px) {
+
+    // Changed height to 100% to make all cards the same height
+    .grow {
+        transition: all .2s ease-in-out;
+        height: 100%;
+    }
+
+    .grow:hover {
+        transform: scale(1.1);
+    }
+}
+
+::ng-deep mat-dialog-container.mat-dialog-container {
+    // background-color: $ombi-primary;
+    // color: white;
+    border-radius: 2%
+}
+
+
+/* Title adjust for the Discover page */
+.mat-card-content h6 {
+    overflow: hidden;
+    white-space: nowrap;
+    font-weight: 400;
+    font-size: 1.1rem;
+}
+
+/* Summary adjust for Discover page */
+.small,
+small {
+    font-size: 0.8rem;
+}
+
+ #cardImage {
+  height: 100%;
+  object-fit: cover;
+  display: block;
+ }
+
+
+
+.box {
+    position: relative;
+    max-width: 600px;
+  }
+
+.ombi-card {
+  padding: 5px;
+  height:100%;
+  max-width: 200px;
+  max-height: 295px;
+}
+::ng-deep .p-carousel-indicators {
+  display: none !important;
+  }
+
+  
+.image {
+  border-radius: 10px;
+  opacity: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: .5s ease;
+  backface-visibility: hidden;
+}
+
+
+.middle {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 67%;
+  width: 90%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+
+.middle-show {
+  transition: .5s ease;
+  opacity: 1;
+  position: absolute;
+  top: 67%;
+  width: 90%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+
+
+.c {
+  position: relative;
+}
+
+.c:hover .image {
+  opacity: 0.3;
+}
+
+.c:hover .middle {
+  opacity: 1;
+}
+
+.small-text {
+  font-size: 11px;
+}
+.title {
+    font-size: 18px;
+  }
+
+
+.full-width {
+    width: 100%;
+  }
+
+.ellipsis {
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-top-info{
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  background-color: rgba(15,23,31,0.7);
+  display:flex;
+  justify-content: space-between;
+  padding-top:0.6em;
+  padding-bottom:0.3em;
+  z-index:2;
+  letter-spacing: 0.2px;
+}
+
+.top-left {
+  font-size: 14px;
+  font-weight:200;
+  padding-left: 0.5em;
+  font-size: 14px; 
+} 
+
+/* common */
+.top-right{
+  display:flex;
+  font-weight:200;
+}
+
+.top-right span.indicator, span.indicator-text {
+  display: none;
+  background-color: transparent;
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0,0,0,.2);
+  text-align: right;
+  font-size: 14px;
+}
+
+.top-right span.indicator{
+  padding-right: 0px;
+}
+.top-right span.indicator-text{
+  padding-right: 1em;
+}
+
+.top-right span.indicator:before{
+  content: '';
+  width: 10px;
+  height: 10px;
+  -moz-border-radius: 7.5px;
+  -webkit-border-radius: 7.5px;
+  border-radius: 7.5px;
+  margin-right:5px;
+}
+
+.top-right span.indicator, span.indicator-text{
+  display:block;
+}
+.top-right span.indicator:before{
+  display: inline-block;
+}
+
+.top-right.available span.indicator:before{
+  background-color: #1DE9B6;
+}
+
+.top-right.approved span.indicator:before{
+  background-color: #ffd740;
+}
+
+.top-right.denied span.indicator:before{
+  background-color: #660202;
+}
+
+.top-right.partly-available span.indicator:before{
+  background-color: #ffd740;
+}
+
+.top-right.requested span.indicator:before{
+  background-color: #ff5722;
+}
+
+::ng-deep a.poster-overlay{
+  color:#fff;
+}
+
+a.poster-overlay:hover{
+  text-decoration: none;
+}
+
+@media screen and (max-width: 400px){
+  .ellipsis{
+    display:none;
+  }
+
+  .top-right span.indicator-text{
+    display:none;
+  }
+
+  .top-right span.indicator{
+    padding-right:1em;
+  }
+}
+
+.ombi-card #cardImage:hover{
+  cursor: pointer;
+}
+
+.ombi-card .button-request-container{
+  position: relative;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: -36px;
+  margin-bottom: 0px;
+  opacity:0;
+  transition: .5s ease;
+}
+.ombi-card .button-request-container-show{
+  position: relative;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: -36px;
+  margin-bottom: 0px;
+  opacity:1;
+  transition: .5s ease;
+}
+
+::ng-deep .ombi-card .button-request-container .button-request{
+  padding-right:0px;
+  padding-left:0px;
+  width:100%;
+}
+::ng-deep .ombi-card .button-request-container-show .button-request{
+  padding-right:0px;
+  padding-left:0px;
+  width:100%;
+}
+
+.c:hover .button-request-container {
+  opacity:1;
+}
+
+.btn-ombi{
+  background-color:#293a4c;
+}
+
+::ng-deep .mat-menu-panel {
+  min-width: 190px !important;
+}
