@@ -1,3 +1,7 @@
+## [4.16.12](https://github.com/Ombi-app/Ombi/compare/v4.16.11...v4.16.12) (2022-04-19)
+
+
+
 ## [4.16.11](https://github.com/Ombi-app/Ombi/compare/v4.16.10...v4.16.11) (2022-04-14)
 
 
@@ -351,16 +355,6 @@
 ### Bug Fixes
 
 * **sonarr:** Fixed where requesting all seasons would only mark the latest as monitored [#4496](https://github.com/Ombi-app/Ombi/issues/4496) ([cfb85c2](https://github.com/Ombi-app/Ombi/commit/cfb85c23d77626b9ec1d99a6cf76497c438d0338))
-
-
-
-## [4.11.4](https://github.com/Ombi-app/Ombi/compare/v4.11.3...v4.11.4) (2022-02-05)
-
-
-### Bug Fixes
-
-* **media-sync:** Add sanity checks upon media server sync ([#4493](https://github.com/Ombi-app/Ombi/issues/4493)) ([9915234](https://github.com/Ombi-app/Ombi/commit/9915234d38d4701c527081ccc21b566980375331)), closes [#4472](https://github.com/Ombi-app/Ombi/issues/4472)
-* **newsletter:** Fix newsletter not publishing double episodes ([#4495](https://github.com/Ombi-app/Ombi/issues/4495)) ([ddf63fb](https://github.com/Ombi-app/Ombi/commit/ddf63fbed0b9cbe458aec37318758c76b99b2de9))
 
 
 
