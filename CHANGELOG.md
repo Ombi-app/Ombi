@@ -1,3 +1,7 @@
+## [4.16.14](https://github.com/Ombi-app/Ombi/compare/v4.16.13...v4.16.14) (2022-04-19)
+
+
+
 ## [4.16.13](https://github.com/Ombi-app/Ombi/compare/v4.16.12...v4.16.13) (2022-04-19)
 
 
@@ -341,15 +345,6 @@
 ### Bug Fixes
 
 * **notifications:** :bug: This is a fix for some of the duplicate notification issues [#3825](https://github.com/Ombi-app/Ombi/issues/3825) ([22bb422](https://github.com/Ombi-app/Ombi/commit/22bb4226ead2d62e8c2c2c05be47d7da621402e2))
-
-
-
-## [4.11.6](https://github.com/Ombi-app/Ombi/compare/v4.11.5...v4.11.6) (2022-02-10)
-
-
-### Bug Fixes
-
-* **plex:** Fixed an issue where in a rare case we couldn't sync the data [#4502](https://github.com/Ombi-app/Ombi/issues/4502) ([191318d](https://github.com/Ombi-app/Ombi/commit/191318ddad5a8148422955bf928f1c49b890e3eb))
 
 
 
