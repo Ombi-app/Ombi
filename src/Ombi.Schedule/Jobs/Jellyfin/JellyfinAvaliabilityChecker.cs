@@ -33,9 +33,11 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core;
+using Ombi.Core.Services;
 using Ombi.Helpers;
 using Ombi.Hubs;
 using Ombi.Notifications.Models;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
@@ -46,7 +48,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
     public class JellyfinAvaliabilityChecker : IJellyfinAvaliabilityChecker
     {
         public JellyfinAvaliabilityChecker(IJellyfinContentRepository repo, ITvRequestRepository t, IMovieRequestRepository m,
-            INotificationHelper n, ILogger<JellyfinAvaliabilityChecker> log, IHubContext<NotificationHub> notification)
+            INotificationHelper n, ILogger<JellyfinAvaliabilityChecker> log, IHubContext<NotificationHub> notification, IFeatureService featureService)
         {
             _repo = repo;
             _tvRepo = t;
@@ -54,6 +56,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
             _notificationService = n;
             _log = log;
             _notification = notification;
+            _featureService = featureService;
         }
 
         private readonly ITvRequestRepository _tvRepo;
@@ -62,6 +65,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
         private readonly INotificationHelper _notificationService;
         private readonly ILogger<JellyfinAvaliabilityChecker> _log;
         private readonly IHubContext<NotificationHub> _notification;
+        private readonly IFeatureService _featureService;
 
         public async Task Execute(IJobExecutionContext job)
         {
@@ -78,6 +82,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
 
         private async Task ProcessMovies()
         {
+            var feature4kEnabled = await _featureService.FeatureEnabled(FeatureNames.Movie4KRequests);
             var movies = _movieRepo.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available || (!x.Available4K && x.Has4KRequest));
 
             foreach (var movie in movies)
@@ -110,8 +115,8 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                     notify = true;
                 }
 
-                // If we have a non-4k versison then mark as available
-                if (jellyfinContent.Quality != null && !movie.Available)
+                // If we have a non-4k version or we don't care about versions, then mark as available
+                if (!movie.Available && ( !feature4kEnabled || jellyfinContent.Quality != null ))
                 {
                     movie.Available = true;
                     movie.MarkedAsAvailable = DateTime.Now;
