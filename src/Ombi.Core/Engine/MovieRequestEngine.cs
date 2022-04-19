@@ -533,7 +533,7 @@ namespace Ombi.Core.Engine
                 }
                 else
                 {
-                    if (!x.Available && !x.Available4K)
+                    if (!x.Available && !x.Available4K && (!x.Denied ?? true) && (!x.Denied4K ?? true))
                     {
                         x.ShowSubscribe = true;
                     }

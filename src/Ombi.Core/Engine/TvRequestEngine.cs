@@ -886,7 +886,7 @@ namespace Ombi.Core.Engine
                 }
                 else
                 {
-                    if (!x.Available)
+                    if (!x.Available && (!x.Denied ?? true))
                     {
                         x.ShowSubscribe = true;
                     }
