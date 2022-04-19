@@ -270,7 +270,10 @@ namespace Ombi.Core.Engine
                 }
                 else
                 {
-                    x.ShowSubscribe = true;
+                    if (!x.Available)
+                    {
+                        x.ShowSubscribe = true;
+                    }
                     var hasSub = sub.FirstOrDefault(r => r.RequestId == x.Id);
                     x.Subscribed = hasSub != null;
                 }

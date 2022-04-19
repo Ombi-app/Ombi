@@ -886,7 +886,10 @@ namespace Ombi.Core.Engine
                 }
                 else
                 {
-                    x.ShowSubscribe = true;
+                    if (!x.Available)
+                    {
+                        x.ShowSubscribe = true;
+                    }
                     var result = relevantSubs.FirstOrDefault(s => s.RequestId == x.Id);
                     x.Subscribed = result != null;
                 }
