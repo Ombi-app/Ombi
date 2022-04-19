@@ -1,3 +1,7 @@
+## [4.16.13](https://github.com/Ombi-app/Ombi/compare/v4.16.12...v4.16.13) (2022-04-19)
+
+
+
 ## [4.16.12](https://github.com/Ombi-app/Ombi/compare/v4.16.11...v4.16.12) (2022-04-19)
 
 
@@ -346,15 +350,6 @@
 ### Bug Fixes
 
 * **plex:** Fixed an issue where in a rare case we couldn't sync the data [#4502](https://github.com/Ombi-app/Ombi/issues/4502) ([191318d](https://github.com/Ombi-app/Ombi/commit/191318ddad5a8148422955bf928f1c49b890e3eb))
-
-
-
-## [4.11.5](https://github.com/Ombi-app/Ombi/compare/v4.11.4...v4.11.5) (2022-02-05)
-
-
-### Bug Fixes
-
-* **sonarr:** Fixed where requesting all seasons would only mark the latest as monitored [#4496](https://github.com/Ombi-app/Ombi/issues/4496) ([cfb85c2](https://github.com/Ombi-app/Ombi/commit/cfb85c23d77626b9ec1d99a6cf76497c438d0338))
 
 
 
