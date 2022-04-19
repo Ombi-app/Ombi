@@ -114,7 +114,9 @@ namespace Ombi.Controllers.V1
         public async Task<SaveWizardResult> CreateWizardUser([FromBody] CreateUserWizardModel user)
         {
             var users = UserManager.Users;
-            if (users.Any(x => x.UserType != UserType.SystemUser))
+            // There could be a SINGLE plex user as you can create that in the wizard flow, but there should not be anything else
+            var plexUsersCount = await users.CountAsync(x => x.UserType == UserType.PlexUser);
+            if (plexUsersCount > 1 || users.Any(x => x.UserType == UserType.LocalUser))
             {
                 // No one should be calling this. Only the wizard
                 return new SaveWizardResult { Result = false, Errors = new List<string> { "Looks like there is an existing user!" } };
@@ -895,7 +897,10 @@ namespace Ombi.Controllers.V1
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<string> GetUserAccessToken()
         {
-
+            if (!User.Identity?.Name.HasValue() ?? true)
+            {
+                return Guid.Empty.ToString("N");
+            }
             var username = User.Identity.Name.ToUpper();
             var user = await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
             if (user == null)
