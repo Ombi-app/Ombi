@@ -17,3 +17,8 @@ export interface IDiscoverModel {
     watchProviders?: number[];
     companies?: number[];
 }
+export interface ILanguage {
+    iso_639_1 : string;
+    english_name : string;
+    name : string;
+}

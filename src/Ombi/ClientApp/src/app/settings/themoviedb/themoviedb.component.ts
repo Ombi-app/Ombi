@@ -1,7 +1,7 @@
 ﻿import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { IMovieDbKeyword, ITheMovieDbSettings } from "../../interfaces";
+import { ILanguage, IMovieDbKeyword, ITheMovieDbSettings } from "../../interfaces";
 import { debounceTime, switchMap } from "rxjs/operators";
 
 import { MatAutocomplete } from "@angular/material/autocomplete";
@@ -22,13 +22,16 @@ interface IKeywordTag {
 export class TheMovieDbComponent implements OnInit {
 
     public settings: ITheMovieDbSettings;
+    public originalLanguages: ILanguage[];
     public excludedKeywords: IKeywordTag[];
     public excludedMovieGenres: IKeywordTag[];
     public excludedTvGenres: IKeywordTag[];
     public tagForm: FormGroup;
+    public languages: ILanguage[];
     public filteredTags: IMovieDbKeyword[];
     public filteredMovieGenres: IMovieDbKeyword[];
     public filteredTvGenres: IMovieDbKeyword[];
+
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
@@ -37,13 +40,29 @@ export class TheMovieDbComponent implements OnInit {
                 private fb: FormBuilder) { }
 
     public ngOnInit() {
-        this.tagForm = this.fb.group({
-            input: null,
-            excludedMovieGenres: null,
-            excludedTvGenres: null,
-          });
         this.settingsService.getTheMovieDbSettings().subscribe(settings => {
             this.settings = settings;
+
+            this.tagForm = this.fb.group({
+              input: null,
+              originalLanguages: [this.settings.originalLanguages],
+              excludedMovieGenres: null,
+              excludedTvGenres: null,
+            });
+
+            this.tagForm
+            .get("input")
+            .valueChanges.pipe(
+              debounceTime(600),
+              switchMap((value: string) => {
+                if (value) {
+                  return this.tmdbService.getKeywords(value);
+                }
+                return [];
+              })
+            )
+            .subscribe((r) => (this.filteredTags = r));
+
 
             // Map Keyword ids -> keyword name
             this.excludedKeywords = settings.excludedKeywordIds
@@ -82,8 +101,12 @@ export class TheMovieDbComponent implements OnInit {
                         }
                     });
                 });
-            });        
-            
+            });
+
+            this.searchService.getLanguages().subscribe((results) => {
+              this.languages = results.sort((a: ILanguage, b: ILanguage) => (a.english_name > b.english_name) ? 1 : -1);;
+            });
+
             // Map Tv Genre ids -> genre name
             this.excludedTvGenres = settings.excludedTvGenreIds
                 ? settings.excludedTvGenreIds.map(id => ({
@@ -102,22 +125,10 @@ export class TheMovieDbComponent implements OnInit {
                             genre.name = result.name;
                         }
                     });
-                }); 
+                });
             });
         });
 
-        this.tagForm
-        .get("input")
-        .valueChanges.pipe(
-          debounceTime(600),
-          switchMap((value: string) => {
-            if (value) {
-              return this.tmdbService.getKeywords(value);
-            }
-            return [];
-          })
-        )
-        .subscribe((r) => (this.filteredTags = r));
     }
 
     public remove(tag: IKeywordTag, tag_type: string): void {

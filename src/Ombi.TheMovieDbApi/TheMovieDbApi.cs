@@ -438,6 +438,16 @@ namespace Ombi.Api.TheMovieDb
             return result.genres ?? new List<Genre>();
         }
 
+        public async Task<List<Language>> GetLanguages(CancellationToken cancellationToken)
+        {
+            var request = new Request($"/configuration/languages", BaseUri, HttpMethod.Get);
+            request.AddQueryString("api_key", ApiToken);
+            AddRetry(request);
+
+            var result = await Api.Request<List<Language>>(request, cancellationToken);
+            return result ?? new List<Language>();
+        }
+
         public Task<TheMovieDbContainer<MultiSearch>> MultiSearch(string searchTerm, string languageCode, CancellationToken cancellationToken)
         {
             var request = new Request("search/multi", BaseUri, HttpMethod.Get);
@@ -471,6 +481,10 @@ namespace Ombi.Api.TheMovieDb
             if (settings.ExcludedKeywordIds?.Any() == true)
             {
                 request.AddQueryString("without_keywords", string.Join(",", settings.ExcludedKeywordIds));
+            }
+            if (settings.OriginalLanguages?.Any() == true)
+            {
+                request.AddQueryString("with_original_language", string.Join("|", settings.OriginalLanguages));
             }
         }
 
