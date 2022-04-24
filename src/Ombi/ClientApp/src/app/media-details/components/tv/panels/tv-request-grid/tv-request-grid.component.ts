@@ -36,7 +36,7 @@ export class TvRequestGridComponent {
         // Make sure something has been selected
         const selected = this.selection.hasValue();
         if (!selected && !this.tv.requestAll && !this.tv.firstSeason && !this.tv.latestSeason) {
-            this.notificationService.send("You need to select some episodes!", "OK");
+            this.notificationService.send(this.translate.instant("Requests.NeedToSelectEpisodes"));
             return;
         }
 
@@ -78,70 +78,6 @@ export class TvRequestGridComponent {
             const requestResult = await this.requestServiceV2.requestTv(viewModel).toPromise();
             this.postRequest(requestResult);
         }
-    }
-
-    public async approve(request: IChildRequests) {
-        const result = await this.requestService.approveChild({
-            id: request.id
-        }).toPromise();
-
-        if (result.result) {
-            request.approved = true;
-            request.denied = false;
-            request.seasonRequests.forEach((season) => {
-                season.episodes.forEach((ep) => {
-                    ep.approved = true;
-                });
-            });
-            this.notificationService.send("Request has been approved", "Ok");
-        } else {
-            this.notificationService.send(result.errorMessage, "Ok");
-        }
-    }
-
-    public changeAvailability(request: IChildRequests, available: boolean) {
-        request.available = available;
-        request.seasonRequests.forEach((season) => {
-            season.episodes.forEach((ep) => {
-                ep.available = available;
-            });
-        });
-        if (available) {
-            this.requestService.markTvAvailable({ id: request.id }).subscribe(x => {
-                if (x.result) {
-                    this.notificationService.send(
-                        `This request is now available`);
-                } else {
-                    this.notificationService.send("Request Available", x.message ? x.message : x.errorMessage);
-                    request.approved = false;
-                }
-            });
-        } else {
-            this.requestService.markTvUnavailable({ id: request.id }).subscribe(x => {
-                if (x.result) {
-                    this.notificationService.send(
-                    `This request is now unavailable`);
-                } else {
-                    this.notificationService.send("Request Available", x.message ? x.message : x.errorMessage);
-                    request.approved = false;
-                }
-            });
-        }
-    }
-    public async deny(request: IChildRequests) {
-        const dialogRef = this.dialog.open(DenyDialogComponent, {
-            width: '250px',
-            data: {requestId: request.id,  requestType: RequestType.tvShow}
-          });
-
-          dialogRef.afterClosed().subscribe(result => {
-            request.denied = true;
-            request.seasonRequests.forEach((season) => {
-                season.episodes.forEach((ep) => {
-                    ep.approved = false;
-                });
-            });
-          });
     }
 
     public async requestAllSeasons() {

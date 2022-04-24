@@ -133,8 +133,7 @@ namespace Ombi.Core.Senders
 
             return new SenderResult
             {
-                Success = false,
-                Message = "Something went wrong!"
+                Success = false
             };
         }
 
