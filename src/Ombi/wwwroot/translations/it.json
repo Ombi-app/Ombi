@@ -60,7 +60,8 @@
         "CheckPageForUpdates": "Controlla questa pagina per aggiornamenti continui del sito."
     },
     "ErrorPages": {
-        "NotFound": "Pagina non trovata"
+        "NotFound": "Pagina non trovata",
+        "SomethingWentWrong": "Qualcosa è andato storto!"
     },
     "NavigationBar": {
         "Discover": "Scopri",
