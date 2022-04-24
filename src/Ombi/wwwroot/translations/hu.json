@@ -60,7 +60,8 @@
         "CheckPageForUpdates": "Látogasd meg ezt az oldalt a frissítésekhez."
     },
     "ErrorPages": {
-        "NotFound": "Az oldal nem található"
+        "NotFound": "Az oldal nem található",
+        "SomethingWentWrong": "Something went wrong!"
     },
     "NavigationBar": {
         "Discover": "Felfedezés",
