@@ -133,8 +133,7 @@ namespace Ombi.Core.Senders
 
             return new SenderResult
             {
-                Success = false,
-                Message = "Something went wrong!"
+                Success = false
             };
         }
 
@@ -343,8 +342,6 @@ namespace Ombi.Core.Senders
                 await Task.Delay(500);
             }
 
-            var seriesChanges = false;
-
             foreach (var season in model.SeasonRequests)
             {
                 foreach (var ep in season.Episodes)
@@ -359,72 +356,36 @@ namespace Ombi.Core.Senders
                 }
 
                 existingSeason = result.seasons.FirstOrDefault(x => x.seasonNumber == season.SeasonNumber);
-                var sonarrEpisodeList = sonarrEpList.Where(x => x.seasonNumber == season.SeasonNumber).ToList();
-                var sonarrEpCount = sonarrEpisodeList.Count;
-                var ourRequestCount = season.Episodes.Count;
-
-                var ourEpisodes = season.Episodes.Select(x => x.EpisodeNumber).ToList();
-                var unairedEpisodes = sonarrEpisodeList.Where(x => x.airDateUtc > DateTime.UtcNow).Select(x => x.episodeNumber).ToList();
-
-                //// Check if we have requested all the latest episodes, if we have then monitor 
-                //// NOTE, not sure if needed since ombi ui displays future episodes anyway...
-                //ourEpisodes.AddRange(unairedEpisodes);
-                //var distinctEpisodes = ourEpisodes.Distinct().ToList();
-                //var missingEpisodes = Enumerable.Range(distinctEpisodes.Min(), distinctEpisodes.Count).Except(distinctEpisodes);     
 
 
-                if (sonarrEpCount == ourRequestCount /*|| !missingEpisodes.Any()*/)
+                // Make sure this season is set to monitored 
+                if (!existingSeason.monitored)
                 {
-                    // We have the same amount of requests as all of the episodes in the season.
+                    // We need to monitor it, problem being is all episodes will now be monitored
+                    // So we need to monitor the series but unmonitor every episode
                     existingSeason.monitored = true;
-                    seriesChanges = true;
+                    var sea = result.seasons.FirstOrDefault(x => x.seasonNumber == existingSeason.seasonNumber);
+                    sea.monitored = true;
 
-                    // We do not need to update the episodes as marking the season as monitored will mark the episodes as monitored.
-                    var seasonToUpdate = result.seasons.FirstOrDefault(x => x.seasonNumber == season.SeasonNumber);
-                    seasonToUpdate.monitored = true; // Update by ref
-                }
-                else
-                {
-                    // Make sure this season is set to monitored 
-                    if (!existingSeason.monitored)
+                    result = await SonarrApi.UpdateSeries(result, s.ApiKey, s.FullUri);
+                    var epToUnmonitored = new List<Episode>();
+                    var newEpList = sonarrEpList.ConvertAll(ep => new Episode(ep)); // Clone it so we don't modify the original member
+                    foreach (var ep in newEpList.Where(x => x.seasonNumber == existingSeason.seasonNumber).ToList())
                     {
-                        // We need to monitor it, problem being is all episodes will now be monitored
-                        // So we need to monitor the series but unmonitor every episode
-                        // Except the episodes that are already monitored before we update the series (we do not want to unmonitored episodes that are monitored beforehand)
-                        existingSeason.monitored = true;
-                        var sea = result.seasons.FirstOrDefault(x => x.seasonNumber == existingSeason.seasonNumber);
-                        sea.monitored = true;
-                        //var previouslyMonitoredEpisodes = sonarrEpList.Where(x =>
-                        //    x.seasonNumber == existingSeason.seasonNumber && x.monitored).Select(x => x.episodeNumber).ToList(); // We probably don't actually care about this
-                        result = await SonarrApi.UpdateSeries(result, s.ApiKey, s.FullUri);
-                        var epToUnmonitored = new List<Episode>();
-                        var newEpList = sonarrEpList.ConvertAll(ep => new Episode(ep)); // Clone it so we don't modify the original member
-                        foreach (var ep in newEpList.Where(x => x.seasonNumber == existingSeason.seasonNumber).ToList())
-                        {
-                            //if (previouslyMonitoredEpisodes.Contains(ep.episodeNumber))
-                            //{
-                            //    // This was previously monitored.
-                            //    continue;
-                            //}
-                            ep.monitored = false;
-                            epToUnmonitored.Add(ep);
-                        }
-
-                        foreach (var epToUpdate in epToUnmonitored)
-                        {
-                            await SonarrApi.UpdateEpisode(epToUpdate, s.ApiKey, s.FullUri);
-                        }
+                        ep.monitored = false;
+                        epToUnmonitored.Add(ep);
                     }
-                    // Now update the episodes that need updating
-                    foreach (var epToUpdate in episodesToUpdate.Where(x => x.seasonNumber == season.SeasonNumber))
+
+                    foreach (var epToUpdate in epToUnmonitored)
                     {
                         await SonarrApi.UpdateEpisode(epToUpdate, s.ApiKey, s.FullUri);
                     }
                 }
-            }
-            if (seriesChanges)
-            {
-                await SonarrApi.SeasonPass(s.ApiKey, s.FullUri, result);
+                // Now update the episodes that need updating
+                foreach (var epToUpdate in episodesToUpdate.Where(x => x.seasonNumber == season.SeasonNumber))
+                {
+                    await SonarrApi.UpdateEpisode(epToUpdate, s.ApiKey, s.FullUri);
+                }
             }
 
             if (!s.AddOnly)

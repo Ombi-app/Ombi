@@ -282,11 +282,18 @@ namespace Ombi.Controllers.V1.External
         {
             try
             {
+                var currentUser = await GetCurrentUserAsync();
+
+                if (!currentUser.Email.HasValue())
+                {
+                    throw new Exception($"User '{currentUser.UserName}' has no email address set on their user profile.");
+                }
+
                 var message = new NotificationMessage
                 {
                     Message = "This is just a test! Success!",
                     Subject = $"Ombi: Test",
-                    To = (await GetCurrentUserAsync()).Email,
+                    To = currentUser.Email,
                 };
 
                 message.Other.Add("PlainTextBody", "This is just a test! Success!");
@@ -539,7 +546,7 @@ namespace Ombi.Controllers.V1.External
             {
 
                 var user = await UserManager.Users.Include(x => x.UserNotificationPreferences).FirstOrDefaultAsync(x => x.UserName == HttpContext.User.Identity.Name);
-                
+
 
                 var status = await WhatsAppApi.SendMessage(new WhatsAppModel {
                     From = settings.From,

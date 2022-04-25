@@ -14,7 +14,7 @@
     <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef> </th>
         <td mat-cell *matCellDef="let element">
-            <button  mat-raised-button color="accent" [routerLink]="[element.providerId]">{{ 'Issues.Details' | translate}}</button>
+            <a mat-raised-button color="accent" [routerLink]="[element.providerId]">{{ 'Issues.Details' | translate}}</a>
          </td>
     </ng-container>
 

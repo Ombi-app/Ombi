@@ -28,6 +28,8 @@ jobs:
 
   unit-test:
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-dotnet@v1
@@ -45,7 +47,16 @@ jobs:
       - name: Run Unit Tests
         run: |
           cd src
-          dotnet test --logger trx --results-directory "TestResults"
+          dotnet test --logger "trx;LogFileName=test-results.trx" || true
+      
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: DotNET Tests
+          path: "**/test-results.trx"                            
+          reporter: dotnet-trx
+          fail-on-error: true
 
   analysis:
     runs-on: ubuntu-latest

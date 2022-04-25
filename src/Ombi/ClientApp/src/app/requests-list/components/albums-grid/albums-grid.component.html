@@ -59,7 +59,7 @@
         <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef> </th>
             <td mat-cell *matCellDef="let element">
-                <button mat-raised-button color="accent" [routerLink]="'/details/artist/' + element.foreignArtistId">{{ 'Requests.Details' | translate}}</button>
+                <a mat-raised-button color="accent" [routerLink]="'/details/artist/' + element.foreignArtistId">{{ 'Requests.Details' | translate}}</a>
                 <button mat-raised-button color="warn" (click)="openOptions(element)" *ngIf="isAdmin || ( manageOwnRequests && element.requestedUser?.userName == userName )"> {{ 'Requests.Options' | translate}}</button>
             </td>
         </ng-container>
