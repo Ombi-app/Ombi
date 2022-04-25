@@ -173,7 +173,7 @@ export class TheMovieDbComponent implements OnInit {
 
         this.settingsService.saveTheMovieDbSettings(this.settings).subscribe(x => {
             if (x) {
-                this.notificationService.success("Successfully saved The Movie Database settings");
+                this.notificationService.success("Successfully saved The Movie Database settings. Restart the server to refresh the cache.");
             } else {
                 this.notificationService.success("There was an error when saving The Movie Database settings");
             }
