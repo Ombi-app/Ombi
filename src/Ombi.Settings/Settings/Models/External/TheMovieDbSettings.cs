@@ -11,5 +11,7 @@ namespace Ombi.Core.Settings.Models.External
         public List<int> ExcludedMovieGenreIds { get; set; }
 
         public List<int> ExcludedTvGenreIds { get; set; }
+
+        public List<string> OriginalLanguages { get; set; }
     }
 }

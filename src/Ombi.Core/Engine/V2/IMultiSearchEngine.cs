@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Models.Search.V2;
+using Ombi.TheMovieDbApi.Models;
 
 // Due to conflicting Genre models in
 // Ombi.TheMovieDbApi.Models and Ombi.Api.TheMovieDb.Models   
@@ -14,5 +15,6 @@ namespace Ombi.Core.Engine.V2
     {
         Task<List<MultiSearchResult>> MultiSearch(string searchTerm, MultiSearchFilter filter, CancellationToken cancellationToken);
         Task<IEnumerable<Genre>> GetGenres(string media, CancellationToken requestAborted);
+        Task<IEnumerable<Language>> GetLanguages(CancellationToken requestAborted);
     }
 }

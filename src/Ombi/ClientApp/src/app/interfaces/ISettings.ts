@@ -339,7 +339,8 @@ export interface ITheMovieDbSettings extends ISettings {
     showAdultMovies: boolean;
     excludedKeywordIds: number[];
     excludedMovieGenreIds: number[];
-    excludedTvGenreIds: number[]
+    excludedTvGenreIds: number[];
+    originalLanguages: string[];
 }
 
 export interface IUpdateModel

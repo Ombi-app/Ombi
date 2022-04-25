@@ -19,6 +19,7 @@ using Ombi.Helpers;
 // Due to conflicting Genre models in
 // Ombi.TheMovieDbApi.Models and Ombi.Api.TheMovieDb.Models   
 using Genre = Ombi.TheMovieDbApi.Models.Genre;
+using Ombi.TheMovieDbApi.Models;
 
 namespace Ombi.Controllers.V2
 {
@@ -67,6 +68,12 @@ namespace Ombi.Controllers.V2
         public Task<IEnumerable<Genre>> GetGenres(string media)
         {
             return _multiSearchEngine.GetGenres(media, HttpContext.RequestAborted);
+        }
+
+        [HttpGet("Languages")]
+        public Task<IEnumerable<Language>> GetLanguages()
+        {
+            return _multiSearchEngine.GetLanguages(HttpContext.RequestAborted);
         }
 
         /// <summary>
