@@ -61,7 +61,7 @@
     },
     "ErrorPages": {
         "NotFound": "Página no encontrada",
-        "SomethingWentWrong": "Something went wrong!"
+        "SomethingWentWrong": "¡Algo salió mal!"
     },
     "NavigationBar": {
         "Discover": "Descubre",
