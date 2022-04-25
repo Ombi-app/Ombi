@@ -218,7 +218,7 @@ namespace Ombi.Core.Engine.V2
             var results = new List<MovieDbSearchResult>();
             foreach (var pagesToLoad in pages)
             {
-                var apiResult = await Cache.GetOrAddAsync(nameof(NowPlayingMovies) + pagesToLoad.Page + langCode,
+                var apiResult = await Cache.GetOrAddAsync(nameof(TrendingMovies) + pagesToLoad.Page + langCode,
                     () =>  MovieApi.TrendingMovies(langCode, pagesToLoad.Page), DateTimeOffset.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
