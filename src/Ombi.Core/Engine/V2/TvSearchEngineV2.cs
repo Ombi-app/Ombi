@@ -26,6 +26,7 @@ using System.Diagnostics;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.UI;
 using Ombi.Core.Helpers;
+using Ombi.Core.Services;
 
 namespace Ombi.Core.Engine.V2
 {
@@ -37,10 +38,12 @@ namespace Ombi.Core.Engine.V2
         private readonly IMovieDbApi _movieApi;
         private readonly ISettingsService<CustomizationSettings> _customization;
         private readonly ITvRequestEngine _requestEngine;
+        private readonly IFeatureService _feature;
 
         public TvSearchEngineV2(ICurrentUser identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper,
             ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um, ICacheService memCache, ISettingsService<OmbiSettings> s,
-            IRepository<RequestSubscription> sub, IMovieDbApi movieApi, ISettingsService<CustomizationSettings> customization, ITvRequestEngine requestEngine)
+            IRepository<RequestSubscription> sub, IMovieDbApi movieApi, ISettingsService<CustomizationSettings> customization, ITvRequestEngine requestEngine,
+            IFeatureService feature)
             : base(identity, service, r, um, memCache, s, sub)
         {
             _tvMaze = tvMaze;
@@ -49,6 +52,7 @@ namespace Ombi.Core.Engine.V2
             _movieApi = movieApi;
             _customization = customization;
             _requestEngine = requestEngine;
+            _feature = feature;
         }
 
 
@@ -132,15 +136,19 @@ namespace Ombi.Core.Engine.V2
         }
 
         public async Task<IEnumerable<SearchTvShowViewModel>> Trending(int currentlyLoaded, int amountToLoad)
-        {
+        {           
             var langCode = await DefaultLanguageCode(null);
+            var isNewTrendingSourceEnabled = await _feature.FeatureEnabled(FeatureNames.NewTrendingSource); 
 
             var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
             var results = new List<MovieDbSearchResult>();
             foreach (var pagesToLoad in pages)
             {
+                var search = ( async () => (isNewTrendingSourceEnabled) ?
+                                await _movieApi.TrendingTv(langCode, pagesToLoad.Page) 
+                                : await _movieApi.TopRatedTv(langCode, pagesToLoad.Page));
                 var apiResult = await Cache.GetOrAddAsync(nameof(Trending) + langCode + pagesToLoad.Page,
-                    async () => await _movieApi.TopRatedTv(langCode, pagesToLoad.Page), DateTimeOffset.Now.AddHours(12));
+                    search, DateTimeOffset.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
 

@@ -208,6 +208,22 @@ namespace Ombi.Core.Engine.V2
             }
             return await TransformMovieResultsToResponse(results);
         }
+        
+        public async Task<IEnumerable<SearchMovieViewModel>> TrendingMovies(int currentPosition, int amountToLoad)
+        {
+            var langCode = await DefaultLanguageCode(null);
+
+            var pages = PaginationHelper.GetNextPages(currentPosition, amountToLoad, _theMovieDbMaxPageItems);
+
+            var results = new List<MovieDbSearchResult>();
+            foreach (var pagesToLoad in pages)
+            {
+                var apiResult = await Cache.GetOrAddAsync(nameof(NowPlayingMovies) + pagesToLoad.Page + langCode,
+                    () =>  MovieApi.TrendingMovies(langCode, pagesToLoad.Page), DateTimeOffset.Now.AddHours(12));
+                results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
+            }
+            return await TransformMovieResultsToResponse(results);
+        }
 
         public async Task<IEnumerable<SearchMovieViewModel>> SeasonalList(int currentPosition, int amountToLoad, CancellationToken cancellationToken)
         {

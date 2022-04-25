@@ -224,7 +224,11 @@ export class CarouselListComponent implements OnInit {
                 this.movies = await this.searchService.popularMoviesByPage(this.currentlyLoaded, this.amountToLoad);
                 break;
             case DiscoverType.Trending:
+              if(this.featureFacade.isNewTrendingSourceEnabled) {
+                this.movies = await this.searchService.trendingMoviesByPage(this.currentlyLoaded, this.amountToLoad);
+              } else {
                 this.movies = await this.searchService.nowPlayingMoviesByPage(this.currentlyLoaded, this.amountToLoad);
+              }
                 break;
             case DiscoverType.Upcoming:
                 this.movies = await this.searchService.upcomingMoviesByPage(this.currentlyLoaded, this.amountToLoad);

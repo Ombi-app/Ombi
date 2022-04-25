@@ -285,6 +285,21 @@ namespace Ombi.Controllers.V2
             () => _movieEngineV2.NowPlayingMovies(currentPosition, amountToLoad),
                 DateTimeOffset.Now.AddHours(12));
         }
+        
+        /// <summary>
+        /// Returns trending movies by page
+        /// </summary>
+        /// <remarks>We use TheMovieDb as the Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("movie/trending/{currentPosition}/{amountToLoad}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public Task<IEnumerable<SearchMovieViewModel>> TrendingMovies(int currentPosition, int amountToLoad)
+        {
+            return _mediaCacheService.GetOrAddAsync(nameof(TrendingMovies) + currentPosition + amountToLoad,
+                () => _movieEngineV2.TrendingMovies(currentPosition, amountToLoad),
+                DateTimeOffset.Now.AddHours(12));
+        }
 
         /// <summary>
         /// Returns top rated movies.
@@ -392,14 +407,14 @@ namespace Ombi.Controllers.V2
         /// <summary>
         /// Returns trending shows by page
         /// </summary>
-        /// <remarks>We use Trakt.tv as the Provider</remarks>
+        /// <remarks>We use TheMovieDb as the Provider</remarks>
         /// <returns></returns>
         [HttpGet("tv/trending/{currentPosition}/{amountToLoad}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public Task<IEnumerable<SearchTvShowViewModel>> Trending(int currentPosition, int amountToLoad)
+        public Task<IEnumerable<SearchTvShowViewModel>> TrendingTv(int currentPosition, int amountToLoad)
         {
-            return _mediaCacheService.GetOrAddAsync(nameof(Trending) + currentPosition + amountToLoad,
+            return _mediaCacheService.GetOrAddAsync(nameof(TrendingTv) + currentPosition + amountToLoad,
                 () => _tvEngineV2.Trending(currentPosition, amountToLoad),
                 DateTimeOffset.Now.AddHours(12));
         }
