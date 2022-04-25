@@ -1,3 +1,12 @@
+## [4.16.16](https://github.com/Ombi-app/Ombi/compare/v4.16.15...v4.16.16) (2022-04-25)
+
+
+### Bug Fixes
+
+* **4616:** :bug: fixed mandatory fields ([d8f2260](https://github.com/Ombi-app/Ombi/commit/d8f2260c7ae3ed48386743b7adbd06e284487034))
+
+
+
 ## [4.16.15](https://github.com/Ombi-app/Ombi/compare/v4.16.14...v4.16.15) (2022-04-24)
 
 
@@ -331,15 +340,6 @@
 ### Features
 
 * **radarr:** 4K Requests and Radarr 4K support  ([ba88848](https://github.com/Ombi-app/Ombi/commit/ba88848866b0a9dedb1e79b55c4d81a0fd453843))
-
-
-
-## [4.11.8](https://github.com/Ombi-app/Ombi/compare/v4.11.7...v4.11.8) (2022-02-13)
-
-
-### Bug Fixes
-
-* **settings:** :bug: Fixed an issue where we were not displaying the excluded keyworks correctly in the TheMovieDbSettings page ([d3b3316](https://github.com/Ombi-app/Ombi/commit/d3b3316cbac18356b2f6b0912a3deb2c183e6534))
 
 
 
