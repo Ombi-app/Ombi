@@ -1,3 +1,12 @@
+# [4.17.0](https://github.com/Ombi-app/Ombi/compare/v4.16.17...v4.17.0) (2022-04-25)
+
+
+### Features
+
+* **discover:** Add original language filter ([ef7ec86](https://github.com/Ombi-app/Ombi/commit/ef7ec861d8aede2a4817752c990617f583805391))
+
+
+
 ## [4.16.17](https://github.com/Ombi-app/Ombi/compare/v4.16.16...v4.16.17) (2022-04-25)
 
 
@@ -326,15 +335,6 @@
 ### Bug Fixes
 
 * **requests:** :bug: Fixed the approve 4k option on the requests list not working as expected ([c0189da](https://github.com/Ombi-app/Ombi/commit/c0189dad478ea375beda61ba3bee3f029a39b8e5))
-
-
-
-## [4.12.1](https://github.com/Ombi-app/Ombi/compare/v4.12.0...v4.12.1) (2022-02-16)
-
-
-### Bug Fixes
-
-* **requests:** :bug: Fixed the issue where Approving a 4K Request wouldn't send it to the correct 4K radarr instance ([87cb990](https://github.com/Ombi-app/Ombi/commit/87cb9903db30e1dead25ee8c5ea34305eb084a03)), closes [#4509](https://github.com/Ombi-app/Ombi/issues/4509)
 
 
 
