@@ -9,7 +9,7 @@ import { TesterService, NotificationService, RadarrService } from "../../../serv
     selector: "ombi-settings-radarr-form",
     templateUrl: "./radarr-form.component.html",
     styleUrls: ["./radarr-form.component.scss"],
-    // changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RadarrFormComponent implements OnInit {
 
@@ -23,11 +23,11 @@ export class RadarrFormComponent implements OnInit {
     constructor(private radarrService: RadarrService,
                 private notificationService: NotificationService,
                 private testerService: TesterService,
-                private controlContainer: ControlContainer) { }
+                private controlContainer: ControlContainer) {
+                }
 
     public ngOnInit() {
         this.form = <FormGroup>this.controlContainer.control;
-        // this.toggleValidators();
 
         this.qualities = [];
         this.qualities.push({ name: "Please Select", id: -1 });

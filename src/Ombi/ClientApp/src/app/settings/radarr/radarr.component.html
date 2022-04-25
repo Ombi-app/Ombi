@@ -8,11 +8,13 @@
             <mat-tab-group dynamicHeight>
                 <mat-tab label="Radarr">
                     <ombi-settings-radarr-form
+                    #normalForm
                     formGroupName="radarr">
                     </ombi-settings-radarr-form>
                 </mat-tab>
                 <mat-tab *ngIf="is4kEnabled" label="Radarr 4K">
                     <ombi-settings-radarr-form
+                    #4kForm
                     formGroupName="radarr4K">
                     </ombi-settings-radarr-form>
                 </mat-tab>
