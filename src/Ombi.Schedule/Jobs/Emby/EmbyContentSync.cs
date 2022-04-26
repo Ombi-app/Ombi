@@ -163,7 +163,7 @@ namespace Ombi.Schedule.Jobs.Emby
                         || existingTv.TheMovieDbId != tvShow.ProviderIds?.Tmdb
                         || existingTv.TvDbId != tvShow.ProviderIds?.Tvdb))
                     {
-                        _logger.LogCritical($"Series '{tvShow.Name}' has different IDs, probably a reidentification.");
+                        _logger.LogDebug($"Series '{tvShow.Name}' has different IDs, probably a reidentification.");
                         await _repo.DeleteTv(existingTv);
                         existingTv = null;
                     }
