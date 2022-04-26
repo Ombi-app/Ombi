@@ -102,6 +102,13 @@ namespace Ombi.Store.Repository
             return InternalSaveChanges();
         }
 
+        public override async Task DeleteTv(EmbyContent tv)
+        {
+            var episodesToDelete = GetAllEpisodes().Cast<EmbyEpisode>().Where(x => x.ParentId == tv.EmbyId).ToList();
+            Db.EmbyEpisode.RemoveRange(episodesToDelete);
+            await Delete(tv);
+        }
+
         public override RecentlyAddedType RecentlyAddedType => RecentlyAddedType.Emby;
     }
 }

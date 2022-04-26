@@ -157,6 +157,17 @@ namespace Ombi.Schedule.Jobs.Emby
                     }
 
                     var existingTv = await _repo.GetByEmbyId(tvShow.Id);
+
+                    if (existingTv != null &&
+                        ( existingTv.ImdbId != tvShow.ProviderIds?.Imdb 
+                        || existingTv.TheMovieDbId != tvShow.ProviderIds?.Tmdb
+                        || existingTv.TvDbId != tvShow.ProviderIds?.Tvdb))
+                    {
+                        _logger.LogCritical($"Series '{tvShow.Name}' has different IDs, probably a reidentification.");
+                        await _repo.DeleteTv(existingTv);
+                        existingTv = null;
+                    }
+
                     if (existingTv == null)
                     {
                         _logger.LogDebug("Adding new TV Show {0}", tvShow.Name);
