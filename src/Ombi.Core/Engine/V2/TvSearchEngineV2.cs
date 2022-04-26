@@ -138,15 +138,15 @@ namespace Ombi.Core.Engine.V2
         public async Task<IEnumerable<SearchTvShowViewModel>> Trending(int currentlyLoaded, int amountToLoad)
         {           
             var langCode = await DefaultLanguageCode(null);
-            var isNewTrendingSourceEnabled = await _feature.FeatureEnabled(FeatureNames.NewTrendingSource); 
+            var isOldTrendingSourceEnabled = await _feature.FeatureEnabled(FeatureNames.OldTrendingSource); 
 
             var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
             var results = new List<MovieDbSearchResult>();
             foreach (var pagesToLoad in pages)
             {
-                var search = ( async () => (isNewTrendingSourceEnabled) ?
-                                await _movieApi.TrendingTv(langCode, pagesToLoad.Page) 
-                                : await _movieApi.TopRatedTv(langCode, pagesToLoad.Page));
+                var search = ( async () => (isOldTrendingSourceEnabled) ?
+                                await _movieApi.TopRatedTv(langCode, pagesToLoad.Page) 
+                                : await _movieApi.TrendingTv(langCode, pagesToLoad.Page));
                 var apiResult = await Cache.GetOrAddAsync(nameof(Trending) + langCode + pagesToLoad.Page,
                     search, DateTimeOffset.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));

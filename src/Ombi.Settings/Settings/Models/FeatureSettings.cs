@@ -20,6 +20,6 @@ namespace Ombi.Settings.Settings.Models
     public static class FeatureNames
     {
         public const string Movie4KRequests = nameof(Movie4KRequests);
-        public const string NewTrendingSource = nameof(NewTrendingSource);
+        public const string OldTrendingSource = nameof(OldTrendingSource);
     }
 }

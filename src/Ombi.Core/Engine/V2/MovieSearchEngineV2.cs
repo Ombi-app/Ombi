@@ -200,16 +200,16 @@ namespace Ombi.Core.Engine.V2
         public async Task<IEnumerable<SearchMovieViewModel>> NowPlayingMovies(int currentPosition, int amountToLoad)
         {
             var langCode = await DefaultLanguageCode(null);
-            var isNewTrendingSourceEnabled = await _feature.FeatureEnabled(FeatureNames.NewTrendingSource); 
+            var isOldTrendingSourceEnabled = await _feature.FeatureEnabled(FeatureNames.OldTrendingSource); 
 
             var pages = PaginationHelper.GetNextPages(currentPosition, amountToLoad, _theMovieDbMaxPageItems);
 
             var results = new List<MovieDbSearchResult>();
             foreach (var pagesToLoad in pages)
             {
-                var search = () => (isNewTrendingSourceEnabled) ? 
-                     MovieApi.TrendingMovies(langCode, pagesToLoad.Page) 
-                     : MovieApi.NowPlaying(langCode, pagesToLoad.Page);
+                var search = () => (isOldTrendingSourceEnabled) ? 
+                     MovieApi.NowPlaying(langCode, pagesToLoad.Page) 
+                     : MovieApi.TrendingMovies(langCode, pagesToLoad.Page);
                 
                 var apiResult = await Cache.GetOrAddAsync(nameof(NowPlayingMovies) + pagesToLoad.Page + langCode,
                     search, DateTimeOffset.Now.AddHours(12));
