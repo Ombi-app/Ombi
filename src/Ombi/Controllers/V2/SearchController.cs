@@ -285,21 +285,6 @@ namespace Ombi.Controllers.V2
             () => _movieEngineV2.NowPlayingMovies(currentPosition, amountToLoad),
                 DateTimeOffset.Now.AddHours(12));
         }
-        
-        /// <summary>
-        /// Returns trending movies by page
-        /// </summary>
-        /// <remarks>We use TheMovieDb as the Provider</remarks>
-        /// <returns></returns>
-        [HttpGet("movie/trending/{currentPosition}/{amountToLoad}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesDefaultResponseType]
-        public Task<IEnumerable<SearchMovieViewModel>> TrendingMovies(int currentPosition, int amountToLoad)
-        {
-            return _mediaCacheService.GetOrAddAsync(nameof(TrendingMovies) + currentPosition + amountToLoad,
-                () => _movieEngineV2.TrendingMovies(currentPosition, amountToLoad),
-                DateTimeOffset.Now.AddHours(12));
-        }
 
         /// <summary>
         /// Returns top rated movies.

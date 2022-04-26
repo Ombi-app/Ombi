@@ -91,10 +91,6 @@ export class SearchV2Service extends ServiceHelpers {
         return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/nowplaying/${currentlyLoaded}/${toLoad}`).toPromise();
     }
 
-    public trendingMoviesByPage(currentlyLoaded: number, toLoad: number): Promise<ISearchMovieResult[]> {
-        return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/trending/${currentlyLoaded}/${toLoad}`).toPromise();
-    }
-
     public topRatedMovies(): Observable<ISearchMovieResult[]> {
         return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/toprated`);
     }

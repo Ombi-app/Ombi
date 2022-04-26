@@ -38,7 +38,6 @@ export class CarouselListComponent implements OnInit {
     public loadingFlag: boolean;
     public DiscoverType = DiscoverType;
     public is4kEnabled = false;
-    public isNewTrendingSourceEnabled = false;
 
     get mediaTypeStorageKey() {
         return "DiscoverOptions" + this.discoverType.toString();
@@ -140,7 +139,6 @@ export class CarouselListComponent implements OnInit {
 
     public async ngOnInit() {
         this.is4kEnabled = this.featureFacade.is4kEnabled();
-        this.isNewTrendingSourceEnabled = this.featureFacade.isNewTrendingSourceEnabled();
         this.currentlyLoaded = 0;
         const localDiscoverOptions = +this.storageService.get(this.mediaTypeStorageKey);
         if (localDiscoverOptions) {
@@ -226,11 +224,7 @@ export class CarouselListComponent implements OnInit {
                 this.movies = await this.searchService.popularMoviesByPage(this.currentlyLoaded, this.amountToLoad);
                 break;
             case DiscoverType.Trending:
-              if(this.isNewTrendingSourceEnabled) {
-                this.movies = await this.searchService.trendingMoviesByPage(this.currentlyLoaded, this.amountToLoad);
-              } else {
                 this.movies = await this.searchService.nowPlayingMoviesByPage(this.currentlyLoaded, this.amountToLoad);
-              }
                 break;
             case DiscoverType.Upcoming:
                 this.movies = await this.searchService.upcomingMoviesByPage(this.currentlyLoaded, this.amountToLoad);
