@@ -11,6 +11,7 @@ using Ombi.Core.Models.Search;
 using Ombi.Core.Models.Search.V2;
 using Ombi.Core.Models.UI;
 using Ombi.Core.Rule.Interfaces;
+using Ombi.Core.Services;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
@@ -31,7 +32,8 @@ namespace Ombi.Core.Engine.V2
     {
         public MovieSearchEngineV2(ICurrentUser identity, IRequestServiceMain service, IMovieDbApi movApi, IMapper mapper,
             ILogger<MovieSearchEngineV2> logger, IRuleEvaluator r, OmbiUserManager um, ICacheService mem, ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub,
-            ISettingsService<CustomizationSettings> customizationSettings, IMovieRequestEngine movieRequestEngine, IHttpClientFactory httpClientFactory)
+            ISettingsService<CustomizationSettings> customizationSettings, IMovieRequestEngine movieRequestEngine, IHttpClientFactory httpClientFactory,
+            IFeatureService feature)
             : base(identity, service, r, um, mem, s, sub)
         {
             MovieApi = movApi;
@@ -40,6 +42,7 @@ namespace Ombi.Core.Engine.V2
             _customizationSettings = customizationSettings;
             _movieRequestEngine = movieRequestEngine;
             _client = httpClientFactory.CreateClient();
+            _feature = feature;
         }
 
         private IMovieDbApi MovieApi { get; }
@@ -48,6 +51,7 @@ namespace Ombi.Core.Engine.V2
         private readonly ISettingsService<CustomizationSettings> _customizationSettings;
         private readonly IMovieRequestEngine _movieRequestEngine;
         private readonly HttpClient _client;
+        private readonly IFeatureService _feature;
 
         public async Task<MovieFullInfoViewModel> GetFullMovieInformation(int theMovieDbId, CancellationToken cancellationToken, string langCode = null)
         {
@@ -196,14 +200,19 @@ namespace Ombi.Core.Engine.V2
         public async Task<IEnumerable<SearchMovieViewModel>> NowPlayingMovies(int currentPosition, int amountToLoad)
         {
             var langCode = await DefaultLanguageCode(null);
+            var isOldTrendingSourceEnabled = await _feature.FeatureEnabled(FeatureNames.OldTrendingSource); 
 
             var pages = PaginationHelper.GetNextPages(currentPosition, amountToLoad, _theMovieDbMaxPageItems);
 
             var results = new List<MovieDbSearchResult>();
             foreach (var pagesToLoad in pages)
             {
+                var search = () => (isOldTrendingSourceEnabled) ? 
+                     MovieApi.NowPlaying(langCode, pagesToLoad.Page) 
+                     : MovieApi.TrendingMovies(langCode, pagesToLoad.Page);
+                
                 var apiResult = await Cache.GetOrAddAsync(nameof(NowPlayingMovies) + pagesToLoad.Page + langCode,
-                    () =>  MovieApi.NowPlaying(langCode, pagesToLoad.Page), DateTimeOffset.Now.AddHours(12));
+                    search, DateTimeOffset.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
             return await TransformMovieResultsToResponse(results);

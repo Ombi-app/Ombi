@@ -281,6 +281,33 @@ namespace Ombi.Api.TheMovieDb
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
             return Mapper.Map<List<MovieDbSearchResult>>(result.results);
         }
+        
+        public Task<List<MovieDbSearchResult>> TrendingMovies(string langCode, int? page = null)
+        {
+            return Trending("movie", langCode, page);
+        }
+
+        public Task<List<MovieDbSearchResult>> TrendingTv(string langCode, int? page = null)
+        {
+            return Trending("tv", langCode, page);
+        }
+        private async Task<List<MovieDbSearchResult>> Trending(string type, string langCode, int? page = null)
+        {
+            // https://developers.themoviedb.org/3/trending/get-trending
+            var timeWindow = "week"; // another option can be 'day' 
+            var request = new Request($"trending/{type}/{timeWindow}", BaseUri, HttpMethod.Get); 
+            request.AddQueryString("api_key", ApiToken);
+            request.AddQueryString("language", langCode);
+
+            if (page != null)
+            {
+                request.AddQueryString("page", page.ToString());
+            }
+
+            AddRetry(request);
+            var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
+            return Mapper.Map<List<MovieDbSearchResult>>(result.results);
+        }
 
         public Task<List<MovieDbSearchResult>> Upcoming(string langCode, int? page = null)
         {
