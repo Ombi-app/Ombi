@@ -5,6 +5,11 @@ on:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
 
+permissions:
+  pull-requests: write
+  issues: write
+  repository-projects: write
+
 jobs:
   build-ui:
     runs-on: ubuntu-latest
@@ -28,8 +33,7 @@ jobs:
 
   unit-test:
     runs-on: ubuntu-latest
-    permissions:
-      checks: write
+      
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-dotnet@v1
@@ -47,7 +51,16 @@ jobs:
       - name: Run Unit Tests
         run: |
           cd src
-          dotnet test --configuration "Release" --logger "trx;LogFileName=test-results.trx"
+          dotnet test --configuration "Release" --logger "trx;LogFileName=test-results.trx" || true
+          
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: DotNET Tests
+          path: "**/test-results.trx"                            
+          reporter: dotnet-trx
+          fail-on-error: true
 
   analysis:
     runs-on: ubuntu-latest
