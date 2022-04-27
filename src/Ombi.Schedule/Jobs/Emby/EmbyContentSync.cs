@@ -170,7 +170,7 @@ namespace Ombi.Schedule.Jobs.Emby
 
                     if (existingTv == null)
                     {
-                        _logger.LogDebug("Adding new TV Show {0}", tvShow.Name);
+                        _logger.LogDebug("Adding TV Show {0}", tvShow.Name);
                         mediaToAdd.Add(new EmbyContent
                         {
                             TvDbId = tvShow.ProviderIds?.Tvdb,
@@ -284,12 +284,11 @@ namespace Ombi.Schedule.Jobs.Emby
             else
             {
                 var movieHasChanged = false;
-                if(existingMovie.ImdbId != movieInfo.ProviderIds.Imdb || existingMovie.TheMovieDbId != movieInfo.ProviderIds.Tmdb)
+                if (existingMovie.ImdbId != movieInfo.ProviderIds.Imdb || existingMovie.TheMovieDbId != movieInfo.ProviderIds.Tmdb)
                 {
                     _logger.LogDebug($"Updating existing movie '{movieInfo.Name}'");
                     MapEmbyContent(existingMovie, movieInfo, server, has4K, quality);
                     movieHasChanged = true;
-
                 }
                 else if (!quality.Equals(existingMovie?.Quality, StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -303,7 +302,7 @@ namespace Ombi.Schedule.Jobs.Emby
                     movieHasChanged = true;
                 }
 
-                if(movieHasChanged)
+                if (movieHasChanged)
                 {
                     toUpdate.Add(existingMovie);
                 }
