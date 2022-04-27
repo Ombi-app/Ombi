@@ -409,7 +409,9 @@ namespace Ombi.Schedule.Jobs.Ombi
         private HashSet<IMediaServerEpisode> FilterEpisodes(IEnumerable<IMediaServerEpisode> source, IEnumerable<RecentlyAddedLog> recentlyAdded)
         {
             var itemsToReturn = new HashSet<IMediaServerEpisode>();
-            foreach (var ep in source.Where(x => x.Series.HasTvDb))
+            foreach (var ep in source.Where(x => x.Series.HasTvDb // needed for recentlyAddedLog
+                                         && x.Series.HasTheMovieDb // needed to fetch info to publish, this is just in case...
+                                         ))
             {
                 var tvDbId = StringHelper.IntParseLinq(ep.Series.TvDbId);
                 if (recentlyAdded.Any(x => x.ContentId == tvDbId && x.EpisodeNumber == ep.EpisodeNumber && x.SeasonNumber == ep.SeasonNumber))
@@ -501,16 +503,11 @@ namespace Ombi.Schedule.Jobs.Ombi
             foreach (var content in ordered)
             {
                 int.TryParse(content.TheMovieDbId, out var movieDbId);
-                if (movieDbId <= 0)
-                {
-                    _log.LogWarning($"{content.Title} does not have a TMDB ID, it won't be published.");
-                    continue;
-                }
                 var info = await _movieApi.GetMovieInformationWithExtraInfo(movieDbId, defaultLanguageCode);
                 var mediaurl = content.Url;
                 if (info == null)
                 {
-                    _log.LogWarning($"TMDB does not know movie {content.Title}, it won't be published.");
+                    _log.LogError($"TMDB does not know movie {content.Title}. This shouldn't happen because our media server knows it as ID '{movieDbId}'.");
                     continue;
                 }
                 try
@@ -665,48 +662,18 @@ namespace Ombi.Schedule.Jobs.Ombi
             var orderedTv = series.OrderByDescending(x => x.AddedAt);
             foreach (var t in orderedTv)
             {
-                if (!t.HasTvDb)
-                {
-                    // We may need to use themoviedb for the imdbid or their own id to get info
-                    if (t.HasTheMovieDb)
-                    {
-                        int.TryParse(t.TheMovieDbId, out var movieId);
-                        var externals = await _movieApi.GetTvExternals(movieId);
-                        if (externals == null || externals.tvdb_id <= 0)
-                        {
-                            // needed later for recently added log
-                            _log.LogWarning($"{t.Title} has no TVDB ID, it won't be published.");
-                            continue;
-                        }
-                        t.TvDbId = externals.tvdb_id.ToString();
-                    }
-                    // WE could check the below but we need to get the moviedb and then perform the above, let the metadata job figure this out.
-                    //else if(t.HasImdb)
-                    //{
-                    //    // Check the imdbid
-                    //    var externals = await _movieApi.Find(t.ImdbId, ExternalSource.imdb_id);
-                    //    if (externals?.tv_results == null || externals.tv_results.Length <= 0)
-                    //    {
-                    //        continue;
-                    //    }
-                    //    t.TvDbId = externals.tv_results.FirstOrDefault()..ToString();
-                    //}
-
-                }
-
                 try
                 {
                     var tvInfo = await _movieApi.GetTVInfo(t.TheMovieDbId, languageCode);
                     if (tvInfo == null)
                     {
-                        _log.LogWarning($"TMDB does not know series {t.Title}, it won't be published.");
+                        _log.LogError($"TMDB does not know series {t.Title}. This shouldn't happen because our media server knows it as ID '{t.TheMovieDbId}'.");
                         continue;
                     }
 
 
                     if (tvInfo.backdrop_path.HasValue())
                     {
-
                         AddBackgroundInsideTable($"https://image.tmdb.org/t/p/w500{tvInfo.backdrop_path}");
                     }
                     else
@@ -732,7 +699,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
                 catch (Exception e)
                 {
-                    _log.LogError(e, "Error when processing Plex TV {0}", t.Title);
+                    _log.LogError(e, "Error when processing TV {0}", t.Title);
                 }
                 finally
                 {
