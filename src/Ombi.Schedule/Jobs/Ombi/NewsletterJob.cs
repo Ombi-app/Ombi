@@ -503,16 +503,11 @@ namespace Ombi.Schedule.Jobs.Ombi
             foreach (var content in ordered)
             {
                 int.TryParse(content.TheMovieDbId, out var movieDbId);
-                if (movieDbId <= 0)
-                {
-                    _log.LogWarning($"{content.Title} does not have a TMDB ID, it won't be published.");
-                    continue;
-                }
                 var info = await _movieApi.GetMovieInformationWithExtraInfo(movieDbId, defaultLanguageCode);
                 var mediaurl = content.Url;
                 if (info == null)
                 {
-                    _log.LogWarning($"TMDB does not know movie {content.Title}, it won't be published.");
+                    _log.LogError($"TMDB does not know movie {content.Title}. This shouldn't happen because our media server knows it as ID '{movieDbId}'.");
                     continue;
                 }
                 try
