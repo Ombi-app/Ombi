@@ -1,3 +1,12 @@
+# [4.20.0](https://github.com/Ombi-app/Ombi/compare/v4.19.1...v4.20.0) (2022-04-28)
+
+
+### Features
+
+* **discover:** Show more relevant shows in upcoming TV ([8357819](https://github.com/Ombi-app/Ombi/commit/8357819b53b8c675c0b246d7006b5a778bdba33f))
+
+
+
 ## [4.19.1](https://github.com/Ombi-app/Ombi/compare/v4.19.0...v4.19.1) (2022-04-27)
 
 
@@ -339,16 +348,6 @@
 
 * **emby/jellyfin:** :bug: Fixed another issue where we were not correctly displaying the correct status' for movies ([5c0556e](https://github.com/Ombi-app/Ombi/commit/5c0556e6f44b8997a611f3a4d8e9e4e05d08bd13))
 * **mediaserver:** fixed some more issues in the media server sync and availability checks ([f3ea979](https://github.com/Ombi-app/Ombi/commit/f3ea979b8bd77842780ce8e6928b16237dd779cf))
-
-
-
-## [4.12.5](https://github.com/Ombi-app/Ombi/compare/v4.12.4...v4.12.5) (2022-02-21)
-
-
-### Bug Fixes
-
-* **emby:** :bug: Fixed the emby content sync [#4513](https://github.com/Ombi-app/Ombi/issues/4513) ([2927504](https://github.com/Ombi-app/Ombi/commit/2927504f0e0b4e7251e69b44e0e30c7ec9519980))
-* **emby:** :bug: Fixed the emby content sync [#4513](https://github.com/Ombi-app/Ombi/issues/4513) ([bd441cb](https://github.com/Ombi-app/Ombi/commit/bd441cb54fd77d6befb03fae321dc36c29f0de2e))
 
 
 
