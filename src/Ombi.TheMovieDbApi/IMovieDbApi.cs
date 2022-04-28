@@ -22,7 +22,7 @@ namespace Ombi.Api.TheMovieDb
         Task<List<MovieDbSearchResult>> GetMoviesViaKeywords(string keywordId, string langCode, CancellationToken cancellationToken, int? page = null);
         Task<List<TvSearchResult>> SearchTv(string searchTerm, string year = default);
         Task<List<MovieDbSearchResult>> TopRated(string languageCode, int? page = null);
-        Task<List<MovieDbSearchResult>> Upcoming(string languageCode, int? page = null);
+        Task<List<MovieDbSearchResult>> UpcomingMovies(string languageCode, int? page = null);
         Task<List<MovieDbSearchResult>> TopRatedTv(string languageCode, int? page = null);
         Task<List<MovieDbSearchResult>> TrendingTv(string languageCode, int? page = null);
         Task<List<MovieDbSearchResult>> UpcomingTv(string languageCode, int? page = null);

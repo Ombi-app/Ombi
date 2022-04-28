@@ -308,22 +308,12 @@ namespace Ombi.Api.TheMovieDb
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
             return Mapper.Map<List<MovieDbSearchResult>>(result.results);
         }
-
-        public Task<List<MovieDbSearchResult>> Upcoming(string langCode, int? page = null)
-        {
-            return Upcoming("movie", langCode, page);
-        }
-        public Task<List<MovieDbSearchResult>> UpcomingTv(string langCode, int? page = null)
-        {
-            return Upcoming("tv", langCode, page);
-        }
-
         /// <remarks>
         /// Maintains filter parity with <a href="https://developers.themoviedb.org/3/movies/get-upcoming">/movie/upcoming</a>.
         /// </remarks>
-        private async Task<List<MovieDbSearchResult>> Upcoming(string type, string langCode, int? page = null)
+        public async Task<List<MovieDbSearchResult>> UpcomingMovies(string langCode, int? page = null)
         {
-            var request = new Request($"discover/{type}", BaseUri, HttpMethod.Get);
+            var request = new Request($"discover/movie", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             request.AddQueryString("language", langCode);
 
@@ -340,7 +330,27 @@ namespace Ombi.Api.TheMovieDb
                 request.AddQueryString("page", page.ToString());
             }
             await AddDiscoverSettings(request);
-            await AddGenreFilter(request, type);
+            await AddGenreFilter(request, "movie");
+            AddRetry(request);
+            var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
+            return Mapper.Map<List<MovieDbSearchResult>>(result.results);
+        }
+        public async Task<List<MovieDbSearchResult>> UpcomingTv(string langCode, int? page = null)
+        {
+            var request = new Request($"discover/tv", BaseUri, HttpMethod.Get);
+            request.AddQueryString("api_key", ApiToken);
+            request.AddQueryString("language", langCode);
+
+            // Search for shows that will air in the next month
+            var startDate = DateTime.Today.AddDays(1);
+            request.AddQueryString($"first_air_date.gte", startDate.ToString("yyyy-MM-dd"));
+            request.AddQueryString($"first_air_date.lte", startDate.AddDays(30).ToString("yyyy-MM-dd"));
+            if (page != null)
+            {
+                request.AddQueryString("page", page.ToString());
+            }
+            await AddDiscoverSettings(request);
+            await AddGenreFilter(request, "tv");
             AddRetry(request);
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
             return Mapper.Map<List<MovieDbSearchResult>>(result.results);

@@ -287,7 +287,7 @@ namespace Ombi.Core.Engine.V2
             var result = await Cache.GetOrAddAsync(CacheKeys.UpcomingMovies, async () =>
             {
                 var langCode = await DefaultLanguageCode(null);
-                return await MovieApi.Upcoming(langCode);
+                return await MovieApi.UpcomingMovies(langCode);
             }, DateTimeOffset.Now.AddHours(12));
             if (result != null)
             {
@@ -307,7 +307,7 @@ namespace Ombi.Core.Engine.V2
             foreach (var pagesToLoad in pages)
             {
                 var apiResult = await Cache.GetOrAddAsync(nameof(UpcomingMovies) + pagesToLoad.Page + langCode,
-                    () =>  MovieApi.Upcoming(langCode, pagesToLoad.Page), DateTimeOffset.Now.AddHours(12));
+                    () =>  MovieApi.UpcomingMovies(langCode, pagesToLoad.Page), DateTimeOffset.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
             return await TransformMovieResultsToResponse(results);
