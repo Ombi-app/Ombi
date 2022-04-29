@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="NewAlbums" xml:space="preserve">
-    <value>Nowy Album</value>
+    <value>Nowe Albumy</value>
   </data>
   <data name="NewMovies" xml:space="preserve">
-    <value>Nowy film</value>
+    <value>Nowe filmy</value>
   </data>
   <data name="NewTV" xml:space="preserve">
     <value>Nowy telewizor</value>
@@ -136,21 +136,21 @@
     <value>Sezon:</value>
   </data>
   <data name="EpisodesLabel" xml:space="preserve">
-    <value>Odcinków:</value>
+    <value>Odcinki:</value>
   </data>
   <data name="PoweredBy" xml:space="preserve">
     <value>Wspierane przez</value>
   </data>
   <data name="Unsubscribe" xml:space="preserve">
-    <value>Wypisać się</value>
+    <value>Wypisz się</value>
   </data>
   <data name="Album" xml:space="preserve">
     <value>Album</value>
   </data>
   <data name="Movie" xml:space="preserve">
-    <value>Movie</value>
+    <value>Film</value>
   </data>
   <data name="TvShow" xml:space="preserve">
-    <value>TV Show</value>
+    <value>Serial</value>
   </data>
 </root>
