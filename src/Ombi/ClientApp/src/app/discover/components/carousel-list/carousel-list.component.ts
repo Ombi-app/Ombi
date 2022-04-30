@@ -27,6 +27,7 @@ export class CarouselListComponent implements OnInit {
     @Input() public isAdmin: boolean;
     @Output() public movieCount: EventEmitter<number> = new EventEmitter();
     @ViewChild('carousel', {static: false}) carousel: Carousel;
+
     public DiscoverOption = DiscoverOption;
     public discoverOptions: DiscoverOption = DiscoverOption.Combined;
     public discoverResults: IDiscoverCardResult[] = [];
@@ -44,95 +45,92 @@ export class CarouselListComponent implements OnInit {
     private amountToLoad = 17;
     private currentlyLoaded = 0;
 
-    constructor(
-
-      private searchService: SearchV2Service,
+    constructor(private searchService: SearchV2Service,
         private storageService: StorageService,
         private featureFacade: FeaturesFacade) {
         Carousel.prototype.onTouchMove = () => { },
         this.responsiveOptions = [
             {
-              ontouchend: "pointer-events: none",
                 breakpoint: '4000px',
                 numVisible: 17,
                 numScroll: 16
             },
-            {ontouchend: "pointer-events: none",
+            {
                 breakpoint: '3800px',
                 numVisible: 16,
                 numScroll: 15
             },
-            {ontouchend: "pointer-events: none",
+            {
                 breakpoint: '3600px',
                 numVisible: 15,
                 numScroll: 14
             },
-            {ontouchend: "pointer-events: none",
+            {
                 breakpoint: '3400px',
                 numVisible: 14,
                 numScroll: 13
             },
-            {ontouchend: "pointer-events: none",
+            {
                 breakpoint: '3200px',
                 numVisible: 13,
                 numScroll: 12
             },
-            {ontouchend: "pointer-events: none",
+            {
                 breakpoint: '3000px',
                 numVisible: 12,
                 numScroll: 11
             },
-            {ontouchend: "pointer-events: none",
+            {
                 breakpoint: '2800px',
                 numVisible: 11,
                 numScroll: 10
             },
-            {ontouchend: "pointer-events: none",
+            {
                 breakpoint: '2600px',
                 numVisible: 10,
                 numScroll: 9
             },
-            {ontouchend: "pointer-events: none",
+            {
                 breakpoint: '2400px',
                 numVisible: 9,
                 numScroll: 8
             },
-            {ontouchend: "pointer-events: none",
+            {
                 breakpoint: '2200px',
                 numVisible: 8,
                 numScroll: 7
             },
-            {ontouchend: "pointer-events: none",
+            {
                 breakpoint: '2000px',
                 numVisible: 7,
                 numScroll: 6
             },
-            {ontouchend: "pointer-events: none",
+            {
                 breakpoint: '1800px',
                 numVisible: 6,
                 numScroll: 5
             },
-            {ontouchend: "pointer-events: none",
+            {
                 breakpoint: '1650px',
                 numVisible: 5,
                 numScroll: 4
             },
-            {ontouchend: "pointer-events: none",
+            {
                 breakpoint: '1500px',
                 numVisible: 4,
                 numScroll: 3
             },
-            {ontouchend: "pointer-events: none",
+            {
                 breakpoint: '768px',
                 numVisible: 3,
                 numScroll: 2
             },
-            {ontouchend: "pointer-events: none",
+            {
                 breakpoint: '660px',
                 numVisible: 2,
                 numScroll: 2
             },
-            {ontouchend: "pointer-events: none",
+            {
                 breakpoint: '480px',
                 numVisible: 1,
                 numScroll: 1
@@ -353,7 +351,6 @@ export class CarouselListComponent implements OnInit {
 
     private finishLoading() {
         this.loadingFlag = false;
-
     }
 
 
