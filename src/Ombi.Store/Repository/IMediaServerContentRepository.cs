@@ -14,6 +14,7 @@ namespace Ombi.Store.Repository
         IQueryable<IMediaServerEpisode> GetAllEpisodes();
         Task<IMediaServerEpisode> Add(IMediaServerEpisode content);
         Task AddRange(IEnumerable<IMediaServerEpisode> content);
+        Task DeleteTv(Content tv);
         void UpdateWithoutSave(IMediaServerContent existingContent);
     }
 }

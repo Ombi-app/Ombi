@@ -157,9 +157,20 @@ namespace Ombi.Schedule.Jobs.Emby
                     }
 
                     var existingTv = await _repo.GetByEmbyId(tvShow.Id);
+
+                    if (existingTv != null &&
+                        ( existingTv.ImdbId != tvShow.ProviderIds?.Imdb 
+                        || existingTv.TheMovieDbId != tvShow.ProviderIds?.Tmdb
+                        || existingTv.TvDbId != tvShow.ProviderIds?.Tvdb))
+                    {
+                        _logger.LogDebug($"Series '{tvShow.Name}' has different IDs, probably a reidentification.");
+                        await _repo.DeleteTv(existingTv);
+                        existingTv = null;
+                    }
+
                     if (existingTv == null)
                     {
-                        _logger.LogDebug("Adding new TV Show {0}", tvShow.Name);
+                        _logger.LogDebug("Adding TV Show {0}", tvShow.Name);
                         mediaToAdd.Add(new EmbyContent
                         {
                             TvDbId = tvShow.ProviderIds?.Tvdb,
@@ -265,23 +276,21 @@ namespace Ombi.Schedule.Jobs.Emby
                     return;
                 }
                 _logger.LogDebug($"Adding new movie {movieInfo.Name}");
-
-                content.Add(new EmbyContent
-                {
-                    ImdbId = movieInfo.ProviderIds.Imdb,
-                    TheMovieDbId = movieInfo.ProviderIds?.Tmdb,
-                    Title = movieInfo.Name,
-                    Type = MediaType.Movie,
-                    EmbyId = movieInfo.Id,
-                    Url = EmbyHelper.GetEmbyMediaUrl(movieInfo.Id, server?.ServerId, server.ServerHostname),
-                    AddedAt = DateTime.UtcNow,
-                    Quality = has4K ? null : quality,
-                    Has4K = has4K
-                });
+                var newMovie = new EmbyContent();
+                newMovie.AddedAt = DateTime.UtcNow;
+                MapEmbyContent(newMovie, movieInfo, server, has4K, quality);
+                content.Add(newMovie);
             }
             else
             {
-                if (!quality.Equals(existingMovie?.Quality, StringComparison.InvariantCultureIgnoreCase))
+                var movieHasChanged = false;
+                if (existingMovie.ImdbId != movieInfo.ProviderIds.Imdb || existingMovie.TheMovieDbId != movieInfo.ProviderIds.Tmdb)
+                {
+                    _logger.LogDebug($"Updating existing movie '{movieInfo.Name}'");
+                    MapEmbyContent(existingMovie, movieInfo, server, has4K, quality);
+                    movieHasChanged = true;
+                }
+                else if (!quality.Equals(existingMovie?.Quality, StringComparison.InvariantCultureIgnoreCase))
                 {
                     _logger.LogDebug($"We have found another quality for Movie '{movieInfo.Name}', Quality: '{quality}'");
                     existingMovie.Quality = has4K ? null : quality;
@@ -290,6 +299,11 @@ namespace Ombi.Schedule.Jobs.Emby
                     // Probably could refactor here
                     // If a 4k movie comes in (we don't store the quality on 4k)
                     // it will always get updated even know it's not changed
+                    movieHasChanged = true;
+                }
+
+                if (movieHasChanged)
+                {
                     toUpdate.Add(existingMovie);
                 }
                 else
@@ -298,6 +312,17 @@ namespace Ombi.Schedule.Jobs.Emby
                     _logger.LogDebug($"We already have movie {movieInfo.Name}");
                 }
             }
+        }
+
+        private void MapEmbyContent(EmbyContent content, EmbyMovie movieInfo, EmbyServers server, bool has4K, string quality){
+            content.ImdbId = movieInfo.ProviderIds.Imdb;
+            content.TheMovieDbId = movieInfo.ProviderIds?.Tmdb;
+            content.Title = movieInfo.Name;
+            content.Type = MediaType.Movie;
+            content.EmbyId = movieInfo.Id;
+            content.Url = EmbyHelper.GetEmbyMediaUrl(movieInfo.Id, server?.ServerId, server.ServerHostname);
+            content.Quality = has4K ? null : quality;
+            content.Has4K = has4K;
         }
 
         private bool ValidateSettings(EmbyServers server)

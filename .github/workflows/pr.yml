@@ -5,6 +5,11 @@ on:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
 
+permissions:
+  pull-requests: write
+  issues: write
+  repository-projects: write
+
 jobs:
   build-ui:
     runs-on: ubuntu-latest
@@ -28,8 +33,7 @@ jobs:
 
   unit-test:
     runs-on: ubuntu-latest
-    permissions:
-      checks: write
+      
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-dotnet@v1

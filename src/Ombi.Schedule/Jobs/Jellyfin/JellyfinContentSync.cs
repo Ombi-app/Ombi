@@ -132,9 +132,20 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                         }
 
                         var existingTv = await _repo.GetByJellyfinId(tvShow.Id);
+
+                        if (existingTv != null &&
+                            ( existingTv.ImdbId != tvShow.ProviderIds?.Imdb 
+                           || existingTv.TheMovieDbId != tvShow.ProviderIds?.Tmdb
+                           || existingTv.TvDbId != tvShow.ProviderIds?.Tvdb))
+                        {
+                            _logger.LogDebug($"Series '{tvShow.Name}' has different IDs, probably a reidentification.");
+                            await _repo.DeleteTv(existingTv);
+                            existingTv = null;
+                        }
+                        
                         if (existingTv == null)
                         {
-                            _logger.LogDebug("Adding new TV Show {0}", tvShow.Name);
+                            _logger.LogDebug("Adding TV Show {0}", tvShow.Name);
                             mediaToAdd.Add(new JellyfinContent
                             {
                                 TvDbId = tvShow.ProviderIds?.Tvdb,
@@ -230,22 +241,21 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                     return;
                 }
                 _logger.LogDebug($"Adding new movie {movieInfo.Name}");
-                content.Add(new JellyfinContent
-                {
-                    ImdbId = movieInfo.ProviderIds.Imdb,
-                    TheMovieDbId = movieInfo.ProviderIds?.Tmdb,
-                    Title = movieInfo.Name,
-                    Type = MediaType.Movie,
-                    JellyfinId = movieInfo.Id,
-                    Url = JellyfinHelper.GetJellyfinMediaUrl(movieInfo.Id, server?.ServerId, server.ServerHostname),
-                    AddedAt = DateTime.UtcNow,
-                    Quality = has4K ? null : quality,
-                    Has4K = has4K
-                });
+                var newMovie = new JellyfinContent();
+                newMovie.AddedAt = DateTime.UtcNow;
+                MapJellyfinMovie(newMovie, movieInfo, server, has4K, quality);
+                content.Add(newMovie);;
             }
             else
             {
-                if (!quality.Equals(existingMovie?.Quality, StringComparison.InvariantCultureIgnoreCase))
+                var movieHasChanged = false;
+                if (existingMovie.ImdbId != movieInfo.ProviderIds.Imdb || existingMovie.TheMovieDbId != movieInfo.ProviderIds.Tmdb)
+                {
+                    _logger.LogDebug($"Updating existing movie '{movieInfo.Name}'");
+                    MapJellyfinMovie(existingMovie, movieInfo, server, has4K, quality);
+                    movieHasChanged = true;
+                }
+                else if (!quality.Equals(existingMovie?.Quality, StringComparison.InvariantCultureIgnoreCase))
                 {
                     _logger.LogDebug($"We have found another quality for Movie '{movieInfo.Name}', Quality: '{quality}'");
                     existingMovie.Quality = has4K ? null : quality;
@@ -255,6 +265,12 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                     // If a 4k movie comes in (we don't store the quality on 4k)
                     // it will always get updated even know it's not changed
                     toUpdate.Add(existingMovie);
+                    movieHasChanged = true;
+                }
+                
+                if (movieHasChanged)
+                {
+                    toUpdate.Add(existingMovie);
                 }
                 else
                 {
@@ -262,6 +278,18 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                     _logger.LogDebug($"We already have movie {movieInfo.Name}");
                 }
             }
+        }
+
+        private void MapJellyfinMovie(JellyfinContent content, JellyfinMovie movieInfo, JellyfinServers server, bool has4K, string quality)
+        {
+            content.ImdbId = movieInfo.ProviderIds.Imdb;
+            content.TheMovieDbId = movieInfo.ProviderIds?.Tmdb;
+            content.Title = movieInfo.Name;
+            content.Type = MediaType.Movie;
+            content.JellyfinId = movieInfo.Id;
+            content.Url = JellyfinHelper.GetJellyfinMediaUrl(movieInfo.Id, server?.ServerId, server.ServerHostname);
+            content.Quality = has4K ? null : quality;
+            content.Has4K = has4K;
         }
 
         private bool ValidateSettings(JellyfinServers server)
