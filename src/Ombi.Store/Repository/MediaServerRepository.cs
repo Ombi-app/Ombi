@@ -22,5 +22,6 @@ namespace Ombi.Store.Repository
         public abstract Task AddRange(IEnumerable<IMediaServerEpisode> content);
         public abstract void UpdateWithoutSave(IMediaServerContent existingContent);
         public abstract Task UpdateRange(IEnumerable<IMediaServerContent> existingContent);
+        public abstract Task DeleteTv(T tv);
     }
 }

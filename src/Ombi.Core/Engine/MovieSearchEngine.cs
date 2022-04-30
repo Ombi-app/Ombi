@@ -161,7 +161,7 @@ namespace Ombi.Core.Engine
             var result = await Cache.GetOrAddAsync(CacheKeys.UpcomingMovies, async () =>
             {
                 var langCode = await DefaultLanguageCode(null);
-                return await MovieApi.Upcoming(langCode);
+                return await MovieApi.UpcomingMovies(langCode);
             }, DateTimeOffset.Now.AddHours(12));
             if (result != null)
             {

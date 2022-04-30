@@ -1,3 +1,43 @@
+# [4.20.0](https://github.com/Ombi-app/Ombi/compare/v4.19.1...v4.20.0) (2022-04-28)
+
+
+### Features
+
+* **discover:** Show more relevant shows in upcoming TV ([8357819](https://github.com/Ombi-app/Ombi/commit/8357819b53b8c675c0b246d7006b5a778bdba33f))
+
+
+
+## [4.19.1](https://github.com/Ombi-app/Ombi/compare/v4.19.0...v4.19.1) (2022-04-27)
+
+
+
+# [4.19.0](https://github.com/Ombi-app/Ombi/compare/v4.18.0...v4.19.0) (2022-04-27)
+
+
+### Features
+
+* **sync:** Detect reidentified movies in Emby and Jellyfin ([5938077](https://github.com/Ombi-app/Ombi/commit/5938077d82a5357f79c07b218b3986557a5816e8))
+* **sync:** Detect reidentified series in Emby and Jellyfin ([9096e91](https://github.com/Ombi-app/Ombi/commit/9096e91d55d268819bce22831f8a8b27f2a1776b))
+
+
+
+# [4.18.0](https://github.com/Ombi-app/Ombi/compare/v4.17.0...v4.18.0) (2022-04-26)
+
+
+### Bug Fixes
+
+* **discover:** Fix cache mix up ([03d9422](https://github.com/Ombi-app/Ombi/commit/03d94220c7eaafb50c6c80a6ed1150794b873ac3))
+* **discover:** Fix new trending feature detection ([6794b88](https://github.com/Ombi-app/Ombi/commit/6794b887f6544fb41528bdd9728b7824b65e47ee))
+* **settings:** Allow toggling features when there are more than one ([a373359](https://github.com/Ombi-app/Ombi/commit/a373359ae8e6bad42b558a6e01a8ff2840d3bbaa))
+
+
+### Features
+
+* **discover:** Add new trending source experimental feature ([1a0823c](https://github.com/Ombi-app/Ombi/commit/1a0823ca80559417c67323aaeaa1ef5243e98031))
+* **discover:** Default trending source to new logic ([4f12939](https://github.com/Ombi-app/Ombi/commit/4f12939e22020a67a5ee75e2907923faea136e8d))
+
+
+
 # [4.17.0](https://github.com/Ombi-app/Ombi/compare/v4.16.17...v4.17.0) (2022-04-25)
 
 
@@ -308,33 +348,6 @@
 
 * **emby/jellyfin:** :bug: Fixed another issue where we were not correctly displaying the correct status' for movies ([5c0556e](https://github.com/Ombi-app/Ombi/commit/5c0556e6f44b8997a611f3a4d8e9e4e05d08bd13))
 * **mediaserver:** fixed some more issues in the media server sync and availability checks ([f3ea979](https://github.com/Ombi-app/Ombi/commit/f3ea979b8bd77842780ce8e6928b16237dd779cf))
-
-
-
-## [4.12.5](https://github.com/Ombi-app/Ombi/compare/v4.12.4...v4.12.5) (2022-02-21)
-
-
-### Bug Fixes
-
-* **emby:** :bug: Fixed the emby content sync [#4513](https://github.com/Ombi-app/Ombi/issues/4513) ([2927504](https://github.com/Ombi-app/Ombi/commit/2927504f0e0b4e7251e69b44e0e30c7ec9519980))
-* **emby:** :bug: Fixed the emby content sync [#4513](https://github.com/Ombi-app/Ombi/issues/4513) ([bd441cb](https://github.com/Ombi-app/Ombi/commit/bd441cb54fd77d6befb03fae321dc36c29f0de2e))
-
-
-
-## [4.12.4](https://github.com/Ombi-app/Ombi/compare/v4.12.3...v4.12.4) (2022-02-17)
-
-
-
-## [4.12.3](https://github.com/Ombi-app/Ombi/compare/v4.12.2...v4.12.3) (2022-02-16)
-
-
-
-## [4.12.2](https://github.com/Ombi-app/Ombi/compare/v4.12.1...v4.12.2) (2022-02-16)
-
-
-### Bug Fixes
-
-* **requests:** :bug: Fixed the approve 4k option on the requests list not working as expected ([c0189da](https://github.com/Ombi-app/Ombi/commit/c0189dad478ea375beda61ba3bee3f029a39b8e5))
 
 
 

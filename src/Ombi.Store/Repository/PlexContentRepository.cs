@@ -169,5 +169,12 @@ namespace Ombi.Store.Repository
             Db.PlexServerContent.UpdateRange((IEnumerable<PlexServerContent>)existingContent);
             return InternalSaveChanges();
         }
+
+        public override Task DeleteTv(PlexServerContent tv)
+        {
+            // not used for now
+            // TODO: delete episodes, then delete series
+            throw new NotImplementedException();
+        }
     }
 }

@@ -8,7 +8,7 @@
       <div *ngFor="let feature of features">
         <div class="row">
           <div class="col-1">
-            <mat-slide-toggle [checked]="feature.enabled" (change)="updateFeature($event, feature)" id="enable"></mat-slide-toggle>
+            <mat-slide-toggle [checked]="feature.enabled" (change)="updateFeature($event, feature)" id="enable{{feature.name}}"></mat-slide-toggle>
           </div>
           <div class="col-2">
             <h3>{{feature.name}}</h3>

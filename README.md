@@ -100,17 +100,17 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/anojht">
-            <img src="https://avatars.githubusercontent.com/u/21053678?v=4" width="50;" alt="anojht"/>
-            <br />
-            <sub><b>Anojh Thayaparan</b></sub>
-        </a>
-    </td>
-    <td align="center">
         <a href="https://github.com/sephrat">
             <img src="https://avatars.githubusercontent.com/u/34862846?v=4" width="50;" alt="sephrat"/>
             <br />
             <sub><b>Sephrat</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/anojht">
+            <img src="https://avatars.githubusercontent.com/u/21053678?v=4" width="50;" alt="anojht"/>
+            <br />
+            <sub><b>Anojh Thayaparan</b></sub>
         </a>
     </td></tr>
 <tr>
