@@ -45,18 +45,25 @@ export class MovieDetailsComponent implements OnInit{
         private requestService2: RequestServiceV2, private radarrService: RadarrService,
         public messageService: MessageService, private auth: AuthService, private settingsState: SettingsStateService,
         private translate: TranslateService, private featureFacade: FeaturesFacade) {
-        this.route.params.subscribe(async (params: any) => {
+          this.route.params.subscribe(async (params: any) => {
             if (typeof params.movieDbId === 'string' || params.movieDbId instanceof String) {
                 if (params.movieDbId.startsWith("tt")) {
                     this.imdbId = params.movieDbId;
+                    // movieDbId changed, re-init component
+                    this.ngOnInit();
                 }
             }
             this.theMovidDbId = params.movieDbId;
+            // movieDbId changed, re-init component
+            this.ngOnInit();
         });
+
     }
 
     async ngOnInit() {
+      this.theMovidDbId = this.route.snapshot.params.movieDbId;
 
+        // reset scroll location to top
         this.is4KEnabled = this.featureFacade.is4kEnabled();
         this.issuesEnabled = this.settingsState.getIssue();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");

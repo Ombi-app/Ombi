@@ -107,7 +107,7 @@
                                 </span>
                             </span>
                         </span>
-                        
+
                         <span *ngIf="movieRequest?.showSubscribe">
                             <button *ngIf="!movieRequest?.subscribed" (click)="notify()" id="notifyBtn"
                                 mat-raised-button class="btn-spacing"> <i class="fas fa-bell"></i>
@@ -239,14 +239,14 @@
                             </div>
 
                             <mat-accordion class=" mat-elevation-z8 spacing-below ">
-                                <mat-expansion-panel>
+                                <mat-expansion-panel *ngIf="movie.recommendations?.results?.length> 0">
                                     <mat-expansion-panel-header>
                                         <mat-panel-title>
                                             {{'MediaDetails.RecommendationsTitle' | translate}}
                                         </mat-panel-title>
                                     </mat-expansion-panel-header>
 
-                                    <div class="row card-spacer " *ngIf="movie.recommendations?.results?.length> 0">
+                                    <div class="row card-spacer ">
 
                                         <div class="col-md-2" *ngFor="let r of movie.recommendations?.results">
                                             <div class="sidebar affixable affix-top preview-poster">
@@ -261,14 +261,14 @@
                                         </div>
                                     </div>
                                 </mat-expansion-panel>
-                                <mat-expansion-panel>
+                                <mat-expansion-panel *ngIf="movie.similar?.results?.length > 0">
                                     <mat-expansion-panel-header>
                                         <mat-panel-title>
                                             {{'MediaDetails.SimilarTitle' | translate}}
                                         </mat-panel-title>
                                     </mat-expansion-panel-header>
 
-                                    <div class="row card-spacer" *ngIf="movie.similar?.results?.length > 0">
+                                    <div class="row card-spacer">
 
                                         <div class="col-md-2" *ngFor="let r of movie.similar.results">
                                             <div class="sidebar affixable affix-top preview-poster">
