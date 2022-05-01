@@ -61,9 +61,8 @@ export class MovieDetailsComponent implements OnInit{
     }
 
     async ngOnInit() {
-      this.theMovidDbId = this.route.snapshot.params.movieDbId;
-
         // reset scroll location to top
+        window.scrollTo(0, 0);
         this.is4KEnabled = this.featureFacade.is4kEnabled();
         this.issuesEnabled = this.settingsState.getIssue();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
