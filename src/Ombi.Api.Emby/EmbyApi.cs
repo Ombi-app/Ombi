@@ -106,7 +106,7 @@ namespace Ombi.Api.Emby
 
             request.AddQueryString("Fields", "ProviderIds,Overview");
 
-            request.AddQueryString("IsVirtualItem", "False");
+            request.AddQueryString("IsMissing", "False");
 
             return await Api.Request<EmbyItemContainer<EmbyMovie>>(request);
         }
@@ -180,7 +180,7 @@ namespace Ombi.Api.Emby
                 request.AddQueryString("ParentId", parentIdFilder);
             }
 
-            request.AddQueryString("IsVirtualItem", "False");
+            request.AddQueryString("IsMissing", "False");
 
             AddHeaders(request, apiKey);
 
@@ -207,7 +207,7 @@ namespace Ombi.Api.Emby
             request.AddQueryString("IncludeItemTypes", type);
             request.AddQueryString("Fields", includeOverview ? "ProviderIds,Overview" : "ProviderIds");
 
-            request.AddQueryString("IsVirtualItem", "False");
+            request.AddQueryString("IsMissing", "False");
 
             AddHeaders(request, apiKey);
 
@@ -229,7 +229,7 @@ namespace Ombi.Api.Emby
                 request.AddQueryString("ParentId", parentIdFilder);
             }
 
-            request.AddQueryString("IsVirtualItem", "False");
+            request.AddQueryString("isMissing", "False");
 
             AddHeaders(request, apiKey);
 

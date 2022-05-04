@@ -130,12 +130,6 @@ namespace Ombi.Schedule.Jobs.Emby
                 {
                     processed++;
 
-                    if (ep.LocationType?.Equals("Virtual", StringComparison.InvariantCultureIgnoreCase) ?? false)
-                    {
-                        // For some reason Emby is not respecting the `IsVirtualItem` field.
-                        continue;
-                    }
-
                     // Let's make sure we have the parent request, stop those pesky forign key errors,
                     // Damn me having data integrity
                     var parent = await _repo.GetByEmbyId(ep.SeriesId);
