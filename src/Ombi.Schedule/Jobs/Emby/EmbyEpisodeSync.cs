@@ -170,18 +170,26 @@ namespace Ombi.Schedule.Jobs.Emby
 
                         if (ep.IndexNumberEnd.HasValue && ep.IndexNumberEnd.Value != ep.IndexNumber)
                         {
-                            epToAdd.Add(new EmbyEpisode
+                            int episodeNumber = ep.IndexNumber;
+                            do
                             {
-                                EmbyId = ep.Id,
-                                EpisodeNumber = ep.IndexNumberEnd.Value,
-                                SeasonNumber = ep.ParentIndexNumber,
-                                ParentId = ep.SeriesId,
-                                TvDbId = ep.ProviderIds.Tvdb,
-                                TheMovieDbId = ep.ProviderIds.Tmdb,
-                                ImdbId = ep.ProviderIds.Imdb,
-                                Title = ep.Name,
-                                AddedAt = DateTime.UtcNow
-                            });
+                                _logger.LogDebug($"Multiple-episode file detected. Adding episode ${episodeNumber}");
+                                episodeNumber++;
+                                epToAdd.Add(new EmbyEpisode
+                                {
+                                    EmbyId = ep.Id,
+                                    EpisodeNumber = episodeNumber,
+                                    SeasonNumber = ep.ParentIndexNumber,
+                                    ParentId = ep.SeriesId,
+                                    TvDbId = ep.ProviderIds.Tvdb,
+                                    TheMovieDbId = ep.ProviderIds.Tmdb,
+                                    ImdbId = ep.ProviderIds.Imdb,
+                                    Title = ep.Name,
+                                    AddedAt = DateTime.UtcNow
+                                });
+
+                            } while (episodeNumber < ep.IndexNumberEnd.Value);
+                        
                         }
                     }
                 }
