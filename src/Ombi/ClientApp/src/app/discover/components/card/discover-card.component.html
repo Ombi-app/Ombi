@@ -2,7 +2,7 @@
 
 <div id="result{{result.id}}" *ngIf="fullyLoaded" class="ombi-card dark-card c" [style.display]="hide ? 'none' : 'block'">
     <div class="card-top-info">
-        <div class="top-left" id="type{{result.id}}">
+        <div class="top-left" id="type{{result.id}}-{{RequestType[result.type]}}">
             {{ 'Common.' + RequestType[result.type] | translate }}
         </div>
         <div class="{{getStatusClass()}} top-right" id="status{{result.id}}">
