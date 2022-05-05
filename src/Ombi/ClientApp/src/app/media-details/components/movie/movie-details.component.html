@@ -24,7 +24,7 @@
 
             <div class="row justify-content-center justify-content-sm-start header-container">
                 <div class="details-poster-container">
-                    <media-poster [posterPath]="'https://image.tmdb.org/t/p/w300/' + movie.posterPath"></media-poster>
+                    <media-poster [posterPath]=movie.posterPath></media-poster>
                 </div>
 
                 <!--Next to poster-->
@@ -107,7 +107,7 @@
                                 </span>
                             </span>
                         </span>
-                        
+
                         <span *ngIf="movieRequest?.showSubscribe">
                             <button *ngIf="!movieRequest?.subscribed" (click)="notify()" id="notifyBtn"
                                 mat-raised-button class="btn-spacing"> <i class="fas fa-bell"></i>
