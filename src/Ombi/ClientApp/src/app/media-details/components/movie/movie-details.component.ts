@@ -68,6 +68,7 @@ export class MovieDetailsComponent implements OnInit{
         if (this.imdbId) {
             this.searchService.getMovieByImdbId(this.imdbId).subscribe(async x => {
                 this.movie = x;
+                this.checkPoster();
                 if (this.movie.requestId > 0) {
                     // Load up this request
                     this.hasRequest = true;
@@ -78,6 +79,7 @@ export class MovieDetailsComponent implements OnInit{
         } else {
             this.searchService.getFullMovieDetails(this.theMovidDbId).subscribe(async x => {
                 this.movie = x;
+                this.checkPoster();
                 if (this.movie.requestId > 0) {
                     // Load up this request
                     this.hasRequest = true;
@@ -272,7 +274,14 @@ export class MovieDetailsComponent implements OnInit{
             }
         });
     }
-
+    private checkPoster() {
+      if (this.movie.posterPath == null) {
+        this.movie.posterPath = "../../../images/default_movie_poster.png";
+      }
+      else {
+        this.movie.posterPath = "https://image.tmdb.org/t/p/w300/" + this.movie.posterPath
+      };
+    }
     private loadAdvancedInfo() {
         const profile = this.radarrService.getQualityProfilesFromSettings();
         const folders = this.radarrService.getRootFoldersFromSettings();
