@@ -60,7 +60,8 @@
         "CheckPageForUpdates": "Check this page for continuous site updates."
     },
     "ErrorPages": {
-        "NotFound": "Stránka nenalezena"
+        "NotFound": "Stránka nenalezena",
+        "SomethingWentWrong": "Something went wrong!"
     },
     "NavigationBar": {
         "Discover": "Objevit nové",

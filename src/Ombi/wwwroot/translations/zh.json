@@ -60,7 +60,8 @@
         "CheckPageForUpdates": "检查此页面以获取站点连续更新。"
     },
     "ErrorPages": {
-        "NotFound": "找不到页面"
+        "NotFound": "找不到页面",
+        "SomethingWentWrong": "Something went wrong!"
     },
     "NavigationBar": {
         "Discover": "发现",

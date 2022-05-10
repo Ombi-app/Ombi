@@ -60,7 +60,8 @@
         "CheckPageForUpdates": "Consulta esta página para ver las últimas novedades."
     },
     "ErrorPages": {
-        "NotFound": "Página no encontrada"
+        "NotFound": "Página no encontrada",
+        "SomethingWentWrong": "¡Algo salió mal!"
     },
     "NavigationBar": {
         "Discover": "Descubre",

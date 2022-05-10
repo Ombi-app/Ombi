@@ -60,7 +60,8 @@
         "CheckPageForUpdates": "Tjek denne side for løbende opdateringer."
     },
     "ErrorPages": {
-        "NotFound": "Siden blev ikke fundet"
+        "NotFound": "Siden blev ikke fundet",
+        "SomethingWentWrong": "Something went wrong!"
     },
     "NavigationBar": {
         "Discover": "Opdag",

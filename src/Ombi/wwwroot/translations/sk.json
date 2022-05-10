@@ -60,7 +60,8 @@
         "CheckPageForUpdates": "Prezrite túto stránku pre aktualizácie."
     },
     "ErrorPages": {
-        "NotFound": "Stránka sa nenašla"
+        "NotFound": "Stránka sa nenašla",
+        "SomethingWentWrong": "Something went wrong!"
     },
     "NavigationBar": {
         "Discover": "Objaviť",

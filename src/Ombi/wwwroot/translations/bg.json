@@ -60,7 +60,8 @@
         "CheckPageForUpdates": "Проверете тази страница за последни новини на сайта."
     },
     "ErrorPages": {
-        "NotFound": "Page not found"
+        "NotFound": "Page not found",
+        "SomethingWentWrong": "Something went wrong!"
     },
     "NavigationBar": {
         "Discover": "Открийте",

@@ -60,7 +60,8 @@
         "CheckPageForUpdates": "Controleer deze pagina voor updates."
     },
     "ErrorPages": {
-        "NotFound": "Page not found"
+        "NotFound": "Page not found",
+        "SomethingWentWrong": "Something went wrong!"
     },
     "NavigationBar": {
         "Discover": "Ontdekken",

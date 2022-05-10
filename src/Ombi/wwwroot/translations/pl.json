@@ -60,7 +60,8 @@
         "CheckPageForUpdates": "Tutaj znajdziesz aktualizacje dotyczące tej strony."
     },
     "ErrorPages": {
-        "NotFound": "Nie znaleziono strony"
+        "NotFound": "Nie znaleziono strony",
+        "SomethingWentWrong": "Something went wrong!"
     },
     "NavigationBar": {
         "Discover": "Odkryj",
