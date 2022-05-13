@@ -16,9 +16,20 @@ using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Ombi.Controllers.V1
 {
+
+
+    public class Token: ActionResult
+    {
+        [JsonProperty("access_token")]
+        public string AccessToken { get; set; }
+        public DateTime Expiration { get; set; }
+    }
+
     [ApiV1]
     [Produces("application/json")]
     [ApiController]
@@ -47,6 +58,7 @@ namespace Ombi.Controllers.V1
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(401)]
+        [ProducesResponseType(typeof(Token), 200)]
         public async Task<IActionResult> GetToken([FromBody] UserAuthModel model)
         {
             if (!model.UsePlexOAuth)
@@ -161,10 +173,10 @@ namespace Ombi.Controllers.V1
 
             await _userManager.UpdateAsync(user);
 
-            return new JsonResult(new
+            return Ok(new Token
             {
-                access_token = accessToken,
-                expiration = token.ValidTo
+                AccessToken = accessToken,
+                Expiration = token.ValidTo
             });
         }
 
