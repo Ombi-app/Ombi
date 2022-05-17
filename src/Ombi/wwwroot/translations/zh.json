@@ -61,7 +61,7 @@
     },
     "ErrorPages": {
         "NotFound": "找不到页面",
-        "SomethingWentWrong": "Something went wrong!"
+        "SomethingWentWrong": "出了些问题"
     },
     "NavigationBar": {
         "Discover": "发现",
@@ -208,9 +208,9 @@
         "RequestPanel": {
             "Delete": "删除请求",
             "Approve": "批准请求",
-            "Deny": "Deny Request",
+            "Deny": "拒绝请求",
             "Approve4K": "批准4K请求",
-            "Deny4K": "Deny 4K Request",
+            "Deny4K": "拒绝 4K 请求",
             "ChangeAvailability": "标记为可用",
             "Deleted": "所选项目已删除",
             "Approved": "所选项目已批准",
