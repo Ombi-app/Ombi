@@ -214,7 +214,7 @@
             "ChangeAvailability": "标记为可用",
             "Deleted": "所选项目已删除",
             "Approved": "所选项目已批准",
-            "Denied": "Successfully denied selected items"
+            "Denied": "所选项目已拒绝"
         },
         "SuccessfullyApproved": "批准成功",
         "SuccessfullyDeleted": "删除请求成功",
@@ -384,7 +384,7 @@
             "StartDate": "开始日期：",
             "EndDate": "结束日期："
         },
-        "RequestSource": "Source:"
+        "RequestSource": "来源:"
     },
     "Discovery": {
         "PopularTab": "热门",
