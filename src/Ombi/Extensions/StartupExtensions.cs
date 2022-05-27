@@ -79,6 +79,8 @@ namespace Ombi
 
                 c.DescribeAllParametersInCamelCase();
             });
+            
+            services.AddSwaggerGenNewtonsoftSupport();
         }
 
         public static void AddAppSettingsValues(this IServiceCollection services, IConfigurationRoot configuration)
