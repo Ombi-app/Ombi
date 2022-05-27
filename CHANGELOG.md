@@ -1,3 +1,18 @@
+## [4.20.1](https://github.com/Ombi-app/Ombi/compare/v4.20.0...v4.20.1) (2022-05-27)
+
+
+### Bug Fixes
+
+* added media type tag to media type text ([#4638](https://github.com/Ombi-app/Ombi/issues/4638)) ([fe501d3](https://github.com/Ombi-app/Ombi/commit/fe501d34a0c36ac9f000b107eca49dbc6694d006))
+* **API:** Fix pagination in some edge cases ([#4649](https://github.com/Ombi-app/Ombi/issues/4649)) ([a70bf8f](https://github.com/Ombi-app/Ombi/commit/a70bf8f46c76d74c9dfdf908c53bd9955ca0a35d))
+* **discover:** Carousel touch not working when scrolling page and recommendations and similar movie navigation ([#4633](https://github.com/Ombi-app/Ombi/issues/4633)) ([d5ef1d5](https://github.com/Ombi-app/Ombi/commit/d5ef1d53e5f77d19dba8b8059c80b538a3e14f2a))
+* Improve Swagger documentation ([#4652](https://github.com/Ombi-app/Ombi/issues/4652)) ([181892b](https://github.com/Ombi-app/Ombi/commit/181892bcfe88e6d76febf49ef57745d04552d08e))
+* Missing Poster broken link fix ([#4637](https://github.com/Ombi-app/Ombi/issues/4637)) ([4070f0d](https://github.com/Ombi-app/Ombi/commit/4070f0d093b1c92487a1c80cabad8283a9650f51))
+* **sickrage:** Fixed issue with incorrect handling of SiCKRAGE episode results returned during episode status changes, now expects array of objects from data path if present ([#4648](https://github.com/Ombi-app/Ombi/issues/4648)) ([6d16442](https://github.com/Ombi-app/Ombi/commit/6d16442d4d714920367df065a3ced42b729f4233))
+* **sync:** Emby+Jellyfin - sync multi-episode files of 3+ episodes ([bd8fd89](https://github.com/Ombi-app/Ombi/commit/bd8fd890554c9d85d6da4d2cee813e82ce698e52))
+
+
+
 # [4.20.0](https://github.com/Ombi-app/Ombi/compare/v4.19.1...v4.20.0) (2022-04-28)
 
 
@@ -338,16 +353,6 @@
 
 
 ## [4.12.7](https://github.com/Ombi-app/Ombi/compare/v4.12.6...v4.12.7) (2022-02-23)
-
-
-
-## [4.12.6](https://github.com/Ombi-app/Ombi/compare/v4.12.5...v4.12.6) (2022-02-22)
-
-
-### Bug Fixes
-
-* **emby/jellyfin:** :bug: Fixed another issue where we were not correctly displaying the correct status' for movies ([5c0556e](https://github.com/Ombi-app/Ombi/commit/5c0556e6f44b8997a611f3a4d8e9e4e05d08bd13))
-* **mediaserver:** fixed some more issues in the media server sync and availability checks ([f3ea979](https://github.com/Ombi-app/Ombi/commit/f3ea979b8bd77842780ce8e6928b16237dd779cf))
 
 
 
