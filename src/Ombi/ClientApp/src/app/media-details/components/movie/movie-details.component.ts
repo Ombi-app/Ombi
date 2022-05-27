@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { ImageService, SearchV2Service, RequestService, MessageService, RadarrService, SettingsStateService } from "../../../services";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
 import { MatDialog } from "@angular/material/dialog";
@@ -32,31 +32,45 @@ export class MovieDetailsComponent implements OnInit{
     public issuesEnabled: boolean;
     public roleName4k = "Request4KMovie";
     public is4KEnabled = false;
-
     public requestType = RequestType.movie;
-
-
     private theMovidDbId: number;
     private imdbId: string;
+    private snapMovieId: string;
 
-    constructor(private searchService: SearchV2Service, private route: ActivatedRoute,
+
+    constructor(private searchService: SearchV2Service, private route: ActivatedRoute, private router: Router,
         private sanitizer: DomSanitizer, private imageService: ImageService,
         public dialog: MatDialog, private requestService: RequestService,
         private requestService2: RequestServiceV2, private radarrService: RadarrService,
         public messageService: MessageService, private auth: AuthService, private settingsState: SettingsStateService,
         private translate: TranslateService, private featureFacade: FeaturesFacade) {
-        this.route.params.subscribe(async (params: any) => {
-            if (typeof params.movieDbId === 'string' || params.movieDbId instanceof String) {
-                if (params.movieDbId.startsWith("tt")) {
-                    this.imdbId = params.movieDbId;
-                }
-            }
-            this.theMovidDbId = params.movieDbId;
+          this.snapMovieId = this.route.snapshot.params.movieDbId;
+          this.route.params.subscribe(async (params: any) => {
+              if (typeof params.movieDbId === 'string' || params.movieDbId instanceof String) {
+                  if (params.movieDbId.startsWith("tt")) {
+                      this.imdbId = params.movieDbId;
+                      // Check if we user navigated to another movie and if so reload the component
+                      if (this.imdbId !== this.snapMovieId) {
+                        this.reloadComponent()
+                      }
+                  }
+              }
+              this.theMovidDbId = params.movieDbId;
+              // Check if we user navigated to another movie and if so reload the component
+              if (params.movieDbId !== this.snapMovieId) {
+                this.reloadComponent()
+              }
         });
     }
 
-    async ngOnInit() {
+    reloadComponent() {
+      let currentUrl = this.router.url;
+          this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+          this.router.onSameUrlNavigation = 'reload';
+          this.router.navigate([currentUrl]);
+      }
 
+    async ngOnInit() {
         this.is4KEnabled = this.featureFacade.is4kEnabled();
         this.issuesEnabled = this.settingsState.getIssue();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
