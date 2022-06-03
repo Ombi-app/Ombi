@@ -1,3 +1,12 @@
+## [4.20.2](https://github.com/Ombi-app/Ombi/compare/v4.20.1...v4.20.2) (2022-06-03)
+
+
+### Bug Fixes
+
+* :bug: Fixed the Request on Behalf of having blanks ([#4667](https://github.com/Ombi-app/Ombi/issues/4667)) ([7dd9b1c](https://github.com/Ombi-app/Ombi/commit/7dd9b1cac07f571dd35b362544e4fe0226c4b817))
+
+
+
 ## [4.20.1](https://github.com/Ombi-app/Ombi/compare/v4.20.0...v4.20.1) (2022-05-27)
 
 
@@ -349,10 +358,6 @@
 
 * **email-notifications:** Add a link to Ombi details page in email notifications ([#4517](https://github.com/Ombi-app/Ombi/issues/4517)) ([a3e97b3](https://github.com/Ombi-app/Ombi/commit/a3e97b31e2298d95e7deebd71268095b8ed5e9dc))
 * **media-details:** Add Trakt to social icons ([#4522](https://github.com/Ombi-app/Ombi/issues/4522)) ([d6ae79c](https://github.com/Ombi-app/Ombi/commit/d6ae79ce9eddbd5b7b888ab1b9f7e342d9d9ff9e))
-
-
-
-## [4.12.7](https://github.com/Ombi-app/Ombi/compare/v4.12.6...v4.12.7) (2022-02-23)
 
 
 
