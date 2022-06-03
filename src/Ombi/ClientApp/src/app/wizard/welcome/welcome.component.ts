@@ -1,10 +1,10 @@
-﻿import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+﻿import { Component, OnInit, ViewChild } from "@angular/core";
 import { IdentityService, NotificationService, SettingsService } from "../../services";
 
 import { CustomizationFacade } from "../../state/customization/customization.facade";
 import { ICreateWizardUser } from "../../interfaces";
 import { IOmbiConfigModel } from "../models/OmbiConfigModel";
-import { MatHorizontalStepper } from'@angular/material/stepper';
+import { MatStepper } from'@angular/material/stepper';
 import { Router } from "@angular/router";
 import { WizardService } from "../services/wizard.service";
 
@@ -14,7 +14,7 @@ import { WizardService } from "../services/wizard.service";
 })
 export class WelcomeComponent implements OnInit {
 
-    @ViewChild('stepper', {static: false}) public stepper: MatHorizontalStepper;
+    @ViewChild('stepper', {static: false}) public stepper: MatStepper;
     public localUser: ICreateWizardUser;
     public config: IOmbiConfigModel;
 
