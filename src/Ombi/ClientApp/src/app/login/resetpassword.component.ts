@@ -1,6 +1,6 @@
 ﻿import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
 import { Component, OnInit, Inject } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
 import { fadeInOutAnimation } from "../animations/fadeinout";
 
@@ -15,7 +15,7 @@ import { CustomizationFacade } from "../state/customization";
 })
 export class ResetPasswordComponent implements OnInit {
 
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public customizationSettings: ICustomizationSettings;
     public emailSettingsEnabled: boolean;
     public baseUrl: string;
@@ -23,7 +23,7 @@ export class ResetPasswordComponent implements OnInit {
     private href: string;
 
     constructor(private identityService: IdentityService, private notify: NotificationService,
-                private fb: FormBuilder, private settingsService: SettingsService, @Inject(APP_BASE_HREF) href:string,
+                private fb: UntypedFormBuilder, private settingsService: SettingsService, @Inject(APP_BASE_HREF) href:string,
                 private images: ImageService, private sanitizer: DomSanitizer, private customizationFacade: CustomizationFacade) {
                     this.href = href;
         this.form = this.fb.group({
@@ -43,7 +43,7 @@ export class ResetPasswordComponent implements OnInit {
         this.settingsService.getEmailSettingsEnabled().subscribe(x => this.emailSettingsEnabled = x);
     }
 
-    public onSubmit(form: FormGroup) {
+    public onSubmit(form: UntypedFormGroup) {
         if (this.emailSettingsEnabled) {
 
             if (form.invalid) {

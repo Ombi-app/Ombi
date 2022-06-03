@@ -1,5 +1,5 @@
 ﻿import { Injectable } from "@angular/core";
-import { FormGroup, ValidatorFn, Validators } from "@angular/forms";
+import { UntypedFormGroup, ValidatorFn, Validators } from "@angular/forms";
 
 @Injectable()
 export class ValidationService {
@@ -9,7 +9,7 @@ export class ValidationService {
      * @param form
      * @param name
      */
-    public disableValidation(form: FormGroup, name: string) {
+    public disableValidation(form: UntypedFormGroup, name: string) {
         form.controls[name].clearValidators();
         form.controls[name].updateValueAndValidity();
     }
@@ -19,8 +19,8 @@ export class ValidationService {
      * @param form
      * @param name
      */
-    public enableValidation(form: FormGroup, name: string): void;
-    public enableValidation(form: FormGroup, name: string, validators?: ValidatorFn[]) {
+    public enableValidation(form: UntypedFormGroup, name: string): void;
+    public enableValidation(form: UntypedFormGroup, name: string, validators?: ValidatorFn[]) {
         if (validators) {
             // If we provide some use them
             form.controls[name].setValidators(validators);

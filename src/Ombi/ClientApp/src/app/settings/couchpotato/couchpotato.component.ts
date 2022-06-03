@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 
 import { CouchPotatoService, NotificationService, SettingsService, TesterService } from "../../services";
 
@@ -11,13 +11,13 @@ import { ICouchPotatoProfiles } from "../../interfaces";
 })
 export class CouchPotatoComponent implements OnInit {
 
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public profiles: ICouchPotatoProfiles;
 
     public profilesRunning: boolean;
 
     constructor(private readonly settingsService: SettingsService,
-                private readonly fb: FormBuilder,
+                private readonly fb: UntypedFormBuilder,
                 private readonly notificationService: NotificationService,
                 private readonly couchPotatoService: CouchPotatoService,
                 private readonly testerService: TesterService) { }
@@ -42,7 +42,7 @@ export class CouchPotatoComponent implements OnInit {
         });
     }
 
-    public getProfiles(form: FormGroup) {
+    public getProfiles(form: UntypedFormGroup) {
         this.profilesRunning = true;
         this.couchPotatoService.getProfiles(form.value).subscribe(x => {
             this.profiles = x;
@@ -50,7 +50,7 @@ export class CouchPotatoComponent implements OnInit {
         });
     }
 
-    public onSubmit(form: FormGroup) {
+    public onSubmit(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;
@@ -67,7 +67,7 @@ export class CouchPotatoComponent implements OnInit {
         });
     }
 
-    public test(form: FormGroup) {
+    public test(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;
@@ -82,10 +82,10 @@ export class CouchPotatoComponent implements OnInit {
         });
     }
 
-    public requestToken(form: FormGroup) {
+    public requestToken(form: UntypedFormGroup) {
         this.couchPotatoService.getApiKey(form.value).subscribe(x => {
             if (x.success === true) {
-                (<FormControl>this.form.controls.apiKey).setValue(x.api_key);
+                (<UntypedFormControl>this.form.controls.apiKey).setValue(x.api_key);
                 this.notificationService.success("Successfully grabbed the Api Key");
             } else {
                 this.notificationService.error("Could not get the Api Key");

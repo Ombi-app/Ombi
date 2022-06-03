@@ -3,7 +3,7 @@ import { IDenyDialogData } from "../interfaces/interfaces";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { RequestService, MessageService, IdentityService } from "../../../../services";
 import { RequestType, IRequestEngineResult, IUserDropdown } from "../../../../interfaces";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { Observable } from "rxjs";
 import { filter, map, startWith } from "rxjs/operators";
 
@@ -18,7 +18,7 @@ export class RequestBehalfComponent implements OnInit {
         public dialogRef: MatDialogRef<RequestBehalfComponent>,
         public identity: IdentityService) { }
 
-    public myControl = new FormControl();
+    public myControl = new UntypedFormControl();
     public options: IUserDropdown[];
     public filteredOptions: Observable<IUserDropdown[]>;
     public userId: string;

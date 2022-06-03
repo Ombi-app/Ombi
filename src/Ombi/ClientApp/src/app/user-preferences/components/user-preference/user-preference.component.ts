@@ -5,7 +5,7 @@ import { AvailableLanguages } from "./user-preference.constants";
 import { IdentityService, NotificationService, ValidationService } from "../../../services";
 import { IUser, UserType } from "../../../interfaces";
 import { Md5 } from "ts-md5";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { APP_BASE_HREF } from "@angular/common";
 import { CustomizationFacade } from "../../../state/customization";
 
@@ -26,7 +26,7 @@ export class UserPreferenceComponent implements OnInit {
     public UserType = UserType;
     public baseUrl: string;
 
-    public passwordForm: FormGroup;
+    public passwordForm: UntypedFormGroup;
 
     private user: IUser;
     private applicationUrl: string = this.customizationFacade.appUrl();
@@ -36,7 +36,7 @@ export class UserPreferenceComponent implements OnInit {
         private readonly translate: TranslateService,
         private readonly notification: NotificationService,
         private readonly identityService: IdentityService,
-        private readonly fb: FormBuilder,
+        private readonly fb: UntypedFormBuilder,
         private readonly validationService: ValidationService,
         private readonly customizationFacade: CustomizationFacade,
         @Inject(APP_BASE_HREF) public internalBaseUrl: string) { }

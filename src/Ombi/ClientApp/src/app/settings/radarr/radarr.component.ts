@@ -1,5 +1,5 @@
 import { Component, OnInit, QueryList, ViewChild, ViewChildren } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 
 import { IMinimumAvailability, IRadarrCombined, IRadarrProfile, IRadarrRootFolder } from "../../interfaces";
 import { NotificationService, SettingsService } from "../../services";
@@ -17,7 +17,7 @@ export class RadarrComponent implements OnInit {
     public minimumAvailabilityOptions: IMinimumAvailability[];
     public profilesRunning: boolean;
     public rootFoldersRunning: boolean;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public is4kEnabled: boolean = false;
 
     @ViewChildren('4kForm') public form4k: QueryList<RadarrFormComponent>;
@@ -26,7 +26,7 @@ export class RadarrComponent implements OnInit {
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
                 private featureFacade: FeaturesFacade,
-                private fb: FormBuilder) { }
+                private fb: UntypedFormBuilder) { }
 
 
     public ngOnInit() {
@@ -74,13 +74,13 @@ export class RadarrComponent implements OnInit {
     }
 
 
-    public onSubmit(form: FormGroup) {
+    public onSubmit(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;
         }
-        const radarrForm = form.controls.radarr as FormGroup;
-        const radarr4KForm = form.controls.radarr4K as FormGroup;
+        const radarrForm = form.controls.radarr as UntypedFormGroup;
+        const radarr4KForm = form.controls.radarr4K as UntypedFormGroup;
 
         if (radarrForm.controls.enabled.value && (radarrForm.controls.defaultQualityProfile.value === -1 || radarrForm.controls.defaultRootPath.value === "Please Select")) {
             this.notificationService.error("Please check your entered values for Radarr");

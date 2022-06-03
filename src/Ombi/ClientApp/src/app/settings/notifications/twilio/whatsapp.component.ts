@@ -1,5 +1,5 @@
 ﻿import { Component, Input } from "@angular/core";
-import { FormGroup } from "@angular/forms";
+import { UntypedFormGroup } from "@angular/forms";
 import { TesterService, NotificationService } from "../../../services";
 import { INotificationTemplates, NotificationType } from "../../../interfaces";
 
@@ -13,13 +13,13 @@ export class WhatsAppComponent {
 
     public NotificationType = NotificationType;
     @Input() public templates: INotificationTemplates[];
-    @Input() public form: FormGroup;
+    @Input() public form: UntypedFormGroup;
 
     constructor(private testerService: TesterService,
                 private notificationService: NotificationService) { }
 
 
-    public test(form: FormGroup) {
+    public test(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;

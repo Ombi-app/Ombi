@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 
 import { IMobileNotifcationSettings, IMobileUsersViewModel, INotificationTemplates, NotificationType, ICloudMobileDevices, ICloudMobileModel } from "../../interfaces";
 import { TesterService } from "../../services";
@@ -17,7 +17,7 @@ export class CloudMobileComponent implements OnInit {
 
     public NotificationType = NotificationType;
     public templates: INotificationTemplates[];
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public devices: MatTableDataSource<ICloudMobileModel>;
     public selection = new SelectionModel<ICloudMobileModel>(true, []);
     displayedColumns: string[] = ['select', 'username'];
@@ -25,7 +25,7 @@ export class CloudMobileComponent implements OnInit {
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
-                private fb: FormBuilder,
+                private fb: UntypedFormBuilder,
                 private mobileService: CloudMobileService) { }
 
     public async ngOnInit() {
@@ -42,7 +42,7 @@ export class CloudMobileComponent implements OnInit {
             }
     }
 
-    public onSubmit(form: FormGroup) {
+    public onSubmit(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;
@@ -61,7 +61,7 @@ export class CloudMobileComponent implements OnInit {
 
     }
 
-    public async sendMessage(form: FormGroup) {
+    public async sendMessage(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;

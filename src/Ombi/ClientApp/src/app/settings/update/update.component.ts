@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 
 import { NotificationService } from "../../services";
 import { JobService, SettingsService } from "../../services";
@@ -10,7 +10,7 @@ import { JobService, SettingsService } from "../../services";
 })
 export class UpdateComponent implements OnInit {
 
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public updateAvailable = false;
     public enableUpdateButton = false;
     public isWindows = false;
@@ -22,7 +22,7 @@ export class UpdateComponent implements OnInit {
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
                 private updateService: JobService,
-                private fb: FormBuilder) { }
+                private fb: UntypedFormBuilder) { }
 
     public ngOnInit() {
         this.settingsService.getUpdateSettings()
@@ -59,7 +59,7 @@ export class UpdateComponent implements OnInit {
         this.notificationService.success("We triggered the update job");
     }
 
-    public onSubmit(form: FormGroup) {
+    public onSubmit(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;
