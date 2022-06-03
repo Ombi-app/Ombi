@@ -1577,13 +1577,6 @@
   resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-13.2.3.tgz#a4434eb5e2ec3cc04d7f714f20d5203114563f33"
   integrity sha512-wooUZiV92QyoeFxkhqIwH/cfiAAAn+l8fEEuaaEIfJtpjpbShvvlboEVsqb28soeGiFJfLcmsZM3mUFgsG4QBQ==
 
-"@ngu/carousel@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@ngu/carousel/-/carousel-4.0.0.tgz#928937168010b36946135d86a1a90a8417a0634c"
-  integrity sha512-/L54YCTMxEZ98BwEWu3cCmH5FkQ2uG6eyw3EANp7D2QOPwry20/5YRWYjp7OkMOVTQ/nOL/pI4na0wJ/qfWD2A==
-  dependencies:
-    tslib "^2.3.0"
-
 "@ngx-translate/core@^14.0.0":
   version "14.0.0"
   resolved "https://registry.yarnpkg.com/@ngx-translate/core/-/core-14.0.0.tgz#af421d0e1a28376843f0fed375cd2fae7630a5ff"
@@ -2179,13 +2172,6 @@ ajv@^8.8.0:
     json-schema-traverse "^1.0.0"
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
-
-angular-bootstrap-md@^7.5.4:
-  version "7.5.4"
-  resolved "https://registry.yarnpkg.com/angular-bootstrap-md/-/angular-bootstrap-md-7.5.4.tgz#1e6c482729380b98aea7dec9b4d7a4f4e187e08c"
-  integrity sha512-LBVqSswd49hJ3YNTkXzwM0Cn1+9SQ2kVYQxX36ZjxaKNeDQKaUk3V2Rb/y8krhDJrPJh37pDzRmlCDObg37EIA==
-  dependencies:
-    tslib "^1.9.0"
 
 angular-router-loader@^0.8.5:
   version "0.8.5"

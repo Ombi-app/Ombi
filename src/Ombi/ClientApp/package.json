@@ -34,7 +34,6 @@
     "@ngxs/store": "^3.7.3",
     "@types/jquery": "^3.5.13",
     "@yellowspot/ng-truncate": "^2.0.0",
-    "angular-bootstrap-md": "^7.5.4",
     "angular-router-loader": "^0.8.5",
     "angularx-qrcode": "^13.0.3",
     "bootstrap": "^4.2.1",
