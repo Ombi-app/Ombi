@@ -96,7 +96,7 @@ export class AdminRequestDialogComponent implements OnInit {
   public displayFn(user: IUserDropdown): string {
     const username = user?.username ? user.username : "";
     const email = user?.email ? `(${user.email})` : "";
-    if (username && email) {
+    if (username || email) {
       return `${username} ${email}`;
     }
     return '';
