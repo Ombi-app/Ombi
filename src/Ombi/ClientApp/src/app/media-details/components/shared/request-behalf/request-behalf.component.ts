@@ -1,13 +1,11 @@
-import { Component, Inject, OnInit } from "@angular/core";
-import { IDenyDialogData } from "../interfaces/interfaces";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { RequestService, MessageService, IdentityService } from "../../../../services";
-import { RequestType, IRequestEngineResult, IUserDropdown } from "../../../../interfaces";
+import { Component, OnInit } from "@angular/core";
+import { map, startWith } from "rxjs/operators";
+
 import { FormControl } from "@angular/forms";
+import { IUserDropdown } from "../../../../interfaces";
+import { IdentityService } from "../../../../services";
+import { MatDialogRef } from "@angular/material/dialog";
 import { Observable } from "rxjs";
-import { filter, map, startWith } from "rxjs/operators";
-
-
 
 @Component({
     selector: "request-behalf",

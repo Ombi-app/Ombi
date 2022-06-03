@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
+import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { ImageService, SearchV2Service, RequestService, MessageService, RadarrService, SettingsStateService } from "../../../services";
 import { ActivatedRoute, Router } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -12,7 +12,6 @@ import { NewIssueComponent } from "../shared/new-issue/new-issue.component";
 import { TranslateService } from "@ngx-translate/core";
 import { MovieAdvancedOptionsComponent } from "./panels/movie-advanced-options/movie-advanced-options.component";
 import { RequestServiceV2 } from "../../../services/requestV2.service";
-import { RequestBehalfComponent } from "../shared/request-behalf/request-behalf.component";
 import { firstValueFrom, forkJoin } from "rxjs";
 import { AdminRequestDialogComponent } from "../../../shared/admin-request-dialog/admin-request-dialog.component";
 import { FeaturesFacade } from "../../../state/features/features.facade";
