@@ -39,9 +39,6 @@ namespace Ombi.Api.Plex.Models
         public string grandparentTheme { get; set; }
         public string chapterSource { get; set; }
         public Medium[] Media { get; set; }
-
-
-        [JsonProperty("guids")]      
         public List<PlexGuids> Guid { get; set; } = new List<PlexGuids>();
     }
 
