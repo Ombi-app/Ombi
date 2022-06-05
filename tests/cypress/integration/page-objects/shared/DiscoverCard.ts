@@ -24,7 +24,7 @@ export class DiscoverCard {
     }
 
     get requestType(): Cypress.Chainable<any> {
-      return cy.get(`#type${this.id}`);
+      return cy.get(`#type${this.id}-${this.movie ? 'movie': 'tvShow'}`);
     }
 
     get statusClass(): Cypress.Chainable<any> {
