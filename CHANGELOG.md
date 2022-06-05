@@ -1,3 +1,12 @@
+## [4.20.3](https://github.com/Ombi-app/Ombi/compare/v4.20.2...v4.20.3) (2022-06-05)
+
+
+### Bug Fixes
+
+* **plex:** 🐛 Fixed an issue with the Plex Sync ([ab1a11a](https://github.com/Ombi-app/Ombi/commit/ab1a11af78efbe9d37bd55aa80a640796c138a98))
+
+
+
 ## [4.20.2](https://github.com/Ombi-app/Ombi/compare/v4.20.1...v4.20.2) (2022-06-03)
 
 
@@ -339,25 +348,6 @@
 * **discover:** :bug: Fixed the issue where there was an option on the discover to request 4k shows (that's not supported currently) ([dcfd688](https://github.com/Ombi-app/Ombi/commit/dcfd688c8d2337e55fa9c6c33b7c3e80fc560cda))
 * **requests:** :bug: Fixed the issue where we could no longer approve TV Requests from the requests list ([19fe4e3](https://github.com/Ombi-app/Ombi/commit/19fe4e342efe5578c26ab8ba7ee2f2e64bbc9418))
 * **translations:** 🌐 New translations from Crowdin [skip ci] ([#4526](https://github.com/Ombi-app/Ombi/issues/4526)) ([7e9f54f](https://github.com/Ombi-app/Ombi/commit/7e9f54fc80a09c938184e6be40ce5f49ce9673ef))
-
-
-
-# [4.13.0](https://github.com/Ombi-app/Ombi/compare/v4.12.7...v4.13.0) (2022-02-25)
-
-
-### Bug Fixes
-
-* **4k:** Hide 'Has 4K Request' column list if 4k feature is disabled ([#4521](https://github.com/Ombi-app/Ombi/issues/4521)) ([a9a6067](https://github.com/Ombi-app/Ombi/commit/a9a60678e74d22fa7ba34051a2645db86b600b4a))
-* **issues:** Fix label ID in chatbox page ([#4520](https://github.com/Ombi-app/Ombi/issues/4520)) ([76882ad](https://github.com/Ombi-app/Ombi/commit/76882adf231f92e1cdd396239933c13467c112b3))
-* **localisation:** Localize request types in notifications ([#4516](https://github.com/Ombi-app/Ombi/issues/4516)) ([e09435d](https://github.com/Ombi-app/Ombi/commit/e09435da455b12fc429f129372de31e0654da797))
-* **notifications:** Remove generic admin email in favour of admins' email ([#4519](https://github.com/Ombi-app/Ombi/issues/4519)) ([b90fc5f](https://github.com/Ombi-app/Ombi/commit/b90fc5fea771a83e6cf576c71a307066efd59ea4))
-* **tv:** Display TV show as requested if all episodes are requested ([#4518](https://github.com/Ombi-app/Ombi/issues/4518)) ([2ed8c48](https://github.com/Ombi-app/Ombi/commit/2ed8c48d128a69f0d144c5d332286dbf3b0bdf28))
-
-
-### Features
-
-* **email-notifications:** Add a link to Ombi details page in email notifications ([#4517](https://github.com/Ombi-app/Ombi/issues/4517)) ([a3e97b3](https://github.com/Ombi-app/Ombi/commit/a3e97b31e2298d95e7deebd71268095b8ed5e9dc))
-* **media-details:** Add Trakt to social icons ([#4522](https://github.com/Ombi-app/Ombi/issues/4522)) ([d6ae79c](https://github.com/Ombi-app/Ombi/commit/d6ae79ce9eddbd5b7b888ab1b9f7e342d9d9ff9e))
 
 
 
