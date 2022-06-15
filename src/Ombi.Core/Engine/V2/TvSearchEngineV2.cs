@@ -272,11 +272,17 @@ namespace Ombi.Core.Engine.V2
                         Overview = tvSeason.overview,
                         Episodes = new List<EpisodeRequests>()
                     };
+                    var hasAirDate = episode.air_date.HasValue();
+                    var airDate = DateTime.MinValue;
+                    if (hasAirDate)
+                    {
+                        DateTime.TryParse(episode.air_date, out airDate);
+                    }
                     newSeason.Episodes.Add(new EpisodeRequests
                     {
                         //Url = episode...ToHttpsUrl(),
                         Title = episode.name,
-                        AirDate = episode.air_date.HasValue() ? DateTime.Parse(episode.air_date) : DateTime.MinValue,
+                        AirDate = airDate,
                         EpisodeNumber = episode.episode_number,
 
                     });
@@ -284,12 +290,18 @@ namespace Ombi.Core.Engine.V2
                 }
                 else
                 {
+                    var hasAirDate = episode.air_date.HasValue();
+                    var airDate = DateTime.MinValue;
+                    if (hasAirDate)
+                    {
+                        DateTime.TryParse(episode.air_date, out airDate);
+                    }
                     // We already have the season, so just add the episode
                     season.Episodes.Add(new EpisodeRequests
                     {
                         //Url = e.url.ToHttpsUrl(),
                         Title = episode.name,
-                        AirDate = episode.air_date.HasValue() ? DateTime.Parse(episode.air_date) : DateTime.MinValue,
+                        AirDate = airDate,
                         EpisodeNumber = episode.episode_number,
                     });
                 }
