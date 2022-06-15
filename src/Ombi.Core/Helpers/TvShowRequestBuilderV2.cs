@@ -9,6 +9,7 @@ using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository.Requests;
 using System.Threading;
+using Ombi.Helpers;
 
 namespace Ombi.Core.Helpers
 {
