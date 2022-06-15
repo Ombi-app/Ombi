@@ -1,3 +1,12 @@
+## [4.20.4](https://github.com/Ombi-app/Ombi/compare/v4.20.3...v4.20.4) (2022-06-15)
+
+
+### Bug Fixes
+
+* fixed build ([f877921](https://github.com/Ombi-app/Ombi/commit/f8779219146051ea74f8b6408658ff7975afb88b))
+
+
+
 ## [4.20.3](https://github.com/Ombi-app/Ombi/compare/v4.20.2...v4.20.3) (2022-06-05)
 
 
@@ -336,18 +345,6 @@
 ### Bug Fixes
 
 * **requests:** :bug: Fixed an issue where you couldn't approve movies from the request list ([1611ef9](https://github.com/Ombi-app/Ombi/commit/1611ef9198befbb7a4db50a4f0953e50f29a788f))
-
-
-
-## [4.13.1](https://github.com/Ombi-app/Ombi/compare/v4.13.0...v4.13.1) (2022-03-01)
-
-
-### Bug Fixes
-
-* **details:** :bug: Fixed the missing Play on Media server button for 4k content [#4529](https://github.com/Ombi-app/Ombi/issues/4529) ([68600f3](https://github.com/Ombi-app/Ombi/commit/68600f3b45376e12dd2ef263d81ca4040c84cbca))
-* **discover:** :bug: Fixed the issue where there was an option on the discover to request 4k shows (that's not supported currently) ([dcfd688](https://github.com/Ombi-app/Ombi/commit/dcfd688c8d2337e55fa9c6c33b7c3e80fc560cda))
-* **requests:** :bug: Fixed the issue where we could no longer approve TV Requests from the requests list ([19fe4e3](https://github.com/Ombi-app/Ombi/commit/19fe4e342efe5578c26ab8ba7ee2f2e64bbc9418))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([#4526](https://github.com/Ombi-app/Ombi/issues/4526)) ([7e9f54f](https://github.com/Ombi-app/Ombi/commit/7e9f54fc80a09c938184e6be40ce5f49ce9673ef))
 
 
 
