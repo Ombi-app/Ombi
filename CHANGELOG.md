@@ -1,3 +1,17 @@
+# [4.21.0](https://github.com/Ombi-app/Ombi/compare/v4.20.4...v4.21.0) (2022-06-22)
+
+
+### Features
+
+* Upgrade to Angular14 ([#4668](https://github.com/Ombi-app/Ombi/issues/4668)) ([b9d55a4](https://github.com/Ombi-app/Ombi/commit/b9d55a469b412558cbf67c1e25db7fdda5964cd8))
+
+
+### Performance Improvements
+
+* stop populating obsolete subscribe fields ([#4625](https://github.com/Ombi-app/Ombi/issues/4625)) ([9a73463](https://github.com/Ombi-app/Ombi/commit/9a734637665f671b17c2bb440d93b35a891c142b))
+
+
+
 ## [4.20.4](https://github.com/Ombi-app/Ombi/compare/v4.20.3...v4.20.4) (2022-06-15)
 
 
@@ -336,15 +350,6 @@
 
 
 # [4.14.0](https://github.com/Ombi-app/Ombi/compare/v4.13.2...v4.14.0) (2022-03-02)
-
-
-
-## [4.13.2](https://github.com/Ombi-app/Ombi/compare/v4.13.1...v4.13.2) (2022-03-01)
-
-
-### Bug Fixes
-
-* **requests:** :bug: Fixed an issue where you couldn't approve movies from the request list ([1611ef9](https://github.com/Ombi-app/Ombi/commit/1611ef9198befbb7a4db50a4f0953e50f29a788f))
 
 
 
