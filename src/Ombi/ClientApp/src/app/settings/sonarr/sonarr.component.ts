@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, FormControl, UntypedFormGroup, Validators } from "@angular/forms";
 
 import { ILanguageProfiles, ISonarrProfile, ISonarrRootFolder } from "../../interfaces";
 
@@ -27,7 +27,7 @@ export class SonarrComponent implements OnInit {
     public profilesRunning: boolean;
     public rootFoldersRunning: boolean;
     public langRunning: boolean;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public advanced = false;
     formErrors: any;
 
@@ -35,7 +35,7 @@ export class SonarrComponent implements OnInit {
                 private sonarrService: SonarrService,
                 private notificationService: NotificationService,
                 private testerService: TesterService,
-                private fb: FormBuilder){}
+                private fb: UntypedFormBuilder){}
 
     onFormValuesChanged()
         {
@@ -115,7 +115,7 @@ export class SonarrComponent implements OnInit {
         this.qualities.push({ name: "Please Select", id: -1 });
     }
 
-    public getProfiles(form: FormGroup) {
+    public getProfiles(form: UntypedFormGroup) {
         this.profilesRunning = true;
         this.sonarrService.getQualityProfiles(form.value)
             .subscribe(x => {
@@ -127,7 +127,7 @@ export class SonarrComponent implements OnInit {
             });
     }
 
-    public getRootFolders(form: FormGroup) {
+    public getRootFolders(form: UntypedFormGroup) {
         this.rootFoldersRunning = true;
         this.sonarrService.getRootFolders(form.value)
             .subscribe(x => {
@@ -140,7 +140,7 @@ export class SonarrComponent implements OnInit {
             });
     }
 
-    public getLanguageProfiles(form: FormGroup) {
+    public getLanguageProfiles(form: UntypedFormGroup) {
         this.langRunning = true;
         this.sonarrService.getV3LanguageProfiles(form.value)
             .subscribe(x => {
@@ -155,7 +155,7 @@ export class SonarrComponent implements OnInit {
             }
     }
 
-    public test(form: FormGroup) {
+    public test(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;
@@ -172,7 +172,7 @@ export class SonarrComponent implements OnInit {
         });
     }
 
-    public onSubmit(form: FormGroup) {
+    public onSubmit(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;

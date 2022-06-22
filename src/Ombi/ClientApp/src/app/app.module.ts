@@ -1,5 +1,4 @@
 import { APP_BASE_HREF, CommonModule, PlatformLocation } from "@angular/common";
-import { CardsFreeModule, MDBBootstrapModule, NavbarModule } from "angular-bootstrap-md";
 import { CustomPageService, ImageService, RequestService, SettingsService } from "./services";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from "@angular/common/http";
@@ -131,7 +130,6 @@ export function JwtTokenGetter() {
         MatSnackBarModule,
         DialogModule,
         MatButtonModule,
-        NavbarModule,
         MatCardModule,
         MatTooltipModule,
         MatMenuModule,
@@ -145,11 +143,9 @@ export function JwtTokenGetter() {
         ConfirmDialogModule,
         OverlayPanelModule,
         CommonModule,
-        CardsFreeModule,
         OverlayModule,
         MatCheckboxModule,
         MatProgressSpinnerModule,
-        MDBBootstrapModule.forRoot(),
         JwtModule.forRoot({
             config: {
                 tokenGetter: JwtTokenGetter,

@@ -1,11 +1,10 @@
 import { Component, OnInit } from "@angular/core";
-import { map, startWith } from "rxjs/operators";
-
-import { FormControl } from "@angular/forms";
-import { IUserDropdown } from "../../../../interfaces";
-import { IdentityService } from "../../../../services";
 import { MatDialogRef } from "@angular/material/dialog";
+import { IdentityService } from "../../../../services";
+import { IUserDropdown } from "../../../../interfaces";
+import { UntypedFormControl } from "@angular/forms";
 import { Observable } from "rxjs";
+import { map, startWith } from "rxjs/operators";
 
 @Component({
     selector: "request-behalf",
@@ -16,7 +15,7 @@ export class RequestBehalfComponent implements OnInit {
         public dialogRef: MatDialogRef<RequestBehalfComponent>,
         public identity: IdentityService) { }
 
-    public myControl = new FormControl();
+    public myControl = new UntypedFormControl();
     public options: IUserDropdown[];
     public filteredOptions: Observable<IUserDropdown[]>;
     public userId: string;

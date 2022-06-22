@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { RequestType } from "../../interfaces";
 import { SearchV2Service } from "../../services";
@@ -13,12 +13,12 @@ import { AdvancedSearchDialogDataService } from "./advanced-search-dialog-data.s
 export class AdvancedSearchDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<AdvancedSearchDialogComponent, boolean>,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private searchService: SearchV2Service,
     private advancedSearchDialogService: AdvancedSearchDialogDataService
   ) {}
 
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   public async ngOnInit() {
 

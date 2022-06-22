@@ -2,7 +2,7 @@
 import { IEmbyServer, IJellyfinLibrariesSettings, IJellyfinServer, IJellyfinSettings } from "../../interfaces";
 import { JellyfinService, JobService, NotificationService, SettingsService, TesterService } from "../../services";
 
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import { MatTabChangeEvent } from "@angular/material/tabs";
 
 @Component({
@@ -13,7 +13,7 @@ export class JellyfinComponent implements OnInit {
 
     public settings: IJellyfinSettings;
     public hasDiscoveredOrDirty: boolean;
-    selected = new FormControl(0);
+    selected = new UntypedFormControl(0);
 
 
     constructor(private settingsService: SettingsService,

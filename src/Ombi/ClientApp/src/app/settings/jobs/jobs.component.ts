@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { JobService, NotificationService, SettingsService } from "../../services";
 
 @Component({
@@ -8,12 +8,12 @@ import { JobService, NotificationService, SettingsService } from "../../services
 })
 export class JobsComponent implements OnInit {
 
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
     public profilesRunning: boolean;
 
     constructor(private readonly settingsService: SettingsService,
-                private readonly fb: FormBuilder,
+                private readonly fb: UntypedFormBuilder,
                 private readonly notificationService: NotificationService,
                 private readonly jobsService: JobService) { }
 
@@ -52,7 +52,7 @@ export class JobsComponent implements OnInit {
         });
     }
 
-    public onSubmit(form: FormGroup) {
+    public onSubmit(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;

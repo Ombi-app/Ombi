@@ -1,6 +1,6 @@
 ﻿import { ActivatedRoute, Params } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { IdentityService, ImageService } from "../services";
 
 import { CustomizationFacade } from "../state/customization";
@@ -17,13 +17,13 @@ import { Router } from "@angular/router";
 })
 export class TokenResetPasswordComponent implements OnInit {
 
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public customizationSettings: ICustomizationSettings;
     public background: any;
     public baseUrl: string;
 
     constructor(private identityService: IdentityService, private router: Router, private route: ActivatedRoute, private notify: NotificationService,
-                private fb: FormBuilder, private location: PlatformLocation, private images: ImageService,
+                private fb: UntypedFormBuilder, private location: PlatformLocation, private images: ImageService,
                 private sanitizer: DomSanitizer, private customizationFacade: CustomizationFacade,
                 ) {
 
@@ -49,7 +49,7 @@ export class TokenResetPasswordComponent implements OnInit {
         this.customizationFacade.settings$().subscribe(x => this.customizationSettings = x);
     }
 
-    public onSubmit(form: FormGroup) {
+    public onSubmit(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notify.error("Email address is required");
             return;

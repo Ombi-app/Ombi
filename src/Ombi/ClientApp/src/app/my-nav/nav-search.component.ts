@@ -8,7 +8,7 @@ import {
 
 import { empty} from "rxjs";
 import { Router } from "@angular/router";
-import { FormGroup, FormBuilder } from "@angular/forms";
+import { UntypedFormGroup, UntypedFormBuilder } from "@angular/forms";
 
 @Component({
   selector: "app-nav-search",
@@ -17,11 +17,11 @@ import { FormGroup, FormBuilder } from "@angular/forms";
 })
 export class NavSearchComponent implements OnInit {
 
-  public searchForm: FormGroup;
+  public searchForm: UntypedFormGroup;
 
   constructor(
     private router: Router,
-    private fb: FormBuilder
+    private fb: UntypedFormBuilder
   ) {}
 
   public async ngOnInit() {

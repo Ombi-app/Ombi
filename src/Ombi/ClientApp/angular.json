@@ -19,7 +19,7 @@
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.app.json",
+            "tsConfig": "src/tsconfig.json",
             "assets": [
               "src/assets"
             ],
@@ -114,7 +114,7 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "src/tsconfig.app.json"
+              "src/tsconfig.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -124,7 +124,6 @@
       }
     }
   },
-  "defaultProject": "ombi",
   "cli": {
     "analytics": false
   }

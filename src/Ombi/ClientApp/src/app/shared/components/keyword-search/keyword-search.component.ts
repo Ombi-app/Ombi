@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { debounceTime, distinctUntilChanged, startWith, switchMap } from "rxjs/operators";
 
 import { IMovieDbKeyword } from "../../../interfaces";
@@ -16,8 +16,8 @@ export class KeywordSearchComponent implements OnInit  {
     private tmdbService: TheMovieDbService
   ) {}
 
-  @Input() public form: FormGroup;
-  public control = new FormControl();
+  @Input() public form: UntypedFormGroup;
+  public control = new UntypedFormControl();
   public filteredTags: IMovieDbKeyword[];
   public filteredKeywords: Observable<IMovieDbKeyword[]>;
 

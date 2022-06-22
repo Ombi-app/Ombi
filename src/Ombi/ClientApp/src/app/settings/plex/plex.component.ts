@@ -5,7 +5,7 @@ import { takeUntil } from "rxjs/operators";
 import { IPlexLibrariesSettings, IPlexServer, IPlexServerResponse, IPlexServerViewModel, IPlexSettings } from "../../interfaces";
 import { JobService, NotificationService, PlexService, SettingsService, TesterService } from "../../services";
 import { MatTabChangeEvent, MatTabGroup } from "@angular/material/tabs";
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 
 @Component({
     templateUrl: "./plex.component.html",
@@ -17,7 +17,7 @@ export class PlexComponent implements OnInit, OnDestroy {
     public username: string;
     public password: string;
     public serversButton = false;
-    selected = new FormControl(0);
+    selected = new UntypedFormControl(0);
     @ViewChild("tabGroup", {static: false}) public tagGroup: MatTabGroup;
 
     public advanced = false;

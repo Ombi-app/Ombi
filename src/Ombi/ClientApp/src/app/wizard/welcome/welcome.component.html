@@ -1,6 +1,6 @@
 ﻿<div class="wizard-background">
   <div class="container wizard-inner">
-      <mat-horizontal-stepper linear #stepper>
+      <mat-stepper linear #stepper>
         <mat-step >
           <form >
             <ng-template matStepLabel>Welcome</ng-template>
@@ -53,7 +53,7 @@
           </form>
         </mat-step>
         <mat-step [optional]="true">
-          <form >
+          <form>
             <ng-template matStepLabel>Ombi config</ng-template>
             <wizard-ombi [config]="config"></wizard-ombi>
             <div>
@@ -81,6 +81,6 @@
             <button mat-button (click)="stepper.reset()" class="mat-raised-button mat-error left">Reset</button>
           </div>
         </mat-step>
-      </mat-horizontal-stepper>
+      </mat-stepper>
   </div>
 </div>

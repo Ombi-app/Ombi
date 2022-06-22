@@ -1,6 +1,6 @@
 ﻿import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { ILanguage, IMovieDbKeyword, ITheMovieDbSettings } from "../../interfaces";
 import { debounceTime, switchMap } from "rxjs/operators";
 
@@ -26,7 +26,7 @@ export class TheMovieDbComponent implements OnInit {
     public excludedKeywords: IKeywordTag[];
     public excludedMovieGenres: IKeywordTag[];
     public excludedTvGenres: IKeywordTag[];
-    public tagForm: FormGroup;
+    public tagForm: UntypedFormGroup;
     public languages: ILanguage[];
     public filteredTags: IMovieDbKeyword[];
     public filteredMovieGenres: IMovieDbKeyword[];
@@ -37,7 +37,7 @@ export class TheMovieDbComponent implements OnInit {
                 private notificationService: NotificationService,
                 private tmdbService: TheMovieDbService,
                 private searchService: SearchV2Service,
-                private fb: FormBuilder) { }
+                private fb: UntypedFormBuilder) { }
 
     public ngOnInit() {
         this.settingsService.getTheMovieDbSettings().subscribe(settings => {

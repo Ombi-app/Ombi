@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { debounceTime, distinctUntilChanged, map, startWith, switchMap } from "rxjs/operators";
 
 import { IMovieDbKeyword } from "../../../interfaces";
@@ -16,7 +16,7 @@ export class GenreSelectComponent {
     private searchService: SearchV2Service
   ) {}
 
-  @Input() public form: FormGroup;
+  @Input() public form: UntypedFormGroup;
 
   private _mediaType: string;
   @Input() set mediaType(type: string) {
@@ -33,7 +33,7 @@ export class GenreSelectComponent {
     return this._mediaType;
   }
   public genres: IMovieDbKeyword[] = [];
-  public control = new FormControl();
+  public control = new UntypedFormControl();
   public filteredTags: IMovieDbKeyword[];
   public filteredKeywords: Observable<IMovieDbKeyword[]>;
 

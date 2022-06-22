@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
-import { ControlContainer, FormGroup, Validators } from "@angular/forms";
+import { ControlContainer, UntypedFormGroup, Validators } from "@angular/forms";
 
 import { IMinimumAvailability, IRadarrProfile, IRadarrRootFolder, IRadarrSettings } from "../../../interfaces";
 import { TesterService, NotificationService, RadarrService } from "../../../services";
@@ -18,7 +18,7 @@ export class RadarrFormComponent implements OnInit {
     public minimumAvailabilityOptions: IMinimumAvailability[];
     public profilesRunning: boolean;
     public rootFoldersRunning: boolean;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
     constructor(private radarrService: RadarrService,
                 private notificationService: NotificationService,
@@ -27,7 +27,7 @@ export class RadarrFormComponent implements OnInit {
                 }
 
     public ngOnInit() {
-        this.form = <FormGroup>this.controlContainer.control;
+        this.form = <UntypedFormGroup>this.controlContainer.control;
 
         this.qualities = [];
         this.qualities.push({ name: "Please Select", id: -1 });
@@ -59,7 +59,7 @@ export class RadarrFormComponent implements OnInit {
         this.form.controls.minimumAvailability.setValidators(enabled ? [Validators.required] : null);
     }
 
-    public getProfiles(form: FormGroup) {
+    public getProfiles(form: UntypedFormGroup) {
          this.profilesRunning = true;
          this.radarrService.getQualityProfiles(form.value).subscribe(x => {
              this.qualities = x;
@@ -70,7 +70,7 @@ export class RadarrFormComponent implements OnInit {
          });
     }
 
-    public getRootFolders(form: FormGroup) {
+    public getRootFolders(form: UntypedFormGroup) {
          this.rootFoldersRunning = true;
          this.radarrService.getRootFolders(form.value).subscribe(x => {
              this.rootFolders = x;
@@ -81,7 +81,7 @@ export class RadarrFormComponent implements OnInit {
          });
     }
 
-    public test(form: FormGroup) {
+    public test(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;

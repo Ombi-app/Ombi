@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { firstValueFrom, Observable } from "rxjs";
 import { startWith, map } from "rxjs/operators";
@@ -25,10 +25,10 @@ export class AdminRequestDialogComponent implements OnInit {
     private sonarrService: SonarrService,
     private settingsService: SettingsService,
     private radarrService: RadarrService,
-    private fb: FormBuilder
+    private fb: UntypedFormBuilder
   ) {}
 
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public RequestType = RequestType;
 
   public options: IUserDropdown[];

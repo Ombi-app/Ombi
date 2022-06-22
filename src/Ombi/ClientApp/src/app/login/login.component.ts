@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, Inject } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 
@@ -24,7 +24,7 @@ import { CustomizationFacade } from "../state/customization";
   styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnDestroy, OnInit {
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public customizationSettings: ICustomizationSettings;
   public authenticationSettings: IAuthenticationSettings;
   public plexEnabled: boolean;
@@ -59,7 +59,7 @@ export class LoginComponent implements OnDestroy, OnInit {
     private authService: AuthService,
     private router: Router,
     private status: StatusService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private settingsService: SettingsService,
     private customziationFacade: CustomizationFacade,
     private images: ImageService,
@@ -132,7 +132,7 @@ export class LoginComponent implements OnDestroy, OnInit {
       .subscribe((x) => (this.errorValidation = x));
   }
 
-  public onSubmit(form: FormGroup) {
+  public onSubmit(form: UntypedFormGroup) {
     if (form.invalid) {
       this.notify.open(this.errorValidation, "OK", {
         duration: 300000,

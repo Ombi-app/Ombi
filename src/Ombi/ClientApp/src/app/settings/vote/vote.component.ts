@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 
 import { NotificationService, SettingsService } from "../../services";
 
@@ -9,10 +9,10 @@ import { NotificationService, SettingsService } from "../../services";
 })
 export class VoteComponent implements OnInit {
 
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
     constructor(private settingsService: SettingsService,
-                private readonly fb: FormBuilder,
+                private readonly fb: UntypedFormBuilder,
                 private notificationService: NotificationService) {  }
 
     public ngOnInit() {
@@ -26,7 +26,7 @@ export class VoteComponent implements OnInit {
         });
     }    
 
-    public onSubmit(form: FormGroup) {
+    public onSubmit(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;
