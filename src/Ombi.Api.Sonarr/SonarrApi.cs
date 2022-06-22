@@ -19,7 +19,7 @@ namespace Ombi.Api.Sonarr
         protected IApi Api { get; }
         protected virtual string ApiBaseUrl => "/api/";
 
-        public async Task<IEnumerable<SonarrProfile>> GetProfiles(string apiKey, string baseUrl)
+        public virtual async Task<IEnumerable<SonarrProfile>> GetProfiles(string apiKey, string baseUrl)
         {
             var request = new Request($"{ApiBaseUrl}profile", baseUrl, HttpMethod.Get);
             request.AddHeader("X-Api-Key", apiKey);
