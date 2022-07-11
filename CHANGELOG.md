@@ -1,3 +1,12 @@
+## [4.21.1](https://github.com/Ombi-app/Ombi/compare/v4.21.0...v4.21.1) (2022-07-11)
+
+
+### Bug Fixes
+
+* **images:** Retry images with a backoff when we get a Too Many requests from TheMovieDb [#4685](https://github.com/Ombi-app/Ombi/issues/4685) ([3f1f35d](https://github.com/Ombi-app/Ombi/commit/3f1f35df3164db6739691cdda8f925c296239791))
+
+
+
 # [4.21.0](https://github.com/Ombi-app/Ombi/compare/v4.20.4...v4.21.0) (2022-06-22)
 
 
@@ -346,10 +355,6 @@
 
 
 ## [4.14.1](https://github.com/Ombi-app/Ombi/compare/v4.14.0...v4.14.1) (2022-03-03)
-
-
-
-# [4.14.0](https://github.com/Ombi-app/Ombi/compare/v4.13.2...v4.14.0) (2022-03-02)
 
 
 
