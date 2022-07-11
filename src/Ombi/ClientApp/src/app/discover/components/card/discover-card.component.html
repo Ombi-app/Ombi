@@ -9,8 +9,7 @@
             <span class="indicator"></span><span class="indicator-text" id="availabilityStatus{{result.id}}">{{getAvailabilityStatus()}}</span>
         </div>
     </div>
-        <img [routerLink]="generateDetailsLink()" id="cardImage" src="{{result.posterPath}}" class="image"
-            alt="{{result.title}}">
+        <img [routerLink]="generateDetailsLink()" id="cardImage" src="{{result.posterPath}}" class="image" (error)="onImageError($event)" alt="{{result.title}}">
         <div [ngClass]="result.posterPath.includes('images/') ? 'middle-show' : 'middle'">
             <a class="poster-overlay" [routerLink]="generateDetailsLink()">
                 <div class="summary">
