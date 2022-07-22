@@ -1,3 +1,12 @@
+## [4.21.2](https://github.com/Ombi-app/Ombi/compare/v4.21.1...v4.21.2) (2022-07-22)
+
+
+### Bug Fixes
+
+* Landing and Login page improvements ([#4690](https://github.com/Ombi-app/Ombi/issues/4690)) ([6d423b5](https://github.com/Ombi-app/Ombi/commit/6d423b5447c52c5e59d8d2bd92a23b47468eb736))
+
+
+
 ## [4.21.1](https://github.com/Ombi-app/Ombi/compare/v4.21.0...v4.21.1) (2022-07-11)
 
 
@@ -351,10 +360,6 @@
 ### Bug Fixes
 
 * **Sonarr:** :bug: Fixed an issue where some seasons were not being monitored correctly in sonarr ([60cfd41](https://github.com/Ombi-app/Ombi/commit/60cfd41f68e9006555c1a419dcff1aaa24b3e09f)), closes [#4506](https://github.com/Ombi-app/Ombi/issues/4506)
-
-
-
-## [4.14.1](https://github.com/Ombi-app/Ombi/compare/v4.14.0...v4.14.1) (2022-03-03)
 
 
 
