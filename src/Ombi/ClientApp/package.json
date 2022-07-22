@@ -47,7 +47,7 @@
     "moment": "^2.29.1",
     "ng2-cookies": "^1.0.12",
     "ngx-clipboard": "^12.1.0",
-    "ngx-infinite-scroll": "^9.0.0",
+    "ngx-infinite-scroll": "^14.0.0",
     "ngx-moment": "^3.0.1",
     "ngx-order-pipe": "^2.2.0",
     "popper.js": "^1.14.3",
