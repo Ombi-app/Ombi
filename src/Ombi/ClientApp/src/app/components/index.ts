@@ -1,0 +1,1 @@
+export * from "./image-background/image-background.component";
