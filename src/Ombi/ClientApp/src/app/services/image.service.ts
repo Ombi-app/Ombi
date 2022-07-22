@@ -1,4 +1,4 @@
-import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
+import { APP_BASE_HREF } from "@angular/common";
 import { Injectable, Inject } from "@angular/core";
 import { Observable } from "rxjs";
 

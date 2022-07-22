@@ -10,17 +10,12 @@ import { PlexTvService } from "../services";
 import { SettingsService } from "../services";
 import { StatusService } from "../services";
 
-import { DomSanitizer } from "@angular/platform-browser";
-import { ImageService } from "../services";
-
-import { fadeInOutAnimation } from "../animations/fadeinout";
 import { StorageService } from "../shared/storage/storage-service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { CustomizationFacade } from "../state/customization";
 
 @Component({
   templateUrl: "./login.component.html",
-  animations: [fadeInOutAnimation],
   styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnDestroy, OnInit {
@@ -28,7 +23,6 @@ export class LoginComponent implements OnDestroy, OnInit {
   public customizationSettings: ICustomizationSettings;
   public authenticationSettings: IAuthenticationSettings;
   public plexEnabled: boolean;
-  public background: any;
   public landingFlag: boolean;
   public baseUrl: string;
   public loginWithOmbi: boolean;
@@ -46,7 +40,6 @@ export class LoginComponent implements OnDestroy, OnInit {
   public get appNameTranslate(): object {
     return { appName: this.appName };
   }
-  private timer: any;
   private clientId: string;
 
   private errorBody: string;
@@ -62,8 +55,6 @@ export class LoginComponent implements OnDestroy, OnInit {
     private fb: UntypedFormBuilder,
     private settingsService: SettingsService,
     private customziationFacade: CustomizationFacade,
-    private images: ImageService,
-    private sanitizer: DomSanitizer,
     private route: ActivatedRoute,
     @Inject(APP_BASE_HREF) href: string,
     private translate: TranslateService,
@@ -111,14 +102,6 @@ export class LoginComponent implements OnDestroy, OnInit {
         this.headerAuth();
       });
     this.settingsService.getClientId().subscribe((x) => (this.clientId = x));
-    this.images.getRandomBackground().subscribe((x) => {
-      this.background = this.sanitizer.bypassSecurityTrustStyle(
-        "url(" + x.url + ")"
-      );
-    });
-    this.timer = setInterval(() => {
-      this.cycleBackground();
-    }, 30000);
 
     const base = this.href;
     if (base.length > 1) {
@@ -284,18 +267,6 @@ export class LoginComponent implements OnDestroy, OnInit {
   }
 
   public ngOnDestroy() {
-    clearInterval(this.timer);
     clearInterval(this.pinTimer);
-  }
-
-  private cycleBackground() {
-    this.images.getRandomBackground().subscribe((x) => {
-      this.background = "";
-    });
-    this.images.getRandomBackground().subscribe((x) => {
-      this.background = this.sanitizer.bypassSecurityTrustStyle(
-        "url(" + x.url + ")"
-      );
-    });
   }
 }

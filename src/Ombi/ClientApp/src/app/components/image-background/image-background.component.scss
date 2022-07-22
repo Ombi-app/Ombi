@@ -1,0 +1,16 @@
+.login-gradient-bar{
+  background: linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.6) 20.0%, rgba(0,0,0,0.6) 80.0%, transparent 60%),transparent;
+  height:100%;
+  width:100%;
+  position: absolute;
+}
+
+.bg {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+}
