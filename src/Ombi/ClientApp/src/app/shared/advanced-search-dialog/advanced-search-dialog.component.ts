@@ -49,7 +49,9 @@ export class AdvancedSearchDialogComponent implements OnInit {
       type: formData.type,
     }, 0, 30);
 
-    this.advancedSearchDialogService.setData(data, formData.type === 'movie' ? RequestType.movie : RequestType.tvShow);
+    const type = formData.type === 'movie' ? RequestType.movie : RequestType.tvShow;
+    this.advancedSearchDialogService.setData(data, type);
+    this.advancedSearchDialogService.setOptions(watchProviderIds, genres, keywords, formData.releaseYear, type, 30);
 
     this.dialogRef.close(true);
   }

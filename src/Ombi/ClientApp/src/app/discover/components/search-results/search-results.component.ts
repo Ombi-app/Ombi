@@ -29,6 +29,7 @@ export class DiscoverSearchResultsComponent implements OnInit {
     public filter: SearchFilter;
 
     private isAdvancedSearch: boolean;
+    private loadPosition: number = 30;
 
     constructor(private searchService: SearchV2Service,
         private route: ActivatedRoute,
@@ -65,7 +66,7 @@ export class DiscoverSearchResultsComponent implements OnInit {
             }
         });
 
-        if (this.advancedDataService) {
+        if (this.isAdvancedSearch) {
             return;
         }
         this.loadingFlag = true;
@@ -176,6 +177,31 @@ export class DiscoverSearchResultsComponent implements OnInit {
                 available: false,
                 tvMovieDb: false
             });
+        });
+    }
+
+    public onScroll() {
+        console.log("scrolled");
+        if (this.advancedDataService) {
+            this.loadMoreAdvancedSearch();
+            return;
+        }
+    }
+
+    private loadMoreAdvancedSearch() {
+        const advancedOptions = this.advancedDataService.getOptions();
+
+        this.searchService.advancedSearch({
+            type: advancedOptions.type == RequestType.movie ? "movie" : "tv",
+            companies: advancedOptions.companies,
+            genreIds: advancedOptions.genres,
+            keywordIds : advancedOptions.keywords,
+            releaseYear: advancedOptions.releaseYear,
+            watchProviders: advancedOptions.watchProviders,
+        }, this.loadPosition, 30).then(x => {
+
+            this.loadPosition += 30;
+            this.mapAdvancedData(x);
         });
     }
 
