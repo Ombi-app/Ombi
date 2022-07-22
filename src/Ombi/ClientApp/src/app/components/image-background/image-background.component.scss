@@ -14,3 +14,13 @@
   width: 100vw;
   position: fixed;
 }
+
+.poster-desc {
+  padding-left: 1%;
+  color: white;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: end;
+  flex-direction: column;
+}

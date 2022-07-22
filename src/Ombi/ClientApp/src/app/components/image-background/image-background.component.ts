@@ -1,6 +1,6 @@
 import { OmbiCommonModules } from "../modules";
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
+import { DomSanitizer } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ImageService } from "../../services";
 import { fadeInOutAnimation } from "app/animations/fadeinout";
@@ -17,6 +17,7 @@ import { fadeInOutAnimation } from "app/animations/fadeinout";
   export class ImageBackgroundComponent implements OnInit, OnDestroy {
 
     public background: any;
+    public name: string;
     private timer: NodeJS.Timer;
 
     constructor(private images: ImageService, private sanitizer: DomSanitizer) { }
@@ -34,8 +35,9 @@ import { fadeInOutAnimation } from "app/animations/fadeinout";
     }
 
     private cycleBackground() {
-        this.images.getRandomBackground().subscribe((x) => {
+        this.images.getRandomBackgroundWithInfo().subscribe((x) => {
           this.background = this.sanitizer.bypassSecurityTrustStyle("url(" + x.url + ")");
+          this.name = x.name;
         });
     }
   }
