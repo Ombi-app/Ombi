@@ -1,3 +1,12 @@
+# [4.22.0](https://github.com/Ombi-app/Ombi/compare/v4.21.2...v4.22.0) (2022-07-22)
+
+
+### Features
+
+* **discover:** ✨ Added infinite scroll on advanced search results ([898bc89](https://github.com/Ombi-app/Ombi/commit/898bc89fa78245c1f3de9481f6c724f087a16e39))
+
+
+
 ## [4.21.2](https://github.com/Ombi-app/Ombi/compare/v4.21.1...v4.21.2) (2022-07-22)
 
 
@@ -351,15 +360,6 @@
 ### Bug Fixes
 
 * **availability:** :bug: Fixed an issue where with 4k content, we could repeat notifications ([f9ebc1c](https://github.com/Ombi-app/Ombi/commit/f9ebc1cc2e13c7cd335121cd86295b10eda529ba))
-
-
-
-## [4.14.2](https://github.com/Ombi-app/Ombi/compare/v4.14.1...v4.14.2) (2022-03-05)
-
-
-### Bug Fixes
-
-* **Sonarr:** :bug: Fixed an issue where some seasons were not being monitored correctly in sonarr ([60cfd41](https://github.com/Ombi-app/Ombi/commit/60cfd41f68e9006555c1a419dcff1aaa24b3e09f)), closes [#4506](https://github.com/Ombi-app/Ombi/issues/4506)
 
 
 
