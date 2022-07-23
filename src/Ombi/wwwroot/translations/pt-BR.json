@@ -61,7 +61,7 @@
     },
     "ErrorPages": {
         "NotFound": "Pagina não encontrada",
-        "SomethingWentWrong": "Something went wrong!"
+        "SomethingWentWrong": "Algo deu errado!"
     },
     "NavigationBar": {
         "Discover": "Explorar",
@@ -212,7 +212,7 @@
             "Approve4K": "Aprovar pedido 4K",
             "Deny4K": "Recusar pedido de 4K",
             "ChangeAvailability": "Marcar Como Disponível",
-            "Deleted": "Successfully deleted selected items",
+            "Deleted": "Itens selecionados excluídos com sucesso",
             "Approved": "Successfully approved selected items",
             "Denied": "Itens selecionados negados com sucesso"
         },
