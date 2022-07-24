@@ -333,7 +333,7 @@ namespace Ombi.Core.Engine
                     allRequests = allRequests.Where(x => 
                             (x.RequestedDate != DateTime.MinValue && x.Approved && !x.Available && (!x.Denied.HasValue || !x.Denied.Value))
                             ||
-                            (x.Has4KRequest && x.Approved4K && !x.Available && (!x.Denied.HasValue || !x.Denied.Value))
+                            (x.Has4KRequest && x.Approved4K && !x.Available4K && (!x.Denied4K.HasValue || !x.Denied4K.Value))
                         );
                     break;
                 case RequestStatus.Available:
