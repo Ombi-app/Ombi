@@ -24,9 +24,9 @@ import { APP_BASE_HREF } from "@angular/common";
 
     public baseUrl: string = "";
 
-    public defaultTv = "images/default_tv_poster.png";
-    private defaultMovie = "images/default_movie_poster.png";
-    private defaultMusic = "images/default-music-placeholder.png";
+    public defaultTv = "/images/default_tv_poster.png";
+    private defaultMovie = "/images/default_movie_poster.png";
+    private defaultMusic = "i/mages/default-music-placeholder.png";
 
     constructor (@Inject(APP_BASE_HREF) public href: string) {
         if (this.href.length > 1) {
@@ -38,13 +38,13 @@ import { APP_BASE_HREF } from "@angular/common";
         // set to a placeholder
         switch(this.type) {
             case RequestType.movie:
-                event.target.src = this.defaultMovie;
+                event.target.src = this.baseUrl + this.defaultMovie;
                 break;
             case RequestType.tvShow:
-                event.target.src = this.defaultTv;
+                event.target.src = this.baseUrl + this.defaultTv;
                 break;
             case RequestType.album:
-                event.target.src = this.defaultMusic;
+                event.target.src = this.baseUrl + this.defaultMusic;
                 break;
         }
 
