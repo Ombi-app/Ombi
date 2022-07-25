@@ -83,7 +83,7 @@ small {
   }
 
   
-.image {
+::ng-deep .image {
   border-radius: 10px;
   opacity: 1;
   display: block;
