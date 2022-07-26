@@ -8,7 +8,6 @@
     "lint": "ng lint",
     "docs:json": "compodoc -p ./tsconfig.json -e json -d .",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "yarn docs:json && build-storybook",
     "chromatic": "chromatic --exit-zero-on-changes"
   },
   "private": true,
