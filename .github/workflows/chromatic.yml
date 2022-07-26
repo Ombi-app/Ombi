@@ -33,6 +33,7 @@ jobs:
           projectToken: 7c47e1a1a4bd
           exitZeroOnChanges: true
           workingDir: ./src/Ombi/ClientApp
+          buildScriptName: storybookbuild
 
       - name: Publish to Chromatic and auto accept changes
         if: github.ref == 'refs/heads/master'
