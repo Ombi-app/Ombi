@@ -35,7 +35,6 @@ import { APP_BASE_HREF } from "@angular/common";
     }
 
     public onError(event: any) {
-        debugger;
         // set to a placeholder
         switch(this.type) {
             case RequestType.movie:
