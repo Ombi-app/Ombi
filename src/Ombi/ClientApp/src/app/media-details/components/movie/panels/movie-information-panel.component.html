@@ -50,8 +50,9 @@
     </div>
 
     <div *ngIf="request">
-        <span class="label">{{'MediaDetails.RequestDate' | translate }}</span>
-        {{request.requestedDate | amUserLocale | amDateFormat: 'LL'}}
+      <span class="label">{{'MediaDetails.RequestDate' | translate }}</span>
+      <span *ngIf="request.requestedDate < request.requestedDate4k"> {{request.requestedDate4k | amUserLocale | amDateFormat: 'LL'}}</span>
+      <span *ngIf="request.requestedDate > request.requestedDate4k"> {{request.requestedDate | amUserLocale | amDateFormat: 'LL'}}</span>
     </div>
 
     <div *ngIf="request && request.source !== RequestSource.Ombi">
