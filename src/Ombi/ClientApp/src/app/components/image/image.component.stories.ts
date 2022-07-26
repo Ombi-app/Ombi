@@ -52,6 +52,12 @@ IdApplied.args = {
   type: RequestType.movie,
   id: 'testId123'
 };
+export const IdAppliedTest = Template.bind({});
+IdApplied.args = {
+  src: 'https://ombi.io/img/logo-orange-small.png',
+  type: RequestType.movie,
+  id: 'testId123'
+};
 
 // export const InvalidMovieImage = Template.bind({});
 // InvalidMovieImage.args = {
