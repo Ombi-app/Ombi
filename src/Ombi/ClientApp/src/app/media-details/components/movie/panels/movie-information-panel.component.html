@@ -30,23 +30,29 @@
         <span id="status"> {{ this.movie.status | translateStatus }}</span>
     </div>
     <div>
-        <span class="label">{{'MediaDetails.Availability' | translate }}</span>
-        <span *ngIf="movie.available"> {{'Common.Available' | translate}}</span>
-        <span *ngIf="!movie.available"> {{'Common.NotAvailable' | translate}}</span>
+      <span class="label">{{'MediaDetails.Availability' | translate }}</span>
+      <span *ngIf="movie.available || movie.available4K"> {{'Common.Available' | translate}}</span>
+      <span *ngIf="!movie.available && !movie.available4K"> {{'Common.NotAvailable' | translate}}</span>
     </div>
-    <div *ngIf="!movie.available">
-        <span class="label">{{'MediaDetails.RequestStatus' | translate }}</span>
-        <div *ngIf="movie.denied">{{'Common.Denied' | translate}}</div>
-        <div *ngElseIf="movie.approved && !movie.available">{{'Common.ProcessingRequest' | translate}}</div>
-        <div *ngElseIf="movie.requested && !movie.approved && !movie.available">{{'Common.PendingApproval' | translate}}
-        </div>
-        <div *ngElseIf="!movie.requested && !movie.available && !movie.approved">{{'Common.NotRequested' | translate}}
-        </div>
+    <div *ngIf="(!movie.available && movie.requested) || (!movie.available4K && movie.has4KRequest)">
+      <span class="label">{{'MediaDetails.RequestStatus' | translate }}</span>
+      <div *ngIf="!movie.available && movie.requested">
+        <div *ngIf="movie.denied">{{'Common.RequestDenied' | translate}}</div>
+        <div *ngIf="movie.approved && !movie.available">{{'Common.ProcessingRequest' | translate}}</div>
+        <div *ngIf="movie.requested && !movie.approved">{{'Common.PendingApproval' | translate}}</div>
+        <!--<div *ngIf="!movie.requested && !movie.available && !movie.approved">{{'Common.NotRequested' | translate}}</div>-->
+      </div>
+      <div *ngIf="!movie.available4K && movie.has4KRequest">
+        <div *ngIf="movie.denied4K">{{'Common.RequestDenied4K' | translate}}</div>
+        <div *ngIf="movie.approved4K && !movie.available4K">{{'Common.ProcessingRequest4K' | translate}}</div>
+        <div *ngIf="movie.requested4K && !movie.approved4K && !movie.available4K">{{'Common.PendingApproval4K' | translate}}</div>
+        <!--<div *ngIf="!movie.requested4K && !movie.available4K && !movie.approved4K">{{'Common.NotRequested4K' | translate}}</div>-->
+      </div>
     </div>
 
     <div *ngIf="request">
-        <span class="label">{{'MediaDetails.RequestedBy' | translate }}</span>
-        <span id="requestedByInfo"> {{request.requestedUser.userAlias}}</span>
+      <span class="label">{{'MediaDetails.RequestedBy' | translate }}</span>
+      <span id="requestedByInfo"> {{request.requestedUser.userAlias}}</span>
     </div>
 
     <div *ngIf="request">
@@ -60,9 +66,14 @@
         {{RequestSource[request.source]}}
     </div>
 
-    <div *ngIf="request && request.denied">
-        <span class="label">{{'MediaDetails.DeniedReason' | translate }}</span>
+    <div *ngIf="request">
+      <span class="label">{{'MediaDetails.DeniedReason' | translate }}</span>
+      <div *ngIf="request.denied">
         <span id="deniedReasonInfo">{{request.deniedReason}}</span>
+      </div>
+      <div *ngIf="request.denied4K">
+        <span id="deniedReasonInfo4K">{{request.deniedReason4K}}</span>
+      </div>
     </div>
 
 
@@ -73,7 +84,7 @@
 
     <div *ngIf="movie.available4K">
         <span class="label">{{'MediaDetails.Quality' | translate }}&nbsp;</span>
-        <span >{{"4K" | quality}}</span>
+        <span>{{"4K" | quality}}</span>
     </div>
 
     <div *ngIf="advancedOptions && request && request.rootPathOverrideTitle">
