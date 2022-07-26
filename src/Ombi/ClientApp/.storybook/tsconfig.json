@@ -4,6 +4,9 @@
     "types": [
       "node"
     ],
+    "typeRoots": [
+      "../node_modules/@typings"
+  ],
     "allowSyntheticDefaultImports": true
   },
   "exclude": [

@@ -57,6 +57,7 @@ IdApplied.args = {
 // InvalidMovieImage.args = {
 //   src: 'https://httpstat.us/429',
 //   type: RequestType.movie,
+//   id: 'testId123'
 // };
 
 // export const InvalidTvImage = Template.bind({});
