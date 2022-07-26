@@ -34,6 +34,7 @@ jobs:
           exitZeroOnChanges: true
           workingDir: ./src/Ombi/ClientApp
           buildScriptName: storybookbuild
+          exitOnceUploaded: true
 
       - name: Publish to Chromatic and auto accept changes
         if: github.ref == 'refs/heads/master'
@@ -43,3 +44,4 @@ jobs:
           autoAcceptChanges: true # 👈 Option to accept all changes
           workingDir: ./src/Ombi/ClientApp
           buildScriptName: storybookbuild
+          exitOnceUploaded: true
