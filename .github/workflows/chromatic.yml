@@ -10,9 +10,6 @@ jobs:
   storybook-build:
     # Operating System
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./src/Ombi/ClientApp
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -26,6 +23,7 @@ jobs:
           key: node_modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install dependencies
+        working-directory: ./src/Ombi/ClientApp
         run: yarn
 
       - name: Publish to Chromatic
@@ -34,6 +32,7 @@ jobs:
         with:
           projectToken: 7c47e1a1a4bd
           exitZeroOnChanges: true
+          workingDir: ./src/Ombi/ClientApp
 
       - name: Publish to Chromatic and auto accept changes
         if: github.ref == 'refs/heads/master'
@@ -41,3 +40,4 @@ jobs:
         with:
           projectToken: 7c47e1a1a4bd
           autoAcceptChanges: true # 👈 Option to accept all changes
+          workingDir: ./src/Ombi/ClientApp
