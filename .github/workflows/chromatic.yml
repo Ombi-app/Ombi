@@ -7,13 +7,9 @@ on:
 
 # List of jobs
 jobs:
-  chromatic-deployment:
+  storybook-build:
     # Operating System
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./src/Ombi/ClientApp
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -28,6 +24,8 @@ jobs:
 
       - name: Install dependencies
         run: yarn
+        with:
+          workingDir: ./src/Ombi/ClientApp
 
       - name: Publish to Chromatic
         if: github.ref != 'refs/heads/master'
@@ -35,6 +33,7 @@ jobs:
         with:
           projectToken: 7c47e1a1a4bd
           exitZeroOnChanges: true
+          workingDir: ./src/Ombi/ClientApp
 
       - name: Publish to Chromatic and auto accept changes
         if: github.ref == 'refs/heads/master'
@@ -42,3 +41,4 @@ jobs:
         with:
           projectToken: 7c47e1a1a4bd
           autoAcceptChanges: true # 👈 Option to accept all changes
+          workingDir: ./src/Ombi/ClientApp
