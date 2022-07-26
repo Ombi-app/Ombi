@@ -13,9 +13,9 @@ jobs:
     defaults:
       run:
         working-directory: ./src/Ombi/ClientApp
-    # Job steps
+
     steps:
-       - name: Checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
