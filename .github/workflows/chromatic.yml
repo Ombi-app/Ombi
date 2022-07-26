@@ -23,9 +23,8 @@ jobs:
           key: node_modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install dependencies
+        workingDir: ./src/Ombi/ClientApp
         run: yarn
-        with:
-          workingDir: ./src/Ombi/ClientApp
 
       - name: Publish to Chromatic
         if: github.ref != 'refs/heads/master'
