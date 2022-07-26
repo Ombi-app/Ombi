@@ -41,3 +41,4 @@ jobs:
           projectToken: 7c47e1a1a4bd
           autoAcceptChanges: true # 👈 Option to accept all changes
           workingDir: ./src/Ombi/ClientApp
+          buildScriptName: storybookbuild
