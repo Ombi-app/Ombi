@@ -8,7 +8,8 @@
     "lint": "ng lint",
     "docs:json": "compodoc -p ./tsconfig.json -e json -d .",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "yarn docs:json && build-storybook"
+    "build-storybook": "yarn docs:json && build-storybook",
+    "chromatic": "chromatic --exit-zero-on-changes"
   },
   "private": true,
   "dependencies": {
@@ -62,7 +63,10 @@
     "ts-md5": "^1.2.7",
     "tslib": "^1.10.0",
     "tslint-angular": "^1.1.2",
-    "zone.js": "~0.11.4"
+    "zone.js": "~0.11.4",
+    "protractor": "~5.4.0",
+    "ts-node": "~5.0.1",
+    "tslint": "^5.12.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^14.0.0",
@@ -91,5 +95,7 @@
     "protractor": "~5.4.0",
     "ts-node": "~5.0.1",
     "tslint": "^5.12.0"
-  }
+  },
+  "readme": "ERROR: No README data found!",
+  "_id": "ombi@3.0.0"
 }
