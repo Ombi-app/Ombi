@@ -251,3 +251,4 @@ _Pvt_Extensions
 /src/Ombi/databases.json
 /src/Ombi/healthchecksdb
 /src/Ombi/ClientApp/package-lock.json
+/src/Ombi.Core/Properties/launchSettings.json

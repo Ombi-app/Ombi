@@ -136,6 +136,7 @@ namespace Ombi.Core.Engine
                     Status = movieInfo.Status,
                     RequestedDate = model.Is4kRequest ? DateTime.MinValue : DateTime.Now,
                     Approved = false,
+                    Approved4K = false,
                     RequestedUserId = canRequestOnBehalf ? model.RequestOnBehalf : userDetails.Id,
                     Background = movieInfo.BackdropPath,
                     LangCode = model.LanguageCode,
@@ -151,7 +152,7 @@ namespace Ombi.Core.Engine
             var usDates = movieInfo.ReleaseDates?.Results?.FirstOrDefault(x => x.IsoCode == "US");
             requestModel.DigitalReleaseDate = usDates?.ReleaseDate
                 ?.FirstOrDefault(x => x.Type == ReleaseDateType.Digital)?.ReleaseDate;
-
+            
             var ruleResults = (await RunRequestRules(requestModel)).ToList();
             var ruleResultInError = ruleResults.Find(x => !x.Success);
             if (ruleResultInError != null)
@@ -163,7 +164,7 @@ namespace Ombi.Core.Engine
                 };
             }
 
-            if (requestModel.Approved) // The rules have auto approved this
+            if (requestModel.Approved || requestModel.Approved4K) // The rules have auto approved this
             {
                 var requestEngineResult = await AddMovieRequest(requestModel, fullMovieName, model.RequestOnBehalf, isExisting, is4kRequest);
                 if (requestEngineResult.Result)
