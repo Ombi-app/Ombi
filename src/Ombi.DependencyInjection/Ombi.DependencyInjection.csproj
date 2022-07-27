@@ -30,6 +30,7 @@
     <ProjectReference Include="..\Ombi.Api.Mattermost\Ombi.Api.Mattermost.csproj" />
     <ProjectReference Include="..\Ombi.Api.MusicBrainz\Ombi.Api.MusicBrainz.csproj" />
     <ProjectReference Include="..\Ombi.Api.Notifications\Ombi.Api.Notifications.csproj" />
+    <ProjectReference Include="..\Ombi.Api.Ntfy\Ombi.Api.Ntfy.csproj" />
     <ProjectReference Include="..\Ombi.Api.Plex\Ombi.Api.Plex.csproj" />
     <ProjectReference Include="..\Ombi.Api.Pushbullet\Ombi.Api.Pushbullet.csproj" />
     <ProjectReference Include="..\Ombi.Api.Pushover\Ombi.Api.Pushover.csproj" />

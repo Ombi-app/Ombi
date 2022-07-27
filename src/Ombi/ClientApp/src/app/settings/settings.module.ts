@@ -40,6 +40,7 @@ import { EmbyComponent } from "./emby/emby.component";
 import { FailedRequestsComponent } from "./failedrequests/failedrequests.component";
 import { FeaturesComponent } from "./features/features.component";
 import { GotifyComponent } from "./notifications/gotify.component";
+import { NtfyComponent } from "./notifications/ntfy.component";
 import { HubService } from "../services/hub.service";
 import {InputSwitchModule} from "primeng/inputswitch";
 import {InputTextModule} from "primeng/inputtext";
@@ -100,6 +101,7 @@ const routes: Routes = [
     { path: "Pushover", component: PushoverComponent, canActivate: [AuthGuard] },
     { path: "Pushbullet", component: PushbulletComponent, canActivate: [AuthGuard] },
     { path: "Gotify", component: GotifyComponent, canActivate: [AuthGuard] },
+    { path: "Ntfy", component: NtfyComponent, canActivate: [AuthGuard] },
     { path: "Webhook", component: WebhookComponent, canActivate: [AuthGuard] },
     { path: "Mattermost", component: MattermostComponent, canActivate: [AuthGuard] },
     { path: "Twilio", component: TwilioComponent, canActivate: [AuthGuard] },
@@ -165,6 +167,7 @@ const routes: Routes = [
         MattermostComponent,
         PushbulletComponent,
         GotifyComponent,
+        NtfyComponent,
         WebhookComponent,
         UserManagementComponent,
         UpdateComponent,

@@ -1,0 +1,74 @@
+
+<settings-menu></settings-menu>
+<div *ngIf="form" class="small-middle-container">
+    <fieldset>
+        <legend>Ntfy Notifications</legend>
+        <div class="col-md-6">
+            <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="enable" formControlName="enabled">
+                        <label for="enable">Enabled</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="baseUrl" class="control-label">Base URL</label>
+
+                    <input type="text" class="form-control form-control-custom " id="baseUrl" name="baseUrl" [ngClass]="{'form-error': form.get('baseUrl').hasError('required')}" formControlName="baseUrl" pTooltip="Enter the URL of your ntfy server.">
+                    <small *ngIf="form.get('baseUrl').hasError('required')" class="error-text">The Base URL is required</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="authorizationHeader" class="control-label">Authorization Header</label>
+
+                    <input type="text" class="form-control form-control-custom " id="authorizationHeader" name="authorizationHeader" [ngClass]="{'form-error': form.get('authorizationHeader').hasError('required')}" formControlName="authorizationHeader" pTooltip="Enter your Authorization header from Ntfy.">
+                    <small *ngIf="form.get('authorizationHeader').hasError('required')" class="error-text">The Authorization Header is required</small>
+                </div>
+
+              <div class="form-group">
+                <label for="topic" class="control-label">Topic</label>
+
+                <input type="text" class="form-control form-control-custom " id="topic" name="topic" [ngClass]="{'form-error': form.get('topic').hasError('required')}" formControlName="topic" pTooltip="Enter your topic from Ntfy.">
+                <small *ngIf="form.get('topic').hasError('required')" class="error-text">The Topic is required</small>
+              </div>
+
+                <div class="form-group">
+                    <label for="priority" class="control-label">Priority</label>
+                    <div>
+                        <select class="form-control form-control-custom " id="priority" name="priority" formControlName="priority" pTooltip="The priority you want your ntfy notifications sent as.">
+                            <option value="4">Normal</option>
+                            <option value="8">High</option>
+                            <option value="2">Low</option>
+                            <option value="0">Lowest</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div>
+                        <button [disabled]="form.invalid" mat-raised-button type="button" (click)="test(form)" class="btn btn-primary-outline">
+                            Test
+                            <div id="spinner"></div>
+                        </button>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <div>
+                        <button [disabled]="form.invalid" mat-raised-button type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+        <div class="col-md-6">
+            <notification-templates [templates]="templates" [showSubject]="false"></notification-templates>
+        </div>
+    </fieldset>
+</div>
