@@ -68,7 +68,7 @@ import { TooltipModule } from "primeng/tooltip";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { TranslateService } from "@ngx-translate/core";
 import { UnauthorizedInterceptor } from "./auth/unauthorized.interceptor";
-import { ImageBackgroundComponent } from "./components/";
+import { ImageBackgroundComponent, ImageComponent } from "./components/";
 import { environment } from "../environments/environment";
 
 const routes: Routes = [
@@ -168,7 +168,8 @@ export function JwtTokenGetter() {
         [
             NgxsReduxDevtoolsPluginModule.forRoot(),
         ],
-        ImageBackgroundComponent
+        ImageBackgroundComponent,
+        ImageComponent,
     ],
     declarations: [
         AppComponent,
