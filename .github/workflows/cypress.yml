@@ -51,8 +51,8 @@ jobs:
         headless: true
         working-directory: tests
         wait-on: http://localhost:3577/
-        # 7 minutes
-        wait-on-timeout: 420
+        # 10 minutes
+        wait-on-timeout: 600
       env:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
