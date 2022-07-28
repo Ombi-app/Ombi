@@ -6,10 +6,10 @@
                 <div class="row justify-content-md-center mat-card mat-card-flat carousel-item">
                     <div class="bottom-space">
                         <a *ngIf="item.image" [routerLink]="'/discover/actor/' + item.id">
-                            <img class="cast-profile-img" src="https://image.tmdb.org/t/p/w300{{item.image}}">
+                            <ombi-image class="cast-profile-img" src="https://image.tmdb.org/t/p/w300{{item.image}}"></ombi-image>
                         </a>
                         <a *ngIf="item.profile_path" [routerLink]="'/discover/actor/' + item.id">
-                            <img class="cast-profile-img" src="https://image.tmdb.org/t/p/w300{{item.profile_path}}">
+                            <ombi-image class="cast-profile-img" src="https://image.tmdb.org/t/p/w300{{item.profile_path}}"></ombi-image>
                         </a>
                         <!-- TODO get profile image default -->
 

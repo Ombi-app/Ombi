@@ -1,3 +1,48 @@
+## [4.22.2](https://github.com/Ombi-app/Ombi/compare/v4.22.1...v4.22.2) (2022-07-25)
+
+
+### Bug Fixes
+
+* fixed an issue where I broke images for some users ([81ddc85](https://github.com/Ombi-app/Ombi/commit/81ddc8553b9094c3f6843b036daebb2eb9262e00))
+
+
+
+## [4.22.1](https://github.com/Ombi-app/Ombi/compare/v4.22.0...v4.22.1) (2022-07-25)
+
+
+### Bug Fixes
+
+* **discover:** :bug: Created new Image component to handle 429's from TMDB ([#4698](https://github.com/Ombi-app/Ombi/issues/4698)) and fixed [#4635](https://github.com/Ombi-app/Ombi/issues/4635) ([#4699](https://github.com/Ombi-app/Ombi/issues/4699)) ([f22d3da](https://github.com/Ombi-app/Ombi/commit/f22d3da765799365455b919027f7563e52b347c3))
+
+
+
+# [4.22.0](https://github.com/Ombi-app/Ombi/compare/v4.21.2...v4.22.0) (2022-07-22)
+
+
+### Features
+
+* **discover:** ✨ Added infinite scroll on advanced search results ([898bc89](https://github.com/Ombi-app/Ombi/commit/898bc89fa78245c1f3de9481f6c724f087a16e39))
+
+
+
+## [4.21.2](https://github.com/Ombi-app/Ombi/compare/v4.21.1...v4.21.2) (2022-07-22)
+
+
+### Bug Fixes
+
+* Landing and Login page improvements ([#4690](https://github.com/Ombi-app/Ombi/issues/4690)) ([6d423b5](https://github.com/Ombi-app/Ombi/commit/6d423b5447c52c5e59d8d2bd92a23b47468eb736))
+
+
+
+## [4.21.1](https://github.com/Ombi-app/Ombi/compare/v4.21.0...v4.21.1) (2022-07-11)
+
+
+### Bug Fixes
+
+* **images:** Retry images with a backoff when we get a Too Many requests from TheMovieDb [#4685](https://github.com/Ombi-app/Ombi/issues/4685) ([3f1f35d](https://github.com/Ombi-app/Ombi/commit/3f1f35df3164db6739691cdda8f925c296239791))
+
+
+
 # [4.21.0](https://github.com/Ombi-app/Ombi/compare/v4.20.4...v4.21.0) (2022-06-22)
 
 
@@ -311,45 +356,6 @@
 ### Bug Fixes
 
 * **jellyfin:** :bug: Fixed an issue where Jellyfin content was showing the Play on Emby button ([18b167d](https://github.com/Ombi-app/Ombi/commit/18b167d16a3d682b5060ee36dedbbb069bef09de)), closes [#4542](https://github.com/Ombi-app/Ombi/issues/4542)
-
-
-
-## [4.14.4](https://github.com/Ombi-app/Ombi/compare/v4.14.3...v4.14.4) (2022-03-10)
-
-
-### Bug Fixes
-
-* :bug: Fixed the Request On Behalf autocomplete not filtering correctly ([a8ba2f3](https://github.com/Ombi-app/Ombi/commit/a8ba2f3544a1c01c57f217c4036a277ab0e67a09)), closes [#4539](https://github.com/Ombi-app/Ombi/issues/4539)
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([356c742](https://github.com/Ombi-app/Ombi/commit/356c7424e0ce8c1c5063b04bc6ed9b809f214d65))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([6fcaecf](https://github.com/Ombi-app/Ombi/commit/6fcaecf80b766f2d43ac7082d74364238e1638b7))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([132f4d4](https://github.com/Ombi-app/Ombi/commit/132f4d4e609b7fb7e37f38ee2f395926e2911abe))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([f292006](https://github.com/Ombi-app/Ombi/commit/f292006a08894a8d0ba899c8c6e9fe863e558dda))
-
-
-
-## [4.14.3](https://github.com/Ombi-app/Ombi/compare/v4.14.2...v4.14.3) (2022-03-06)
-
-
-### Bug Fixes
-
-* **availability:** :bug: Fixed an issue where with 4k content, we could repeat notifications ([f9ebc1c](https://github.com/Ombi-app/Ombi/commit/f9ebc1cc2e13c7cd335121cd86295b10eda529ba))
-
-
-
-## [4.14.2](https://github.com/Ombi-app/Ombi/compare/v4.14.1...v4.14.2) (2022-03-05)
-
-
-### Bug Fixes
-
-* **Sonarr:** :bug: Fixed an issue where some seasons were not being monitored correctly in sonarr ([60cfd41](https://github.com/Ombi-app/Ombi/commit/60cfd41f68e9006555c1a419dcff1aaa24b3e09f)), closes [#4506](https://github.com/Ombi-app/Ombi/issues/4506)
-
-
-
-## [4.14.1](https://github.com/Ombi-app/Ombi/compare/v4.14.0...v4.14.1) (2022-03-03)
-
-
-
-# [4.14.0](https://github.com/Ombi-app/Ombi/compare/v4.13.2...v4.14.0) (2022-03-02)
 
 
 

@@ -12,6 +12,7 @@ import * as fromComponents from './components';
 import { AuthGuard } from "../auth/auth.guard";
 import { ArtistDetailsComponent } from "./components/artist/artist-details.component";
 import { ReactiveFormsModule } from "@angular/forms";
+import { ImageComponent } from "app/components";
 
 
 const routes: Routes = [
@@ -27,6 +28,7 @@ const routes: Routes = [
         ReactiveFormsModule,
         PipeModule,
         CarouselModule,
+        ImageComponent,
     ],
     declarations: [
         ...fromComponents.components

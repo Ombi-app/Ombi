@@ -152,15 +152,15 @@ namespace Ombi.Core.Engine.V2
         {
             var langCode = await DefaultLanguageCode(null);
 
-            //var pages = PaginationHelper.GetNextPages(currentlyLoaded, toLoad, _theMovieDbMaxPageItems);
+            var pages = PaginationHelper.GetNextPages(currentlyLoaded, toLoad, _theMovieDbMaxPageItems);
 
             var results = new List<MovieDbSearchResult>();
-            //foreach (var pagesToLoad in pages)
-            //{
-                var apiResult = await MovieApi.AdvancedSearch(model, cancellationToken);
-                //results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
-            //}
-            return await TransformMovieResultsToResponse(apiResult);
+            foreach (var pagesToLoad in pages)
+            {
+                var apiResult = await MovieApi.AdvancedSearch(model, pagesToLoad.Page, cancellationToken);
+                results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
+            }
+            return await TransformMovieResultsToResponse(results);
         }
 
         /// <summary>

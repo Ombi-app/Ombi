@@ -70,11 +70,11 @@ namespace Ombi.Api.TheMovieDb
 
 
 
-        public async Task<List<MovieDbSearchResult>> AdvancedSearch(DiscoverModel model, CancellationToken cancellationToken)
+        public async Task<List<MovieDbSearchResult>> AdvancedSearch(DiscoverModel model, int page, CancellationToken cancellationToken)
         {
             var request = new Request($"discover/{model.Type}", BaseUri, HttpMethod.Get);
             request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
-            if(model.ReleaseYear.HasValue && model.ReleaseYear.Value > 1900)
+            if (model.ReleaseYear.HasValue && model.ReleaseYear.Value > 1900)
             {
                 request.FullUri = request.FullUri.AddQueryParameter("year", model.ReleaseYear.Value.ToString());
             }
@@ -91,6 +91,9 @@ namespace Ombi.Api.TheMovieDb
                 request.FullUri = request.FullUri.AddQueryParameter("with_watch_providers", string.Join(',', model.WatchProviders));
             }
             //request.FullUri = request.FullUri.AddQueryParameter("sort_by", "popularity.desc");
+
+            request.AddQueryString("page", page.ToString());
+
 
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request, cancellationToken);
             return Mapper.Map<List<MovieDbSearchResult>>(result.results);
@@ -139,7 +142,7 @@ namespace Ombi.Api.TheMovieDb
             var result = await Api.Request<ActorCredits>(request);
             return result;
         }
-        
+
         public async Task<ActorCredits> GetActorTvCredits(int actorId, string langCode)
         {
             var request = new Request($"person/{actorId}/tv_credits", BaseUri, HttpMethod.Get);
@@ -281,7 +284,7 @@ namespace Ombi.Api.TheMovieDb
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
             return Mapper.Map<List<MovieDbSearchResult>>(result.results);
         }
-        
+
         public Task<List<MovieDbSearchResult>> TrendingMovies(string langCode, int? page = null)
         {
             return Trending("movie", langCode, page);
@@ -295,7 +298,7 @@ namespace Ombi.Api.TheMovieDb
         {
             // https://developers.themoviedb.org/3/trending/get-trending
             var timeWindow = "week"; // another option can be 'day' 
-            var request = new Request($"trending/{type}/{timeWindow}", BaseUri, HttpMethod.Get); 
+            var request = new Request($"trending/{type}/{timeWindow}", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             request.AddQueryString("language", langCode);
 
@@ -413,8 +416,8 @@ namespace Ombi.Api.TheMovieDb
             request.AddQueryString("language", langCode);
             request.AddQueryString("sort_by", "vote_average.desc");
 
-            request.AddQueryString("with_keywords", keywordId);            
-            
+            request.AddQueryString("with_keywords", keywordId);
+
             // `vote_count` consideration isn't explicitly documented, but using only the `sort_by` filter
             // does not provide the same results as `/movie/top_rated`. This appears to be adequate enough
             // to filter out extremely high-rated movies due to very little votes
@@ -530,7 +533,8 @@ namespace Ombi.Api.TheMovieDb
             var settings = await Settings;
             List<int> excludedGenres;
 
-            switch (media_type) {
+            switch (media_type)
+            {
                 case "tv":
                     excludedGenres = settings.ExcludedTvGenreIds;
                     break;

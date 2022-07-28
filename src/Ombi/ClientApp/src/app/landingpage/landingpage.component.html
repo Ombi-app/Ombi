@@ -1,5 +1,5 @@
-﻿<div *ngIf="landingPageSettings && customizationSettings">
-    <div *ngIf="background" @fadeInOut class="bg" [style.background-image]="background"></div>
+﻿<div *ngIf="landingPageSettings && customizationSettings" style="overflow:hidden">
+    <ombi-image-background></ombi-image-background>
 
     <div class="small-middle-container">
         <div class="row">

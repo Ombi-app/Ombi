@@ -2,7 +2,7 @@
     <div>
         <div class="rating medium-font">
             <span *ngIf="tv.rating">
-                <img class="rating-small" src="{{baseUrl}}/images/tmdb-logo.svg"> {{tv.rating * 10}}%
+                <img class="rating-small" src="{{baseUrl}}/images/tmdb-logo.svg"> {{tv.rating * 10 | number : '1.2-2'}}%
             </span>
             <span *ngIf="ratings?.score && ratings?.class">
                 <img class="rating-small" src="{{baseUrl}}/images/{{ratings.class === 'rotten' ? 'rotten-rotten.svg' : 'rotten-fresh.svg'}}"> {{ratings.score}}%

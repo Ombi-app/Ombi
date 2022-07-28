@@ -1902,11 +1902,6 @@
     node-gyp "^8.4.1"
     read-package-json-fast "^2.0.3"
 
-"@scarf/scarf@^1.1.0":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@scarf/scarf/-/scarf-1.1.1.tgz#d8b9f20037b3a37dbf8dcdc4b3b72f9285bfce35"
-  integrity sha512-VGbKDbk1RFIaSmdVb0cNjjWJoRWRI/Weo23AjRCC2nryO0iAS8pzsToJfPVPtVs74WHw4L1UTADNdIYRLkirZQ==
-
 "@schematics/angular@14.0.0":
   version "14.0.0"
   resolved "https://registry.yarnpkg.com/@schematics/angular/-/angular-14.0.0.tgz#de6cb4c86586ed5b06adfd7a759cc9908e627787"
@@ -5619,13 +5614,12 @@ ngx-clipboard@^12.1.0:
     ngx-window-token "^2.0.0"
     tslib "^1.9.0"
 
-ngx-infinite-scroll@^9.0.0:
-  version "9.1.0"
-  resolved "https://registry.yarnpkg.com/ngx-infinite-scroll/-/ngx-infinite-scroll-9.1.0.tgz#6716a47613ff59f236b85c3ce291b2fd57106824"
-  integrity sha512-ZulbahgFsoPmP8cz7qPGDeFX9nKiSm74aav8vXNSI1ZoPiGYY5FQd8AK+yXqygY7tyCJRyt8Wp3DIg7zgP5dPA==
+ngx-infinite-scroll@^14.0.0:
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-infinite-scroll/-/ngx-infinite-scroll-14.0.0.tgz#395b15be5f451c3e3d2ad7ce2aeb66f8c66aba5d"
+  integrity sha512-YZB5PBPXSERNtCGQRZTVflbgkh5asp01NPfC8KPItemmQik1Ip8ZCCbcyHA77TDTdilmaiu8TbguA3geg/LMWw==
   dependencies:
-    "@scarf/scarf" "^1.1.0"
-    opencollective-postinstall "^2.0.2"
+    tslib "^2.3.0"
 
 ngx-moment@^3.0.1:
   version "3.5.0"
@@ -5900,11 +5894,6 @@ open@8.4.0, open@^8.0.9:
     define-lazy-prop "^2.0.0"
     is-docker "^2.1.1"
     is-wsl "^2.2.0"
-
-opencollective-postinstall@^2.0.2:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/opencollective-postinstall/-/opencollective-postinstall-2.0.3.tgz#7a0fff978f6dbfa4d006238fbac98ed4198c3259"
-  integrity sha512-8AV/sCtuzUeTo8gQK5qDZzARrulB3egtLzFgteqB2tcT4Mw7B8Kt7JcDHmltjz6FOAHsvTevk70gZEbhM4ZS9Q==
 
 ora@5.4.1, ora@^5.4.1:
   version "5.4.1"
