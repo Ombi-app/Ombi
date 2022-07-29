@@ -1,0 +1,75 @@
+# build stage
+FROM mcr.microsoft.com/dotnet/sdk:6.0-bullseye-slim AS build
+LABEL exclaimer-signature-analytics-build=true
+ARG VERSION=1.0.0
+WORKDIR /source
+
+COPY ["Ombi.sln", "."]
+COPY ["Ombi/Ombi.csproj", "Ombi/"]
+COPY ["Ombi.Api/Ombi.Api.csproj", "Ombi.Api/"]
+COPY ["Ombi.Api.CloudService/Ombi.Api.CloudService.csproj", "Ombi.Api.CloudService/"]
+COPY ["Ombi.Api.CouchPotato/Ombi.Api.CouchPotato.csproj", "Ombi.Api.CouchPotato/"]
+COPY ["Ombi.Api.Discord/Ombi.Api.Discord.csproj", "Ombi.Api.Discord/"]
+COPY ["Ombi.Api.DogNzb/Ombi.Api.DogNzb.csproj", "Ombi.Api.DogNzb/"]
+COPY ["Ombi.Api.Emby/Ombi.Api.Emby.csproj", "Ombi.Api.Emby/"]
+COPY ["Ombi.Api.FanartTv/Ombi.Api.FanartTv.csproj", "Ombi.Api.FanartTv/"]
+COPY ["Ombi.Api.Github/Ombi.Api.Github.csproj", "Ombi.Api.Github/"]
+COPY ["Ombi.Api.Gotify/Ombi.Api.Gotify.csproj", "Ombi.Api.Gotify/"]
+COPY ["Ombi.Api.GroupMe/Ombi.Api.GroupMe.csproj", "Ombi.Api.GroupMe/"]
+COPY ["Ombi.Api.Jellyfin/Ombi.Api.Jellyfin.csproj", "Ombi.Api.Jellyfin/"]
+COPY ["Ombi.Api.Lidarr/Ombi.Api.Lidarr.csproj", "Ombi.Api.Lidarr/"]
+COPY ["Ombi.Api.Mattermost/Ombi.Api.Mattermost.csproj", "Ombi.Api.Mattermost/"]
+COPY ["Ombi.Api.MediaServer/Ombi.Api.MediaServer.csproj", "Ombi.Api.MediaServer/"]
+COPY ["Ombi.Api.MusicBrainz/Ombi.Api.MusicBrainz.csproj", "Ombi.Api.MusicBrainz/"]
+COPY ["Ombi.Api.Notifications/Ombi.Api.Notifications.csproj", "Ombi.Api.Notifications/"]
+COPY ["Ombi.Api.Plex/Ombi.Api.Plex.csproj", "Ombi.Api.Plex/"]
+COPY ["Ombi.Api.Pushbullet/Ombi.Api.Pushbullet.csproj", "Ombi.Api.Pushbullet/"]
+COPY ["Ombi.Api.Pushover/Ombi.Api.Pushover.csproj", "Ombi.Api.Pushover/"]
+COPY ["Ombi.Api.Radarr/Ombi.Api.Radarr.csproj", "Ombi.Api.Radarr/"]
+COPY ["Ombi.Api.RottenTomatoes/Ombi.Api.RottenTomatoes.csproj", "Ombi.Api.RottenTomatoes/"]
+COPY ["Ombi.Api.Service/Ombi.Api.Service.csproj", "Ombi.Api.Service/"]
+COPY ["Ombi.Api.SickRage/Ombi.Api.SickRage.csproj", "Ombi.Api.SickRage/"]
+COPY ["Ombi.Api.Slack/Ombi.Api.Slack.csproj", "Ombi.Api.Slack/"]
+COPY ["Ombi.Api.Sonarr/Ombi.Api.Sonarr.csproj", "Ombi.Api.Sonarr/"]
+COPY ["Ombi.Api.Telegram/Ombi.Api.Telegram.csproj", "Ombi.Api.Telegram/"]
+COPY ["Ombi.Api.Trakt/Ombi.Api.Trakt.csproj", "Ombi.Api.Trakt/"]
+COPY ["Ombi.Api.TvMaze/Ombi.Api.TvMaze.csproj", "Ombi.Api.TvMaze/"]
+COPY ["Ombi.Api.Webhook/Ombi.Api.Webhook.csproj", "Ombi.Api.Webhook/"]
+COPY ["Ombi.Core/Ombi.Core.csproj", "Ombi.Core/"]
+COPY ["Ombi.DependencyInjection/Ombi.DependencyInjection.csproj", "Ombi.DependencyInjection/"]
+COPY ["Ombi.HealthChecks/Ombi.HealthChecks.csproj", "Ombi.HealthChecks/"]
+COPY ["Ombi.Hubs/Ombi.Hubs.csproj", "Ombi.Hubs/"]
+COPY ["Ombi.I18n/Ombi.I18n.csproj", "Ombi.I18n/"]
+COPY ["Ombi.Helpers/Ombi.Helpers.csproj", "Ombi.Helpers/"]
+COPY ["Ombi.Mapping/Ombi.Mapping.csproj", "Ombi.Mapping/"]
+COPY ["Ombi.Notifications/Ombi.Notifications.csproj", "Ombi.Notifications/"]
+COPY ["Ombi.Notifications.Templates/Ombi.Notifications.Templates.csproj", "Ombi.Notifications.Templates/"]
+COPY ["Ombi.Schedule/Ombi.Schedule.csproj", "Ombi.Schedule/"]
+COPY ["Ombi.Settings/Ombi.Settings.csproj", "Ombi.Settings/"]
+COPY ["Ombi.Store/Ombi.Store.csproj", "Ombi.Store/"]
+COPY ["Ombi.TheMovieDbApi/Ombi.Api.TheMovieDb.csproj", "Ombi.TheMovieDbApi/"]
+COPY ["Ombi.Api.Twilio/Ombi.Api.Twilio.csproj", "Ombi.Api.Twilio/"]
+RUN dotnet restore Ombi/Ombi.csproj
+
+# copy and build app
+WORKDIR /source/Ombi
+COPY ["Ombi/", "."]
+RUN dotnet build -c release --no-restore -p:Version=$VERSION
+
+
+FROM build AS publish
+
+RUN dotnet publish -c release --no-restore --no-build -o /app/publish
+# RUN dotnet publish "Ombi.csproj" -c Release -o /app/publish
+
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-bullseye-slim as base
+WORKDIR /src
+EXPOSE 80
+
+FROM base AS final
+WORKDIR /src
+COPY --from=publish /app/publish .
+COPY ["Ombi/ClientApp/dist", "Ombi/ClientApp/dist/"]
+ENTRYPOINT ["dotnet", "Ombi.dll"]
+
+

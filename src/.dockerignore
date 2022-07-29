@@ -1,0 +1,4 @@
+bin/
+obj/
+.angular/
+node_modules/
