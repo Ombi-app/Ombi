@@ -64,7 +64,7 @@ jobs:
         browser: chrome
         headless: true
         working-directory: tests
-        wait-on: http://localhost:3577/
+        wait-on: http://localhost:5000/
         # 10 minutes
         wait-on-timeout: 600
       env:
