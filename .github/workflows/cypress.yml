@@ -34,6 +34,9 @@ jobs:
     - name: Install Frontend Deps
       run: yarn --cwd ./src/Ombi/ClientApp install
 
+    - name: Build Frontend
+      run: yarn --cwd ./src/Ombi/ClientApp build
+
     - name: Build Docker Image
       run: docker build -t ombi src/
 
