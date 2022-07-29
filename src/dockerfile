@@ -50,26 +50,26 @@ COPY ["Ombi.Store/Ombi.Store.csproj", "Ombi.Store/"]
 COPY ["Ombi.TheMovieDbApi/Ombi.Api.TheMovieDb.csproj", "Ombi.TheMovieDbApi/"]
 COPY ["Ombi.Api.Twilio/Ombi.Api.Twilio.csproj", "Ombi.Api.Twilio/"]
 RUN dotnet restore Ombi/Ombi.csproj
+COPY . .
 
 # copy and build app
 WORKDIR /source/Ombi
 COPY ["Ombi/", "."]
-RUN dotnet build -c release --no-restore -p:Version=$VERSION
+RUN dotnet build "Ombi.csproj" -c release -p:Version=$VERSION
 
 
 FROM build AS publish
 
-RUN dotnet publish -c release --no-restore --no-build -o /app/publish
-# RUN dotnet publish "Ombi.csproj" -c Release -o /app/publish
+RUN dotnet publish "Ombi.csproj" -c release --no-restore --no-build -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0-bullseye-slim as base
-WORKDIR /src
-EXPOSE 80
+WORKDIR /src/Ombi
+EXPOSE 5000
 
 FROM base AS final
-WORKDIR /src
+WORKDIR /src/Ombi
 COPY --from=publish /app/publish .
-COPY ["Ombi/ClientApp/dist", "Ombi/ClientApp/dist/"]
+COPY ["Ombi/ClientApp/dist", "/src/Ombi/ClientApp/dist/"]
 ENTRYPOINT ["dotnet", "Ombi.dll"]
 
 

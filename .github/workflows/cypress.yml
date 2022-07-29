@@ -34,16 +34,22 @@ jobs:
     - name: Install Frontend Deps
       run: yarn --cwd ./src/Ombi/ClientApp install
 
-    - name: Start Frontend
-      run: |
-          nohup yarn --cwd ./src/Ombi/ClientApp start &
+    - name: Build Docker Image
+      run: docker build -t ombi src/
 
-    - name: Install Automation Deps
-      run: yarn --cwd ./tests install
+    - name: Run Docker Image
+      run: docker run --rm -p 5000:5000 ombi
 
-    - name: Start Backend
-      run: |
-          nohup dotnet run --project ./src/Ombi -- --host http://*:3577 &
+    # - name: Start Frontend
+    #   run: |
+    #       nohup yarn --cwd ./src/Ombi/ClientApp start &
+
+    # - name: Install Automation Deps
+    #   run: yarn --cwd ./tests install
+
+    # - name: Start Backend
+    #   run: |
+    #       nohup dotnet run --project ./src/Ombi -- --host http://*:3577 &
 
     - name: Cypress Tests
       uses: cypress-io/github-action@v2.8.2
