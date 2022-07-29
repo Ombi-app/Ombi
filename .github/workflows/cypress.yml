@@ -41,7 +41,10 @@ jobs:
       run: docker build -t ombi src/
 
     - name: Run Docker Image
-      run: docker run --rm -p 5000:5000 ombi
+      run: nohup docker run --rm -p 5000:5000 ombi &
+
+    - name: Sleep for server to start
+      run: sleep 20
 
     # - name: Start Frontend
     #   run: |
