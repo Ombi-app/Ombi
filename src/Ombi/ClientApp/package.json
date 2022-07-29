@@ -5,7 +5,11 @@
     "ng": "ng",
     "start": "ng serve --port 3578 --configuration hmr",
     "build": "node --max_old_space_size=6144 node_modules/@angular/cli/bin/ng build -c production",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "docs:json": "compodoc -p ./tsconfig.json -e json -d .",
+    "storybook": "start-storybook -p 6006",
+    "chromatic": "chromatic --exit-zero-on-changes",
+    "storybookbuild": "yarn build-storybook"
   },
   "private": true,
   "dependencies": {
@@ -22,7 +26,7 @@
     "@angular/platform-server": "^14.0.0",
     "@angular/router": "^14.0.0",
     "@angularclass/hmr": "^3.0.0",
-    "@aspnet/signalr": "^1.1.0",
+    "@microsoft/signalr": "^6.0.7",
     "@auth0/angular-jwt": "^5.0.2",
     "@fortawesome/fontawesome-free": "^6.0.0",
     "@fullcalendar/core": "^4.2.0",
@@ -59,16 +63,31 @@
     "ts-md5": "^1.2.7",
     "tslib": "^1.10.0",
     "tslint-angular": "^1.1.2",
-    "zone.js": "~0.11.4"
+    "zone.js": "~0.11.4",
+    "protractor": "~5.4.0",
+    "ts-node": "~5.0.1",
+    "tslint": "^5.12.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^14.0.0",
     "@angular/cli": "^14.0.0",
     "@angular/compiler-cli": "^14.0.0",
     "@angular/language-service": "^14.0.0",
+    "@babel/core": "^7.18.9",
+    "@compodoc/compodoc": "^1.1.19",
+    "@types/node": "^16.11.45",
+    "@storybook/addon-actions": "^6.5.9",
+    "@storybook/addon-essentials": "^6.5.9",
+    "@storybook/addon-interactions": "^6.5.9",
+    "@storybook/addon-links": "^6.5.9",
+    "@storybook/angular": "^6.5.9",
+    "@storybook/builder-webpack5": "^6.5.9",
+    "@storybook/manager-webpack5": "^6.5.9",
+    "@storybook/testing-library": "^0.0.13",
     "@types/jasmine": "~3.6.7",
     "@types/jasminewd2": "~2.0.8",
-    "@types/node": "^16.10.9",
+    "babel-loader": "^8.2.5",
+    "chromatic": "^6.7.1",
     "codelyzer": "^6.0.1",
     "typescript": "~4.7.3"
   },
@@ -76,5 +95,7 @@
     "protractor": "~5.4.0",
     "ts-node": "~5.0.1",
     "tslint": "^5.12.0"
-  }
+  },
+  "readme": "ERROR: No README data found!",
+  "_id": "ombi@3.0.0"
 }
