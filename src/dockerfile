@@ -50,6 +50,8 @@ COPY ["Ombi.Store/Ombi.Store.csproj", "Ombi.Store/"]
 COPY ["Ombi.TheMovieDbApi/Ombi.Api.TheMovieDb.csproj", "Ombi.TheMovieDbApi/"]
 COPY ["Ombi.Api.Twilio/Ombi.Api.Twilio.csproj", "Ombi.Api.Twilio/"]
 COPY ["Ombi.Updater/Ombi.Updater.csproj", "Ombi.Updater/"]
+RUN dotnet restore Ombi/Ombi.csproj
+COPY . .
 
 # copy and build app
 WORKDIR /source/Ombi
