@@ -49,13 +49,12 @@ COPY ["Ombi.Settings/Ombi.Settings.csproj", "Ombi.Settings/"]
 COPY ["Ombi.Store/Ombi.Store.csproj", "Ombi.Store/"]
 COPY ["Ombi.TheMovieDbApi/Ombi.Api.TheMovieDb.csproj", "Ombi.TheMovieDbApi/"]
 COPY ["Ombi.Api.Twilio/Ombi.Api.Twilio.csproj", "Ombi.Api.Twilio/"]
-RUN dotnet restore Ombi/Ombi.csproj
-COPY . .
+COPY ["Ombi.Updater/Ombi.Updater.csproj", "Ombi.Updater/"]
 
 # copy and build app
 WORKDIR /source/Ombi
 COPY ["Ombi/", "."]
-RUN dotnet build "Ombi.csproj" -c release -p:Version=$VERSION
+RUN dotnet build "Ombi.csproj" -c release
 
 
 FROM build AS publish
