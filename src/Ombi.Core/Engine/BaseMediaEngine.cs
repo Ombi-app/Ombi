@@ -26,7 +26,7 @@ namespace Ombi.Core.Engine
         private Dictionary<int, MovieRequests> _dbMovies;
         private Dictionary<int, TvRequests> _dbTv;
 
-        protected BaseMediaEngine(IPrincipal identity, IRequestServiceMain requestService,
+        protected BaseMediaEngine(ICurrentUser identity, IRequestServiceMain requestService,
             IRuleEvaluator rules, OmbiUserManager um, ICacheService cache, ISettingsService<OmbiSettings> ombiSettings, IRepository<RequestSubscription> sub) : base(identity, um, rules)
         {
             RequestService = requestService;
@@ -76,6 +76,32 @@ namespace Ombi.Core.Engine
                 _cacheTime = now;
             }
             return _dbTv;
+        }
+
+        protected async Task<RequestEngineResult> CheckCanManageRequest(BaseRequest request) {
+            var errorResult = new RequestEngineResult {
+                Result = false,
+                ErrorCode = ErrorCode.NoPermissions
+            };
+            var successResult = new RequestEngineResult { Result = true };
+            
+            // Admins can always manage requests
+            var isAdmin = await IsInRole(OmbiRoles.PowerUser) || await IsInRole(OmbiRoles.Admin);
+            if (isAdmin) {
+                return successResult;
+            }
+
+            // Users with 'ManageOwnRequests' can only manage their own requests
+            var canManageOwnRequests = await IsInRole(OmbiRoles.ManageOwnRequests);
+            if (!canManageOwnRequests) {
+                return errorResult;
+            }
+            var isRequestedBySameUser = ( await GetUser() ).Id == request.RequestedUser?.Id;
+            if (isRequestedBySameUser) {
+                return successResult;
+            }
+
+            return errorResult;
         }
 
         public RequestCountModel RequestCount()

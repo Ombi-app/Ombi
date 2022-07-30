@@ -66,7 +66,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
         public async Task Execute(IJobExecutionContext job)
         {
             var settings = await _settings.GetSettingsAsync();
-            
+
             Api = _apiFactory.CreateClient(settings);
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Jellyfin Episode Sync Started");
@@ -98,19 +98,13 @@ namespace Ombi.Schedule.Jobs.Jellyfin
         {
             var allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, 0, 200, server.AdministratorId, server.FullUri);
             var total = allEpisodes.TotalRecordCount;
-            var processed = 1;
+            var processed = 0;
             var epToAdd = new HashSet<JellyfinEpisode>();
             while (processed < total)
             {
                 foreach (var ep in allEpisodes.Items)
                 {
                     processed++;
-
-                    if (ep.LocationType?.Equals("Virtual", StringComparison.InvariantCultureIgnoreCase) ?? false)
-                    {
-                        // For some reason Jellyfin is not respecting the `IsVirtualItem` field.
-                        continue;
-                    }
 
                     // Let's make sure we have the parent request, stop those pesky forign key errors,
                     // Damn me having data integrity
@@ -128,6 +122,13 @@ namespace Ombi.Schedule.Jobs.Jellyfin
 
                     if (existingEpisode == null && !existingInList)
                     {
+                        // Sanity checks
+                        if (ep.IndexNumber == 0) // no check on season number, Season 0 can be Specials
+                        {
+                            _logger.LogWarning($"Episode {ep.Name} has no episode number. Skipping.");
+                            continue;
+                        }
+
                         _logger.LogDebug("Adding new episode {0} to parent {1}", ep.Name, ep.SeriesName);
                         // add it
                         epToAdd.Add(new JellyfinEpisode
@@ -145,18 +146,25 @@ namespace Ombi.Schedule.Jobs.Jellyfin
 
                         if (ep.IndexNumberEnd.HasValue && ep.IndexNumberEnd.Value != ep.IndexNumber)
                         {
-                            epToAdd.Add(new JellyfinEpisode
+                            int episodeNumber = ep.IndexNumber;
+                            do
                             {
-                                JellyfinId = ep.Id,
-                                EpisodeNumber = ep.IndexNumberEnd.Value,
-                                SeasonNumber = ep.ParentIndexNumber,
-                                ParentId = ep.SeriesId,
-                                TvDbId = ep.ProviderIds.Tvdb,
-                                TheMovieDbId = ep.ProviderIds.Tmdb,
-                                ImdbId = ep.ProviderIds.Imdb,
-                                Title = ep.Name,
-                                AddedAt = DateTime.UtcNow
-                            });
+                                _logger.LogDebug($"Multiple-episode file detected. Adding episode ${episodeNumber}");
+                                episodeNumber++;
+                                epToAdd.Add(new JellyfinEpisode
+                                {
+                                    JellyfinId = ep.Id,
+                                    EpisodeNumber = episodeNumber,
+                                    SeasonNumber = ep.ParentIndexNumber,
+                                    ParentId = ep.SeriesId,
+                                    TvDbId = ep.ProviderIds.Tvdb,
+                                    TheMovieDbId = ep.ProviderIds.Tmdb,
+                                    ImdbId = ep.ProviderIds.Imdb,
+                                    Title = ep.Name,
+                                    AddedAt = DateTime.UtcNow
+                                });
+
+                            } while (episodeNumber < ep.IndexNumberEnd.Value);
                         }
                     }
                 }

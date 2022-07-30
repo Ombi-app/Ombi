@@ -1,20 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <FileVersion>3.0.0.0</FileVersion>
     <Version></Version>
     <PackageVersion></PackageVersion>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>latest</LangVersion>
     <Configurations>Debug;Release;NonUiBuild</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="5.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0" />
     <PackageReference Include="MusicBrainzAPI" Version="2.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.Diagnostics.Process" Version="4.3.0" />
@@ -36,6 +36,7 @@
     <ProjectReference Include="..\Ombi.Api.Trakt\Ombi.Api.Trakt.csproj" />
     <ProjectReference Include="..\Ombi.Api.TvMaze\Ombi.Api.TvMaze.csproj" />
     <ProjectReference Include="..\Ombi.Helpers\Ombi.Helpers.csproj" />
+    <ProjectReference Include="..\Ombi.I18n\Ombi.I18n.csproj" />
     <ProjectReference Include="..\Ombi.Notifications\Ombi.Notifications.csproj" />
     <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
     <ProjectReference Include="..\Ombi.Store\Ombi.Store.csproj" />

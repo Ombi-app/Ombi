@@ -17,7 +17,7 @@ namespace Ombi.Helpers
             var lastPage = lastItemIndex / maxItemsPerPage + 1;
             var stopPos = lastItemIndex % maxItemsPerPage + 1;
 
-            while (currentlyLoaded > maxItemsPerPage)
+            while (currentlyLoaded >= maxItemsPerPage)
             {
                 currentlyLoaded -= maxItemsPerPage;
             }

@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+    <Version></Version>
+    <PackageVersion></PackageVersion>
+    <LangVersion>latest</LangVersion>
+    <Configurations>Debug;Release;NonUiBuild</Configurations>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Resources\*.*">
+       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+ </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources\Texts.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Texts.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="Resources\Texts.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Texts.Designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>  
+</Project>

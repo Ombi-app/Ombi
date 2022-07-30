@@ -46,57 +46,36 @@ namespace Ombi.Controllers.V1
     [ApiController]
     public class IdentityController : Controller
     {
-        public IdentityController(OmbiUserManager user, IMapper mapper, RoleManager<IdentityRole> rm, IEmailProvider prov,
+        public IdentityController(OmbiUserManager user,
+            RoleManager<IdentityRole> rm,
+            IEmailProvider prov,
             ISettingsService<EmailNotificationSettings> s,
             ISettingsService<CustomizationSettings> c,
             ISettingsService<OmbiSettings> ombiSettings,
             IWelcomeEmail welcome,
-            IMovieRequestRepository m,
-            ITvRequestRepository t,
             ILogger<IdentityController> l,
             IPlexApi plexApi,
             ISettingsService<PlexSettings> settings,
-            IRepository<RequestLog> requestLog,
-            IRepository<Issues> issues,
-            IRepository<IssueComments> issueComments,
-            IRepository<NotificationUserId> notificationRepository,
-            IRepository<RequestSubscription> subscriptionRepository,
             ISettingsService<UserManagementSettings> umSettings,
             IRepository<UserNotificationPreferences> notificationPreferences,
             IRepository<UserQualityProfiles> userProfiles,
-            IMusicRequestRepository musicRepo,
-            IMovieRequestEngine movieRequestEngine,
-            ITvRequestEngine tvRequestEngine,
-            IMusicRequestEngine musicEngine,
             IUserDeletionEngine deletionEngine,
             IRequestLimitService requestLimitService,
             ICacheService cacheService)
         {
             UserManager = user;
-            Mapper = mapper;
             RoleManager = rm;
             EmailProvider = prov;
             EmailSettings = s;
             CustomizationSettings = c;
             WelcomeEmail = welcome;
-            MovieRepo = m;
-            MusicRepo = musicRepo;
-            TvRepo = t;
             _log = l;
             _plexApi = plexApi;
             _plexSettings = settings;
-            _issuesRepository = issues;
-            _requestLogRepository = requestLog;
-            _issueCommentsRepository = issueComments;
             OmbiSettings = ombiSettings;
-            _requestSubscriptionRepository = subscriptionRepository;
-            _notificationRepository = notificationRepository;
             _userManagementSettings = umSettings;
-            TvRequestEngine = tvRequestEngine;
-            MovieRequestEngine = movieRequestEngine;
             _userNotificationPreferences = notificationPreferences;
             _userQualityProfiles = userProfiles;
-            MusicRequestEngine = musicEngine;
             _deletionEngine = deletionEngine;
             _requestLimitService = requestLimitService;
             _cacheService = cacheService;
@@ -108,27 +87,15 @@ namespace Ombi.Controllers.V1
         private readonly ICacheService _cacheService;
 
         private RoleManager<IdentityRole> RoleManager { get; }
-        private IMapper Mapper { get; }
         private IEmailProvider EmailProvider { get; }
         private ISettingsService<EmailNotificationSettings> EmailSettings { get; }
         private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
         private readonly ISettingsService<UserManagementSettings> _userManagementSettings;
         private ISettingsService<OmbiSettings> OmbiSettings { get; }
         private IWelcomeEmail WelcomeEmail { get; }
-        private IMovieRequestRepository MovieRepo { get; }
-        private ITvRequestRepository TvRepo { get; }
-        private IMovieRequestEngine MovieRequestEngine { get; }
-        private IMusicRequestEngine MusicRequestEngine { get; }
-        private ITvRequestEngine TvRequestEngine { get; }
-        private IMusicRequestRepository MusicRepo { get; }
         private readonly ILogger<IdentityController> _log;
         private readonly IPlexApi _plexApi;
         private readonly ISettingsService<PlexSettings> _plexSettings;
-        private readonly IRepository<Issues> _issuesRepository;
-        private readonly IRepository<IssueComments> _issueCommentsRepository;
-        private readonly IRepository<RequestLog> _requestLogRepository;
-        private readonly IRepository<NotificationUserId> _notificationRepository;
-        private readonly IRepository<RequestSubscription> _requestSubscriptionRepository;
         private readonly IRepository<UserNotificationPreferences> _userNotificationPreferences;
         private readonly IRepository<UserQualityProfiles> _userQualityProfiles;
 
@@ -147,7 +114,9 @@ namespace Ombi.Controllers.V1
         public async Task<SaveWizardResult> CreateWizardUser([FromBody] CreateUserWizardModel user)
         {
             var users = UserManager.Users;
-            if (users.Any(x => x.UserType == UserType.LocalUser))
+            // There could be a SINGLE plex user as you can create that in the wizard flow, but there should not be anything else
+            var plexUsersCount = await users.CountAsync(x => x.UserType == UserType.PlexUser);
+            if (plexUsersCount > 1 || users.Any(x => x.UserType == UserType.LocalUser))
             {
                 // No one should be calling this. Only the wizard
                 return new SaveWizardResult { Result = false, Errors = new List<string> { "Looks like there is an existing user!" } };
@@ -258,6 +227,8 @@ namespace Ombi.Controllers.V1
             await CreateRole(OmbiRoles.ReceivesNewsletter);
             await CreateRole(OmbiRoles.ManageOwnRequests);
             await CreateRole(OmbiRoles.EditCustomPage);
+            await CreateRole(OmbiRoles.EditCustomPage);
+            await CreateRole(OmbiRoles.Request4KMovie);
         }
 
         private async Task CreateRole(string role)
@@ -926,7 +897,10 @@ namespace Ombi.Controllers.V1
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<string> GetUserAccessToken()
         {
-
+            if (!User.Identity?.Name.HasValue() ?? true)
+            {
+                return Guid.Empty.ToString("N");
+            }
             var username = User.Identity.Name.ToUpper();
             var user = await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
             if (user == null)

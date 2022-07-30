@@ -4,6 +4,7 @@ export interface IDenyDialogData {
     requestType: RequestType;
     requestId: number;
     denied: boolean;
+    is4K: boolean;
 }
 
 export interface IIssueDialogData {
@@ -11,4 +12,5 @@ export interface IIssueDialogData {
     requestId: number;
     providerId: string;
     title: string;
+    posterPath: string;
 }

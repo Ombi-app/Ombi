@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <FileVersion>3.0.0.0</FileVersion>
     <Version></Version>
     <PackageVersion></PackageVersion>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>latest</LangVersion>
     <Configurations>Debug;Release;NonUiBuild</Configurations>
   </PropertyGroup>
 
@@ -17,6 +17,7 @@
     <None Update="Templates\BasicTemplate.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <ProjectReference Include="..\Ombi.I18n\Ombi.I18n.csproj" />
   </ItemGroup>
 
 </Project>

@@ -41,6 +41,15 @@ namespace Ombi.Core.Models.Search.V2
         public Recommendations Recommendations { get; set; }
         public ExternalIds ExternalIds { get; set; }
         public Keywords Keywords { get; set; }
+        public bool Has4KRequest { get; set; }
+        public bool Approved4K { get; set; }
+        public DateTime MarkedAsApproved4K { get; set; }
+        public DateTime RequestedDate4k { get; set; }
+        public bool Available4K { get; set; }
+        public DateTime? MarkedAsAvailable4K { get; set; }
+        public bool? Denied4K { get; set; }
+        public DateTime MarkedAsDenied4K { get; set; }
+        public string DeniedReason4K { get; set; }
     }
     public class Keywords
     {

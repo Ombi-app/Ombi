@@ -14,6 +14,8 @@ export const AvailableLanguages: ILanguage[] = [
     { display: 'Svenska', value: 'sv' },
     { display: 'Български', value: 'bg' },
     { display: 'Русский', value: 'ru' },
+    { display: 'čeština', value: 'cs' },
+    { display: '简体中文', value: 'zh' },
 ];
 
 export interface ILanguage {

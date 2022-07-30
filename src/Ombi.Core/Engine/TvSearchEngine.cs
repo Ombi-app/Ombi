@@ -23,6 +23,7 @@ using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using System.Threading;
 using TraktSharp.Entities;
+using Ombi.Core.Helpers;
 
 namespace Ombi.Core.Engine
 {
@@ -32,7 +33,7 @@ namespace Ombi.Core.Engine
         private readonly IImageService _imageService;
         private readonly IMovieDbApi _theMovieDbApi;
 
-        public TvSearchEngine(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper,
+        public TvSearchEngine(ICurrentUser identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper,
             ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um, ISettingsService<CustomizationSettings> customizationSettings,
             ICacheService memCache, ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub, IImageService imageService,
             IMovieDbApi theMovieDbApi)
@@ -105,11 +106,17 @@ namespace Ombi.Core.Engine
                         SeasonNumber = e.season,
                         Episodes = new List<EpisodeRequests>()
                     };
+                    var hasAirDate = e.airstamp.HasValue();
+                    var airDate = DateTime.MinValue;
+                    if (hasAirDate)
+                    {
+                        hasAirDate = DateTime.TryParse(e.airdate, out airDate);
+                    }
                     newSeason.Episodes.Add(new EpisodeRequests
                     {
                         Url = e.url.ToHttpsUrl(),
                         Title = e.name,
-                        AirDate = e.airstamp.HasValue() ? DateTime.Parse(e.airstamp) : DateTime.MinValue,
+                        AirDate = airDate,
                         EpisodeNumber = e.number,
 
                     });
@@ -117,12 +124,18 @@ namespace Ombi.Core.Engine
                 }
                 else
                 {
+                    var hasAirDate = e.airstamp.HasValue();
+                    var airDate = DateTime.MinValue;
+                    if (hasAirDate)
+                    {
+                        hasAirDate = DateTime.TryParse(e.airdate, out airDate);
+                    }
                     // We already have the season, so just add the episode
                     season.Episodes.Add(new EpisodeRequests
                     {
                         Url = e.url.ToHttpsUrl(),
                         Title = e.name,
-                        AirDate = e.airstamp.HasValue() ? DateTime.Parse(e.airstamp) : DateTime.MinValue,
+                        AirDate = airDate,
                         EpisodeNumber = e.number,
                     });
                 }

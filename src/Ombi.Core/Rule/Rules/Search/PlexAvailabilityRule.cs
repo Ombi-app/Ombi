@@ -3,9 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
+using Ombi.Core.Services;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 
@@ -14,12 +16,15 @@ namespace Ombi.Core.Rule.Rules.Search
     public class PlexAvailabilityRule : BaseSearchRule, IRules<SearchViewModel>
     {
         private readonly ISettingsService<PlexSettings> _plexSettings;
+        private readonly IFeatureService _featureService;
 
-        public PlexAvailabilityRule(IPlexContentRepository repo, ILogger<PlexAvailabilityRule> log, ISettingsService<PlexSettings> plexSettings)
+        public PlexAvailabilityRule(IPlexContentRepository repo, ILogger<PlexAvailabilityRule> log, ISettingsService<PlexSettings> plexSettings,
+            IFeatureService featureService)
         {
             PlexContentRepository = repo;
             Log = log;
             _plexSettings = plexSettings;
+            _featureService = featureService;
         }
 
         private IPlexContentRepository PlexContentRepository { get; }
@@ -33,7 +38,7 @@ namespace Ombi.Core.Rule.Rules.Search
             var useId = false;
             var useTvDb = false;
 
-            PlexMediaTypeEntity type = ConvertType(obj.Type);
+            MediaType type = ConvertType(obj.Type);
 
             if (obj.ImdbId.HasValue())
             {
@@ -89,13 +94,44 @@ namespace Ombi.Core.Rule.Rules.Search
                     obj.TheMovieDbId = obj.Id.ToString();
                     useTheMovieDb = true;
                 }
-                obj.Available = true;
-                obj.PlexUrl = PlexHelper.BuildPlexMediaUrl(item.Url, host);
-                obj.Quality = item.Quality;
-                
-                if (obj.Type == RequestType.TvShow)
+
+                if (obj is SearchMovieViewModel movie)
                 {
-                    var search = (SearchTvShowViewModel)obj;
+                    var is4kEnabled = await _featureService.FeatureEnabled(FeatureNames.Movie4KRequests);
+
+                    if (item.Has4K && is4kEnabled)
+                    {
+                        movie.Available4K = true;
+                    }
+                    else
+                    {
+                        obj.Available = true;
+                        obj.Quality = item.Quality;
+                    }
+
+                    if (item.Quality.HasValue())
+                    {
+                        obj.Available = true;
+                        obj.Quality = item.Quality;
+                    }
+                }
+                else
+                {
+                    obj.Available = true;
+                }
+
+                if (item.Url.StartsWith("http"))
+                {
+                    obj.PlexUrl = item.Url;
+                }
+                else
+                {
+                    // legacy content
+                    obj.PlexUrl = PlexHelper.BuildPlexMediaUrl(item.Url, host);
+                }
+
+                if (obj is SearchTvShowViewModel search)
+                {
                     // Let's go through the episodes now
                     if (search.SeasonRequests.Any())
                     {
@@ -115,12 +151,12 @@ namespace Ombi.Core.Rule.Rules.Search
             return Success();
         }
 
-        private PlexMediaTypeEntity ConvertType(RequestType type) =>
+        private MediaType ConvertType(RequestType type) =>
             type switch
             {
-                RequestType.Movie => PlexMediaTypeEntity.Movie,
-                RequestType.TvShow => PlexMediaTypeEntity.Show,
-                _ => PlexMediaTypeEntity.Movie,
+                RequestType.Movie => MediaType.Movie,
+                RequestType.TvShow => MediaType.Series,
+                _ => MediaType.Movie,
             };
     }
 }

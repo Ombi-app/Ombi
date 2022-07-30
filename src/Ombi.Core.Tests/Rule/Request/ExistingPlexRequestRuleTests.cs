@@ -1,6 +1,7 @@
 ﻿using MockQueryable.Moq;
 using Moq;
 using NUnit.Framework;
+using Ombi.Core.Engine;
 using Ombi.Core.Rule.Rules.Request;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
@@ -176,17 +177,58 @@ namespace Ombi.Core.Tests.Rule.Request
             Assert.That(result.Success, Is.True);
         }
 
+        [Test]
+        public async Task RequestMovie_IsSuccessful()
+        {
+            SetupMockData();
+
+            var req = new MovieRequests
+            {
+                RequestType = RequestType.Movie,
+                TheMovieDbId = 123,
+                Id = 1,
+            };
+            var result = await Rule.Execute(req);
+
+
+            Assert.That(result.Success, Is.True);
+        }
+
+        [Test]
+        public async Task RequestMovie_IsAlreadyAvailable()
+        {
+            var content = new List<PlexServerContent> {
+                new PlexServerContent
+                {
+                    TheMovieDbId = 123.ToString(),
+                }
+            };
+            PlexContentRepo.Setup(x => x.GetAll()).Returns(content.AsQueryable().BuildMock().Object);
+
+            var req = new MovieRequests
+            {
+                RequestType = RequestType.Movie,
+                TheMovieDbId = 123,
+                Id = 1,
+            };
+            var result = await Rule.Execute(req);
+
+
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorCode, Is.EqualTo(ErrorCode.AlreadyRequested));
+        }
+
         private void SetupMockData()
         {
             var childRequests = new List<PlexServerContent>
             {
                 new PlexServerContent
                 {
-                    Type = PlexMediaTypeEntity.Show,
+                    Type = MediaType.Series,
                     TheMovieDbId = "1",
                     Title = "Test",
                     ReleaseYear = "2001",
-                    Episodes = new List<PlexEpisode>
+                    Episodes = new List<IMediaServerEpisode>
                     {
                         new PlexEpisode
                         {

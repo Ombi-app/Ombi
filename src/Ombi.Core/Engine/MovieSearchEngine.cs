@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Authentication;
+using Ombi.Core.Helpers;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
@@ -15,14 +16,13 @@ using Ombi.Store.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace Ombi.Core.Engine
 {
     public class MovieSearchEngine : BaseMediaEngine, IMovieEngine
     {
-        public MovieSearchEngine(IPrincipal identity, IRequestServiceMain service, IMovieDbApi movApi, IMapper mapper,
+        public MovieSearchEngine(ICurrentUser identity, IRequestServiceMain service, IMovieDbApi movApi, IMapper mapper,
             ILogger<MovieSearchEngine> logger, IRuleEvaluator r, OmbiUserManager um, ICacheService mem, ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub)
             : base(identity, service, r, um, mem, s, sub)
         {
@@ -46,7 +46,7 @@ namespace Ombi.Core.Engine
         {
             langCode = await DefaultLanguageCode(langCode);
             var movieInfo = await Cache.GetOrAddAsync(nameof(LookupImdbInformation) + langCode + theMovieDbId,
-                () =>  MovieApi.GetMovieInformationWithExtraInfo(theMovieDbId, langCode),
+                () => MovieApi.GetMovieInformationWithExtraInfo(theMovieDbId, langCode),
                 DateTimeOffset.Now.AddHours(12));
             var viewMovie = Mapper.Map<SearchMovieViewModel>(movieInfo);
 
@@ -81,11 +81,11 @@ namespace Ombi.Core.Engine
             {
                 return resultSet;
             }
-            
+
             // Get this person movie credits
             var credits = await MovieApi.GetActorMovieCredits(person.id, langaugeCode);
             // Grab results from both cast and crew, prefer items in cast.  we can handle directors like this.
-            var movieResults = (from role in credits.cast select new  { Id = role.id, Title = role.title, ReleaseDate = role.release_date }).ToList();
+            var movieResults = (from role in credits.cast select new { Id = role.id, Title = role.title, ReleaseDate = role.release_date }).ToList();
             movieResults.AddRange((from job in credits.crew select new { Id = job.id, Title = job.title, ReleaseDate = job.release_date }).ToList());
 
             movieResults = movieResults.Take(10).ToList();
@@ -120,7 +120,7 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<IEnumerable<SearchMovieViewModel>> PopularMovies()
         {
-           
+
             var result = await Cache.GetOrAddAsync(CacheKeys.PopularMovies, async () =>
             {
                 var langCode = await DefaultLanguageCode(null);
@@ -160,7 +160,7 @@ namespace Ombi.Core.Engine
             var result = await Cache.GetOrAddAsync(CacheKeys.UpcomingMovies, async () =>
             {
                 var langCode = await DefaultLanguageCode(null);
-                return await MovieApi.Upcoming(langCode);
+                return await MovieApi.UpcomingMovies(langCode);
             }, DateTimeOffset.Now.AddHours(12));
             if (result != null)
             {
@@ -201,7 +201,7 @@ namespace Ombi.Core.Engine
 
         protected async Task<SearchMovieViewModel> ProcessSingleMovie(SearchMovieViewModel viewMovie, bool lookupExtraInfo = false)
         {
-            if (lookupExtraInfo && viewMovie.ImdbId.IsNullOrEmpty())
+            if (lookupExtraInfo && viewMovie.ImdbId.IsNullOrEmpty() && viewMovie.Id > 0)
             {
                 var showInfo = await MovieApi.GetMovieInformation(viewMovie.Id);
                 viewMovie.Id = showInfo.Id; // TheMovieDbId
@@ -215,34 +215,9 @@ namespace Ombi.Core.Engine
 
             await RunSearchRules(viewMovie);
 
-            // This requires the rules to be run first to populate the RequestId property
-            await CheckForSubscription(viewMovie);
-            
             return viewMovie;
         }
 
-        private async Task CheckForSubscription(SearchMovieViewModel viewModel)
-        {
-            // Check if this user requested it
-            var user = await GetUser();
-            if (user == null)
-            {
-                return;
-            }
-            var request = await RequestService.MovieRequestService.GetAll()
-                .AnyAsync(x => x.RequestedUserId.Equals(user.Id) && x.TheMovieDbId == viewModel.Id);
-            if (request || viewModel.Available)
-            {
-                viewModel.ShowSubscribe = false;
-            }
-            else
-            {
-                viewModel.ShowSubscribe = true;
-                var sub = await _subscriptionRepository.GetAll().FirstOrDefaultAsync(s => s.UserId == user.Id
-                                                                                          && s.RequestId == viewModel.RequestId && s.RequestType == RequestType.Movie);
-                viewModel.Subscribed = sub != null;
-            }
-        }
 
         private async Task<SearchMovieViewModel> ProcessSingleMovie(MovieDbSearchResult movie)
         {

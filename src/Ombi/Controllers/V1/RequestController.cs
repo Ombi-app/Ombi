@@ -128,9 +128,9 @@ namespace Ombi.Controllers.V1
         /// <returns></returns>
         [HttpDelete("movie/{requestId:int}")]
         [Authorize(Roles = "Admin,PowerUser,ManageOwnRequests")]
-        public async Task DeleteRequest(int requestId)
+        public async Task<RequestEngineResult> DeleteRequest(int requestId)
         {
-            await MovieRequestEngine.RemoveMovieRequest(requestId);
+            return await MovieRequestEngine.RemoveMovieRequest(requestId);
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace Ombi.Controllers.V1
         [PowerUser]
         public async Task<RequestEngineResult> ApproveMovie([FromBody] MovieUpdateModel model)
         {
-            return await MovieRequestEngine.ApproveMovieById(model.Id);
+            return await MovieRequestEngine.ApproveMovieById(model.Id, model.Is4K);
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace Ombi.Controllers.V1
         [PowerUser]
         public async Task<RequestEngineResult> MarkMovieAvailable([FromBody] MovieUpdateModel model)
         {
-            return await MovieRequestEngine.MarkAvailable(model.Id);
+            return await MovieRequestEngine.MarkAvailable(model.Id, model.Is4K);
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace Ombi.Controllers.V1
         [PowerUser]
         public async Task<RequestEngineResult> MarkMovieUnAvailable([FromBody] MovieUpdateModel model)
         {
-            return await MovieRequestEngine.MarkUnavailable(model.Id);
+            return await MovieRequestEngine.MarkUnavailable(model.Id, model.Is4K);
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace Ombi.Controllers.V1
         [PowerUser]
         public async Task<RequestEngineResult> DenyMovie([FromBody] DenyMovieModel model)
         {
-            return await MovieRequestEngine.DenyMovieById(model.Id, model.Reason);
+            return await MovieRequestEngine.DenyMovieById(model.Id, model.Reason, model.Is4K);
         }
 
         /// <summary>
@@ -324,7 +324,7 @@ namespace Ombi.Controllers.V1
         /// <param name="requestId">The request identifier.</param>
         /// <returns></returns>
         [HttpDelete("tv/{requestId:int}")]
-        [Authorize(Roles = "Admin,PowerUser,ManageOwnRequests")]
+        [Authorize(Roles = "Admin,PowerUser")]
         public async Task DeleteTvRequest(int requestId)
         {
             await TvRequestEngine.RemoveTvRequest(requestId);
@@ -403,7 +403,7 @@ namespace Ombi.Controllers.V1
         [PowerUser]
         public async Task<RequestEngineResult> MarkTvAvailable([FromBody] TvUpdateModel model)
         {
-            return await TvRequestEngine.MarkAvailable(model.Id);
+            return await TvRequestEngine.MarkAvailable(model.Id, false);
         }
 
         /// <summary>
@@ -415,7 +415,7 @@ namespace Ombi.Controllers.V1
         [PowerUser]
         public async Task<RequestEngineResult> MarkTvUnAvailable([FromBody] TvUpdateModel model)
         {
-            return await TvRequestEngine.MarkUnavailable(model.Id);
+            return await TvRequestEngine.MarkUnavailable(model.Id, false);
         }
 
         /// <summary>
@@ -437,10 +437,9 @@ namespace Ombi.Controllers.V1
         /// <returns></returns>
         [Authorize(Roles = "Admin,PowerUser,ManageOwnRequests")]
         [HttpDelete("tv/child/{requestId:int}")]
-        public async Task<bool> DeleteChildRequest(int requestId)
+        public async Task<RequestEngineResult> DeleteChildRequest(int requestId)
         {
-            await TvRequestEngine.RemoveTvChild(requestId);
-            return true;
+            return await TvRequestEngine.RemoveTvChild(requestId);
         }
 
 

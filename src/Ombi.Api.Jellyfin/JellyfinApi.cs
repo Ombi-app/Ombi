@@ -82,7 +82,7 @@ namespace Ombi.Api.Jellyfin
 
             request.AddQueryString("Fields", "ProviderIds,Overview");
 
-            request.AddQueryString("IsVirtualItem", "False");
+            request.AddQueryString("isMissing", "False");
 
             return await Api.Request<JellyfinItemContainer<JellyfinMovie>>(request);
         }
@@ -143,7 +143,7 @@ namespace Ombi.Api.Jellyfin
             request.AddQueryString("IncludeItemTypes", type);
             request.AddQueryString("Fields", includeOverview ? "ProviderIds,Overview" : "ProviderIds");
 
-            request.AddQueryString("IsVirtualItem", "False");
+            request.AddQueryString("isMissing", "False");
 
             AddHeaders(request, apiKey);
 
@@ -157,7 +157,7 @@ namespace Ombi.Api.Jellyfin
 
             request.AddQueryString("Recursive", true.ToString());
             request.AddQueryString("IncludeItemTypes", type);
-            request.AddQueryString("Fields", includeOverview ? "ProviderIds,Overview,ParentId" : "ProviderIds,ParentId");
+            request.AddQueryString("Fields", includeOverview ? "ProviderIds,MediaStreams Overview,ParentId" : "ProviderIds,ParentId,MediaStreams");
             request.AddQueryString("startIndex", startIndex.ToString());
             request.AddQueryString("limit", count.ToString());
             if(!string.IsNullOrEmpty(parentIdFilder))
@@ -165,7 +165,7 @@ namespace Ombi.Api.Jellyfin
                 request.AddQueryString("ParentId", parentIdFilder);
             }
 
-            request.AddQueryString("IsVirtualItem", "False");
+            request.AddQueryString("isMissing", "False");
 
             AddHeaders(request, apiKey);
 

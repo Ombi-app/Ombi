@@ -48,6 +48,7 @@ export class TvDetailsComponent implements OnInit {
 
     public async ngOnInit() {
         await this.load();
+        this.checkPoster();
     }
 
     public async load() {
@@ -84,7 +85,7 @@ export class TvDetailsComponent implements OnInit {
     public async issue() {
         const dialogRef = this.dialog.open(NewIssueComponent, {
             width: '500px',
-            data: { requestId: this.tvRequest ? this.tv.requestId : null, requestType: RequestType.tvShow, providerId: this.tv.theTvDbId, title: this.tv.title }
+            data: { requestId: this.tvRequest ? this.tv.requestId : null, requestType: RequestType.tvShow, providerId: this.tv.id, title: this.tv.title, posterPath: this.tv.images.original }
         });
     }
 
@@ -125,6 +126,17 @@ export class TvDetailsComponent implements OnInit {
         }
     }
 
+    public allEpisodesRequested(): boolean {
+        return this.tv.seasonRequests.every(e => e.episodes.every(x => x.approved || x.requested));
+    }
+    private checkPoster() {
+      if (this.tv.images.original == null) {
+        this.tv.images.original = "../../../images/default_movie_poster.png";
+      }
+      else {
+        this.tv.images.original = 'https://image.tmdb.org/t/p/w300/' + this.tv.images.original
+      };
+    }
     private loadAdvancedInfo() {
         const profile = this.sonarrService.getQualityProfilesWithoutSettings();
         const folders = this.sonarrService.getRootFoldersWithoutSettings();

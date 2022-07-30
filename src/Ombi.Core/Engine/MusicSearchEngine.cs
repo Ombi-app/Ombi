@@ -27,7 +27,7 @@ namespace Ombi.Core.Engine
 {
     public class MusicSearchEngine : BaseMediaEngine, IMusicSearchEngine
     {
-        public MusicSearchEngine(IPrincipal identity, IRequestServiceMain service, ILidarrApi lidarrApi, IMapper mapper,
+        public MusicSearchEngine(ICurrentUser identity, IRequestServiceMain service, ILidarrApi lidarrApi, IMapper mapper,
             ILogger<MusicSearchEngine> logger, IRuleEvaluator r, OmbiUserManager um, ICacheService mem, ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub,
             ISettingsService<LidarrSettings> lidarrSettings)
             : base(identity, service, r, um, mem, s, sub)

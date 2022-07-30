@@ -10,6 +10,7 @@ import { SearchFilter } from "../../../my-nav/SearchFilter";
 import { SearchV2Service } from "../../../services";
 import { StorageService } from "../../../shared/storage/storage-service";
 import { isEqual } from "lodash";
+import { FeaturesFacade } from "../../../state/features/features.facade";
 
 @Component({
     templateUrl: "./search-results.component.html",
@@ -21,12 +22,14 @@ export class DiscoverSearchResultsComponent implements OnInit {
     public searchTerm: string;
     public results: IMultiSearchResult[];
     public isAdmin: boolean;
+    public is4kEnabled = false;
 
     public discoverResults: IDiscoverCardResult[] = [];
 
     public filter: SearchFilter;
 
     private isAdvancedSearch: boolean;
+    private loadPosition: number = 30;
 
     constructor(private searchService: SearchV2Service,
         private route: ActivatedRoute,
@@ -34,7 +37,8 @@ export class DiscoverSearchResultsComponent implements OnInit {
         private router: Router,
         private advancedDataService: AdvancedSearchDialogDataService,
         private store: StorageService,
-        private authService: AuthService) {
+        private authService: AuthService,
+        private featureFacade: FeaturesFacade) {
         this.route.params.subscribe((params: any) => {
             this.isAdvancedSearch = this.router.url === '/discover/advanced/search';
             if (this.isAdvancedSearch) {
@@ -53,6 +57,7 @@ export class DiscoverSearchResultsComponent implements OnInit {
     }
 
     public async ngOnInit() {
+        this.is4kEnabled = this.featureFacade.is4kEnabled();
         this.isAdmin = this.authService.isAdmin();
         this.filterService.onFilterChange.subscribe(async x => {
             if (!isEqual(this.filter, x)) {
@@ -61,7 +66,7 @@ export class DiscoverSearchResultsComponent implements OnInit {
             }
         });
 
-        if (this.advancedDataService) {
+        if (this.isAdvancedSearch) {
             return;
         }
         this.loadingFlag = true;
@@ -172,6 +177,31 @@ export class DiscoverSearchResultsComponent implements OnInit {
                 available: false,
                 tvMovieDb: false
             });
+        });
+    }
+
+    public onScroll() {
+        console.log("scrolled");
+        if (this.advancedDataService) {
+            this.loadMoreAdvancedSearch();
+            return;
+        }
+    }
+
+    private loadMoreAdvancedSearch() {
+        const advancedOptions = this.advancedDataService.getOptions();
+
+        this.searchService.advancedSearch({
+            type: advancedOptions.type == RequestType.movie ? "movie" : "tv",
+            companies: advancedOptions.companies,
+            genreIds: advancedOptions.genres,
+            keywordIds : advancedOptions.keywords,
+            releaseYear: advancedOptions.releaseYear,
+            watchProviders: advancedOptions.watchProviders,
+        }, this.loadPosition, 30).then(x => {
+
+            this.loadPosition += 30;
+            this.mapAdvancedData(x);
         });
     }
 

@@ -30,26 +30,26 @@ namespace Ombi.Core.Engine
 
         public IEnumerable<RecentlyAddedMovieModel> GetRecentlyAddedMovies(DateTime from, DateTime to)
         {
-            var plexMovies = _plex.GetAll().Where(x => x.Type == PlexMediaTypeEntity.Movie && x.AddedAt > from && x.AddedAt < to);
-            var embyMovies = _emby.GetAll().Where(x => x.Type == EmbyMediaType.Movie && x.AddedAt > from && x.AddedAt < to);
-            var jellyfinMovies = _jellyfin.GetAll().Where(x => x.Type == JellyfinMediaType.Movie && x.AddedAt > from && x.AddedAt < to);
+            var plexMovies = _plex.GetAll().Where(x => x.Type == MediaType.Movie && x.AddedAt > from && x.AddedAt < to);
+            var embyMovies = _emby.GetAll().Where(x => x.Type == MediaType.Movie && x.AddedAt > from && x.AddedAt < to);
+            var jellyfinMovies = _jellyfin.GetAll().Where(x => x.Type == MediaType.Movie && x.AddedAt > from && x.AddedAt < to);
             
             return GetRecentlyAddedMovies(plexMovies, embyMovies, jellyfinMovies).Take(30);
         }
 
         public IEnumerable<RecentlyAddedMovieModel> GetRecentlyAddedMovies()
         {
-            var plexMovies = _plex.GetAll().Where(x => x.Type == PlexMediaTypeEntity.Movie);
-            var embyMovies = _emby.GetAll().Where(x => x.Type == EmbyMediaType.Movie);
-            var jellyfinMovies = _jellyfin.GetAll().Where(x => x.Type == JellyfinMediaType.Movie);
+            var plexMovies = _plex.GetAll().Where(x => x.Type == MediaType.Movie);
+            var embyMovies = _emby.GetAll().Where(x => x.Type == MediaType.Movie);
+            var jellyfinMovies = _jellyfin.GetAll().Where(x => x.Type == MediaType.Movie);
             return GetRecentlyAddedMovies(plexMovies, embyMovies, jellyfinMovies);
         }
 
         public IEnumerable<RecentlyAddedTvModel> GetRecentlyAddedTv(DateTime from, DateTime to, bool groupBySeason)
         {
-            var plexTv = _plex.GetAll().Include(x => x.Seasons).Include(x => x.Episodes).Where(x => x.Type == PlexMediaTypeEntity.Show && x.AddedAt > from && x.AddedAt < to);
-            var embyTv = _emby.GetAll().Include(x => x.Episodes).Where(x => x.Type == EmbyMediaType.Series && x.AddedAt > from && x.AddedAt < to);
-            var jellyfinTv = _jellyfin.GetAll().Include(x => x.Episodes).Where(x => x.Type == JellyfinMediaType.Series && x.AddedAt > from && x.AddedAt < to);
+            var plexTv = _plex.GetAll().Include(x => x.Seasons).Include(x => x.Episodes).Where(x => x.Type == MediaType.Series && x.AddedAt > from && x.AddedAt < to);
+            var embyTv = _emby.GetAll().Include(x => x.Episodes).Where(x => x.Type == MediaType.Series && x.AddedAt > from && x.AddedAt < to);
+            var jellyfinTv = _jellyfin.GetAll().Include(x => x.Episodes).Where(x => x.Type == MediaType.Series && x.AddedAt > from && x.AddedAt < to);
 
             return GetRecentlyAddedTv(plexTv, embyTv, jellyfinTv, groupBySeason).Take(30);
         }
@@ -57,9 +57,9 @@ namespace Ombi.Core.Engine
 
         public IEnumerable<RecentlyAddedTvModel> GetRecentlyAddedTv(bool groupBySeason)
         {
-            var plexTv = _plex.GetAll().Include(x => x.Seasons).Include(x => x.Episodes).Where(x => x.Type == PlexMediaTypeEntity.Show);
-            var embyTv = _emby.GetAll().Include(x => x.Episodes).Where(x => x.Type == EmbyMediaType.Series);
-            var jellyfinTv = _jellyfin.GetAll().Include(x => x.Episodes).Where(x => x.Type == JellyfinMediaType.Series);
+            var plexTv = _plex.GetAll().Include(x => x.Seasons).Include(x => x.Episodes).Where(x => x.Type == MediaType.Series);
+            var embyTv = _emby.GetAll().Include(x => x.Episodes).Where(x => x.Type == MediaType.Series);
+            var jellyfinTv = _jellyfin.GetAll().Include(x => x.Episodes).Where(x => x.Type == MediaType.Series);
 
             return GetRecentlyAddedTv(plexTv, embyTv, jellyfinTv, groupBySeason);
         }
@@ -76,7 +76,7 @@ namespace Ombi.Core.Engine
                 {
                     continue;
                 }
-                if (p.Type == PlexMediaTypeEntity.Movie)
+                if (p.Type == MediaType.Movie)
                 {
                     recentlyAddedLog.Add(new RecentlyAddedLog
                     {
@@ -114,7 +114,7 @@ namespace Ombi.Core.Engine
                 {
                     continue;
                 }
-                if (e.Type == EmbyMediaType.Movie)
+                if (e.Type == MediaType.Movie)
                 {
                     recentlyAddedLog.Add(new RecentlyAddedLog
                     {
@@ -152,7 +152,7 @@ namespace Ombi.Core.Engine
                 {
                     continue;
                 }
-                if (e.Type == JellyfinMediaType.Movie)
+                if (e.Type == MediaType.Movie)
                 {
                     recentlyAddedLog.Add(new RecentlyAddedLog
                     {

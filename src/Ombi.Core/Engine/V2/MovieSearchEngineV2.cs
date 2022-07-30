@@ -5,11 +5,13 @@ using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Interfaces;
+using Ombi.Core.Helpers;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Models.Search.V2;
 using Ombi.Core.Models.UI;
 using Ombi.Core.Rule.Interfaces;
+using Ombi.Core.Services;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
@@ -28,9 +30,10 @@ namespace Ombi.Core.Engine.V2
 {
     public class MovieSearchEngineV2 : BaseMediaEngine, IMovieEngineV2
     {
-        public MovieSearchEngineV2(IPrincipal identity, IRequestServiceMain service, IMovieDbApi movApi, IMapper mapper,
+        public MovieSearchEngineV2(ICurrentUser identity, IRequestServiceMain service, IMovieDbApi movApi, IMapper mapper,
             ILogger<MovieSearchEngineV2> logger, IRuleEvaluator r, OmbiUserManager um, ICacheService mem, ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub,
-            ISettingsService<CustomizationSettings> customizationSettings, IMovieRequestEngine movieRequestEngine, IHttpClientFactory httpClientFactory)
+            ISettingsService<CustomizationSettings> customizationSettings, IMovieRequestEngine movieRequestEngine, IHttpClientFactory httpClientFactory,
+            IFeatureService feature)
             : base(identity, service, r, um, mem, s, sub)
         {
             MovieApi = movApi;
@@ -39,6 +42,7 @@ namespace Ombi.Core.Engine.V2
             _customizationSettings = customizationSettings;
             _movieRequestEngine = movieRequestEngine;
             _client = httpClientFactory.CreateClient();
+            _feature = feature;
         }
 
         private IMovieDbApi MovieApi { get; }
@@ -47,6 +51,7 @@ namespace Ombi.Core.Engine.V2
         private readonly ISettingsService<CustomizationSettings> _customizationSettings;
         private readonly IMovieRequestEngine _movieRequestEngine;
         private readonly HttpClient _client;
+        private readonly IFeatureService _feature;
 
         public async Task<MovieFullInfoViewModel> GetFullMovieInformation(int theMovieDbId, CancellationToken cancellationToken, string langCode = null)
         {
@@ -147,15 +152,15 @@ namespace Ombi.Core.Engine.V2
         {
             var langCode = await DefaultLanguageCode(null);
 
-            //var pages = PaginationHelper.GetNextPages(currentlyLoaded, toLoad, _theMovieDbMaxPageItems);
+            var pages = PaginationHelper.GetNextPages(currentlyLoaded, toLoad, _theMovieDbMaxPageItems);
 
             var results = new List<MovieDbSearchResult>();
-            //foreach (var pagesToLoad in pages)
-            //{
-                var apiResult = await MovieApi.AdvancedSearch(model, cancellationToken);
-                //results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
-            //}
-            return await TransformMovieResultsToResponse(apiResult);
+            foreach (var pagesToLoad in pages)
+            {
+                var apiResult = await MovieApi.AdvancedSearch(model, pagesToLoad.Page, cancellationToken);
+                results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
+            }
+            return await TransformMovieResultsToResponse(results);
         }
 
         /// <summary>
@@ -195,14 +200,19 @@ namespace Ombi.Core.Engine.V2
         public async Task<IEnumerable<SearchMovieViewModel>> NowPlayingMovies(int currentPosition, int amountToLoad)
         {
             var langCode = await DefaultLanguageCode(null);
+            var isOldTrendingSourceEnabled = await _feature.FeatureEnabled(FeatureNames.OldTrendingSource); 
 
             var pages = PaginationHelper.GetNextPages(currentPosition, amountToLoad, _theMovieDbMaxPageItems);
 
             var results = new List<MovieDbSearchResult>();
             foreach (var pagesToLoad in pages)
             {
+                var search = () => (isOldTrendingSourceEnabled) ? 
+                     MovieApi.NowPlaying(langCode, pagesToLoad.Page) 
+                     : MovieApi.TrendingMovies(langCode, pagesToLoad.Page);
+                
                 var apiResult = await Cache.GetOrAddAsync(nameof(NowPlayingMovies) + pagesToLoad.Page + langCode,
-                    () =>  MovieApi.NowPlaying(langCode, pagesToLoad.Page), DateTimeOffset.Now.AddHours(12));
+                    search, DateTimeOffset.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
             return await TransformMovieResultsToResponse(results);
@@ -277,7 +287,7 @@ namespace Ombi.Core.Engine.V2
             var result = await Cache.GetOrAddAsync(CacheKeys.UpcomingMovies, async () =>
             {
                 var langCode = await DefaultLanguageCode(null);
-                return await MovieApi.Upcoming(langCode);
+                return await MovieApi.UpcomingMovies(langCode);
             }, DateTimeOffset.Now.AddHours(12));
             if (result != null)
             {
@@ -297,7 +307,7 @@ namespace Ombi.Core.Engine.V2
             foreach (var pagesToLoad in pages)
             {
                 var apiResult = await Cache.GetOrAddAsync(nameof(UpcomingMovies) + pagesToLoad.Page + langCode,
-                    () =>  MovieApi.Upcoming(langCode, pagesToLoad.Page), DateTimeOffset.Now.AddHours(12));
+                    () =>  MovieApi.UpcomingMovies(langCode, pagesToLoad.Page), DateTimeOffset.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
             return await TransformMovieResultsToResponse(results);
@@ -323,6 +333,7 @@ namespace Ombi.Core.Engine.V2
 
         public async Task<ActorCredits> GetMoviesByActor(int actorId, string langCode)
         {
+            langCode = await DefaultLanguageCode(langCode);
             var result = await Cache.GetOrAddAsync(nameof(GetMoviesByActor) + actorId + langCode,
                 () =>  MovieApi.GetActorMovieCredits(actorId, langCode), DateTimeOffset.Now.AddHours(12));
             // Later we run this through the rules engine
@@ -391,20 +402,25 @@ namespace Ombi.Core.Engine.V2
 
             await RunSearchRules(viewMovie);
 
-            // This requires the rules to be run first to populate the RequestId property
-            await CheckForSubscription(viewMovie);
             var mapped = Mapper.Map<MovieFullInfoViewModel>(movie);
 
             mapped.Available = viewMovie.Available;
             mapped.Approved = viewMovie.Approved;
+            mapped.Denied = viewMovie.Denied;
+            mapped.DeniedReason = viewMovie.DeniedReason;
             mapped.RequestId = viewMovie.RequestId;
             mapped.Requested = viewMovie.Requested;
             mapped.PlexUrl = viewMovie.PlexUrl;
             mapped.EmbyUrl = viewMovie.EmbyUrl;
             mapped.JellyfinUrl = viewMovie.JellyfinUrl;
-            mapped.Subscribed = viewMovie.Subscribed;
-            mapped.ShowSubscribe = viewMovie.ShowSubscribe;
             mapped.DigitalReleaseDate = viewMovie.DigitalReleaseDate;
+            mapped.RequestedDate4k = viewMovie.RequestedDate4k;
+            mapped.Approved4K = viewMovie.Approved4K;
+            mapped.Available4K = viewMovie.Available4K;
+            mapped.Denied4K = viewMovie.Denied4K;
+            mapped.DeniedReason4K = viewMovie.DeniedReason4K;
+            mapped.Has4KRequest = viewMovie.Has4KRequest;
+            
 
             return mapped;
         }
@@ -418,8 +434,6 @@ namespace Ombi.Core.Engine.V2
                 var mappedMovie = Mapper.Map<SearchMovieViewModel>(movie);
                 await RunSearchRules(mappedMovie);
 
-                // This requires the rules to be run first to populate the RequestId property
-                await CheckForSubscription(mappedMovie);
                 var mapped = Mapper.Map<MovieCollection>(movie);
 
                 mapped.Available = movie.Available;
@@ -429,8 +443,6 @@ namespace Ombi.Core.Engine.V2
                 mapped.PlexUrl = movie.PlexUrl;
                 mapped.EmbyUrl = movie.EmbyUrl;
                 mapped.JellyfinUrl = movie.JellyfinUrl;
-                mapped.Subscribed = movie.Subscribed;
-                mapped.ShowSubscribe = movie.ShowSubscribe;
                 mapped.ReleaseDate = movie.ReleaseDate;
             }
             return viewMovie;
@@ -459,34 +471,9 @@ namespace Ombi.Core.Engine.V2
 
             await RunSearchRules(viewMovie);
 
-            // This requires the rules to be run first to populate the RequestId property
-            await CheckForSubscription(viewMovie);
-
             return viewMovie;
         }
 
-        private async Task CheckForSubscription(SearchViewModel viewModel)
-        {
-            // Check if this user requested it
-            var user = await GetUser();
-            if (user == null)
-            {
-                return;
-            }
-            var request = await RequestService.MovieRequestService.GetAll()
-                .AnyAsync(x => x.RequestedUserId.Equals(user.Id) && x.TheMovieDbId == viewModel.Id);
-            if (request)
-            {
-                viewModel.ShowSubscribe = false;
-            }
-            else
-            {
-                viewModel.ShowSubscribe = true;
-                var sub = await _subscriptionRepository.GetAll().FirstOrDefaultAsync(s => s.UserId == user.Id
-                                                                                          && s.RequestId == viewModel.RequestId && s.RequestType == RequestType.Movie);
-                viewModel.Subscribed = sub != null;
-            }
-        }
 
         public async Task<MovieFullInfoViewModel> GetMovieInfoByImdbId(string imdbId, CancellationToken cancellationToken)
         {

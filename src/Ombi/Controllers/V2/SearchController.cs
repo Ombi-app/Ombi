@@ -16,6 +16,11 @@ using Ombi.Api.RottenTomatoes.Models;
 using Ombi.Api.RottenTomatoes;
 using Ombi.Helpers;
 
+// Due to conflicting Genre models in
+// Ombi.TheMovieDbApi.Models and Ombi.Api.TheMovieDb.Models   
+using Genre = Ombi.TheMovieDbApi.Models.Genre;
+using Ombi.TheMovieDbApi.Models;
+
 namespace Ombi.Controllers.V2
 {
     public class SearchController : V2Controller
@@ -52,7 +57,23 @@ namespace Ombi.Controllers.V2
         [HttpPost("multi/{searchTerm}")]
         public async Task<List<MultiSearchResult>> MultiSearch(string searchTerm, [FromBody] MultiSearchFilter filter)
         {
-            return await _multiSearchEngine.MultiSearch(searchTerm, filter, Request.HttpContext.RequestAborted);
+            return await _multiSearchEngine.MultiSearch(Uri.UnescapeDataString(searchTerm), filter, Request.HttpContext.RequestAborted);
+        }
+
+        /// <summary>
+        /// Gets the genres for either Tv or Movies depending on media type
+        /// </summary>
+        /// <param name="media">Either `tv` or `movie`.</param>
+        [HttpGet("Genres/{media}")]
+        public Task<IEnumerable<Genre>> GetGenres(string media)
+        {
+            return _multiSearchEngine.GetGenres(media, HttpContext.RequestAborted);
+        }
+
+        [HttpGet("Languages")]
+        public Task<IEnumerable<Language>> GetLanguages()
+        {
+            return _multiSearchEngine.GetLanguages(HttpContext.RequestAborted);
         }
 
         /// <summary>
@@ -371,14 +392,14 @@ namespace Ombi.Controllers.V2
         /// <summary>
         /// Returns trending shows by page
         /// </summary>
-        /// <remarks>We use Trakt.tv as the Provider</remarks>
+        /// <remarks>We use TheMovieDb as the Provider</remarks>
         /// <returns></returns>
         [HttpGet("tv/trending/{currentPosition}/{amountToLoad}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public Task<IEnumerable<SearchTvShowViewModel>> Trending(int currentPosition, int amountToLoad)
+        public Task<IEnumerable<SearchTvShowViewModel>> TrendingTv(int currentPosition, int amountToLoad)
         {
-            return _mediaCacheService.GetOrAddAsync(nameof(Trending) + currentPosition + amountToLoad,
+            return _mediaCacheService.GetOrAddAsync(nameof(TrendingTv) + currentPosition + amountToLoad,
                 () => _tvEngineV2.Trending(currentPosition, amountToLoad),
                 DateTimeOffset.Now.AddHours(12));
         }
@@ -394,6 +415,19 @@ namespace Ombi.Controllers.V2
         public async Task<ActorCredits> GetMoviesByActor(int actorId)
         {
             return await _movieEngineV2.GetMoviesByActor(actorId, null);
+        }
+        
+        /// <summary>
+        /// Returns all the tv shows that is by the actor id 
+        /// </summary>
+        /// <param name="actorId">TheMovieDb Actor ID</param>
+        /// <returns></returns>
+        [HttpGet("actor/{actorId}/tv")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<ActorCredits> GetTvByActor(int actorId)
+        {
+            return await _tvEngineV2.GetTvByActor(actorId, null);
         }
 
 

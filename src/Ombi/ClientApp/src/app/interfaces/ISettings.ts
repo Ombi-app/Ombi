@@ -1,4 +1,4 @@
-﻿import { ISettings } from "./ICommon";
+import { ISettings } from "./ICommon";
 import { RequestLimitType } from ".";
 
 export interface IExternalSettings extends ISettings {
@@ -112,6 +112,7 @@ export interface IPublicInfo {
 
 export interface IPlexSettings extends ISettings {
   enable: boolean;
+  enableWatchlistImport: boolean;
   servers: IPlexServer[];
 }
 
@@ -158,6 +159,11 @@ export interface IRadarrSettings extends IExternalSettings {
   scanForAvailability: boolean;
 }
 
+export interface IRadarrCombined {
+  radarr: IRadarrSettings;
+  radarr4K: IRadarrSettings;
+}
+
 export interface ILidarrSettings extends IExternalSettings {
   enabled: boolean;
   apiKey: string;
@@ -193,6 +199,7 @@ export interface ICustomizationSettings extends ISettings {
   recentlyAddedPage: boolean;
   useCustomPage: boolean;
   hideAvailableFromDiscover: boolean;
+  favicon: string;
 }
 
 export interface IJobSettings {
@@ -212,6 +219,8 @@ export interface IJobSettings {
   retryRequests: string;
   mediaDatabaseRefresh: string;
   autoDeleteRequests: string;
+  embyRecentlyAddedSync: string;
+  plexWatchlistImport: string;
 }
 
 export interface IIssueSettings extends ISettings {
@@ -231,6 +240,8 @@ export interface IAuthenticationSettings extends ISettings {
   requireNonAlphanumeric: boolean;
   requireUppercase: boolean;
   enableOAuth: boolean;
+  enableHeaderAuth: boolean;
+  headerAuthVariable: string;
 }
 
 export interface ICustomPage extends ISettings {
@@ -328,7 +339,8 @@ export interface ITheMovieDbSettings extends ISettings {
     showAdultMovies: boolean;
     excludedKeywordIds: number[];
     excludedMovieGenreIds: number[];
-    excludedTvGenreIds: number[]
+    excludedTvGenreIds: number[];
+    originalLanguages: string[];
 }
 
 export interface IUpdateModel

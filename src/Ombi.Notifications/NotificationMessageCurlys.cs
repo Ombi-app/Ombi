@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Humanizer;
 using Ombi.Helpers;
+using Ombi.I18n.Resources;
 using Ombi.Notifications.Models;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
@@ -39,7 +40,22 @@ namespace Ombi.Notifications
             Year = req?.ReleaseDate.Year.ToString();
             Overview = req?.Overview;
             AdditionalInformation = opts?.AdditionalInformation ?? string.Empty;
-            PosterImage = $"https://image.tmdb.org/t/p/w300/{req?.PosterPath?.TrimStart('/') ?? string.Empty}";
+
+            var img = req?.PosterPath ?? string.Empty;
+            if (img.HasValue())
+            {
+                if (img.StartsWith("http"))
+                {
+                    // This means it's a legacy request from when we used TvMaze as a provider.
+                    // The poster url is the fully qualified address, so just use it
+                    PosterImage = img;
+                }
+                else
+                {
+                    PosterImage =
+                        $"https://image.tmdb.org/t/p/w300/{img?.TrimStart('/') ?? string.Empty}";
+                }
+            }
             CalculateRequestStatus(req);
         }
 
@@ -53,8 +69,21 @@ namespace Ombi.Notifications
             Year = req?.ParentRequest?.ReleaseDate.Year.ToString();
             Overview = req?.ParentRequest?.Overview;
             AdditionalInformation = opts.AdditionalInformation;
-            PosterImage =
-                $"https://image.tmdb.org/t/p/w300/{req?.ParentRequest?.PosterPath?.TrimStart('/') ?? string.Empty}";
+            var img = req?.ParentRequest?.PosterPath ?? string.Empty;
+            if (img.HasValue())
+            {
+                if (img.StartsWith("http"))
+                {
+                    // This means it's a legacy request from when we used TvMaze as a provider.
+                    // The poster url is the fully qualified address, so just use it
+                    PosterImage = img;
+                }
+                else
+                {
+                    PosterImage =
+                        $"https://image.tmdb.org/t/p/w300/{img?.TrimStart('/') ?? string.Empty}";
+                }
+            }
 
             // Generate episode list.
             StringBuilder epSb = new StringBuilder();
@@ -94,16 +123,24 @@ namespace Ombi.Notifications
 
         private void LoadIssues(NotificationOptions opts)
         {
-            IssueDescription = opts.Substitutes.TryGetValue("IssueDescription", out string val) ? val : string.Empty;
-            IssueCategory = opts.Substitutes.TryGetValue("IssueCategory", out val) ? val : string.Empty;
-            IssueStatus = opts.Substitutes.TryGetValue("IssueStatus", out val) ? val : string.Empty;
-            IssueSubject = opts.Substitutes.TryGetValue("IssueSubject", out val) ? val : string.Empty;
-            NewIssueComment = opts.Substitutes.TryGetValue("NewIssueComment", out val) ? val : string.Empty;
-            UserName = opts.Substitutes.TryGetValue("IssueUser", out val) ? val : string.Empty;
-            Alias = opts.Substitutes.TryGetValue("IssueUserAlias", out val) ? val : string.Empty;
-            Type = opts.Substitutes.TryGetValue("RequestType", out val) && Enum.TryParse(val, out RequestType type)
+            IssueDescription = opts.Substitutes.TryGetValue(NotificationSubstitues.IssueDescription, out string val) ? val : string.Empty;
+            IssueCategory = opts.Substitutes.TryGetValue(NotificationSubstitues.IssueCategory, out val) ? val : string.Empty;
+            IssueStatus = opts.Substitutes.TryGetValue(NotificationSubstitues.IssueStatus, out val) ? val : string.Empty;
+            IssueSubject = opts.Substitutes.TryGetValue(NotificationSubstitues.IssueSubject, out val) ? val : string.Empty;
+            NewIssueComment = opts.Substitutes.TryGetValue(NotificationSubstitues.NewIssueComment, out val) ? val : string.Empty;
+            UserName = opts.Substitutes.TryGetValue(NotificationSubstitues.IssueUser, out val) ? val : string.Empty;
+            Alias = opts.Substitutes.TryGetValue(NotificationSubstitues.IssueUserAlias, out val) ? val : string.Empty;
+            Type = opts.Substitutes.TryGetValue(NotificationSubstitues.RequestType, out val) && Enum.TryParse(val, out RequestType type)
                 ? HumanizeReturnType(type)
                 : string.Empty;
+            if (opts.Substitutes.TryGetValue(NotificationSubstitues.PosterPath, out val) && val.HasValue())
+            {
+                PosterImage = $"https://image.tmdb.org/t/p/w300/{val.TrimStart('/')}";
+            }
+            else
+            {
+                PosterImage = string.Empty;
+            }
         }
 
         private void LoadCommon(BaseRequest req, CustomizationSettings s, UserNotificationPreferences pref, NotificationOptions opts)
@@ -115,6 +152,7 @@ namespace Ombi.Notifications
             RequestId = req?.Id.ToString();
             RequestedUser = req?.RequestedUser?.UserName;
             RequestedDate = req?.RequestedDate.ToString("D");
+            DetailsUrl = GetDetailsUrl(s, req);
 
             if (Type.IsNullOrEmpty())
             {
@@ -156,7 +194,9 @@ namespace Ombi.Notifications
             return requestType switch
             {
                 null => string.Empty,
-                RequestType.TvShow => "TV Show",
+                RequestType.TvShow => Texts.TvShow,
+                RequestType.Album => Texts.Album,
+                RequestType.Movie => Texts.Movie,
                 _ => requestType.Humanize()
             };
         }
@@ -175,6 +215,26 @@ namespace Ombi.Notifications
                 default:
                     Title = req.Title;
                     break;
+            }
+        }
+
+        private string GetDetailsUrl(CustomizationSettings s, BaseRequest req)
+        {
+            if (string.IsNullOrEmpty(s.ApplicationUrl))
+            {
+                return string.Empty;
+            }
+
+            switch (req)
+            {
+                case MovieRequests movieRequest:
+                    return $"{s.ApplicationUrl}/details/movie/{movieRequest.TheMovieDbId}";
+                case ChildRequests tvRequest:
+                    return $"{s.ApplicationUrl}/details/tv/{tvRequest.ParentRequest.ExternalProviderId}";
+                case AlbumRequest albumRequest:
+                    return $"{s.ApplicationUrl}/details/artist/{albumRequest.ForeignArtistId}";
+                default:
+                    return string.Empty;
             }
         }
 
@@ -219,6 +279,7 @@ namespace Ombi.Notifications
         public string Year { get; set; }
         public string EpisodesList { get; set; }
         public string SeasonsList { get; set; }
+        public string DetailsUrl { get; set; }
         public string PosterImage { get; set; }
         public string ApplicationName { get; set; }
         public string ApplicationUrl { get; set; }

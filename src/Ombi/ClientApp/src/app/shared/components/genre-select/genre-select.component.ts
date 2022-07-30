@@ -1,11 +1,11 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { debounceTime, distinctUntilChanged, map, startWith, switchMap } from "rxjs/operators";
 
 import { IMovieDbKeyword } from "../../../interfaces";
 import { MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
 import { Observable } from "rxjs";
-import { TheMovieDbService } from "../../../services";
+import { SearchV2Service } from "../../../services";
 
 @Component({
   selector: "genre-select",
@@ -13,15 +13,15 @@ import { TheMovieDbService } from "../../../services";
 })
 export class GenreSelectComponent {
   constructor(
-    private tmdbService: TheMovieDbService
+    private searchService: SearchV2Service
   ) {}
 
-  @Input() public form: FormGroup;
+  @Input() public form: UntypedFormGroup;
 
   private _mediaType: string;
   @Input() set mediaType(type: string) {
     this._mediaType = type;
-    this.tmdbService.getGenres(this._mediaType).subscribe((res) => {
+    this.searchService.getGenres(this._mediaType).subscribe((res) => {
       this.genres = res;
       this.filteredKeywords = this.control.valueChanges.pipe(
         startWith(''),
@@ -33,7 +33,7 @@ export class GenreSelectComponent {
     return this._mediaType;
   }
   public genres: IMovieDbKeyword[] = [];
-  public control = new FormControl();
+  public control = new UntypedFormControl();
   public filteredTags: IMovieDbKeyword[];
   public filteredKeywords: Observable<IMovieDbKeyword[]>;
 

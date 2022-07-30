@@ -18,6 +18,7 @@ using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
 using Ombi.Helpers;
+using Ombi.Core.Services;
 
 namespace Ombi.Schedule.Tests
 {
@@ -36,7 +37,7 @@ namespace Ombi.Schedule.Tests
             hub.Setup(x =>
                 x.Clients.Clients(It.IsAny<IReadOnlyList<string>>()).SendCoreAsync(It.IsAny<string>(), It.IsAny<object[]>(), It.IsAny<CancellationToken>()));
             NotificationHub.UsersOnline.TryAdd("A", new HubUsers());
-            Checker = new PlexAvailabilityChecker(_repo.Object, _tv.Object, _movie.Object, _notify.Object, null, hub.Object);
+            Checker = new PlexAvailabilityChecker(_repo.Object, _tv.Object, _movie.Object, _notify.Object, null, hub.Object, Mock.Of<IFeatureService>());
         }
 
 

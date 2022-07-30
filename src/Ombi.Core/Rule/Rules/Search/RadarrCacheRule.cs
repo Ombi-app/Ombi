@@ -18,16 +18,23 @@ namespace Ombi.Core.Rule.Rules.Search
 
         public Task<RuleResult> Execute(SearchViewModel obj)
         {
-            if (obj.Type == RequestType.Movie)
+            if (obj is SearchMovieViewModel movie)
             {
                 // Check if it's in Radarr
                 var result = _db.GetAll().FirstOrDefault(x => x.TheMovieDbId == obj.Id);
                 if (result != null)
                 {
-                    obj.Approved = true; // It's in radarr so it's approved... Maybe have a new property called "Processing" or something?
+                    movie.Approved = true; // It's in radarr so it's approved... Maybe have a new property called "Processing" or something?
                     if (result.HasFile)
                     {
-                        obj.Available = true;
+                        if (result.Has4K)
+                        {
+                            movie.Available4K = true;
+                        }
+                        if (result.HasRegular)
+                        {
+                            movie.Available = true;
+                        }
                     }
                 }
             }

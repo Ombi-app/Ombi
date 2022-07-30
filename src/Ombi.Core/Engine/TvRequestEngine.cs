@@ -32,7 +32,7 @@ namespace Ombi.Core.Engine
 {
     public class TvRequestEngine : BaseMediaEngine, ITvRequestEngine
     {
-        public TvRequestEngine(ITvMazeApi tvApi, IMovieDbApi movApi, IRequestServiceMain requestService, IPrincipal user,
+        public TvRequestEngine(ITvMazeApi tvApi, IMovieDbApi movApi, IRequestServiceMain requestService, ICurrentUser user,
             INotificationHelper helper, IRuleEvaluator rule, OmbiUserManager manager, ILogger<TvRequestEngine> logger,
             ITvSender sender, IRepository<RequestLog> rl, ISettingsService<OmbiSettings> settings, ICacheService cache,
             IRepository<RequestSubscription> sub, IMediaCacheService mediaCacheService) : base(user, requestService, rule, manager, cache, settings, sub)
@@ -188,7 +188,7 @@ namespace Ombi.Core.Engine
             (await tvBuilder
                 .GetShowInfo(tv.TheMovieDbId, tv.languageCode))
                 .CreateTvList(tv)
-                .CreateChild(tv, canRequestOnBehalf ? tv.RequestOnBehalf : user.Id);
+                .CreateChild(tv, canRequestOnBehalf ? tv.RequestOnBehalf : user.Id, tv.Source);
 
             await tvBuilder.BuildEpisodes(tv);
 
@@ -710,7 +710,11 @@ namespace Ombi.Core.Engine
 
             if (request.Approved)
             {
-                await NotificationHelper.Notify(request, NotificationType.RequestApproved);
+                var canNotify = await RunSpecificRule(request, SpecificRules.CanSendNotification, string.Empty);
+                if (canNotify.Success)
+                {
+                    await NotificationHelper.Notify(request, NotificationType.RequestApproved);
+                }
                 // Autosend
                 await TvSender.Send(request);
             }
@@ -749,9 +753,13 @@ namespace Ombi.Core.Engine
             return request;
         }
 
-        public async Task RemoveTvChild(int requestId)
+        public async Task<RequestEngineResult> RemoveTvChild(int requestId)
         {
             var request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == requestId);
+
+            var result = await CheckCanManageRequest(request);
+            if (result.IsError)
+                return result;
 
             TvRepository.Db.ChildRequests.Remove(request);
             var all = TvRepository.Db.TvRequests.Include(x => x.ChildRequests);
@@ -766,6 +774,11 @@ namespace Ombi.Core.Engine
 
             await TvRepository.Db.SaveChangesAsync();
             await _mediaCacheService.Purge();
+
+            return new RequestEngineResult
+            {
+                Result = true,
+            };
         }
 
         public async Task RemoveTvRequest(int requestId)
@@ -780,7 +793,7 @@ namespace Ombi.Core.Engine
             return await TvRepository.GetChild().AnyAsync(x => x.RequestedUserId == userId);
         }
 
-        public async Task<RequestEngineResult> MarkUnavailable(int modelId)
+        public async Task<RequestEngineResult> MarkUnavailable(int modelId, bool is4K)
         {
             var request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == modelId);
             if (request == null)
@@ -808,7 +821,7 @@ namespace Ombi.Core.Engine
             };
         }
 
-        public async Task<RequestEngineResult> MarkAvailable(int modelId)
+        public async Task<RequestEngineResult> MarkAvailable(int modelId, bool is4K)
         {
             ChildRequests request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == modelId);
             if (request == null)
@@ -873,7 +886,10 @@ namespace Ombi.Core.Engine
                 }
                 else
                 {
-                    x.ShowSubscribe = true;
+                    if (!x.Available && (!x.Denied ?? true))
+                    {
+                        x.ShowSubscribe = true;
+                    }
                     var result = relevantSubs.FirstOrDefault(s => s.RequestId == x.Id);
                     x.Subscribed = result != null;
                 }
@@ -905,7 +921,7 @@ namespace Ombi.Core.Engine
             return await AfterRequest(model.ChildRequests.FirstOrDefault(), requestOnBehalf);
         }
 
-        public async Task<RequestEngineResult> ReProcessRequest(int requestId, CancellationToken cancellationToken)
+        public async Task<RequestEngineResult> ReProcessRequest(int requestId, bool is4K, CancellationToken cancellationToken)
         {
             var request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == requestId, cancellationToken);
             if (request == null)
@@ -948,7 +964,11 @@ namespace Ombi.Core.Engine
             if (model.Approved)
             {
                 // Autosend
-                await NotificationHelper.Notify(model, NotificationType.RequestApproved);
+                var canNotify = await RunSpecificRule(model, SpecificRules.CanSendNotification, string.Empty);
+                if (canNotify.Success)
+                {
+                    await NotificationHelper.Notify(model, NotificationType.RequestApproved);
+                }
                 var result = await TvSender.Send(model);
                 if (result.Success)
                 {

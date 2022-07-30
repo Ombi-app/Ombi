@@ -92,6 +92,17 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
+        /// Runs the Plex Watchlist Importer
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("plexwatchlist")]
+        public async Task<bool> PlexWatchlistImport()
+        {
+            await OmbiQuartz.TriggerJob(nameof(IPlexWatchlistImport), "Plex");
+            return true;
+        }
+
+        /// <summary>
         /// Runs the Emby User importer
         /// </summary>
         /// <returns></returns>
@@ -118,9 +129,9 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <returns></returns>
         [HttpPost("plexcontentcacher")]
-        public bool StartPlexContentCacher()
+        public async Task<bool> StartPlexContentCacher()
         {
-            OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IPlexContentSync), "Plex"), new JobDataMap(new Dictionary<string, string> { { "recentlyAddedSearch", "false" } }));
+            await OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IPlexContentSync), "Plex"), new JobDataMap(new Dictionary<string, string> { { "recentlyAddedSearch", "false" } }));
             return true;
         }
 
@@ -129,9 +140,9 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <returns></returns>
         [HttpPost("clearmediaserverdata")]
-        public bool ClearMediaServerData()
+        public async Task<bool> ClearMediaServerData()
         {
-            OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IMediaDatabaseRefresh), "System"));
+            await OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IMediaDatabaseRefresh), "System"));
             return true;
         }
 
@@ -140,9 +151,9 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <returns></returns>
         [HttpPost("plexrecentlyadded")]
-        public bool StartRecentlyAdded()
+        public async Task<bool> StartRecentlyAdded()
         {
-            OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IPlexContentSync) + "RecentlyAdded", "Plex"), new JobDataMap(new Dictionary<string, string> { { "recentlyAddedSearch", "true" } }));
+            await OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IPlexContentSync) + "RecentlyAdded", "Plex"), new JobDataMap(new Dictionary<string, string> { { "recentlyAddedSearch", "true" } }));
             return true;
         }
 
@@ -153,7 +164,18 @@ namespace Ombi.Controllers.V1
         [HttpPost("embycontentcacher")]
         public async Task<bool> StartEmbyContentCacher()
         {
-            await OmbiQuartz.TriggerJob(nameof(IEmbyContentSync), "Emby");
+            await OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IEmbyContentSync), "Emby"), new JobDataMap(new Dictionary<string, string> { { JobDataKeys.EmbyRecentlyAddedSearch, "false" } }));
+            return true;
+        }
+
+        /// <summary>
+        /// Runs a smaller version of the content cacher
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("embyrecentlyadded")]
+        public async Task<bool> StartEmbyRecentlyAdded()
+        {
+            await OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IEmbyContentSync) + "RecentlyAdded", "Emby"), new JobDataMap(new Dictionary<string, string> { { JobDataKeys.EmbyRecentlyAddedSearch, "true" } }));
             return true;
         }
 

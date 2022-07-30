@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Ombi.Store.Entities;
 
 namespace Ombi.Core.Models.Search
@@ -32,8 +33,10 @@ namespace Ombi.Core.Models.Search
         public string TheMovieDbId { get; set; }
 
         [NotMapped]
+        [Obsolete("Use request service instead")]
         public bool Subscribed { get; set; }
         [NotMapped]
+        [Obsolete("Use request service instead")]
         public bool ShowSubscribe { get; set; }
     }
 }

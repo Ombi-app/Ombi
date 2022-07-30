@@ -4,8 +4,8 @@
         "UsernamePlaceholder": "Nom d’utilisateur",
         "PasswordPlaceholder": "Mot de passe",
         "RememberMe": "Se souvenir de moi",
-        "SignInWith": "Se Connecter avec {{appName}}",
-        "SignInWithPlex": "Se Connecter avec Plex",
+        "SignInWith": "Se connecter avec {{appName}}",
+        "SignInWithPlex": "Se connecter avec Plex",
         "ForgottenPassword": "Mot de passe oublié ?",
         "Errors": {
             "IncorrectCredentials": "Nom d'utilisateur ou mot de passe incorrect"
@@ -14,24 +14,32 @@
     "Common": {
         "ContinueButton": "Continuer",
         "Available": "Disponible",
+        "Available4K": "4K disponible",
         "Approved": "Approuvée",
+        "Approve4K": "Approuver 4K",
         "Pending": "En attente",
         "PartiallyAvailable": "Partiellement disponible",
         "Monitored": "Suivi",
         "NotAvailable": "Non disponible",
         "ProcessingRequest": "En cours de traitement",
+        "ProcessingRequest4K": "4K en cours de traitement",
         "PendingApproval": "En attente d'approbation",
+        "PendingApproval4K": "En attente d'approbation 4K",
         "RequestDenied": "Demande refusée",
+        "RequestDenied4K": "Demande 4K refusée",
         "NotRequested": "Non demandé",
+        "NotRequested4K": "4K non demandée",
         "Requested": "Demandé",
+        "Requested4K": "4K demandée",
         "Search": "Rechercher",
         "Request": "Demander",
+        "Request4K": "Demander en 4K",
         "Denied": "Refusé",
         "Approve": "Approuver",
         "PartlyAvailable": "Partiellement disponible",
         "ViewDetails": "Voir les détails",
         "Errors": {
-            "Validation": "Veuillez vérifier les valeurs entrées"
+            "Validation": "Veuillez vérifier les valeurs saisies"
         },
         "Cancel": "Annuler",
         "Submit": "Envoyer",
@@ -55,6 +63,10 @@
         "OfflineParagraph": "Le serveur média est actuellement hors-ligne.",
         "CheckPageForUpdates": "Consultez cette page pour voir les mises à jour du site."
     },
+    "ErrorPages": {
+        "NotFound": "Page non trouvée",
+        "SomethingWentWrong": "Une erreur s'est produite !"
+    },
     "NavigationBar": {
         "Discover": "Découvrir",
         "Search": "Rechercher",
@@ -62,14 +74,14 @@
         "UserManagement": "Utilisateurs",
         "Issues": "Problèmes",
         "Vote": "Vote",
-        "Donate": "Faire un don !",
+        "Donate": "Faire un don",
         "DonateLibraryMaintainer": "Faire un don au mainteneur de la bibliothèque",
         "DonateTooltip": "C’est pour convaincre ma femme de me laisser passer mon temps libre à développer Ombi 😁",
         "UpdateAvailableTooltip": "Mise à jour disponible !",
         "Settings": "Paramètres",
         "Welcome": "Bienvenue {{username}}",
         "UpdateDetails": "Mettre à jour les informations",
-        "Logout": "Déconnexion",
+        "Logout": "Se déconnecter",
         "OpenMobileApp": "Ouvrir l'application",
         "RecentlyAdded": "Ajouts récents",
         "ChangeTheme": "Changer de thème",
@@ -89,7 +101,7 @@
     },
     "Search": {
         "Title": "Rechercher",
-        "Paragraph": "Vous voulez regarder quelque chose qui n'est pas disponible actuellement ? Pas de problème, recherchez-le ci-dessous et demandez-le !",
+        "Paragraph": "Vous voulez regarder quelque chose qui n'est pas disponible actuellement ? Pas de problème, recherchez-le en bas et demandez-le !",
         "MoviesTab": "Films",
         "TvTab": "Séries",
         "MusicTab": "Musique",
@@ -118,9 +130,9 @@
             "Popular": "Populaire",
             "Trending": "Tendances",
             "MostWatched": "Les plus visionnées",
-            "MostAnticipated": "Les plus attendus",
+            "MostAnticipated": "Les plus attendues",
             "Results": "Résultats",
-            "AirDate": "Date de diffusion:",
+            "AirDate": "Date de diffusion :",
             "AllSeasons": "Toutes les saisons",
             "FirstSeason": "Première saison",
             "LatestSeason": "Dernière saison",
@@ -131,6 +143,9 @@
         },
         "AdvancedSearchInstructions": "Veuillez choisir le type de média que vous recherchez :",
         "YearOfRelease": "Année de sortie",
+        "SearchGenre": "Rechercher un genre",
+        "SearchKeyword": "Rechercher un mot-clé",
+        "SearchProvider": "Rechercher un fournisseur",
         "KeywordSearchingDisclaimer": "Veuillez noter que la recherche de mots-clés n'est pas très fiable en raison de données incohérentes dans TheMovieDb"
     },
     "Requests": {
@@ -145,19 +160,23 @@
         "Status": "Statut",
         "RequestStatus": "Statut de la demande",
         "Denied": " Refusé :",
-        "TheatricalRelease": "Sortie en salle: {{date}}",
+        "TheatricalRelease": "Sortie en salle : {{date}}",
         "ReleaseDate": "Sortie : {{date}}",
         "TheatricalReleaseSort": "Sortie en salle",
-        "DigitalRelease": "Sortie numérique: {{date}}",
+        "DigitalRelease": "Sortie numérique : {{date}}",
         "RequestDate": "Date de la demande",
         "QualityOverride": "Remplacement de la qualité :",
         "RootFolderOverride": "Remplacement du répertoire racine :",
         "ChangeRootFolder": "Répertoire racine",
         "ChangeQualityProfile": "Profil de qualité",
-        "MarkUnavailable": "Marquer comme non disponible",
-        "MarkAvailable": "Marquer comme disponible",
+        "MarkUnavailable": "Marquer indisponible",
+        "MarkUnavailable4K": "Marquer 4K indisponible",
+        "MarkAvailable": "Marquer disponible",
+        "MarkAvailable4K": "Marquer 4K disponible",
         "Remove": "Supprimer",
         "Deny": "Refuser",
+        "Deny4K": "Refuser 4K",
+        "Has4KRequest": "A une demande 4K",
         "DenyReason": "Motif de refus",
         "DeniedReason": "Motif de refus",
         "Season": "Saison",
@@ -193,11 +212,16 @@
         "RequestPanel": {
             "Delete": "Supprimer la demande",
             "Approve": "Approuver la demande",
+            "Deny": "Refuser la demande",
+            "Approve4K": "Approuver la demande 4K",
+            "Deny4K": "Refuser la demande 4K",
             "ChangeAvailability": "Marquer comme Disponible",
             "Deleted": "Éléments sélectionnés supprimés avec succès",
-            "Approved": "Éléments sélectionnés approuvés avec succès"
+            "Approved": "Éléments sélectionnés approuvés avec succès",
+            "Denied": "Les éléments sélectionnés ont été refusés"
         },
         "SuccessfullyApproved": "Approuvée avec succès",
+        "SuccessfullyDeleted": "Demande supprimée avec succès",
         "NowAvailable": "La demande est maintenant disponible",
         "NowUnavailable": "La demande est maintenant indisponible",
         "SuccessfullyReprocessed": "La demande a été retraitée avec succès",
@@ -215,14 +239,20 @@
             "ChildRequestDoesNotExist": "La demande enfant n'existe pas",
             "NoPermissionsRequestMovie": "Vous n'avez pas la permission de demander un film",
             "NoPermissionsRequestTV": "Vous n'avez pas la permission de demander une série TV",
-            "NoPermissionsRequestAlbum": "Vous n'avez pas la permission de demander un album",
-            "MovieRequestQuotaExceeded": "Vous avez dépassé votre quota de demande de films !",
-            "TvRequestQuotaExceeded": "Vous avez dépassé votre quota de demande d'épisodes !",
-            "AlbumRequestQuotaExceeded": "Vous avez dépassé votre quota de demande d'albums !"
-        }
+            "NoPermissionsRequestAlbum": "Vous n'avez pas le droit de demander un album",
+            "MovieRequestQuotaExceeded": "Vous avez dépassé votre quota de demandes de films !",
+            "TvRequestQuotaExceeded": "Vous avez dépassé votre quota de demandes d'épisodes !",
+            "AlbumRequestQuotaExceeded": "Vous avez dépassé votre quota de demandes d'albums !"
+        },
+        "Notify": "Notifier",
+        "RemoveNotification": "Supprimer les notifications",
+        "SuccessfulNotify": "Vous allez maintenant être notifié pour {{title}}",
+        "SuccessfulUnNotify": "Vous ne serez plus notifié pour {{title}}",
+        "CouldntNotify": "Impossible de notifier {{title}}"
     },
     "Issues": {
         "Title": "Problèmes",
+        "IssuesForTitle": "Problèmes pour {{title}}",
         "PendingTitle": "Problèmes en attente",
         "InProgressTitle": "Problèmes en cours",
         "ResolvedTitle": "Problèmes résolus",
@@ -236,7 +266,7 @@
         "MarkInProgress": "Marquer en cours de traitement",
         "MarkResolved": "Marquer comme résolu",
         "SendMessageButton": "Envoyer",
-        "Subject": "Sujet",
+        "Subject": "Objet",
         "Comments": "Commentaires",
         "WriteMessagePlaceholder": "Écrivez votre message ici...",
         "ReportedBy": "Signalé par",
@@ -255,6 +285,7 @@
         "Delete": "Supprimer le problème",
         "DeletedIssue": "Problème supprimé",
         "Chat": "Discuter",
+        "EnterYourMessage": "Saisissez votre message",
         "Requested": "Demandé",
         "UserOnDate": "{{user}} le {{date}}"
     },
@@ -268,9 +299,9 @@
         "Keywords": "Mots-clés"
     },
     "UserManagment": {
-        "TvRemaining": "Séries : {{remaining}}/{{total}} restant(s)",
-        "MovieRemaining": "Films : {{remaining}}/{{total}} restant(s)",
-        "MusicRemaining": "Musique : {{remaining}}/{{total}} restant(s)",
+        "TvRemaining": "Séries : {{remaining}}/{{total}} restante(s)",
+        "MovieRemaining": "Films : {{remaining}}/{{total}} restante(s)",
+        "MusicRemaining": "Musique : {{remaining}}/{{total}} restante(s)",
         "TvDue": "Séries : {{date}}",
         "MovieDue": "Film : {{date}}",
         "MusicDue": "Musique : {{date}}"
@@ -281,6 +312,8 @@
     },
     "MediaDetails": {
         "Denied": "Refusé",
+        "Denied4K": "4K refusée",
+        "Trailers": "Bandes-annonces",
         "RecommendationsTitle": "Recommandations",
         "SimilarTitle": "Similaires",
         "VideosTitle": "Vidéos",
@@ -300,33 +333,34 @@
         "Status": "Statut :",
         "StatusValues": {
             "Rumored": "Rumeur",
-            "Planned": "Planifié",
+            "Planned": "Prévu",
             "In Production": "En Production",
             "Post Production": "Post-production",
             "Released": "Sorti",
             "Running": "En cours",
             "Returning Series": "Série en cours",
-            "Ended": "Finie",
+            "Ended": "Terminée",
             "Canceled": "Annulée"
         },
         "Seasons": "Saisons :",
         "Episodes": "Épisodes :",
         "Availability": "Disponibilité :",
-        "RequestStatus": "Statut de la Demande",
+        "RequestStatus": "Statut de la demande :",
         "Quality": "Qualité :",
-        "RootFolderOverride": "Remplacement du répertoire racine :",
-        "QualityOverride": "Remplacement de la qualité :",
+        "RootFolderOverride": "Répertoire racine remplacé :",
+        "QualityOverride": "Qualité remplacée :",
         "Network": "Diffuseur :",
-        "Genres": "Genres :",
+        "GenresLabel": "Genres :",
+        "Genres": "Genres",
         "FirstAired": "Première diffusion :",
-        "TheatricalRelease": "Sortie :",
+        "TheatricalRelease": "Sortie en salle :",
         "DigitalRelease": "Sortie numérique :",
         "Votes": "Votes :",
         "Runtime": "Durée :",
         "Minutes": "{{runtime}} Minutes",
         "Revenue": "Recettes :",
         "Budget": "Budget :",
-        "Keywords": "Mots-clés / Tags :",
+        "Keywords": "Mots-clés/Tags :",
         "Casts": {
             "CastTitle": "Casting"
         },
@@ -343,15 +377,18 @@
         "PleaseSelectUser": "Veuillez sélectionner un utilisateur",
         "StreamingOn": "En streaming sur :",
         "RequestedBy": "Demandé par :",
+        "RequestedByOn": "Demandé par {{user}} le {{date}}",
         "RequestDate": "Date de la demande :",
         "DeniedReason": "Motif de refus :",
         "ReProcessRequest": "Refaire une demande",
+        "ReProcessRequest4K": "Retraiter la demande 4K",
         "Music": {
             "Type": "Type :",
             "Country": "Pays :",
             "StartDate": "Date de début :",
             "EndDate": "Date de fin :"
-        }
+        },
+        "RequestSource": "Source :"
     },
     "Discovery": {
         "PopularTab": "Populaire",
@@ -367,23 +404,23 @@
             "Studio": "Studio",
             "Network": "Diffuseur",
             "UnknownNetwork": "Inconnu",
-            "RequestStatus": "Statut de la Demande",
+            "RequestStatus": "Statut de la demande",
             "Director": "Réalisateur",
-            "InCinemas": "En Salles",
-            "FirstAired": "Première Diffusion",
+            "InCinemas": "En salles",
+            "FirstAired": "Première diffusion",
             "Writer": "Scénariste",
-            "ExecProducer": "Producteur Exécutif"
+            "ExecProducer": "Producteur exécutif"
         },
         "NoSearch": "Désolé, rien ne correspond à votre recherche !"
     },
     "UserPreferences": {
         "Welcome": "Bienvenue {{username}} !",
         "OmbiLanguage": "Langue",
-        "DarkMode": "Mode Sombre",
+        "DarkMode": "Mode sombre",
         "Updated": "Mise à jour réussie",
         "StreamingCountry": "Pays de diffusion",
-        "StreamingCountryDescription": "C'est le code du pays pour lequel nous afficherons des informations de diffusion. Si vous êtes en France, veuillez sélectionner la France et vous aurez des informations de streaming en relation avec la France.",
-        "LanguageDescription": "C'est la langue dans laquelle vous souhaitez que l'interface Ombi soit affichée.",
+        "StreamingCountryDescription": "C'est le code du pays dont nous afficherons les informations de diffusion. Si vous êtes en France, veuillez sélectionner la France et vous aurez des informations de streaming pour la France.",
+        "LanguageDescription": "C'est la langue dans laquelle vous souhaitez que le site d'Ombi soit affichée.",
         "MobileQRCode": "QR Code mobile",
         "LegacyApp": "Lancer l'ancienne application",
         "NoQrCode": "Veuillez contacter votre administrateur pour activer les QR codes",
@@ -396,7 +433,8 @@
         "NewPasswordConfirm": "Confirmation du nouveau mot de passe",
         "Security": "Sécurité",
         "Profile": "Profil",
-        "UpdatedYourInformation": "Informations mises à jour"
+        "UpdatedYourInformation": "Informations mises à jour",
+        "Unsubscribed": "Désabonné !"
     },
     "UserTypeLabel": {
         "1": "Utilisateur local",
@@ -404,5 +442,14 @@
         "3": "Utilisateur Emby",
         "4": "Utilisateur Emby Connect",
         "5": "Utilisateur Jellyfin"
+    },
+    "Paginator": {
+        "itemsPerPageLabel": "Éléments par page :",
+        "nextPageLabel": "Page suivante",
+        "previousPageLabel": "Page précédente",
+        "firstPageLabel": "Première page",
+        "lastPageLabel": "Dernière page",
+        "rangePageLabel1": "0 sur {{length}}",
+        "rangePageLabel2": "{{startIndex}} – {{endIndex}} sur {{length}}"
     }
 }

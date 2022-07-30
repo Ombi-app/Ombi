@@ -5,6 +5,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Interfaces;
+using Ombi.Core.Helpers;
 using Ombi.Core.Models.Search.V2;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Entities;
@@ -17,7 +18,7 @@ namespace Ombi.Core.Engine.V2
     {
         public DateTime DaysAgo => DateTime.Now.AddDays(-90);
         public DateTime DaysAhead => DateTime.Now.AddDays(90);
-        public CalendarEngine(IPrincipal user, OmbiUserManager um, IRuleEvaluator rules, IMovieRequestRepository movieRepo,
+        public CalendarEngine(ICurrentUser user, OmbiUserManager um, IRuleEvaluator rules, IMovieRequestRepository movieRepo,
             ITvRequestRepository tvRequestRepo) : base(user, um, rules)
         {
             _movieRepo = movieRepo;

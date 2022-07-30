@@ -1,11 +1,11 @@
 ﻿import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
-import { IMovieDbKeyword, ITheMovieDbSettings } from "../../interfaces";
+import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
+import { ILanguage, IMovieDbKeyword, ITheMovieDbSettings } from "../../interfaces";
 import { debounceTime, switchMap } from "rxjs/operators";
 
 import { MatAutocomplete } from "@angular/material/autocomplete";
-import { NotificationService } from "../../services";
+import { NotificationService, SearchV2Service } from "../../services";
 import { SettingsService } from "../../services";
 import { TheMovieDbService } from "../../services";
 
@@ -22,27 +22,47 @@ interface IKeywordTag {
 export class TheMovieDbComponent implements OnInit {
 
     public settings: ITheMovieDbSettings;
+    public originalLanguages: ILanguage[];
     public excludedKeywords: IKeywordTag[];
     public excludedMovieGenres: IKeywordTag[];
     public excludedTvGenres: IKeywordTag[];
-    public tagForm: FormGroup;
+    public tagForm: UntypedFormGroup;
+    public languages: ILanguage[];
     public filteredTags: IMovieDbKeyword[];
     public filteredMovieGenres: IMovieDbKeyword[];
     public filteredTvGenres: IMovieDbKeyword[];
 
+
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
                 private tmdbService: TheMovieDbService,
-                private fb: FormBuilder) { }
+                private searchService: SearchV2Service,
+                private fb: UntypedFormBuilder) { }
 
     public ngOnInit() {
-        this.tagForm = this.fb.group({
-            input: null,
-            excludedMovieGenres: null,
-            excludedTvGenres: null,
-          });
         this.settingsService.getTheMovieDbSettings().subscribe(settings => {
             this.settings = settings;
+
+            this.tagForm = this.fb.group({
+              input: null,
+              originalLanguages: [this.settings.originalLanguages],
+              excludedMovieGenres: null,
+              excludedTvGenres: null,
+            });
+
+            this.tagForm
+            .get("input")
+            .valueChanges.pipe(
+              debounceTime(600),
+              switchMap((value: string) => {
+                if (value) {
+                  return this.tmdbService.getKeywords(value);
+                }
+                return [];
+              })
+            )
+            .subscribe((r) => (this.filteredTags = r));
+
 
             // Map Keyword ids -> keyword name
             this.excludedKeywords = settings.excludedKeywordIds
@@ -55,9 +75,10 @@ export class TheMovieDbComponent implements OnInit {
 
             this.excludedKeywords.forEach(key => {
                 this.tmdbService.getKeyword(key.id).subscribe(keyResult => {
-                    this.excludedKeywords.filter((val, idx) => {
-                        val.name = keyResult.name;
-                    })
+                    var keyToUpdate = this.excludedKeywords.filter((val) => {
+                        return val.id == key.id;
+                    })[0];
+                    keyToUpdate.name = keyResult.name;
                 });
             });
 
@@ -70,7 +91,7 @@ export class TheMovieDbComponent implements OnInit {
                 }))
                 : [];
 
-            this.tmdbService.getGenres("movie").subscribe(results => {
+            this.searchService.getGenres("movie").subscribe(results => {
                 this.filteredMovieGenres = results;
 
                 this.excludedMovieGenres.forEach(genre => {
@@ -80,8 +101,12 @@ export class TheMovieDbComponent implements OnInit {
                         }
                     });
                 });
-            });        
-            
+            });
+
+            this.searchService.getLanguages().subscribe((results) => {
+              this.languages = results.sort((a: ILanguage, b: ILanguage) => (a.english_name > b.english_name) ? 1 : -1);;
+            });
+
             // Map Tv Genre ids -> genre name
             this.excludedTvGenres = settings.excludedTvGenreIds
                 ? settings.excludedTvGenreIds.map(id => ({
@@ -91,7 +116,7 @@ export class TheMovieDbComponent implements OnInit {
                 }))
                 : [];
 
-            this.tmdbService.getGenres("tv").subscribe(results => {
+            this.searchService.getGenres("tv").subscribe(results => {
                 this.filteredTvGenres = results;
 
                 this.excludedTvGenres.forEach(genre => {
@@ -100,21 +125,10 @@ export class TheMovieDbComponent implements OnInit {
                             genre.name = result.name;
                         }
                     });
-                }); 
+                });
             });
         });
 
-        this.tagForm
-        .get("input")
-        .valueChanges.pipe(
-          debounceTime(600),
-          switchMap((value: string) => {
-            if (value) {
-              return this.tmdbService.getKeywords(value);
-            }
-          })
-        )
-        .subscribe((r) => (this.filteredTags = r));
     }
 
     public remove(tag: IKeywordTag, tag_type: string): void {
@@ -159,7 +173,7 @@ export class TheMovieDbComponent implements OnInit {
 
         this.settingsService.saveTheMovieDbSettings(this.settings).subscribe(x => {
             if (x) {
-                this.notificationService.success("Successfully saved The Movie Database settings");
+                this.notificationService.success("Successfully saved The Movie Database settings. Restart the server to refresh the cache.");
             } else {
                 this.notificationService.success("There was an error when saving The Movie Database settings");
             }

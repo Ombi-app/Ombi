@@ -63,7 +63,7 @@
         <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef> </th>
             <td mat-cell *matCellDef="let element">
-                <button id="detailsButton{{element.id}}" mat-raised-button color="accent" [routerLink]="'/details/tv/' + element.parentRequest.externalProviderId">{{'Requests.Details' | translate}}</button>
+                <a id="detailsButton{{element.id}}" mat-raised-button color="accent" [routerLink]="'/details/tv/' + element.parentRequest.externalProviderId">{{'Requests.Details' | translate}}</a> 
                 <button id="optionsButton{{element.id}}" mat-raised-button color="warn" (click)="openOptions(element)" *ngIf="isAdmin">{{'Requests.Options' | translate}}</button>
             </td>
         </ng-container>

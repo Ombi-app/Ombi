@@ -27,6 +27,10 @@ export class JobService extends ServiceHelpers {
         return this.http.post<boolean>(`${this.url}plexUserImporter/`, {headers: this.headers});
     }
 
+    public runPlexWatchlistImport(): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}plexwatchlist/`, {headers: this.headers});
+    }
+
     public runEmbyImporter(): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}embyUserImporter/`, {headers: this.headers});
     }
@@ -41,6 +45,10 @@ export class JobService extends ServiceHelpers {
 
     public runPlexRecentlyAddedCacher(): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}plexrecentlyadded/`, {headers: this.headers});
+    }
+
+    public runEmbyRecentlyAddedCacher(): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}embyrecentlyadded/`, {headers: this.headers});
     }
 
     public clearMediaserverData(): Observable<boolean> {

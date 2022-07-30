@@ -19,11 +19,12 @@ namespace Ombi.Core.Engine.Interfaces
         Task<IEnumerable<T>> GetRequests();
         Task<bool> UserHasRequest(string userId);
 
-        Task<RequestEngineResult> MarkUnavailable(int modelId);
-        Task<RequestEngineResult> MarkAvailable(int modelId);
+        Task<RequestEngineResult> MarkUnavailable(int modelId, bool is4K);
+        Task<RequestEngineResult> MarkAvailable(int modelId, bool is4K);
         Task<int> GetTotal();
         Task UnSubscribeRequest(int requestId, RequestType type);
         Task SubscribeToRequest(int requestId, RequestType type);
-        Task<RequestEngineResult> ReProcessRequest(int requestId, CancellationToken cancellationToken);
+        Task<RequestEngineResult> ReProcessRequest(int requestId, bool is4K, CancellationToken cancellationToken);
+        void SetUser(OmbiUser user);
     }
 }

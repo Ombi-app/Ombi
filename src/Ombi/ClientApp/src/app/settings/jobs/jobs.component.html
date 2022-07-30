@@ -77,6 +77,13 @@
                         <small *ngIf="form.get('plexRecentlyAddedSync').hasError('required')" class="error-text">The Plex Sync is required</small></mat-form-field>
                         <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('plexRecentlyAddedSync')?.value)">Test</button>
                 </div>
+                <div class="form-group cronBox">
+                    <mat-form-field appearance="outline" floatLabel=always>
+                        <mat-label for="plexWatchlistImport" class="control-mat-label">Plex Watchlist Import</mat-label>              
+                        <input type="text" matInput [ngClass]="{'form-error': form.get('plexWatchlistImport').hasError('required')}" id="plexWatchlistImport" name="plexWatchlistImport" formControlName="plexWatchlistImport">
+                        <small *ngIf="form.get('plexWatchlistImport').hasError('required')" class="error-text">The Plex Watchlist Import is required</small></mat-form-field>
+                        <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('plexWatchlistImport')?.value)">Test</button>
+                </div>
 
                 <div class="form-group cronBox">
                     <mat-form-field appearance="outline" floatLabel=always>
@@ -84,6 +91,14 @@
                         <input type="text" matInput [ngClass]="{'form-error': form.get('embyContentSync').hasError('required')}" id="embyContentSync" name="embyContentSync" formControlName="embyContentSync">
                         <small *ngIf="form.get('embyContentSync').hasError('required')" class="error-text">The Emby Sync is required</small></mat-form-field>
                         <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('embyContentSync')?.value)">Test</button>
+                </div>
+
+                <div class="form-group cronBox">
+                    <mat-form-field appearance="outline" floatLabel=always>
+                        <mat-label for="embyRecentlyAddedSync" class="control-mat-label">Emby Recently Added Sync</mat-label>              
+                        <input type="text" matInput [ngClass]="{'form-error': form.get('embyRecentlyAddedSync').hasError('required')}" id="embyRecentlyAddedSync" name="embyRecentlyAddedSync" formControlName="embyRecentlyAddedSync">
+                        <small *ngIf="form.get('embyRecentlyAddedSync').hasError('required')" class="error-text">The Emby Recently Added Sync is required</small></mat-form-field>
+                        <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('embyRecentlyAddedSync')?.value)">Test</button>
                 </div>
 
                 <div class="form-group cronBox">

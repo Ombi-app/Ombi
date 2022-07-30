@@ -49,7 +49,9 @@ namespace Ombi.Schedule.Jobs.Ombi
                         await _requestQueue.SaveChangesAsync();
                         continue;
                     }
-                    var result = await _movieSender.Send(movieRequest);
+
+                    // TODO probably need to add something to the request queue to better idenitfy if it's a 4k request
+                    var result = await _movieSender.Send(movieRequest, movieRequest.Approved4K);
                     if (result.Success)
                     {
                         request.Completed = DateTime.UtcNow;

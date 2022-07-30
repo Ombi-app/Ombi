@@ -8,6 +8,7 @@ import { IDiscoverCardResult } from "../../interfaces";
 import { IMovieCollectionsViewModel } from "../../../interfaces/ISearchTvResultV2";
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { RequestType } from "../../../interfaces";
+import { FeaturesFacade } from "../../../state/features/features.facade";
 
 @Component({
     templateUrl: "./discover-collections.component.html",
@@ -19,6 +20,7 @@ export class DiscoverCollectionsComponent implements OnInit {
     public collection: IMovieCollectionsViewModel;
     public loadingFlag: boolean;
     public isAdmin: boolean;
+    public is4kEnabled = false;
 
     public discoverResults: IDiscoverCardResult[] = [];
 
@@ -27,13 +29,15 @@ export class DiscoverCollectionsComponent implements OnInit {
          private requestServiceV2: RequestServiceV2,
          private messageService: MessageService,
          private auth: AuthService,
-         private translate: TranslateService) {
+         private translate: TranslateService,
+         private featureFacade: FeaturesFacade) {
         this.route.params.subscribe((params: any) => {
             this.collectionId = params.collectionId;
         });
      }
 
     public async ngOnInit() {
+        this.is4kEnabled = this.featureFacade.is4kEnabled();
         this.loadingFlag = true;
         this.isAdmin = this.auth.isAdmin();
         this.collection = await this.searchService.getMovieCollections(this.collectionId);

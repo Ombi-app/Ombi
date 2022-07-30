@@ -3,6 +3,7 @@
     public class JobSettings : Settings
     {
         public string EmbyContentSync { get; set; }
+        public string EmbyRecentlyAddedSync { get; set; }
         public string JellyfinContentSync { get; set; }
         public string SonarrSync { get; set; }
         public string RadarrSync { get; set; }
@@ -18,5 +19,6 @@
         public string RetryRequests { get; set; }
         public string MediaDatabaseRefresh { get; set; }
         public string AutoDeleteRequests { get; set; }
+        public string PlexWatchlistImport { get; set; }
     }
 }

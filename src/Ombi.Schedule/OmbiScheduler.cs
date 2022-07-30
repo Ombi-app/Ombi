@@ -91,11 +91,13 @@ namespace Ombi.Schedule
             await OmbiQuartz.Instance.AddJob<IPlexUserImporter>(nameof(IPlexUserImporter), "Plex", JobSettingsHelper.UserImporter(s));
             await OmbiQuartz.Instance.AddJob<IPlexEpisodeSync>(nameof(IPlexEpisodeSync), "Plex", null);
             await OmbiQuartz.Instance.AddJob<IPlexAvailabilityChecker>(nameof(IPlexAvailabilityChecker), "Plex", null);
+            await OmbiQuartz.Instance.AddJob<IPlexWatchlistImport>(nameof(IPlexWatchlistImport), "Plex", JobSettingsHelper.PlexWatchlistImport(s));
         }
 
         private static async Task AddEmby(JobSettings s)
         {
             await OmbiQuartz.Instance.AddJob<IEmbyContentSync>(nameof(IEmbyContentSync), "Emby", JobSettingsHelper.EmbyContent(s));
+            await OmbiQuartz.Instance.AddJob<IEmbyContentSync>(nameof(IEmbyContentSync) + "RecentlyAdded", "Emby", JobSettingsHelper.EmbyRecentlyAddedSync(s), new Dictionary<string, string> { { JobDataKeys.EmbyRecentlyAddedSearch, "true" } });
             await OmbiQuartz.Instance.AddJob<IEmbyEpisodeSync>(nameof(IEmbyEpisodeSync), "Emby", null);
             await OmbiQuartz.Instance.AddJob<IEmbyAvaliabilityChecker>(nameof(IEmbyAvaliabilityChecker), "Emby", null);
             await OmbiQuartz.Instance.AddJob<IEmbyUserImporter>(nameof(IEmbyUserImporter), "Emby", JobSettingsHelper.UserImporter(s));

@@ -1,6 +1,6 @@
 <div class="container top-spacing" *ngIf="details">
 
-  <h1>Issues for {{details.title}}</h1>
+  <h1>{{ 'Issues.IssuesForTitle' | translate: { title: details.title} }}</h1>
   <div>
     <span>{{'Issues.Requested' | translate}} 
       <i *ngIf="!hasRequest" class="far fa-times-circle"></i>

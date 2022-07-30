@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { RequestService, MessageService } from "../../../../services";
 import { TranslateService } from "@ngx-translate/core";
 import { RequestType, IRequestEngineResult } from "../../../../interfaces";
+import { firstValueFrom } from "rxjs";
 
 @Component({
     selector: "deny-dialog",
@@ -22,13 +23,13 @@ export class DenyDialogComponent {
         public async deny() {
             let result: IRequestEngineResult;
             if(this.data.requestType == RequestType.movie) {
-                result = await this.requestService.denyMovie({id: this.data.requestId, reason: this.denyReason }).toPromise();
+                result = await firstValueFrom(this.requestService.denyMovie({id: this.data.requestId, reason: this.denyReason, is4K: this.data.is4K }));
             }
             if(this.data.requestType == RequestType.tvShow) {
-                result = await this.requestService.denyChild({id: this.data.requestId, reason: this.denyReason }).toPromise();
+                result = await firstValueFrom(this.requestService.denyChild({id: this.data.requestId, reason: this.denyReason }));
             }
             if(this.data.requestType == RequestType.album) {
-                result = await this.requestService.denyAlbum({id: this.data.requestId, reason: this.denyReason }).toPromise();
+                result = await firstValueFrom(this.requestService.denyAlbum({id: this.data.requestId, reason: this.denyReason }));
             }
 
             if (result.result) {

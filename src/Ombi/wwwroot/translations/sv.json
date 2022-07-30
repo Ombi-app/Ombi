@@ -14,18 +14,26 @@
     "Common": {
         "ContinueButton": "Fortsätt",
         "Available": "Tillgänglig",
-        "Approved": "Approved",
+        "Available4K": "Tillgänglig 4K",
+        "Approved": "Godkänd",
+        "Approve4K": "Godkänn 4K",
         "Pending": "Pending",
         "PartiallyAvailable": "Delvis tillgänglig",
         "Monitored": "Övervakad",
         "NotAvailable": "Inte tillgänglig",
         "ProcessingRequest": "Bearbetar förfrågan",
+        "ProcessingRequest4K": "Processing Request 4K",
         "PendingApproval": "Väntar på godkännande",
+        "PendingApproval4K": "Pending Approval 4K",
         "RequestDenied": "Efterfrågan nekas",
+        "RequestDenied4K": "Request Denied 4K",
         "NotRequested": "Inte begärd",
+        "NotRequested4K": "Not Requested 4K",
         "Requested": "Begärd",
-        "Search": "Search",
+        "Requested4K": "Begärd 4K",
+        "Search": "Sök",
         "Request": "Begär",
+        "Request4K": "Begär 4K",
         "Denied": "Nekad",
         "Approve": "Godkänn",
         "PartlyAvailable": "Delvis tillgänglig",
@@ -54,6 +62,10 @@
         "OfflineHeading": "För närvarande Offline",
         "OfflineParagraph": "Medieservern är för närvarande offline.",
         "CheckPageForUpdates": "Håll utkik här för uppdateringar på denna sida."
+    },
+    "ErrorPages": {
+        "NotFound": "Page not found",
+        "SomethingWentWrong": "Something went wrong!"
     },
     "NavigationBar": {
         "Discover": "Upptäck",
@@ -101,7 +113,7 @@
         "TheatricalRelease": "Biopremiär: {{date}}",
         "ViewOnPlex": "Visa på Plex",
         "ViewOnEmby": "Visa på Emby",
-        "ViewOnJellyfin": "Play On Jellyfin",
+        "ViewOnJellyfin": "Spela på Jellyfin",
         "RequestAdded": "Begäran av {{title}} har lagts till",
         "Similar": "Liknande",
         "Refine": "Förfina",
@@ -131,6 +143,9 @@
         },
         "AdvancedSearchInstructions": "Please choose what type of media you are searching for:",
         "YearOfRelease": "Year of Release",
+        "SearchGenre": "Search Genre",
+        "SearchKeyword": "Search Keyword",
+        "SearchProvider": "Search Provider",
         "KeywordSearchingDisclaimer": "Please note that Keyword Searching is very hit and miss due to the inconsistent data in TheMovieDb"
     },
     "Requests": {
@@ -155,9 +170,13 @@
         "ChangeRootFolder": "Byt rotmapp",
         "ChangeQualityProfile": "Byt kvalitétsprofil",
         "MarkUnavailable": "Markera Otillgänglig",
+        "MarkUnavailable4K": "Markera som ej tillgänglig 4K",
         "MarkAvailable": "Markera Tillgänglig",
+        "MarkAvailable4K": "Markera som tillgänglig 4K",
         "Remove": "Ta bort",
         "Deny": "Neka",
+        "Deny4K": "Neka 4K",
+        "Has4KRequest": "Har 4K-förfrågan",
         "DenyReason": "Anledning för nekande",
         "DeniedReason": "Denied Reason",
         "Season": "Säsong",
@@ -193,11 +212,16 @@
         "RequestPanel": {
             "Delete": "Ta bort förfrågan",
             "Approve": "Godkänn begäran",
+            "Deny": "Deny Request",
+            "Approve4K": "Godkänn 4K-begäran",
+            "Deny4K": "Deny 4K Request",
             "ChangeAvailability": "Markera Tillgänglig",
             "Deleted": "Successfully deleted selected items",
-            "Approved": "Successfully approved selected items"
+            "Approved": "Successfully approved selected items",
+            "Denied": "Successfully denied selected items"
         },
         "SuccessfullyApproved": "Successfully Approved",
+        "SuccessfullyDeleted": "Request successfully deleted",
         "NowAvailable": "Request is now available",
         "NowUnavailable": "Request is now unavailable",
         "SuccessfullyReprocessed": "Successfully Re-processed the request",
@@ -205,7 +229,7 @@
         "RequestCollection": "Request Collection",
         "CollectionSuccesfullyAdded": "The collection {{name}} has been successfully added!",
         "NeedToSelectEpisodes": "You need to select some episodes!",
-        "RequestAddedSuccessfully": "Request for {{title}} has been added successfully",
+        "RequestAddedSuccessfully": "Begäran av {{title}} har lagts till",
         "ErrorCodes": {
             "AlreadyRequested": "This has already been requested",
             "EpisodesAlreadyRequested": "We already have episodes requested from this series",
@@ -219,10 +243,16 @@
             "MovieRequestQuotaExceeded": "You have exceeded your Movie request quota!",
             "TvRequestQuotaExceeded": "You have exceeded your Episode request quota!",
             "AlbumRequestQuotaExceeded": "You have exceeded your Album request quota!"
-        }
+        },
+        "Notify": "Avisering",
+        "RemoveNotification": "Ta bort avisering",
+        "SuccessfulNotify": "Du kommer nu att aviseras för titel {{title}}",
+        "SuccessfulUnNotify": "Du kommer inte längre att aviseras för titel {{title}}",
+        "CouldntNotify": "Kunde inte avisera för {{title}}"
     },
     "Issues": {
         "Title": "Problem",
+        "IssuesForTitle": "Issues for {{title}}",
         "PendingTitle": "Väntande problem",
         "InProgressTitle": "Pågående problem",
         "ResolvedTitle": "Lösta problem",
@@ -255,7 +285,8 @@
         "Delete": "Ta bort problem",
         "DeletedIssue": "Problemet har tagits bort",
         "Chat": "Chat",
-        "Requested": "Requested",
+        "EnterYourMessage": "Enter Your Message",
+        "Requested": "Begärd",
         "UserOnDate": "{{user}} on {{date}}"
     },
     "Filter": {
@@ -281,6 +312,8 @@
     },
     "MediaDetails": {
         "Denied": "Nekad",
+        "Denied4K": "Nekad 4K",
+        "Trailers": "Trailers",
         "RecommendationsTitle": "Rekommendationer",
         "SimilarTitle": "Liknande",
         "VideosTitle": "Videor",
@@ -291,9 +324,9 @@
         "ViewCollection": "Visa samling",
         "NotEnoughInfo": "Tyvärr finns det inte tillräckligt med information om denna serie ännu!",
         "AdvancedOptions": "Avancerade inställningar",
-        "AutoApproveOptions": "You can configure the request here, once requested it will be send to your DVR application and will be auto approved! Please note, this is optional, just press Request to skip!",
-        "AutoApproveOptionsTv": "You can configure the request here, once requested it will be send to your DVR application and will be auto approved! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it!  Please note, this is optional, just press Request to skip!",
-        "AutoApproveOptionsTvShort": "You can configure the request here, once requested it will be send to your DVR application! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it! Please note, this is optional, just press Request to skip!",
+        "AutoApproveOptions": "You can configure the request here, once requested it will be sent to your DVR application and will be auto approved! Please note, this is optional, just press Request to skip!",
+        "AutoApproveOptionsTv": "You can configure the request here, once requested it will be sent to your DVR application and will be auto approved! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it!  Please note, this is optional, just press Request to skip!",
+        "AutoApproveOptionsTvShort": "You can configure the request here, once requested it will be sent to your DVR application! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it! Please note, this is optional, just press Request to skip!",
         "QualityProfilesSelect": "Välj en kvalitetsprofil",
         "RootFolderSelect": "Välj en rotmapp",
         "LanguageProfileSelect": "Select A Language Profile",
@@ -311,22 +344,23 @@
         },
         "Seasons": "Seasons:",
         "Episodes": "Episodes:",
-        "Availability": "Availability:",
-        "RequestStatus": "Status för begäran",
-        "Quality": "Quality:",
-        "RootFolderOverride": "Root Folder Override:",
-        "QualityOverride": "Quality Override:",
-        "Network": "Network:",
-        "Genres": "Genres:",
-        "FirstAired": "First Aired:",
-        "TheatricalRelease": "Release:",
-        "DigitalRelease": "Digital Release:",
-        "Votes": "Votes:",
-        "Runtime": "Runtime:",
+        "Availability": "Tillgänglighet:",
+        "RequestStatus": "Request Status:",
+        "Quality": "Kvalitet:",
+        "RootFolderOverride": "Rotmappsöverskridande:",
+        "QualityOverride": "Kvalitétsöverskridande:",
+        "Network": "Tv-nätverk:",
+        "GenresLabel": "Genrer:",
+        "Genres": "Genrer",
+        "FirstAired": "Sändes första gången:",
+        "TheatricalRelease": "Biopremiär:",
+        "DigitalRelease": "Digital release:",
+        "Votes": "Röster:",
+        "Runtime": "Speltid:",
         "Minutes": "{{runtime}} minuter",
-        "Revenue": "Revenue:",
+        "Revenue": "Intäkter:",
         "Budget": "Budget:",
-        "Keywords": "Keywords/Tags:",
+        "Keywords": "Nyckelord/Taggar:",
         "Casts": {
             "CastTitle": "Rollista"
         },
@@ -335,23 +369,26 @@
             "FirstSeasonTooltip": "Detta kommer endast att begära den första säsongen för denna serie",
             "LatestSeasonTooltip": "Detta kommer endast att begära den senaste säsongen för denna serie",
             "NoEpisodes": "There unfortunately is no episode data for this show yet!",
-            "SeasonNumber": "Season {{number}}"
+            "SeasonNumber": "Säsong {{number}}"
         },
-        "SonarrConfiguration": "Sonarr Configuration",
-        "RadarrConfiguration": "Radarr Configuration",
-        "RequestOnBehalf": "Request on behalf of",
-        "PleaseSelectUser": "Please select a user",
-        "StreamingOn": "Streaming On:",
-        "RequestedBy": "Requested By:",
-        "RequestDate": "Request Date:",
+        "SonarrConfiguration": "Sonarr Konfiguration",
+        "RadarrConfiguration": "Radarr Konfiguration",
+        "RequestOnBehalf": "På begäran av",
+        "PleaseSelectUser": "Vänligen välj en användare",
+        "StreamingOn": "Strömmar på:",
+        "RequestedBy": "Efterfrågats av:",
+        "RequestedByOn": "Requested By {{user}} on {{date}}",
+        "RequestDate": "Datum för begäran:",
         "DeniedReason": "Denied Reason:",
         "ReProcessRequest": "Re-Process Request",
+        "ReProcessRequest4K": "Omarbeta 4K-förfrågan",
         "Music": {
             "Type": "Type:",
             "Country": "Country:",
             "StartDate": "Start Date:",
             "EndDate": "EndDate:"
-        }
+        },
+        "RequestSource": "Källa:"
     },
     "Discovery": {
         "PopularTab": "Populära",
@@ -374,15 +411,15 @@
             "Writer": "Författare",
             "ExecProducer": "Exekutiv producent"
         },
-        "NoSearch": "Sorry, nothing matches your search!"
+        "NoSearch": "Tyvärr, inget matchar din sökning!"
     },
     "UserPreferences": {
         "Welcome": "Välkommen {{username}}!",
         "OmbiLanguage": "Språk",
         "DarkMode": "Mörkt läge",
-        "Updated": "Successfully Updated",
+        "Updated": "Uppdatering lyckades",
         "StreamingCountry": "Streaming Country",
-        "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will have US related streaming information.",
+        "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will get US related streaming information.",
         "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
         "MobileQRCode": "Mobile QR Code",
         "LegacyApp": "Launch Legacy App",
@@ -391,12 +428,13 @@
         "ChangeDetails": "Change Details",
         "NeedCurrentPassword": "You need your current password to make any changes here",
         "CurrentPassword": "Current Password",
-        "EmailAddress": "Email Address",
+        "EmailAddress": "E-postadress",
         "NewPassword": "New Password",
         "NewPasswordConfirm": "New Password Confirm",
         "Security": "Security",
         "Profile": "Profile",
-        "UpdatedYourInformation": "Updated your information"
+        "UpdatedYourInformation": "Updated your information",
+        "Unsubscribed": "Unsubscribed!"
     },
     "UserTypeLabel": {
         "1": "Local User",
@@ -404,5 +442,14 @@
         "3": "Emby User",
         "4": "Emby Connect User",
         "5": "Jellyfin User"
+    },
+    "Paginator": {
+        "itemsPerPageLabel": "Items per page:",
+        "nextPageLabel": "Next page",
+        "previousPageLabel": "Previous page",
+        "firstPageLabel": "First page",
+        "lastPageLabel": "Last page",
+        "rangePageLabel1": "0 of {{length}}",
+        "rangePageLabel2": "{{startIndex}} – {{endIndex}} of {{length}}"
     }
 }

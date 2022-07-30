@@ -40,6 +40,8 @@ using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Quartz;
 using Ombi.Schedule.Jobs.Ombi;
+using Ombi.Api.Emby.Models;
+using Ombi.Api.Emby.Models.Media.Tv;
 
 namespace Ombi.Schedule.Jobs.Emby
 {
@@ -61,13 +63,22 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly IEmbyContentRepository _repo;
         private readonly IHubContext<NotificationHub> _notification;
 
+        private const int AmountToTake = 100;
+
         private IEmbyApi Api { get; set; }
 
 
-        public async Task Execute(IJobExecutionContext job)
+        public async Task Execute(IJobExecutionContext context)
         {
+            JobDataMap dataMap = context.MergedJobDataMap;
+            var recentlyAddedSearch = false;
+            if (dataMap.TryGetValue(JobDataKeys.EmbyRecentlyAddedSearch, out var recentlyAddedObj))
+            {
+                recentlyAddedSearch = Convert.ToBoolean(recentlyAddedObj);
+            }
+
             var settings = await _settings.GetSettingsAsync();
-            
+
             Api = _apiFactory.CreateClient(settings);
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Emby Episode Sync Started");
@@ -79,12 +90,12 @@ namespace Ombi.Schedule.Jobs.Emby
                     foreach (var tvParentIdFilter in tvLibsToFilter)
                     {
                         _logger.LogInformation($"Scanning Lib for episodes '{tvParentIdFilter.Title}'");
-                        await CacheEpisodes(server, tvParentIdFilter.Key);
+                        await CacheEpisodes(server, recentlyAddedSearch, tvParentIdFilter.Key);
                     }
                 }
                 else
                 {
-                    await CacheEpisodes(server, string.Empty);
+                    await CacheEpisodes(server, recentlyAddedSearch, string.Empty);
                 }
             }
 
@@ -94,23 +105,30 @@ namespace Ombi.Schedule.Jobs.Emby
             await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
         }
 
-        private async Task CacheEpisodes(EmbyServers server, string parentIdFilter)
+        private async Task CacheEpisodes(EmbyServers server, bool recentlyAdded, string parentIdFilter)
         {
-            var allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, 0, 200, server.AdministratorId, server.FullUri);
+            EmbyItemContainer<EmbyEpisodes> allEpisodes;
+            if (recentlyAdded)
+            {
+                var recentlyAddedAmountToTake = AmountToTake;
+                allEpisodes = await Api.RecentlyAddedEpisodes(server.ApiKey, parentIdFilter, 0, recentlyAddedAmountToTake, server.AdministratorId, server.FullUri);
+                if (allEpisodes.TotalRecordCount > recentlyAddedAmountToTake)
+                {
+                    allEpisodes.TotalRecordCount = recentlyAddedAmountToTake;
+                }
+            }
+            else
+            {
+                allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, 0, AmountToTake, server.AdministratorId, server.FullUri);
+            }
             var total = allEpisodes.TotalRecordCount;
-            var processed = 1;
+            var processed = 0;
             var epToAdd = new HashSet<EmbyEpisode>();
             while (processed < total)
             {
                 foreach (var ep in allEpisodes.Items)
                 {
                     processed++;
-
-                    if (ep.LocationType?.Equals("Virtual", StringComparison.InvariantCultureIgnoreCase) ?? false)
-                    {
-                        // For some reason Emby is not respecting the `IsVirtualItem` field.
-                        continue;
-                    }
 
                     // Let's make sure we have the parent request, stop those pesky forign key errors,
                     // Damn me having data integrity
@@ -128,6 +146,13 @@ namespace Ombi.Schedule.Jobs.Emby
 
                     if (existingEpisode == null && !existingInList)
                     {
+                        // Sanity checks
+                        if (ep.IndexNumber == 0)
+                        {
+                            _logger.LogWarning($"Episode {ep.Name} has no episode number. Skipping.");
+                            continue;
+                        }
+
                         _logger.LogDebug("Adding new episode {0} to parent {1}", ep.Name, ep.SeriesName);
                         // add it
                         epToAdd.Add(new EmbyEpisode
@@ -145,25 +170,36 @@ namespace Ombi.Schedule.Jobs.Emby
 
                         if (ep.IndexNumberEnd.HasValue && ep.IndexNumberEnd.Value != ep.IndexNumber)
                         {
-                            epToAdd.Add(new EmbyEpisode
+                            int episodeNumber = ep.IndexNumber;
+                            do
                             {
-                                EmbyId = ep.Id,
-                                EpisodeNumber = ep.IndexNumberEnd.Value,
-                                SeasonNumber = ep.ParentIndexNumber,
-                                ParentId = ep.SeriesId,
-                                TvDbId = ep.ProviderIds.Tvdb,
-                                TheMovieDbId = ep.ProviderIds.Tmdb,
-                                ImdbId = ep.ProviderIds.Imdb,
-                                Title = ep.Name,
-                                AddedAt = DateTime.UtcNow
-                            });
+                                _logger.LogDebug($"Multiple-episode file detected. Adding episode ${episodeNumber}");
+                                episodeNumber++;
+                                epToAdd.Add(new EmbyEpisode
+                                {
+                                    EmbyId = ep.Id,
+                                    EpisodeNumber = episodeNumber,
+                                    SeasonNumber = ep.ParentIndexNumber,
+                                    ParentId = ep.SeriesId,
+                                    TvDbId = ep.ProviderIds.Tvdb,
+                                    TheMovieDbId = ep.ProviderIds.Tmdb,
+                                    ImdbId = ep.ProviderIds.Imdb,
+                                    Title = ep.Name,
+                                    AddedAt = DateTime.UtcNow
+                                });
+
+                            } while (episodeNumber < ep.IndexNumberEnd.Value);
+                        
                         }
                     }
                 }
 
                 await _repo.AddRange(epToAdd);
                 epToAdd.Clear();
-                allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, processed, 200, server.AdministratorId, server.FullUri);
+                if (!recentlyAdded)
+                {
+                    allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, processed, AmountToTake, server.AdministratorId, server.FullUri);
+                }
             }
 
             if (epToAdd.Any())

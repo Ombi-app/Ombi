@@ -7,6 +7,7 @@ using Ombi.Api.MusicBrainz;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Authentication;
+using Ombi.Core.Helpers;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search.V2;
 using Ombi.Core.Rule.Interfaces;
@@ -16,12 +17,17 @@ using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Ombi.TheMovieDbApi.Models;
+
+// Due to conflicting Genre models in
+// Ombi.TheMovieDbApi.Models and Ombi.Api.TheMovieDb.Models   
+using Genre = Ombi.TheMovieDbApi.Models.Genre;
 
 namespace Ombi.Core.Engine.V2
 {
     public class MultiSearchEngine : BaseMediaEngine, IMultiSearchEngine
     {
-        public MultiSearchEngine(IPrincipal identity, IRequestServiceMain requestService, IRuleEvaluator rules,
+        public MultiSearchEngine(ICurrentUser identity, IRequestServiceMain requestService, IRuleEvaluator rules,
             OmbiUserManager um, ICacheService cache, ISettingsService<OmbiSettings> ombiSettings, IRepository<RequestSubscription> sub,
             IMovieDbApi movieDbApi, ISettingsService<LidarrSettings> lidarrSettings, IMusicBrainzApi musicApi)
             : base(identity, requestService, rules, um, cache, ombiSettings, sub)
@@ -112,6 +118,16 @@ namespace Ombi.Core.Engine.V2
             }
 
             return model;
+        }
+
+        public async Task<IEnumerable<Genre>> GetGenres(string media, CancellationToken cancellationToken)
+        {
+            var lang = await DefaultLanguageCode(null);
+            return await _movieDbApi.GetGenres(media, cancellationToken, lang);
+        }
+        public async Task<IEnumerable<Language>> GetLanguages(CancellationToken cancellationToken)
+        {
+            return await _movieDbApi.GetLanguages(cancellationToken);
         }
     }
 }

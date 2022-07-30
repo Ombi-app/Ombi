@@ -24,12 +24,13 @@ using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using System.ComponentModel;
+using Ombi.Core.Helpers;
 
 namespace Ombi.Core.Engine
 {
     public class MusicRequestEngine : BaseMediaEngine, IMusicRequestEngine
     {
-        public MusicRequestEngine(IRequestServiceMain requestService, IPrincipal user,
+        public MusicRequestEngine(IRequestServiceMain requestService, ICurrentUser user,
             INotificationHelper helper, IRuleEvaluator r, ILogger<MusicRequestEngine> log,
             OmbiUserManager manager, IRepository<RequestLog> rl, ICacheService cache,
             ISettingsService<OmbiSettings> ombiSettings, IRepository<RequestSubscription> sub, ILidarrApi lidarr,
@@ -269,7 +270,10 @@ namespace Ombi.Core.Engine
                 }
                 else
                 {
-                    x.ShowSubscribe = true;
+                    if (!x.Available && (!x.Denied ?? false))
+                    {
+                        x.ShowSubscribe = true;
+                    }
                     var hasSub = sub.FirstOrDefault(r => r.RequestId == x.Id);
                     x.Subscribed = hasSub != null;
                 }
@@ -404,10 +408,20 @@ namespace Ombi.Core.Engine
         /// </summary>
         /// <param name="requestId">The request identifier.</param>
         /// <returns></returns>
-        public async Task RemoveAlbumRequest(int requestId)
+        public async Task<RequestEngineResult> RemoveAlbumRequest(int requestId)
         {
             var request = await MusicRepository.GetAll().FirstOrDefaultAsync(x => x.Id == requestId);
+            
+            var result = await CheckCanManageRequest(request);
+            if (result.IsError)
+                return result;
+
             await MusicRepository.Delete(request);
+
+            return new RequestEngineResult
+            {
+                Result = true,
+            };
         }
 
         public async Task<bool> UserHasRequest(string userId)

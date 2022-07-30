@@ -3,6 +3,12 @@ name: PR Build
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  pull-requests: write
+  issues: write
+  repository-projects: write
 
 jobs:
   build-ui:
@@ -27,11 +33,12 @@ jobs:
 
   unit-test:
     runs-on: ubuntu-latest
+      
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '5.0.x'
+          dotnet-version: '6.0.x'
 
       - name: Nuget Cache
         uses: actions/cache@v2
@@ -44,7 +51,7 @@ jobs:
       - name: Run Unit Tests
         run: |
           cd src
-          dotnet test --logger trx --results-directory "TestResults"
+          dotnet test --configuration "Release" --logger "trx;LogFileName=test-results.trx"
 
   analysis:
     runs-on: ubuntu-latest
@@ -89,6 +96,9 @@ jobs:
             format: tar.gz
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
 
       - name: Nuget Cache
         uses: actions/cache@v2

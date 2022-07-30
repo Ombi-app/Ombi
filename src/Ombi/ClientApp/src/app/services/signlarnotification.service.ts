@@ -1,8 +1,8 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 
-import { HubConnection } from '@aspnet/signalr';
-import * as signalR from '@aspnet/signalr';
+import { HubConnection } from '@microsoft/signalr';
+import * as signalR from '@microsoft/signalr';
 
 @Injectable()
 export class SignalRNotificationService {

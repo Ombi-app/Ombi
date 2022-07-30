@@ -6,39 +6,50 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Ombi.Core.Authentication;
 using Ombi.Helpers;
 using Ombi.Models;
 using Ombi.Models.External;
-using Ombi.Models.Identity;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Ombi.Core.Settings;
+using Ombi.Settings.Settings.Models;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Ombi.Controllers.V1
 {
+
+
+    public class Token
+    {
+        [JsonProperty("access_token")]
+        public string AccessToken { get; set; }
+        public DateTime Expiration { get; set; }
+    }
+
     [ApiV1]
     [Produces("application/json")]
     [ApiController]
     public class TokenController : ControllerBase
     {
-        public TokenController(OmbiUserManager um, IOptions<TokenAuthentication> ta, ITokenRepository token,
-            IPlexOAuthManager oAuthManager, ILogger<TokenController> logger)
+        public TokenController(OmbiUserManager um, ITokenRepository token,
+            IPlexOAuthManager oAuthManager, ILogger<TokenController> logger, ISettingsService<AuthenticationSettings> auth)
         {
             _userManager = um;
-            _tokenAuthenticationOptions = ta.Value;
             _token = token;
             _plexOAuthManager = oAuthManager;
             _log = logger;
+            _authSettings = auth;
         }
 
-        private readonly TokenAuthentication _tokenAuthenticationOptions;
         private readonly ITokenRepository _token;
         private readonly OmbiUserManager _userManager;
         private readonly IPlexOAuthManager _plexOAuthManager;
         private readonly ILogger<TokenController> _log;
+        private readonly ISettingsService<AuthenticationSettings> _authSettings;
 
         /// <summary>
         /// Gets the token.
@@ -47,6 +58,7 @@ namespace Ombi.Controllers.V1
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(401)]
+        [ProducesResponseType(typeof(Token), 200)]
         public async Task<IActionResult> GetToken([FromBody] UserAuthModel model)
         {
             if (!model.UsePlexOAuth)
@@ -113,6 +125,7 @@ namespace Ombi.Controllers.V1
             {
                 return Unauthorized();
             }
+            
             return await CreateToken(true, user);
         }
 
@@ -143,7 +156,6 @@ namespace Ombi.Controllers.V1
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(StartupSingleton.Instance.SecurityKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-
             var token = new JwtSecurityToken(
                 claims: claims,
                 expires: rememberMe ? DateTime.Now.AddYears(1) : DateTime.Now.AddDays(7),
@@ -161,10 +173,10 @@ namespace Ombi.Controllers.V1
 
             await _userManager.UpdateAsync(user);
 
-            return new JsonResult(new
+            return Ok(new Token
             {
-                access_token = accessToken,
-                expiration = token.ValidTo
+                AccessToken = accessToken,
+                Expiration = token.ValidTo
             });
         }
 
@@ -199,6 +211,9 @@ namespace Ombi.Controllers.V1
                     return new UnauthorizedResult();
                 }
             }
+
+            user.MediaServerToken = account.user.authentication_token;
+            await  _userManager.UpdateAsync(user);
 
             return await CreateToken(true, user);
         }
@@ -271,6 +286,39 @@ namespace Ombi.Controllers.V1
             }
 
             return ip;
+        }
+
+        [HttpPost("header_auth")]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> HeaderAuth()
+        {
+            var authSettings = await _authSettings.GetSettingsAsync();
+            _log.LogInformation("Logging with header: " + authSettings.HeaderAuthVariable);
+            if (authSettings.HeaderAuthVariable != null && authSettings.EnableHeaderAuth)
+            {
+                if (Request.HttpContext?.Request?.Headers != null && Request.HttpContext.Request.Headers.ContainsKey(authSettings.HeaderAuthVariable))
+                {
+                    var username = Request.HttpContext.Request.Headers[authSettings.HeaderAuthVariable].ToString();
+
+                    // Check if user exists
+                    var user = await _userManager.FindByNameAsync(username);
+                    if (user == null)
+                    {
+                        return new UnauthorizedResult();
+                    }
+
+                    return await CreateToken(true, user);
+                }
+                else
+                {
+                    return new UnauthorizedResult();
+                }
+            }    
+            else
+            {
+                return new UnauthorizedResult();
+            }
         }
     }
 }

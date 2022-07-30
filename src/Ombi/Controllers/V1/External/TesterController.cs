@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -48,7 +49,7 @@ namespace Ombi.Controllers.V1.External
             IPlexApi plex, IEmbyApiFactory emby, IRadarrV3Api radarr, ISonarrApi sonarr, ILogger<TesterController> log, IEmailProvider provider,
             ICouchPotatoApi cpApi, ITelegramNotification telegram, ISickRageApi srApi, INewsletterJob newsletter, ILegacyMobileNotification mobileNotification,
             ILidarrApi lidarrApi, IGotifyNotification gotifyNotification, IWhatsAppApi whatsAppApi, OmbiUserManager um, IWebhookNotification webhookNotification,
-            IJellyfinApi jellyfinApi)
+            IJellyfinApi jellyfinApi, IPrincipal user)
         {
             Service = service;
             DiscordNotification = notification;
@@ -74,6 +75,7 @@ namespace Ombi.Controllers.V1.External
             UserManager = um;
             WebhookNotification = webhookNotification;
             _jellyfinApi = jellyfinApi;
+            UserPrinciple = user;
         }
 
         private INotificationService Service { get; }
@@ -100,6 +102,7 @@ namespace Ombi.Controllers.V1.External
         private IWhatsAppApi WhatsAppApi { get; }
         private OmbiUserManager UserManager {get; }
         private readonly IJellyfinApi _jellyfinApi;
+        private IPrincipal UserPrinciple { get; }
 
         /// <summary>
         /// Sends a test message to discord using the provided settings
@@ -279,11 +282,18 @@ namespace Ombi.Controllers.V1.External
         {
             try
             {
+                var currentUser = await GetCurrentUserAsync();
+
+                if (!currentUser.Email.HasValue())
+                {
+                    throw new Exception($"User '{currentUser.UserName}' has no email address set on their user profile.");
+                }
+
                 var message = new NotificationMessage
                 {
                     Message = "This is just a test! Success!",
                     Subject = $"Ombi: Test",
-                    To = settings.AdminEmail,
+                    To = currentUser.Email,
                 };
 
                 message.Other.Add("PlainTextBody", "This is just a test! Success!");
@@ -296,6 +306,11 @@ namespace Ombi.Controllers.V1.External
             }
 
             return true;
+        }
+
+        private async Task<OmbiUser> GetCurrentUserAsync()
+        {
+            return await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == UserPrinciple.Identity.Name.ToUpper());
         }
 
         /// <summary>
@@ -531,7 +546,7 @@ namespace Ombi.Controllers.V1.External
             {
 
                 var user = await UserManager.Users.Include(x => x.UserNotificationPreferences).FirstOrDefaultAsync(x => x.UserName == HttpContext.User.Identity.Name);
-                
+
 
                 var status = await WhatsAppApi.SendMessage(new WhatsAppModel {
                     From = settings.From,

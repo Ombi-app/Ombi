@@ -2,6 +2,7 @@
 <button mat-button [matMenuTriggerFor]="configurationmenu"><i class="fas fa-wrench" aria-hidden="true"></i> Configuration</button>
 <mat-menu #configurationmenu="matMenu">
     <button mat-menu-item [routerLink]="['/Settings/Ombi']"><i class="far fa-grin-stars icon-spacing"></i> General</button>
+    <button mat-menu-item [routerLink]="['/Settings/Features']"><i class="fas fa-rocket icon-spacing"></i> Control Features</button>
     <button mat-menu-item [routerLink]="['/Settings/Customization']"><i class="fas fa-paint-brush icon-spacing"></i> Customization</button>
     <button mat-menu-item [routerLink]="['/Settings/LandingPage']"><i class="far fa-file icon-spacing"></i> Landing Page</button>
     <button mat-menu-item [routerLink]="['/Settings/Issues']"><i class="fas fa-exclamation-triangle icon-spacing"></i> Issues</button>

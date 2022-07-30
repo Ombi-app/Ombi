@@ -23,10 +23,12 @@ export class SocialIconsComponent {
 
     @Input() isAdmin: boolean;
     @Input() canShowAdvanced: boolean;
+    @Input() has4KRequest: boolean;
 
     @Output() openTrailer: EventEmitter<any> = new EventEmitter();
     @Output() onAdvancedOptions: EventEmitter<any> = new EventEmitter();
     @Output() onReProcessRequest: EventEmitter<any> = new EventEmitter();
+    @Output() onReProcess4KRequest: EventEmitter<any> = new EventEmitter();
 
     public RequestType = RequestType;
 
@@ -39,7 +41,11 @@ export class SocialIconsComponent {
         this.onAdvancedOptions.emit();
     }
 
-    public reProcessRequest() {
-        this.onReProcessRequest.emit();
+    public reProcessRequest(is4K: boolean) {
+        if (is4K) {
+            this.onReProcess4KRequest.emit();
+        } else {
+            this.onReProcessRequest.emit();
+        }
     }
 }

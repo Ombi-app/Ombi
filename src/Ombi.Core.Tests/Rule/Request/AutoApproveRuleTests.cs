@@ -10,6 +10,8 @@ using Ombi.Test.Common;
 using System.Collections.Generic;
 using Ombi.Store.Entities;
 using System;
+using Ombi.Core.Services;
+using Ombi.Core.Helpers;
 
 namespace Ombi.Core.Tests.Rule.Request
 {
@@ -26,23 +28,26 @@ namespace Ombi.Core.Tests.Rule.Request
         public void Setup()
         {
 
-            PrincipalMock = new Mock<IPrincipal>();
-            PrincipalMock.Setup(x => x.Identity.Name).Returns("abc");
+            FeatureService = new Mock<IFeatureService>();
+
+            PrincipalMock = new Mock<ICurrentUser>();
+            PrincipalMock.Setup(x => x.Username).Returns("abc");
+            PrincipalMock.Setup(x => x.GetUser()).ReturnsAsync(new OmbiUser { UserName = "abc", NormalizedUserName = "ABC", Id = "a" });
 
             UserManager = MockHelper.MockUserManager(_users);
-            Rule = new AutoApproveRule(PrincipalMock.Object, UserManager.Object);
+            Rule = new AutoApproveRule(PrincipalMock.Object, UserManager.Object, FeatureService.Object);
         }
 
-
         private AutoApproveRule Rule { get; set; }
-        private Mock<IPrincipal> PrincipalMock { get; set; }
+        private Mock<ICurrentUser> PrincipalMock { get; set; }
         private Mock<OmbiUserManager> UserManager { get; set; }
+        private Mock<IFeatureService> FeatureService { get; set; }
 
         [Test]
         public async Task Should_ReturnSuccess_WhenAdminAndRequestMovie()
         {
             UserManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), OmbiRoles.Admin)).ReturnsAsync(true);
-            var request = new BaseRequest() { RequestType = Store.Entities.RequestType.Movie };
+            var request = new MovieRequests() { RequestType = Store.Entities.RequestType.Movie };
             var result = await Rule.Execute(request);
 
             Assert.True(result.Success);
@@ -64,7 +69,7 @@ namespace Ombi.Core.Tests.Rule.Request
         public async Task Should_ReturnSuccess_WhenAutoApproveMovieAndRequestMovie()
         {
             UserManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), OmbiRoles.AutoApproveMovie)).ReturnsAsync(true);
-            var request = new BaseRequest() { RequestType = Store.Entities.RequestType.Movie };
+            var request = new MovieRequests() { RequestType = Store.Entities.RequestType.Movie };
             var result = await Rule.Execute(request);
 
             Assert.True(result.Success);
@@ -96,7 +101,8 @@ namespace Ombi.Core.Tests.Rule.Request
         [Test]
         public async Task Should_ReturnSuccess_WhenSystemUserAndRequestTV()
         {
-            PrincipalMock.Setup(x => x.Identity.Name).Returns("sys");
+            PrincipalMock.Setup(x => x.GetUser()).ReturnsAsync(new OmbiUser { UserName = "sys", NormalizedUserName = "SYS", Id = "a" });
+
             UserManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), OmbiRoles.AutoApproveTv)).ReturnsAsync(false);
             var request = new BaseRequest() { RequestType = Store.Entities.RequestType.TvShow };
             var result = await Rule.Execute(request);
@@ -136,6 +142,18 @@ namespace Ombi.Core.Tests.Rule.Request
 
             Assert.True(result.Success);
             Assert.False(request.Approved);
+        }
+
+        [Test]
+        public async Task Should_ReturnFail_When4kRequestAndFeatureNotEnabled()
+        {
+            UserManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), It.IsAny<string>())).ReturnsAsync(false);
+            var request = new MovieRequests() { RequestType = Store.Entities.RequestType.Movie, Is4kRequest = true };
+            var result = await Rule.Execute(request);
+
+            Assert.True(result.Success);
+            Assert.False(request.Approved);
+            Assert.False(request.Approved4K);
         }
     }
 }

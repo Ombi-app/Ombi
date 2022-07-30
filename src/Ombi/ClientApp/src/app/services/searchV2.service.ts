@@ -4,7 +4,7 @@ import { Injectable, Inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
-import { IDiscoverModel, IMultiSearchResult, ISearchMovieResult, ISearchTvResult } from "../interfaces";
+import { IDiscoverModel, ILanguage, IMovieDbKeyword, IMultiSearchResult, ISearchMovieResult, ISearchTvResult } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
 import { ISearchMovieResultV2 } from "../interfaces/ISearchMovieResultV2";
@@ -21,8 +21,17 @@ export class SearchV2Service extends ServiceHelpers {
     }
 
     public multiSearch(searchTerm: string, filter: SearchFilter): Observable<IMultiSearchResult[]> {
-        return this.http.post<IMultiSearchResult[]>(`${this.url}/multi/${searchTerm}`, filter);
+        return this.http.post<IMultiSearchResult[]>(`${this.url}/multi/${encodeURIComponent(searchTerm)}`, filter);
     }
+
+    public getGenres(media: string): Observable<IMovieDbKeyword[]> {
+        return this.http.get<IMovieDbKeyword[]>(`${this.url}/Genres/${media}`, { headers: this.headers })
+    }
+
+    public getLanguages(): Observable<ILanguage[]> {
+        return this.http.get<ILanguage[]>(`${this.url}/Languages`, { headers: this.headers })
+    }
+
     public getFullMovieDetails(theMovieDbId: number): Observable<ISearchMovieResultV2> {
         return this.http.get<ISearchMovieResultV2>(`${this.url}/Movie/${theMovieDbId}`);
     }
@@ -130,6 +139,10 @@ export class SearchV2Service extends ServiceHelpers {
 
     public getMoviesByActor(actorId: number): Observable<IActorCredits> {
         return this.http.get<IActorCredits>(`${this.url}/actor/${actorId}/movie`, { headers: this.headers });
+    }
+
+    public getTvByActor(actorId: number): Observable<IActorCredits> {
+        return this.http.get<IActorCredits>(`${this.url}/actor/${actorId}/tv`, { headers: this.headers });
     }
 
     public getArtistInformation(artistId: string): Observable<IArtistSearchResult> {

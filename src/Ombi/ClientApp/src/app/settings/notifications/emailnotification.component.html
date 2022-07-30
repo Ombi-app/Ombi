@@ -57,21 +57,6 @@
                                 <input matInput formControlName="senderName" matTooltip="The 'Friendly' name that will appear in the 'FROM:' part of the email">
                             </mat-form-field>
                         </div>
-
-                        <div class="md-form-field">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Admin Email</mat-label>
-                                <input matInput formControlName="adminEmail" matTooltip="The administrator email will be used to send emails for admin only notifications (e.g. New Requests that require approvals)">
-                                <mat-error *ngIf="emailForm.get('adminEmail').hasError('required')">
-                                    Admin Email is <strong>required</strong>
-                                  </mat-error>
-                                  <mat-error *ngIf="emailForm.get('adminEmail').hasError('email')">
-                                    Admin Email needs to be a valid email address
-                                  </mat-error>
-                            </mat-form-field>
-                        </div>
-
-                        
                         <div class="md-form-field" *ngIf="emailForm.controls['username'].validator">
                             <mat-form-field appearance="outline">
                                 <mat-label>Username</mat-label>

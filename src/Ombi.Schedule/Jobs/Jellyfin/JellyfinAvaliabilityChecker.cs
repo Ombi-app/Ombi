@@ -33,11 +33,11 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core;
-using Ombi.Core.Notifications;
+using Ombi.Core.Services;
 using Ombi.Helpers;
 using Ombi.Hubs;
 using Ombi.Notifications.Models;
-using Ombi.Schedule.Jobs.Ombi;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
@@ -48,7 +48,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
     public class JellyfinAvaliabilityChecker : IJellyfinAvaliabilityChecker
     {
         public JellyfinAvaliabilityChecker(IJellyfinContentRepository repo, ITvRequestRepository t, IMovieRequestRepository m,
-            INotificationHelper n, ILogger<JellyfinAvaliabilityChecker> log, IHubContext<NotificationHub> notification)
+            INotificationHelper n, ILogger<JellyfinAvaliabilityChecker> log, IHubContext<NotificationHub> notification, IFeatureService featureService)
         {
             _repo = repo;
             _tvRepo = t;
@@ -56,6 +56,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
             _notificationService = n;
             _log = log;
             _notification = notification;
+            _featureService = featureService;
         }
 
         private readonly ITvRequestRepository _tvRepo;
@@ -64,6 +65,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
         private readonly INotificationHelper _notificationService;
         private readonly ILogger<JellyfinAvaliabilityChecker> _log;
         private readonly IHubContext<NotificationHub> _notification;
+        private readonly IFeatureService _featureService;
 
         public async Task Execute(IJobExecutionContext job)
         {
@@ -80,10 +82,12 @@ namespace Ombi.Schedule.Jobs.Jellyfin
 
         private async Task ProcessMovies()
         {
-            var movies = _movieRepo.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available);
+            var feature4kEnabled = await _featureService.FeatureEnabled(FeatureNames.Movie4KRequests);
+            var movies = _movieRepo.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available || (!x.Available4K && x.Has4KRequest));
 
             foreach (var movie in movies)
             {
+                var has4kRequest = movie.Has4KRequest;
                 JellyfinContent jellyfinContent = null;
                 if (movie.TheMovieDbId > 0)
                 {
@@ -102,9 +106,24 @@ namespace Ombi.Schedule.Jobs.Jellyfin
 
                 _log.LogInformation("We have found the request {0} on Jellyfin, sending the notification", movie?.Title ?? string.Empty);
 
-                movie.Available = true;
-                movie.MarkedAsAvailable = DateTime.Now;
-                if (movie.Available)
+                var notify = false;
+
+                if (has4kRequest && jellyfinContent.Has4K && !movie.Available4K)
+                {
+                    movie.Available4K = true;
+                    movie.MarkedAsAvailable4K = DateTime.Now;
+                    notify = true;
+                }
+
+                // If we have a non-4k version or we don't care about versions, then mark as available
+                if (!movie.Available && ( !feature4kEnabled || jellyfinContent.Quality != null ))
+                {
+                    movie.Available = true;
+                    movie.MarkedAsAvailable = DateTime.Now;
+                    notify = true;
+                }
+
+                if (notify)
                 {
                     var recipient = movie.RequestedUser.Email.HasValue() ? movie.RequestedUser.Email : string.Empty;
 
@@ -151,7 +170,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
 
                 var tvDbId = child.ParentRequest.TvDbId;
                 var imdbId = child.ParentRequest.ImdbId;
-                IQueryable<JellyfinEpisode> seriesEpisodes = null;
+                IQueryable<IMediaServerEpisode> seriesEpisodes = null;
                 if (useImdb)
                 {
                     seriesEpisodes = jellyfinEpisodes.Where(x => x.Series.ImdbId == imdbId.ToString());

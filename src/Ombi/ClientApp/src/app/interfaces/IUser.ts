@@ -121,6 +121,7 @@ export interface IMassEmailModel {
     subject: string;
     body: string;
     users: IUser[];
+    bcc: boolean;
 }
 
 export interface INotificationPreferences {
@@ -144,4 +145,9 @@ export enum INotificationAgent {
     Gotify = 8,
     Webhook = 9,
     WhatsApp = 10
+}
+
+export interface IFeatureEnablement {
+    name: string;
+    enabled: boolean;
 }

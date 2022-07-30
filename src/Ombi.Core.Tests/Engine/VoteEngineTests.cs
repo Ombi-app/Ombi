@@ -9,6 +9,7 @@ using NUnit.Framework;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
+using Ombi.Core.Helpers;
 using Ombi.Core.Models;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Settings;
@@ -32,8 +33,9 @@ namespace Ombi.Core.Tests.Engine
             TvRequestEngine = new Mock<ITvRequestEngine>();
             MovieRequestEngine = new Mock<IMovieRequestEngine>();
             MovieRequestEngine = new Mock<IMovieRequestEngine>();
-            User = new Mock<IPrincipal>();
-            User.Setup(x => x.Identity.Name).Returns("abc");
+            User = new Mock<ICurrentUser>();
+            User.Setup(x => x.GetUser()).ReturnsAsync(new OmbiUser { UserName = "abc", NormalizedUserName = "ABC", Id = "abc" });
+
             UserManager = MockHelper.MockUserManager(new List<OmbiUser> { new OmbiUser { Id = "abc", UserName = "abc", NormalizedUserName = "ABC" } });
             Rule = new Mock<IRuleEvaluator>();
             Engine = new VoteEngine(VoteRepository.Object, User.Object, UserManager.Object, Rule.Object, VoteSettings.Object, MusicRequestEngine.Object,
@@ -48,7 +50,7 @@ namespace Ombi.Core.Tests.Engine
 
         public Fixture F { get; set; }
         public VoteEngine Engine { get; set; }
-        public Mock<IPrincipal> User { get; set; }
+        public Mock<ICurrentUser> User { get; set; }
         public Mock<OmbiUserManager> UserManager { get; set; }
         public Mock<IRuleEvaluator> Rule { get; set; }
         public Mock<IRepository<Votes>> VoteRepository { get; set; }
@@ -83,7 +85,7 @@ namespace Ombi.Core.Tests.Engine
             Assert.That(result.Result, Is.True);
             VoteRepository.Verify(x => x.Add(It.Is<Votes>(c => c.UserId == "abc" && c.VoteType == type)), Times.Once);
             VoteRepository.Verify(x => x.Delete(It.IsAny<Votes>()), Times.Never);
-            MovieRequestEngine.Verify(x => x.ApproveMovieById(1), Times.Never);
+            MovieRequestEngine.Verify(x => x.ApproveMovieById(1, false), Times.Never);
         }
         public static IEnumerable<TestCaseData> VoteData
         {
@@ -129,7 +131,7 @@ namespace Ombi.Core.Tests.Engine
 
             Assert.That(result.Result, Is.False);
             VoteRepository.Verify(x => x.Delete(It.IsAny<Votes>()), Times.Never);
-            MovieRequestEngine.Verify(x => x.ApproveMovieById(1), Times.Never);
+            MovieRequestEngine.Verify(x => x.ApproveMovieById(1, false), Times.Never);
         }
         public static IEnumerable<TestCaseData> AttemptedTwiceData
         {
@@ -175,7 +177,7 @@ namespace Ombi.Core.Tests.Engine
             Assert.That(result.Result, Is.True);
             VoteRepository.Verify(x => x.Delete(It.IsAny<Votes>()), Times.Once);
             VoteRepository.Verify(x => x.Add(It.Is<Votes>(v => v.VoteType == type)), Times.Once);
-            MovieRequestEngine.Verify(x => x.ApproveMovieById(1), Times.Never);
+            MovieRequestEngine.Verify(x => x.ApproveMovieById(1, false), Times.Never);
         }
         public static IEnumerable<TestCaseData> VoteConvertData
         {

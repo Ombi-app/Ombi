@@ -83,7 +83,7 @@ small {
   }
 
   
-.image {
+::ng-deep .image {
   border-radius: 10px;
   opacity: 1;
   display: block;
@@ -201,31 +201,31 @@ small {
   margin-right:5px;
 }
 
-.top-right.available span.indicator, span.indicator-text{
+.top-right span.indicator, span.indicator-text{
   display:block;
+}
+.top-right span.indicator:before{
+  display: inline-block;
 }
 
 .top-right.available span.indicator:before{
-  display: inline-block;
   background-color: #1DE9B6;
 }
 
-.top-right.approved span.indicator, span.indicator-text {
-  display: block;
-}
-
 .top-right.approved span.indicator:before{
-  display: inline-block;
-  background-color: #ff5722;
+  background-color: #ffd740;
 }
 
-.top-right.requested span.indicator, span.indicator-text {
-  display: block;
+.top-right.denied span.indicator:before{
+  background-color: #660202;
+}
+
+.top-right.partly-available span.indicator:before{
+  background-color: #ffd740;
 }
 
 .top-right.requested span.indicator:before{
-  display: inline-block;
-  background-color: #ffd740;
+  background-color: #ff5722;
 }
 
 ::ng-deep a.poster-overlay{
@@ -292,4 +292,8 @@ a.poster-overlay:hover{
 
 .btn-ombi{
   background-color:#293a4c;
+}
+
+::ng-deep .mat-menu-panel {
+  min-width: 190px !important;
 }

@@ -22,11 +22,15 @@ export class MessageService {
     }
     public sendRequestEngineResultError(result: IRequestEngineResult, action: string = "Ok") {
         const textKey = 'Requests.ErrorCodes.' + result.errorCode;
-        const text = this.translate.instant(textKey);
-        if (text !== textKey) {
-            this.send(text, action);
-        } else {
-            this.send(result.errorMessage ? result.errorMessage : result.message, action);
+        var text = this.translate.instant(textKey);
+        if (text === textKey) { // Error code on backend may not exist in frontend
+            if (result.errorMessage || result.message) {
+                text = result.errorMessage ? result.errorMessage : result.message;
+            } else {
+                text = this.translate.instant('ErrorPages.SomethingWentWrong');
+            }
         }
+
+        this.send(text, action);
     }
 }

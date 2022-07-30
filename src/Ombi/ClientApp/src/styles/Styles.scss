@@ -142,6 +142,10 @@
         background-color: $ombi-active;
     }
 
+    a.mat-raised-button {
+        text-decoration:none;
+    }
+
     hr {
         border-top: 1px solid $accent-dark;
     }

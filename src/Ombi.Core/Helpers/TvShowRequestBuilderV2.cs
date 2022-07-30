@@ -9,6 +9,7 @@ using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository.Requests;
 using System.Threading;
+using Ombi.Helpers;
 
 namespace Ombi.Core.Helpers
 {
@@ -53,7 +54,7 @@ namespace Ombi.Core.Helpers
             return this;
         }
 
-        public TvShowRequestBuilderV2 CreateChild(TvRequestViewModelV2 model, string userId)
+        public TvShowRequestBuilderV2 CreateChild(TvRequestViewModelV2 model, string userId, RequestSource source)
         {
             var animationGenre = TheMovieDbRecord.genres?.Any(s => s.name.Equals("Animation", StringComparison.InvariantCultureIgnoreCase)) ?? false;
             var animeKeyword = TheMovieDbRecord.Keywords?.KeywordsValue?.Any(s => s.Name.Equals("Anime", StringComparison.InvariantCultureIgnoreCase)) ?? false;
@@ -68,7 +69,8 @@ namespace Ombi.Core.Helpers
                 Title = TheMovieDbRecord.name,
                 ReleaseYear = FirstAir,
                 RequestedByAlias = model.RequestedByAlias,
-                SeriesType = animationGenre && animeKeyword ? SeriesType.Anime : SeriesType.Standard
+                SeriesType = animationGenre && animeKeyword ? SeriesType.Anime : SeriesType.Standard,
+                Source = source
             };
 
             return this;
@@ -254,9 +256,16 @@ namespace Ombi.Core.Helpers
             return this;
         }
 
-        private DateTime FormatDate(string date)
+        private static DateTime FormatDate(string date)
         {
-            return string.IsNullOrEmpty(date) ? DateTime.MinValue : DateTime.Parse(date);
+            if (date.HasValue())
+            {
+                if (DateTime.TryParse(date, out var d))
+                {
+                    return d;
+                }
+            }
+            return DateTime.MinValue;
         }
     }
 }

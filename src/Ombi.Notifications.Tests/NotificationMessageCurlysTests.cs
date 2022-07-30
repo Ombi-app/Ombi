@@ -76,6 +76,7 @@ namespace Ombi.Notifications.Tests
                     { "IssueUser", "User" },
                     { "IssueUserAlias", "alias" },
                     { "RequestType", "Movie" },
+                    { "PosterPath", "aaaaa" }
                 }
             };
             var req = F.Build<MovieRequests>()
@@ -92,6 +93,39 @@ namespace Ombi.Notifications.Tests
             Assert.That("User", Is.EqualTo(sut.UserName));
             Assert.That("alias", Is.EqualTo(sut.Alias));
             Assert.That("Movie", Is.EqualTo(sut.Type));
+        }
+
+        [Test]
+        public void IssueNotificationTests_NoRequest()
+        {
+            var notificationOptions = new NotificationOptions
+            {
+                Substitutes = new Dictionary<string, string>
+                {
+                    { "IssueDescription", "Desc" },
+                    { "IssueCategory", "Cat" },
+                    { "IssueStatus", "state" },
+                    { "IssueSubject", "sub" },
+                    { "NewIssueComment", "a" },
+                    { "IssueUser", "User" },
+                    { "IssueUserAlias", "alias" },
+                    { "RequestType", "Movie" },
+                    { "PosterPath", "aaaaa" }
+                }
+            };
+
+            var customization = new CustomizationSettings();
+            var userPrefs = new UserNotificationPreferences();
+            sut.Setup(notificationOptions, (MovieRequests)null, customization, userPrefs);
+
+            Assert.That("Desc", Is.EqualTo(sut.IssueDescription));
+            Assert.That("Cat", Is.EqualTo(sut.IssueCategory));
+            Assert.That("state", Is.EqualTo(sut.IssueStatus));
+            Assert.That("a", Is.EqualTo(sut.NewIssueComment));
+            Assert.That("User", Is.EqualTo(sut.UserName));
+            Assert.That("alias", Is.EqualTo(sut.Alias));
+            Assert.That("Movie", Is.EqualTo(sut.Type));
+            Assert.That("https://image.tmdb.org/t/p/w300/aaaaa", Is.EqualTo(sut.PosterImage));
         }
 
         [Test]

@@ -2,15 +2,14 @@
 
 <div id="result{{result.id}}" *ngIf="fullyLoaded" class="ombi-card dark-card c" [style.display]="hide ? 'none' : 'block'">
     <div class="card-top-info">
-        <div class="top-left" id="type{{result.id}}">
+        <div class="top-left" id="type{{result.id}}-{{RequestType[result.type]}}">
             {{ 'Common.' + RequestType[result.type] | translate }}
         </div>
         <div class="{{getStatusClass()}} top-right" id="status{{result.id}}">
-            <span class="indicator"></span><span class="indicator-text" id="availabilityStatus{{result.id}}">{{getAvailbilityStatus()}}</span>
+            <span class="indicator"></span><span class="indicator-text" id="availabilityStatus{{result.id}}">{{getAvailabilityStatus()}}</span>
         </div>
     </div>
-        <img [routerLink]="generateDetailsLink()" id="cardImage" src="{{result.posterPath}}" class="image"
-            alt="{{result.title}}">
+    <ombi-image [src]="result.posterPath" [type]="result.type" [routerLink]="generateDetailsLink()" id="cardImage" class="image" alt="{{result.title}}"></ombi-image>
         <div [ngClass]="result.posterPath.includes('images/') ? 'middle-show' : 'middle'">
             <a class="poster-overlay" [routerLink]="generateDetailsLink()">
                 <div class="summary">
@@ -20,12 +19,32 @@
             </a>
         </div>
         <div [ngClass]="result.posterPath.includes('images/') ? 'button-request-container-show' : 'button-request-container'" class="row" *ngIf="!result.available && !result.approved && !result.requested">
-            <div class="button-request poster-overlay">
-                <button id="requestButton{{result.id}}{{result.type}}{{discoverType}}" *ngIf="requestable" mat-raised-button class="btn-ombi full-width poster-request-btn" (click)="request($event)">
-                    <i *ngIf="!loading" class="fa-lg fas fa-cloud-download-alt"></i>
-                    <i *ngIf="loading" class="fas fa-spinner fa-pulse fa-2x fa-fw" aria-hidden="true"></i>
-                    {{'Common.Request' | translate }}
-                </button>
-            </div>
+
+            <div *ngIf="is4kEnabled && requestable && result.type === RequestType.movie;then show4K else regular"></div>
+            <ng-template #show4K>
+                <div class="button-request poster-overlay">
+                    <button [matMenuTriggerFor]="menu" id="requestButton{{result.id}}{{result.type}}{{discoverType}}" mat-raised-button class="btn-ombi full-width poster-request-btn">
+                        <i *ngIf="!loading" class="fa-lg fas fa-cloud-download-alt"></i>
+                        <i *ngIf="loading" class="fas fa-spinner fa-pulse fa-2x fa-fw" aria-hidden="true"></i>
+                        {{'Common.Request' | translate }}
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item  class="btn-ombi full-width poster-request-btn" (click)="request($event, false)">{{'Common.Request' | translate }}</button>
+                        <button mat-menu-item  class="btn-ombi full-width poster-request-btn" (click)="request($event, true)">{{'Common.Request4K' | translate }}</button>
+                      </mat-menu>
+                </div>
+            </ng-template>
+            <ng-template #regular>
+                <div class="button-request poster-overlay">
+                    <button id="requestButton{{result.id}}{{result.type}}{{discoverType}}" *ngIf="requestable" mat-raised-button class="btn-ombi full-width poster-request-btn" (click)="request($event, false)">
+                        <i *ngIf="!loading" class="fa-lg fas fa-cloud-download-alt"></i>
+                        <i *ngIf="loading" class="fas fa-spinner fa-pulse fa-2x fa-fw" aria-hidden="true"></i>
+                        {{'Common.Request' | translate }}
+                    </button>
+                </div>
+            </ng-template>
+
+
+
         </div>
 </div>

@@ -1,7 +1,6 @@
 ﻿import { Component, OnInit } from "@angular/core";
-
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { NotificationService, SettingsService, JobService } from "../../services";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
+import { JobService, NotificationService, SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./jobs.component.html",
@@ -9,12 +8,12 @@ import { NotificationService, SettingsService, JobService } from "../../services
 })
 export class JobsComponent implements OnInit {
 
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
     public profilesRunning: boolean;
 
     constructor(private readonly settingsService: SettingsService,
-                private readonly fb: FormBuilder,
+                private readonly fb: UntypedFormBuilder,
                 private readonly notificationService: NotificationService,
                 private readonly jobsService: JobService) { }
 
@@ -36,7 +35,9 @@ export class JobsComponent implements OnInit {
                 issuesPurge:              [x.issuesPurge, Validators.required],
                 retryRequests:            [x.retryRequests, Validators.required],
                 mediaDatabaseRefresh:     [x.mediaDatabaseRefresh, Validators.required],
-                autoDeleteRequests:     [x.autoDeleteRequests, Validators.required]
+                autoDeleteRequests:       [x.autoDeleteRequests, Validators.required],
+                embyRecentlyAddedSync:    [x.embyRecentlyAddedSync, Validators.required],
+                plexWatchlistImport:      [x.plexWatchlistImport, Validators.required],
             });
         });
     }
@@ -51,7 +52,7 @@ export class JobsComponent implements OnInit {
         });
     }
 
-    public onSubmit(form: FormGroup) {
+    public onSubmit(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;

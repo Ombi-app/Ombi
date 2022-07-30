@@ -42,7 +42,7 @@
                 <div class="small-middle-container">
                     <div class="row justify-content-center justify-content-sm-start header-container">
                         <div class="details-poster-container">
-                            <media-poster [posterPath]="'https://image.tmdb.org/t/p/w300/' + tv.images.original"></media-poster>
+                            <media-poster [posterPath]=tv.images.original></media-poster>
                         </div>
                         <!--Next to poster-->
                         <div class="details-button-container">
@@ -61,9 +61,13 @@
                                         <i class="far fa-play-circle fa-2x"></i>
                                     </a>
                                 </ng-container>
-                                <button *ngIf="!tv.fullyAvailable" mat-raised-button id="requestBtn" class="btn-spacing" color="primary"
+                                <button *ngIf="!tv.fullyAvailable && !allEpisodesRequested()" mat-raised-button id="requestBtn" class="btn-spacing" color="primary"
                                     (click)="request()"><i class="fas fa-plus"></i>
                                     {{ 'Common.Request' | translate }}</button>
+
+                                    <button *ngIf="!tv.denied && allEpisodesRequested()" mat-raised-button class="btn-spacing" color="warn" [disabled]>
+                                        <i class="fas fa-check"></i>
+                                        {{ 'Common.Requested' | translate }}</button>
 
                                     <button *ngIf="tv.fullyAvailable && !tv.partlyAvailable" id="availableBtn" mat-raised-button class="btn-spacing" color="accent"
                                     [disabled]>
@@ -78,6 +82,10 @@
                                         class="btn-spacing" color="accent" [disabled]>
                                     <i class="fas fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
                                     <!-- end unaired episodes-->
+
+                                    <button id="deniedButton" *ngIf="tv.denied" [matTooltip]="tv.deniedReason" mat-raised-button class="btn-spacing" color="warn">
+                                        <i class="fas fa-times"></i> {{'Common.Denied' | translate }}
+                                    </button>
 
                                 <button mat-raised-button class="btn-spacing" color="danger" id="reportIssueBtn" *ngIf="issuesEnabled" (click)="issue()">
                                     <i class="fas fa-exclamation"></i> {{
@@ -131,7 +139,7 @@
                         </div>
                         <div class="col-12 col-md-10">
                             <div class="issuesPanel">
-                                <issues-panel [providerId]="tv.theTvDbId" [isAdmin]="isAdmin"></issues-panel>
+                                <issues-panel [providerId]="tv.id" [isAdmin]="isAdmin"></issues-panel>
                             </div>
                             <mat-accordion id="requests-panel">
                                 <mat-expansion-panel>

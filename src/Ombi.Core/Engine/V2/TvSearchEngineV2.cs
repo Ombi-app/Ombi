@@ -25,6 +25,8 @@ using Ombi.Api.TheMovieDb.Models;
 using System.Diagnostics;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.UI;
+using Ombi.Core.Helpers;
+using Ombi.Core.Services;
 
 namespace Ombi.Core.Engine.V2
 {
@@ -36,10 +38,12 @@ namespace Ombi.Core.Engine.V2
         private readonly IMovieDbApi _movieApi;
         private readonly ISettingsService<CustomizationSettings> _customization;
         private readonly ITvRequestEngine _requestEngine;
+        private readonly IFeatureService _feature;
 
-        public TvSearchEngineV2(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper,
+        public TvSearchEngineV2(ICurrentUser identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper,
             ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um, ICacheService memCache, ISettingsService<OmbiSettings> s,
-            IRepository<RequestSubscription> sub, IMovieDbApi movieApi, ISettingsService<CustomizationSettings> customization, ITvRequestEngine requestEngine)
+            IRepository<RequestSubscription> sub, IMovieDbApi movieApi, ISettingsService<CustomizationSettings> customization, ITvRequestEngine requestEngine,
+            IFeatureService feature)
             : base(identity, service, r, um, memCache, s, sub)
         {
             _tvMaze = tvMaze;
@@ -48,6 +52,7 @@ namespace Ombi.Core.Engine.V2
             _movieApi = movieApi;
             _customization = customization;
             _requestEngine = requestEngine;
+            _feature = feature;
         }
 
 
@@ -89,7 +94,7 @@ namespace Ombi.Core.Engine.V2
 
             foreach (var tvSeason in show.seasons.Where(x => x.season_number != 0)) // skip the first season
             {
-                var seasonEpisodes = (await _movieApi.GetSeasonEpisodes(show.id, tvSeason.season_number, token));
+                var seasonEpisodes = (await _movieApi.GetSeasonEpisodes(show.id, tvSeason.season_number, token, langCode));
 
                 MapSeasons(mapped.SeasonRequests, tvSeason, seasonEpisodes);
             }
@@ -131,15 +136,19 @@ namespace Ombi.Core.Engine.V2
         }
 
         public async Task<IEnumerable<SearchTvShowViewModel>> Trending(int currentlyLoaded, int amountToLoad)
-        {
+        {           
             var langCode = await DefaultLanguageCode(null);
+            var isOldTrendingSourceEnabled = await _feature.FeatureEnabled(FeatureNames.OldTrendingSource); 
 
             var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
             var results = new List<MovieDbSearchResult>();
             foreach (var pagesToLoad in pages)
             {
+                var search = ( async () => (isOldTrendingSourceEnabled) ?
+                                await _movieApi.TopRatedTv(langCode, pagesToLoad.Page) 
+                                : await _movieApi.TrendingTv(langCode, pagesToLoad.Page));
                 var apiResult = await Cache.GetOrAddAsync(nameof(Trending) + langCode + pagesToLoad.Page,
-                    async () => await _movieApi.TopRatedTv(langCode, pagesToLoad.Page), DateTimeOffset.Now.AddHours(12));
+                    search, DateTimeOffset.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
 
@@ -147,6 +156,13 @@ namespace Ombi.Core.Engine.V2
             return await processed;
         }
 
+        public async Task<ActorCredits> GetTvByActor(int actorId, string langCode)
+        {
+            langCode = await DefaultLanguageCode(langCode);
+            var result = await Cache.GetOrAddAsync(nameof(GetTvByActor) + actorId + langCode,
+                () =>  _movieApi.GetActorTvCredits(actorId, langCode), DateTimeOffset.Now.AddHours(12));
+            return result;
+        }
 
         public async Task<IEnumerable<StreamingData>> GetStreamInformation(int movieDbId, CancellationToken cancellationToken)
         {
@@ -256,11 +272,17 @@ namespace Ombi.Core.Engine.V2
                         Overview = tvSeason.overview,
                         Episodes = new List<EpisodeRequests>()
                     };
+                    var hasAirDate = episode.air_date.HasValue();
+                    var airDate = DateTime.MinValue;
+                    if (hasAirDate)
+                    {
+                        DateTime.TryParse(episode.air_date, out airDate);
+                    }
                     newSeason.Episodes.Add(new EpisodeRequests
                     {
                         //Url = episode...ToHttpsUrl(),
                         Title = episode.name,
-                        AirDate = episode.air_date.HasValue() ? DateTime.Parse(episode.air_date) : DateTime.MinValue,
+                        AirDate = airDate,
                         EpisodeNumber = episode.episode_number,
 
                     });
@@ -268,12 +290,18 @@ namespace Ombi.Core.Engine.V2
                 }
                 else
                 {
+                    var hasAirDate = episode.air_date.HasValue();
+                    var airDate = DateTime.MinValue;
+                    if (hasAirDate)
+                    {
+                        DateTime.TryParse(episode.air_date, out airDate);
+                    }
                     // We already have the season, so just add the episode
                     season.Episodes.Add(new EpisodeRequests
                     {
                         //Url = e.url.ToHttpsUrl(),
                         Title = episode.name,
-                        AirDate = episode.air_date.HasValue() ? DateTime.Parse(episode.air_date) : DateTime.MinValue,
+                        AirDate = airDate,
                         EpisodeNumber = episode.episode_number,
                     });
                 }
@@ -300,6 +328,8 @@ namespace Ombi.Core.Engine.V2
             item.PartlyAvailable = oldModel.PartlyAvailable;
             item.Requested = oldModel.Requested;
             item.Available = oldModel.Available;
+            item.Denied = oldModel.Denied;
+            item.DeniedReason = oldModel.DeniedReason;
             item.Approved = oldModel.Approved;
             item.SeasonRequests = oldModel.SeasonRequests;
             item.RequestId = oldModel.RequestId;

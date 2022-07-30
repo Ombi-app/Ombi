@@ -1,5 +1,4 @@
 import { APP_BASE_HREF, CommonModule, PlatformLocation } from "@angular/common";
-import { CardsFreeModule, MDBBootstrapModule, NavbarModule } from "angular-bootstrap-md";
 import { CustomPageService, ImageService, RequestService, SettingsService } from "./services";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from "@angular/common/http";
@@ -21,6 +20,8 @@ import { CustomPageComponent } from "./custompage/custompage.component";
 import { CustomizationState } from "./state/customization/customization.state";
 import { DataViewModule } from "primeng/dataview";
 import { DialogModule } from "primeng/dialog";
+import { FEATURES_INITIALIZER } from "./state/features/features-initializer";
+import { FeatureState } from "./state/features";
 import { JwtModule } from "@auth0/angular-jwt";
 import { LandingPageComponent } from "./landingpage/landingpage.component";
 import { LandingPageService } from "./services";
@@ -38,6 +39,8 @@ import { MatInputModule } from "@angular/material/input";
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from "@angular/material/menu";
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatPaginatorI18n } from "./localization/MatPaginatorI18n";
+import { MatPaginatorIntl } from "@angular/material/paginator";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
@@ -63,7 +66,9 @@ import { StorageService } from "./shared/storage/storage-service";
 import { TokenResetPasswordComponent } from "./login/tokenresetpassword.component";
 import { TooltipModule } from "primeng/tooltip";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { TranslateService } from "@ngx-translate/core";
 import { UnauthorizedInterceptor } from "./auth/unauthorized.interceptor";
+import { ImageBackgroundComponent, ImageComponent } from "./components/";
 import { environment } from "../environments/environment";
 
 const routes: Routes = [
@@ -126,7 +131,6 @@ export function JwtTokenGetter() {
         MatSnackBarModule,
         DialogModule,
         MatButtonModule,
-        NavbarModule,
         MatCardModule,
         MatTooltipModule,
         MatMenuModule,
@@ -140,11 +144,9 @@ export function JwtTokenGetter() {
         ConfirmDialogModule,
         OverlayPanelModule,
         CommonModule,
-        CardsFreeModule,
         OverlayModule,
         MatCheckboxModule,
         MatProgressSpinnerModule,
-        MDBBootstrapModule.forRoot(),
         JwtModule.forRoot({
             config: {
                 tokenGetter: JwtTokenGetter,
@@ -159,13 +161,15 @@ export function JwtTokenGetter() {
         }),
         SidebarModule,
         MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, LayoutModule, MatSlideToggleModule,
-        NgxsModule.forRoot([CustomizationState], {
+        NgxsModule.forRoot([CustomizationState, FeatureState], {
             developmentMode: !environment.production,
         }),
-        ...environment.production ? [] : 
+        ...environment.production ? [] :
         [
             NgxsReduxDevtoolsPluginModule.forRoot(),
-        ]
+        ],
+        ImageBackgroundComponent,
+        ImageComponent,
     ],
     declarations: [
         AppComponent,
@@ -202,6 +206,7 @@ export function JwtTokenGetter() {
         StorageService,
         RequestService,
         SignalRNotificationService,
+        FEATURES_INITIALIZER,
         CUSTOMIZATION_INITIALIZER,
         {
             provide: APP_BASE_HREF,
@@ -211,6 +216,10 @@ export function JwtTokenGetter() {
             provide: HTTP_INTERCEPTORS,
             useClass: UnauthorizedInterceptor,
             multi: true
+        },
+        {
+            provide: MatPaginatorIntl, deps: [TranslateService],
+            useFactory: (translateService: TranslateService) => new MatPaginatorI18n(translateService).getPaginatorIntl()
         },
        ],
     bootstrap: [AppComponent],

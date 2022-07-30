@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Mattermost;
 using Ombi.Api.Mattermost.Models;
@@ -19,7 +20,7 @@ namespace Ombi.Notifications.Agents
     {
         public MattermostNotification(IMattermostApi api, ISettingsService<MattermostNotificationSettings> sn, ILogger<MattermostNotification> log, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t,
             ISettingsService<CustomizationSettings> s, IRepository<RequestSubscription> sub, IMusicRequestRepository music,
-            IRepository<UserNotificationPreferences> userPref) : base(sn, r, m, t, s, log, sub, music, userPref)
+            IRepository<UserNotificationPreferences> userPref, UserManager<OmbiUser> um) : base(sn, r, m, t, s, log, sub, music, userPref, um)
         {
             Api = api;
             Logger = log;

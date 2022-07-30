@@ -19,7 +19,7 @@
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.app.json",
+            "tsConfig": "src/tsconfig.json",
             "assets": [
               "src/assets"
             ],
@@ -34,11 +34,8 @@
               "node_modules/@fortawesome/fontawesome-free/scss/brands.scss",
               "node_modules/primeng/resources/primeng.min.css",
               "node_modules/primeicons/primeicons.css",
-              "node_modules/please-wait/src/please-wait.scss",
               "node_modules/@fullcalendar/core/main.min.css",
-              "node_modules/@fullcalendar/daygrid/main.min.css",
-              "node_modules/spinkit/scss/spinners/11-folding-cube.scss",
-              "node_modules/spinkit/scss/spinkit.scss"
+              "node_modules/@fullcalendar/daygrid/main.min.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
@@ -82,7 +79,13 @@
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.hmr.ts"
                 }
-              ]
+              ],
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
           }
         },
@@ -111,7 +114,7 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "src/tsconfig.app.json"
+              "src/tsconfig.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -121,7 +124,6 @@
       }
     }
   },
-  "defaultProject": "ombi",
   "cli": {
     "analytics": false
   }

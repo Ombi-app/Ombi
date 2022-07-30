@@ -16,6 +16,13 @@ export interface IMovieRequests extends IFullBaseRequest {
   subscribed: boolean;
   showSubscribe: boolean;
   requestStatus: string;
+  has4KRequest: boolean;
+  approved4K: boolean;
+  available4K: boolean;
+  denied4K: boolean;
+  deniedReason4K: string;
+  requestedDate4k: Date;
+  requestedDate: Date;
 
   // For the UI
   rootPathOverrideTitle: string;
@@ -53,6 +60,7 @@ export interface IRequestsViewModel<T> {
 
 export interface IMovieUpdateModel {
   id: number;
+  is4K: boolean;
 }
 
 export interface IDenyMovieModel extends IMovieUpdateModel {
@@ -96,6 +104,13 @@ export interface IBaseRequest {
   canApprove: boolean;
   title: string;
   requestedByAlias: string;
+  source: RequestSource;
+}
+
+export enum RequestSource
+{
+    Ombi = 0,
+    PlexWatchlist = 1
 }
 
 export interface ITvRequests {
@@ -176,6 +191,7 @@ export interface IEpisodesRequests {
 export interface IMovieRequestModel extends BaseRequestOptions {
   theMovieDbId: number;
   languageCode: string | undefined;
+  is4KRequest?: boolean;
 }
 
 export interface IFilter {

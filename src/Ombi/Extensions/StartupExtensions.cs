@@ -41,6 +41,21 @@ namespace Ombi
                     Type = SecuritySchemeType.ApiKey
                 });
 
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme, 
+                                Id = "ApiKey"
+                            }
+                        },
+                        new string[] {}
+                    }
+                });
+
                 c.CustomSchemaIds(x => x.FullName);
 
                 try
@@ -64,6 +79,8 @@ namespace Ombi
 
                 c.DescribeAllParametersInCamelCase();
             });
+            
+            services.AddSwaggerGenNewtonsoftSupport();
         }
 
         public static void AddAppSettingsValues(this IServiceCollection services, IConfigurationRoot configuration)

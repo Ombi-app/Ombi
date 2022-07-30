@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
@@ -22,7 +23,7 @@ namespace Ombi.Notifications.Agents
     {
         public EmailNotification(ISettingsService<EmailNotificationSettings> settings, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t, IEmailProvider prov, ISettingsService<CustomizationSettings> c,
             ILogger<EmailNotification> log, UserManager<OmbiUser> um, IRepository<RequestSubscription> sub, IMusicRequestRepository music,
-            IRepository<UserNotificationPreferences> userPref) : base(settings, r, m, t, c, log, sub, music, userPref)
+            IRepository<UserNotificationPreferences> userPref) : base(settings, r, m, t, c, log, sub, music, userPref, um)
         {
             EmailProvider = prov;
             Logger = log;
@@ -46,7 +47,7 @@ namespace Ombi.Notifications.Agents
                     return false;
                 }
             }
-            if (string.IsNullOrEmpty(settings.Host) || string.IsNullOrEmpty(settings.AdminEmail) || string.IsNullOrEmpty(settings.Port.ToString()))
+            if (string.IsNullOrEmpty(settings.Host) || string.IsNullOrEmpty(settings.Port.ToString()))
             {
                 return false;
             }
@@ -63,7 +64,7 @@ namespace Ombi.Notifications.Agents
                 return null;
             }
             var email = new EmailBasicTemplate();
-            var html = email.LoadTemplate(parsed.Subject, parsed.Message, parsed.Image, Customization.Logo);
+            var html = email.LoadTemplate(parsed.Subject, parsed.Message, parsed.Image, Customization.Logo, parsed.DetailsUrl);
 
 
             var message = new NotificationMessage
@@ -72,26 +73,6 @@ namespace Ombi.Notifications.Agents
                 Subject = parsed.Subject,
             };
 
-            if (model.Substitutes.TryGetValue("AdminComment", out var isAdminString))
-            {
-                var isAdmin = bool.Parse(isAdminString);
-                if (isAdmin)
-                {
-                    var user = _userManager.Users.FirstOrDefault(x => x.Id == model.UserId);
-                    // Send to user
-                    message.To = user.Email;
-                }
-                else
-                {
-                    // Send to admin
-                    message.To = settings.AdminEmail;
-                }
-            }
-            else
-            {
-                // Send to admin
-                message.To = settings.AdminEmail;
-            }
 
             return message;
         }
@@ -114,7 +95,15 @@ namespace Ombi.Notifications.Agents
             var plaintext = await LoadPlainTextMessage(NotificationType.NewRequest, model, settings);
             message.Other.Add("PlainTextBody", plaintext);
 
-            await Send(message, settings);
+            foreach (var recipient in (await GetPrivilegedUsers()).DistinctBy(x => x.Email))
+            {
+                if (recipient.Email.IsNullOrEmpty())
+                {
+                    continue;
+                }
+                message.To = recipient.Email;
+                await Send(message, settings);
+            }
         }
 
         protected override async Task NewIssue(NotificationOptions model, EmailNotificationSettings settings)
@@ -129,9 +118,7 @@ namespace Ombi.Notifications.Agents
             message.Other.Add("PlainTextBody", plaintext);
 
             // Issues should be sent to admin
-            message.To = settings.AdminEmail;
-
-            await Send(message, settings);
+            await SendToAdmins(message, settings);
         }
 
         protected override async Task IssueComment(NotificationOptions model, EmailNotificationSettings settings)
@@ -145,18 +132,16 @@ namespace Ombi.Notifications.Agents
             var plaintext = await LoadPlainTextMessage(NotificationType.IssueComment, model, settings);
             message.Other.Add("PlainTextBody", plaintext);
 
-            if (model.Substitutes.TryGetValue("AdminComment", out var isAdminString))
+            if (model.Substitutes.TryGetValue("AdminComment", out var isAdminString) && !bool.Parse(isAdminString))
             {
-                var isAdmin = bool.Parse(isAdminString);
-                message.To = isAdmin ? model.Recipient : settings.AdminEmail;
+                await SendToAdmins(message, settings);
             }
             else
             {
                 message.To = model.Recipient;
+                await Send(message, settings);
             }
 
-
-            await Send(message, settings);
         }
 
         protected override async Task IssueResolved(NotificationOptions model, EmailNotificationSettings settings)
@@ -195,9 +180,7 @@ namespace Ombi.Notifications.Agents
             var plaintext = await LoadPlainTextMessage(NotificationType.ItemAddedToFaultQueue, model, settings);
             message.Other.Add("PlainTextBody", plaintext);
 
-            // Issues resolved should be sent to the user
-            message.To = settings.AdminEmail;
-            await Send(message, settings);
+            await SendToAdmins(message, settings);
         }
 
         protected override async Task RequestDeclined(NotificationOptions model, EmailNotificationSettings settings)
@@ -296,6 +279,19 @@ namespace Ombi.Notifications.Agents
         {
             await EmailProvider.Send(model, settings);
         }
+        
+        protected async Task SendToAdmins(NotificationMessage message, EmailNotificationSettings settings)
+        {
+            foreach (var recipient in (await GetAdminUsers()).DistinctBy(x => x.Email))
+            {
+                if (recipient.Email.IsNullOrEmpty())
+                {
+                    continue;
+                }
+                message.To = recipient.Email;
+                await Send(message, settings);
+            }
+        }
 
         protected override async Task Test(NotificationOptions model, EmailNotificationSettings settings)
         {
@@ -307,12 +303,11 @@ namespace Ombi.Notifications.Agents
             {
                 Message = html,
                 Subject = $"Ombi: Test",
-                To = settings.AdminEmail,
             };
 
             message.Other.Add("PlainTextBody", "This is just a test! Success!");
 
-            await Send(message, settings);
+            await SendToAdmins(message, settings);
         }
     }
 }

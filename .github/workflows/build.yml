@@ -3,6 +3,7 @@ name: CI Build
 on:
   push:
     branches: [ develop, master ]
+  workflow_dispatch:
 
 jobs:
   build-ui:
@@ -38,7 +39,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '5.0.x'
+          dotnet-version: '6.0.x'
 
       - name: Nuget Cache
         uses: actions/cache@v2
@@ -67,7 +68,7 @@ jobs:
          uses: TriPSs/conventional-changelog-action@v3
          with:
           version-file: 'version.json'
-          release-count: 20
+          release-count: 40
           skip-on-empty: 'false'
           git-message: 'chore(release): :rocket: {version}'
 
@@ -103,6 +104,12 @@ jobs:
             format: tar.gz
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'      
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
 
       - name: Nuget Cache
         uses: actions/cache@v2
@@ -183,6 +190,7 @@ jobs:
         if: contains(github.ref, 'develop')
         with:
           prerelease: true
+          generate_release_notes: true
           body: ${{ needs.versioning.outputs.changelog }}
           name: ${{ needs.versioning.outputs.tag }}
           tag_name: ${{ needs.versioning.outputs.tag }}

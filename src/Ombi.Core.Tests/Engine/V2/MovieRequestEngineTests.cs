@@ -7,8 +7,10 @@ using Moq;
 using NUnit.Framework;
 using Ombi.Api.TheMovieDb;
 using Ombi.Core.Engine;
+using Ombi.Core.Helpers;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Rule.Interfaces;
+using Ombi.Core.Services;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
@@ -32,7 +34,7 @@ namespace Ombi.Core.Tests.Engine.V2
             var requestService = new Mock<IRequestServiceMain>();
             _movieRequestRepository = new Mock<IMovieRequestRepository>();
             requestService.Setup(x => x.MovieRequestService).Returns(_movieRequestRepository.Object);
-            var user = new Mock<IPrincipal>();
+            var user = new Mock<ICurrentUser>();
             var notificationHelper = new Mock<INotificationHelper>();
             var rules = new Mock<IRuleEvaluator>();
             var movieSender = new Mock<IMovieSender>();
@@ -43,8 +45,9 @@ namespace Ombi.Core.Tests.Engine.V2
             var ombiSettings = new Mock<ISettingsService<OmbiSettings>>();
             var requestSubs = new Mock<IRepository<RequestSubscription>>();
             var mediaCache = new Mock<IMediaCacheService>();
+            var featureService = new Mock<IFeatureService>();
             _engine = new MovieRequestEngine(movieApi.Object, requestService.Object, user.Object, notificationHelper.Object, rules.Object, movieSender.Object,
-                logger.Object, userManager.Object, requestLogRepo.Object, cache.Object, ombiSettings.Object, requestSubs.Object, mediaCache.Object);
+                logger.Object, userManager.Object, requestLogRepo.Object, cache.Object, ombiSettings.Object, requestSubs.Object, mediaCache.Object, featureService.Object);
         }
 
         [Test]

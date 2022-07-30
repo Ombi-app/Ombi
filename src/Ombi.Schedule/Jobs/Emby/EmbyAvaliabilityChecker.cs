@@ -7,10 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core;
 using Ombi.Core.Notifications;
+using Ombi.Core.Services;
 using Ombi.Helpers;
 using Ombi.Hubs;
 using Ombi.Notifications.Models;
 using Ombi.Schedule.Jobs.Ombi;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
@@ -21,7 +23,7 @@ namespace Ombi.Schedule.Jobs.Emby
     public class EmbyAvaliabilityChecker : IEmbyAvaliabilityChecker
     {
         public EmbyAvaliabilityChecker(IEmbyContentRepository repo, ITvRequestRepository t, IMovieRequestRepository m,
-            INotificationHelper n, ILogger<EmbyAvaliabilityChecker> log, IHubContext<NotificationHub> notification)
+            INotificationHelper n, ILogger<EmbyAvaliabilityChecker> log, IHubContext<NotificationHub> notification, IFeatureService featureService)
         {
             _repo = repo;
             _tvRepo = t;
@@ -29,6 +31,7 @@ namespace Ombi.Schedule.Jobs.Emby
             _notificationService = n;
             _log = log;
             _notification = notification;
+            _featureService = featureService;
         }
 
         private readonly ITvRequestRepository _tvRepo;
@@ -37,6 +40,7 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly INotificationHelper _notificationService;
         private readonly ILogger<EmbyAvaliabilityChecker> _log;
         private readonly IHubContext<NotificationHub> _notification;
+        private readonly IFeatureService _featureService;
 
         public async Task Execute(IJobExecutionContext job)
         {
@@ -53,10 +57,12 @@ namespace Ombi.Schedule.Jobs.Emby
 
         private async Task ProcessMovies()
         {
-            var movies = _movieRepo.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available);
+            var feature4kEnabled = await _featureService.FeatureEnabled(FeatureNames.Movie4KRequests);
+            var movies = _movieRepo.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available || (!x.Available4K && x.Has4KRequest));
 
             foreach (var movie in movies)
             {
+                var has4kRequest = movie.Has4KRequest;
                 EmbyContent embyContent = null;
                 if (movie.TheMovieDbId > 0)
                 {
@@ -75,9 +81,23 @@ namespace Ombi.Schedule.Jobs.Emby
 
                 _log.LogInformation("We have found the request {0} on Emby, sending the notification", movie?.Title ?? string.Empty);
 
-                movie.Available = true;
-                movie.MarkedAsAvailable = DateTime.Now;
-                if (movie.Available)
+                var notify = false;
+
+                if (has4kRequest && embyContent.Has4K && !movie.Available4K)
+                {
+                    movie.Available4K = true;
+                    movie.MarkedAsAvailable4K = DateTime.Now;
+                    notify = true;
+                }
+
+                // If we have a non-4k version or we don't care about versions, then mark as available
+                if (!movie.Available && ( !feature4kEnabled || embyContent.Quality != null ))
+                {
+                    movie.Available = true;
+                    movie.MarkedAsAvailable = DateTime.Now;
+                    notify = true;
+                }
+                if (notify)
                 {
                     var recipient = movie.RequestedUser.Email.HasValue() ? movie.RequestedUser.Email : string.Empty;
 
@@ -124,7 +144,7 @@ namespace Ombi.Schedule.Jobs.Emby
 
                 var tvDbId = child.ParentRequest.TvDbId;
                 var imdbId = child.ParentRequest.ImdbId;
-                IQueryable<EmbyEpisode> seriesEpisodes = null;
+                IQueryable<IMediaServerEpisode> seriesEpisodes = null;
                 if (useImdb)
                 {
                     seriesEpisodes = embyEpisodes.Where(x => x.Series.ImdbId == imdbId.ToString());
