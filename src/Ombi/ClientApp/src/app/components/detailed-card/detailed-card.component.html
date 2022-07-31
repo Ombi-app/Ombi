@@ -1,0 +1,77 @@
+<!-- <div *ngIf="!request">Nothing</div>
+
+<div id="request{{request.requestId}}" class="ombi-card dark-card c" [style.display]="hide ? 'none' : 'block'">
+    <div class="card-top-info">
+        <div class="top-left" id="type{{request.requestId}}-{{RequestType[request.requestType]}}">
+            {{ 'Common.' + RequestType[request.requestType] }}
+        </div>
+    </div>
+    <ombi-image [src]="request.posterPath" [type]="request.requestType" id="cardImage" class="image" alt="{{request.title}}"></ombi-image>
+        <div [ngClass]="request.posterPath.includes('images/') ? 'middle-show' : 'middle'">
+            <a class="poster-overlay">
+                <div class="summary">
+                    <div class="title" id="title{{request.requestId}}">{{request.title}}</div>
+                    <div class="small-text ellipsis" id="overview{{request.requestId}}">{{request.overview}}</div>
+                </div>
+            </a>
+        </div>
+        <div [ngClass]="request.posterPath.includes('images/') ? 'button-request-container-show' : 'button-request-container'" class="row" *ngIf="!request.available && !request.approved && !request.requested">
+
+            <div *ngIf="is4kEnabled && request.requestType === RequestType.movie;then show4K else regular"></div>
+            <ng-template #show4K>
+                <div class="button-request poster-overlay">
+                    <button [matMenuTriggerFor]="menu" id="requestButton{{request.requestId}}{{request.requestType}}" mat-raised-button class="btn-ombi full-width poster-request-btn">
+                        <i *ngIf="!loading" class="fa-lg fas fa-cloud-download-alt"></i>
+                        <i *ngIf="loading" class="fas fa-spinner fa-pulse fa-2x fa-fw" aria-hidden="true"></i>
+                        {{'Common.Request' }}
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item  class="btn-ombi full-width poster-request-btn" (click)="submitRequest(false)">{{'Common.Request' }}</button>
+                        <button mat-menu-item  class="btn-ombi full-width poster-request-btn" (click)="submitRequest(true)">{{'Common.Request4K' }}</button>
+                      </mat-menu>
+                </div>
+            </ng-template>
+            <ng-template #regular>
+                <div class="button-request poster-overlay">
+                    <button id="requestButton{{request.requestId}}{{request.requestType}}" *ngIf="requestable" mat-raised-button class="btn-ombi full-width poster-request-btn" (click)="submitRequest(false)">
+                        <i *ngIf="!loading" class="fa-lg fas fa-cloud-download-alt"></i>
+                        <i *ngIf="loading" class="fas fa-spinner fa-pulse fa-2x fa-fw" aria-hidden="true"></i>
+                        {{'Common.Request' }}
+                    </button>
+                </div>
+            </ng-template>
+
+
+
+        </div>
+</div> -->
+
+<div class="detailed-container">
+    <div class="row">
+        <div class="col-5">
+            <ombi-image [src]="request.posterPath" [type]="request.requestType" class="poster" alt="{{request.title}}">
+            </ombi-image>
+        </div>
+        <div class="col-7">
+            <div class="row">
+                <div class="col-12 title">
+                    <h3>{{request.title}}</h3>
+                </div>
+                <div class="col-12 overview">
+                    <p>{{request.overview}}</p>
+                </div>
+                <div class="col-12">
+                    <span>Requested By: {{request.userName}}</span>
+                </div>
+                <div class="col-12">
+                    <span>On: {{request.requestDate | amFromUtc | amLocal | amUserLocale | amDateFormat: 'l LT'}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <button>Request</button>
+        </div>
+    </div>
+</div>

@@ -6,11 +6,16 @@ module.exports = {
   "addons": [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
-    "@storybook/addon-interactions"
+    "@storybook/addon-interactions",
+    "@storybook/preset-scss",
   ],
   "framework": "@storybook/angular",
   "core": {
     "builder": "@storybook/builder-webpack5"
   },
-  "staticDirs": ['../../wwwroot/images']
+  "staticDirs": [
+    '../../wwwroot/images',
+    '../../wwwroot/translations',
+    "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+  ]
 }

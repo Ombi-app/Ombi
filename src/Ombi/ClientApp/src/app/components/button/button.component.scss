@@ -1,0 +1,18 @@
+.detailed-container {
+    width: 400px;
+
+    
+
+
+    ::ng-deep .poster {
+        border-radius: 10px;
+        opacity: 1;
+        display: block;
+        width: 100%;
+        height: auto;
+        transition: .5s ease;
+        backface-visibility: hidden;
+    }
+
+}
+

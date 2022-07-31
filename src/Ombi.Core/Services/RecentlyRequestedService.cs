@@ -65,7 +65,8 @@ namespace Ombi.Core.Services
                     Type = RequestType.Movie,
                     Approved = item.Approved,
                     UserId = item.RequestedUserId,
-                    Username = item.RequestedUser.UserAlias
+                    Username = item.RequestedUser.UserAlias,
+                    MediaId = item.TheMovieDbId.ToString(),
                 });
             }
 
@@ -82,7 +83,8 @@ namespace Ombi.Core.Services
                     Title = item.Title,
                     Type = RequestType.Album,
                     UserId = item.RequestedUserId,
-                    Username = item.RequestedUser.UserAlias
+                    Username = item.RequestedUser.UserAlias,
+                    MediaId = item.ForeignAlbumId,
                 });
             }
 
@@ -101,7 +103,8 @@ namespace Ombi.Core.Services
                     Title = item.ParentRequest.Title,
                     Type = RequestType.TvShow,
                     UserId = item.RequestedUserId,
-                    Username = item.RequestedUser.UserAlias
+                    Username = item.RequestedUser.UserAlias,
+                    MediaId = item.ParentRequest.ExternalProviderId.ToString()
                 });
             }
 
