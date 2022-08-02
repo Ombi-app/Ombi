@@ -11,13 +11,9 @@ export class SocialIconsComponent {
     @Input() hasTrailer: boolean;
     @Input() imdbId: string;
     @Input() tvdbId: string;
-    @Input() twitter: string;
-    @Input() facebook: string;
-    @Input() instagram: string;
-    @Input() available: boolean;
-    @Input() plexUrl: string;
-    @Input() embyUrl: string;
-    @Input() jellyfinUrl: string;
+    @Input() twitter: string|undefined;
+    @Input() facebook: string|undefined;
+    @Input() instagram: string|undefined;
     @Input() doNotAppend: boolean;
     @Input() type: RequestType;
 

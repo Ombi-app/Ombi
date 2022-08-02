@@ -11,7 +11,7 @@
         <i matTooltip="The TV DB" class="fas fa-tv fa-2x grow-social"></i>
     </a>
 
-    <a *ngIf="hasTrailer" class="media-icons youtube" (click)="openDialog()">
+    <a *ngIf="hasTrailer" data-testid="social-trailer" class="media-icons youtube" (click)="openDialog()">
         <i matTooltip="Trailer" class="fab fa-youtube fa-2x grow-social"></i>
     </a>
     <a *ngIf="imdbId" class="media-icons imdb" [href]="doNotAppend ? imdbid : 'https://imdb.com/title/' + imdbId" target="_blank">
