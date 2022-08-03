@@ -65,7 +65,7 @@
     },
     "ErrorPages": {
         "NotFound": "Siden blev ikke fundet",
-        "SomethingWentWrong": "Noget gik galt!"
+        "SomethingWentWrong": "Something went wrong!"
     },
     "NavigationBar": {
         "Discover": "Opdag",
@@ -212,13 +212,13 @@
         "RequestPanel": {
             "Delete": "Slet Anmodning",
             "Approve": "Godkend Andmodning",
-            "Deny": "Afvis Request",
+            "Deny": "Deny Request",
             "Approve4K": "Godkend 4K Anmodning",
-            "Deny4K": "Afvis 4K Request",
+            "Deny4K": "Deny 4K Request",
             "ChangeAvailability": "Markér som tilgængelig",
             "Deleted": "De valgte elementer blev slettet",
             "Approved": "De valgte elementer blev godkendt",
-            "Denied": "De valgte elementer blev afvist"
+            "Denied": "Successfully denied selected items"
         },
         "SuccessfullyApproved": "Godkendt",
         "SuccessfullyDeleted": "Anmodningen blev slettet",
