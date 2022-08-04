@@ -1,3 +1,14 @@
+## [4.22.4](https://github.com/Ombi-app/Ombi/compare/v4.22.3...v4.22.4) (2022-08-04)
+
+
+### Bug Fixes
+
+* :bug: Fixed missing externals ([#4712](https://github.com/Ombi-app/Ombi/issues/4712)) ([fcc1eaa](https://github.com/Ombi-app/Ombi/commit/fcc1eaaa377683dcdc81d62a2a688fb0c4490c7b))
+* fixed trakt image not loading when base url present ([#4711](https://github.com/Ombi-app/Ombi/issues/4711)) ([f102dcf](https://github.com/Ombi-app/Ombi/commit/f102dcf751c2eb62ebfe30f9f8e4b2ad863c3b0d))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([#4713](https://github.com/Ombi-app/Ombi/issues/4713)) ([ff142b0](https://github.com/Ombi-app/Ombi/commit/ff142b09abbb2f9540387284222552e6e12639fe))
+
+
+
 ## [4.22.3](https://github.com/Ombi-app/Ombi/compare/v4.22.2...v4.22.3) (2022-07-28)
 
 
@@ -347,15 +358,6 @@
 ### Bug Fixes
 
 * **metadata:** improved the metadata job to also lookup the media in Plex to see if it has any more uptodate metadata ([83d1a15](https://github.com/Ombi-app/Ombi/commit/83d1a15cc9d0ee91be73bd91c4672cf1bcf2728a))
-
-
-
-## [4.15.1](https://github.com/Ombi-app/Ombi/compare/v4.15.0...v4.15.1) (2022-03-18)
-
-
-### Bug Fixes
-
-* **mediaserver:** fixed an issue where we were not detecting available content correctly [#4542](https://github.com/Ombi-app/Ombi/issues/4542) ([9cdd6f4](https://github.com/Ombi-app/Ombi/commit/9cdd6f41cdab8825a984905c089611409c53c753))
 
 
 
