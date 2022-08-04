@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { APP_BASE_HREF } from "@angular/common";
+import { Component, Input, Output, EventEmitter, Inject } from "@angular/core";
 import { RequestType } from "../../../../interfaces";
 @Component({
     selector: "social-icons",
@@ -31,6 +32,13 @@ export class SocialIconsComponent {
     @Output() onReProcess4KRequest: EventEmitter<any> = new EventEmitter();
 
     public RequestType = RequestType;
+    public baseUrl: string = "";
+
+    constructor (@Inject(APP_BASE_HREF) public href: string) {
+        if (this.href.length > 1) {
+            this.baseUrl = this.href;
+        }
+    }
 
 
     public openDialog() {
