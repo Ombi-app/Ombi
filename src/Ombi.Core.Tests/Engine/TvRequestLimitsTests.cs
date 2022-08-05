@@ -399,7 +399,7 @@ namespace Ombi.Core.Tests.Engine
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
                 .And.Property(nameof(RequestQuotaCountModel.Limit)).EqualTo(2)
-                .And.Property(nameof(RequestQuotaCountModel.Remaining)).EqualTo(2)
+                .And.Property(nameof(RequestQuotaCountModel.Remaining)).EqualTo(1) //2-1=1
                 );
         }
 

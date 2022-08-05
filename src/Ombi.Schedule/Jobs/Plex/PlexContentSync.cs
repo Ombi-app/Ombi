@@ -354,7 +354,6 @@ namespace Ombi.Schedule.Jobs.Plex
                             movie.ratingKey);
 
                         var meta = metaData.MediaContainer.Metadata.FirstOrDefault();
-                        guids.Add(meta.guid);
                         if (meta.Guid != null)
                         {
                             foreach (var g in meta.Guid)
@@ -649,10 +648,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private async Task GetProviderIds(PlexMetadata showMetadata, PlexServerContent existingContent)
         {
             var metadata = showMetadata.MediaContainer.Metadata.FirstOrDefault();
-            var guids = new List<string>
-            {
-                metadata.guid
-            };
+            var guids = new List<string>();
             if (metadata.Guid != null)
             {
                 foreach (var g in metadata.Guid)

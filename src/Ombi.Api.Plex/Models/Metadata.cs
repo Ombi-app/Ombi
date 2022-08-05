@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace Ombi.Api.Plex.Models
 {
@@ -25,7 +24,6 @@ namespace Ombi.Api.Plex.Models
         public string primaryExtraKey { get; set; }
         public string parentRatingKey { get; set; }
         public string grandparentRatingKey { get; set; }
-        public string guid { get; set; }
         public int librarySectionID { get; set; }
         public string librarySectionKey { get; set; }
         public string grandparentKey { get; set; }
