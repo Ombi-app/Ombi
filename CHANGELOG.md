@@ -1,195 +1,4 @@
-## [4.22.4](https://github.com/Ombi-app/Ombi/compare/v4.22.3...v4.22.4) (2022-08-04)
-
-
-### Bug Fixes
-
-* :bug: Fixed missing externals ([#4712](https://github.com/Ombi-app/Ombi/issues/4712)) ([fcc1eaa](https://github.com/Ombi-app/Ombi/commit/fcc1eaaa377683dcdc81d62a2a688fb0c4490c7b))
-* fixed trakt image not loading when base url present ([#4711](https://github.com/Ombi-app/Ombi/issues/4711)) ([f102dcf](https://github.com/Ombi-app/Ombi/commit/f102dcf751c2eb62ebfe30f9f8e4b2ad863c3b0d))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([#4713](https://github.com/Ombi-app/Ombi/issues/4713)) ([ff142b0](https://github.com/Ombi-app/Ombi/commit/ff142b09abbb2f9540387284222552e6e12639fe))
-
-
-
-## [4.22.3](https://github.com/Ombi-app/Ombi/compare/v4.22.2...v4.22.3) (2022-07-28)
-
-
-### Bug Fixes
-
-* Override Sonarr V3 Profiles endpoint ([#4678](https://github.com/Ombi-app/Ombi/issues/4678)) ([875da95](https://github.com/Ombi-app/Ombi/commit/875da959f353119b05138d68ee6d32a49e14b91e))
-
-
-
-## [4.22.2](https://github.com/Ombi-app/Ombi/compare/v4.22.1...v4.22.2) (2022-07-25)
-
-
-### Bug Fixes
-
-* fixed an issue where I broke images for some users ([81ddc85](https://github.com/Ombi-app/Ombi/commit/81ddc8553b9094c3f6843b036daebb2eb9262e00))
-
-
-
-## [4.22.1](https://github.com/Ombi-app/Ombi/compare/v4.22.0...v4.22.1) (2022-07-25)
-
-
-### Bug Fixes
-
-* **discover:** :bug: Created new Image component to handle 429's from TMDB ([#4698](https://github.com/Ombi-app/Ombi/issues/4698)) and fixed [#4635](https://github.com/Ombi-app/Ombi/issues/4635) ([#4699](https://github.com/Ombi-app/Ombi/issues/4699)) ([f22d3da](https://github.com/Ombi-app/Ombi/commit/f22d3da765799365455b919027f7563e52b347c3))
-
-
-
-# [4.22.0](https://github.com/Ombi-app/Ombi/compare/v4.21.2...v4.22.0) (2022-07-22)
-
-
-### Features
-
-* **discover:** ✨ Added infinite scroll on advanced search results ([898bc89](https://github.com/Ombi-app/Ombi/commit/898bc89fa78245c1f3de9481f6c724f087a16e39))
-
-
-
-## [4.21.2](https://github.com/Ombi-app/Ombi/compare/v4.21.1...v4.21.2) (2022-07-22)
-
-
-### Bug Fixes
-
-* Landing and Login page improvements ([#4690](https://github.com/Ombi-app/Ombi/issues/4690)) ([6d423b5](https://github.com/Ombi-app/Ombi/commit/6d423b5447c52c5e59d8d2bd92a23b47468eb736))
-
-
-
-## [4.21.1](https://github.com/Ombi-app/Ombi/compare/v4.21.0...v4.21.1) (2022-07-11)
-
-
-### Bug Fixes
-
-* **images:** Retry images with a backoff when we get a Too Many requests from TheMovieDb [#4685](https://github.com/Ombi-app/Ombi/issues/4685) ([3f1f35d](https://github.com/Ombi-app/Ombi/commit/3f1f35df3164db6739691cdda8f925c296239791))
-
-
-
-# [4.21.0](https://github.com/Ombi-app/Ombi/compare/v4.20.4...v4.21.0) (2022-06-22)
-
-
-### Features
-
-* Upgrade to Angular14 ([#4668](https://github.com/Ombi-app/Ombi/issues/4668)) ([b9d55a4](https://github.com/Ombi-app/Ombi/commit/b9d55a469b412558cbf67c1e25db7fdda5964cd8))
-
-
-### Performance Improvements
-
-* stop populating obsolete subscribe fields ([#4625](https://github.com/Ombi-app/Ombi/issues/4625)) ([9a73463](https://github.com/Ombi-app/Ombi/commit/9a734637665f671b17c2bb440d93b35a891c142b))
-
-
-
-## [4.20.4](https://github.com/Ombi-app/Ombi/compare/v4.20.3...v4.20.4) (2022-06-15)
-
-
-### Bug Fixes
-
-* fixed build ([f877921](https://github.com/Ombi-app/Ombi/commit/f8779219146051ea74f8b6408658ff7975afb88b))
-
-
-
-## [4.20.3](https://github.com/Ombi-app/Ombi/compare/v4.20.2...v4.20.3) (2022-06-05)
-
-
-### Bug Fixes
-
-* **plex:** 🐛 Fixed an issue with the Plex Sync ([ab1a11a](https://github.com/Ombi-app/Ombi/commit/ab1a11af78efbe9d37bd55aa80a640796c138a98))
-
-
-
-## [4.20.2](https://github.com/Ombi-app/Ombi/compare/v4.20.1...v4.20.2) (2022-06-03)
-
-
-### Bug Fixes
-
-* :bug: Fixed the Request on Behalf of having blanks ([#4667](https://github.com/Ombi-app/Ombi/issues/4667)) ([7dd9b1c](https://github.com/Ombi-app/Ombi/commit/7dd9b1cac07f571dd35b362544e4fe0226c4b817))
-
-
-
-## [4.20.1](https://github.com/Ombi-app/Ombi/compare/v4.20.0...v4.20.1) (2022-05-27)
-
-
-### Bug Fixes
-
-* added media type tag to media type text ([#4638](https://github.com/Ombi-app/Ombi/issues/4638)) ([fe501d3](https://github.com/Ombi-app/Ombi/commit/fe501d34a0c36ac9f000b107eca49dbc6694d006))
-* **API:** Fix pagination in some edge cases ([#4649](https://github.com/Ombi-app/Ombi/issues/4649)) ([a70bf8f](https://github.com/Ombi-app/Ombi/commit/a70bf8f46c76d74c9dfdf908c53bd9955ca0a35d))
-* **discover:** Carousel touch not working when scrolling page and recommendations and similar movie navigation ([#4633](https://github.com/Ombi-app/Ombi/issues/4633)) ([d5ef1d5](https://github.com/Ombi-app/Ombi/commit/d5ef1d53e5f77d19dba8b8059c80b538a3e14f2a))
-* Improve Swagger documentation ([#4652](https://github.com/Ombi-app/Ombi/issues/4652)) ([181892b](https://github.com/Ombi-app/Ombi/commit/181892bcfe88e6d76febf49ef57745d04552d08e))
-* Missing Poster broken link fix ([#4637](https://github.com/Ombi-app/Ombi/issues/4637)) ([4070f0d](https://github.com/Ombi-app/Ombi/commit/4070f0d093b1c92487a1c80cabad8283a9650f51))
-* **sickrage:** Fixed issue with incorrect handling of SiCKRAGE episode results returned during episode status changes, now expects array of objects from data path if present ([#4648](https://github.com/Ombi-app/Ombi/issues/4648)) ([6d16442](https://github.com/Ombi-app/Ombi/commit/6d16442d4d714920367df065a3ced42b729f4233))
-* **sync:** Emby+Jellyfin - sync multi-episode files of 3+ episodes ([bd8fd89](https://github.com/Ombi-app/Ombi/commit/bd8fd890554c9d85d6da4d2cee813e82ce698e52))
-
-
-
-# [4.20.0](https://github.com/Ombi-app/Ombi/compare/v4.19.1...v4.20.0) (2022-04-28)
-
-
-### Features
-
-* **discover:** Show more relevant shows in upcoming TV ([8357819](https://github.com/Ombi-app/Ombi/commit/8357819b53b8c675c0b246d7006b5a778bdba33f))
-
-
-
-## [4.19.1](https://github.com/Ombi-app/Ombi/compare/v4.19.0...v4.19.1) (2022-04-27)
-
-
-
-# [4.19.0](https://github.com/Ombi-app/Ombi/compare/v4.18.0...v4.19.0) (2022-04-27)
-
-
-### Features
-
-* **sync:** Detect reidentified movies in Emby and Jellyfin ([5938077](https://github.com/Ombi-app/Ombi/commit/5938077d82a5357f79c07b218b3986557a5816e8))
-* **sync:** Detect reidentified series in Emby and Jellyfin ([9096e91](https://github.com/Ombi-app/Ombi/commit/9096e91d55d268819bce22831f8a8b27f2a1776b))
-
-
-
-# [4.18.0](https://github.com/Ombi-app/Ombi/compare/v4.17.0...v4.18.0) (2022-04-26)
-
-
-### Bug Fixes
-
-* **discover:** Fix cache mix up ([03d9422](https://github.com/Ombi-app/Ombi/commit/03d94220c7eaafb50c6c80a6ed1150794b873ac3))
-* **discover:** Fix new trending feature detection ([6794b88](https://github.com/Ombi-app/Ombi/commit/6794b887f6544fb41528bdd9728b7824b65e47ee))
-* **settings:** Allow toggling features when there are more than one ([a373359](https://github.com/Ombi-app/Ombi/commit/a373359ae8e6bad42b558a6e01a8ff2840d3bbaa))
-
-
-### Features
-
-* **discover:** Add new trending source experimental feature ([1a0823c](https://github.com/Ombi-app/Ombi/commit/1a0823ca80559417c67323aaeaa1ef5243e98031))
-* **discover:** Default trending source to new logic ([4f12939](https://github.com/Ombi-app/Ombi/commit/4f12939e22020a67a5ee75e2907923faea136e8d))
-
-
-
-# [4.17.0](https://github.com/Ombi-app/Ombi/compare/v4.16.17...v4.17.0) (2022-04-25)
-
-
-### Features
-
-* **discover:** Add original language filter ([ef7ec86](https://github.com/Ombi-app/Ombi/commit/ef7ec861d8aede2a4817752c990617f583805391))
-
-
-
-## [4.16.17](https://github.com/Ombi-app/Ombi/compare/v4.16.16...v4.16.17) (2022-04-25)
-
-
-
-## [4.16.16](https://github.com/Ombi-app/Ombi/compare/v4.16.15...v4.16.16) (2022-04-25)
-
-
-### Bug Fixes
-
-* **4616:** :bug: fixed mandatory fields ([d8f2260](https://github.com/Ombi-app/Ombi/commit/d8f2260c7ae3ed48386743b7adbd06e284487034))
-
-
-
-## [4.16.15](https://github.com/Ombi-app/Ombi/compare/v4.16.14...v4.16.15) (2022-04-24)
-
-
-
-## [4.16.14](https://github.com/Ombi-app/Ombi/compare/v4.16.13...v4.16.14) (2022-04-19)
-
-
-
-## [4.16.13](https://github.com/Ombi-app/Ombi/compare/v4.16.12...v4.16.13) (2022-04-19)
+## [4.22.5](https://github.com/Ombi-app/Ombi/compare/v4.16.12...v4.22.5) (2022-08-05)
 
 
 
@@ -358,6 +167,189 @@
 ### Bug Fixes
 
 * **metadata:** improved the metadata job to also lookup the media in Plex to see if it has any more uptodate metadata ([83d1a15](https://github.com/Ombi-app/Ombi/commit/83d1a15cc9d0ee91be73bd91c4672cf1bcf2728a))
+
+
+
+## [4.15.1](https://github.com/Ombi-app/Ombi/compare/v4.15.0...v4.15.1) (2022-03-18)
+
+
+### Bug Fixes
+
+* **mediaserver:** fixed an issue where we were not detecting available content correctly [#4542](https://github.com/Ombi-app/Ombi/issues/4542) ([9cdd6f4](https://github.com/Ombi-app/Ombi/commit/9cdd6f41cdab8825a984905c089611409c53c753))
+
+
+
+# [4.15.0](https://github.com/Ombi-app/Ombi/compare/v4.14.4...v4.15.0) (2022-03-17)
+
+
+### Bug Fixes
+
+* **jellyfin:** :bug: Fixed an issue where Jellyfin content was showing the Play on Emby button ([18b167d](https://github.com/Ombi-app/Ombi/commit/18b167d16a3d682b5060ee36dedbbb069bef09de)), closes [#4542](https://github.com/Ombi-app/Ombi/issues/4542)
+
+
+
+## [4.14.4](https://github.com/Ombi-app/Ombi/compare/v4.14.3...v4.14.4) (2022-03-10)
+
+
+### Bug Fixes
+
+* :bug: Fixed the Request On Behalf autocomplete not filtering correctly ([a8ba2f3](https://github.com/Ombi-app/Ombi/commit/a8ba2f3544a1c01c57f217c4036a277ab0e67a09)), closes [#4539](https://github.com/Ombi-app/Ombi/issues/4539)
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([356c742](https://github.com/Ombi-app/Ombi/commit/356c7424e0ce8c1c5063b04bc6ed9b809f214d65))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([6fcaecf](https://github.com/Ombi-app/Ombi/commit/6fcaecf80b766f2d43ac7082d74364238e1638b7))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([132f4d4](https://github.com/Ombi-app/Ombi/commit/132f4d4e609b7fb7e37f38ee2f395926e2911abe))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([f292006](https://github.com/Ombi-app/Ombi/commit/f292006a08894a8d0ba899c8c6e9fe863e558dda))
+
+
+
+## [4.14.3](https://github.com/Ombi-app/Ombi/compare/v4.14.2...v4.14.3) (2022-03-06)
+
+
+### Bug Fixes
+
+* **availability:** :bug: Fixed an issue where with 4k content, we could repeat notifications ([f9ebc1c](https://github.com/Ombi-app/Ombi/commit/f9ebc1cc2e13c7cd335121cd86295b10eda529ba))
+
+
+
+## [4.14.2](https://github.com/Ombi-app/Ombi/compare/v4.14.1...v4.14.2) (2022-03-05)
+
+
+### Bug Fixes
+
+* **Sonarr:** :bug: Fixed an issue where some seasons were not being monitored correctly in sonarr ([60cfd41](https://github.com/Ombi-app/Ombi/commit/60cfd41f68e9006555c1a419dcff1aaa24b3e09f)), closes [#4506](https://github.com/Ombi-app/Ombi/issues/4506)
+
+
+
+## [4.14.1](https://github.com/Ombi-app/Ombi/compare/v4.14.0...v4.14.1) (2022-03-03)
+
+
+
+# [4.14.0](https://github.com/Ombi-app/Ombi/compare/v4.13.2...v4.14.0) (2022-03-02)
+
+
+
+## [4.13.2](https://github.com/Ombi-app/Ombi/compare/v4.13.1...v4.13.2) (2022-03-01)
+
+
+### Bug Fixes
+
+* **requests:** :bug: Fixed an issue where you couldn't approve movies from the request list ([1611ef9](https://github.com/Ombi-app/Ombi/commit/1611ef9198befbb7a4db50a4f0953e50f29a788f))
+
+
+
+## [4.13.1](https://github.com/Ombi-app/Ombi/compare/v4.13.0...v4.13.1) (2022-03-01)
+
+
+### Bug Fixes
+
+* **details:** :bug: Fixed the missing Play on Media server button for 4k content [#4529](https://github.com/Ombi-app/Ombi/issues/4529) ([68600f3](https://github.com/Ombi-app/Ombi/commit/68600f3b45376e12dd2ef263d81ca4040c84cbca))
+* **discover:** :bug: Fixed the issue where there was an option on the discover to request 4k shows (that's not supported currently) ([dcfd688](https://github.com/Ombi-app/Ombi/commit/dcfd688c8d2337e55fa9c6c33b7c3e80fc560cda))
+* **requests:** :bug: Fixed the issue where we could no longer approve TV Requests from the requests list ([19fe4e3](https://github.com/Ombi-app/Ombi/commit/19fe4e342efe5578c26ab8ba7ee2f2e64bbc9418))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([#4526](https://github.com/Ombi-app/Ombi/issues/4526)) ([7e9f54f](https://github.com/Ombi-app/Ombi/commit/7e9f54fc80a09c938184e6be40ce5f49ce9673ef))
+
+
+
+# [4.13.0](https://github.com/Ombi-app/Ombi/compare/v4.12.7...v4.13.0) (2022-02-25)
+
+
+### Bug Fixes
+
+* **4k:** Hide 'Has 4K Request' column list if 4k feature is disabled ([#4521](https://github.com/Ombi-app/Ombi/issues/4521)) ([a9a6067](https://github.com/Ombi-app/Ombi/commit/a9a60678e74d22fa7ba34051a2645db86b600b4a))
+* **issues:** Fix label ID in chatbox page ([#4520](https://github.com/Ombi-app/Ombi/issues/4520)) ([76882ad](https://github.com/Ombi-app/Ombi/commit/76882adf231f92e1cdd396239933c13467c112b3))
+* **localisation:** Localize request types in notifications ([#4516](https://github.com/Ombi-app/Ombi/issues/4516)) ([e09435d](https://github.com/Ombi-app/Ombi/commit/e09435da455b12fc429f129372de31e0654da797))
+* **notifications:** Remove generic admin email in favour of admins' email ([#4519](https://github.com/Ombi-app/Ombi/issues/4519)) ([b90fc5f](https://github.com/Ombi-app/Ombi/commit/b90fc5fea771a83e6cf576c71a307066efd59ea4))
+* **tv:** Display TV show as requested if all episodes are requested ([#4518](https://github.com/Ombi-app/Ombi/issues/4518)) ([2ed8c48](https://github.com/Ombi-app/Ombi/commit/2ed8c48d128a69f0d144c5d332286dbf3b0bdf28))
+
+
+### Features
+
+* **email-notifications:** Add a link to Ombi details page in email notifications ([#4517](https://github.com/Ombi-app/Ombi/issues/4517)) ([a3e97b3](https://github.com/Ombi-app/Ombi/commit/a3e97b31e2298d95e7deebd71268095b8ed5e9dc))
+* **media-details:** Add Trakt to social icons ([#4522](https://github.com/Ombi-app/Ombi/issues/4522)) ([d6ae79c](https://github.com/Ombi-app/Ombi/commit/d6ae79ce9eddbd5b7b888ab1b9f7e342d9d9ff9e))
+
+
+
+## [4.12.7](https://github.com/Ombi-app/Ombi/compare/v4.12.6...v4.12.7) (2022-02-23)
+
+
+
+## [4.12.6](https://github.com/Ombi-app/Ombi/compare/v4.12.5...v4.12.6) (2022-02-22)
+
+
+### Bug Fixes
+
+* **emby/jellyfin:** :bug: Fixed another issue where we were not correctly displaying the correct status' for movies ([5c0556e](https://github.com/Ombi-app/Ombi/commit/5c0556e6f44b8997a611f3a4d8e9e4e05d08bd13))
+* **mediaserver:** fixed some more issues in the media server sync and availability checks ([f3ea979](https://github.com/Ombi-app/Ombi/commit/f3ea979b8bd77842780ce8e6928b16237dd779cf))
+
+
+
+## [4.12.5](https://github.com/Ombi-app/Ombi/compare/v4.12.4...v4.12.5) (2022-02-21)
+
+
+### Bug Fixes
+
+* **emby:** :bug: Fixed the emby content sync [#4513](https://github.com/Ombi-app/Ombi/issues/4513) ([2927504](https://github.com/Ombi-app/Ombi/commit/2927504f0e0b4e7251e69b44e0e30c7ec9519980))
+* **emby:** :bug: Fixed the emby content sync [#4513](https://github.com/Ombi-app/Ombi/issues/4513) ([bd441cb](https://github.com/Ombi-app/Ombi/commit/bd441cb54fd77d6befb03fae321dc36c29f0de2e))
+
+
+
+## [4.12.4](https://github.com/Ombi-app/Ombi/compare/v4.12.3...v4.12.4) (2022-02-17)
+
+
+
+## [4.12.3](https://github.com/Ombi-app/Ombi/compare/v4.12.2...v4.12.3) (2022-02-16)
+
+
+
+## [4.12.2](https://github.com/Ombi-app/Ombi/compare/v4.12.1...v4.12.2) (2022-02-16)
+
+
+### Bug Fixes
+
+* **requests:** :bug: Fixed the approve 4k option on the requests list not working as expected ([c0189da](https://github.com/Ombi-app/Ombi/commit/c0189dad478ea375beda61ba3bee3f029a39b8e5))
+
+
+
+## [4.12.1](https://github.com/Ombi-app/Ombi/compare/v4.12.0...v4.12.1) (2022-02-16)
+
+
+### Bug Fixes
+
+* **requests:** :bug: Fixed the issue where Approving a 4K Request wouldn't send it to the correct 4K radarr instance ([87cb990](https://github.com/Ombi-app/Ombi/commit/87cb9903db30e1dead25ee8c5ea34305eb084a03)), closes [#4509](https://github.com/Ombi-app/Ombi/issues/4509)
+
+
+
+# [4.12.0](https://github.com/Ombi-app/Ombi/compare/v4.11.8...v4.12.0) (2022-02-14)
+
+
+### Features
+
+* **radarr:** 4K Requests and Radarr 4K support  ([ba88848](https://github.com/Ombi-app/Ombi/commit/ba88848866b0a9dedb1e79b55c4d81a0fd453843))
+
+
+
+## [4.11.8](https://github.com/Ombi-app/Ombi/compare/v4.11.7...v4.11.8) (2022-02-13)
+
+
+### Bug Fixes
+
+* **settings:** :bug: Fixed an issue where we were not displaying the excluded keyworks correctly in the TheMovieDbSettings page ([d3b3316](https://github.com/Ombi-app/Ombi/commit/d3b3316cbac18356b2f6b0912a3deb2c183e6534))
+
+
+
+## [4.11.7](https://github.com/Ombi-app/Ombi/compare/v4.11.6...v4.11.7) (2022-02-12)
+
+
+### Bug Fixes
+
+* **notifications:** :bug: This is a fix for some of the duplicate notification issues [#3825](https://github.com/Ombi-app/Ombi/issues/3825) ([22bb422](https://github.com/Ombi-app/Ombi/commit/22bb4226ead2d62e8c2c2c05be47d7da621402e2))
+
+
+
+## [4.11.6](https://github.com/Ombi-app/Ombi/compare/v4.11.5...v4.11.6) (2022-02-10)
+
+
+### Bug Fixes
+
+* **plex:** Fixed an issue where in a rare case we couldn't sync the data [#4502](https://github.com/Ombi-app/Ombi/issues/4502) ([191318d](https://github.com/Ombi-app/Ombi/commit/191318ddad5a8148422955bf928f1c49b890e3eb))
 
 
 
