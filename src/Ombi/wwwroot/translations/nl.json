@@ -22,9 +22,13 @@
         "Monitored": "Gemonitord",
         "NotAvailable": "Niet Beschikbaar",
         "ProcessingRequest": "Verzoek wordt verwerkt",
+        "ProcessingRequest4K": "Processing Request 4K",
         "PendingApproval": "Wacht op goedkeuring",
+        "PendingApproval4K": "Pending Approval 4K",
         "RequestDenied": "Verzoek geweigerd",
+        "RequestDenied4K": "Request Denied 4K",
         "NotRequested": "Niet verzocht",
+        "NotRequested4K": "Not Requested 4K",
         "Requested": "Aangevraagd",
         "Requested4K": "Requested 4K",
         "Search": "Zoeken",
@@ -60,7 +64,8 @@
         "CheckPageForUpdates": "Controleer deze pagina voor updates."
     },
     "ErrorPages": {
-        "NotFound": "Page not found"
+        "NotFound": "Page not found",
+        "SomethingWentWrong": "Something went wrong!"
     },
     "NavigationBar": {
         "Discover": "Ontdekken",
@@ -340,7 +345,7 @@
         "Seasons": "Seasons:",
         "Episodes": "Afleveringen:",
         "Availability": "Beschikbaarheid:",
-        "RequestStatus": "Aanvraagstatus",
+        "RequestStatus": "Request Status:",
         "Quality": "Kwaliteit:",
         "RootFolderOverride": "Hoofdmap overschrijven:",
         "QualityOverride": "Kwaliteit overschrijven:",

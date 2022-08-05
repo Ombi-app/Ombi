@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 
 import { Branch, ILanguageRefine, IOmbiSettings } from "../../interfaces";
 import { NotificationService } from "../../services";
@@ -13,13 +13,13 @@ import languageData from "./../../../other/iso-lang.json";
 })
 export class OmbiComponent implements OnInit {
 
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public langauges: ILanguageRefine[];
     public Branch = Branch;
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
-                private fb: FormBuilder) { }
+                private fb: UntypedFormBuilder) { }
 
     public ngOnInit() {
         this.settingsService.getOmbi().subscribe(x => {
@@ -45,7 +45,7 @@ export class OmbiComponent implements OnInit {
         });
     }
 
-    public onSubmit(form: FormGroup) {
+    public onSubmit(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;

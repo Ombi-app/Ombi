@@ -2,7 +2,7 @@
 import { EmbyService, JobService, NotificationService, SettingsService, TesterService } from "../../services";
 import { IEmbyLibrariesSettings, IEmbyServer, IEmbySettings } from "../../interfaces";
 
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import { MatTabChangeEvent } from "@angular/material/tabs";
 
 @Component({
@@ -13,7 +13,7 @@ export class EmbyComponent implements OnInit {
 
     public settings: IEmbySettings;
     public hasDiscoveredOrDirty: boolean;
-    selected = new FormControl(0);
+    selected = new UntypedFormControl(0);
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,

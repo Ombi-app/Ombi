@@ -22,9 +22,13 @@
         "Monitored": "Überwacht",
         "NotAvailable": "Nicht verfügbar",
         "ProcessingRequest": "Anfrage wird bearbeitet",
+        "ProcessingRequest4K": "Processing Request 4K",
         "PendingApproval": "Genehmigung ausstehend",
+        "PendingApproval4K": "Pending Approval 4K",
         "RequestDenied": "Anfrage abgelehnt",
+        "RequestDenied4K": "Request Denied 4K",
         "NotRequested": "Nicht angefordert",
+        "NotRequested4K": "Not Requested 4K",
         "Requested": "Angefordert",
         "Requested4K": "In 4K angefragt",
         "Search": "Suche",
@@ -60,7 +64,8 @@
         "CheckPageForUpdates": "Überprüfe diese Seite für kontinuierliche Website-Updates."
     },
     "ErrorPages": {
-        "NotFound": "Seite nicht gefunden"
+        "NotFound": "Seite nicht gefunden",
+        "SomethingWentWrong": "Etwas ist schiefgelaufen!"
     },
     "NavigationBar": {
         "Discover": "Entdecken",
@@ -207,13 +212,13 @@
         "RequestPanel": {
             "Delete": "Anfrage löschen",
             "Approve": "Anfrage genehmigen",
-            "Deny": "Deny Request",
+            "Deny": "Anfrage ablehnen",
             "Approve4K": "4K Anfrage genehmigen",
-            "Deny4K": "Deny 4K Request",
+            "Deny4K": "4K Anfrage ablehnen",
             "ChangeAvailability": "Als verfügbar markieren",
             "Deleted": "Ausgewählte Elemente erfolgreich gelöscht",
             "Approved": "Ausgewählte Elemente erfolgreich freigegeben",
-            "Denied": "Successfully denied selected items"
+            "Denied": "Ausgewählte Elemente erfolgreich abgelehnt"
         },
         "SuccessfullyApproved": "Erfolgreich genehmigt",
         "SuccessfullyDeleted": "Anfrage erfolgreich gelöscht",
@@ -327,12 +332,12 @@
         "LanguageProfileSelect": "Wählen Sie ein Sprachprofil",
         "Status": "Status:",
         "StatusValues": {
-            "Rumored": "Rumored",
+            "Rumored": "Gerüchten zufolge",
             "Planned": "Geplant",
             "In Production": "In Produktion",
             "Post Production": "Postproduktion",
             "Released": "Veröffentlicht",
-            "Running": "Running",
+            "Running": "Aktiv",
             "Returning Series": "Wiederkehrende Serie",
             "Ended": "Beendet",
             "Canceled": "Abgesagt"
@@ -340,7 +345,7 @@
         "Seasons": "Staffeln:",
         "Episodes": "Episoden:",
         "Availability": "Verfügbarkeit:",
-        "RequestStatus": "Anfrage Status",
+        "RequestStatus": "Request Status:",
         "Quality": "Qualität:",
         "RootFolderOverride": "Stammverzeichnis Überschreiben:",
         "QualityOverride": "Qualitäts Überschreiben:",
@@ -432,10 +437,10 @@
         "Unsubscribed": "Abbestellt!"
     },
     "UserTypeLabel": {
-        "1": "Local User",
-        "2": "Plex User",
-        "3": "Emby User",
-        "4": "Emby Connect User",
+        "1": "Lokaler Benutzer",
+        "2": "Plex Benutzer",
+        "3": "Embe Benutzer",
+        "4": "Emby Connect Benutzer",
         "5": "Jellyfin Server"
     },
     "Paginator": {

@@ -48,6 +48,7 @@ export class CarouselListComponent implements OnInit {
     constructor(private searchService: SearchV2Service,
         private storageService: StorageService,
         private featureFacade: FeaturesFacade) {
+        Carousel.prototype.onTouchMove = () => { },
         this.responsiveOptions = [
             {
                 breakpoint: '4000px',

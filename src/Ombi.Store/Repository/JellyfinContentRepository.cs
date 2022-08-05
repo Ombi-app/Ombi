@@ -104,6 +104,13 @@ namespace Ombi.Store.Repository
             return InternalSaveChanges();
         }
 
+        public override async Task DeleteTv(JellyfinContent tv)
+        {
+            var episodesToDelete = GetAllEpisodes().Cast<JellyfinEpisode>().Where(x => x.ParentId == tv.JellyfinId).ToList();
+            Db.JellyfinEpisode.RemoveRange(episodesToDelete);
+            await Delete(tv);
+        }
+
         public override RecentlyAddedType RecentlyAddedType => RecentlyAddedType.Jellyfin;
     }
 }

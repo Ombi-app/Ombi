@@ -9,6 +9,7 @@ using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository.Requests;
 using System.Threading;
+using Ombi.Helpers;
 
 namespace Ombi.Core.Helpers
 {
@@ -255,9 +256,16 @@ namespace Ombi.Core.Helpers
             return this;
         }
 
-        private DateTime FormatDate(string date)
+        private static DateTime FormatDate(string date)
         {
-            return string.IsNullOrEmpty(date) ? DateTime.MinValue : DateTime.Parse(date);
+            if (date.HasValue())
+            {
+                if (DateTime.TryParse(date, out var d))
+                {
+                    return d;
+                }
+            }
+            return DateTime.MinValue;
         }
     }
 }

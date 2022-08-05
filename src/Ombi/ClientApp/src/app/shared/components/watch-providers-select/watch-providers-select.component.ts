@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { IMovieDbKeyword, IWatchProvidersResults } from "../../../interfaces";
 import { debounceTime, distinctUntilChanged, map, startWith, switchMap } from "rxjs/operators";
 
@@ -30,10 +30,10 @@ export class WatchProvidersSelectComponent {
   get mediaType(): string {
     return this._mediaType;
   }
-  @Input() public form: FormGroup;
+  @Input() public form: UntypedFormGroup;
 
   public watchProviders: IWatchProvidersResults[] = [];
-  public control = new FormControl();
+  public control = new UntypedFormControl();
   public filteredTags: IWatchProvidersResults[];
   public filteredList: Observable<IWatchProvidersResults[]>;
 

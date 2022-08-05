@@ -22,9 +22,13 @@
         "Monitored": "Figyelve",
         "NotAvailable": "Nem elérhető",
         "ProcessingRequest": "Kérés feldolgozása",
+        "ProcessingRequest4K": "Processing Request 4K",
         "PendingApproval": "Jóváhagyásra vár",
+        "PendingApproval4K": "Pending Approval 4K",
         "RequestDenied": "Kérés megtagadva",
+        "RequestDenied4K": "Request Denied 4K",
         "NotRequested": "Nincs kérve",
+        "NotRequested4K": "Not Requested 4K",
         "Requested": "Kérve",
         "Requested4K": "Requested 4K",
         "Search": "Keresés",
@@ -60,7 +64,8 @@
         "CheckPageForUpdates": "Látogasd meg ezt az oldalt a frissítésekhez."
     },
     "ErrorPages": {
-        "NotFound": "Az oldal nem található"
+        "NotFound": "Az oldal nem található",
+        "SomethingWentWrong": "Something went wrong!"
     },
     "NavigationBar": {
         "Discover": "Felfedezés",
@@ -340,7 +345,7 @@
         "Seasons": "Évadok:",
         "Episodes": "Epizódok:",
         "Availability": "Elérhetőség:",
-        "RequestStatus": "Kérés állapota",
+        "RequestStatus": "Request Status:",
         "Quality": "Minőség:",
         "RootFolderOverride": "Gyökér mappa felülírása:",
         "QualityOverride": "Minőség felülírása:",

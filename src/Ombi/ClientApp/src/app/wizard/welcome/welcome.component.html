@@ -1,6 +1,6 @@
 ﻿<div class="wizard-background">
   <div class="container wizard-inner">
-      <mat-horizontal-stepper linear #stepper>
+      <mat-stepper linear #stepper>
         <mat-step >
           <form >
             <ng-template matStepLabel>Welcome</ng-template>
@@ -16,9 +16,9 @@
                   <br />
                   <div class="social-media">
                     <ul class="fa-ul">
-                      <li><a href="https://discord.gg/Sa7wNWb" target="_blank"><span class="fa-li"><i class="fab fa-discord"></i></span>Ombi Discord</a>
-                      <li><a href="https://github.com/Ombi-app/Ombi" target="_blank"><span class="fa-li"><i class="fab fa-github"></i></span>Ombi Github</a>
-                      <li><a href="https://docs.ombi.app/" target="_blank"><span class="fa-li"><i class="fas fa-book"></i></span>Ombi Documentation</a>
+                      <li><a href="https://discord.gg/Sa7wNWb" target="_blank"><span class="fa-li"><i class="fa-brands fa-discord"></i></span>Ombi Discord</a>
+                      <li><a href="https://github.com/Ombi-app/Ombi" target="_blank"><span class="fa-li"><i class="fa-brands fa-github"></i></span>Ombi Github</a>
+                      <li><a href="https://docs.ombi.app/" target="_blank"><span class="fa-li"><i class="fa-solid fa-book"></i></span>Ombi Documentation</a>
                     </ul>
                   </div>
                 </div>
@@ -53,7 +53,7 @@
           </form>
         </mat-step>
         <mat-step [optional]="true">
-          <form >
+          <form>
             <ng-template matStepLabel>Ombi config</ng-template>
             <wizard-ombi [config]="config"></wizard-ombi>
             <div>
@@ -81,6 +81,6 @@
             <button mat-button (click)="stepper.reset()" class="mat-raised-button mat-error left">Reset</button>
           </div>
         </mat-step>
-      </mat-horizontal-stepper>
+      </mat-stepper>
   </div>
 </div>

@@ -34,15 +34,29 @@ jobs:
     - name: Install Frontend Deps
       run: yarn --cwd ./src/Ombi/ClientApp install
 
-    - name: Install Automation Deps
-      run: yarn --cwd ./tests install
+    - name: Build Frontend
+      run: yarn --cwd ./src/Ombi/ClientApp build
 
-    - name: Start Backend
-      run: |
-          nohup dotnet run --project ./src/Ombi -- --host http://*:3577 &
-    - name: Start Frontend
-      run: |
-          nohup yarn --cwd ./src/Ombi/ClientApp start &
+    - name: Build Docker Image
+      run: docker build -t ombi src/
+
+    - name: Run Docker Image
+      run: nohup docker run --rm -p 5000:5000 ombi &
+
+    - name: Sleep for server to start
+      run: sleep 20
+
+    # - name: Start Frontend
+    #   run: |
+    #       nohup yarn --cwd ./src/Ombi/ClientApp start &
+
+    # - name: Install Automation Deps
+    #   run: yarn --cwd ./tests install
+
+    # - name: Start Backend
+    #   run: |
+    #       nohup dotnet run --project ./src/Ombi -- --host http://*:3577 &
+
     - name: Cypress Tests
       uses: cypress-io/github-action@v2.8.2
       with:
@@ -50,9 +64,9 @@ jobs:
         browser: chrome
         headless: true
         working-directory: tests
-        wait-on: http://localhost:3577/
-        # 7 minutes
-        wait-on-timeout: 420
+        wait-on: http://localhost:5000/
+        # 10 minutes
+        wait-on-timeout: 600
       env:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

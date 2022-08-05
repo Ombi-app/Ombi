@@ -22,9 +22,13 @@
         "Monitored": "Sledované",
         "NotAvailable": "Nie je k dispozícii",
         "ProcessingRequest": "Spracovávanie požiadavky",
+        "ProcessingRequest4K": "Processing Request 4K",
         "PendingApproval": "Čaká na schválenie",
+        "PendingApproval4K": "Pending Approval 4K",
         "RequestDenied": "Požiadavka zamietnutá",
+        "RequestDenied4K": "Request Denied 4K",
         "NotRequested": "Nepožiadané",
+        "NotRequested4K": "Not Requested 4K",
         "Requested": "Požiadané",
         "Requested4K": "Requested 4K",
         "Search": "Hľadať",
@@ -60,7 +64,8 @@
         "CheckPageForUpdates": "Prezrite túto stránku pre aktualizácie."
     },
     "ErrorPages": {
-        "NotFound": "Stránka sa nenašla"
+        "NotFound": "Stránka sa nenašla",
+        "SomethingWentWrong": "Something went wrong!"
     },
     "NavigationBar": {
         "Discover": "Objaviť",
@@ -340,7 +345,7 @@
         "Seasons": "Séria:",
         "Episodes": "Epizódy:",
         "Availability": "Dostupnosť:",
-        "RequestStatus": "Požiadať stav",
+        "RequestStatus": "Request Status:",
         "Quality": "Kvalita:",
         "RootFolderOverride": "Prepísanie koreňového priečinku:",
         "QualityOverride": "Prepísanie kvality:",

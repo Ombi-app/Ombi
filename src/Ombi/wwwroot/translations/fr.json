@@ -22,9 +22,13 @@
         "Monitored": "Suivi",
         "NotAvailable": "Non disponible",
         "ProcessingRequest": "En cours de traitement",
+        "ProcessingRequest4K": "4K en cours de traitement",
         "PendingApproval": "En attente d'approbation",
+        "PendingApproval4K": "En attente d'approbation 4K",
         "RequestDenied": "Demande refusée",
+        "RequestDenied4K": "Demande 4K refusée",
         "NotRequested": "Non demandé",
+        "NotRequested4K": "4K non demandée",
         "Requested": "Demandé",
         "Requested4K": "4K demandée",
         "Search": "Rechercher",
@@ -60,7 +64,8 @@
         "CheckPageForUpdates": "Consultez cette page pour voir les mises à jour du site."
     },
     "ErrorPages": {
-        "NotFound": "Page non trouvée"
+        "NotFound": "Page non trouvée",
+        "SomethingWentWrong": "Une erreur s'est produite !"
     },
     "NavigationBar": {
         "Discover": "Découvrir",
@@ -340,7 +345,7 @@
         "Seasons": "Saisons :",
         "Episodes": "Épisodes :",
         "Availability": "Disponibilité :",
-        "RequestStatus": "Statut de la Demande",
+        "RequestStatus": "Statut de la demande :",
         "Quality": "Qualité :",
         "RootFolderOverride": "Répertoire racine remplacé :",
         "QualityOverride": "Qualité remplacée :",

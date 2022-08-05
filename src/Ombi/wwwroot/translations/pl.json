@@ -22,9 +22,13 @@
         "Monitored": "Monitorowane",
         "NotAvailable": "Niedostępne",
         "ProcessingRequest": "Przetwarzanie zgłoszenia",
+        "ProcessingRequest4K": "Processing Request 4K",
         "PendingApproval": "Oczekujące na zatwierdzenie",
+        "PendingApproval4K": "Pending Approval 4K",
         "RequestDenied": "Zgłoszenie odrzucone",
+        "RequestDenied4K": "Request Denied 4K",
         "NotRequested": "Niezgłoszone",
+        "NotRequested4K": "Not Requested 4K",
         "Requested": "Zgłoszone",
         "Requested4K": "Żądane 4K",
         "Search": "Szukaj",
@@ -60,7 +64,8 @@
         "CheckPageForUpdates": "Tutaj znajdziesz aktualizacje dotyczące tej strony."
     },
     "ErrorPages": {
-        "NotFound": "Nie znaleziono strony"
+        "NotFound": "Nie znaleziono strony",
+        "SomethingWentWrong": "Something went wrong!"
     },
     "NavigationBar": {
         "Discover": "Odkryj",
@@ -340,7 +345,7 @@
         "Seasons": "Sezony:",
         "Episodes": "Odcinków:",
         "Availability": "Dostępność:",
-        "RequestStatus": "Status zgłoszenia",
+        "RequestStatus": "Request Status:",
         "Quality": "Jakość:",
         "RootFolderOverride": "Wymuszenie folderu głównego:",
         "QualityOverride": "Wymuszenie jakości:",

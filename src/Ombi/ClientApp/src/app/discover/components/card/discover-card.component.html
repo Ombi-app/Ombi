@@ -2,15 +2,14 @@
 
 <div id="result{{result.id}}" *ngIf="fullyLoaded" class="ombi-card dark-card c" [style.display]="hide ? 'none' : 'block'">
     <div class="card-top-info">
-        <div class="top-left" id="type{{result.id}}">
+        <div class="top-left" id="type{{result.id}}-{{RequestType[result.type]}}">
             {{ 'Common.' + RequestType[result.type] | translate }}
         </div>
         <div class="{{getStatusClass()}} top-right" id="status{{result.id}}">
             <span class="indicator"></span><span class="indicator-text" id="availabilityStatus{{result.id}}">{{getAvailabilityStatus()}}</span>
         </div>
     </div>
-        <img [routerLink]="generateDetailsLink()" id="cardImage" src="{{result.posterPath}}" class="image"
-            alt="{{result.title}}">
+    <ombi-image [src]="result.posterPath" [type]="result.type" [routerLink]="generateDetailsLink()" id="cardImage" class="image" alt="{{result.title}}"></ombi-image>
         <div [ngClass]="result.posterPath.includes('images/') ? 'middle-show' : 'middle'">
             <a class="poster-overlay" [routerLink]="generateDetailsLink()">
                 <div class="summary">

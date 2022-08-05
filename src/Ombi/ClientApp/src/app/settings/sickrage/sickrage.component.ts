@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 
 import { IDropDownModel, ISickRageSettings } from "../../interfaces";
 import { TesterService } from "../../services";
@@ -13,12 +13,12 @@ import { SettingsService } from "../../services";
 export class SickRageComponent implements OnInit {
 
     public qualities: IDropDownModel[];
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
                 private testerService: TesterService,
-                private fb: FormBuilder) { }
+                private fb: UntypedFormBuilder) { }
 
     public ngOnInit() {
         this.settingsService.getSickRageSettings()
@@ -36,7 +36,7 @@ export class SickRageComponent implements OnInit {
             });
     }
 
-    public test(form: FormGroup) {
+    public test(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;
@@ -51,7 +51,7 @@ export class SickRageComponent implements OnInit {
         });
     }
 
-    public onSubmit(form: FormGroup) {
+    public onSubmit(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;

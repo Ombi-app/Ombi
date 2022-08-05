@@ -10,9 +10,8 @@
 
         <social-icons [homepage]="movie.homepage" [theMoviedbId]="movie.id"
             [hasTrailer]="movie.videos?.results?.length > 0" [imdbId]="movie.imdbId"
-            [twitter]="movie.externalIds.twitterId" [facebook]="movie.externalIds.facebookId"
-            [instagram]="movie.externalIds.instagramId" [available]="movie.available" [plexUrl]="movie.plexUrl"
-            [embyUrl]="movie.embyUrl" [jellyfinUrl]="movie.jellyfinUrl" [isAdmin]="isAdmin"
+            [twitter]="movie.externalIds?.twitterId" [facebook]="movie.externalIds?.facebookId"
+            [instagram]="movie.externalIds?.instagramId" [available]="movie.available" [isAdmin]="isAdmin"
             [canShowAdvanced]="showAdvanced && movieRequest" [type]="requestType" [has4KRequest]="movie.has4KRequest"
             (openTrailer)="openDialog()" (onAdvancedOptions)="openAdvancedOptions()"
             (onReProcessRequest)="reProcessRequest(false)" (onReProcess4KRequest)="reProcessRequest(true)">
@@ -24,7 +23,7 @@
 
             <div class="row justify-content-center justify-content-sm-start header-container">
                 <div class="details-poster-container">
-                    <media-poster [posterPath]="'https://image.tmdb.org/t/p/w300/' + movie.posterPath"></media-poster>
+                    <media-poster [posterPath]=movie.posterPath></media-poster>
                 </div>
 
                 <!--Next to poster-->
@@ -107,7 +106,7 @@
                                 </span>
                             </span>
                         </span>
-                        
+
                         <span *ngIf="movieRequest?.showSubscribe">
                             <button *ngIf="!movieRequest?.subscribed" (click)="notify()" id="notifyBtn"
                                 mat-raised-button class="btn-spacing"> <i class="fas fa-bell"></i>
@@ -239,44 +238,44 @@
                             </div>
 
                             <mat-accordion class=" mat-elevation-z8 spacing-below ">
-                                <mat-expansion-panel>
+                                <mat-expansion-panel *ngIf="movie.recommendations?.results?.length> 0">
                                     <mat-expansion-panel-header>
                                         <mat-panel-title>
                                             {{'MediaDetails.RecommendationsTitle' | translate}}
                                         </mat-panel-title>
                                     </mat-expansion-panel-header>
 
-                                    <div class="row card-spacer " *ngIf="movie.recommendations?.results?.length> 0">
+                                    <div class="row card-spacer ">
 
                                         <div class="col-md-2" *ngFor="let r of movie.recommendations?.results">
                                             <div class="sidebar affixable affix-top preview-poster">
                                                 <div class="poster">
                                                     <a [routerLink]="'/details/movie/'+r.id">
-                                                        <img class="real grow" matTooltip="{{r.title}}"
+                                                        <ombi-image class="real grow" matTooltip="{{r.title}}"
                                                             src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}"
-                                                            alt="Poster" style="display: block;">
+                                                            alt="Poster" style="display: block;"> </ombi-image>
                                                     </a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </mat-expansion-panel>
-                                <mat-expansion-panel>
+                                <mat-expansion-panel *ngIf="movie.similar?.results?.length > 0">
                                     <mat-expansion-panel-header>
                                         <mat-panel-title>
                                             {{'MediaDetails.SimilarTitle' | translate}}
                                         </mat-panel-title>
                                     </mat-expansion-panel-header>
 
-                                    <div class="row card-spacer" *ngIf="movie.similar?.results?.length > 0">
+                                    <div class="row card-spacer">
 
                                         <div class="col-md-2" *ngFor="let r of movie.similar.results">
                                             <div class="sidebar affixable affix-top preview-poster">
                                                 <div class="poster ">
                                                     <a [routerLink]="'/details/movie/'+r.id">
-                                                        <img class="real grow" matTooltip="{{r.title}}"
+                                                        <ombi-image class="real grow" matTooltip="{{r.title}}"
                                                             src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}"
-                                                            alt="Poster" style="display: block;">
+                                                            alt="Poster" style="display: block;"></ombi-image>
                                                     </a>
                                                 </div>
                                             </div>

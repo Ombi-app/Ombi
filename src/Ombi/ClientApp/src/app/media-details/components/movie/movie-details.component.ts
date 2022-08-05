@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
+import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { ImageService, SearchV2Service, RequestService, MessageService, RadarrService, SettingsStateService } from "../../../services";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
 import { MatDialog } from "@angular/material/dialog";
@@ -12,7 +12,6 @@ import { NewIssueComponent } from "../shared/new-issue/new-issue.component";
 import { TranslateService } from "@ngx-translate/core";
 import { MovieAdvancedOptionsComponent } from "./panels/movie-advanced-options/movie-advanced-options.component";
 import { RequestServiceV2 } from "../../../services/requestV2.service";
-import { RequestBehalfComponent } from "../shared/request-behalf/request-behalf.component";
 import { firstValueFrom, forkJoin } from "rxjs";
 import { AdminRequestDialogComponent } from "../../../shared/admin-request-dialog/admin-request-dialog.component";
 import { FeaturesFacade } from "../../../state/features/features.facade";
@@ -32,31 +31,45 @@ export class MovieDetailsComponent implements OnInit{
     public issuesEnabled: boolean;
     public roleName4k = "Request4KMovie";
     public is4KEnabled = false;
-
     public requestType = RequestType.movie;
-
-
     private theMovidDbId: number;
     private imdbId: string;
+    private snapMovieId: string;
 
-    constructor(private searchService: SearchV2Service, private route: ActivatedRoute,
+
+    constructor(private searchService: SearchV2Service, private route: ActivatedRoute, private router: Router,
         private sanitizer: DomSanitizer, private imageService: ImageService,
         public dialog: MatDialog, private requestService: RequestService,
         private requestService2: RequestServiceV2, private radarrService: RadarrService,
         public messageService: MessageService, private auth: AuthService, private settingsState: SettingsStateService,
         private translate: TranslateService, private featureFacade: FeaturesFacade) {
-        this.route.params.subscribe(async (params: any) => {
-            if (typeof params.movieDbId === 'string' || params.movieDbId instanceof String) {
-                if (params.movieDbId.startsWith("tt")) {
-                    this.imdbId = params.movieDbId;
-                }
-            }
-            this.theMovidDbId = params.movieDbId;
+          this.snapMovieId = this.route.snapshot.params.movieDbId;
+          this.route.params.subscribe(async (params: any) => {
+              if (typeof params.movieDbId === 'string' || params.movieDbId instanceof String) {
+                  if (params.movieDbId.startsWith("tt")) {
+                      this.imdbId = params.movieDbId;
+                      // Check if we user navigated to another movie and if so reload the component
+                      if (this.imdbId !== this.snapMovieId) {
+                        this.reloadComponent()
+                      }
+                  }
+              }
+              this.theMovidDbId = params.movieDbId;
+              // Check if we user navigated to another movie and if so reload the component
+              if (params.movieDbId !== this.snapMovieId) {
+                this.reloadComponent()
+              }
         });
     }
 
-    async ngOnInit() {
+    reloadComponent() {
+      let currentUrl = this.router.url;
+          this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+          this.router.onSameUrlNavigation = 'reload';
+          this.router.navigate([currentUrl]);
+      }
 
+    async ngOnInit() {
         this.is4KEnabled = this.featureFacade.is4kEnabled();
         this.issuesEnabled = this.settingsState.getIssue();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
@@ -68,6 +81,7 @@ export class MovieDetailsComponent implements OnInit{
         if (this.imdbId) {
             this.searchService.getMovieByImdbId(this.imdbId).subscribe(async x => {
                 this.movie = x;
+                this.checkPoster();
                 if (this.movie.requestId > 0) {
                     // Load up this request
                     this.hasRequest = true;
@@ -78,6 +92,7 @@ export class MovieDetailsComponent implements OnInit{
         } else {
             this.searchService.getFullMovieDetails(this.theMovidDbId).subscribe(async x => {
                 this.movie = x;
+                this.checkPoster();
                 if (this.movie.requestId > 0) {
                     // Load up this request
                     this.hasRequest = true;
@@ -272,7 +287,14 @@ export class MovieDetailsComponent implements OnInit{
             }
         });
     }
-
+    private checkPoster() {
+      if (this.movie.posterPath == null) {
+        this.movie.posterPath = "../../../images/default_movie_poster.png";
+      }
+      else {
+        this.movie.posterPath = "https://image.tmdb.org/t/p/w300/" + this.movie.posterPath
+      };
+    }
     private loadAdvancedInfo() {
         const profile = this.radarrService.getQualityProfilesFromSettings();
         const folders = this.radarrService.getRootFoldersFromSettings();

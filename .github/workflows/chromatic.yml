@@ -1,0 +1,47 @@
+name: 'Chromatic'
+
+# Event for the workflow
+on:
+  push:
+  workflow_dispatch:
+
+# List of jobs
+jobs:
+  storybook-build:
+    # Operating System
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: NodeModules Cache
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: node_modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install dependencies
+        working-directory: ./src/Ombi/ClientApp
+        run: yarn
+
+      - name: Publish to Chromatic
+        if: github.ref != 'refs/heads/master'
+        uses: chromaui/action@v1
+        with:
+          projectToken: 7c47e1a1a4bd
+          exitZeroOnChanges: true
+          workingDir: ./src/Ombi/ClientApp
+          buildScriptName: storybookbuild
+          exitOnceUploaded: true
+
+      - name: Publish to Chromatic and auto accept changes
+        if: github.ref == 'refs/heads/develop'
+        uses: chromaui/action@v1
+        with:
+          projectToken: 7c47e1a1a4bd
+          autoAcceptChanges: true # 👈 Option to accept all changes
+          workingDir: ./src/Ombi/ClientApp
+          buildScriptName: storybookbuild
+          exitOnceUploaded: true

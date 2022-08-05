@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 
 import { IMobileNotifcationSettings, IMobileUsersViewModel, INotificationTemplates, NotificationType } from "../../interfaces";
 import { TesterService } from "../../services";
@@ -14,13 +14,13 @@ export class MobileComponent implements OnInit {
 
     public NotificationType = NotificationType;
     public templates: INotificationTemplates[];
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public userList: IMobileUsersViewModel[];
     public testUserId: string;
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
-                private fb: FormBuilder,
+                private fb: UntypedFormBuilder,
                 private testerService: TesterService,
                 private mobileService: MobileService) { }
 
@@ -42,7 +42,7 @@ export class MobileComponent implements OnInit {
         });
     }
 
-    public onSubmit(form: FormGroup) {
+    public onSubmit(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;
@@ -61,7 +61,7 @@ export class MobileComponent implements OnInit {
 
     }
 
-    public test(form: FormGroup) {
+    public test(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;

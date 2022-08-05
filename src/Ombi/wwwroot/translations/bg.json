@@ -22,9 +22,13 @@
         "Monitored": "Наблюдавано",
         "NotAvailable": "Не е налично",
         "ProcessingRequest": "Обработване на заявката",
+        "ProcessingRequest4K": "Processing Request 4K",
         "PendingApproval": "Чака одобрение",
+        "PendingApproval4K": "Pending Approval 4K",
         "RequestDenied": "Заявката е отказана",
+        "RequestDenied4K": "Request Denied 4K",
         "NotRequested": "Не е заявено",
+        "NotRequested4K": "Not Requested 4K",
         "Requested": "Заявено",
         "Requested4K": "Requested 4K",
         "Search": "Търсене",
@@ -60,7 +64,8 @@
         "CheckPageForUpdates": "Проверете тази страница за последни новини на сайта."
     },
     "ErrorPages": {
-        "NotFound": "Page not found"
+        "NotFound": "Page not found",
+        "SomethingWentWrong": "Something went wrong!"
     },
     "NavigationBar": {
         "Discover": "Открийте",
@@ -340,7 +345,7 @@
         "Seasons": "Seasons:",
         "Episodes": "Episodes:",
         "Availability": "Наличност:",
-        "RequestStatus": "Състояние на заявката",
+        "RequestStatus": "Request Status:",
         "Quality": "Качество:",
         "RootFolderOverride": "Ръчно задаване на основната папка:",
         "QualityOverride": "Ръчно задаване на качеството:",

@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 
 import { IIssueCategory } from "../../interfaces";
 import { IssuesService, NotificationService, SettingsService } from "../../services";
@@ -12,11 +12,11 @@ export class IssuesComponent implements OnInit {
 
     public categories: IIssueCategory[];
     public categoryToAdd: IIssueCategory = {id: 0, value: ""};
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
     constructor(private issuesService: IssuesService,
                 private settingsService: SettingsService,
-                private readonly fb: FormBuilder,
+                private readonly fb: UntypedFormBuilder,
                 private notificationService: NotificationService) {  }
 
     public ngOnInit() {
@@ -48,7 +48,7 @@ export class IssuesComponent implements OnInit {
         });
     }
     
-    public onSubmit(form: FormGroup) {
+    public onSubmit(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;

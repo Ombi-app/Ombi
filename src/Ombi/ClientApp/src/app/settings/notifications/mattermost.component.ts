@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 
 import { IMattermostNotifcationSettings, INotificationTemplates, NotificationType } from "../../interfaces";
 import { TesterService } from "../../services";
@@ -14,11 +14,11 @@ export class MattermostComponent implements OnInit {
 
     public NotificationType = NotificationType;
     public templates: INotificationTemplates[];
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
-                private fb: FormBuilder,
+                private fb: UntypedFormBuilder,
                 private testerService: TesterService) { }
 
     public ngOnInit() {
@@ -36,7 +36,7 @@ export class MattermostComponent implements OnInit {
         });
     }
 
-    public onSubmit(form: FormGroup) {
+    public onSubmit(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;
@@ -55,7 +55,7 @@ export class MattermostComponent implements OnInit {
 
     }
 
-    public test(form: FormGroup) {
+    public test(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;

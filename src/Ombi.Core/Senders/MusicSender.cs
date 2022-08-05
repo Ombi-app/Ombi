@@ -70,7 +70,7 @@ namespace Ombi.Core.Senders
             }
 
 
-            return new SenderResult { Success = false, Sent = false, Message = "Something went wrong!" };
+            return new SenderResult { Success = false, Sent = false };
         }
 
         private async Task<SenderResult> SendToLidarr(AlbumRequest model, LidarrSettings settings)

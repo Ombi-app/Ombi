@@ -3,7 +3,7 @@ import { searchPage as Page } from "@/integration/page-objects";
 describe("Search Tests", () => {
   beforeEach(() => {
     cy.login();
-    cy.intercept("POST", "v2/search/multi/").as("searchResponse");
+    cy.intercept("POST", "api/v2/search/multi/*").as("searchResponse");
   });
 
   it("Single result when TV Search Only", () => {

@@ -6,7 +6,7 @@
         "type": "coreclr",
         "request": "launch",
         "preLaunchTask": "build",
-        "program": "${workspaceFolder}/bin/Debug/net5.0/ombi.dll",
+        "program": "${workspaceFolder}/bin/Debug/net6.0/ombi.dll",
         "args": ["--host", "http://localhost:3577"],
         "cwd": "${workspaceFolder}",
         "stopAtEntry": false,

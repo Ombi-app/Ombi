@@ -17,6 +17,7 @@ using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Ombi.TheMovieDbApi.Models;
 
 // Due to conflicting Genre models in
 // Ombi.TheMovieDbApi.Models and Ombi.Api.TheMovieDb.Models   
@@ -123,6 +124,10 @@ namespace Ombi.Core.Engine.V2
         {
             var lang = await DefaultLanguageCode(null);
             return await _movieDbApi.GetGenres(media, cancellationToken, lang);
+        }
+        public async Task<IEnumerable<Language>> GetLanguages(CancellationToken cancellationToken)
+        {
+            return await _movieDbApi.GetLanguages(cancellationToken);
         }
     }
 }

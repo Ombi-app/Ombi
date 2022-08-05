@@ -1,6 +1,8 @@
 ﻿using System.Net.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
+using Ombi.Api.Sonarr.Models;
 using Ombi.Api.Sonarr.Models.V3;
 
 namespace Ombi.Api.Sonarr
@@ -20,6 +22,13 @@ namespace Ombi.Api.Sonarr
             request.AddHeader("X-Api-Key", apiKey);
 
             return await Api.Request<List<LanguageProfiles>>(request);
+        }
+
+        public override async Task<IEnumerable<SonarrProfile>> GetProfiles(string apiKey, string baseUrl)
+        {
+            var request = new Request($"{ApiBaseUrl}qualityprofile", baseUrl, HttpMethod.Get);
+            request.AddHeader("X-Api-Key", apiKey);
+            return await Api.Request<List<SonarrProfile>>(request);
         }
     }
 }

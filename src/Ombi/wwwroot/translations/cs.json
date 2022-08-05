@@ -22,9 +22,13 @@
         "Monitored": "Monitorováno",
         "NotAvailable": "Není k dispozici",
         "ProcessingRequest": "Zpracovávání žádosti",
+        "ProcessingRequest4K": "Processing Request 4K",
         "PendingApproval": "Čeká na schválení",
+        "PendingApproval4K": "Pending Approval 4K",
         "RequestDenied": "Žádost zamítnuta",
+        "RequestDenied4K": "Request Denied 4K",
         "NotRequested": "Nevyžádáno",
+        "NotRequested4K": "Not Requested 4K",
         "Requested": "Vyžádáno",
         "Requested4K": "Požádáno o 4K",
         "Search": "Hledat",
@@ -60,7 +64,8 @@
         "CheckPageForUpdates": "Check this page for continuous site updates."
     },
     "ErrorPages": {
-        "NotFound": "Stránka nenalezena"
+        "NotFound": "Stránka nenalezena",
+        "SomethingWentWrong": "Something went wrong!"
     },
     "NavigationBar": {
         "Discover": "Objevit nové",
@@ -340,7 +345,7 @@
         "Seasons": "Série:",
         "Episodes": "Epizody:",
         "Availability": "Dostupnost:",
-        "RequestStatus": "Stav požadavku",
+        "RequestStatus": "Request Status:",
         "Quality": "Kvalita:",
         "RootFolderOverride": "Root Folder Override:",
         "QualityOverride": "Quality Override:",

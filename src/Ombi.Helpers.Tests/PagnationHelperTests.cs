@@ -83,6 +83,8 @@ namespace Ombi.Helpers.Tests
                     .SetName("PaginationPosition_Load_SecondHalf_FirstPage_FirstHalf_SecondPage");
                 yield return new TestCaseData(0, 40, 20, new List<MultiplePagesTestData> { new MultiplePagesTestData(1, 20, 0), new MultiplePagesTestData(2, 20, 0) })
                     .SetName("PaginationPosition_Load_Full_First_And_SecondPage");
+                yield return new TestCaseData(40, 40, 20, new List<MultiplePagesTestData> { new MultiplePagesTestData(3, 20, 0), new MultiplePagesTestData(4, 20, 0) })
+                    .SetName("PaginationPosition_Load_Full_Third_And_ForthPage");
                 yield return new TestCaseData(35, 15, 20, new List<MultiplePagesTestData> { new MultiplePagesTestData(2, 5, 15), new MultiplePagesTestData(3, 10, 0) })
                     .SetName("PaginationPosition_Load_EndSecondPage_Beginning_ThirdPage");
                 yield return new TestCaseData(18, 22, 20, new List<MultiplePagesTestData> { new MultiplePagesTestData(1, 2, 18), new MultiplePagesTestData(2, 20, 0) })

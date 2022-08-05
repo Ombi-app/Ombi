@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 
 import { ILidarrSettings, IMinimumAvailability, IProfiles, IRadarrProfile, IRadarrRootFolder } from "../../interfaces";
 import { LidarrService, TesterService } from "../../services";
@@ -20,12 +20,12 @@ export class LidarrComponent implements OnInit {
     public rootFoldersRunning: boolean;
     public metadataRunning: boolean;
     public advanced = false;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
     constructor(private settingsService: SettingsService,
                 private lidarrService: LidarrService,
                 private notificationService: NotificationService,
-                private fb: FormBuilder,
+                private fb: UntypedFormBuilder,
                 private testerService: TesterService) { }
 
     public ngOnInit() {
@@ -67,7 +67,7 @@ export class LidarrComponent implements OnInit {
             });
     }
 
-    public getProfiles(form: FormGroup) {
+    public getProfiles(form: UntypedFormGroup) {
         this.profilesRunning = true;
         this.lidarrService.getQualityProfiles(form.value).subscribe(x => {
             this.qualities = x;
@@ -78,7 +78,7 @@ export class LidarrComponent implements OnInit {
         });
     }
 
-    public getRootFolders(form: FormGroup) {
+    public getRootFolders(form: UntypedFormGroup) {
         this.rootFoldersRunning = true;
         this.lidarrService.getRootFolders(form.value).subscribe(x => {
             this.rootFolders = x;
@@ -89,7 +89,7 @@ export class LidarrComponent implements OnInit {
         });
     }
 
-    public getMetadataProfiles(form: FormGroup) {
+    public getMetadataProfiles(form: UntypedFormGroup) {
         this.metadataRunning = true;
         this.lidarrService.getMetadataProfiles(form.value).subscribe(x => {
             this.metadataProfiles = x;
@@ -100,7 +100,7 @@ export class LidarrComponent implements OnInit {
         });
     }
 
-    public test(form: FormGroup) {
+    public test(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;
@@ -117,7 +117,7 @@ export class LidarrComponent implements OnInit {
         });
     }
 
-    public onSubmit(form: FormGroup) {
+    public onSubmit(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;

@@ -169,6 +169,19 @@ export class DiscoverCardComponent implements OnInit {
         }
     }
 
+    public onImageError(event: any) {
+        const originalSrc = event.target.src;
+
+        // set to a placeholder
+        event.target.src = "../../../images/default_movie_poster.png";
+
+        // Retry the original image
+        const timeout = setTimeout(() => {
+            event.target.src = originalSrc;
+            clearTimeout(timeout);
+        }, Math.floor(Math.random() * (7000 - 1000 + 1)) + 1000);
+    }
+
     private getExtraMovieInfo() {
         if (!this.result.imdbid) {
             this.searchService.getFullMovieDetails(+this.result.id)

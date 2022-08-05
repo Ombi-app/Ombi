@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 
 import { IEmailNotificationSettings, INotificationTemplates, NotificationType } from "../../interfaces";
 import { TesterService } from "../../services";
@@ -14,11 +14,11 @@ import { SettingsService } from "../../services";
 export class EmailNotificationComponent implements OnInit {
     public NotificationType = NotificationType;
     public templates: INotificationTemplates[];
-    public emailForm: FormGroup;
+    public emailForm: UntypedFormGroup;
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
-                private fb: FormBuilder,
+                private fb: UntypedFormBuilder,
                 private validationService: ValidationService,
                 private testerService: TesterService) { }
 
@@ -48,7 +48,7 @@ export class EmailNotificationComponent implements OnInit {
         });
     }
 
-    public onSubmit(form: FormGroup) {
+    public onSubmit(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;
@@ -67,7 +67,7 @@ export class EmailNotificationComponent implements OnInit {
 
     }
 
-    public test(form: FormGroup) {
+    public test(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;

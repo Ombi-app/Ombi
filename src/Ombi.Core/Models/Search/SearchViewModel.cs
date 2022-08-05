@@ -36,6 +36,7 @@ namespace Ombi.Core.Models.Search
         [Obsolete("Use request service instead")]
         public bool Subscribed { get; set; }
         [NotMapped]
+        [Obsolete("Use request service instead")]
         public bool ShowSubscribe { get; set; }
     }
 }
