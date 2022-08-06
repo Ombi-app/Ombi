@@ -268,6 +268,12 @@
                       <e p="cast-carousel.component.scss" t="Include" />
                       <e p="cast-carousel.component.ts" t="Include" />
                     </e>
+                    <e p="crew-carousel" t="Include">
+                      <e p="crew-carousel.component.html" t="Include" />
+                      <e p="crew-carousel.component.scss" t="Include" />
+                      <e p="crew-carousel.component.ts" t="Include" />
+                    </e>
+
                     <e p="deny-dialog" t="Include">
                       <e p="deny-dialog.component.html" t="Include" />
                       <e p="deny-dialog.component.ts" t="Include" />
