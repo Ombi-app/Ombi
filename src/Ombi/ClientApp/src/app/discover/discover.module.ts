@@ -8,7 +8,7 @@ import { PipeModule } from "../pipes/pipe.module";
 import { RouterModule } from "@angular/router";
 import { SharedModule } from "../shared/shared.module";
 import { SkeletonModule } from 'primeng/skeleton';
-import { DetailedCardComponent, ImageComponent } from 'app/components';
+import { ImageComponent } from 'app/components';
 
 @NgModule({
     imports: [
@@ -20,7 +20,6 @@ import { DetailedCardComponent, ImageComponent } from 'app/components';
         InfiniteScrollModule,
         SkeletonModule,
         ImageComponent,
-        DetailedCardComponent,
     ],
     declarations: [
         ...fromComponents.components

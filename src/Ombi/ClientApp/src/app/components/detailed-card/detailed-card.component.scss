@@ -1,7 +1,30 @@
+@import "~styles/variables.scss";
+
 .detailed-container {
     width: 400px;
+    height: auto;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid $ombi-background-primary-accent;
 
-    
+    background-color: $ombi-background-accent;
+
+    .top-spacing {
+        margin-top: 20px;
+    }
+
+    .overview {
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .posterColumn {
+        width: 100%
+    }
 
 
     ::ng-deep .poster {

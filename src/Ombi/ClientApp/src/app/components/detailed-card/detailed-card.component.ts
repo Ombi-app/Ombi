@@ -1,16 +1,11 @@
-import { OmbiCommonModules } from "../modules";
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { IRecentlyRequested, RequestType } from "../../interfaces";
-import { ImageComponent } from "../image/image.component";
 import { ImageService } from "app/services";
 import { Subject, takeUntil } from "rxjs";
-import { PipeModule } from "app/pipes/pipe.module";
 
 @Component({
-    standalone: true,
+    standalone: false,
     selector: 'ombi-detailed-card',
-    imports: [...OmbiCommonModules, ImageComponent, PipeModule],
-    providers: [ImageService],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './detailed-card.component.html',
     styleUrls: ['./detailed-card.component.scss']
@@ -34,11 +29,31 @@ import { PipeModule } from "app/pipes/pipe.module";
         }
       }
 
-
       public submitRequest(is4k: boolean) {
         this.onRequest.emit(is4k);
       }
 
+      public getStatus(request: IRecentlyRequested) {
+        if (request.available) {
+          return "Common.Available";
+        }
+        if (request.approved) {
+          return "Common.Approved";
+        } else {
+          return "Common.Pending";
+        }
+      }
+
+      public getClass(request: IRecentlyRequested) {
+        if (request.available) {
+          return "success";
+        }
+        if (request.approved) {
+          return "primary";
+        } else {
+          return "info";
+        }
+      }
 
       public ngOnDestroy() {
         this.$imageSub.next();

@@ -11,6 +11,7 @@ import { RecentlyRequestedListComponent } from "./recently-requested-list/recent
 import { MatDialog } from "@angular/material/dialog";
 import { RequestServiceV2 } from "../../services/requestV2.service";
 import { Routes } from "@angular/router";
+import { DetailedCardComponent } from "app/components";
 
 export const components: any[] = [
     DiscoverComponent,
@@ -20,6 +21,7 @@ export const components: any[] = [
     DiscoverSearchResultsComponent,
     CarouselListComponent,
     RecentlyRequestedListComponent,
+    DetailedCardComponent,
 ];
 
 export const providers: any[] = [

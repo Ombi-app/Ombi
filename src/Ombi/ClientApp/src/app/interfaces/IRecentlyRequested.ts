@@ -4,7 +4,7 @@ export interface IRecentlyRequested {
     requestId: number;
     requestType: RequestType;
     userId: string;
-    userName: string;
+    username: string;
     available: boolean;
     tvPartiallyAvailable: boolean;
     requestDate: Date;

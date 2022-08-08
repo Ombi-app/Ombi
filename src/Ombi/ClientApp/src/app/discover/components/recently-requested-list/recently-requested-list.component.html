@@ -1,5 +1,5 @@
-<p-carousel #carousel [numVisible]="7" [numScroll]="0" [page]="0" [value]="requests" [responsiveOptions]="responsiveOptions">
+<p-carousel #carousel [numVisible]="4" [numScroll]="7" [page]="0" [value]="requests" [responsiveOptions]="responsiveOptions">
     <ng-template let-result pTemplate="item">
-        {{result.title}}
+        <ombi-detailed-card [request]="result"></ombi-detailed-card>
     </ng-template>
 </p-carousel>
