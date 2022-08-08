@@ -1,4 +1,4 @@
-<p-carousel #carousel [numVisible]="10" [numScroll]="10" [page]="0" [value]="requests" [responsiveOptions]="responsiveOptions">
+<p-carousel #carousel [value]="requests" [responsiveOptions]="responsiveOptions" [page]="0">
     <ng-template let-result pTemplate="item">
         <ombi-detailed-card [request]="result" (onClick)="navigate(result)"></ombi-detailed-card>
     </ng-template>
