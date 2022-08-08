@@ -1,0 +1,5 @@
+<p-carousel #carousel [numVisible]="7" [numScroll]="0" [page]="0" [value]="requests" [responsiveOptions]="responsiveOptions">
+    <ng-template let-result pTemplate="item">
+        {{result.title}}
+    </ng-template>
+</p-carousel>
