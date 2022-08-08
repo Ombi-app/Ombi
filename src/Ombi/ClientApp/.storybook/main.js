@@ -13,9 +13,8 @@ module.exports = {
   "core": {
     "builder": "@storybook/builder-webpack5"
   },
-  "staticDirs": [
-    '../../wwwroot/images',
-    '../../wwwroot/translations',
-    "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-  ]
+    "staticDirs": [{ from: '../../wwwroot/images', to: 'images' }, { from: '../../wwwroot/translations', to: 'translations'}],
+  "features": {
+    interactionsDebugger: true,
+  }
 }

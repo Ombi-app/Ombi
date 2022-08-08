@@ -810,6 +810,13 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/mkgeeky">
+            <img src="https://avatars.githubusercontent.com/u/68811367?v=4" width="50;" alt="mkgeeky"/>
+            <br />
+            <sub><b>Mkgeeky</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/sir-marv">
             <img src="https://avatars.githubusercontent.com/u/3598205?v=4" width="50;" alt="sir-marv"/>
             <br />
