@@ -1,9 +1,11 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Ombi.Api.FanartTv;
+using Ombi.Api.TheMovieDb;
 using Ombi.Config;
 using Ombi.Core;
 using Ombi.Core.Engine.Interfaces;
@@ -17,11 +19,12 @@ namespace Ombi.Controllers.V1
     [ApiController]
     public class ImagesController : ControllerBase
     {
-        public ImagesController(IFanartTvApi fanartTvApi, IApplicationConfigRepository config,
+        public ImagesController(IFanartTvApi fanartTvApi, IMovieDbApi movieDbApi, IApplicationConfigRepository config,
             IOptions<LandingPageBackground> options, ICacheService c, IImageService imageService,
             IMovieEngineV2 movieEngineV2, ITVSearchEngineV2 tVSearchEngineV2)
         {
             FanartTvApi = fanartTvApi;
+            _movieDbApi = movieDbApi;
             Config = config;
             Options = options.Value;
             _cache = c;
@@ -33,6 +36,8 @@ namespace Ombi.Controllers.V1
         private IFanartTvApi FanartTvApi { get; }
         private IApplicationConfigRepository Config { get; }
         private LandingPageBackground Options { get; }
+
+        private readonly IMovieDbApi _movieDbApi;
         private readonly ICacheService _cache;
         private readonly IImageService _imageService;
         private readonly IMovieEngineV2 _movieEngineV2;
@@ -172,6 +177,23 @@ namespace Ombi.Controllers.V1
                 return images.tvthumb.OrderBy(x => x.likes).Select(x => x.url).FirstOrDefault();
             }
 
+            return string.Empty;
+        }
+
+        [HttpGet("poster/tv/tmdb/{tmdbId}")]
+        public async Task<string> GetTmdbTvPoster(string tmdbId)
+        {
+            var images = await _cache.GetOrAddAsync($"{CacheKeys.TmdbImages}tv{tmdbId}", () => _movieDbApi.GetTvImages(tmdbId, HttpContext.RequestAborted), DateTimeOffset.Now.AddDays(1));
+
+            if (images?.posters?.Any() ?? false)
+            {
+                return images.posters.Select(x => x.file_path).FirstOrDefault();
+            }
+
+            if (images?.backdrops?.Any() ?? false)
+            {
+                return images.backdrops.Select(x => x.file_path).FirstOrDefault();
+            }
             return string.Empty;
         }
 

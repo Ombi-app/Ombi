@@ -10,10 +10,6 @@
 
     background-color: $ombi-background-accent;
 
-    .top-spacing {
-        margin-top: 20px;
-    }
-
     .overview {
         display: -webkit-box;
         -webkit-line-clamp: 4;
@@ -22,12 +18,8 @@
         text-overflow: ellipsis;
     }
 
-    .posterColumn {
-        width: 100%
-    }
-
-
     ::ng-deep .poster {
+        cursor: pointer;
         border-radius: 10px;
         opacity: 1;
         display: block;

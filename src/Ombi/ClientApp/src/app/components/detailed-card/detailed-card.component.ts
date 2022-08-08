@@ -12,9 +12,8 @@ import { Subject, takeUntil } from "rxjs";
   })
   export class DetailedCardComponent implements OnInit, OnDestroy {
       @Input() public request: IRecentlyRequested;
-      @Input() public is4kEnabled: boolean = false;
 
-      @Output() public onRequest: EventEmitter<boolean> = new EventEmitter<boolean>();
+      @Output() public onClick: EventEmitter<void> = new EventEmitter<void>();
 
       public RequestType = RequestType;
       public loading: false;
@@ -25,17 +24,23 @@ import { Subject, takeUntil } from "rxjs";
 
       ngOnInit(): void {
         if (!this.request.posterPath) {
-          this.imageService.getMoviePoster(this.request.mediaId).pipe(takeUntil(this.$imageSub)).subscribe(x => this.request.posterPath = x);
+          switch (this.request.type) {
+            case RequestType.movie:
+              this.imageService.getMoviePoster(this.request.mediaId).pipe(takeUntil(this.$imageSub)).subscribe(x => this.request.posterPath = x);
+              break;
+            case RequestType.tvShow:
+              this.imageService.getTmdbTvPoster(Number(this.request.mediaId)).pipe(takeUntil(this.$imageSub)).subscribe(x => this.request.posterPath = `https://image.tmdb.org/t/p/w300${x}`);
+              break;
+          }
         }
-      }
-
-      public submitRequest(is4k: boolean) {
-        this.onRequest.emit(is4k);
       }
 
       public getStatus(request: IRecentlyRequested) {
         if (request.available) {
           return "Common.Available";
+        }
+        if (request.tvPartiallyAvailable) {
+          return "Common.PartiallyAvailable";
         }
         if (request.approved) {
           return "Common.Approved";
@@ -44,8 +49,12 @@ import { Subject, takeUntil } from "rxjs";
         }
       }
 
+      public click() {
+        this.onClick.emit();
+      }
+
       public getClass(request: IRecentlyRequested) {
-        if (request.available) {
+        if (request.available || request.tvPartiallyAvailable) {
           return "success";
         }
         if (request.approved) {

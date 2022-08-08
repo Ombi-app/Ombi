@@ -9,6 +9,7 @@ import { FeaturesFacade } from "../../../state/features/features.facade";
 import { ResponsiveOptions } from "../carousel.options";
 import { RequestServiceV2 } from "app/services/requestV2.service";
 import { Subject, takeUntil } from "rxjs";
+import { Router } from "@angular/router";
 
 export enum DiscoverType {
     Upcoming,
@@ -41,7 +42,8 @@ export class RecentlyRequestedListComponent implements OnInit, OnDestroy {
     private $loadSub = new Subject<void>();
 
     constructor(private requestService: RequestServiceV2,
-        private featureFacade: FeaturesFacade) {
+        private featureFacade: FeaturesFacade,
+        private router: Router) {
         Carousel.prototype.onTouchMove = () => {},
         this.responsiveOptions = ResponsiveOptions;
     }
@@ -53,11 +55,25 @@ export class RecentlyRequestedListComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         this.loading();
-        this.loadData(false);
+        this.loadData();
     }
 
+    public navigate(request: IRecentlyRequested) {
+        this.router.navigate([this.generateDetailsLink(request), request.mediaId]);
+    }
 
-    private loadData(clearExisting: boolean = true) {
+    private generateDetailsLink(request: IRecentlyRequested): string {
+        switch (request.type) {
+            case RequestType.movie:
+                return `/details/movie/`;
+            case RequestType.tvShow:
+                return `/details/tv/`;
+            case RequestType.album: //Actually artist
+                return `/details/artist/`;
+        }
+    }
+
+    private loadData() {
         this.requestService.getRecentlyRequested().pipe(takeUntil(this.$loadSub)).subscribe(x => {
             this.requests = x;
             this.finishLoading();

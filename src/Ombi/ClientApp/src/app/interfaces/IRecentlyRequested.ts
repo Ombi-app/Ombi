@@ -2,7 +2,6 @@ import { RequestType } from "./IRequestModel";
 
 export interface IRecentlyRequested {
     requestId: number;
-    requestType: RequestType;
     userId: string;
     username: string;
     available: boolean;
@@ -13,6 +12,7 @@ export interface IRecentlyRequested {
     releaseDate: Date;
     approved: boolean;
     mediaId: string;
+    type: RequestType;
 
     posterPath: string;
 }

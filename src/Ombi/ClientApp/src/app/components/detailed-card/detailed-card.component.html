@@ -46,10 +46,10 @@
         </div>
 </div> -->
 
-<div class="detailed-container">
+<div class="detailed-container" (click)="click()" >
     <div class="row">
         <div class="col-5 posterColumn">
-            <ombi-image [src]="request.posterPath" [type]="request.requestType" class="poster" alt="{{request.title}}">
+            <ombi-image [src]="request.posterPath" [type]="request.type" class="poster" alt="{{request.title}}">
             </ombi-image>
         </div>
         <div class="col-7">

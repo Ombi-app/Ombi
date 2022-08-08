@@ -514,6 +514,14 @@ namespace Ombi.Api.TheMovieDb
             return Api.Request<WatchProviders>(request, token);
         }
 
+        public Task<TvImages> GetTvImages(string theMovieDbId, CancellationToken token)
+        {
+            var request = new Request($"tv/{theMovieDbId}/images", BaseUri, HttpMethod.Get);
+            request.AddQueryString("api_key", ApiToken);
+            
+            return Api.Request<TvImages>(request, token);
+        }
+
         private async Task AddDiscoverSettings(Request request)
         {
             var settings = await Settings;

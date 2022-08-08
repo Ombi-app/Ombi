@@ -4,7 +4,6 @@ import { Story, Meta, moduleMetadata } from '@storybook/angular';
 import { IRecentlyRequested, RequestType } from '../../interfaces';
 import { DetailedCardComponent } from './detailed-card.component';
 import { TranslateModule } from "@ngx-translate/core";
-import { ImageService } from '../../services/image.service';
 
 // More on default export: https://storybook.js.org/docs/angular/writing-stories/introduction#default-export
 export default {
@@ -39,13 +38,12 @@ NewMovieRequest.args = {
     available: false,
     tvPartiallyAvailable: false,
     requestDate: new Date(2022, 1, 1),
-    userName: 'John Doe',
+    username: 'John Doe',
     userId: '12345',
-    requestType: RequestType.movie,
+    type: RequestType.movie,
     mediaId: '603',
     overview: 'The Matrix is a movie about a group of people who are forced to fight against a powerful computer system that controls them.',
     releaseDate: new Date(2020, 1, 1),
     posterPath: "https://assets.fanart.tv/fanart/movies/603/movieposter/the-matrix-52256ae1021be.jpg"
   } as IRecentlyRequested,
-  is4kEnabled: false,
 };
