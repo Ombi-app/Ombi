@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnI
 import { IRecentlyRequested, RequestType } from "../../interfaces";
 import { ImageService } from "app/services";
 import { Subject, takeUntil } from "rxjs";
+import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
 
 @Component({
     standalone: false,
@@ -20,16 +21,24 @@ import { Subject, takeUntil } from "rxjs";
 
       private $imageSub = new Subject<void>();
 
-    constructor(private imageService: ImageService) { }
+      public background: SafeStyle;
+
+    constructor(private imageService: ImageService, private sanitizer: DomSanitizer) { }
 
       ngOnInit(): void {
         if (!this.request.posterPath) {
           switch (this.request.type) {
             case RequestType.movie:
               this.imageService.getMoviePoster(this.request.mediaId).pipe(takeUntil(this.$imageSub)).subscribe(x => this.request.posterPath = x);
+              this.imageService.getMovieBackground(this.request.mediaId).pipe(takeUntil(this.$imageSub)).subscribe(x => {
+                this.background = this.sanitizer.bypassSecurityTrustStyle("linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url(" + x + ")");
+              });
               break;
             case RequestType.tvShow:
               this.imageService.getTmdbTvPoster(Number(this.request.mediaId)).pipe(takeUntil(this.$imageSub)).subscribe(x => this.request.posterPath = `https://image.tmdb.org/t/p/w300${x}`);
+              this.imageService.getTmdbTvBackground(Number(this.request.mediaId)).pipe(takeUntil(this.$imageSub)).subscribe(x => {
+                this.background = this.sanitizer.bypassSecurityTrustStyle("linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url(https://image.tmdb.org/t/p/w300" + x + ")");
+              });
               break;
           }
         }

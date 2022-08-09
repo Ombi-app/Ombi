@@ -108,7 +108,7 @@ namespace Ombi.Core.Services
                 });
             }
 
-            return model.OrderByDescending(x => x.ReleaseDate);
+            return model.OrderByDescending(x => x.RequestDate);
         }
     }
 }

@@ -46,15 +46,16 @@
         </div>
 </div> -->
 
-<div class="detailed-container" (click)="click()" >
+<div class="detailed-container" (click)="click()" [style.background-image]="background">
     <div class="row">
-        <div class="col-5 posterColumn">
+        <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 posterColumn">
             <ombi-image [src]="request.posterPath" [type]="request.type" class="poster" alt="{{request.title}}">
             </ombi-image>
         </div>
-        <div class="col-7">
+        <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12">
             <div class="row">
                 <div class="col-12 title">
+                    <div class="text-right year"><sup>{{request.releaseDate | date:'yyyy'}}</sup></div>
                     <h3>{{request.title}}</h3>
                 </div>
                 <div class="col-12">

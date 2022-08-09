@@ -8,7 +8,14 @@
     border-radius: 10px;
     border: 1px solid $ombi-background-primary-accent;
 
+    @media (max-width:768px) {
+        width: 200px;
+    }
+
     background-color: $ombi-background-accent;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
 
     .overview {
         display: -webkit-box;
@@ -16,6 +23,12 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    .year {
+        @media (max-width:768px) {
+            padding-top: 3%;
+        }
     }
 
     ::ng-deep .poster {
@@ -27,6 +40,7 @@
         height: 200px;
         transition: .5s ease;
         backface-visibility: hidden;
+        border: 1px solid #35465c;
     }
 
 }

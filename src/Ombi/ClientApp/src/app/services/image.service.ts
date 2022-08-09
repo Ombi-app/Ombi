@@ -48,4 +48,8 @@ export class ImageService extends ServiceHelpers {
     public getTvBackground(tvdbid: number): Observable<string> {
         return this.http.get<string>(`${this.url}background/tv/${tvdbid}`, { headers: this.headers });
     }
+
+    public getTmdbTvBackground(id: number): Observable<string> {
+        return this.http.get<string>(`${this.url}background/tv/tmdb/${id}`, { headers: this.headers });
+    }
 }

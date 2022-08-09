@@ -181,21 +181,8 @@ namespace Ombi.Controllers.V1
         }
 
         [HttpGet("poster/tv/tmdb/{tmdbId}")]
-        public async Task<string> GetTmdbTvPoster(string tmdbId)
-        {
-            var images = await _cache.GetOrAddAsync($"{CacheKeys.TmdbImages}tv{tmdbId}", () => _movieDbApi.GetTvImages(tmdbId, HttpContext.RequestAborted), DateTimeOffset.Now.AddDays(1));
-
-            if (images?.posters?.Any() ?? false)
-            {
-                return images.posters.Select(x => x.file_path).FirstOrDefault();
-            }
-
-            if (images?.backdrops?.Any() ?? false)
-            {
-                return images.backdrops.Select(x => x.file_path).FirstOrDefault();
-            }
-            return string.Empty;
-        }
+        public Task<string> GetTmdbTvPoster(string tmdbId) => _imageService.GetTmdbTvPoster(tmdbId, HttpContext.RequestAborted);
+        
 
         [HttpGet("background/movie/{movieDbId}")]
         public async Task<string> GetMovieBackground(string movieDbId)
@@ -257,6 +244,10 @@ namespace Ombi.Controllers.V1
 
             return await _imageService.GetTvBackground(tvdbid.ToString());
         }
+
+        [HttpGet("background/tv/tmdb/{id}")]
+        public Task<string> GetTmdbTvBackground(string id) => _imageService.GetTmdbTvBackground(id, HttpContext.RequestAborted);
+
 
         [HttpGet("background")]
         public async Task<object> GetBackgroundImage()
