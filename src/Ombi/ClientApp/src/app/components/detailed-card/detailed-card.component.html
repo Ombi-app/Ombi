@@ -1,0 +1,25 @@
+<div id="detailed-{{request.mediaId}}" class="detailed-container" (click)="click()" [style.background-image]="background">
+    <div class="row">
+        <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 posterColumn">
+            <ombi-image [src]="request.posterPath" [type]="request.type" class="poster" alt="{{request.title}}">
+            </ombi-image>
+        </div>
+        <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12">
+            <div class="row">
+                <div class="col-12 title">
+                    <div class="text-right year"><sup>{{request.releaseDate | date:'yyyy'}}</sup></div>
+                    <h3 id="detailed-request-title-{{request.mediaId}}">{{request.title}}</h3>
+                </div>
+                <div class="col-12" *ngIf="request.username">
+                    <p id="detailed-request-requestedby-{{request.mediaId}}">Requested By: {{request.username}}</p>
+                </div>
+                <div class="col-12">
+                    <p id="detailed-request-date-{{request.mediaId}}">On: {{request.requestDate | amFromUtc | amLocal | amUserLocale | amDateFormat: 'l LT'}}</p>
+                </div>
+                <div class="col-12">
+                    <p id="detailed-request-status-{{request.mediaId}}">Status: <span class="badge badge-{{getClass(request)}}">{{getStatus(request) | translate}}</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

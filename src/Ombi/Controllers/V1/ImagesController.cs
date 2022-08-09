@@ -1,9 +1,11 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Ombi.Api.FanartTv;
+using Ombi.Api.TheMovieDb;
 using Ombi.Config;
 using Ombi.Core;
 using Ombi.Core.Engine.Interfaces;
@@ -17,11 +19,12 @@ namespace Ombi.Controllers.V1
     [ApiController]
     public class ImagesController : ControllerBase
     {
-        public ImagesController(IFanartTvApi fanartTvApi, IApplicationConfigRepository config,
+        public ImagesController(IFanartTvApi fanartTvApi, IMovieDbApi movieDbApi, IApplicationConfigRepository config,
             IOptions<LandingPageBackground> options, ICacheService c, IImageService imageService,
             IMovieEngineV2 movieEngineV2, ITVSearchEngineV2 tVSearchEngineV2)
         {
             FanartTvApi = fanartTvApi;
+            _movieDbApi = movieDbApi;
             Config = config;
             Options = options.Value;
             _cache = c;
@@ -33,6 +36,8 @@ namespace Ombi.Controllers.V1
         private IFanartTvApi FanartTvApi { get; }
         private IApplicationConfigRepository Config { get; }
         private LandingPageBackground Options { get; }
+
+        private readonly IMovieDbApi _movieDbApi;
         private readonly ICacheService _cache;
         private readonly IImageService _imageService;
         private readonly IMovieEngineV2 _movieEngineV2;
@@ -175,6 +180,10 @@ namespace Ombi.Controllers.V1
             return string.Empty;
         }
 
+        [HttpGet("poster/tv/tmdb/{tmdbId}")]
+        public Task<string> GetTmdbTvPoster(string tmdbId) => _imageService.GetTmdbTvPoster(tmdbId, HttpContext.RequestAborted);
+        
+
         [HttpGet("background/movie/{movieDbId}")]
         public async Task<string> GetMovieBackground(string movieDbId)
         {
@@ -235,6 +244,10 @@ namespace Ombi.Controllers.V1
 
             return await _imageService.GetTvBackground(tvdbid.ToString());
         }
+
+        [HttpGet("background/tv/tmdb/{id}")]
+        public Task<string> GetTmdbTvBackground(string id) => _imageService.GetTmdbTvBackground(id, HttpContext.RequestAborted);
+
 
         [HttpGet("background")]
         public async Task<object> GetBackgroundImage()

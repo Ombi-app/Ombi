@@ -28,7 +28,7 @@ describe('User Management Page', () => {
         // Setup the form
         cy.get('#username').type(username);
         cy.get('#alias').type("alias1");
-        cy.get('#emailAddress').type(username + "@emailaddress.com");
+        cy.get('#emailAddress').type(username + "@emailaddress.com", { force: true });
         cy.get('#password').type("password");
         cy.get('#confirmPass').type("password");
 
@@ -54,7 +54,7 @@ describe('User Management Page', () => {
       // Setup the form
       cy.get('#username').type("user1");
       cy.get('#alias').type("alias1");
-      cy.get('#emailAddress').type("user1@emailaddress.com");
+      cy.get('#emailAddress').type("user1@emailaddress.com", { force: true });
       cy.get('#password').type("password");
       cy.get('#confirmPass').type("password");
 
@@ -72,7 +72,7 @@ describe('User Management Page', () => {
       // Setup the form
       cy.get('#username').type("user1");
       cy.get('#alias').type("alias1");
-      cy.get('#emailAddress').type("user1@emailaddress.com");
+      cy.get('#emailAddress').type("user1@emailaddress.com", { force: true });
       cy.get('#password').type("password");
       cy.get('#confirmPass').type("pass22word");
 

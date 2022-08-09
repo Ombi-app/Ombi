@@ -4,7 +4,7 @@ import { Injectable, Inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ServiceHelpers } from "./service.helpers";
-import { IRequestsViewModel, IMovieRequests, IChildRequests, IMovieAdvancedOptions as IMediaAdvancedOptions, IRequestEngineResult, IAlbumRequest, ITvRequestViewModelV2, RequestType } from "../interfaces";
+import { IRequestsViewModel, IMovieRequests, IChildRequests, IMovieAdvancedOptions as IMediaAdvancedOptions, IRequestEngineResult, IAlbumRequest, ITvRequestViewModelV2, RequestType, IRecentlyRequested } from "../interfaces";
 
 
 @Injectable()
@@ -99,5 +99,9 @@ export class RequestServiceV2 extends ServiceHelpers {
 
     public requestMovieCollection(collectionId: number): Observable<IRequestEngineResult> {
         return this.http.post<IRequestEngineResult>(`${this.url}movie/collection/${collectionId}`, undefined, { headers: this.headers });
+    }
+
+    public getRecentlyRequested(): Observable<IRecentlyRequested[]> {
+        return this.http.get<IRecentlyRequested[]>(`${this.url}recentlyRequested`, { headers: this.headers });
     }
 }

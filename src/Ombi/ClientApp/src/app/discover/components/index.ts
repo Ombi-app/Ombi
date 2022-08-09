@@ -7,9 +7,11 @@ import { DiscoverCardComponent } from "./card/discover-card.component";
 import { DiscoverCollectionsComponent } from "./collections/discover-collections.component";
 import { DiscoverComponent } from "./discover/discover.component";
 import { DiscoverSearchResultsComponent } from "./search-results/search-results.component";
+import { RecentlyRequestedListComponent } from "./recently-requested-list/recently-requested-list.component";
 import { MatDialog } from "@angular/material/dialog";
 import { RequestServiceV2 } from "../../services/requestV2.service";
 import { Routes } from "@angular/router";
+import { DetailedCardComponent } from "app/components";
 
 export const components: any[] = [
     DiscoverComponent,
@@ -18,6 +20,8 @@ export const components: any[] = [
     DiscoverActorComponent,
     DiscoverSearchResultsComponent,
     CarouselListComponent,
+    RecentlyRequestedListComponent,
+    DetailedCardComponent,
 ];
 
 export const providers: any[] = [

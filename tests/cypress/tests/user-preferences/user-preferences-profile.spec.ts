@@ -12,8 +12,8 @@ const langs = [
 ];
 
 langs.forEach((l) => {
-  it(`Change language to ${l.code}, UI should update`, () => {
-    cy.intercept('POST','/language').as('langSave');
+  it.only(`Change language to ${l.code}, UI should update`, () => {
+    cy.intercept('POST','**/language').as('langSave');
     Page.visit();
 
     Page.profile.languageSelectBox.click();
