@@ -191,3 +191,19 @@ PartiallyAvailableTv.args = {
     releaseDate: new Date(2020, 1, 1),
   } as IRecentlyRequested,
 };
+
+export const TvNoUsername = Template.bind({});
+// More on args: https://storybook.js.org/docs/angular/writing-stories/args
+PartiallyAvailableTv.args = {
+  request: {
+    title: 'For All Mankind',
+    approved: true,
+    available: false,
+    tvPartiallyAvailable: true,
+    requestDate: new Date(2022, 1, 1),
+    userId: '12345',
+    type: RequestType.tvShow,
+    mediaId: '603',
+    releaseDate: new Date(2020, 1, 1),
+  } as IRecentlyRequested,
+};
