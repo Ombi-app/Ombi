@@ -194,7 +194,7 @@ PartiallyAvailableTv.args = {
 
 export const TvNoUsername = Template.bind({});
 // More on args: https://storybook.js.org/docs/angular/writing-stories/args
-PartiallyAvailableTv.args = {
+TvNoUsername.args = {
   request: {
     title: 'For All Mankind',
     approved: true,
