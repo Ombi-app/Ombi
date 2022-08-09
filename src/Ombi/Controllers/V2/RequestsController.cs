@@ -227,8 +227,7 @@ namespace Ombi.Controllers.V2
             return await _movieRequestEngine.RequestCollection(collectionId, HttpContext.RequestAborted);
         }
 
-        [HttpGet("recentlyRequestedstuff")]
-        [Admin]
+        [HttpGet("recentlyRequested")]
         public Task<IEnumerable<RecentlyRequestedModel>> RecentlyRequested()
         {
             return _recentlyRequestedService.GetRecentlyRequested(CancellationToken);

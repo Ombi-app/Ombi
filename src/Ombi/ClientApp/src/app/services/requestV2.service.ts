@@ -102,6 +102,6 @@ export class RequestServiceV2 extends ServiceHelpers {
     }
 
     public getRecentlyRequested(): Observable<IRecentlyRequested[]> {
-        return this.http.get<IRecentlyRequested[]>(`${this.url}recentlyRequestedstuff`, { headers: this.headers });
+        return this.http.get<IRecentlyRequested[]>(`${this.url}recentlyRequested`, { headers: this.headers });
     }
 }

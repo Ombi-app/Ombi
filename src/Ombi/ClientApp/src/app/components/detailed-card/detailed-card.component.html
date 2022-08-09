@@ -58,7 +58,7 @@
                     <div class="text-right year"><sup>{{request.releaseDate | date:'yyyy'}}</sup></div>
                     <h3>{{request.title}}</h3>
                 </div>
-                <div class="col-12">
+                <div class="col-12" *ngIf="request.username">
                     <p>Requested By: {{request.username}}</p>
                 </div>
                 <div class="col-12">
