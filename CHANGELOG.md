@@ -1,3 +1,17 @@
+# [4.23.0](https://github.com/Ombi-app/Ombi/compare/v4.22.4...v4.23.0) (2022-08-09)
+
+
+### Bug Fixes
+
+* Log Microsoft warnings to log file ([#4723](https://github.com/Ombi-app/Ombi/issues/4723)) ([26ac75f](https://github.com/Ombi-app/Ombi/commit/26ac75f0c223c2a91e3471797ae46ede3fde89cc))
+
+
+### Features
+
+* ✨ Recently Requested on Discover Page ([#4387](https://github.com/Ombi-app/Ombi/issues/4387)) ([44d38fb](https://github.com/Ombi-app/Ombi/commit/44d38fbaae521dbb467b61c7471b2384015ac52e))
+
+
+
 ## [4.22.4](https://github.com/Ombi-app/Ombi/compare/v4.22.3...v4.22.4) (2022-08-04)
 
 
@@ -349,15 +363,6 @@
 
 
 ## [4.15.3](https://github.com/Ombi-app/Ombi/compare/v4.15.2...v4.15.3) (2022-03-24)
-
-
-
-## [4.15.2](https://github.com/Ombi-app/Ombi/compare/v4.15.1...v4.15.2) (2022-03-23)
-
-
-### Bug Fixes
-
-* **metadata:** improved the metadata job to also lookup the media in Plex to see if it has any more uptodate metadata ([83d1a15](https://github.com/Ombi-app/Ombi/commit/83d1a15cc9d0ee91be73bd91c4672cf1bcf2728a))
 
 
 
