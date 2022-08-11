@@ -377,6 +377,7 @@
         "PleaseSelectUser": "Selecteer een gebruiker",
         "StreamingOn": "Streamt op:",
         "RequestedBy": "Verzocht Door:",
+        "OnDate": "On:",
         "RequestedByOn": "Requested By {{user}} on {{date}}",
         "RequestDate": "Aanvraag Datum:",
         "DeniedReason": "Denied Reason:",
