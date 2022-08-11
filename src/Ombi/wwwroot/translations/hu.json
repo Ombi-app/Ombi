@@ -377,6 +377,7 @@
         "PleaseSelectUser": "Válassz egy felhasználót",
         "StreamingOn": "Streaming csatorna:",
         "RequestedBy": "Kérte:",
+        "OnDate": "On:",
         "RequestedByOn": "Kérte: {{user}} ekkor: {{date}}",
         "RequestDate": "Kérés ideje:",
         "DeniedReason": "Elutasítás oka:",
