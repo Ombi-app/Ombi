@@ -377,6 +377,7 @@
         "PleaseSelectUser": "Proszę wybrać użytkownika",
         "StreamingOn": "Strumieniowane w:",
         "RequestedBy": "Zgłoszone przez:",
+        "OnDate": "On:",
         "RequestedByOn": "Requested By {{user}} on {{date}}",
         "RequestDate": "Data zgłoszenia:",
         "DeniedReason": "Denied Reason:",
