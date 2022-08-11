@@ -11,13 +11,13 @@
                     <h3 id="detailed-request-title-{{request.mediaId}}">{{request.title}}</h3>
                 </div>
                 <div class="col-12" *ngIf="request.username">
-                    <p id="detailed-request-requestedby-{{request.mediaId}}">Requested By: {{request.username}}</p>
+                    <p id="detailed-request-requestedby-{{request.mediaId}}">{{'MediaDetails.RequestedBy' | translate}} {{request.username}}</p>
                 </div>
                 <div class="col-12">
-                    <p id="detailed-request-date-{{request.mediaId}}">On: {{request.requestDate | amFromUtc | amLocal | amUserLocale | amDateFormat: 'l LT'}}</p>
+                    <p id="detailed-request-date-{{request.mediaId}}">{{'MediaDetails.OnDate' | translate}} {{request.requestDate | amFromUtc | amLocal | amUserLocale | amDateFormat: 'l LT'}}</p>
                 </div>
                 <div class="col-12">
-                    <p id="detailed-request-status-{{request.mediaId}}">Status: <span class="badge badge-{{getClass(request)}}">{{getStatus(request) | translate}}</span></p>
+                    <p id="detailed-request-status-{{request.mediaId}}">{{'MediaDetails.Status' | translate}} <span class="badge badge-{{getClass(request)}}">{{getStatus(request) | translate}}</span></p>
                 </div>
             </div>
         </div>
