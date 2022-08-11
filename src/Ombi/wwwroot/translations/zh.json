@@ -377,6 +377,7 @@
         "PleaseSelectUser": "请选择用户",
         "StreamingOn": "流媒体：",
         "RequestedBy": "请求者:",
+        "OnDate": "On:",
         "RequestedByOn": "由 {{user}} 在 {{date}} 时请求",
         "RequestDate": "请求日期：",
         "DeniedReason": "被拒绝原因：",
