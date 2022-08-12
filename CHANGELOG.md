@@ -1,3 +1,12 @@
+## [4.23.1](https://github.com/Ombi-app/Ombi/compare/v4.23.0...v4.23.1) (2022-08-12)
+
+
+### Bug Fixes
+
+* Localize recently requested on discover page ([#4729](https://github.com/Ombi-app/Ombi/issues/4729)) ([bf65c76](https://github.com/Ombi-app/Ombi/commit/bf65c76ff9ce38f65a9e5feb872734e8d8e35eb6))
+
+
+
 # [4.23.0](https://github.com/Ombi-app/Ombi/compare/v4.22.4...v4.23.0) (2022-08-09)
 
 
@@ -359,10 +368,6 @@
 
 
 ## [4.15.4](https://github.com/Ombi-app/Ombi/compare/v4.15.3...v4.15.4) (2022-03-29)
-
-
-
-## [4.15.3](https://github.com/Ombi-app/Ombi/compare/v4.15.2...v4.15.3) (2022-03-24)
 
 
 
