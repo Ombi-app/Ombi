@@ -377,6 +377,7 @@
         "PleaseSelectUser": "Моля, изберете потребител",
         "StreamingOn": "Поточното изпълнение е включено:",
         "RequestedBy": "Заявено от:",
+        "OnDate": "On:",
         "RequestedByOn": "Requested By {{user}} on {{date}}",
         "RequestDate": "Дата на заявка:",
         "DeniedReason": "Причина за отхвърляне:",

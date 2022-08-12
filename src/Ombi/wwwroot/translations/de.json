@@ -377,6 +377,7 @@
         "PleaseSelectUser": "Bitte Benutzer auswählen",
         "StreamingOn": "Wird gestreamt auf:",
         "RequestedBy": "Angefordert von:",
+        "OnDate": "On:",
         "RequestedByOn": "Angefragt von {{user}} am {{date}}",
         "RequestDate": "Datum der Anfrage:",
         "DeniedReason": "Ablehnungsgrund:",

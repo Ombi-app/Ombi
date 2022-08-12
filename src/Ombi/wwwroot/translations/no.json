@@ -377,6 +377,7 @@
         "PleaseSelectUser": "Please select a user",
         "StreamingOn": "Streaming On:",
         "RequestedBy": "Etterspurt av:",
+        "OnDate": "On:",
         "RequestedByOn": "Requested By {{user}} on {{date}}",
         "RequestDate": "Dato for forespørsel:",
         "DeniedReason": "Denied Reason:",

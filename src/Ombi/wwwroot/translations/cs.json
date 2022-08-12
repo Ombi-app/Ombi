@@ -377,6 +377,7 @@
         "PleaseSelectUser": "Please select a user",
         "StreamingOn": "Streamuje na:",
         "RequestedBy": "Požadováno od:",
+        "OnDate": "On:",
         "RequestedByOn": "Požádáno uživatelem {{user}} dne {{date}}",
         "RequestDate": "Datum požadavku:",
         "DeniedReason": "Důvod zamítnutí:",

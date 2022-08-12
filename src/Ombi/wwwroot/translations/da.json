@@ -377,6 +377,7 @@
         "PleaseSelectUser": "Vælg venligst en bruger",
         "StreamingOn": "Streaming På:",
         "RequestedBy": "Anmodet af:",
+        "OnDate": "On:",
         "RequestedByOn": "Anmodet af {{user}} d. {{date}}",
         "RequestDate": "Dato for anmodning:",
         "DeniedReason": "Afvisningsårsag:",
