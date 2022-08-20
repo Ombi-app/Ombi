@@ -1,7 +1,7 @@
 {
     "Login": {
-        "SignInButton": "Prihláste sa",
-        "UsernamePlaceholder": "Užívateľské meno",
+        "SignInButton": "Prihlásiť sa",
+        "UsernamePlaceholder": "Používateľské meno",
         "PasswordPlaceholder": "Heslo",
         "RememberMe": "Zapamätať prihlásenie",
         "SignInWith": "Prihlásiť sa s {{appName}}",
@@ -246,9 +246,9 @@
         },
         "Notify": "Oznámiť",
         "RemoveNotification": "Odstrániť notifikácie",
-        "SuccessfulNotify": "You will now be notified for title {{title}}",
-        "SuccessfulUnNotify": "You will no longer be notified for title {{title}}",
-        "CouldntNotify": "Couldn't notify title {{title}}"
+        "SuccessfulNotify": "Budete upozornení na titul ",
+        "SuccessfulUnNotify": "Nebudete upozornení na titul ",
+        "CouldntNotify": "Nie je možné upozornenie na titul "
     },
     "Issues": {
         "Title": "Problémy",
@@ -312,7 +312,7 @@
     },
     "MediaDetails": {
         "Denied": "Zamietnuté",
-        "Denied4K": "Denied 4K",
+        "Denied4K": "Odmietnuté 4K",
         "Trailers": "Upútavka",
         "RecommendationsTitle": "Odporúčania",
         "SimilarTitle": "Podobné",
@@ -345,7 +345,7 @@
         "Seasons": "Séria:",
         "Episodes": "Epizódy:",
         "Availability": "Dostupnosť:",
-        "RequestStatus": "Request Status:",
+        "RequestStatus": "Stav požiadavky:",
         "Quality": "Kvalita:",
         "RootFolderOverride": "Prepísanie koreňového priečinku:",
         "QualityOverride": "Prepísanie kvality:",
@@ -377,19 +377,19 @@
         "PleaseSelectUser": "Prosím vyberte uživatela",
         "StreamingOn": "Streamovanie cez:",
         "RequestedBy": "Vyžiadané od:",
-        "OnDate": "On:",
+        "OnDate": "Na:",
         "RequestedByOn": "Vyžiadané od {{user}} dňa {{date}}",
         "RequestDate": "Dátum požiadavky:",
         "DeniedReason": "Dôvod zamietnutia:",
         "ReProcessRequest": "Žiadosť o opätovné spracovanie",
-        "ReProcessRequest4K": "Re-Process 4K Request",
+        "ReProcessRequest4K": "Žiadosť o opätovné spracovanie",
         "Music": {
             "Type": "Typ:",
             "Country": "Krajina:",
             "StartDate": "Dátum začatia:",
             "EndDate": "Dátum ukončenia:"
         },
-        "RequestSource": "Source:"
+        "RequestSource": "Zdroje:"
     },
     "Discovery": {
         "PopularTab": "Populárne",
