@@ -1,3 +1,12 @@
+## [4.23.2](https://github.com/Ombi-app/Ombi/compare/v4.23.1...v4.23.2) (2022-08-22)
+
+
+### Bug Fixes
+
+* Fix conflicting property name for Swagger ([#4733](https://github.com/Ombi-app/Ombi/issues/4733)) ([d661f32](https://github.com/Ombi-app/Ombi/commit/d661f32e8a9e105faab6380b4b7b642896b98163))
+
+
+
 ## [4.23.1](https://github.com/Ombi-app/Ombi/compare/v4.23.0...v4.23.1) (2022-08-12)
 
 
@@ -364,10 +373,6 @@
 
 
 ## [4.15.5](https://github.com/Ombi-app/Ombi/compare/v4.15.4...v4.15.5) (2022-04-06)
-
-
-
-## [4.15.4](https://github.com/Ombi-app/Ombi/compare/v4.15.3...v4.15.4) (2022-03-29)
 
 
 
