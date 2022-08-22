@@ -1,3 +1,12 @@
+# [4.24.0](https://github.com/Ombi-app/Ombi/compare/v4.23.2...v4.24.0) (2022-08-22)
+
+
+### Features
+
+* add crew on movie page ([#4722](https://github.com/Ombi-app/Ombi/issues/4722)) ([1d53261](https://github.com/Ombi-app/Ombi/commit/1d532613823804b25984bd1d223d081a54ad143d))
+
+
+
 ## [4.23.2](https://github.com/Ombi-app/Ombi/compare/v4.23.1...v4.23.2) (2022-08-22)
 
 
@@ -369,10 +378,6 @@
 ### Bug Fixes
 
 * **radarr:** Fixed an issue where we couldn't sync radarr content [#4577](https://github.com/Ombi-app/Ombi/issues/4577) ([a5355a3](https://github.com/Ombi-app/Ombi/commit/a5355a3023e6900c4dd1b0da4722d7596c03907f))
-
-
-
-## [4.15.5](https://github.com/Ombi-app/Ombi/compare/v4.15.4...v4.15.5) (2022-04-06)
 
 
 
