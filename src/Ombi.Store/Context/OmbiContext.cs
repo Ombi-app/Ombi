@@ -45,6 +45,7 @@ namespace Ombi.Store.Context
         public DbSet<RequestLog> RequestLogs { get; set; }
         public DbSet<RecentlyAddedLog> RecentlyAddedLogs { get; set; }
         public DbSet<Votes> Votes { get; set; }
+        public DbSet<PlexWatchlistUserError> PlexWatchListUserError { get; set; }
 
 
         public DbSet<Audit> Audit { get; set; }
