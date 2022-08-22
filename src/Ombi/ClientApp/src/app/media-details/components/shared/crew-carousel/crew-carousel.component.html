@@ -4,14 +4,14 @@
         <p-carousel [value]="crew" easing="easeOutStrong" [responsiveOptions]="responsiveOptions"  [numVisible]="5" >
             <ng-template let-item pTemplate="item">
                 <div class="row justify-content-md-center mat-card mat-card-flat carousel-item">
-                    <div class="bottom-space">
-                        <a *ngIf="item.image" [routerLink]="'/discover/actor/' + item.id">
+                    <div [routerLink]="'/discover/actor/' + item.id" class="bottom-space link">
+                        <a *ngIf="item.image">
                             <img class="crew-profile-img" src="https://image.tmdb.org/t/p/w300{{item.image}}">
                         </a>
-                        <a *ngIf="item.profile_path" [routerLink]="'/discover/actor/' + item.id">
+                        <a *ngIf="item.profile_path">
                             <img class="crew-profile-img" src="https://image.tmdb.org/t/p/w300{{item.profile_path}}">
                         </a>
-                        <!-- TODO get profile image default -->
+                        <i *ngIf="!item.image && !item.profile_path"  class="fa-solid fa-user-large  fa-2xl crew-profile-img" aria-hidden="true"></i>
 
                     </div>
                     <div class="col-12">
