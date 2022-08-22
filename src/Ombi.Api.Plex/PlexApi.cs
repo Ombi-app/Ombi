@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -295,9 +296,18 @@ namespace Ombi.Api.Plex
             var request = new Request("library/sections/watchlist/all", WatchlistUri, HttpMethod.Get);
             await AddHeaders(request, plexToken);
 
-            var result = await Api.Request<PlexWatchlistContainer>(request, cancellationToken);
+            var result = await Api.Request(request, cancellationToken);
 
-            return result;
+            if (result.StatusCode.Equals(HttpStatusCode.Unauthorized))
+            {
+                return new PlexWatchlistContainer
+                {
+                    AuthError = true
+                };
+            }
+
+            var receivedString = await result.Content.ReadAsStringAsync(cancellationToken);
+            return JsonConvert.DeserializeObject<PlexWatchlistContainer>(receivedString);
         }
         
         public async Task<PlexWatchlistMetadataContainer> GetWatchlistMetadata(string ratingKey, string plexToken, CancellationToken cancellationToken)

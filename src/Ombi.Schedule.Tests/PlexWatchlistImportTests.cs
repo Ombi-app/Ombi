@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using MockQueryable.Moq;
+using Moq;
 using Moq.AutoMock;
 using NUnit.Framework;
 using Ombi.Api.Plex;
@@ -8,6 +9,7 @@ using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
+using Ombi.Core.Tests;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
@@ -32,11 +34,12 @@ namespace Ombi.Schedule.Tests
         public void Setup()
         {
             _mocker = new AutoMocker();
-            var um = MockHelper.MockUserManager(new List<OmbiUser> { new OmbiUser { Id = "abc", UserType = UserType.PlexUser, MediaServerToken = "abc", UserName = "abc", NormalizedUserName = "ABC" } });
+            var um = MockHelper.MockUserManager(new List<OmbiUser> { new OmbiUser { Id = "abc", UserType = UserType.PlexUser, MediaServerToken = "token1", UserName = "abc", NormalizedUserName = "ABC" } });
             _mocker.Use(um);
             _context = _mocker.GetMock<IJobExecutionContext>();
             _context.Setup(x => x.CancellationToken).Returns(CancellationToken.None);
             _subject = _mocker.CreateInstance<PlexWatchlistImport>();
+            _mocker.Setup<IExternalRepository<PlexWatchlistUserError>, IQueryable<PlexWatchlistUserError>>(x => x.GetAll()).Returns(new List<PlexWatchlistUserError>().AsQueryable().BuildMock().Object);
         }
 
         [Test]
@@ -53,6 +56,7 @@ namespace Ombi.Schedule.Tests
         [Test]
         public async Task TerminatesWhenWatchlistIsNotEnabled()
         {
+            
             _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync()).ReturnsAsync(new PlexSettings { Enable = true, EnableWatchlistImport = false });
             await _subject.Execute(null);
             _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()), Times.Never);
@@ -76,8 +80,73 @@ namespace Ombi.Schedule.Tests
         }
 
         [Test]
+        public async Task AuthenticationError()
+        {
+
+            _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync()).ReturnsAsync(new PlexSettings { Enable = true, EnableWatchlistImport = true });
+            _mocker.Setup<IPlexApi, Task<PlexWatchlistContainer>>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new PlexWatchlistContainer { AuthError = true });
+            await _subject.Execute(_context.Object);
+            _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()), Times.Never);
+            _mocker.Verify<IPlexApi>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
+            _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistUserError>>(x => x.Add(It.Is<PlexWatchlistUserError>(x => x.UserId == "abc")), Times.Once);
+        }
+
+        [Test]
+        public async Task FailedWatchListUser_NewToken_ShouldBeRemoved()
+        {
+            _mocker.Setup<IExternalRepository<PlexWatchlistUserError>, IQueryable<PlexWatchlistUserError>>(x => x.GetAll()).Returns(new List<PlexWatchlistUserError>
+            {
+                new PlexWatchlistUserError
+                {
+                    UserId = "abc",
+                    MediaServerToken = "dead"
+                }
+            }.AsQueryable().BuildMock().Object);
+
+            _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync()).ReturnsAsync(new PlexSettings { Enable = true, EnableWatchlistImport = true });
+            _mocker.Setup<IPlexApi, Task<PlexWatchlistContainer>>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new PlexWatchlistContainer { AuthError = false });
+            await _subject.Execute(_context.Object);
+            _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()), Times.Never);
+            _mocker.Verify<IPlexApi>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
+            _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistUserError>>(x => x.Add(It.Is<PlexWatchlistUserError>(x => x.UserId == "abc")), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistUserError>>(x => x.Delete(It.Is<PlexWatchlistUserError>(x => x.UserId == "abc")), Times.Once);
+        }
+
+        [Test]
+        public async Task FailedWatchListUser_OldToken_ShouldSkip()
+        {
+            _mocker.Setup<IExternalRepository<PlexWatchlistUserError>, IQueryable<PlexWatchlistUserError>>(x => x.GetAll()).Returns(new List<PlexWatchlistUserError>
+            {
+                new PlexWatchlistUserError
+                {
+                    UserId = "abc",
+                    MediaServerToken = "token1"
+                }
+            }.AsQueryable().BuildMock().Object);
+
+            _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync()).ReturnsAsync(new PlexSettings { Enable = true, EnableWatchlistImport = true });
+            _mocker.Setup<IPlexApi, Task<PlexWatchlistContainer>>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new PlexWatchlistContainer { AuthError = false });
+            await _subject.Execute(_context.Object);
+            _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()), Times.Never);
+            _mocker.Verify<IPlexApi>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+            _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistUserError>>(x => x.Add(It.Is<PlexWatchlistUserError>(x => x.UserId == "abc")), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistUserError>>(x => x.Delete(It.Is<PlexWatchlistUserError>(x => x.UserId == "abc")), Times.Never);
+        }
+
+
+        [Test]
         public async Task NoPlexUsersWithToken()
         {
+            
             _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync()).ReturnsAsync(new PlexSettings { Enable = true, EnableWatchlistImport = true });
             var um = MockHelper.MockUserManager(new List<OmbiUser>
             {
@@ -102,6 +171,7 @@ namespace Ombi.Schedule.Tests
         [Test]
         public async Task MultipleUsers()
         {
+            
             _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync()).ReturnsAsync(new PlexSettings { Enable = true, EnableWatchlistImport = true });
             var um = MockHelper.MockUserManager(new List<OmbiUser>
             {
@@ -125,6 +195,7 @@ namespace Ombi.Schedule.Tests
         [Test]
         public async Task MovieRequestFromWatchList_NoGuid()
         {
+            
             _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync()).ReturnsAsync(new PlexSettings { Enable = true, EnableWatchlistImport = true });
             _mocker.Setup<IPlexApi, Task<PlexWatchlistContainer>>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new PlexWatchlistContainer
             {
@@ -175,6 +246,7 @@ namespace Ombi.Schedule.Tests
         [Test]
         public async Task TvRequestFromWatchList_NoGuid()
         {
+            
             _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync()).ReturnsAsync(new PlexSettings { Enable = true, EnableWatchlistImport = true });
             _mocker.Setup<IPlexApi, Task<PlexWatchlistContainer>>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new PlexWatchlistContainer
             {
@@ -224,6 +296,7 @@ namespace Ombi.Schedule.Tests
         [Test]
         public async Task MovieRequestFromWatchList_AlreadyRequested()
         {
+            
             _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync()).ReturnsAsync(new PlexSettings { Enable = true, EnableWatchlistImport = true });
             _mocker.Setup<IPlexApi, Task<PlexWatchlistContainer>>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new PlexWatchlistContainer
             {
@@ -273,6 +346,7 @@ namespace Ombi.Schedule.Tests
         [Test]
         public async Task TvRequestFromWatchList_AlreadyRequested()
         {
+            
             _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync()).ReturnsAsync(new PlexSettings { Enable = true, EnableWatchlistImport = true });
             _mocker.Setup<IPlexApi, Task<PlexWatchlistContainer>>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new PlexWatchlistContainer
             {
@@ -322,6 +396,7 @@ namespace Ombi.Schedule.Tests
         [Test]
         public async Task MovieRequestFromWatchList_NoTmdbGuid()
         {
+            
             _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync()).ReturnsAsync(new PlexSettings { Enable = true, EnableWatchlistImport = true });
             _mocker.Setup<IPlexApi, Task<PlexWatchlistContainer>>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new PlexWatchlistContainer
             {
@@ -371,6 +446,7 @@ namespace Ombi.Schedule.Tests
         [Test]
         public async Task TvRequestFromWatchList_NoTmdbGuid()
         {
+            
             _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync()).ReturnsAsync(new PlexSettings { Enable = true, EnableWatchlistImport = true });
             _mocker.Setup<IPlexApi, Task<PlexWatchlistContainer>>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new PlexWatchlistContainer
             {
@@ -420,6 +496,7 @@ namespace Ombi.Schedule.Tests
         [Test]
         public async Task MovieRequestFromWatchList_AlreadyImported()
         {
+            
             _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync()).ReturnsAsync(new PlexSettings { Enable = true, EnableWatchlistImport = true });
             _mocker.Setup<IPlexApi, Task<PlexWatchlistContainer>>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new PlexWatchlistContainer
             {
