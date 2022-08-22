@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="NewAlbums" xml:space="preserve">
-    <value>New Albums</value>
+    <value>Nový album</value>
   </data>
   <data name="NewMovies" xml:space="preserve">
-    <value>New Movies</value>
+    <value>Nové filmy</value>
   </data>
   <data name="NewTV" xml:space="preserve">
-    <value>New TV</value>
+    <value>Nové seriály</value>
   </data>
   <data name="GenresLabel" xml:space="preserve">
     <value>Žánre:</value>
@@ -139,18 +139,18 @@
     <value>Epizódy:</value>
   </data>
   <data name="PoweredBy" xml:space="preserve">
-    <value>Powered by</value>
+    <value>Beží na</value>
   </data>
   <data name="Unsubscribe" xml:space="preserve">
-    <value>Unsubscribe</value>
+    <value>Zrušiť odber</value>
   </data>
   <data name="Album" xml:space="preserve">
     <value>Album</value>
   </data>
   <data name="Movie" xml:space="preserve">
-    <value>Movie</value>
+    <value>Film</value>
   </data>
   <data name="TvShow" xml:space="preserve">
-    <value>TV Show</value>
+    <value>Seriál</value>
   </data>
 </root>

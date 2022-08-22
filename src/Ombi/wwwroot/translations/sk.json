@@ -1,7 +1,7 @@
 {
     "Login": {
-        "SignInButton": "Prihláste sa",
-        "UsernamePlaceholder": "Užívateľské meno",
+        "SignInButton": "Prihlásiť sa",
+        "UsernamePlaceholder": "Používateľské meno",
         "PasswordPlaceholder": "Heslo",
         "RememberMe": "Zapamätať prihlásenie",
         "SignInWith": "Prihlásiť sa s {{appName}}",
@@ -14,26 +14,26 @@
     "Common": {
         "ContinueButton": "Pokračovať",
         "Available": "Dostupné",
-        "Available4K": "Available 4K",
+        "Available4K": "Dostupné 4K",
         "Approved": "Schválené",
-        "Approve4K": "Approve 4K",
+        "Approve4K": "Schváliť 4K",
         "Pending": "Čakajúce",
         "PartiallyAvailable": "Čiastočne dostupné",
         "Monitored": "Sledované",
         "NotAvailable": "Nie je k dispozícii",
         "ProcessingRequest": "Spracovávanie požiadavky",
-        "ProcessingRequest4K": "Processing Request 4K",
+        "ProcessingRequest4K": "Spracováva sa požiadavka 4K",
         "PendingApproval": "Čaká na schválenie",
-        "PendingApproval4K": "Pending Approval 4K",
+        "PendingApproval4K": "Čaká na schválenie 4K",
         "RequestDenied": "Požiadavka zamietnutá",
-        "RequestDenied4K": "Request Denied 4K",
+        "RequestDenied4K": "Požiadavka zamietnutá 4K",
         "NotRequested": "Nepožiadané",
-        "NotRequested4K": "Not Requested 4K",
+        "NotRequested4K": "Nepožiadané 4K",
         "Requested": "Požiadané",
-        "Requested4K": "Requested 4K",
+        "Requested4K": "Požiadané 4K",
         "Search": "Hľadať",
         "Request": "Požiadať",
-        "Request4K": "Request 4K",
+        "Request4K": "Požiadané 4K",
         "Denied": "Zamietnuté",
         "Approve": "Schválené",
         "PartlyAvailable": "Čiastočne dostupné",
@@ -65,7 +65,7 @@
     },
     "ErrorPages": {
         "NotFound": "Stránka sa nenašla",
-        "SomethingWentWrong": "Something went wrong!"
+        "SomethingWentWrong": "Vyskytla sa chyba!"
     },
     "NavigationBar": {
         "Discover": "Objaviť",
@@ -170,13 +170,13 @@
         "ChangeRootFolder": "Koreňový priečinok",
         "ChangeQualityProfile": "Profil kvality",
         "MarkUnavailable": "Označiť nedostupné",
-        "MarkUnavailable4K": "Mark Unavailable 4K",
+        "MarkUnavailable4K": "Označiť ako nedostupné 4K",
         "MarkAvailable": "Označiť dostupné",
-        "MarkAvailable4K": "Mark Available 4K",
+        "MarkAvailable4K": "Označiť ako dostupné 4K",
         "Remove": "Odstrániť",
         "Deny": "Odmietnuť",
-        "Deny4K": "Deny 4K",
-        "Has4KRequest": "Has 4K Request",
+        "Deny4K": "Odmietnuť 4K",
+        "Has4KRequest": "Má 4K požiadavku",
         "DenyReason": "Odmietnuť dôvod",
         "DeniedReason": "Odmietnuť dôvod",
         "Season": "Séria",
@@ -212,13 +212,13 @@
         "RequestPanel": {
             "Delete": "Odstrániž požiadavku",
             "Approve": "Schváliť žiadosť",
-            "Deny": "Deny Request",
-            "Approve4K": "Approve 4K Request",
-            "Deny4K": "Deny 4K Request",
+            "Deny": "Odmietnuť požiadavku",
+            "Approve4K": "Schváliť žiadosť 4K",
+            "Deny4K": "Odmietnuť požiadavku 4K",
             "ChangeAvailability": "Označiť k dispozícií",
             "Deleted": "Úspešne odstránené vybrané položky",
             "Approved": "Úspešne schválené vybrané položky",
-            "Denied": "Successfully denied selected items"
+            "Denied": "Úspešne odstránené vybrané položky"
         },
         "SuccessfullyApproved": "Úspešne schválené",
         "SuccessfullyDeleted": "Žiadosť bola úspešne vymazaná",
@@ -244,11 +244,11 @@
             "TvRequestQuotaExceeded": "Prekročili ste limit požiadaviek na epizódy!",
             "AlbumRequestQuotaExceeded": "Prekročili ste limit požiadaviek na albumy!"
         },
-        "Notify": "Notify",
-        "RemoveNotification": "Remove Notifications",
-        "SuccessfulNotify": "You will now be notified for title {{title}}",
-        "SuccessfulUnNotify": "You will no longer be notified for title {{title}}",
-        "CouldntNotify": "Couldn't notify title {{title}}"
+        "Notify": "Oznámiť",
+        "RemoveNotification": "Odstrániť notifikácie",
+        "SuccessfulNotify": "Budete upozornení na titul ",
+        "SuccessfulUnNotify": "Nebudete upozornení na titul ",
+        "CouldntNotify": "Nie je možné upozornenie na titul "
     },
     "Issues": {
         "Title": "Problémy",
@@ -312,7 +312,7 @@
     },
     "MediaDetails": {
         "Denied": "Zamietnuté",
-        "Denied4K": "Denied 4K",
+        "Denied4K": "Odmietnuté 4K",
         "Trailers": "Upútavka",
         "RecommendationsTitle": "Odporúčania",
         "SimilarTitle": "Podobné",
@@ -345,7 +345,7 @@
         "Seasons": "Séria:",
         "Episodes": "Epizódy:",
         "Availability": "Dostupnosť:",
-        "RequestStatus": "Request Status:",
+        "RequestStatus": "Stav požiadavky:",
         "Quality": "Kvalita:",
         "RootFolderOverride": "Prepísanie koreňového priečinku:",
         "QualityOverride": "Prepísanie kvality:",
@@ -377,19 +377,19 @@
         "PleaseSelectUser": "Prosím vyberte uživatela",
         "StreamingOn": "Streamovanie cez:",
         "RequestedBy": "Vyžiadané od:",
-        "OnDate": "On:",
+        "OnDate": "Na:",
         "RequestedByOn": "Vyžiadané od {{user}} dňa {{date}}",
         "RequestDate": "Dátum požiadavky:",
         "DeniedReason": "Dôvod zamietnutia:",
         "ReProcessRequest": "Žiadosť o opätovné spracovanie",
-        "ReProcessRequest4K": "Re-Process 4K Request",
+        "ReProcessRequest4K": "Žiadosť o opätovné spracovanie",
         "Music": {
             "Type": "Typ:",
             "Country": "Krajina:",
             "StartDate": "Dátum začatia:",
             "EndDate": "Dátum ukončenia:"
         },
-        "RequestSource": "Source:"
+        "RequestSource": "Zdroje:"
     },
     "Discovery": {
         "PopularTab": "Populárne",
