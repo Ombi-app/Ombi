@@ -4,6 +4,7 @@ import { ArtistDetailsComponent } from "./artist/artist-details.component";
 import { ArtistInformationPanel } from "./artist/panels/artist-information-panel/artist-information-panel.component";
 import { ArtistReleasePanel } from "./artist/panels/artist-release-panel/artist-release-panel.component";
 import { CastCarouselComponent } from "./shared/cast-carousel/cast-carousel.component";
+import { CrewCarouselComponent } from "./shared/crew-carousel/crew-carousel.component";
 import { DenyDialogComponent } from "./shared/deny-dialog/deny-dialog.component";
 import { IssuesPanelComponent } from "./shared/issues-panel/issues-panel.component";
 import { MediaPosterComponent } from "./shared/media-poster/media-poster.component";
@@ -32,6 +33,7 @@ export const components: any[] = [
     SocialIconsComponent,
     MediaPosterComponent,
     CastCarouselComponent,
+    CrewCarouselComponent,
     DenyDialogComponent,
     TvRequestsPanelComponent,
     MovieAdvancedOptionsComponent,
