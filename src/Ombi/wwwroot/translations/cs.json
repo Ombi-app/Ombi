@@ -364,6 +364,9 @@
         "Casts": {
             "CastTitle": "Hrají"
         },
+        "Crews": {
+            "CrewTitle": "Crew"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Toto vyžádá všechny serie pro tento pořad",
             "FirstSeasonTooltip": "Toto vyžádá jen první sérii pro tento pořad",
