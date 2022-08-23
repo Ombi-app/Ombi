@@ -1,4 +1,4 @@
-import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
+import { APP_BASE_HREF } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Injectable, Inject } from "@angular/core";
 
@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 
 import { ServiceHelpers } from "../service.helpers";
 
-import { IPlexAuthentication, IPlexLibResponse, IPlexLibSimpleResponse, IPlexOAuthViewModel, IPlexServer, IPlexServerAddViewModel, IPlexServerViewModel, IPlexUserAddResponse, IPlexUserViewModel, IUsersModel } from "../../interfaces";
+import { IPlexAuthentication, IPlexLibResponse, IPlexLibSimpleResponse, IPlexOAuthViewModel, IPlexServer, IPlexServerAddViewModel, IPlexServerViewModel, IPlexUserAddResponse, IPlexUserViewModel, IPlexWatchlistUsers, IUsersModel } from "../../interfaces";
 
 @Injectable()
 export class PlexService extends ServiceHelpers {
@@ -44,5 +44,9 @@ export class PlexService extends ServiceHelpers {
 
     public oAuth(wizard: IPlexOAuthViewModel): Observable<any> {
         return this.http.post<any>(`${this.url}oauth`, JSON.stringify(wizard), {headers: this.headers});
+    }
+
+    public getWatchlistUsers(): Observable<IPlexWatchlistUsers[]> {
+        return this.http.get<IPlexWatchlistUsers[]>(`${this.url}WatchlistUsers`,  {headers: this.headers});
     }
 }

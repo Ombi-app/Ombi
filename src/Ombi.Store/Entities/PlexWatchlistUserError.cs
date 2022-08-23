@@ -7,8 +7,5 @@ namespace Ombi.Store.Entities
     {
         public string UserId { get; set; }
         public string MediaServerToken { get; set; }
-
-        [ForeignKey(nameof(UserId))]
-        public OmbiUser User { get; set; }
     }
 }

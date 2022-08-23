@@ -350,25 +350,6 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Ombi.Store.Entities.PlexWatchlistUserError", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("MediaServerToken")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("PlexWatchlistUserError");
-                });
-
             modelBuilder.Entity("Ombi.Store.Entities.RecentlyAddedLog", b =>
                 {
                     b.Property<int>("Id")
@@ -1107,15 +1088,6 @@ namespace Ombi.Store.Migrations.OmbiMySql
                 {
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
                         .WithMany("NotificationUserIds")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Ombi.Store.Entities.PlexWatchlistUserError", b =>
-                {
-                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
-                        .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");

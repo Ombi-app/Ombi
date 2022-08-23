@@ -1,0 +1,32 @@
+﻿<div class="small-middle-container">
+    <fieldset style="fieldset">
+        <legend>Watchlist Errors</legend>
+
+        <p>If the Sync fails, this is because of an authentication issue with Plex (Token has expired). If this happens the user needs to re-login to Ombi.</p>
+        <p>Key:
+            <br>
+            <em  class="fa-solid fa-check"></em>
+            <br>
+            <em class="fa-solid fa-times"></em>
+            <br>
+            <em class="fas fa-user-alt-slash"></em>
+        </p>
+        <table mat-table *ngIf="dataSource" [dataSource]="dataSource" matSort class="mat-elevation-z8">
+            <ng-container matColumnDef="userName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Username </th>
+                <td mat-cell *matCellDef="let element"> {{element.userName}} </td>
+            </ng-container>
+            <ng-container matColumnDef="syncStatus">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Watchlist Sync Result </th>
+                <td mat-cell *matCellDef="let element"> 
+                    <em *ngIf="element.syncStatus === WatchlistSyncStatus.Successful" class="fa-solid fa-check"></em>
+                    <em *ngIf="element.syncStatus === WatchlistSyncStatus.Failed" class="fa-solid fa-times"></em>
+                    <em *ngIf="element.syncStatus === WatchlistSyncStatus.NotEnabled" class="fas fa-user-alt-slash"></em>
+                 </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </fieldset>
+</div>

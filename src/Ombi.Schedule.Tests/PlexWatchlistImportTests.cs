@@ -97,7 +97,7 @@ namespace Ombi.Schedule.Tests
         [Test]
         public async Task FailedWatchListUser_NewToken_ShouldBeRemoved()
         {
-            _mocker.Setup<IExternalRepository<PlexWatchlistUserError>, IQueryable<PlexWatchlistUserError>>(x => x.GetAll()).Returns(new List<PlexWatchlistUserError>
+            _mocker.Setup<IRepository<PlexWatchlistUserError>, IQueryable<PlexWatchlistUserError>>(x => x.GetAll()).Returns(new List<PlexWatchlistUserError>
             {
                 new PlexWatchlistUserError
                 {
@@ -121,7 +121,7 @@ namespace Ombi.Schedule.Tests
         [Test]
         public async Task FailedWatchListUser_OldToken_ShouldSkip()
         {
-            _mocker.Setup<IExternalRepository<PlexWatchlistUserError>, IQueryable<PlexWatchlistUserError>>(x => x.GetAll()).Returns(new List<PlexWatchlistUserError>
+            _mocker.Setup<IRepository<PlexWatchlistUserError>, IQueryable<PlexWatchlistUserError>>(x => x.GetAll()).Returns(new List<PlexWatchlistUserError>
             {
                 new PlexWatchlistUserError
                 {
