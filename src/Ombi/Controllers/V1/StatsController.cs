@@ -21,7 +21,7 @@ namespace Ombi.Controllers.V1
         private readonly IUserStatsEngine _statsEngine;
 
         [HttpGet]
-        public async Task<UserStatsSummary> GetUserStats(SummaryRequest req)
+        public async Task<UserStatsSummary> GetUserStats([FromQuery]SummaryRequest req)
         {
             return await _statsEngine.GetSummary(req);
         }
