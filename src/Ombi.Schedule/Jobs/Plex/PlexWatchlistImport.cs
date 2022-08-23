@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
 using Ombi.Api.Plex.Models;
@@ -32,10 +33,11 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly IHubContext<NotificationHub> _hub;
         private readonly ILogger _logger;
         private readonly IExternalRepository<PlexWatchlistHistory> _watchlistRepo;
+        private readonly IRepository<PlexWatchlistUserError> _userError;
 
         public PlexWatchlistImport(IPlexApi plexApi, ISettingsService<PlexSettings> settings, OmbiUserManager ombiUserManager,
             IMovieRequestEngine movieRequestEngine, ITvRequestEngine tvRequestEngine, IHubContext<NotificationHub> hub,
-            ILogger<PlexWatchlistImport> logger, IExternalRepository<PlexWatchlistHistory> watchlistRepo)
+            ILogger<PlexWatchlistImport> logger, IExternalRepository<PlexWatchlistHistory> watchlistRepo, IRepository<PlexWatchlistUserError> userError)
         {
             _plexApi = plexApi;
             _settings = settings;
@@ -45,6 +47,7 @@ namespace Ombi.Schedule.Jobs.Plex
             _hub = hub;
             _logger = logger;
             _watchlistRepo = watchlistRepo;
+            _userError = userError;
         }
 
         public async Task Execute(IJobExecutionContext context)
@@ -64,9 +67,35 @@ namespace Ombi.Schedule.Jobs.Plex
             {
                 try
                 {
+                    // Check if the user has errors and the token is the same (not refreshed)
+                    var failedUser = await _userError.GetAll().Where(x => x.UserId == user.Id).FirstOrDefaultAsync();
+                    if (failedUser != null)
+                    {
+                        if (failedUser.MediaServerToken.Equals(user.MediaServerToken))
+                        {
+                            _logger.LogInformation($"Skipping Plex Watchlist Import for user '{user.UserName}' as they failed previously and the token has not yet been refreshed");
+                            continue;
+                        }
+                        else
+                        {
+                            // remove that guy
+                            await _userError.Delete(failedUser);
+                            failedUser = null;
+                        }
+                    }
 
                     _logger.LogDebug($"Starting Watchlist Import for {user.UserName} with token {user.MediaServerToken}");
                     var watchlist = await _plexApi.GetWatchlist(user.MediaServerToken, context?.CancellationToken ?? CancellationToken.None);
+                    if (watchlist?.AuthError ?? false)
+                    {
+                        _logger.LogError($"Auth failed for user '{user.UserName}'. Need to re-authenticate with Ombi.");
+                        await _userError.Add(new PlexWatchlistUserError
+                        {
+                            UserId = user.Id,
+                            MediaServerToken = user.MediaServerToken,
+                        });
+                        continue;
+                    }
                     if (watchlist == null || !(watchlist.MediaContainer?.Metadata?.Any() ?? false))
                     {
                         _logger.LogDebug($"No watchlist found for {user.UserName}");

@@ -107,3 +107,16 @@ export interface IPlexServerResponse {
     port: string;
     scheme: string;
 }
+
+export interface IPlexWatchlistUsers {
+    userId: string;
+    syncStatus: WatchlistSyncStatus;
+    userName: string;
+}
+
+export enum WatchlistSyncStatus
+{
+    Successful,
+    Failed,
+    NotEnabled
+}

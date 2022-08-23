@@ -83,6 +83,7 @@ import { VoteComponent } from "./vote/vote.component";
 import { WebhookComponent } from "./notifications/webhook.component";
 import { WhatsAppComponent } from "./notifications/twilio/whatsapp.component";
 import { WikiComponent } from "./wiki.component";
+import { PlexWatchlistComponent } from "./plex/components/watchlist/plex-watchlist.component";
 
 const routes: Routes = [
     { path: "Ombi", component: OmbiComponent, canActivate: [AuthGuard] },
@@ -189,6 +190,7 @@ const routes: Routes = [
         FeaturesComponent,
         CloudMobileComponent,
         UpdateDialogComponent,
+        PlexWatchlistComponent,
     ],
     exports: [
         RouterModule,
