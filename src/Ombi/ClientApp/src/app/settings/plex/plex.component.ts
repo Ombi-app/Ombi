@@ -6,6 +6,8 @@ import { IPlexLibrariesSettings, IPlexServer, IPlexServerResponse, IPlexServerVi
 import { JobService, NotificationService, PlexService, SettingsService, TesterService } from "../../services";
 import { MatTabChangeEvent, MatTabGroup } from "@angular/material/tabs";
 import {UntypedFormControl} from '@angular/forms';
+import { MatDialog } from "@angular/material/dialog";
+import { PlexWatchlistComponent } from "./components/watchlist/plex-watchlist.component";
 
 @Component({
     templateUrl: "./plex.component.html",
@@ -29,7 +31,8 @@ export class PlexComponent implements OnInit, OnDestroy {
         private notificationService: NotificationService,
         private plexService: PlexService,
         private testerService: TesterService,
-        private jobService: JobService) { }
+        private jobService: JobService,
+        private dialog: MatDialog) { }
 
     public ngOnInit() {
         this.settingsService.getPlex().subscribe(x => {
@@ -178,6 +181,10 @@ export class PlexComponent implements OnInit, OnDestroy {
                 this.notificationService.success("Triggered the Watchlist Import");
             }
         });
+    }
+
+    public openWatchlistUserLog(): void {
+        this.dialog.open(PlexWatchlistComponent, { width: "700px", panelClass: 'modal-panel' });
     }
 
     public ngOnDestroy() {
