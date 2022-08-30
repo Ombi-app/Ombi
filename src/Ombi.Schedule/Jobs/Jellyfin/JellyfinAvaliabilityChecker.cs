@@ -89,7 +89,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
             {
                 var has4kRequest = movie.Has4KRequest;
                 JellyfinContent jellyfinContent = null;
-                if (movie.TheMovieDbId > 0)
+                if (movie?.TheMovieDbId > 0)
                 {
                     jellyfinContent = await _repo.GetByTheMovieDbId(movie.TheMovieDbId.ToString());
                 }

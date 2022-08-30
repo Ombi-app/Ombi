@@ -528,7 +528,7 @@ namespace Ombi.Controllers.V1.External
                 var status = await LidarrApi.Status(settings.ApiKey, settings.FullUri);
                 return new TesterResultModel
                 {
-                    IsValid = status?.urlBase == settings.SubDir || string.IsNullOrEmpty(status.urlBase) && string.IsNullOrEmpty(settings.SubDir),
+                    IsValid = status?.urlBase == settings.SubDir || string.IsNullOrEmpty(status?.urlBase) && string.IsNullOrEmpty(settings.SubDir),
                     ExpectedSubDir = status?.urlBase
                 };
             }
@@ -551,7 +551,7 @@ namespace Ombi.Controllers.V1.External
                 var status = await WhatsAppApi.SendMessage(new WhatsAppModel {
                     From = settings.From,
                     Message = "This is a test from Ombi!",
-                    To = user.UserNotificationPreferences.FirstOrDefault(x => x.Agent == NotificationAgent.WhatsApp).Value
+                    To = user.UserNotificationPreferences.FirstOrDefault(x => x.Agent == NotificationAgent.WhatsApp)?.Value
                 }, settings.AccountSid, settings.AuthToken);
                 if (status.HasValue())
                 {

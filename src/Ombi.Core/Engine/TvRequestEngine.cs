@@ -89,7 +89,7 @@ namespace Ombi.Core.Engine
             {
                 return new RequestEngineResult
                 {
-                    ErrorMessage = results.FirstOrDefault(x => !string.IsNullOrEmpty(x.Message)).Message
+                    ErrorMessage = results.FirstOrDefault(x => !string.IsNullOrEmpty(x.Message))?.Message
                 };
             }
 
@@ -198,7 +198,7 @@ namespace Ombi.Core.Engine
             {
                 return new RequestEngineResult
                 {
-                    ErrorMessage = results.FirstOrDefault(x => !string.IsNullOrEmpty(x.Message)).Message
+                    ErrorMessage = results.FirstOrDefault(x => !string.IsNullOrEmpty(x.Message))?.Message
                 };
             }
 

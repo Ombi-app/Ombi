@@ -524,7 +524,7 @@ namespace Ombi.Core.Senders
 
             if (pathId == 0)
             {
-                return rootFoldersResult.FirstOrDefault().path;
+                return rootFoldersResult.FirstOrDefault()?.path;
             }
 
             foreach (var r in rootFoldersResult.Where(r => r.id == pathId))

@@ -64,7 +64,7 @@ namespace Ombi.Schedule.Jobs.Emby
             {
                 var has4kRequest = movie.Has4KRequest;
                 EmbyContent embyContent = null;
-                if (movie.TheMovieDbId > 0)
+                if (movie?.TheMovieDbId > 0)
                 {
                     embyContent = await _repo.GetByTheMovieDbId(movie.TheMovieDbId.ToString());
                 }

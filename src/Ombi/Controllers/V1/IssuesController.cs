@@ -317,10 +317,10 @@ namespace Ombi.Controllers.V1
                         ? issue.UserReported.Email
                         : string.Empty,
                     AdditionalInformation = $"{issue.Subject} | {issue.Description}",
-                    UserId = issue.UserReported.Id, // This is a resolved notification, so needs to go to the user who raised it
+                    UserId = issue.UserReported?.Id, // This is a resolved notification, so needs to go to the user who raised it
                     
                 };
-                AddIssueNotificationSubstitutes(notificationModel, issue, issue.UserReported?.UserName ?? string.Empty, issue.UserReported.UserAlias);
+                AddIssueNotificationSubstitutes(notificationModel, issue, issue.UserReported?.UserName ?? string.Empty, issue.UserReported?.UserAlias);
 
                 await _notification.Notify(notificationModel);
             }

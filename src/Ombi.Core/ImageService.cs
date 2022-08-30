@@ -61,7 +61,7 @@ namespace Ombi.Core
 
             if (images?.backdrops?.Any() ?? false)
             {
-                return images.backdrops.Select(x => x.file_path).FirstOrDefault();
+                return images?.backdrops.Select(x => x.file_path).FirstOrDefault();
             }
             if (images?.posters?.Any() ?? false)
             {
@@ -85,7 +85,7 @@ namespace Ombi.Core
                 }
                 else
                 {
-                    return images.posters.Select(x => x.file_path).First();
+                    return images?.posters.Select(x => x.file_path).First();
                 }
             }
 

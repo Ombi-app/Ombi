@@ -104,12 +104,12 @@ namespace Ombi.Controllers.V1.External
                 Items = new List<MediaFolders>()
             };
 
-            foreach(var folder in result)
+            foreach (var folder in result)
             {
                 var toAdd = new MediaFolders
                 {
-                    Name = folder.Name,
-                    Id = folder.ItemId,
+                    Name = folder?.Name,
+                    Id = folder?.ItemId,
                     ServerId = server.ServerId
                 };
 

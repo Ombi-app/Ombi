@@ -154,7 +154,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                                 Title = tvShow.Name,
                                 Type = MediaType.Series,
                                 JellyfinId = tvShow.Id,
-                                Url = JellyfinHelper.GetJellyfinMediaUrl(tvShow.Id, server?.ServerId, server.ServerHostname),
+                                Url = JellyfinHelper.GetJellyfinMediaUrl(tvShow.Id, server?.ServerId, server?.ServerHostname),
                                 AddedAt = DateTime.UtcNow
                             });
                         }
@@ -249,7 +249,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
             else
             {
                 var movieHasChanged = false;
-                if (existingMovie.ImdbId != movieInfo.ProviderIds.Imdb || existingMovie.TheMovieDbId != movieInfo.ProviderIds.Tmdb)
+                if (existingMovie?.ImdbId != movieInfo.ProviderIds.Imdb || existingMovie?.TheMovieDbId != movieInfo.ProviderIds.Tmdb)
                 {
                     _logger.LogDebug($"Updating existing movie '{movieInfo.Name}'");
                     MapJellyfinMovie(existingMovie, movieInfo, server, has4K, quality);
@@ -282,12 +282,12 @@ namespace Ombi.Schedule.Jobs.Jellyfin
 
         private void MapJellyfinMovie(JellyfinContent content, JellyfinMovie movieInfo, JellyfinServers server, bool has4K, string quality)
         {
-            content.ImdbId = movieInfo.ProviderIds.Imdb;
+            content.ImdbId = movieInfo.ProviderIds?.Imdb;
             content.TheMovieDbId = movieInfo.ProviderIds?.Tmdb;
             content.Title = movieInfo.Name;
             content.Type = MediaType.Movie;
             content.JellyfinId = movieInfo.Id;
-            content.Url = JellyfinHelper.GetJellyfinMediaUrl(movieInfo.Id, server?.ServerId, server.ServerHostname);
+            content.Url = JellyfinHelper.GetJellyfinMediaUrl(movieInfo.Id, server?.ServerId, server?.ServerHostname);
             content.Quality = has4K ? null : quality;
             content.Has4K = has4K;
         }

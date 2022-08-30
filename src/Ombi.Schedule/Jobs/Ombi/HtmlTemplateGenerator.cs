@@ -19,7 +19,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         {
             sb.Append("<tr>");
             sb.Append("<td class=\"poster-container\" width=\"150\" height=\"225\" valign=\"top\" style=\"ont-family: sans-serif; font-size: 14px; vertical-align: top; width: 150px; min-width: 150px; height: 225px; max-height: 225px; min-height: 225px; \">");
-            sb.AppendFormat("<table class=\"poster-img\" width=\"100%\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; \">", url);
+            sb.Append("<table class=\"poster-img\" width=\"100%\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; \">");
         }
 
         protected virtual void AddMediaServerUrl(string mediaurl, string url)

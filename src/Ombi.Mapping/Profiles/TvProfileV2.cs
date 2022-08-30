@@ -21,7 +21,7 @@ namespace Ombi.Mapping.Profiles
                 .ForMember(dest => dest.ImdbId, opts => opts.MapFrom(src => src.ExternalIds.ImdbId))
                 .ForMember(dest => dest.TheTvDbId, opts => opts.MapFrom(src => src.ExternalIds.TvDbId))
                 .ForMember(dest => dest.Network, opts => opts.MapFrom(src => src.networks.FirstOrDefault()))
-                .ForMember(dest => dest.NetworkId, opts => opts.MapFrom(src => src.networks.FirstOrDefault().id))
+                .ForMember(dest => dest.NetworkId, opts => opts.MapFrom(src => src.networks.FirstOrDefault()?.id))
                 .ForMember(dest => dest.Overview, opts => opts.MapFrom(src => src.overview))
                 .ForMember(dest => dest.Rating,
                     opts => opts.MapFrom(src => src.vote_average.ToString(CultureInfo.CurrentUICulture)))

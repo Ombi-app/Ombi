@@ -167,7 +167,7 @@ namespace Ombi.Notifications
             if (Alias.IsNullOrEmpty())
             {
                 Alias = req?.RequestedUser?.Alias.HasValue() ?? false
-                    ? req.RequestedUser?.Alias
+                    ? req?.RequestedUser?.Alias
                     : req?.RequestedUser?.UserName;
             }
 

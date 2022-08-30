@@ -82,8 +82,8 @@ namespace Ombi.Controllers.V1.External
             {
                 var toAdd = new MediaFolders
                 {
-                    Name = folder.Name,
-                    Id = folder.ItemId,
+                    Name = folder?.Name,
+                    Id = folder?.ItemId,
                     ServerId = server.ServerId
                 };
 

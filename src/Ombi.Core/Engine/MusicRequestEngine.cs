@@ -99,7 +99,7 @@ namespace Ombi.Core.Engine
             {
                 return new RequestEngineResult
                 {
-                    ErrorMessage = ruleResults.FirstOrDefault(x => x.Message.HasValue()).Message
+                    ErrorMessage = ruleResults.FirstOrDefault(x => x.Message.HasValue())?.Message
                 };
             }
 

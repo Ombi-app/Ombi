@@ -99,8 +99,8 @@ namespace Ombi.Schedule.Jobs.Plex
                         var newUser = new OmbiUser
                         {
                             UserType = UserType.PlexUser,
-                            UserName = plexUser?.Username ?? plexUser.Id,
-                            ProviderUserId = plexUser.Id,
+                            UserName = plexUser?.Username ?? plexUser?.Id,
+                            ProviderUserId = plexUser?.Id,
                             Email = plexUser?.Email ?? string.Empty,
                             Alias = string.Empty,
                             MovieRequestLimit = userManagementSettings.MovieRequestLimit,

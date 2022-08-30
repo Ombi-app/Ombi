@@ -179,7 +179,7 @@ namespace Ombi.Schedule.Jobs.Emby
                             Title = tvShow.Name,
                             Type = MediaType.Series,
                             EmbyId = tvShow.Id,
-                            Url = EmbyHelper.GetEmbyMediaUrl(tvShow.Id, server?.ServerId, server.ServerHostname),
+                            Url = EmbyHelper.GetEmbyMediaUrl(tvShow.Id, server?.ServerId, server?.ServerHostname),
                             AddedAt = DateTime.UtcNow,
                         });
                     }
@@ -284,7 +284,7 @@ namespace Ombi.Schedule.Jobs.Emby
             else
             {
                 var movieHasChanged = false;
-                if (existingMovie.ImdbId != movieInfo.ProviderIds.Imdb || existingMovie.TheMovieDbId != movieInfo.ProviderIds.Tmdb)
+                if (existingMovie?.ImdbId != movieInfo.ProviderIds.Imdb || existingMovie?.TheMovieDbId != movieInfo.ProviderIds.Tmdb)
                 {
                     _logger.LogDebug($"Updating existing movie '{movieInfo.Name}'");
                     MapEmbyContent(existingMovie, movieInfo, server, has4K, quality);
@@ -315,12 +315,12 @@ namespace Ombi.Schedule.Jobs.Emby
         }
 
         private void MapEmbyContent(EmbyContent content, EmbyMovie movieInfo, EmbyServers server, bool has4K, string quality){
-            content.ImdbId = movieInfo.ProviderIds.Imdb;
+            content.ImdbId = movieInfo.ProviderIds?.Imdb;
             content.TheMovieDbId = movieInfo.ProviderIds?.Tmdb;
             content.Title = movieInfo.Name;
             content.Type = MediaType.Movie;
             content.EmbyId = movieInfo.Id;
-            content.Url = EmbyHelper.GetEmbyMediaUrl(movieInfo.Id, server?.ServerId, server.ServerHostname);
+            content.Url = EmbyHelper.GetEmbyMediaUrl(movieInfo.Id, server?.ServerId, server?.ServerHostname);
             content.Quality = has4K ? null : quality;
             content.Has4K = has4K;
         }
