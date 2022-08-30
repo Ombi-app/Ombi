@@ -46,16 +46,15 @@ namespace Ombi.Core.Engine
         {
             _movieRepository = movieRepository;
             _userManager = userManager;
-            _tvRepository = tvRepository;
-            _musicRepository = musicRepository;
             _issuesRepository = issueRepo;
             _issueCommentsRepository = issueCommentsRepo;
-            _notificationRepository = notificationidsRepo;
             _requestLogRepository = requestLogRepo;
-            _requestSubscriptionRepository = requestSubRepository;
             _notificationRepository = notificationidsRepo;
+            _requestSubscriptionRepository = requestSubRepository;
             _userNotificationPreferences = notificationPreferencesRepo;
             _userQualityProfiles = qualityProfilesRepo;
+            _tvRepository = tvRepository;
+            _musicRepository = musicRepository;
             _voteRepository = voteRepository;
             _mobileDevicesRepository = mobileDevicesRepository;
             _watchlistUserError = watchlistUserError;

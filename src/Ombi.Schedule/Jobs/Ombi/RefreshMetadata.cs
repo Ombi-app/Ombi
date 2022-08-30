@@ -294,7 +294,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     var guids = new List<string>();
 
                     var meta = metaData.MediaContainer.Metadata.FirstOrDefault();
-                    guids.Add(meta.guid);
+                    guids.Add(meta?.guid);
                     if (meta.Guid != null)
                     {
                         foreach (var g in meta.Guid)

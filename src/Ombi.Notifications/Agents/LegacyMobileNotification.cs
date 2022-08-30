@@ -277,7 +277,7 @@ namespace Ombi.Notifications.Agents
             if (model.UserId.HasValue() && (!notificationIds?.Any() ?? true))
             {
                 var user = _userManager.Users.Include(x => x.NotificationUserIds).FirstOrDefault(x => x.Id == model.UserId);
-                notificationIds = user.NotificationUserIds;
+                notificationIds = user?.NotificationUserIds;
             }
 
             if (!notificationIds?.Any() ?? true)

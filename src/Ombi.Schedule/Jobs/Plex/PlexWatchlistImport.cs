@@ -205,7 +205,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 var metaData = await _plexApi.GetWatchlistMetadata(movie.ratingKey, authToken, cancellationToken);
 
                 var meta = metaData.MediaContainer.Metadata.FirstOrDefault();
-                guids.Add(meta.guid);
+                guids.Add(meta?.guid);
                 if (meta.Guid != null)
                 {
                     foreach (var g in meta.Guid)

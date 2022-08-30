@@ -46,7 +46,7 @@ namespace Ombi.Controllers.V1.External
             request.Enable = true;
             var firstServer = request.Servers.FirstOrDefault();
             // Test that we can connect
-            var result = await client.GetUsers(firstServer.FullUri, firstServer.ApiKey);
+            var result = await client.GetUsers(firstServer?.FullUri, firstServer?.ApiKey);
 
             if (result != null && result.Any())
             {

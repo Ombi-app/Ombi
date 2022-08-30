@@ -365,7 +365,7 @@ namespace Ombi.Core.Senders
                     // So we need to monitor the series but unmonitor every episode
                     existingSeason.monitored = true;
                     var sea = result.seasons.FirstOrDefault(x => x.seasonNumber == existingSeason.seasonNumber);
-                    sea.monitored = true;
+                    sea?.monitored = true;
 
                     result = await SonarrApi.UpdateSeries(result, s.ApiKey, s.FullUri);
                     var epToUnmonitored = new List<Episode>();

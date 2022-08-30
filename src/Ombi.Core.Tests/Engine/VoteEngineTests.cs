@@ -32,7 +32,6 @@ namespace Ombi.Core.Tests.Engine
             MusicRequestEngine = new Mock<IMusicRequestEngine>();
             TvRequestEngine = new Mock<ITvRequestEngine>();
             MovieRequestEngine = new Mock<IMovieRequestEngine>();
-            MovieRequestEngine = new Mock<IMovieRequestEngine>();
             User = new Mock<ICurrentUser>();
             User.Setup(x => x.GetUser()).ReturnsAsync(new OmbiUser { UserName = "abc", NormalizedUserName = "ABC", Id = "abc" });
 

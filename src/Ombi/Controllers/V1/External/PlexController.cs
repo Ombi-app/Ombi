@@ -140,7 +140,7 @@ namespace Ombi.Controllers.V1.External
             {
                 var s = await PlexSettings.GetSettingsAsync();
                 var settings = s.Servers.FirstOrDefault(x => x.MachineIdentifier == machineId);
-                var libs = await PlexApi.GetLibrariesForMachineId(settings.PlexAuthToken, machineId);
+                var libs = await PlexApi.GetLibrariesForMachineId(settings?.PlexAuthToken, machineId);
 
                 return new PlexLibrariesLiteResponse
                 {
@@ -167,7 +167,7 @@ namespace Ombi.Controllers.V1.External
         {
             var s = await PlexSettings.GetSettingsAsync();
             var server = s.Servers.FirstOrDefault(x => x.MachineIdentifier == user.MachineIdentifier);
-            var result = await PlexApi.AddUser(user.Username, user.MachineIdentifier, server.PlexAuthToken,
+            var result = await PlexApi.AddUser(user.Username, user.MachineIdentifier, server?.PlexAuthToken,
                 user.LibsSelected);
             if (result.HasError)
             {

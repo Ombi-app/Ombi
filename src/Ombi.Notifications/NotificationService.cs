@@ -70,7 +70,7 @@ namespace Ombi.Notifications
                     var ctor = ctors.FirstOrDefault();
 
                     var services = new List<object>();
-                    foreach (var param in ctor.GetParameters())
+                    foreach (var param in ctor?.GetParameters())
                     {
                         services.Add(_provider.GetService(param.ParameterType));
                     }

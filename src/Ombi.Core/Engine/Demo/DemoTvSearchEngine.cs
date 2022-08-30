@@ -40,16 +40,16 @@ namespace Ombi.Core.Engine.Demo
         {
             var searchResult = await TvMazeApi.Search(search);
 
-            for (var i = 0; i < searchResult.Count; i++)
-            {
-                if (!_demoLists.TvShows.Contains(searchResult[i].show?.externals?.thetvdb ?? 0))
-                {
-                    searchResult.RemoveAt(i);
-                }
-            }
-
             if (searchResult != null)
             {
+                for (var i = 0; i < searchResult.Count; i++)
+                {
+                    if (!_demoLists.TvShows.Contains(searchResult[i].show?.externals?.thetvdb ?? 0))
+                    {
+                        searchResult.RemoveAt(i);
+                    }
+                }
+
                 var retVal = new List<SearchTvShowViewModel>();
                 foreach (var tvMazeSearch in searchResult)
                 {

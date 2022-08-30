@@ -25,7 +25,7 @@ namespace Ombi.Notifications
         {
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s.ApplicationName;
             ApplicationUrl = s?.ApplicationUrl.HasValue() ?? false ? s.ApplicationUrl : string.Empty;
-            RequestedUser = user.UserName;
+            RequestedUser = user?.UserName;
             Alias = user.UserAlias;
             UserName = user.UserName;
         }

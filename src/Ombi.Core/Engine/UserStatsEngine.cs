@@ -46,8 +46,8 @@ namespace Ombi.Core.Engine
                 TotalTvRequests = childrenCount,
                 CompletedRequestsTv = availableChildren,
                 CompletedRequestsMovies = availableMovies,
-                MostRequestedUserMovie = userMovie.FirstOrDefault()?.RequestedUser ?? new OmbiUser(),
-                MostRequestedUserTv = userTv.FirstOrDefault()?.RequestedUser ?? new OmbiUser(),
+                MostRequestedUserMovie = userMovie?.FirstOrDefault()?.RequestedUser ?? new OmbiUser(),
+                MostRequestedUserTv = userTv?.FirstOrDefault()?.RequestedUser ?? new OmbiUser(),
             };
         }
     }

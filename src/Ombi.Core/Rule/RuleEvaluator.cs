@@ -84,7 +84,7 @@ namespace Ombi.Core.Rule
                     var ctor = ctors.FirstOrDefault();
 
                     var services = new List<object>();
-                    foreach (var param in ctor.GetParameters())
+                    foreach (var param in ctor?.GetParameters())
                     {
                         services.Add(provider.GetService(param.ParameterType));
                     }
@@ -106,7 +106,7 @@ namespace Ombi.Core.Rule
                     var ctor = ctors.FirstOrDefault();
 
                     var services = new List<object>();
-                    foreach (var param in ctor.GetParameters())
+                    foreach (var param in ctor?.GetParameters())
                     {
                         services.Add(provider.GetService(param.ParameterType));
                     }

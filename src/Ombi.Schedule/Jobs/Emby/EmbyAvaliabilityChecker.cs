@@ -62,55 +62,58 @@ namespace Ombi.Schedule.Jobs.Emby
 
             foreach (var movie in movies)
             {
-                var has4kRequest = movie.Has4KRequest;
-                EmbyContent embyContent = null;
-                if (movie?.TheMovieDbId > 0)
+                if (movie != null)
                 {
-                    embyContent = await _repo.GetByTheMovieDbId(movie.TheMovieDbId.ToString());
-                }
-                else if(movie.ImdbId.HasValue())
-                {
-                    embyContent = await _repo.GetByImdbId(movie.ImdbId);
-                }
-                
-                if (embyContent == null)
-                {
-                    // We don't have this yet
-                    continue;
-                }
-
-                _log.LogInformation("We have found the request {0} on Emby, sending the notification", movie?.Title ?? string.Empty);
-
-                var notify = false;
-
-                if (has4kRequest && embyContent.Has4K && !movie.Available4K)
-                {
-                    movie.Available4K = true;
-                    movie.MarkedAsAvailable4K = DateTime.Now;
-                    notify = true;
-                }
-
-                // If we have a non-4k version or we don't care about versions, then mark as available
-                if (!movie.Available && ( !feature4kEnabled || embyContent.Quality != null ))
-                {
-                    movie.Available = true;
-                    movie.MarkedAsAvailable = DateTime.Now;
-                    notify = true;
-                }
-                if (notify)
-                {
-                    var recipient = movie.RequestedUser.Email.HasValue() ? movie.RequestedUser.Email : string.Empty;
-
-                    _log.LogDebug("MovieId: {0}, RequestUser: {1}", movie.Id, recipient);
-
-                    await _notificationService.Notify(new NotificationOptions
+                    var has4kRequest = movie.Has4KRequest;
+                    EmbyContent embyContent = null;
+                    if (movie?.TheMovieDbId > 0)
                     {
-                        DateTime = DateTime.Now,
-                        NotificationType = NotificationType.RequestAvailable,
-                        RequestId = movie.Id,
-                        RequestType = RequestType.Movie,
-                        Recipient = recipient,
-                    });
+                        embyContent = await _repo.GetByTheMovieDbId(movie.TheMovieDbId.ToString());
+                    }
+                    else if (movie.ImdbId.HasValue())
+                    {
+                        embyContent = await _repo.GetByImdbId(movie.ImdbId);
+                    }
+
+                    if (embyContent == null)
+                    {
+                        // We don't have this yet
+                        continue;
+                    }
+
+                    _log.LogInformation("We have found the request {0} on Emby, sending the notification", movie?.Title ?? string.Empty);
+
+                    var notify = false;
+
+                    if (has4kRequest && embyContent.Has4K && !movie.Available4K)
+                    {
+                        movie.Available4K = true;
+                        movie.MarkedAsAvailable4K = DateTime.Now;
+                        notify = true;
+                    }
+
+                    // If we have a non-4k version or we don't care about versions, then mark as available
+                    if (!movie.Available && (!feature4kEnabled || embyContent.Quality != null))
+                    {
+                        movie.Available = true;
+                        movie.MarkedAsAvailable = DateTime.Now;
+                        notify = true;
+                    }
+                    if (notify)
+                    {
+                        var recipient = movie.RequestedUser.Email.HasValue() ? movie.RequestedUser.Email : string.Empty;
+
+                        _log.LogDebug("MovieId: {0}, RequestUser: {1}", movie.Id, recipient);
+
+                        await _notificationService.Notify(new NotificationOptions
+                        {
+                            DateTime = DateTime.Now,
+                            NotificationType = NotificationType.RequestAvailable,
+                            RequestId = movie.Id,
+                            RequestType = RequestType.Movie,
+                            Recipient = recipient,
+                        });
+                    }
                 }
             }
             await _movieRepo.Save();

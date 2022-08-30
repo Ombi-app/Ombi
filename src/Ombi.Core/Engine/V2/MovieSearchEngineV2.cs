@@ -482,7 +482,7 @@ namespace Ombi.Core.Engine.V2
                 () =>  MovieApi.Find(imdbId, ExternalSource.imdb_id), DateTimeOffset.Now.AddHours(12));
 
             var movie = findResult.movie_results.FirstOrDefault();
-            var movieInfo = await Cache.GetOrAddAsync(nameof(GetMovieInfoByImdbId) + movie.id + langCode,
+            var movieInfo = await Cache.GetOrAddAsync(nameof(GetMovieInfoByImdbId) + movie?.id + langCode,
                 () =>  MovieApi.GetFullMovieInfo(movie.id, cancellationToken, langCode), DateTimeOffset.Now.AddHours(12));
 
             return await ProcessSingleMovie(movieInfo);

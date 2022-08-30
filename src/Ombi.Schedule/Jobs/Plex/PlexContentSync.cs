@@ -354,7 +354,7 @@ namespace Ombi.Schedule.Jobs.Plex
                             movie.ratingKey);
 
                         var meta = metaData.MediaContainer.Metadata.FirstOrDefault();
-                        guids.Add(meta.guid);
+                        guids.Add(meta?.guid);
                         if (meta.Guid != null)
                         {
                             foreach (var g in meta.Guid)
@@ -651,7 +651,7 @@ namespace Ombi.Schedule.Jobs.Plex
             var metadata = showMetadata.MediaContainer.Metadata.FirstOrDefault();
             var guids = new List<string>
             {
-                metadata.guid
+                metadata?.guid
             };
             if (metadata.Guid != null)
             {
