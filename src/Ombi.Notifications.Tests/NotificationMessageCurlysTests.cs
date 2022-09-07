@@ -324,6 +324,8 @@ namespace Ombi.Notifications.Tests
             Assert.That("name", Is.EqualTo(sut.ApplicationName));
             Assert.That(sut.PartiallyAvailableEpisodeNumbers, Is.EqualTo("1, 2"));
             Assert.That(sut.PartiallyAvailableSeasonNumber, Is.EqualTo("1"));
+            Assert.That(sut.PartiallyAvailableEpisodeCount, Is.EqualTo("2"));
+            Assert.That(sut.PartiallyAvailableEpisodesList, Is.EqualTo("1x1, 1x2"));
         }
 
         [Test]

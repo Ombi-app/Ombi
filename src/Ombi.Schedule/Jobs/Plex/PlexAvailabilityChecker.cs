@@ -174,6 +174,8 @@ namespace Ombi.Schedule.Jobs.Plex
                     };
                     notification.Substitutes.Add("Season", availableEpisode.First().SeasonNumber.ToString());
                     notification.Substitutes.Add("Episodes", string.Join(", " ,availableEpisode.Select(x => x.EpisodeNumber)));
+                    notification.Substitutes.Add("EpisodesCount", $"{availableEpisode.Count}");
+                    notification.Substitutes.Add("SeasonEpisodes", string.Join(", ", availableEpisode.Select(x => $"{x.SeasonNumber}x{x.EpisodeNumber}" )));
                     await _notificationService.Notify(notification);
                 }
             }
