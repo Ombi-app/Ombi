@@ -292,6 +292,8 @@ namespace Ombi.Notifications.Tests
 
             notificationOptions.Substitutes.Add("Season", "1");
             notificationOptions.Substitutes.Add("Episodes", "1, 2");
+            notificationOptions.Substitutes.Add("EpisodesCount", "2");
+            notificationOptions.Substitutes.Add("SeasonEpisodes", "1x1, 1x2");
             var req = F.Build<ChildRequests>()
                 .With(x => x.RequestType, RequestType.TvShow)
                 .With(x => x.Available, true)
@@ -324,6 +326,8 @@ namespace Ombi.Notifications.Tests
             Assert.That("name", Is.EqualTo(sut.ApplicationName));
             Assert.That(sut.PartiallyAvailableEpisodeNumbers, Is.EqualTo("1, 2"));
             Assert.That(sut.PartiallyAvailableSeasonNumber, Is.EqualTo("1"));
+            Assert.That(sut.PartiallyAvailableEpisodeCount, Is.EqualTo("2"));
+            Assert.That(sut.PartiallyAvailableEpisodesList, Is.EqualTo("1x1, 1x2"));
         }
 
         [Test]
