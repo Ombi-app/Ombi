@@ -1,3 +1,12 @@
+# [4.26.0](https://github.com/Ombi-app/Ombi/compare/v4.25.1...v4.26.0) (2022-09-07)
+
+
+### Features
+
+* **notifications:** Add more curly variables for partially available notification ([66aa101](https://github.com/Ombi-app/Ombi/commit/66aa101019c4c4b34e186db9d303049d02b9c781))
+
+
+
 ## [4.25.1](https://github.com/Ombi-app/Ombi/compare/v4.25.0...v4.25.1) (2022-09-07)
 
 
@@ -384,10 +393,6 @@
 ### Bug Fixes
 
 * **wizard:** Fixed an issue when using Plex OAuth it could fail setting up ([b743cf4](https://github.com/Ombi-app/Ombi/commit/b743cf4fafa7341ad1b163276f006d7ab0e9dcff))
-
-
-
-## [4.16.1](https://github.com/Ombi-app/Ombi/compare/v4.16.0...v4.16.1) (2022-04-07)
 
 
 
