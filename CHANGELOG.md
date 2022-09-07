@@ -1,3 +1,12 @@
+## [4.25.1](https://github.com/Ombi-app/Ombi/compare/v4.25.0...v4.25.1) (2022-09-07)
+
+
+### Bug Fixes
+
+* **webhook:** Remove added trailing slash from webhook URL [#4710](https://github.com/Ombi-app/Ombi/issues/4710) ([369eb33](https://github.com/Ombi-app/Ombi/commit/369eb339171671101be219486e2aab27a20f3d74))
+
+
+
 # [4.25.0](https://github.com/Ombi-app/Ombi/compare/v4.24.0...v4.25.0) (2022-08-23)
 
 
@@ -379,10 +388,6 @@
 
 
 ## [4.16.1](https://github.com/Ombi-app/Ombi/compare/v4.16.0...v4.16.1) (2022-04-07)
-
-
-
-# [4.16.0](https://github.com/Ombi-app/Ombi/compare/v4.15.6...v4.16.0) (2022-04-07)
 
 
 
