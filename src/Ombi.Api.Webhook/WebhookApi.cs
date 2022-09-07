@@ -19,8 +19,8 @@ namespace Ombi.Api.Webhook
 
         public async Task PushAsync(string baseUrl, string accessToken, IDictionary<string, string> parameters)
         {
-            var request = new Request("", baseUrl, HttpMethod.Post);
-
+            var request = new Request("", baseUrl, HttpMethod.Post) {IgnoreBaseUrlAppend = true};
+            
             if (!string.IsNullOrWhiteSpace(accessToken))
             {
                 request.AddHeader("Access-Token", accessToken);
