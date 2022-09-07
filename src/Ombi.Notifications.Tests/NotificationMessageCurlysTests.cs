@@ -292,6 +292,8 @@ namespace Ombi.Notifications.Tests
 
             notificationOptions.Substitutes.Add("Season", "1");
             notificationOptions.Substitutes.Add("Episodes", "1, 2");
+            notificationOptions.Substitutes.Add("EpisodesCount", "2");
+            notificationOptions.Substitutes.Add("SeasonEpisodes", "1x1, 1x2");
             var req = F.Build<ChildRequests>()
                 .With(x => x.RequestType, RequestType.TvShow)
                 .With(x => x.Available, true)
