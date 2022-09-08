@@ -10,7 +10,6 @@ using Ombi.Core.Services;
 using Ombi.Helpers;
 using Ombi.Hubs;
 using Ombi.Notifications.Models;
-using Ombi.Schedule.Jobs.Plex.Models;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
@@ -20,26 +19,19 @@ using Quartz;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
-    public class PlexAvailabilityChecker : IPlexAvailabilityChecker
+    public class PlexAvailabilityChecker : AvailabilityChecker, IPlexAvailabilityChecker
     {
         public PlexAvailabilityChecker(IPlexContentRepository repo, ITvRequestRepository tvRequest, IMovieRequestRepository movies,
             INotificationHelper notification, ILogger<PlexAvailabilityChecker> log, IHubContext<NotificationHub> hub, IFeatureService featureService)
+            : base(tvRequest, notification, log, hub)
         {
-            _tvRepo = tvRequest;
             _repo = repo;
             _movieRepo = movies;
-            _notificationService = notification;
-            _log = log;
-            _notification = hub;
             _featureService = featureService;
         }
 
-        private readonly ITvRequestRepository _tvRepo;
         private readonly IMovieRequestRepository _movieRepo;
         private readonly IPlexContentRepository _repo;
-        private readonly INotificationHelper _notificationService;
-        private readonly ILogger _log;
-        private readonly IHubContext<NotificationHub> _notification;
         private readonly IFeatureService _featureService;
 
         public async Task Execute(IJobExecutionContext job)
@@ -47,20 +39,20 @@ namespace Ombi.Schedule.Jobs.Plex
             try
             {
 
-                await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                await _hub.Clients.Clients(NotificationHub.AdminConnectionIds)
                     .SendAsync(NotificationHub.NotificationEvent, "Plex Availability Check Started");
                 await ProcessMovies();
                 await ProcessTv();
             }
             catch (Exception e)
             {
-                await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                await _hub.Clients.Clients(NotificationHub.AdminConnectionIds)
                     .SendAsync(NotificationHub.NotificationEvent, "Plex Availability Check Failed");
                 _log.LogError(e, "Exception thrown in Plex availbility checker");
                 return;
             }
 
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+            await _hub.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Plex Availability Check Finished");
         }
 
@@ -113,71 +105,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
                 }
 
-                var availableEpisode = new List<AvailabilityModel>();
-                foreach (var season in child.SeasonRequests)
-                {
-                    foreach (var episode in season.Episodes)
-                    {
-                        if (episode.Available)
-                        {
-                            continue;
-                        }
-                        var foundEp = await seriesEpisodes.AnyAsync(
-                            x => x.EpisodeNumber == episode.EpisodeNumber &&
-                                 x.SeasonNumber == episode.Season.SeasonNumber);
-
-                        if (foundEp)
-                        {
-                            availableEpisode.Add(new AvailabilityModel
-                            {
-                                Id = episode.Id,
-                                EpisodeNumber = episode.EpisodeNumber,
-                                SeasonNumber = episode.Season.SeasonNumber
-                            });
-                            episode.Available = true;
-                        }
-                    }
-                }
-
-                if (availableEpisode.Any())
-                {
-                    await _tvRepo.Save();
-                }
-
-                // Check to see if all of the episodes in all seasons are available for this request
-                var allAvailable = child.SeasonRequests.All(x => x.Episodes.All(c => c.Available));
-                if (allAvailable)
-                {
-                    child.Available = true;
-                    child.MarkedAsAvailable = DateTime.UtcNow;
-                    _log.LogInformation("[PAC] - Child request {0} is now available, sending notification", $"{child.Title} - {child.Id}");
-                    // We have ful-fulled this request!
-                    await _tvRepo.Save();
-                    await _notificationService.Notify(new NotificationOptions
-                    {
-                        DateTime = DateTime.Now,
-                        NotificationType = NotificationType.RequestAvailable,
-                        RequestId = child.Id,
-                        RequestType = RequestType.TvShow,
-                        Recipient = child.RequestedUser.Email
-                    });
-                }
-                else if (availableEpisode.Any())
-                {
-                    var notification = new NotificationOptions
-                    {
-                        DateTime = DateTime.Now,
-                        NotificationType = NotificationType.PartiallyAvailable,
-                        RequestId = child.Id,
-                        RequestType = RequestType.TvShow,
-                        Recipient = child.RequestedUser.Email,
-                    };
-                    notification.Substitutes.Add("Season", availableEpisode.First().SeasonNumber.ToString());
-                    notification.Substitutes.Add("Episodes", string.Join(", " ,availableEpisode.Select(x => x.EpisodeNumber)));
-                    notification.Substitutes.Add("EpisodesCount", $"{availableEpisode.Count}");
-                    notification.Substitutes.Add("SeasonEpisodes", string.Join(", ", availableEpisode.Select(x => $"{x.SeasonNumber}x{x.EpisodeNumber}" )));
-                    await _notificationService.Notify(notification);
-                }
+                ProcessTvShow(seriesEpisodes, child);
             }
 
             await _tvRepo.Save();

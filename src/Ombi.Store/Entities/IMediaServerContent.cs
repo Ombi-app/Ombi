@@ -29,10 +29,8 @@ namespace Ombi.Store.Entities
         public bool HasTheMovieDb => !string.IsNullOrEmpty(TheMovieDbId);
     }
 
-    public interface IMediaServerEpisode
+    public interface IMediaServerEpisode: IBaseMediaServerEpisode
     {
-        public int EpisodeNumber { get; set; }
-        public int SeasonNumber { get; set; }
         public string Title { get; set; }
         /// <summary>
         /// The Season key
@@ -45,6 +43,12 @@ namespace Ombi.Store.Entities
         public IMediaServerContent Series { get; set; }
         public IMediaServerContent SeriesIsIn(ICollection<IMediaServerContent> content);
         public bool IsIn(IMediaServerContent content);
+    }
+    
+    public interface IBaseMediaServerEpisode
+    {
+        public int EpisodeNumber { get; set; }
+        public int SeasonNumber { get; set; }
     }
 
     public enum MediaType

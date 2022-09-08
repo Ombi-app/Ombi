@@ -26,7 +26,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
@@ -45,38 +44,31 @@ using Quartz;
 
 namespace Ombi.Schedule.Jobs.Jellyfin
 {
-    public class JellyfinAvaliabilityChecker : IJellyfinAvaliabilityChecker
+    public class JellyfinAvaliabilityChecker : AvailabilityChecker, IJellyfinAvaliabilityChecker
     {
         public JellyfinAvaliabilityChecker(IJellyfinContentRepository repo, ITvRequestRepository t, IMovieRequestRepository m,
             INotificationHelper n, ILogger<JellyfinAvaliabilityChecker> log, IHubContext<NotificationHub> notification, IFeatureService featureService)
+             : base(t, n, log, notification)
         {
             _repo = repo;
-            _tvRepo = t;
             _movieRepo = m;
-            _notificationService = n;
-            _log = log;
-            _notification = notification;
             _featureService = featureService;
         }
 
-        private readonly ITvRequestRepository _tvRepo;
         private readonly IMovieRequestRepository _movieRepo;
         private readonly IJellyfinContentRepository _repo;
-        private readonly INotificationHelper _notificationService;
-        private readonly ILogger<JellyfinAvaliabilityChecker> _log;
-        private readonly IHubContext<NotificationHub> _notification;
         private readonly IFeatureService _featureService;
 
         public async Task Execute(IJobExecutionContext job)
         {
             _log.LogInformation("Starting Jellyfin Availability Check");
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+            await _hub.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Jellyfin Availability Checker Started");
             await ProcessMovies();
             await ProcessTv();
 
             _log.LogInformation("Finished Jellyfin Availability Check");
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+            await _hub.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Jellyfin Availability Checker Finished");
         }
 
@@ -193,70 +185,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                         x.Series.Title == child.Title);
                 }
 
-                var availableEpisode = new List<AvailabilityModel>();
-                foreach (var season in child.SeasonRequests)
-                {
-                    foreach (var episode in season.Episodes)
-                    {
-                        if (episode.Available)
-                        {
-                            continue;
-                        }
-
-                        var foundEp = await seriesEpisodes.FirstOrDefaultAsync(
-                            x => x.EpisodeNumber == episode.EpisodeNumber &&
-                                 x.SeasonNumber == episode.Season.SeasonNumber);
-
-                        if (foundEp != null)
-                        {
-                            availableEpisode.Add(new AvailabilityModel
-                            {
-                                Id = episode.Id,
-                                EpisodeNumber = episode.EpisodeNumber,
-                                SeasonNumber = episode.Season.SeasonNumber
-                            });
-                            episode.Available = true;
-                        }
-                    }
-                }
-
-                if (availableEpisode.Any())
-                {
-                    await _tvRepo.Save();
-                }
-
-                // Check to see if all of the episodes in all seasons are available for this request
-                var allAvailable = child.SeasonRequests.All(x => x.Episodes.All(c => c.Available));
-                if (allAvailable)
-                {
-                    // We have fulfulled this request!
-                    child.Available = true;
-                    child.MarkedAsAvailable = DateTime.Now;
-                    await _notificationService.Notify(new NotificationOptions
-                    {
-                        DateTime = DateTime.Now,
-                        NotificationType = NotificationType.RequestAvailable,
-                        RequestId = child.Id,
-                        RequestType = RequestType.TvShow,
-                        Recipient = child.RequestedUser.Email
-                    });
-                }
-                else if (availableEpisode.Any())
-                {
-                    var notification = new NotificationOptions
-                    {
-                        DateTime = DateTime.Now,
-                        NotificationType = NotificationType.PartiallyAvailable,
-                        RequestId = child.Id,
-                        RequestType = RequestType.TvShow,
-                        Recipient = child.RequestedUser.Email,
-                    };
-                    notification.Substitutes.Add("Season", availableEpisode.First().SeasonNumber.ToString());
-                    notification.Substitutes.Add("Episodes", string.Join(", ", availableEpisode.Select(x => x.EpisodeNumber)));
-                    notification.Substitutes.Add("EpisodesCount", $"{availableEpisode.Count}");
-                    notification.Substitutes.Add("SeasonEpisodes", string.Join(", ", availableEpisode.Select(x => $"{x.SeasonNumber}x{x.EpisodeNumber}" )));
-                    await _notificationService.Notify(notification);
-                }
+                ProcessTvShow(seriesEpisodes, child);
             }
 
             await _tvRepo.Save();
