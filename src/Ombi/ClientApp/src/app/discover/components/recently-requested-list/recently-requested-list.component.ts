@@ -1,15 +1,13 @@
-import { Component, OnInit, Input, ViewChild, Output, EventEmitter, OnDestroy } from "@angular/core";
-import { DiscoverOption, IDiscoverCardResult } from "../../interfaces";
-import { IRecentlyRequested, ISearchMovieResult, ISearchTvResult, RequestType } from "../../../interfaces";
-import { SearchV2Service } from "../../../services";
-import { StorageService } from "../../../shared/storage/storage-service";
-import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import { Component, OnInit, Input, ViewChild, OnDestroy } from "@angular/core";
+import { IRecentlyRequested, IRequestEngineResult, RequestType } from "../../../interfaces";
 import { Carousel } from 'primeng/carousel';
-import { FeaturesFacade } from "../../../state/features/features.facade";
 import { ResponsiveOptions } from "../carousel.options";
 import { RequestServiceV2 } from "app/services/requestV2.service";
-import { Subject, takeUntil } from "rxjs";
+import { finalize, map, Observable, Subject, takeUntil, tap } from "rxjs";
 import { Router } from "@angular/router";
+import { AuthService } from "app/auth/auth.service";
+import { NotificationService, RequestService } from "app/services";
+import { TranslateService } from "@ngx-translate/core";
 
 export enum DiscoverType {
     Upcoming,
@@ -30,21 +28,22 @@ export class RecentlyRequestedListComponent implements OnInit, OnDestroy {
     @Input() public isAdmin: boolean;
     @ViewChild('carousel', {static: false}) carousel: Carousel;
 
-
-    public requests: IRecentlyRequested[];
+    public requests$: Observable<IRecentlyRequested[]>;
 
     public responsiveOptions: any;
     public RequestType = RequestType;
     public loadingFlag: boolean;
     public DiscoverType = DiscoverType;
-    public is4kEnabled = false;
 
     private $loadSub = new Subject<void>();
 
-    constructor(private requestService: RequestServiceV2,
-        private featureFacade: FeaturesFacade,
-        private router: Router) {
-        Carousel.prototype.onTouchMove = () => {},
+    constructor(private requestServiceV2: RequestServiceV2,
+        private requestService: RequestService,
+        private router: Router,
+        private authService: AuthService,
+        private notificationService: NotificationService,
+        private translateService: TranslateService) {
+        Carousel.prototype.onTouchMove = () => {};
         this.responsiveOptions = ResponsiveOptions;
     }
 
@@ -54,12 +53,41 @@ export class RecentlyRequestedListComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        this.loading();
         this.loadData();
+        this.isAdmin = this.authService.isAdmin();
     }
 
     public navigate(request: IRecentlyRequested) {
         this.router.navigate([this.generateDetailsLink(request), request.mediaId]);
+    }
+
+    public approve(request: IRecentlyRequested) {
+        switch(request.type) {
+            case RequestType.movie:
+                this.requestService.approveMovie({id: request.requestId, is4K: false}).pipe(
+                    map((res) => this.handleApproval(res, request))
+                ).subscribe();
+                break;
+            case RequestType.tvShow:
+                this.requestService.approveChild({id: request.requestId}).pipe(
+                    tap((res) => this.handleApproval(res, request))
+                ).subscribe();
+                break;
+            case RequestType.album:
+                this.requestService.approveAlbum({id: request.requestId}).pipe(
+                    tap((res) => this.handleApproval(res, request))
+                ).subscribe();
+                break;
+        }
+    }
+
+    private handleApproval(result: IRequestEngineResult, request: IRecentlyRequested) {
+        if (result.result) {
+            this.notificationService.success(this.translateService.instant("Requests.SuccessfullyApproved"));
+            request.approved = true;
+        } else {
+            this.notificationService.error(result.errorMessage);
+        }
     }
 
     private generateDetailsLink(request: IRecentlyRequested): string {
@@ -74,12 +102,12 @@ export class RecentlyRequestedListComponent implements OnInit, OnDestroy {
     }
 
     private loadData() {
-        this.requestService.getRecentlyRequested().pipe(takeUntil(this.$loadSub)).subscribe(x => {
-            this.requests = x;
-            this.finishLoading();
-        });
+        this.requests$ = this.requestServiceV2.getRecentlyRequested().pipe(
+            tap(() => this.loading()),
+            takeUntil(this.$loadSub),
+            finalize(() => this.finishLoading())
+        );
     }
-
 
     private loading() {
         this.loadingFlag = true;

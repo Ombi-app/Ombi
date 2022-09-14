@@ -67,6 +67,7 @@ NewMovieRequest.args = {
     overview: 'The Matrix is a movie about a group of people who are forced to fight against a powerful computer system that controls them.',
     releaseDate: new Date(2020, 1, 1),
   } as IRecentlyRequested,
+  isAdmin: false,
 };
 
 export const MovieNoUsername = Template.bind({});
@@ -206,4 +207,60 @@ TvNoUsername.args = {
     mediaId: '603',
     releaseDate: new Date(2020, 1, 1),
   } as IRecentlyRequested,
+};
+
+export const AdminNewMovie = Template.bind({});
+// More on args: https://storybook.js.org/docs/angular/writing-stories/args
+AdminNewMovie.args = {
+  request: {
+    title: 'The Matrix',
+    approved: false,
+    available: false,
+    tvPartiallyAvailable: false,
+    requestDate: new Date(2022, 1, 1),
+    username: 'John Doe',
+    userId: '12345',
+    type: RequestType.movie,
+    mediaId: '603',
+    overview: 'The Matrix is a movie about a group of people who are forced to fight against a powerful computer system that controls them.',
+    releaseDate: new Date(2020, 1, 1),
+  } as IRecentlyRequested,
+  isAdmin: true,
+};
+
+export const AdminTvShow = Template.bind({});
+// More on args: https://storybook.js.org/docs/angular/writing-stories/args
+AdminTvShow.args = {
+  request: {
+    title: 'For All Mankind',
+    approved: false,
+    available: false,
+    tvPartiallyAvailable: true,
+    requestDate: new Date(2022, 1, 1),
+    userId: '12345',
+    type: RequestType.tvShow,
+    mediaId: '603',
+    username: 'John Doe',
+    releaseDate: new Date(2020, 1, 1),
+  } as IRecentlyRequested,
+  isAdmin: true,
+};
+
+export const AdminApprovedMovie = Template.bind({});
+// More on args: https://storybook.js.org/docs/angular/writing-stories/args
+AdminApprovedMovie.args = {
+  request: {
+    title: 'The Matrix',
+    approved: true,
+    available: false,
+    tvPartiallyAvailable: false,
+    requestDate: new Date(2022, 1, 1),
+    username: 'John Doe',
+    userId: '12345',
+    type: RequestType.movie,
+    mediaId: '603',
+    overview: 'The Matrix is a movie about a group of people who are forced to fight against a powerful computer system that controls them.',
+    releaseDate: new Date(2020, 1, 1),
+  } as IRecentlyRequested,
+  isAdmin: true,
 };

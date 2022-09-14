@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Ombi.Api.TheMovieDb;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Helpers;
@@ -12,7 +13,6 @@ using Ombi.Store.Repository.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using static Ombi.Core.Engine.BaseMediaEngine;
@@ -26,7 +26,8 @@ namespace Ombi.Core.Services
         private readonly IMusicRequestRepository _musicRequestRepository;
         private readonly ISettingsService<CustomizationSettings> _customizationSettings;
         private readonly ISettingsService<OmbiSettings> _ombiSettings;
-
+        private readonly IMovieDbApi _movieDbApi;
+        private readonly ICacheService _cache;
         private const int AmountToTake = 7;
 
         public RecentlyRequestedService(
@@ -37,13 +38,17 @@ namespace Ombi.Core.Services
             ISettingsService<OmbiSettings> ombiSettings,
             ICurrentUser user,
             OmbiUserManager um,
-            IRuleEvaluator rules) : base(user, um, rules)
+            IRuleEvaluator rules,
+            IMovieDbApi movieDbApi,
+            ICacheService cache) : base(user, um, rules)
         {
             _movieRequestRepository = movieRequestRepository;
             _tvRequestRepository = tvRequestRepository;
             _musicRequestRepository = musicRequestRepository;
             _customizationSettings = customizationSettings;
             _ombiSettings = ombiSettings;
+            _movieDbApi = movieDbApi;
+            _cache = cache;
         }
 
         public async Task<IEnumerable<RecentlyRequestedModel>> GetRecentlyRequested(CancellationToken cancellationToken)
@@ -65,8 +70,10 @@ namespace Ombi.Core.Services
 
             var model = new List<RecentlyRequestedModel>();
 
+            var lang = await DefaultLanguageCode();
             foreach (var item in await recentMovieRequests.ToListAsync(cancellationToken))
             {
+                var images = await _cache.GetOrAddAsync($"{CacheKeys.TmdbImages}movie{item.TheMovieDbId}", () => _movieDbApi.GetMovieImages(item.TheMovieDbId.ToString(), cancellationToken), DateTimeOffset.Now.AddDays(1));
                 model.Add(new RecentlyRequestedModel
                 {
                     RequestId = item.Id,
@@ -80,6 +87,8 @@ namespace Ombi.Core.Services
                     UserId = hideUsers.Hide ? string.Empty : item.RequestedUserId,
                     Username = hideUsers.Hide ? string.Empty : item.RequestedUser.UserAlias,
                     MediaId = item.TheMovieDbId.ToString(),
+                    PosterPath = images?.posters?.Where(x => lang.Equals(x?.iso_639_1, StringComparison.InvariantCultureIgnoreCase))?.OrderByDescending(x => x.vote_count)?.Select(x => x.file_path)?.FirstOrDefault(),
+                    Background = images?.backdrops?.Where(x => lang.Equals(x?.iso_639_1, StringComparison.InvariantCultureIgnoreCase))?.OrderByDescending(x => x.vote_count)?.Select(x => x.file_path)?.FirstOrDefault(),
                 });
             }
 
@@ -103,6 +112,9 @@ namespace Ombi.Core.Services
 
             foreach (var item in await recentTvRequests.ToListAsync(cancellationToken))
             {
+                var providerId = item.ParentRequest.ExternalProviderId.ToString();
+                var images = await _cache.GetOrAddAsync($"{CacheKeys.TmdbImages}tv{providerId}", () => _movieDbApi.GetTvImages(providerId.ToString(), cancellationToken), DateTimeOffset.Now.AddDays(1));
+                
                 var partialAvailability = item.SeasonRequests.SelectMany(x => x.Episodes).Any(e => e.Available);
                 model.Add(new RecentlyRequestedModel
                 {
@@ -117,7 +129,9 @@ namespace Ombi.Core.Services
                     Type = RequestType.TvShow,
                     UserId = hideUsers.Hide ? string.Empty : item.RequestedUserId,
                     Username = hideUsers.Hide ? string.Empty : item.RequestedUser.UserAlias,
-                    MediaId = item.ParentRequest.ExternalProviderId.ToString()
+                    MediaId = providerId.ToString(),
+                    PosterPath = images?.posters?.Where(x => lang.Equals(x?.iso_639_1, StringComparison.InvariantCultureIgnoreCase))?.OrderByDescending(x => x.vote_count)?.Select(x => x.file_path)?.FirstOrDefault(),
+                    Background = images?.backdrops?.Where(x => lang.Equals(x?.iso_639_1, StringComparison.InvariantCultureIgnoreCase))?.OrderByDescending(x => x.vote_count)?.Select(x => x.file_path)?.FirstOrDefault(),
                 });
             }
 
@@ -134,13 +148,36 @@ namespace Ombi.Core.Services
                     UserId = user.Id
                 };
             }
-            var settings = await _ombiSettings.GetSettingsAsync();
+            var settings = await GetOmbiSettings();
             var result = new HideResult
             {
                 Hide = settings.HideRequestsUsers,
                 UserId = user.Id
             };
             return result;
+        }
+        protected async Task<string> DefaultLanguageCode()
+        {
+            var user = await GetUser();
+            if (user == null)
+            {
+                return "en";
+            }
+
+            if (string.IsNullOrEmpty(user.Language))
+            {
+                var s = await GetOmbiSettings();
+                return s.DefaultLanguageCode;
+            }
+
+            return user.Language;
+        }
+
+
+        private OmbiSettings ombiSettings;
+        protected async Task<OmbiSettings> GetOmbiSettings()
+        {
+            return ombiSettings ??= await _ombiSettings.GetSettingsAsync();
         }
     }
 }
