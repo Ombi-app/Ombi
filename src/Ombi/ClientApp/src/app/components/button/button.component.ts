@@ -17,7 +17,7 @@ import { MatButtonModule } from "@angular/material/button";
     @Input() public text: string;
 
     @Input() public id: string;
-    @Input() public type: string;
+    @Input() public type: string = "primary";
     @Input() public class: string;
     @Input('data-toggle') public dataToggle: string;
     @Input('data-target') public dataTarget: string;

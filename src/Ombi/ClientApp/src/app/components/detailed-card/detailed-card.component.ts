@@ -7,14 +7,14 @@ import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
 @Component({
     standalone: false,
     selector: 'ombi-detailed-card',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './detailed-card.component.html',
     styleUrls: ['./detailed-card.component.scss']
   })
   export class DetailedCardComponent implements OnInit, OnDestroy {
       @Input() public request: IRecentlyRequested;
-
+      @Input() public isAdmin: boolean = false;
       @Output() public onClick: EventEmitter<void> = new EventEmitter<void>();
+      @Output() public onApprove: EventEmitter<void> = new EventEmitter<void>();
 
       public RequestType = RequestType;
       public loading: false;
@@ -60,6 +60,10 @@ import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
 
       public click() {
         this.onClick.emit();
+      }
+
+      public approve() {
+        this.onApprove.emit();
       }
 
       public getClass(request: IRecentlyRequested) {
