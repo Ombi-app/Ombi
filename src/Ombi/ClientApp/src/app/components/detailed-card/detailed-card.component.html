@@ -22,7 +22,7 @@
             </div>
             <div class="row action-items">
                 <div class="col-12" *ngIf="isAdmin">
-                    <button *ngIf="!request.approved" id="approve-{{request.mediaId}}" color="accent" mat-raised-button (click)="approve()">{{'Common.Approve' | translate}}</button>
+                    <button *ngIf="!request.approved" id="detailed-request-approve-{{request.mediaId}}" color="accent" mat-raised-button (click)="approve()">{{'Common.Approve' | translate}}</button>
                 </div>
             </div>
         </div>

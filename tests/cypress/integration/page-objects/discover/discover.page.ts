@@ -43,9 +43,13 @@ class DetailedCard {
     return cy.get(`#detailed-request-status-${this.id}`);
   }
 
+  get approveButton(): Cypress.Chainable<any> {
+    return cy.get(`#detailed-request-approve-${this.id}`);
+  }
+
   verifyTitle(expected: string): Cypress.Chainable<any> {
     return this.title.should('have.text',expected);
-}
+  }
 
   constructor(id: string) {
     this.id = id;
