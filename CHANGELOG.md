@@ -1,3 +1,12 @@
+# [4.27.0](https://github.com/Ombi-app/Ombi/compare/v4.26.0...v4.27.0) (2022-09-14)
+
+
+### Features
+
+* Recently requested improvements ([#4755](https://github.com/Ombi-app/Ombi/issues/4755)) ([ff04d87](https://github.com/Ombi-app/Ombi/commit/ff04d875343604c77c391bf55d0968977e480281))
+
+
+
 # [4.26.0](https://github.com/Ombi-app/Ombi/compare/v4.25.1...v4.26.0) (2022-09-07)
 
 
@@ -384,15 +393,6 @@
 ### Bug Fixes
 
 * **plex-watchlist:** :bug: Fixed the issue where the watchlist didn't work for users logging in via OAuth ([6398f6a](https://github.com/Ombi-app/Ombi/commit/6398f6a4f7755281ebeac537e3ff623df5cfa0f3))
-
-
-
-## [4.16.2](https://github.com/Ombi-app/Ombi/compare/v4.16.1...v4.16.2) (2022-04-07)
-
-
-### Bug Fixes
-
-* **wizard:** Fixed an issue when using Plex OAuth it could fail setting up ([b743cf4](https://github.com/Ombi-app/Ombi/commit/b743cf4fafa7341ad1b163276f006d7ab0e9dcff))
 
 
 
