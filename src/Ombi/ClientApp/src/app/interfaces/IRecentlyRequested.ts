@@ -15,4 +15,5 @@ export interface IRecentlyRequested {
     type: RequestType;
 
     posterPath: string;
+    background: string;
 }

@@ -1,6 +1,6 @@
 ﻿namespace Ombi.Api.TheMovieDb.Models
 {
-    public class TvImages
+    public class MovieDbImages
     {
         public Backdrop[] backdrops { get; set; }
         public int id { get; set; }

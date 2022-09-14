@@ -17,5 +17,8 @@ namespace Ombi.Core.Models.Requests
         public DateTime ReleaseDate { get; set; }
         public bool Approved { get; set; }
         public string MediaId { get; set; }
+
+        public string PosterPath { get; set; }
+        public string Background { get; set; }
     }
 }

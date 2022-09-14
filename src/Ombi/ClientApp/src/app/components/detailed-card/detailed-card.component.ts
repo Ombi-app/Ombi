@@ -27,20 +27,10 @@ import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
 
       ngOnInit(): void {
         if (!this.request.posterPath) {
-          switch (this.request.type) {
-            case RequestType.movie:
-              this.imageService.getMoviePoster(this.request.mediaId).pipe(takeUntil(this.$imageSub)).subscribe(x => this.request.posterPath = x);
-              this.imageService.getMovieBackground(this.request.mediaId).pipe(takeUntil(this.$imageSub)).subscribe(x => {
-                this.background = this.sanitizer.bypassSecurityTrustStyle("linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url(" + x + ")");
-              });
-              break;
-            case RequestType.tvShow:
-              this.imageService.getTmdbTvPoster(Number(this.request.mediaId)).pipe(takeUntil(this.$imageSub)).subscribe(x => this.request.posterPath = `https://image.tmdb.org/t/p/w300${x}`);
-              this.imageService.getTmdbTvBackground(Number(this.request.mediaId)).pipe(takeUntil(this.$imageSub)).subscribe(x => {
-                this.background = this.sanitizer.bypassSecurityTrustStyle("linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url(https://image.tmdb.org/t/p/w300" + x + ")");
-              });
-              break;
-          }
+          this.loadImages();
+        } else {
+          this.request.posterPath = `https://image.tmdb.org/t/p/w300${this.request.posterPath}`;
+          this.background = this.sanitizer.bypassSecurityTrustStyle("linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url(https://image.tmdb.org/t/p/w300" + this.request.background + ")");
         }
       }
 
@@ -80,6 +70,23 @@ import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
       public ngOnDestroy() {
         this.$imageSub.next();
         this.$imageSub.complete();
+    }
+
+    private loadImages() {
+      switch (this.request.type) {
+        case RequestType.movie:
+          this.imageService.getMoviePoster(this.request.mediaId).pipe(takeUntil(this.$imageSub)).subscribe(x => this.request.posterPath = x);
+          this.imageService.getMovieBackground(this.request.mediaId).pipe(takeUntil(this.$imageSub)).subscribe(x => {
+            this.background = this.sanitizer.bypassSecurityTrustStyle("linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url(" + x + ")");
+          });
+          break;
+        case RequestType.tvShow:
+          this.imageService.getTmdbTvPoster(Number(this.request.mediaId)).pipe(takeUntil(this.$imageSub)).subscribe(x => this.request.posterPath = `https://image.tmdb.org/t/p/w300${x}`);
+          this.imageService.getTmdbTvBackground(Number(this.request.mediaId)).pipe(takeUntil(this.$imageSub)).subscribe(x => {
+            this.background = this.sanitizer.bypassSecurityTrustStyle("linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url(https://image.tmdb.org/t/p/w300" + x + ")");
+          });
+          break;
+      }
     }
 
   }
