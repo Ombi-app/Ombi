@@ -7,7 +7,6 @@ import { MatButtonModule } from "@angular/material/button";
     selector: 'ombi-button',
     imports: [...OmbiCommonModules, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    styleUrls: ['./button.component.scss'],
     template: `
     <button [id]="id" [type]="type" [class]="class" [data-toggle]="dataToggle" mat-raised-button [data-target]="dataTarget">{{text}}</button>
     `

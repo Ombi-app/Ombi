@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { IRecentlyRequested, RequestType } from "../../interfaces";
 import { ImageService } from "app/services";
 import { Subject, takeUntil } from "rxjs";
