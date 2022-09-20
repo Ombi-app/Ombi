@@ -1,3 +1,12 @@
+## [4.27.1](https://github.com/Ombi-app/Ombi/compare/v4.27.0...v4.27.1) (2022-09-20)
+
+
+### Bug Fixes
+
+* **plex:** stop the plex sync from deleting episodes when we can't find the plex key ([66b05e5](https://github.com/Ombi-app/Ombi/commit/66b05e5a85dbfe1fec5f9366e80987f2cfa1f4fe))
+
+
+
 # [4.27.0](https://github.com/Ombi-app/Ombi/compare/v4.26.0...v4.27.0) (2022-09-14)
 
 
@@ -384,15 +393,6 @@
 
 
 ## [4.16.4](https://github.com/Ombi-app/Ombi/compare/v4.16.3...v4.16.4) (2022-04-08)
-
-
-
-## [4.16.3](https://github.com/Ombi-app/Ombi/compare/v4.16.2...v4.16.3) (2022-04-08)
-
-
-### Bug Fixes
-
-* **plex-watchlist:** :bug: Fixed the issue where the watchlist didn't work for users logging in via OAuth ([6398f6a](https://github.com/Ombi-app/Ombi/commit/6398f6a4f7755281ebeac537e3ff623df5cfa0f3))
 
 
 
