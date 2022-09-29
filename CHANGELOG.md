@@ -1,3 +1,12 @@
+## [4.27.2](https://github.com/Ombi-app/Ombi/compare/v4.27.1...v4.27.2) (2022-09-29)
+
+
+### Bug Fixes
+
+* **sonarr:** :bug: Cleaned up and removed Sonarr v3 option, sonarr v3 is now the default. This allows us to get ready for the upcoming Sonarr v4 ([#4764](https://github.com/Ombi-app/Ombi/issues/4764)) ([2cddec7](https://github.com/Ombi-app/Ombi/commit/2cddec759004b6490f686ff74cb092238e3dc946))
+
+
+
 ## [4.27.1](https://github.com/Ombi-app/Ombi/compare/v4.27.0...v4.27.1) (2022-09-20)
 
 
@@ -389,10 +398,6 @@
 ### Bug Fixes
 
 * **watchlist:** actually fixed it this time... ([d962a32](https://github.com/Ombi-app/Ombi/commit/d962a3211eca29520662ddce962676e3aea17ec5))
-
-
-
-## [4.16.4](https://github.com/Ombi-app/Ombi/compare/v4.16.3...v4.16.4) (2022-04-08)
 
 
 
