@@ -66,11 +66,9 @@ export class AdminRequestDialogComponent implements OnInit {
       this.sonarrEnabled = await this.sonarrService.isEnabled();
       if (this.sonarrEnabled) {
         this.settingsService.getSonarr().subscribe((settings: ISonarrSettings) => {
-          if (settings.v3) {
             this.sonarrService.getV3LanguageProfiles(settings).subscribe((profiles: ILanguageProfiles[]) => {
               this.sonarrLanguageProfiles = profiles;
             })
-          }
         });
         this.sonarrService.getQualityProfilesWithoutSettings().subscribe(c => {
             this.sonarrProfiles = c;

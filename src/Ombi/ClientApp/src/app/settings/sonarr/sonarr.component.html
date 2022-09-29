@@ -10,9 +10,6 @@
                         <div class="md-form-field">
                             <mat-slide-toggle formControlName="enabled" id="enable">Enable</mat-slide-toggle>
                         </div>
-                       <div class="md-form-field">
-                            <mat-slide-toggle formControlName="v3">V3</mat-slide-toggle>
-                        </div>
                         <div class="md-form-field">
                             <mat-slide-toggle [(ngModel)]="advanced" [ngModelOptions]="{standalone: true}">Advanced</mat-slide-toggle>
                         </div>
@@ -120,8 +117,8 @@
 
                     </div>
 
-                    <div class="form-group  col-md-12" *ngIf="form.controls.v3.value">
-                        <label for="select" class="control-label">Language Profiles 
+                    <div class="form-group  col-md-12">
+                        <label for="select" class="control-label">Language Profiles
                             <i *ngIf="form.get('languageProfile').hasError('required')" class="fas fa-exclamation-circle error-text" pTooltip="A Language Profile is required"></i>
                         </label>
                         <div id="langaugeProfile">

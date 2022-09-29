@@ -22,7 +22,8 @@
         "emby",
         "availability-rules",
         "details",
-        "requests"
+        "requests",
+        "sonarr"
     ],
     "rpc.enabled": true
 }

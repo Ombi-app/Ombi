@@ -157,7 +157,6 @@ namespace Ombi.Core.Senders
             }
 
             int qualityToUse;
-            var sonarrV3 = s.V3;
             var languageProfileId = s.LanguageProfile;
             string rootFolderPath;
             string seriesType;
@@ -265,13 +264,11 @@ namespace Ombi.Core.Senders
                             ignoreEpisodesWithFiles = false, // There shouldn't be any episodes with files, this is a new season
                             ignoreEpisodesWithoutFiles = false, // We want all missing
                             searchForMissingEpisodes = false // we want dont want to search yet. We want to make sure everything is unmonitored/monitored correctly.
-                        }
-                    };
+                        },
+                        languageProfileId = languageProfileId
+                };
 
-                    if (sonarrV3)
-                    {
-                        newSeries.languageProfileId = languageProfileId;
-                    }
+                
 
                     // Montitor the correct seasons,
                     // If we have that season in the model then it's monitored!

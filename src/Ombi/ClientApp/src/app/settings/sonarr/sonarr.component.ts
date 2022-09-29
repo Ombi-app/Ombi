@@ -72,8 +72,7 @@ export class SonarrComponent implements OnInit {
                     port: [x.port, [Validators.required]],
                     addOnly: [x.addOnly],
                     seasonFolders: [x.seasonFolders],
-                    v3: [x.v3],
-                    languageProfile: [x.languageProfile],
+                    languageProfile: [x.languageProfile, [Validators.required, validateProfile]],
                     languageProfileAnime: [x.languageProfileAnime],
                     scanForAvailability: [x.scanForAvailability],
                 });
@@ -87,17 +86,6 @@ export class SonarrComponent implements OnInit {
                 if (x.languageProfile) {
                     this.getLanguageProfiles(this.form);
                 }
-                if (x.v3) {
-                    this.form.controls.languageProfile.setValidators([Validators.required]);
-                }
-
-                this.form.controls.v3.valueChanges.subscribe((val: boolean) => {
-                    if (val) {
-                        this.form.controls.languageProfile.setValidators([Validators.required, validateProfile]);
-                    } else {
-                        this.form.controls.languageProfile.clearValidators();
-                    }
-                });
 
                 this.formErrors ={
                     apiKey: {},
@@ -113,6 +101,7 @@ export class SonarrComponent implements OnInit {
         this.languageProfiles = [];
         this.rootFolders.push({ path: "Please Select", id: -1 });
         this.qualities.push({ name: "Please Select", id: -1 });
+        this.languageProfiles.push({ name: "Please Select", id: -1 });
     }
 
     public getProfiles(form: UntypedFormGroup) {
@@ -150,9 +139,6 @@ export class SonarrComponent implements OnInit {
                 this.langRunning = false;
                 this.notificationService.success("Successfully retrieved the Language Profiles");
             });
-            if (this.form.controls.v3.value) {
-                this.form.controls.languageProfile.setValidators([Validators.required]);
-            }
     }
 
     public test(form: UntypedFormGroup) {
@@ -187,7 +173,7 @@ export class SonarrComponent implements OnInit {
                 this.notificationService.error("Please check your entered values");
             }
         }
-        if (form.controls.v3.value && form.controls.languageProfile) {
+        if (form.controls.languageProfile) {
             if (form.controls.languageProfile.value === "Please Select") {
                 this.notificationService.error("Please check your entered values");
             }
