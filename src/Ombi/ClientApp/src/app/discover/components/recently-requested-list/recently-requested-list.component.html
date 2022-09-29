@@ -1,5 +1,11 @@
-<p-carousel #carousel [value]="requests$ | async" [numVisible]="3" [numScroll]="1" [responsiveOptions]="responsiveOptions" [page]="0">
-    <ng-template let-result pTemplate="item">
-        <ombi-detailed-card [request]="result" [isAdmin]="isAdmin" (onClick)="navigate(result)" (onApprove)="approve(result)"></ombi-detailed-card>
-    </ng-template>
-</p-carousel>
+<div *ngIf="requests$ | async as requests">
+    <div *ngIf="requests.length > 0">
+        <p-carousel #carousel [value]="requests" [numVisible]="3" [numScroll]="1"
+            [responsiveOptions]="responsiveOptions" [page]="0">
+            <ng-template let-result pTemplate="item">
+                <ombi-detailed-card [request]="result" [isAdmin]="isAdmin" (onClick)="navigate(result)"
+                    (onApprove)="approve(result)"></ombi-detailed-card>
+            </ng-template>
+        </p-carousel>
+    </div>
+</div>

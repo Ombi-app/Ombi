@@ -13,7 +13,7 @@ namespace Ombi.Helpers
     }
     public class MediaCacheService : CacheService, IMediaCacheService
     {
-        private const string CacheKey = "MediaCacheServiceKeys";
+        private const string _cacheKey = "MediaCacheServiceKeys";
 
         public MediaCacheService(IMemoryCache memoryCache) : base(memoryCache)
         {
@@ -43,19 +43,19 @@ namespace Ombi.Helpers
 
         private void UpdateLocalCache(string cacheKey)
         {
-            var mediaServiceCache = _memoryCache.Get<List<string>>(CacheKey);
+            var mediaServiceCache = _memoryCache.Get<List<string>>(_cacheKey);
             if (mediaServiceCache == null)
             {
                 mediaServiceCache = new List<string>();
             }
             mediaServiceCache.Add(cacheKey);
-            _memoryCache.Remove(CacheKey);
-            _memoryCache.Set(CacheKey, mediaServiceCache);
+            _memoryCache.Remove(_cacheKey);
+            _memoryCache.Set(_cacheKey, mediaServiceCache);
         }
 
         public Task Purge()
         {
-            var keys = _memoryCache.Get<List<string>>(CacheKey);
+            var keys = _memoryCache.Get<List<string>>(_cacheKey);
             if (keys == null)
             {
                 return Task.CompletedTask;

@@ -34,9 +34,9 @@ namespace Ombi.Controllers.V1.External
         /// <returns></returns>
         [HttpPost("Profiles")]
         [PowerUser]
-        public async Task<IEnumerable<SonarrProfile>> GetProfiles([FromBody] SonarrSettings settings)
+        public Task<IEnumerable<SonarrProfile>> GetProfiles([FromBody] SonarrSettings settings)
         {
-            return await SonarrApi.GetProfiles(settings.ApiKey, settings.FullUri);
+            return SonarrV3Api.GetProfiles(settings.ApiKey, settings.FullUri);
         }
 
         /// <summary>
@@ -46,9 +46,9 @@ namespace Ombi.Controllers.V1.External
         /// <returns></returns>
         [HttpPost("RootFolders")]
         [PowerUser]
-        public async Task<IEnumerable<SonarrRootFolder>> GetRootFolders([FromBody] SonarrSettings settings)
+        public Task<IEnumerable<SonarrRootFolder>> GetRootFolders([FromBody] SonarrSettings settings)
         {
-            return await SonarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
+            return SonarrV3Api.GetRootFolders(settings.ApiKey, settings.FullUri);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Ombi.Controllers.V1.External
             var settings = await SonarrSettings.GetSettingsAsync();
             if (settings.Enabled)
             {
-                return await SonarrApi.GetProfiles(settings.ApiKey, settings.FullUri);
+                return await SonarrV3Api.GetProfiles(settings.ApiKey, settings.FullUri);
             }
             return null;
         }
@@ -78,7 +78,7 @@ namespace Ombi.Controllers.V1.External
             var settings = await SonarrSettings.GetSettingsAsync();
             if (settings.Enabled)
             {
-                return await SonarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
+                return await SonarrV3Api.GetRootFolders(settings.ApiKey, settings.FullUri);
             }
 
             return null;
@@ -110,7 +110,7 @@ namespace Ombi.Controllers.V1.External
         [PowerUser]
         public async Task<IEnumerable<Tag>> GetTags([FromBody] SonarrSettings settings)
         {
-            return await SonarrApi.GetTags(settings.ApiKey, settings.FullUri);
+            return await SonarrV3Api.GetTags(settings.ApiKey, settings.FullUri);
         }
 
 
@@ -125,7 +125,7 @@ namespace Ombi.Controllers.V1.External
             var settings = await SonarrSettings.GetSettingsAsync();
             if (settings.Enabled)
             {
-                return await SonarrApi.GetTags(settings.ApiKey, settings.FullUri);
+                return await SonarrV3Api.GetTags(settings.ApiKey, settings.FullUri);
             }
 
             return null;

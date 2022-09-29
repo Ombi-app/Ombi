@@ -124,7 +124,6 @@ namespace Ombi.Schedule.Jobs.Plex
             {
                 await NotifyClient("Plex Sync - Checking if any requests are now available");
                 Logger.LogInformation("Kicking off Plex Availability Checker");
-                await _mediaCacheService.Purge();
                 await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
             }
             var processedCont = processedContent?.Content?.Count() ?? 0;
@@ -133,6 +132,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
             await NotifyClient(recentlyAddedSearch ? $"Plex Recently Added Sync Finished, We processed {processedCont}, and {processedEp} Episodes" : "Plex Content Sync Finished");
 
+            await _mediaCacheService.Purge();
         }
 
         private async Task<ProcessedContent> StartTheCache(PlexSettings plexSettings, bool recentlyAddedSearch)
