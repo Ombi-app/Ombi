@@ -38,7 +38,6 @@ namespace Ombi.Schedule.Jobs.Plex
         {
             try
             {
-
                 await _hub.Clients.Clients(NotificationHub.AdminConnectionIds)
                     .SendAsync(NotificationHub.NotificationEvent, "Plex Availability Check Started");
                 await ProcessMovies();
@@ -70,14 +69,20 @@ namespace Ombi.Schedule.Jobs.Plex
             {
                 var useImdb = false;
                 var useTvDb = false;
+                var useMovieDb = false;
                 if (child.ParentRequest.ImdbId.HasValue())
                 {
                     useImdb = true;
                 }
 
-                if (child.ParentRequest.TvDbId.ToString().HasValue())
+                if (child.ParentRequest.TvDbId > 0)
                 {
                     useTvDb = true;
+                }
+
+                if (child.ParentRequest.ExternalProviderId > 0)
+                {
+                    useMovieDb = true;
                 }
 
                 var tvDbId = child.ParentRequest.TvDbId;
@@ -91,18 +96,16 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     seriesEpisodes = plexEpisodes.Where(x => x.Series.TvDbId == tvDbId.ToString());
                 }
-
-                if (seriesEpisodes == null)
+                if (useMovieDb && (seriesEpisodes == null || !seriesEpisodes.Any()))
                 {
-                    continue;
+                    seriesEpisodes = plexEpisodes.Where(x => x.Series.TheMovieDbId == child.ParentRequest.ExternalProviderId.ToString());
                 }
 
-                if (!seriesEpisodes.Any())
+                if (seriesEpisodes == null || !seriesEpisodes.Any())
                 {
                     // Let's try and match the series by name
                     seriesEpisodes = plexEpisodes.Where(x =>
-                        x.Series.Title == child.Title);
-
+                        x.Series.Title.Equals(child.Title, StringComparison.InvariantCultureIgnoreCase));
                 }
 
                 await ProcessTvShow(seriesEpisodes, child);

@@ -11,10 +11,9 @@ using Ombi.Schedule.Jobs;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository.Requests;
-using System;
+using Ombi.Tests;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Ombi.Schedule.Tests
@@ -29,14 +28,8 @@ namespace Ombi.Schedule.Tests
         public void SetUp()
         {
             _mocker = new AutoMocker();
-            Mock<IHubClients> mockClients = new Mock<IHubClients>();
-            Mock<IClientProxy> mockClientProxy = new Mock<IClientProxy>();
-            mockClients.Setup(clients => clients.Clients(It.IsAny<IReadOnlyList<string>>())).Returns(mockClientProxy.Object);
-
-            var hubContext = new Mock<IHubContext<NotificationHub>>();
-            hubContext.Setup(x => x.Clients).Returns(() => mockClients.Object);
-            _mocker.Use(hubContext);
-
+            var hub = SignalRHelper.MockHub<NotificationHub>();
+            _mocker.Use(hub);
 
             _subject = _mocker.CreateInstance<TestAvailabilityChecker>();
         }

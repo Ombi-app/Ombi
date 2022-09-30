@@ -19,49 +19,140 @@ using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
 using Ombi.Helpers;
 using Ombi.Core.Services;
+using Ombi.Tests;
+using Moq.AutoMock;
+using Ombi.Settings.Settings.Models;
+using Ombi.Notifications.Models;
 
 namespace Ombi.Schedule.Tests
 {
     [TestFixture]
-    [Ignore("Need to work out how to mockout the hub context")]
     public class PlexAvailabilityCheckerTests
     {
+        private AutoMocker _mocker;
+        private PlexAvailabilityChecker _subject;
+        
         [SetUp]
         public void Setup()
         {
-            _repo = new Mock<IPlexContentRepository>();
-            _tv = new Mock<ITvRequestRepository>();
-            _movie = new Mock<IMovieRequestRepository>();
-            _notify = new Mock<INotificationHelper>();
-            var hub = new Mock<IHubContext<NotificationHub>>();
-            hub.Setup(x =>
-                x.Clients.Clients(It.IsAny<IReadOnlyList<string>>()).SendCoreAsync(It.IsAny<string>(), It.IsAny<object[]>(), It.IsAny<CancellationToken>()));
-            NotificationHub.UsersOnline.TryAdd("A", new HubUsers());
-            Checker = new PlexAvailabilityChecker(_repo.Object, _tv.Object, _movie.Object, _notify.Object, null, hub.Object, Mock.Of<IFeatureService>());
+            _mocker = new AutoMocker();
+            
+            var hub = SignalRHelper.MockHub<NotificationHub>();
+            _mocker.Use(hub);
+
+            _subject = _mocker.CreateInstance<PlexAvailabilityChecker>();
         }
 
-
-        private Mock<IPlexContentRepository> _repo;
-        private Mock<ITvRequestRepository> _tv;
-        private Mock<IMovieRequestRepository> _movie;
-        private Mock<INotificationHelper> _notify;
-        private PlexAvailabilityChecker Checker;
-
         [Test]
-        public async Task ProcessMovies_ShouldMarkAvailable_WhenInPlex()
+        public async Task ProcessMovies_ShouldMarkAvailable_WhenInPlex_WithImdbId()
         {
             var request = new MovieRequests
             {
                 ImdbId = "test"
             };
-            _movie.Setup(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
-            _repo.Setup(x => x.Get("test", ProviderType.ImdbId)).ReturnsAsync(new PlexServerContent());
+            _mocker.Setup<IMovieRequestRepository>(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
+            _mocker.Setup<IPlexContentRepository, Task<PlexServerContent>>(x => x.Get("test", ProviderType.ImdbId)).ReturnsAsync(new PlexServerContent());
 
-            await Checker.Execute(null);
+            await _subject.Execute(null);
 
-            _movie.Verify(x => x.Save(), Times.Once);
+            Assert.Multiple(() =>
+            {
+                Assert.That(request.Available, Is.True);
+                Assert.That(request.MarkedAsAvailable, Is.Not.Null);
+                Assert.That(request.Available4K, Is.False);
+                Assert.That(request.MarkedAsAvailable4K, Is.Null);
+            });
 
-            Assert.True(request.Available);
+            _mocker.Verify<IMovieRequestRepository>(x => x.SaveChangesAsync(), Times.Once);
+            _mocker.Verify<IPlexContentRepository>(x => x.Get("test", ProviderType.ImdbId), Times.Once);
+            _mocker.Verify<IPlexContentRepository>(x => x.Get(It.IsAny<string>(), ProviderType.TheMovieDbId), Times.Never);
+            _mocker.Verify<INotificationHelper>(x => x.Notify(It.Is<NotificationOptions>(x => x.NotificationType == NotificationType.RequestAvailable)), Times.Once);
+        }
+
+        [Test]
+        public async Task ProcessMovies_ShouldMarkAvailable_WhenInPlex_WithTheMovieDbId()
+        {
+            var request = new MovieRequests
+            {
+                ImdbId = null,
+                TheMovieDbId = 33
+            };
+            _mocker.Setup<IMovieRequestRepository>(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
+            _mocker.Setup<IPlexContentRepository, Task<PlexServerContent>>(x => x.Get(It.IsAny<string>(), ProviderType.ImdbId)).ReturnsAsync((PlexServerContent)null);
+            _mocker.Setup<IPlexContentRepository, Task<PlexServerContent>>(x => x.Get("33", ProviderType.TheMovieDbId)).ReturnsAsync(new PlexServerContent());
+
+            await _subject.Execute(null);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(request.Available, Is.True);
+                Assert.That(request.MarkedAsAvailable, Is.Not.Null);
+                Assert.That(request.Available4K, Is.False);
+                Assert.That(request.MarkedAsAvailable4K, Is.Null);
+            });
+
+            _mocker.Verify<IMovieRequestRepository>(x => x.SaveChangesAsync(), Times.Once);
+            _mocker.Verify<IPlexContentRepository>(x => x.Get(It.IsAny<string>(), ProviderType.ImdbId), Times.Never);
+            _mocker.Verify<IPlexContentRepository>(x => x.Get(It.IsAny<string>(), ProviderType.TheMovieDbId), Times.Once);
+            _mocker.Verify<INotificationHelper>(x => x.Notify(It.Is<NotificationOptions>(x => x.NotificationType == NotificationType.RequestAvailable)), Times.Once);
+        }
+
+        [Test]
+        public async Task ProcessMovies_ShouldMarkAvailable_WhenInPlex_WithTheMovieDbId_4K_Enabled ()
+        {
+            _mocker.Setup<IFeatureService, Task<bool>>(x => x.FeatureEnabled(FeatureNames.Movie4KRequests)).ReturnsAsync(true);
+            var request = new MovieRequests
+            {
+                ImdbId = "test"
+            };
+            _mocker.Setup<IMovieRequestRepository>(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
+            _mocker.Setup<IPlexContentRepository, Task<PlexServerContent>>(x => x.Get("test", ProviderType.ImdbId)).ReturnsAsync(new PlexServerContent {  Quality = "1080p" });
+
+            await _subject.Execute(null);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(request.Available, Is.True);
+                Assert.That(request.MarkedAsAvailable, Is.Not.Null);
+                Assert.That(request.Available4K, Is.False);
+                Assert.That(request.MarkedAsAvailable4K, Is.Null);
+            });
+
+            _mocker.Verify<IMovieRequestRepository>(x => x.SaveChangesAsync(), Times.Once);
+            _mocker.Verify<IPlexContentRepository>(x => x.Get("test", ProviderType.ImdbId), Times.Once);
+            _mocker.Verify<IPlexContentRepository>(x => x.Get(It.IsAny<string>(), ProviderType.TheMovieDbId), Times.Never);
+            _mocker.Verify<INotificationHelper>(x => x.Notify(It.Is<NotificationOptions>(x => x.NotificationType == NotificationType.RequestAvailable)), Times.Once);
+        }
+
+        [Test]
+        public async Task ProcessMovies_4K_ShouldMarkAvailable_WhenInPlex_WithImdbId_And_4K_FeatureEnabled()
+        {
+            _mocker.Setup<IFeatureService, Task<bool>>(x => x.FeatureEnabled(FeatureNames.Movie4KRequests)).ReturnsAsync(true);
+            var request = new MovieRequests
+            {
+                ImdbId = "test",
+                Is4kRequest = true,
+                Has4KRequest = true,
+            };
+            _mocker.Setup<IMovieRequestRepository>(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
+            _mocker.Setup<IPlexContentRepository, Task<PlexServerContent>>(x => x.Get("test", ProviderType.ImdbId)).ReturnsAsync(new PlexServerContent { Has4K = true });
+
+            await _subject.Execute(null);
+
+            _mocker.Verify<IMovieRequestRepository>(x => x.SaveChangesAsync(), Times.Once);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(request.Available, Is.False);
+                Assert.That(request.MarkedAsAvailable, Is.Null);
+                Assert.That(request.Available4K, Is.True);
+                Assert.That(request.MarkedAsAvailable4K, Is.Not.Null);
+            });
+
+            _mocker.Verify<IMovieRequestRepository>(x => x.SaveChangesAsync(), Times.Once);
+            _mocker.Verify<IPlexContentRepository>(x => x.Get("test", ProviderType.ImdbId), Times.Once);
+            _mocker.Verify<IPlexContentRepository>(x => x.Get(It.IsAny<string>(), ProviderType.TheMovieDbId), Times.Never);
+            _mocker.Verify<INotificationHelper>(x => x.Notify(It.Is<NotificationOptions>(x => x.NotificationType == NotificationType.RequestAvailable)), Times.Once);
         }
 
         [Test]
@@ -71,19 +162,96 @@ namespace Ombi.Schedule.Tests
             {
                 ImdbId = "test"
             };
-            _movie.Setup(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
+            _mocker.Setup<IMovieRequestRepository>(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
 
-            await Checker.Execute(null);
+            await _subject.Execute(null);
 
             Assert.False(request.Available);
         }
 
         [Test]
-        public async Task ProcessTv_ShouldMark_Episode_Available_WhenInPlex()
+        public async Task ProcessTv_ShouldMark_Episode_Available_WhenInPlex_MovieDbId()
         {
-            var request = new ChildRequests
+            var request = CreateChildRequest(null, 33, 99);
+            _mocker.Setup<ITvRequestRepository>(x => x.GetChild()).Returns(new List<ChildRequests> { request }.AsQueryable().BuildMock().Object);
+            _mocker.Setup<IPlexContentRepository, IQueryable<IMediaServerEpisode>>(x => x.GetAllEpisodes()).Returns(new List<PlexEpisode>
             {
-                ParentRequest = new TvRequests { TvDbId = 1 },
+                new PlexEpisode
+                {
+                    Series = new PlexServerContent
+                    {
+                        TheMovieDbId = 33.ToString(),
+                        Title = "Test"
+                    },
+                    EpisodeNumber = 1,
+                    SeasonNumber = 2,
+                }
+            }.AsQueryable().BuildMock().Object);
+
+            await _subject.Execute(null);
+
+            _mocker.Verify<ITvRequestRepository>(x => x.Save(), Times.AtLeastOnce);
+
+            Assert.True(request.SeasonRequests[0].Episodes[0].Available);
+        }
+
+        [Test]
+        public async Task ProcessTv_ShouldMark_Episode_Available_WhenInPlex_ImdbId()
+        {
+            var request = CreateChildRequest("abc", -1, 99);
+            _mocker.Setup<ITvRequestRepository>(x => x.GetChild()).Returns(new List<ChildRequests> { request }.AsQueryable().BuildMock().Object);
+            _mocker.Setup<IPlexContentRepository, IQueryable<IMediaServerEpisode>>(x => x.GetAllEpisodes()).Returns(new List<PlexEpisode>
+            {
+                new PlexEpisode
+                {
+                    Series = new  PlexServerContent
+                    {
+                        ImdbId = "abc",
+                    },
+                    EpisodeNumber = 1,
+                    SeasonNumber = 2,
+                }
+            }.AsQueryable().BuildMock().Object);
+
+            await _subject.Execute(null);
+
+            _mocker.Verify<ITvRequestRepository>(x => x.Save(), Times.AtLeastOnce);
+
+            Assert.True(request.SeasonRequests[0].Episodes[0].Available);
+        }
+
+        [Test]
+        public async Task ProcessTv_ShouldMark_Episode_Available_By_TitleMatch()
+        {
+            var request = CreateChildRequest("abc", -1, 99);
+            _mocker.Setup<ITvRequestRepository>(x => x.GetChild()).Returns(new List<ChildRequests> { request }.AsQueryable().BuildMock().Object);
+            _mocker.Setup<IPlexContentRepository, IQueryable<IMediaServerEpisode>>(x => x.GetAllEpisodes()).Returns(new List<PlexEpisode>
+            {
+                new PlexEpisode
+                {
+                    Series = new  PlexServerContent
+                    {
+                        Title = "UNITTEST",
+                        ImdbId = "invlaid",
+                    },
+                    EpisodeNumber = 1,
+                    SeasonNumber = 2,
+                }
+            }.AsQueryable().BuildMock().Object);
+
+            await _subject.Execute(null);
+
+            _mocker.Verify<ITvRequestRepository>(x => x.Save(), Times.AtLeastOnce);
+
+            Assert.True(request.SeasonRequests[0].Episodes[0].Available);
+        }
+
+        private ChildRequests CreateChildRequest(string imdbId, int theMovieDbId, int tvdbId)
+        {
+            return new ChildRequests
+            {
+                Title = "UnitTest",
+                ParentRequest = new TvRequests { ImdbId = imdbId, ExternalProviderId = theMovieDbId, TvDbId = tvdbId },
                 SeasonRequests = new EditableList<SeasonRequests>
                 {
                     new SeasonRequests
@@ -93,7 +261,7 @@ namespace Ombi.Schedule.Tests
                             new EpisodeRequests
                             {
                                 EpisodeNumber = 1,
-                                Season =  new SeasonRequests
+                                Season = new SeasonRequests
                                 {
                                     SeasonNumber = 2
                                 }
@@ -106,27 +274,6 @@ namespace Ombi.Schedule.Tests
                     Email = "abc"
                 }
             };
-            _tv.Setup(x => x.GetChild()).Returns(new List<ChildRequests> { request }.AsQueryable().BuildMock().Object);
-            _repo.Setup(x => x.GetAllEpisodes()).Returns(new List<PlexEpisode>
-            {
-                new PlexEpisode
-                {
-                    Series = new  PlexServerContent
-                    {
-                        TvDbId = 1.ToString(),
-                    },
-                    EpisodeNumber = 1,
-                    SeasonNumber = 2
-                }
-            }.AsQueryable().BuildMock().Object);
-            _repo.Setup(x => x.Include(It.IsAny<IQueryable<PlexEpisode>>(),It.IsAny<Expression<Func<PlexEpisode, PlexServerContent>>>()));
-
-            await Checker.Execute(null);
-
-            _tv.Verify(x => x.Save(), Times.Once);
-
-            Assert.True(request.SeasonRequests[0].Episodes[0].Available);
-
         }
     }
 }
