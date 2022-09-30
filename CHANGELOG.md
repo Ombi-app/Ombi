@@ -1,3 +1,12 @@
+## [4.27.5](https://github.com/Ombi-app/Ombi/compare/v4.27.4...v4.27.5) (2022-09-30)
+
+
+### Bug Fixes
+
+* **importer:** 🐛 Allow you to only import Plex Admins without the Plex Users ([8c9ad9b](https://github.com/Ombi-app/Ombi/commit/8c9ad9b414fdc6c88bdb911d6057ae5d38783b98))
+
+
+
 ## [4.27.4](https://github.com/Ombi-app/Ombi/compare/v4.27.3...v4.27.4) (2022-09-30)
 
 
@@ -394,10 +403,6 @@
 ### Bug Fixes
 
 * **availability:** Fixed an issue where we wouldn't mark a available 4k movie as available (when 4K request feature is disabled) ([b492699](https://github.com/Ombi-app/Ombi/commit/b49269961d4830a530e3054976a47f519524948b))
-
-
-
-## [4.16.7](https://github.com/Ombi-app/Ombi/compare/v4.16.6...v4.16.7) (2022-04-12)
 
 
 
