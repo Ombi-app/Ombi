@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
+using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
@@ -19,7 +20,7 @@ namespace Ombi.Schedule.Jobs.Plex
 {
     public class PlexUserImporter : IPlexUserImporter
     {
-        public PlexUserImporter(IPlexApi api, UserManager<OmbiUser> um, ILogger<PlexUserImporter> log,
+        public PlexUserImporter(IPlexApi api, OmbiUserManager um, ILogger<PlexUserImporter> log,
             ISettingsService<PlexSettings> plexSettings, ISettingsService<UserManagementSettings> ums, IHubContext<NotificationHub> hub)
         {
             _api = api;
@@ -33,7 +34,7 @@ namespace Ombi.Schedule.Jobs.Plex
         }
 
         private readonly IPlexApi _api;
-        private readonly UserManager<OmbiUser> _userManager;
+        private readonly OmbiUserManager _userManager;
         private readonly ILogger<PlexUserImporter> _log;
         private readonly ISettingsService<PlexSettings> _plexSettings;
         private readonly ISettingsService<UserManagementSettings> _userManagementSettings;
@@ -43,16 +44,16 @@ namespace Ombi.Schedule.Jobs.Plex
         public async Task Execute(IJobExecutionContext job)
         {
             var userManagementSettings = await _userManagementSettings.GetSettingsAsync();
-            if (!userManagementSettings.ImportPlexUsers)
+            if (!userManagementSettings.ImportPlexUsers && !userManagementSettings.ImportPlexAdmin)
             {
                 return;
             }
+
             var settings = await _plexSettings.GetSettingsAsync();
             if (!settings.Enable)
             {
                 return;
             }
-
 
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Plex User Importer Started");
@@ -64,78 +65,13 @@ namespace Ombi.Schedule.Jobs.Plex
                     continue;
                 }
 
-                await ImportAdmin(userManagementSettings, server, allUsers);
-
-                var users = await _api.GetUsers(server.PlexAuthToken);
-
-                foreach (var plexUser in users.User)
+                if (userManagementSettings.ImportPlexAdmin)
                 {
-                    // Check if we should import this user
-                    if (userManagementSettings.BannedPlexUserIds.Contains(plexUser.Id))
-                    {
-                        // Do not import these, they are not allowed into the country.
-                        continue;
-                    }
-
-                    // Check if this Plex User already exists
-                    // We are using the Plex USERNAME and Not the TITLE, the Title is for HOME USERS
-                    var existingPlexUser = allUsers.FirstOrDefault(x => x.ProviderUserId == plexUser.Id);
-                    if (existingPlexUser == null)
-                    {
-
-                        if (!plexUser.Username.HasValue())
-                        {
-                            _log.LogInformation("Could not create Plex user since the have no username, PlexUserId: {0}", plexUser.Id);
-                            continue;
-                        }
-
-                        if ((plexUser.Email.HasValue()) && await _userManager.FindByEmailAsync(plexUser.Email) != null)
-                        {
-                            _log.LogWarning($"Cannot add user {plexUser.Username} because their email address is already in Ombi, skipping this user");
-                            continue;
-                        }
-                        // Create this users
-                        // We do not store a password against the user since they will authenticate via Plex
-                        var newUser = new OmbiUser
-                        {
-                            UserType = UserType.PlexUser,
-                            UserName = plexUser?.Username ?? plexUser.Id,
-                            ProviderUserId = plexUser.Id,
-                            Email = plexUser?.Email ?? string.Empty,
-                            Alias = string.Empty,
-                            MovieRequestLimit = userManagementSettings.MovieRequestLimit,
-                            MovieRequestLimitType = userManagementSettings.MovieRequestLimitType,
-                            EpisodeRequestLimit = userManagementSettings.EpisodeRequestLimit,
-                            EpisodeRequestLimitType = userManagementSettings.EpisodeRequestLimitType,
-                            MusicRequestLimit = userManagementSettings.MusicRequestLimit,
-                            MusicRequestLimitType = userManagementSettings.MusicRequestLimitType,
-                            StreamingCountry = userManagementSettings.DefaultStreamingCountry
-                        };
-                        _log.LogInformation("Creating Plex user {0}", newUser.UserName);
-                        var result = await _userManager.CreateAsync(newUser);
-                        if (!LogResult(result))
-                        {
-                            continue;
-                        }
-                        if (userManagementSettings.DefaultRoles.Any())
-                        {
-                            // Get the new user object to avoid any concurrency failures
-                            var dbUser =
-                                await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == newUser.UserName);
-                            foreach (var defaultRole in userManagementSettings.DefaultRoles)
-                            {
-                                await _userManager.AddToRoleAsync(dbUser, defaultRole);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Do we need to update this user?
-                        existingPlexUser.Email = plexUser.Email;
-                        existingPlexUser.UserName = plexUser.Username;
-
-                        await _userManager.UpdateAsync(existingPlexUser);
-                    }
+                    await ImportAdmin(userManagementSettings, server, allUsers);
+                }
+                if (userManagementSettings.ImportPlexUsers)
+                {
+                    await ImportPlexUsers(userManagementSettings, allUsers, server);
                 }
             }
 
@@ -143,13 +79,83 @@ namespace Ombi.Schedule.Jobs.Plex
                 .SendAsync(NotificationHub.NotificationEvent, "Plex User Importer Finished");
         }
 
+        private async Task ImportPlexUsers(UserManagementSettings userManagementSettings, List<OmbiUser> allUsers, PlexServers server)
+        {
+            var users = await _api.GetUsers(server.PlexAuthToken);
+
+            foreach (var plexUser in users.User)
+            {
+                // Check if we should import this user
+                if (userManagementSettings.BannedPlexUserIds.Contains(plexUser.Id))
+                {
+                    // Do not import these, they are not allowed into the country.
+                    continue;
+                }
+
+                // Check if this Plex User already exists
+                // We are using the Plex USERNAME and Not the TITLE, the Title is for HOME USERS
+                var existingPlexUser = allUsers.FirstOrDefault(x => x.ProviderUserId == plexUser.Id);
+                if (existingPlexUser == null)
+                {
+
+                    if (!plexUser.Username.HasValue())
+                    {
+                        _log.LogInformation("Could not create Plex user since the have no username, PlexUserId: {0}", plexUser.Id);
+                        continue;
+                    }
+
+                    if ((plexUser.Email.HasValue()) && await _userManager.FindByEmailAsync(plexUser.Email) != null)
+                    {
+                        _log.LogWarning($"Cannot add user {plexUser.Username} because their email address is already in Ombi, skipping this user");
+                        continue;
+                    }
+                    // Create this users
+                    // We do not store a password against the user since they will authenticate via Plex
+                    var newUser = new OmbiUser
+                    {
+                        UserType = UserType.PlexUser,
+                        UserName = plexUser?.Username ?? plexUser.Id,
+                        ProviderUserId = plexUser.Id,
+                        Email = plexUser?.Email ?? string.Empty,
+                        Alias = string.Empty,
+                        MovieRequestLimit = userManagementSettings.MovieRequestLimit,
+                        MovieRequestLimitType = userManagementSettings.MovieRequestLimitType,
+                        EpisodeRequestLimit = userManagementSettings.EpisodeRequestLimit,
+                        EpisodeRequestLimitType = userManagementSettings.EpisodeRequestLimitType,
+                        MusicRequestLimit = userManagementSettings.MusicRequestLimit,
+                        MusicRequestLimitType = userManagementSettings.MusicRequestLimitType,
+                        StreamingCountry = userManagementSettings.DefaultStreamingCountry
+                    };
+                    _log.LogInformation("Creating Plex user {0}", newUser.UserName);
+                    var result = await _userManager.CreateAsync(newUser);
+                    if (!LogResult(result))
+                    {
+                        continue;
+                    }
+                    if (userManagementSettings.DefaultRoles.Any())
+                    {
+                        // Get the new user object to avoid any concurrency failures
+                        var dbUser =
+                            await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == newUser.UserName);
+                        foreach (var defaultRole in userManagementSettings.DefaultRoles)
+                        {
+                            await _userManager.AddToRoleAsync(dbUser, defaultRole);
+                        }
+                    }
+                }
+                else
+                {
+                    // Do we need to update this user?
+                    existingPlexUser.Email = plexUser.Email;
+                    existingPlexUser.UserName = plexUser.Username;
+
+                    await _userManager.UpdateAsync(existingPlexUser);
+                }
+            }
+        }
+
         private async Task ImportAdmin(UserManagementSettings settings, PlexServers server, List<OmbiUser> allUsers)
         {
-            if (!settings.ImportPlexAdmin)
-            {
-                return;
-            }
-
             var plexAdmin = (await _api.GetAccount(server.PlexAuthToken)).user;
 
             // Check if the admin is already in the DB
@@ -163,6 +169,14 @@ namespace Ombi.Schedule.Jobs.Plex
                 adminUserFromDb.UserName = plexAdmin.username;
                 adminUserFromDb.ProviderUserId = plexAdmin.id;
                 await _userManager.UpdateAsync(adminUserFromDb);
+                return;
+            }
+
+            // Ensure we don't have a user with the same username
+            var normalUsername = plexAdmin.username.ToUpperInvariant();
+            if (await _userManager.Users.AnyAsync(x => x.NormalizedUserName == normalUsername))
+            {
+                _log.LogWarning($"Cannot add user {plexAdmin.username} because their username is already in Ombi, skipping this user");
                 return;
             }
 
