@@ -157,7 +157,7 @@ namespace Ombi.Schedule.Jobs.Emby
                         x.Series.Title == child.Title);
                 }
 
-                ProcessTvShow(seriesEpisodes, child);
+                await ProcessTvShow(seriesEpisodes, child);
             }
 
             await _tvRepo.Save();

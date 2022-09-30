@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -14,7 +15,7 @@ using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Schedule.Jobs
 {
-    public class AvailabilityChecker
+    public abstract class AvailabilityChecker
     {
         protected readonly ITvRequestRepository _tvRepo;
         protected readonly INotificationHelper _notificationService;
@@ -30,9 +31,8 @@ namespace Ombi.Schedule.Jobs
             _hub = hub;
         }
 
-        protected async void ProcessTvShow(IQueryable<IBaseMediaServerEpisode> seriesEpisodes, ChildRequests child)
+        protected async Task ProcessTvShow(IQueryable<IBaseMediaServerEpisode> seriesEpisodes, ChildRequests child)
         {
-
             var availableEpisode = new List<AvailabilityModel>();
             foreach (var season in child.SeasonRequests)
             {
@@ -71,7 +71,7 @@ namespace Ombi.Schedule.Jobs
                 // We have ful-fulled this request!
                 child.Available = true;
                 child.MarkedAsAvailable = DateTime.UtcNow;
-                 await _hub.Clients.Clients(NotificationHub.AdminConnectionIds)
+                await _hub?.Clients?.Clients(NotificationHub.AdminConnectionIds)?
                         .SendAsync(NotificationHub.NotificationEvent, "Availability Checker found some new available Shows!");
                 _log.LogInformation("Child request {0} is now available, sending notification", $"{child.Title} - {child.Id}");
                 

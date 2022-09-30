@@ -105,7 +105,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
                 }
 
-                ProcessTvShow(seriesEpisodes, child);
+                await ProcessTvShow(seriesEpisodes, child);
             }
 
             await _tvRepo.Save();

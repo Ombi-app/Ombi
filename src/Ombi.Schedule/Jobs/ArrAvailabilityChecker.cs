@@ -132,7 +132,7 @@ namespace Ombi.Schedule.Jobs.Radarr
                     continue;
                 }
 
-                ProcessTvShow(seriesEpisodes, child);
+                await ProcessTvShow(seriesEpisodes, child);
             }
 
             await _tvRepo.Save();
