@@ -1,3 +1,12 @@
+## [4.27.3](https://github.com/Ombi-app/Ombi/compare/v4.27.2...v4.27.3) (2022-09-30)
+
+
+### Bug Fixes
+
+* **availability:** 🐛 Fixed a issue with the availability checker after the previous update. Added full test coverage around that area ([28e2480](https://github.com/Ombi-app/Ombi/commit/28e248046ad56390595f84172bbd5f5961325b4d))
+
+
+
 ## [4.27.2](https://github.com/Ombi-app/Ombi/compare/v4.27.1...v4.27.2) (2022-09-29)
 
 
@@ -389,15 +398,6 @@
 
 
 ## [4.16.6](https://github.com/Ombi-app/Ombi/compare/v4.16.5...v4.16.6) (2022-04-11)
-
-
-
-## [4.16.5](https://github.com/Ombi-app/Ombi/compare/v4.16.4...v4.16.5) (2022-04-08)
-
-
-### Bug Fixes
-
-* **watchlist:** actually fixed it this time... ([d962a32](https://github.com/Ombi-app/Ombi/commit/d962a3211eca29520662ddce962676e3aea17ec5))
 
 
 
