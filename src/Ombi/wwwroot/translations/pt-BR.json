@@ -364,6 +364,9 @@
         "Casts": {
             "CastTitle": "Elenco"
         },
+        "Crews": {
+            "CrewTitle": "Crew"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Isto irá pedir todas as temporadas da série",
             "FirstSeasonTooltip": "Isto somente irá pedir a 1ª temporada da série",

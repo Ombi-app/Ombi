@@ -364,6 +364,9 @@
         "Casts": {
             "CastTitle": "Enviar pantalla"
         },
+        "Crews": {
+            "CrewTitle": "Equipo"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Esto solicitará cada temporada para este programa",
             "FirstSeasonTooltip": "Esto solo solicitará la primera temporada para este programa",

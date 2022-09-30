@@ -364,6 +364,9 @@
         "Casts": {
             "CastTitle": "演员"
         },
+        "Crews": {
+            "CrewTitle": "Crew"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "请求这个节目的每一季",
             "FirstSeasonTooltip": "请求这个节目的第一季",

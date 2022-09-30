@@ -364,6 +364,9 @@
         "Casts": {
             "CastTitle": "В ролите"
         },
+        "Crews": {
+            "CrewTitle": "Crew"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Това ще заяви всеки сезон на това предаване",
             "FirstSeasonTooltip": "Това ще заяви само първия сезон на това предаване",

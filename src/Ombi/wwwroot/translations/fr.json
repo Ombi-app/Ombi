@@ -324,9 +324,9 @@
         "ViewCollection": "Afficher la Collection",
         "NotEnoughInfo": "Malheureusement, il n'y a pas encore assez d'informations à propos de cette série !",
         "AdvancedOptions": "Options Avancées",
-        "AutoApproveOptions": "Vous pouvez configurer la demande ici. Une fois demandée, elle sera envoyée à votre application de DVR et sera automatiquement approuvée ! Veuillez noter que ceci est optionnel, appuyez simplement sur \"Demander\" pour sauter !",
-        "AutoApproveOptionsTv": "Vous pouvez configurer la demande ici. Une fois demandée, elle sera envoyée à votre application de DVR et sera automatiquement approuvée ! Si la demande est déjà dans Sonarr, nous ne changerons pas le dossier racine ou le profil de qualité si vous la définissez ! Veuillez noter que ceci est optionnel, appuyez simplement sur \"Demander\" pour sauter !",
-        "AutoApproveOptionsTvShort": "Vous pouvez configurer la demande ici. Une fois demandée, elle sera envoyée à votre application de DVR ! Si la demande est déjà dans Sonarr, nous ne changerons pas le dossier racine ou le profil de qualité si vous la définissez ! Veuillez noter que ceci est optionnel, appuyez simplement sur \"Demander\" pour sauter !",
+        "AutoApproveOptions": "Vous pouvez configurer la demande ici. Une fois demandée, elle sera envoyée à votre application de DVR et sera automatiquement approuvée ! Veuillez noter que ceci est optionnel, appuyez simplement sur \"Demander\" pour passer !",
+        "AutoApproveOptionsTv": "Vous pouvez configurer la demande ici. Une fois demandée, elle sera envoyée à votre application de DVR et sera automatiquement approuvée ! Si la demande est déjà dans Sonarr, nous ne changerons pas le dossier racine ou le profil de qualité si vous la définissez ! Veuillez noter que ceci est optionnel, appuyez simplement sur \"Demander\" pour passer !",
+        "AutoApproveOptionsTvShort": "Vous pouvez configurer la demande ici. Une fois demandée, elle sera envoyée à votre application de DVR ! Si la demande est déjà dans Sonarr, nous ne changerons pas le dossier racine ou le profil de qualité si vous la définissez ! Veuillez noter que ceci est optionnel, appuyez simplement sur \"Demander\" pour passer !",
         "QualityProfilesSelect": "Sélectionner un Profil de Qualité",
         "RootFolderSelect": "Sélectionner un Dossier Racine",
         "LanguageProfileSelect": "Sélectionnez un profil de langue",
@@ -365,7 +365,7 @@
             "CastTitle": "Casting"
         },
         "Crews": {
-            "CrewTitle": "Equipe"
+            "CrewTitle": "Équipe technique"
         },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Cette action demandera toutes les saisons de cette série",

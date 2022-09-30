@@ -364,6 +364,9 @@
         "Casts": {
             "CastTitle": "Trasmetti"
         },
+        "Crews": {
+            "CrewTitle": "Crew"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Richiederà tutte le stagioni per questa serie",
             "FirstSeasonTooltip": "Richiederà solo la Prima Stagione per questa serie",

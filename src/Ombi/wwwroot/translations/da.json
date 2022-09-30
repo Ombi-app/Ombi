@@ -364,6 +364,9 @@
         "Casts": {
             "CastTitle": "Medvirkende"
         },
+        "Crews": {
+            "CrewTitle": "Crew"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Dette vil anmode om hver sæson for denne tv-serie",
             "FirstSeasonTooltip": "Dette vil kun anmode om den første sæson for denne tv-serie",

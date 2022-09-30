@@ -364,6 +364,9 @@
         "Casts": {
             "CastTitle": "Obsadenie"
         },
+        "Crews": {
+            "CrewTitle": "Crew"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Požiadať všetky sezóny série.",
             "FirstSeasonTooltip": "Požiadať iba prvú sezónu série.",

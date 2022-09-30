@@ -364,6 +364,9 @@
         "Casts": {
             "CastTitle": "Rollista"
         },
+        "Crews": {
+            "CrewTitle": "Crew"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Detta kommer att begära varje säsong för denna serie",
             "FirstSeasonTooltip": "Detta kommer endast att begära den första säsongen för denna serie",
