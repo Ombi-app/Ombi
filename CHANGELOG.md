@@ -1,3 +1,12 @@
+## [4.27.6](https://github.com/Ombi-app/Ombi/compare/v4.27.5...v4.27.6) (2022-10-01)
+
+
+### Bug Fixes
+
+* **notifications:** Fixed the error when sending multiple test notifications. Added more logging when Discord complains the message is invalid ([fc14780](https://github.com/Ombi-app/Ombi/commit/fc14780bd354483119ddcbb55a8c382e1890a783))
+
+
+
 ## [4.27.5](https://github.com/Ombi-app/Ombi/compare/v4.27.4...v4.27.5) (2022-09-30)
 
 
@@ -394,15 +403,6 @@
 ### Bug Fixes
 
 * **plex-watchlist:** Only request the latest season when importing from the watchlist ([77a47ff](https://github.com/Ombi-app/Ombi/commit/77a47ff157c6c5feafe3f2a29a3fcba8df4fdfef))
-
-
-
-## [4.16.8](https://github.com/Ombi-app/Ombi/compare/v4.16.7...v4.16.8) (2022-04-13)
-
-
-### Bug Fixes
-
-* **availability:** Fixed an issue where we wouldn't mark a available 4k movie as available (when 4K request feature is disabled) ([b492699](https://github.com/Ombi-app/Ombi/commit/b49269961d4830a530e3054976a47f519524948b))
 
 
 
