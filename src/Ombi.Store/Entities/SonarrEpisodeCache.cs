@@ -3,7 +3,7 @@
 namespace Ombi.Store.Entities
 {
     [Table("SonarrEpisodeCache")]
-    public class SonarrEpisodeCache : Entity
+    public class SonarrEpisodeCache : Entity, IBaseMediaServerEpisode
     {
         public int SeasonNumber { get; set; }
         public int EpisodeNumber { get; set; }

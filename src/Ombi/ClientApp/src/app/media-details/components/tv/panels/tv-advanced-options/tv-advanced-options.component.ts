@@ -45,7 +45,6 @@ export class TvAdvancedOptionsComponent implements OnInit {
         this.setRootFolderOverrides();
       });
 
-      if (settings.v3) {
         this.sonarrService
           .getV3LanguageProfiles(settings)
           .subscribe((profiles: ILanguageProfiles[]) => {
@@ -53,7 +52,6 @@ export class TvAdvancedOptionsComponent implements OnInit {
             this.data.languages = profiles;
             this.setLanguageOverride();
           });
-      }
     });
   }
 

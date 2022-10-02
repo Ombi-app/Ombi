@@ -22,9 +22,13 @@
         "Monitored": "Suivi",
         "NotAvailable": "Non disponible",
         "ProcessingRequest": "En cours de traitement",
+        "ProcessingRequest4K": "4K en cours de traitement",
         "PendingApproval": "En attente d'approbation",
+        "PendingApproval4K": "En attente d'approbation 4K",
         "RequestDenied": "Demande refusée",
+        "RequestDenied4K": "Demande 4K refusée",
         "NotRequested": "Non demandé",
+        "NotRequested4K": "4K non demandée",
         "Requested": "Demandé",
         "Requested4K": "4K demandée",
         "Search": "Rechercher",
@@ -320,9 +324,9 @@
         "ViewCollection": "Afficher la Collection",
         "NotEnoughInfo": "Malheureusement, il n'y a pas encore assez d'informations à propos de cette série !",
         "AdvancedOptions": "Options Avancées",
-        "AutoApproveOptions": "Vous pouvez configurer la demande ici. Une fois demandée, elle sera envoyée à votre application de DVR et sera automatiquement approuvée ! Veuillez noter que ceci est optionnel, appuyez simplement sur \"Demander\" pour sauter !",
-        "AutoApproveOptionsTv": "Vous pouvez configurer la demande ici. Une fois demandée, elle sera envoyée à votre application de DVR et sera automatiquement approuvée ! Si la demande est déjà dans Sonarr, nous ne changerons pas le dossier racine ou le profil de qualité si vous la définissez ! Veuillez noter que ceci est optionnel, appuyez simplement sur \"Demander\" pour sauter !",
-        "AutoApproveOptionsTvShort": "Vous pouvez configurer la demande ici. Une fois demandée, elle sera envoyée à votre application de DVR ! Si la demande est déjà dans Sonarr, nous ne changerons pas le dossier racine ou le profil de qualité si vous la définissez ! Veuillez noter que ceci est optionnel, appuyez simplement sur \"Demander\" pour sauter !",
+        "AutoApproveOptions": "Vous pouvez configurer la demande ici. Une fois demandée, elle sera envoyée à votre application de DVR et sera automatiquement approuvée ! Veuillez noter que ceci est optionnel, appuyez simplement sur \"Demander\" pour passer !",
+        "AutoApproveOptionsTv": "Vous pouvez configurer la demande ici. Une fois demandée, elle sera envoyée à votre application de DVR et sera automatiquement approuvée ! Si la demande est déjà dans Sonarr, nous ne changerons pas le dossier racine ou le profil de qualité si vous la définissez ! Veuillez noter que ceci est optionnel, appuyez simplement sur \"Demander\" pour passer !",
+        "AutoApproveOptionsTvShort": "Vous pouvez configurer la demande ici. Une fois demandée, elle sera envoyée à votre application de DVR ! Si la demande est déjà dans Sonarr, nous ne changerons pas le dossier racine ou le profil de qualité si vous la définissez ! Veuillez noter que ceci est optionnel, appuyez simplement sur \"Demander\" pour passer !",
         "QualityProfilesSelect": "Sélectionner un Profil de Qualité",
         "RootFolderSelect": "Sélectionner un Dossier Racine",
         "LanguageProfileSelect": "Sélectionnez un profil de langue",
@@ -341,7 +345,7 @@
         "Seasons": "Saisons :",
         "Episodes": "Épisodes :",
         "Availability": "Disponibilité :",
-        "RequestStatus": "Statut de la Demande",
+        "RequestStatus": "Statut de la demande :",
         "Quality": "Qualité :",
         "RootFolderOverride": "Répertoire racine remplacé :",
         "QualityOverride": "Qualité remplacée :",
@@ -360,6 +364,9 @@
         "Casts": {
             "CastTitle": "Casting"
         },
+        "Crews": {
+            "CrewTitle": "Équipe technique"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Cette action demandera toutes les saisons de cette série",
             "FirstSeasonTooltip": "Cette action ne demandera que la Première Saison de cette série",
@@ -373,6 +380,7 @@
         "PleaseSelectUser": "Veuillez sélectionner un utilisateur",
         "StreamingOn": "En streaming sur :",
         "RequestedBy": "Demandé par :",
+        "OnDate": "Le :",
         "RequestedByOn": "Demandé par {{user}} le {{date}}",
         "RequestDate": "Date de la demande :",
         "DeniedReason": "Motif de refus :",

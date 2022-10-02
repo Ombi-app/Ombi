@@ -39,6 +39,7 @@ namespace Ombi.Api.Plex.Models
         public string grandparentTheme { get; set; }
         public string chapterSource { get; set; }
         public Medium[] Media { get; set; }
+         [JsonProperty("Guid")] // force uppercase to solve conflict with lowercase guid
         public List<PlexGuids> Guid { get; set; } = new List<PlexGuids>();
     }
 

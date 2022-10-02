@@ -24,7 +24,11 @@ namespace Ombi.Hubs
         {
             get
             {
-                return UsersOnline.Where(x => x.Value.Roles.Contains(OmbiRoles.Admin)).Select(x => x.Key).ToList();
+                if (UsersOnline.Any())
+                {
+                    return UsersOnline.Where(x => x.Value.Roles.Contains(OmbiRoles.Admin)).Select(x => x.Key).ToList();
+                }
+                return Enumerable.Empty<string>().ToList();
             }
         }
 

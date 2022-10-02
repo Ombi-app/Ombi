@@ -186,6 +186,14 @@ namespace Ombi.Notifications
                 {
                     PartiallyAvailableEpisodeNumbers = epNumber;
                 }
+                if (opts.Substitutes.TryGetValue("EpisodesCount", out var epCount))
+                {
+                    PartiallyAvailableEpisodeCount = epCount;
+                }
+                if (opts.Substitutes.TryGetValue("SeasonEpisodes", out var sEpisodes))
+                {
+                    PartiallyAvailableEpisodesList = sEpisodes;
+                }
             }
         }
 
@@ -295,6 +303,8 @@ namespace Ombi.Notifications
         public string ProviderId { get; set; }
         public string PartiallyAvailableEpisodeNumbers { get; set; }
         public string PartiallyAvailableSeasonNumber { get; set; }
+        public string PartiallyAvailableEpisodeCount { get; set; }
+        public string PartiallyAvailableEpisodesList { get; set; }
 
         // System Defined
         private string LongDate => DateTime.Now.ToString("D");
@@ -336,6 +346,8 @@ namespace Ombi.Notifications
             { nameof(ProviderId), ProviderId },
             { nameof(PartiallyAvailableEpisodeNumbers), PartiallyAvailableEpisodeNumbers },
             { nameof(PartiallyAvailableSeasonNumber), PartiallyAvailableSeasonNumber },
+            { nameof(PartiallyAvailableEpisodesList), PartiallyAvailableEpisodesList },
+            { nameof(PartiallyAvailableEpisodeCount), PartiallyAvailableEpisodeCount },
         };
     }
 }

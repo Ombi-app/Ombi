@@ -22,9 +22,13 @@
         "Monitored": "Мониторинг",
         "NotAvailable": "Недоступно",
         "ProcessingRequest": "Обработка запроса",
+        "ProcessingRequest4K": "Processing Request 4K",
         "PendingApproval": "В ожидании одобрения",
+        "PendingApproval4K": "Pending Approval 4K",
         "RequestDenied": "Запрос отклонен",
+        "RequestDenied4K": "Request Denied 4K",
         "NotRequested": "Не запрошено",
+        "NotRequested4K": "Not Requested 4K",
         "Requested": "Запрошено",
         "Requested4K": "Requested 4K",
         "Search": "Поиск",
@@ -341,7 +345,7 @@
         "Seasons": "Seasons:",
         "Episodes": "Episodes:",
         "Availability": "Доступность:",
-        "RequestStatus": "Request Status",
+        "RequestStatus": "Request Status:",
         "Quality": "Quality:",
         "RootFolderOverride": "Переопределение корневой папки:",
         "QualityOverride": "Переопределение качества:",
@@ -360,6 +364,9 @@
         "Casts": {
             "CastTitle": "Cast"
         },
+        "Crews": {
+            "CrewTitle": "Crew"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "This will request every season for this show",
             "FirstSeasonTooltip": "This will only request the First Season for this show",
@@ -373,6 +380,7 @@
         "PleaseSelectUser": "Please select a user",
         "StreamingOn": "Streaming On:",
         "RequestedBy": "Автор запроса:",
+        "OnDate": "On:",
         "RequestedByOn": "Requested By {{user}} on {{date}}",
         "RequestDate": "Дата запроса:",
         "DeniedReason": "Denied Reason:",

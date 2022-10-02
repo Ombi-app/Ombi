@@ -23,7 +23,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
 {
     public class SonarrSync : ISonarrSync
     {
-        public SonarrSync(ISettingsService<SonarrSettings> s, ISonarrApi api, ILogger<SonarrSync> l, ExternalContext ctx,
+        public SonarrSync(ISettingsService<SonarrSettings> s, ISonarrV3Api api, ILogger<SonarrSync> l, ExternalContext ctx,
             IMovieDbApi movieDbApi)
         {
             _settings = s;
@@ -35,7 +35,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
         }
 
         private readonly ISettingsService<SonarrSettings> _settings;
-        private readonly ISonarrApi _api;
+        private readonly ISonarrV3Api _api;
         private readonly ILogger<SonarrSync> _log;
         private readonly ExternalContext _ctx;
         private readonly IMovieDbApi _movieDbApi;
@@ -73,8 +73,6 @@ namespace Ombi.Schedule.Jobs.Sonarr
                             tran.Commit();
                         }
                     });
-
-                    var existingSeries = await _ctx.SonarrCache.Select(x => x.TvDbId).ToListAsync();
 
                     var sonarrCacheToSave = new HashSet<SonarrCache>();
                     foreach (var id in ids)

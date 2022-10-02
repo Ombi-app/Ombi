@@ -111,11 +111,11 @@ namespace Ombi.Core.Engine
                 if (model.Is4kRequest)
                 {
                     existingRequest.Is4kRequest = true;
-                    existingRequest.RequestedDate4k = DateTime.Now;
+                    existingRequest.RequestedDate4k = DateTime.UtcNow;
                 }
                 else
                 {
-                    existingRequest.RequestedDate = DateTime.Now;
+                    existingRequest.RequestedDate = DateTime.UtcNow;
                 }
                 isExisting = true;
                 requestModel = existingRequest;
@@ -134,7 +134,7 @@ namespace Ombi.Core.Engine
                         ? DateTime.Parse(movieInfo.ReleaseDate)
                         : DateTime.MinValue,
                     Status = movieInfo.Status,
-                    RequestedDate = model.Is4kRequest ? DateTime.MinValue : DateTime.Now,
+                    RequestedDate = model.Is4kRequest ? DateTime.MinValue : DateTime.UtcNow,
                     Approved = false,
                     Approved4K = false,
                     RequestedUserId = canRequestOnBehalf ? model.RequestOnBehalf : userDetails.Id,
@@ -143,7 +143,7 @@ namespace Ombi.Core.Engine
                     RequestedByAlias = model.RequestedByAlias,
                     RootPathOverride = model.RootFolderOverride.GetValueOrDefault(),
                     QualityOverride = model.QualityPathOverride.GetValueOrDefault(),
-                    RequestedDate4k = model.Is4kRequest ? DateTime.Now : DateTime.MinValue,
+                    RequestedDate4k = model.Is4kRequest ? DateTime.UtcNow : DateTime.MinValue,
                     Is4kRequest = model.Is4kRequest,
                     Source = model.Source
                 };

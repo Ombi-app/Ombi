@@ -22,9 +22,13 @@
         "Monitored": "Überwacht",
         "NotAvailable": "Nicht verfügbar",
         "ProcessingRequest": "Anfrage wird bearbeitet",
+        "ProcessingRequest4K": "Processing Request 4K",
         "PendingApproval": "Genehmigung ausstehend",
+        "PendingApproval4K": "Pending Approval 4K",
         "RequestDenied": "Anfrage abgelehnt",
+        "RequestDenied4K": "Request Denied 4K",
         "NotRequested": "Nicht angefordert",
+        "NotRequested4K": "Not Requested 4K",
         "Requested": "Angefordert",
         "Requested4K": "In 4K angefragt",
         "Search": "Suche",
@@ -341,7 +345,7 @@
         "Seasons": "Staffeln:",
         "Episodes": "Episoden:",
         "Availability": "Verfügbarkeit:",
-        "RequestStatus": "Anfrage Status",
+        "RequestStatus": "Request Status:",
         "Quality": "Qualität:",
         "RootFolderOverride": "Stammverzeichnis Überschreiben:",
         "QualityOverride": "Qualitäts Überschreiben:",
@@ -360,6 +364,9 @@
         "Casts": {
             "CastTitle": "Besetzung"
         },
+        "Crews": {
+            "CrewTitle": "Crew"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Dies wird jede Saison für diese Show anfordern",
             "FirstSeasonTooltip": "Dies wird nur die erste Saison für diese Show anfordern",
@@ -373,6 +380,7 @@
         "PleaseSelectUser": "Bitte Benutzer auswählen",
         "StreamingOn": "Wird gestreamt auf:",
         "RequestedBy": "Angefordert von:",
+        "OnDate": "On:",
         "RequestedByOn": "Angefragt von {{user}} am {{date}}",
         "RequestDate": "Datum der Anfrage:",
         "DeniedReason": "Ablehnungsgrund:",

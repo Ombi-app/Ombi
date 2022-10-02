@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core;
-using Ombi.Core.Notifications;
 using Ombi.Core.Services;
 using Ombi.Helpers;
 using Ombi.Hubs;
 using Ombi.Notifications.Models;
-using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
@@ -20,38 +17,31 @@ using Quartz;
 
 namespace Ombi.Schedule.Jobs.Emby
 {
-    public class EmbyAvaliabilityChecker : IEmbyAvaliabilityChecker
+    public class EmbyAvaliabilityChecker : AvailabilityChecker, IEmbyAvaliabilityChecker
     {
         public EmbyAvaliabilityChecker(IEmbyContentRepository repo, ITvRequestRepository t, IMovieRequestRepository m,
             INotificationHelper n, ILogger<EmbyAvaliabilityChecker> log, IHubContext<NotificationHub> notification, IFeatureService featureService)
+            : base(t, n, log, notification)
         {
             _repo = repo;
-            _tvRepo = t;
             _movieRepo = m;
-            _notificationService = n;
-            _log = log;
-            _notification = notification;
             _featureService = featureService;
         }
 
-        private readonly ITvRequestRepository _tvRepo;
         private readonly IMovieRequestRepository _movieRepo;
         private readonly IEmbyContentRepository _repo;
-        private readonly INotificationHelper _notificationService;
-        private readonly ILogger<EmbyAvaliabilityChecker> _log;
-        private readonly IHubContext<NotificationHub> _notification;
         private readonly IFeatureService _featureService;
 
         public async Task Execute(IJobExecutionContext job)
         {
             _log.LogInformation("Starting Emby Availability Check");
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+            await _hub.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Emby Availability Checker Started");
             await ProcessMovies();
             await ProcessTv();
 
             _log.LogInformation("Finished Emby Availability Check");
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+            await _hub.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Emby Availability Checker Finished");
         }
 
@@ -167,68 +157,7 @@ namespace Ombi.Schedule.Jobs.Emby
                         x.Series.Title == child.Title);
                 }
 
-                var availableEpisode = new List<AvailabilityModel>();
-                foreach (var season in child.SeasonRequests)
-                {
-                    foreach (var episode in season.Episodes)
-                    {
-                        if (episode.Available)
-                        {
-                            continue;
-                        }
-
-                        var foundEp = await seriesEpisodes.FirstOrDefaultAsync(
-                            x => x.EpisodeNumber == episode.EpisodeNumber &&
-                                 x.SeasonNumber == episode.Season.SeasonNumber);
-
-                        if (foundEp != null)
-                        {
-                            availableEpisode.Add(new AvailabilityModel
-                            {
-                                Id = episode.Id,
-                                EpisodeNumber = episode.EpisodeNumber,
-                                SeasonNumber = episode.Season.SeasonNumber
-                            });
-                            episode.Available = true;
-                        }
-                    }
-                }
-
-                if (availableEpisode.Any())
-                {
-                    await _tvRepo.Save();
-                }
-
-                // Check to see if all of the episodes in all seasons are available for this request
-                var allAvailable = child.SeasonRequests.All(x => x.Episodes.All(c => c.Available));
-                if (allAvailable)
-                {
-                    // We have fulfulled this request!
-                    child.Available = true;
-                    child.MarkedAsAvailable = DateTime.Now;
-                    await _notificationService.Notify(new NotificationOptions
-                    {
-                        DateTime = DateTime.Now,
-                        NotificationType = NotificationType.RequestAvailable,
-                        RequestId = child.Id,
-                        RequestType = RequestType.TvShow,
-                        Recipient = child.RequestedUser.Email
-                    });
-                }
-                else if (availableEpisode.Any())
-                {
-                    var notification = new NotificationOptions
-                    {
-                        DateTime = DateTime.Now,
-                        NotificationType = NotificationType.PartiallyAvailable,
-                        RequestId = child.Id,
-                        RequestType = RequestType.TvShow,
-                        Recipient = child.RequestedUser.Email,
-                    };
-                    notification.Substitutes.Add("Season", availableEpisode.First().SeasonNumber.ToString());
-                    notification.Substitutes.Add("Episodes", string.Join(", ", availableEpisode.Select(x => x.EpisodeNumber)));
-                    await _notificationService.Notify(notification);
-                }
+                await ProcessTvShow(seriesEpisodes, child);
             }
 
             await _tvRepo.Save();

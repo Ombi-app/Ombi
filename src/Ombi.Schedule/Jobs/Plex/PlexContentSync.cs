@@ -124,7 +124,6 @@ namespace Ombi.Schedule.Jobs.Plex
             {
                 await NotifyClient("Plex Sync - Checking if any requests are now available");
                 Logger.LogInformation("Kicking off Plex Availability Checker");
-                await _mediaCacheService.Purge();
                 await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
             }
             var processedCont = processedContent?.Content?.Count() ?? 0;
@@ -133,6 +132,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
             await NotifyClient(recentlyAddedSearch ? $"Plex Recently Added Sync Finished, We processed {processedCont}, and {processedEp} Episodes" : "Plex Content Sync Finished");
 
+            await _mediaCacheService.Purge();
         }
 
         private async Task<ProcessedContent> StartTheCache(PlexSettings plexSettings, bool recentlyAddedSearch)
@@ -496,31 +496,31 @@ namespace Ombi.Schedule.Jobs.Plex
                     await Repo.Update(existingContent);
                 }
 
-                // Just check the key
-                if (existingKey != null)
-                {
-                    // The rating key is all good!
-                }
-                else
-                {
-                    // This means the rating key has changed somehow.
-                    // Should probably delete this and get the new one
-                    var oldKey = existingContent.Key;
-                    Repo.DeleteWithoutSave(existingContent);
+                //// Just check the key
+                //if (existingKey != null)
+                //{
+                //    // The rating key is all good!
+                //}
+                //else
+                //{
+                //    // This means the rating key has changed somehow.
+                //    // Should probably delete this and get the new one
+                //    var oldKey = existingContent.Key;
+                //    Repo.DeleteWithoutSave(existingContent);
 
-                    // Because we have changed the rating key, we need to change all children too
-                    var episodeToChange = Repo.GetAllEpisodes().Cast<PlexEpisode>().Where(x => x.GrandparentKey == oldKey);
-                    if (episodeToChange.Any())
-                    {
-                        foreach (var e in episodeToChange)
-                        {
-                            Repo.DeleteWithoutSave(e);
-                        }
-                    }
+                //    // Because we have changed the rating key, we need to change all children too
+                //    var episodeToChange = Repo.GetAllEpisodes().Cast<PlexEpisode>().Where(x => x.GrandparentKey == oldKey);
+                //    if (episodeToChange.Any())
+                //    {
+                //        foreach (var e in episodeToChange)
+                //        {
+                //            Repo.DeleteWithoutSave(e);
+                //        }
+                //    }
 
-                    await Repo.SaveChangesAsync();
-                    existingContent = null;
-                }
+                //    await Repo.SaveChangesAsync();
+                //    existingContent = null;
+                //}
             }
 
             // Also make sure it's not already being processed...

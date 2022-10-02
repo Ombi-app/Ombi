@@ -10,9 +10,8 @@
 
         <social-icons [homepage]="movie.homepage" [theMoviedbId]="movie.id"
             [hasTrailer]="movie.videos?.results?.length > 0" [imdbId]="movie.imdbId"
-            [twitter]="movie.externalIds.twitterId" [facebook]="movie.externalIds.facebookId"
-            [instagram]="movie.externalIds.instagramId" [available]="movie.available" [plexUrl]="movie.plexUrl"
-            [embyUrl]="movie.embyUrl" [jellyfinUrl]="movie.jellyfinUrl" [isAdmin]="isAdmin"
+            [twitter]="movie.externalIds?.twitterId" [facebook]="movie.externalIds?.facebookId"
+            [instagram]="movie.externalIds?.instagramId" [available]="movie.available" [isAdmin]="isAdmin"
             [canShowAdvanced]="showAdvanced && movieRequest" [type]="requestType" [has4KRequest]="movie.has4KRequest"
             (openTrailer)="openDialog()" (onAdvancedOptions)="openAdvancedOptions()"
             (onReProcessRequest)="reProcessRequest(false)" (onReProcess4KRequest)="reProcessRequest(true)">
@@ -198,10 +197,16 @@
                             </mat-card>
                         </div>
                     </div>
-
+                    
                     <div class="row">
                         <div class="col-12">
                             <cast-carousel [cast]="movie.credits.cast"></cast-carousel>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <crew-carousel [crew]="movie.credits.crew"></crew-carousel>
                         </div>
                     </div>
 

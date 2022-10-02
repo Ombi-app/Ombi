@@ -45,6 +45,7 @@ namespace Ombi.Store.Context
         public DbSet<RequestLog> RequestLogs { get; set; }
         public DbSet<RecentlyAddedLog> RecentlyAddedLogs { get; set; }
         public DbSet<Votes> Votes { get; set; }
+        public DbSet<PlexWatchlistUserError> PlexWatchListUserError { get; set; }
 
 
         public DbSet<Audit> Audit { get; set; }
@@ -212,7 +213,7 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Your TV request for {Title} is now partially available! Season {PartiallyAvailableSeasonNumber} Episodes {PartiallyAvailableEpisodeNumbers}!",
+                                Message = "Your TV request for {Title} is now partially available! Episodes {PartiallyAvailableEpisodesList}!",
                                 Subject = "{ApplicationName}: Partially Available Request!",
                                 Agent = agent,
                                 Enabled = true,

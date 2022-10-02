@@ -22,9 +22,13 @@
         "Monitored": "Övervakad",
         "NotAvailable": "Inte tillgänglig",
         "ProcessingRequest": "Bearbetar förfrågan",
+        "ProcessingRequest4K": "Processing Request 4K",
         "PendingApproval": "Väntar på godkännande",
+        "PendingApproval4K": "Pending Approval 4K",
         "RequestDenied": "Efterfrågan nekas",
+        "RequestDenied4K": "Request Denied 4K",
         "NotRequested": "Inte begärd",
+        "NotRequested4K": "Not Requested 4K",
         "Requested": "Begärd",
         "Requested4K": "Begärd 4K",
         "Search": "Sök",
@@ -341,7 +345,7 @@
         "Seasons": "Seasons:",
         "Episodes": "Episodes:",
         "Availability": "Tillgänglighet:",
-        "RequestStatus": "Status för begäran",
+        "RequestStatus": "Request Status:",
         "Quality": "Kvalitet:",
         "RootFolderOverride": "Rotmappsöverskridande:",
         "QualityOverride": "Kvalitétsöverskridande:",
@@ -360,6 +364,9 @@
         "Casts": {
             "CastTitle": "Rollista"
         },
+        "Crews": {
+            "CrewTitle": "Crew"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Detta kommer att begära varje säsong för denna serie",
             "FirstSeasonTooltip": "Detta kommer endast att begära den första säsongen för denna serie",
@@ -373,6 +380,7 @@
         "PleaseSelectUser": "Vänligen välj en användare",
         "StreamingOn": "Strömmar på:",
         "RequestedBy": "Efterfrågats av:",
+        "OnDate": "On:",
         "RequestedByOn": "Requested By {{user}} on {{date}}",
         "RequestDate": "Datum för begäran:",
         "DeniedReason": "Denied Reason:",

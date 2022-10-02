@@ -22,9 +22,13 @@
         "Monitored": "Наблюдавано",
         "NotAvailable": "Не е налично",
         "ProcessingRequest": "Обработване на заявката",
+        "ProcessingRequest4K": "Processing Request 4K",
         "PendingApproval": "Чака одобрение",
+        "PendingApproval4K": "Pending Approval 4K",
         "RequestDenied": "Заявката е отказана",
+        "RequestDenied4K": "Request Denied 4K",
         "NotRequested": "Не е заявено",
+        "NotRequested4K": "Not Requested 4K",
         "Requested": "Заявено",
         "Requested4K": "Requested 4K",
         "Search": "Търсене",
@@ -341,7 +345,7 @@
         "Seasons": "Seasons:",
         "Episodes": "Episodes:",
         "Availability": "Наличност:",
-        "RequestStatus": "Състояние на заявката",
+        "RequestStatus": "Request Status:",
         "Quality": "Качество:",
         "RootFolderOverride": "Ръчно задаване на основната папка:",
         "QualityOverride": "Ръчно задаване на качеството:",
@@ -360,6 +364,9 @@
         "Casts": {
             "CastTitle": "В ролите"
         },
+        "Crews": {
+            "CrewTitle": "Crew"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Това ще заяви всеки сезон на това предаване",
             "FirstSeasonTooltip": "Това ще заяви само първия сезон на това предаване",
@@ -373,6 +380,7 @@
         "PleaseSelectUser": "Моля, изберете потребител",
         "StreamingOn": "Поточното изпълнение е включено:",
         "RequestedBy": "Заявено от:",
+        "OnDate": "On:",
         "RequestedByOn": "Requested By {{user}} on {{date}}",
         "RequestDate": "Дата на заявка:",
         "DeniedReason": "Причина за отхвърляне:",

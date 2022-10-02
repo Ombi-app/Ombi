@@ -1,4 +1,6 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Ombi.Api.Discord.Models;
@@ -23,7 +25,20 @@ namespace Ombi.Api.Discord
 
             request.ApplicationJsonContentType();
 
-            await Api.Request(request);
+            var response = await Api.Request(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                throw new DiscordException(content, response.StatusCode);
+            }
+        }
+
+        public class DiscordException : Exception
+        {
+            public DiscordException(string content, HttpStatusCode code) : base($"Exception when calling Discord with status code {code} and message: {content}")
+            {
+            }
         }
     }
 }

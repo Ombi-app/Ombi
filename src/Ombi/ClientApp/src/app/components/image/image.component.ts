@@ -28,6 +28,8 @@ import { APP_BASE_HREF } from "@angular/common";
     private defaultMovie = "/images/default_movie_poster.png";
     private defaultMusic = "i/mages/default-music-placeholder.png";
 
+    private alreadyErrored = false;
+
     constructor (@Inject(APP_BASE_HREF) public href: string) {
         if (this.href.length > 1) {
             this.baseUrl = this.href;
@@ -35,6 +37,9 @@ import { APP_BASE_HREF } from "@angular/common";
     }
 
     public onError(event: any) {
+        if (this.alreadyErrored) {
+            return;
+        }
         // set to a placeholder
         switch(this.type) {
             case RequestType.movie:
@@ -48,10 +53,11 @@ import { APP_BASE_HREF } from "@angular/common";
                 break;
         }
 
+        this.alreadyErrored = true;
         // Retry the original image
         const timeout = setTimeout(() => {
-            event.target.src = this.src;
             clearTimeout(timeout);
+            event.target.src = this.src;
         }, Math.floor(Math.random() * (7000 - 1000 + 1)) + 1000);
     }
   }

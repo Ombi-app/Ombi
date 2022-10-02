@@ -26,8 +26,39 @@ class CarouselComponent {
   }
 }
 
+class RecentlyRequestedComponent {
+  getRequest(id: string): DetailedCard {
+    return new DetailedCard(id);
+  }
+}
+
+class DetailedCard {
+  private id: string;
+
+  get title(): Cypress.Chainable<any> {
+    return cy.get(`#detailed-request-title-${this.id}`);
+  }
+
+  get status(): Cypress.Chainable<any> {
+    return cy.get(`#detailed-request-status-${this.id}`);
+  }
+
+  get approveButton(): Cypress.Chainable<any> {
+    return cy.get(`#detailed-request-approve-${this.id}`);
+  }
+
+  verifyTitle(expected: string): Cypress.Chainable<any> {
+    return this.title.should('have.text',expected);
+  }
+
+  constructor(id: string) {
+    this.id = id;
+  }
+}
+
 class DiscoverPage extends BasePage {
   popularCarousel = new CarouselComponent("popular");
+  recentlyRequested = new RecentlyRequestedComponent();
   adminOptionsDialog = new AdminRequestDialog();
 
   constructor() {

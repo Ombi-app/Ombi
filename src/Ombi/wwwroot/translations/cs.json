@@ -22,9 +22,13 @@
         "Monitored": "Monitorováno",
         "NotAvailable": "Není k dispozici",
         "ProcessingRequest": "Zpracovávání žádosti",
+        "ProcessingRequest4K": "Processing Request 4K",
         "PendingApproval": "Čeká na schválení",
+        "PendingApproval4K": "Pending Approval 4K",
         "RequestDenied": "Žádost zamítnuta",
+        "RequestDenied4K": "Request Denied 4K",
         "NotRequested": "Nevyžádáno",
+        "NotRequested4K": "Not Requested 4K",
         "Requested": "Vyžádáno",
         "Requested4K": "Požádáno o 4K",
         "Search": "Hledat",
@@ -341,7 +345,7 @@
         "Seasons": "Série:",
         "Episodes": "Epizody:",
         "Availability": "Dostupnost:",
-        "RequestStatus": "Stav požadavku",
+        "RequestStatus": "Request Status:",
         "Quality": "Kvalita:",
         "RootFolderOverride": "Root Folder Override:",
         "QualityOverride": "Quality Override:",
@@ -360,6 +364,9 @@
         "Casts": {
             "CastTitle": "Hrají"
         },
+        "Crews": {
+            "CrewTitle": "Crew"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Toto vyžádá všechny serie pro tento pořad",
             "FirstSeasonTooltip": "Toto vyžádá jen první sérii pro tento pořad",
@@ -373,6 +380,7 @@
         "PleaseSelectUser": "Please select a user",
         "StreamingOn": "Streamuje na:",
         "RequestedBy": "Požadováno od:",
+        "OnDate": "On:",
         "RequestedByOn": "Požádáno uživatelem {{user}} dne {{date}}",
         "RequestDate": "Datum požadavku:",
         "DeniedReason": "Důvod zamítnutí:",

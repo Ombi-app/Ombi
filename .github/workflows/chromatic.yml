@@ -37,7 +37,7 @@ jobs:
           exitOnceUploaded: true
 
       - name: Publish to Chromatic and auto accept changes
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/develop'
         uses: chromaui/action@v1
         with:
           projectToken: 7c47e1a1a4bd

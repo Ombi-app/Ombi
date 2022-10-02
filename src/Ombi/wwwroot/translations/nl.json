@@ -22,9 +22,13 @@
         "Monitored": "Gemonitord",
         "NotAvailable": "Niet Beschikbaar",
         "ProcessingRequest": "Verzoek wordt verwerkt",
+        "ProcessingRequest4K": "Processing Request 4K",
         "PendingApproval": "Wacht op goedkeuring",
+        "PendingApproval4K": "Pending Approval 4K",
         "RequestDenied": "Verzoek geweigerd",
+        "RequestDenied4K": "Request Denied 4K",
         "NotRequested": "Niet verzocht",
+        "NotRequested4K": "Not Requested 4K",
         "Requested": "Aangevraagd",
         "Requested4K": "Requested 4K",
         "Search": "Zoeken",
@@ -341,7 +345,7 @@
         "Seasons": "Seasons:",
         "Episodes": "Afleveringen:",
         "Availability": "Beschikbaarheid:",
-        "RequestStatus": "Aanvraagstatus",
+        "RequestStatus": "Request Status:",
         "Quality": "Kwaliteit:",
         "RootFolderOverride": "Hoofdmap overschrijven:",
         "QualityOverride": "Kwaliteit overschrijven:",
@@ -360,6 +364,9 @@
         "Casts": {
             "CastTitle": "Acteurs"
         },
+        "Crews": {
+            "CrewTitle": "Crew"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Dit verzoekt ieder seizoen van deze serie",
             "FirstSeasonTooltip": "Dit verzoekt alleen het eerste seizoen van deze serie",
@@ -373,6 +380,7 @@
         "PleaseSelectUser": "Selecteer een gebruiker",
         "StreamingOn": "Streamt op:",
         "RequestedBy": "Verzocht Door:",
+        "OnDate": "On:",
         "RequestedByOn": "Requested By {{user}} on {{date}}",
         "RequestDate": "Aanvraag Datum:",
         "DeniedReason": "Denied Reason:",

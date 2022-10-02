@@ -36,7 +36,7 @@ namespace Ombi.Store.Entities
         public abstract RecentlyAddedType RecentlyAddedType { get; }
     }
 
-    public abstract class MediaServerEpisode: Entity, IMediaServerEpisode
+    public abstract class MediaServerEpisode : Entity, IMediaServerEpisode
     {
         public int EpisodeNumber { get; set; }
         public int SeasonNumber { get; set; }

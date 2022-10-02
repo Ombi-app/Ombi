@@ -68,15 +68,16 @@ describe("TV Details Buttons", () => {
 
 
   it("Issues Enabled", () => {
-    cy.intercept("GET", "Settings/issuesenabled", 'true');
+    cy.intercept("GET", "**/Settings/issuesenabled", 'true').as('issuesEnabled');
 
     cy.visit("/details/tv/1399");
 
+    cy.wait('@issuesEnabled');
     Page.reportIssueButton.should('be.visible');
   });
 
   it("Issues Disabled", () => {
-    cy.intercept("GET", "Settings/issuesenabled", 'false');
+    cy.intercept("GET", "**/Settings/issuesenabled", 'false');
 
     Page.visit("1399");
 

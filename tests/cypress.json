@@ -1,7 +1,7 @@
 {
   "$schema": "https://on.cypress.io/cypress.schema.json",
   "supportFile": "cypress/support/index.ts",
-  "baseUrl": "http://localhost:3577",
+  "baseUrl": "http://localhost:5000",
   "integrationFolder": "cypress/tests",
   "testFiles": "**/*.spec.ts*",
   "watchForFileChanges": true,

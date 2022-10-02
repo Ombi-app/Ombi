@@ -22,9 +22,13 @@
         "Monitored": "Overvåket",
         "NotAvailable": "Ikke tilgjengelig",
         "ProcessingRequest": "Behandler forespørsel",
+        "ProcessingRequest4K": "Processing Request 4K",
         "PendingApproval": "Venter på godkjenning",
+        "PendingApproval4K": "Pending Approval 4K",
         "RequestDenied": "Forespørsel avslått",
+        "RequestDenied4K": "Request Denied 4K",
         "NotRequested": "Ikke forespurt",
+        "NotRequested4K": "Not Requested 4K",
         "Requested": "Forespurt",
         "Requested4K": "Requested 4K",
         "Search": "Søk",
@@ -341,7 +345,7 @@
         "Seasons": "Seasons:",
         "Episodes": "Episodes:",
         "Availability": "Tilgjengelighet:",
-        "RequestStatus": "Request Status",
+        "RequestStatus": "Request Status:",
         "Quality": "Quality:",
         "RootFolderOverride": "Overstyring av rotmappe:",
         "QualityOverride": "Overstyr kvalitet:",
@@ -360,6 +364,9 @@
         "Casts": {
             "CastTitle": "Cast"
         },
+        "Crews": {
+            "CrewTitle": "Crew"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "This will request every season for this show",
             "FirstSeasonTooltip": "This will only request the First Season for this show",
@@ -373,6 +380,7 @@
         "PleaseSelectUser": "Please select a user",
         "StreamingOn": "Streaming On:",
         "RequestedBy": "Etterspurt av:",
+        "OnDate": "On:",
         "RequestedByOn": "Requested By {{user}} on {{date}}",
         "RequestDate": "Dato for forespørsel:",
         "DeniedReason": "Denied Reason:",

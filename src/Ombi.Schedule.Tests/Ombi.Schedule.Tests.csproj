@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Ombi.Schedule\Ombi.Schedule.csproj" />
     <ProjectReference Include="..\Ombi.Test.Common\Ombi.Test.Common.csproj" />
+    <ProjectReference Include="..\Ombi.Tests\Ombi.Tests.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,54 @@
+@import "~styles/variables.scss";
+
+.detailed-container {
+    width: 400px;
+    height: 250px;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid $ombi-background-primary-accent;
+
+    @media (max-width:768px) {
+        width: 200px;
+        height: auto;
+    }
+
+    background-color: $ombi-background-accent;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+
+    .overview {
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .year {
+        @media (max-width:768px) {
+            padding-top: 3%;
+        }
+    }
+
+    ::ng-deep .poster {
+        cursor: pointer;
+        border-radius: 10px;
+        opacity: 1;
+        display: block;
+        height: 225px;
+        width: 100%;
+        transition: .5s ease;
+        backface-visibility: hidden;
+        border: 1px solid #35465c;
+    }
+
+    .action-items {
+        @media (min-width:768px) {
+            bottom: 0;
+            position: absolute;
+        }
+    }
+}
+
