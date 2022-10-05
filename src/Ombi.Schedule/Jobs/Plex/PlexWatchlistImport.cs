@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
 using Ombi.Api.Plex.Models;
@@ -30,13 +29,13 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly OmbiUserManager _ombiUserManager;
         private readonly IMovieRequestEngine _movieRequestEngine;
         private readonly ITvRequestEngine _tvRequestEngine;
-        private readonly IHubContext<NotificationHub> _hub;
+        private readonly INotificationHubService _notificationHubService;
         private readonly ILogger _logger;
         private readonly IExternalRepository<PlexWatchlistHistory> _watchlistRepo;
         private readonly IRepository<PlexWatchlistUserError> _userError;
 
         public PlexWatchlistImport(IPlexApi plexApi, ISettingsService<PlexSettings> settings, OmbiUserManager ombiUserManager,
-            IMovieRequestEngine movieRequestEngine, ITvRequestEngine tvRequestEngine, IHubContext<NotificationHub> hub,
+            IMovieRequestEngine movieRequestEngine, ITvRequestEngine tvRequestEngine, INotificationHubService notificationHubService,
             ILogger<PlexWatchlistImport> logger, IExternalRepository<PlexWatchlistHistory> watchlistRepo, IRepository<PlexWatchlistUserError> userError)
         {
             _plexApi = plexApi;
@@ -44,7 +43,7 @@ namespace Ombi.Schedule.Jobs.Plex
             _ombiUserManager = ombiUserManager;
             _movieRequestEngine = movieRequestEngine;
             _tvRequestEngine = tvRequestEngine;
-            _hub = hub;
+            _notificationHubService = notificationHubService;
             _logger = logger;
             _watchlistRepo = watchlistRepo;
             _userError = userError;
@@ -228,13 +227,9 @@ namespace Ombi.Schedule.Jobs.Plex
 
         private async Task NotifyClient(string message)
         {
-            if (_hub?.Clients == null)
-            {
-                return;
-            }
-            await _hub?.Clients?.Clients(NotificationHub.AdminConnectionIds)?
-                .SendAsync(NotificationHub.NotificationEvent, $"Plex Watchlist Import - {message}");
+            await _notificationHubService.SendNotificationToAdmins($"Plex Watchlist Import - {message}");
         }
+
         public void Dispose() { }
     }
 }

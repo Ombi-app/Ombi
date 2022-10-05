@@ -3,7 +3,6 @@ using System.IO;
 using CommandLine;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace Ombi.Updater
@@ -40,7 +39,7 @@ namespace Ombi.Updater
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .WriteTo.RollingFile(Path.Combine("Logs", "log-{Date}.txt"))
+                .WriteTo.File(Path.Combine("Logs", "log.txt"), rollingInterval: RollingInterval.Day)
                 .Enrich.FromLogContext()
                 .CreateLogger();
             

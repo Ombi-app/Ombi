@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MimeKit;
@@ -38,7 +37,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             UserManager<OmbiUser> um, ISettingsService<NewsletterSettings> newsletter, ILogger<NewsletterJob> log,
             ILidarrApi lidarrApi, IExternalRepository<LidarrAlbumCache> albumCache, ISettingsService<LidarrSettings> lidarrSettings,
             ISettingsService<OmbiSettings> ombiSettings, ISettingsService<PlexSettings> plexSettings, ISettingsService<EmbySettings> embySettings, ISettingsService<JellyfinSettings> jellyfinSettings,
-            IHubContext<NotificationHub> notification, IRefreshMetadata refreshMetadata)
+            INotificationHubService notification, IRefreshMetadata refreshMetadata)
         {
             _plex = plex;
             _emby = emby;
@@ -86,7 +85,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly ISettingsService<PlexSettings> _plexSettings;
         private readonly ISettingsService<EmbySettings> _embySettings;
         private readonly ISettingsService<JellyfinSettings> _jellyfinSettings;
-        private readonly IHubContext<NotificationHub> _notification;
+        private readonly INotificationHubService _notification;
         private readonly IRefreshMetadata _refreshMetadata;
 
         public async Task Start(NewsletterSettings settings, bool test)
@@ -101,13 +100,11 @@ namespace Ombi.Schedule.Jobs.Ombi
                 return;
             }
 
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Newsletter Started");
+            await _notification.SendNotificationToAdmins("Newsletter Started");
             var emailSettings = await _emailSettings.GetSettingsAsync();
             if (!ValidateConfiguration(emailSettings))
             {
-                await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                    .SendAsync(NotificationHub.NotificationEvent, "Newsletter Email Settings Not Configured");
+                await _notification.SendNotificationToAdmins("Newsletter Email Settings Not Configured");
                 return;
             }
 
@@ -230,14 +227,12 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
             catch (Exception e)
             {
-                await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                    .SendAsync(NotificationHub.NotificationEvent, "Newsletter Failed");
+                await _notification.SendNotificationToAdmins( "Newsletter Failed");
                 _log.LogError(e, "Error when attempting to create newsletter");
                 throw;
             }
 
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Newsletter Finished");
+            await _notification.SendNotificationToAdmins("Newsletter Finished");
         }
 
         private void AddToRecentlyAddedLog(ICollection<IMediaServerContent> moviesContents,

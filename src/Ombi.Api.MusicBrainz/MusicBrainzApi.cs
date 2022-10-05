@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
-using Hqub.MusicBrainz.API.Entities.Collections;
 using Newtonsoft.Json;
 using Ombi.Api.MusicBrainz.Models;
 
@@ -14,28 +12,30 @@ namespace Ombi.Api.MusicBrainz
 {
     public class MusicBrainzApi : IMusicBrainzApi
     {
+        private readonly MusicBrainzClient _client;
         private readonly IApi _api;
 
-        public MusicBrainzApi(IApi api)
+        public MusicBrainzApi(MusicBrainzClient client, IApi api)
         {
+            _client = client;
             _api = api;
         }
 
         public Task<Release> GetAlbumInformation(string albumId)
         {
-            var album = Release.GetAsync(albumId);
+            var album = _client.Releases.GetAsync(albumId);
             return album;
         }
 
         public async Task<IEnumerable<Artist>> SearchArtist(string artistQuery)
         {
-            var artist = await Artist.SearchAsync(artistQuery, 10);
+            var artist = await _client.Artists.SearchAsync(artistQuery, 10);
             return artist.Items.Where(x => x.Type != null);
         }
 
         public async Task<Artist> GetArtistInformation(string artistId)
         {
-            var artist = await Artist.GetAsync(artistId, "artist-rels", "url-rels", "releases", "release-groups");
+            var artist = await _client.Artists.GetAsync(artistId, "artist-rels", "url-rels", "releases", "release-groups");
             return artist;
         }
 
@@ -49,8 +49,7 @@ namespace Ombi.Api.MusicBrainz
             };
 
             // Search for a release by title.
-            var releases = await Release.SearchAsync(query);
-
+            var releases = await _client.Releases.SearchAsync(query);
             return releases.Items;
         }
 
@@ -64,11 +63,6 @@ namespace Ombi.Api.MusicBrainz
                 return JsonConvert.DeserializeObject<ReleaseGroupArt>(jsonContent, Api.Settings);
             }
             return null;
-        }
-
-        private void AddHeaders(Request req)
-        {
-            req.AddHeader("Accept", "application/json");
         }
     }
 }

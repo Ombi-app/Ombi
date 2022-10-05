@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core;
@@ -20,7 +19,7 @@ namespace Ombi.Schedule.Jobs.Emby
     public class EmbyAvaliabilityChecker : AvailabilityChecker, IEmbyAvaliabilityChecker
     {
         public EmbyAvaliabilityChecker(IEmbyContentRepository repo, ITvRequestRepository t, IMovieRequestRepository m,
-            INotificationHelper n, ILogger<EmbyAvaliabilityChecker> log, IHubContext<NotificationHub> notification, IFeatureService featureService)
+            INotificationHelper n, ILogger<EmbyAvaliabilityChecker> log, INotificationHubService notification, IFeatureService featureService)
             : base(t, n, log, notification)
         {
             _repo = repo;
@@ -35,14 +34,12 @@ namespace Ombi.Schedule.Jobs.Emby
         public async Task Execute(IJobExecutionContext job)
         {
             _log.LogInformation("Starting Emby Availability Check");
-            await _hub.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Emby Availability Checker Started");
+            await NotificationHubService.SendNotificationToAdmins("Emby Availability Checker Started");
             await ProcessMovies();
             await ProcessTv();
 
             _log.LogInformation("Finished Emby Availability Check");
-            await _hub.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Emby Availability Checker Finished");
+            await NotificationHubService.SendNotificationToAdmins("Emby Availability Checker Finished");
         }
 
         private async Task ProcessMovies()

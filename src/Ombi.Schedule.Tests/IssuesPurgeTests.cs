@@ -9,7 +9,6 @@ using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using System.Threading.Tasks;
-using MockQueryable;
 using MockQueryable.Moq;
 
 namespace Ombi.Schedule.Tests
@@ -51,7 +50,7 @@ namespace Ombi.Schedule.Tests
             };
 
             Settings.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new IssueSettings { DeleteIssues = true, DaysAfterResolvedToDelete = 5 });
-            Repo.Setup(x => x.GetAll()).Returns(new List<Issues>(issues).AsQueryable().BuildMock().Object);
+            Repo.Setup(x => x.GetAll()).Returns(new List<Issues>(issues).AsQueryable().BuildMock());
             await Job.Execute(null);
 
             Assert.That(issues.First().Status, Is.EqualTo(IssueStatus.Deleted));
@@ -76,7 +75,7 @@ namespace Ombi.Schedule.Tests
             };
 
             Settings.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new IssueSettings { DeleteIssues = true, DaysAfterResolvedToDelete = 5 });
-            Repo.Setup(x => x.GetAll()).Returns(new EnumerableQuery<Issues>(issues).AsQueryable().BuildMock().Object);
+            Repo.Setup(x => x.GetAll()).Returns(new EnumerableQuery<Issues>(issues).AsQueryable().BuildMock());
             await Job.Execute(null);
 
             Assert.That(issues[0].Status, Is.Not.EqualTo(IssueStatus.Deleted));
@@ -102,7 +101,7 @@ namespace Ombi.Schedule.Tests
             };
 
             Settings.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new IssueSettings { DeleteIssues = true, DaysAfterResolvedToDelete = 5 });
-            Repo.Setup(x => x.GetAll()).Returns(new EnumerableQuery<Issues>(issues).AsQueryable().BuildMock().Object);
+            Repo.Setup(x => x.GetAll()).Returns(new EnumerableQuery<Issues>(issues).AsQueryable().BuildMock());
             await Job.Execute(null);
 
             Assert.That(issues[0].Status, Is.Not.EqualTo(IssueStatus.Deleted));

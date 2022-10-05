@@ -3,7 +3,6 @@ using Moq;
 using Moq.AutoMock;
 using NUnit.Framework;
 using Ombi.Core.Authentication;
-using Ombi.Core.Engine;
 using Ombi.Core.Helpers;
 using Ombi.Core.Models;
 using Ombi.Core.Services;
@@ -59,7 +58,7 @@ namespace Ombi.Core.Tests.Engine
             var user = new OmbiUser();
 
             var um = _mocker.GetMock<OmbiUserManager>();
-            um.SetupGet(x => x.Users).Returns(new List<OmbiUser> { user }.AsQueryable().BuildMock().Object);
+            um.SetupGet(x => x.Users).Returns(new List<OmbiUser> { user }.AsQueryable().BuildMock());
 
 
 
@@ -77,7 +76,7 @@ namespace Ombi.Core.Tests.Engine
             };
 
             var um = _mocker.GetMock<OmbiUserManager>();
-            um.SetupGet(x => x.Users).Returns(new List<OmbiUser> { user }.AsQueryable().BuildMock().Object);
+            um.SetupGet(x => x.Users).Returns(new List<OmbiUser> { user }.AsQueryable().BuildMock());
 
 
 
@@ -95,7 +94,7 @@ namespace Ombi.Core.Tests.Engine
                 EpisodeRequestLimit = 1
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
-            repoMock.Setup(x => x.GetAll()).Returns(new List<RequestLog>().AsQueryable().BuildMock().Object);
+            repoMock.Setup(x => x.GetAll()).Returns(new List<RequestLog>().AsQueryable().BuildMock());
 
             var result = await _subject.GetRemainingTvRequests(user);
 
@@ -126,7 +125,7 @@ namespace Ombi.Core.Tests.Engine
                 }
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
-            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
+            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock());
 
             var result = await _subject.GetRemainingTvRequests(user);
 
@@ -209,7 +208,7 @@ namespace Ombi.Core.Tests.Engine
                 },
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
-            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
+            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock());
 
             var result = await _subject.GetRemainingTvRequests(user);
 
@@ -243,7 +242,7 @@ namespace Ombi.Core.Tests.Engine
                 }
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
-            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
+            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock());
 
             var result = await _subject.GetRemainingTvRequests(user);
 
@@ -276,7 +275,7 @@ namespace Ombi.Core.Tests.Engine
                 }
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
-            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
+            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock());
 
             var result = await _subject.GetRemainingTvRequests(user);
 
@@ -317,7 +316,7 @@ namespace Ombi.Core.Tests.Engine
                 },
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
-            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
+            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock());
 
             var result = await _subject.GetRemainingTvRequests(user);
 
@@ -358,7 +357,7 @@ namespace Ombi.Core.Tests.Engine
                 },
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
-            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
+            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock());
 
             var result = await _subject.GetRemainingTvRequests(user);
 
@@ -380,7 +379,7 @@ namespace Ombi.Core.Tests.Engine
                 EpisodeRequestLimitType = RequestLimitType.Week,
                 Id = "id1"
             };
-            var lastWeek = DateTime.Now.AddDays(-8);
+            var lastWeek = DateTime.UtcNow.AddDays(-8);
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -392,7 +391,7 @@ namespace Ombi.Core.Tests.Engine
                 }
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
-            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
+            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock());
 
             var result = await _subject.GetRemainingTvRequests(user);
 
@@ -425,7 +424,7 @@ namespace Ombi.Core.Tests.Engine
                 }
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
-            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
+            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock());
 
             var result = await _subject.GetRemainingTvRequests(user);
 
@@ -466,7 +465,7 @@ namespace Ombi.Core.Tests.Engine
                 },
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
-            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
+            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock());
 
             var result = await _subject.GetRemainingTvRequests(user);
 
@@ -507,7 +506,7 @@ namespace Ombi.Core.Tests.Engine
                 },
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
-            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
+            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock());
 
             var result = await _subject.GetRemainingTvRequests(user);
 
@@ -541,7 +540,7 @@ namespace Ombi.Core.Tests.Engine
                 }
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
-            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
+            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock());
 
             var result = await _subject.GetRemainingTvRequests(user);
 
@@ -574,7 +573,7 @@ namespace Ombi.Core.Tests.Engine
                 }
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
-            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
+            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock());
 
             var result = await _subject.GetRemainingTvRequests(user);
 
@@ -615,7 +614,7 @@ namespace Ombi.Core.Tests.Engine
                 },
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
-            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
+            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock());
 
             var result = await _subject.GetRemainingTvRequests(user);
 
@@ -656,7 +655,7 @@ namespace Ombi.Core.Tests.Engine
                 },
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
-            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock().Object);
+            repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock());
 
             var result = await _subject.GetRemainingTvRequests(user);
 

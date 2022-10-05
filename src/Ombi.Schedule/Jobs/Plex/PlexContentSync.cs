@@ -29,7 +29,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
@@ -40,7 +39,6 @@ using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Hubs;
-using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Schedule.Jobs.Plex.Models;
 using Ombi.Store.Entities;
@@ -55,14 +53,14 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly IMediaCacheService _mediaCacheService;
 
         public PlexContentSync(ISettingsService<PlexSettings> plex, IPlexApi plexApi, ILogger<PlexContentSync> logger, IPlexContentRepository repo,
-            IPlexEpisodeSync epsiodeSync, IHubContext<NotificationHub> hub, IMovieDbApi movieDbApi, IMediaCacheService mediaCacheService)
+            IPlexEpisodeSync epsiodeSync, INotificationHubService notificationHubService, IMovieDbApi movieDbApi, IMediaCacheService mediaCacheService)
         {
             Plex = plex;
             PlexApi = plexApi;
             Logger = logger;
             Repo = repo;
             EpisodeSync = epsiodeSync;
-            Notification = hub;
+            Notification = notificationHubService;
             _movieApi = movieDbApi;
             _mediaCacheService = mediaCacheService;
             Plex.ClearCache();
@@ -73,7 +71,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private ILogger<PlexContentSync> Logger { get; }
         private IPlexContentRepository Repo { get; }
         private IPlexEpisodeSync EpisodeSync { get; }
-        private IHubContext<NotificationHub> Notification { get; set; }
+        private INotificationHubService Notification { get; set; }
 
         public async Task Execute(IJobExecutionContext context)
         {
@@ -743,8 +741,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
         private async Task NotifyClient(string message)
         {
-            await Notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, $"Plex Sync - {message}");
+            await Notification.SendNotificationToAdmins($"Plex Sync - {message}");
         }
 
         private static bool ValidateSettings(PlexSettings plex)

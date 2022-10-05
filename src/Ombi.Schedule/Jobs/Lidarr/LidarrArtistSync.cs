@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Lidarr;
@@ -20,7 +19,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
     public class LidarrArtistSync : ILidarrArtistSync
     {
         public LidarrArtistSync(ISettingsService<LidarrSettings> lidarr, ILidarrApi lidarrApi, ILogger<LidarrArtistSync> log, ExternalContext ctx
-            , IHubContext<NotificationHub> notification)
+            , INotificationHubService notification)
         {
             _lidarrSettings = lidarr;
             _lidarrApi = lidarrApi;
@@ -33,7 +32,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
         private readonly ILidarrApi _lidarrApi;
         private readonly ILogger _logger;
         private readonly ExternalContext _ctx;
-        private readonly IHubContext<NotificationHub> _notification;
+        private readonly INotificationHubService _notification;
 
         public async Task Execute(IJobExecutionContext job)
         {
@@ -43,8 +42,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
                 if (settings.Enabled)
                 {
 
-                    await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                        .SendAsync(NotificationHub.NotificationEvent, "Lidarr Artist Sync Started");
+                    await _notification.SendNotificationToAdmins("Lidarr Artist Sync Started");
                     try
                     {
                         var artists = await _lidarrApi.GetArtists(settings.ApiKey, settings.FullUri);
@@ -90,13 +88,11 @@ namespace Ombi.Schedule.Jobs.Lidarr
                     }
                     catch (Exception ex)
                     {
-                        await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                            .SendAsync(NotificationHub.NotificationEvent, "Lidarr Artist Sync Failed");
+                        await _notification.SendNotificationToAdmins("Lidarr Artist Sync Failed");
                         _logger.LogError(LoggingEvents.Cacher, ex, "Failed caching queued items from Lidarr");
                     }
 
-                    await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                        .SendAsync(NotificationHub.NotificationEvent, "Lidarr Artist Sync Finished");
+                    await _notification.SendNotificationToAdmins("Lidarr Artist Sync Finished");
 
                     await OmbiQuartz.TriggerJob(nameof(ILidarrAlbumSync), "DVR");
                 }

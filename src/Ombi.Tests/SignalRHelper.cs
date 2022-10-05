@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using Moq;
+﻿using Moq;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Ombi.Tests
 {

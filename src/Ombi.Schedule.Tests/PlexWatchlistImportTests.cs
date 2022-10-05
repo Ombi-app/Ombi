@@ -9,7 +9,6 @@ using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
-using Ombi.Core.Tests;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
@@ -39,7 +38,7 @@ namespace Ombi.Schedule.Tests
             _context = _mocker.GetMock<IJobExecutionContext>();
             _context.Setup(x => x.CancellationToken).Returns(CancellationToken.None);
             _subject = _mocker.CreateInstance<PlexWatchlistImport>();
-            _mocker.Setup<IRepository<PlexWatchlistUserError>, IQueryable<PlexWatchlistUserError>>(x => x.GetAll()).Returns(new List<PlexWatchlistUserError>().AsQueryable().BuildMock().Object);
+            _mocker.Setup<IRepository<PlexWatchlistUserError>, IQueryable<PlexWatchlistUserError>>(x => x.GetAll()).Returns(new List<PlexWatchlistUserError>().AsQueryable().BuildMock());
         }
 
         [Test]
@@ -104,7 +103,7 @@ namespace Ombi.Schedule.Tests
                     UserId = "abc",
                     MediaServerToken = "dead"
                 }
-            }.AsQueryable().BuildMock().Object);
+            }.AsQueryable().BuildMock());
 
             _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync()).ReturnsAsync(new PlexSettings { Enable = true, EnableWatchlistImport = true });
             _mocker.Setup<IPlexApi, Task<PlexWatchlistContainer>>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new PlexWatchlistContainer { AuthError = false });
@@ -128,7 +127,7 @@ namespace Ombi.Schedule.Tests
                     UserId = "abc",
                     MediaServerToken = "token1"
                 }
-            }.AsQueryable().BuildMock().Object);
+            }.AsQueryable().BuildMock());
 
             _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync()).ReturnsAsync(new PlexSettings { Enable = true, EnableWatchlistImport = true });
             _mocker.Setup<IPlexApi, Task<PlexWatchlistContainer>>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new PlexWatchlistContainer { AuthError = false });

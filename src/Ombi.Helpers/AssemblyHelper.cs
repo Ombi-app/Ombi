@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.PlatformAbstractions;
-using System.Linq;
-using System.Reflection;
+﻿using System;
 
 namespace Ombi.Helpers
 {
@@ -8,9 +6,8 @@ namespace Ombi.Helpers
     {
         public static string GetRuntimeVersion()
         {
-            ApplicationEnvironment app = PlatformServices.Default.Application;
-            var split = app.ApplicationVersion.Split('.');
-            return string.Join('.', split.Take(3));
+            Version version = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version;
+            return version == null ? "1.0.0" : $"{version.Major}.{version.Minor}.{version.Build}";
         }
     }
 }

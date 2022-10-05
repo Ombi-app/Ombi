@@ -29,7 +29,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Emby;
@@ -46,7 +45,7 @@ namespace Ombi.Schedule.Jobs.Emby
     public class EmbyUserImporter : IEmbyUserImporter
     {
         public EmbyUserImporter(IEmbyApiFactory api, UserManager<OmbiUser> um, ILogger<EmbyUserImporter> log,
-            ISettingsService<EmbySettings> embySettings, ISettingsService<UserManagementSettings> ums, IHubContext<NotificationHub> notification)
+            ISettingsService<EmbySettings> embySettings, ISettingsService<UserManagementSettings> ums, INotificationHubService notification)
         {
             _apiFactory = api;
             _userManager = um;
@@ -61,7 +60,7 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly ILogger<EmbyUserImporter> _log;
         private readonly ISettingsService<EmbySettings> _embySettings;
         private readonly ISettingsService<UserManagementSettings> _userManagementSettings;
-        private readonly IHubContext<NotificationHub> _notification;
+        private readonly INotificationHubService _notification;
         private IEmbyApi Api { get; set; }
 
         public async Task Execute(IJobExecutionContext job)
@@ -79,8 +78,7 @@ namespace Ombi.Schedule.Jobs.Emby
 
             Api = _apiFactory.CreateClient(settings);
 
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, $"Emby User Importer Started");
+            await _notification.SendNotificationToAdmins("Emby User Importer Started");
             var allUsers = await _userManager.Users.Where(x => x.UserType == UserType.EmbyUser || x.UserType == UserType.EmbyConnectUser).ToListAsync();
             foreach (var server in settings.Servers)
             {
@@ -160,8 +158,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 }
             }
 
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Emby User Importer Finished");
+            await _notification.SendNotificationToAdmins("Emby User Importer Finished");
         }
 
         private bool _disposed;

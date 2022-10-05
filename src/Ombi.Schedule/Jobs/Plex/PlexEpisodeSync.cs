@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
@@ -22,13 +21,13 @@ namespace Ombi.Schedule.Jobs.Plex
     public class PlexEpisodeSync : IPlexEpisodeSync
     {
         public PlexEpisodeSync(ISettingsService<PlexSettings> s, ILogger<PlexEpisodeSync> log, IPlexApi plexApi,
-            IPlexContentRepository repo, IHubContext<NotificationHub> hub)
+            IPlexContentRepository repo, INotificationHubService notificationHubService)
         {
             _settings = s;
             _log = log;
             _api = plexApi;
             _repo = repo;
-            _notification = hub;
+            _notification = notificationHubService;
             _settings.ClearCache();
         }
 
@@ -36,7 +35,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly ILogger<PlexEpisodeSync> _log;
         private readonly IPlexApi _api;
         private readonly IPlexContentRepository _repo;
-        private readonly IHubContext<NotificationHub> _notification;
+        private readonly INotificationHubService _notification;
 
         public async Task Execute(IJobExecutionContext job)
         {
@@ -47,8 +46,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     return;
                 }
-                await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                    .SendAsync(NotificationHub.NotificationEvent, "Plex Episode Sync Started");
+                await _notification.SendNotificationToAdmins("Plex Episode Sync Started");
 
                 foreach (var server in s.Servers)
                 {
@@ -58,8 +56,7 @@ namespace Ombi.Schedule.Jobs.Plex
             }
             catch (Exception e)
             {
-                await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                    .SendAsync(NotificationHub.NotificationEvent, "Plex Episode Sync Failed");
+                await _notification.SendNotificationToAdmins("Plex Episode Sync Failed");
                 _log.LogError(LoggingEvents.Cacher, e, "Caching Episodes Failed");
             }
 
@@ -67,8 +64,7 @@ namespace Ombi.Schedule.Jobs.Plex
             _log.LogInformation("Plex Episode Sync Finished - Triggering Metadata refresh");
             await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
 
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Plex Episode Sync Finished");
+            await _notification.SendNotificationToAdmins("Plex Episode Sync Finished");
         }
 
         private async Task Cache(PlexServers settings)

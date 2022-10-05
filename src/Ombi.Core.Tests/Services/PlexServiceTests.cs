@@ -59,7 +59,7 @@ namespace Ombi.Core.Tests.Services
             _subject = _mocker.CreateInstance<PlexService>();
 
             _mocker.Setup<IRepository<PlexWatchlistUserError>, IQueryable<PlexWatchlistUserError>>(x => x.GetAll())
-                .Returns(new List<PlexWatchlistUserError>().AsQueryable().BuildMock().Object);
+                .Returns(new List<PlexWatchlistUserError>().AsQueryable().BuildMock());
 
             var result = await _subject.GetWatchlistUsers(CancellationToken.None);
 
@@ -95,7 +95,7 @@ namespace Ombi.Core.Tests.Services
             _subject = _mocker.CreateInstance<PlexService>();
 
             _mocker.Setup<IRepository<PlexWatchlistUserError>, IQueryable<PlexWatchlistUserError>>(x => x.GetAll())
-                .Returns(new List<PlexWatchlistUserError>().AsQueryable().BuildMock().Object);
+                .Returns(new List<PlexWatchlistUserError>().AsQueryable().BuildMock());
 
             var result = await _subject.GetWatchlistUsers(CancellationToken.None);
 
@@ -132,7 +132,7 @@ namespace Ombi.Core.Tests.Services
                         UserId = "1",
                         MediaServerToken = "test",
                     }
-                }.AsQueryable().BuildMock().Object);
+                }.AsQueryable().BuildMock());
 
             var result = await _subject.GetWatchlistUsers(CancellationToken.None);
 

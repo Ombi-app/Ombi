@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core;
@@ -32,12 +31,12 @@ namespace Ombi.Schedule.Jobs.Radarr
             IExternalRepository<RadarrCache> radarrRepo,
             IExternalRepository<SonarrCache> sonarrRepo,
             IExternalRepository<SonarrEpisodeCache> sonarrEpisodeRepo,
-            INotificationHelper notification, IHubContext<NotificationHub> hub,
+            INotificationHelper notification, INotificationHubService notificationHubService,
             ITvRequestRepository tvRequest, IMovieRequestRepository movies,
             ILogger<ArrAvailabilityChecker> log,
             ISettingsService<RadarrSettings> radarrSettings,
             ISettingsService<SonarrSettings> sonarrSettings)
-             : base(tvRequest, notification, log, hub)
+             : base(tvRequest, notification, log, notificationHubService)
         {
             _radarrRepo = radarrRepo;
             _sonarrRepo = sonarrRepo;
@@ -101,9 +100,9 @@ namespace Ombi.Schedule.Jobs.Radarr
 
             if (itemsForAvailability.Any())
             {
-                await _hub.Clients.Clients(NotificationHub.AdminConnectionIds)
-                    .SendAsync(NotificationHub.NotificationEvent, "Radarr Availability Checker found some new available movies!");
+                await NotificationHubService.SendNotificationToAdmins("Radarr Availability Checker found some new available movies!");
             }
+
             foreach (var item in itemsForAvailability)
             {
                 await _notificationService.Notify(new NotificationOptions

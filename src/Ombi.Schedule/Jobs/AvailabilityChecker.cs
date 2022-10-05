@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core;
@@ -20,15 +19,15 @@ namespace Ombi.Schedule.Jobs
         protected readonly ITvRequestRepository _tvRepo;
         protected readonly INotificationHelper _notificationService;
         protected readonly ILogger _log;
-        protected readonly IHubContext<NotificationHub> _hub;
+        protected readonly INotificationHubService NotificationHubService;
 
         public AvailabilityChecker(ITvRequestRepository tvRequest, INotificationHelper notification,
-        ILogger log, IHubContext<NotificationHub> hub)
+        ILogger log, INotificationHubService notificationHubService)
         {
             _tvRepo = tvRequest;
             _notificationService = notification;
             _log = log;
-            _hub = hub;
+            NotificationHubService = notificationHubService;
         }
 
         protected async Task ProcessTvShow(IQueryable<IBaseMediaServerEpisode> seriesEpisodes, ChildRequests child)
@@ -71,8 +70,7 @@ namespace Ombi.Schedule.Jobs
                 // We have ful-fulled this request!
                 child.Available = true;
                 child.MarkedAsAvailable = DateTime.UtcNow;
-                await _hub?.Clients?.Clients(NotificationHub.AdminConnectionIds)?
-                        .SendAsync(NotificationHub.NotificationEvent, "Availability Checker found some new available Shows!");
+                await NotificationHubService.SendNotificationToAdmins("Availability Checker found some new available Shows!");
                 _log.LogInformation("Child request {0} is now available, sending notification", $"{child.Title} - {child.Id}");
                 
                 await _tvRepo.Save();

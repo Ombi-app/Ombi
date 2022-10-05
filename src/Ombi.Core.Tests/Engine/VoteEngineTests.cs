@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Principal;
 using System.Threading.Tasks;
 using AutoFixture;
 using MockQueryable.Moq;
@@ -71,7 +70,7 @@ namespace Ombi.Core.Tests.Engine
 
             VoteRepository.Setup(x => x.GetAll()).Returns(new EnumerableQuery<Votes>(votes)
                 .AsQueryable()
-                .BuildMock().Object);
+                .BuildMock());
             var result = new VoteEngineResult();
             if (type == VoteType.Downvote)
             {
@@ -118,7 +117,7 @@ namespace Ombi.Core.Tests.Engine
             });
             VoteRepository.Setup(x => x.GetAll()).Returns(new EnumerableQuery<Votes>(votes)
                 .AsQueryable()
-                .BuildMock().Object);
+                .BuildMock());
             var result = new VoteEngineResult();
             if (type == VoteType.Downvote)
             {
@@ -163,7 +162,7 @@ namespace Ombi.Core.Tests.Engine
             });
             VoteRepository.Setup(x => x.GetAll()).Returns(new EnumerableQuery<Votes>(votes)
                 .AsQueryable()
-                .BuildMock().Object);
+                .BuildMock());
 
             var result = new VoteEngineResult();
             if (type == VoteType.Downvote)

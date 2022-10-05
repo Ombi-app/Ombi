@@ -11,15 +11,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyCrypto" Version="3.3.2" />
-    <PackageReference Include="LazyCache.AspNetCore" Version="2.1.3" />
+    <PackageReference Include="EasyCrypto" Version="4.5.0" />
+    <PackageReference Include="LazyCache.AspNetCore" Version="2.4.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Nito.AsyncEx" Version="5.1.0" />
-    <PackageReference Include="Quartz" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
+    <PackageReference Include="Quartz" Version="3.5.0" />
     <PackageReference Include="System.Security.Claims" Version="4.3.0" />
-    <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
   </ItemGroup>
 
 </Project>

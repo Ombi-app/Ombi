@@ -29,7 +29,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Jellyfin;
@@ -46,7 +45,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
     public class JellyfinUserImporter : IJellyfinUserImporter
     {
         public JellyfinUserImporter(IJellyfinApiFactory api, UserManager<OmbiUser> um, ILogger<JellyfinUserImporter> log,
-            ISettingsService<JellyfinSettings> jellyfinSettings, ISettingsService<UserManagementSettings> ums, IHubContext<NotificationHub> notification)
+            ISettingsService<JellyfinSettings> jellyfinSettings, ISettingsService<UserManagementSettings> ums, INotificationHubService notification)
         {
             _apiFactory = api;
             _userManager = um;
@@ -61,7 +60,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
         private readonly ILogger<JellyfinUserImporter> _log;
         private readonly ISettingsService<JellyfinSettings> _jellyfinSettings;
         private readonly ISettingsService<UserManagementSettings> _userManagementSettings;
-        private readonly IHubContext<NotificationHub> _notification;
+        private readonly INotificationHubService _notification;
         private IJellyfinApi Api { get; set; }
 
         public async Task Execute(IJobExecutionContext job)
@@ -79,8 +78,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
 
             Api = _apiFactory.CreateClient(settings);
 
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, $"Jellyfin User Importer Started");
+            await _notification.SendNotificationToAdmins("Jellyfin User Importer Started");
             var allUsers = await _userManager.Users.Where(x => x.UserType == UserType.JellyfinUser).ToListAsync();
             foreach (var server in settings.Servers)
             {
@@ -146,8 +144,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                 }
             }
 
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Jellyfin User Importer Finished");
+            await _notification.SendNotificationToAdmins("Jellyfin User Importer Finished");
         }
 
         private bool _disposed;

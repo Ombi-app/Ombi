@@ -1,24 +1,29 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Attributes;
 using Ombi.Core.Authentication;
 using Ombi.Hubs;
 using Ombi.Models;
+using Ombi.Store.Entities;
 
 namespace Ombi.Controllers.V2
 {
     [Admin]
     public class HubController : V2Controller
     {
-        public HubController(OmbiUserManager um)
-        {
-            _um = um;
-        }
+        private readonly INotificationHubService _notificationHubService;
+        private readonly OmbiUserManager _userManager;
 
-        private readonly OmbiUserManager _um;
+        public HubController(
+            INotificationHubService notificationHubService,
+            OmbiUserManager userManager
+        )
+        {
+            _notificationHubService = notificationHubService;
+            _userManager = userManager;
+        }
 
         /// <summary>
         /// Returns the currently connected users in Ombi
@@ -27,13 +32,12 @@ namespace Ombi.Controllers.V2
         [HttpGet("Users")]
         public async Task<List<ConnectedUsersViewModel>> GetConnectedUsers()
         {
-            var users = NotificationHub.UsersOnline.Values;
-            var allUsers = _um.Users;
-            var model = new List<ConnectedUsersViewModel>();
-            foreach (var user in users)
+            IEnumerable<NotificationHubUser> users = _notificationHubService.GetOnlineUsers();
+            List<ConnectedUsersViewModel> model = new();
+            foreach (NotificationHubUser user in users)
             {
-                var ombiUser = await allUsers.FirstOrDefaultAsync(x => x.Id == user.UserId);
-
+                OmbiUser ombiUser = await _userManager.Users
+                    .FirstOrDefaultAsync(x => x.Id == user.UserId);
                 if (ombiUser == null)
                 {
                     continue;

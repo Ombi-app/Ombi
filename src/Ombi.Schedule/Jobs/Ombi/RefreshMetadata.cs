@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Emby;
@@ -31,7 +30,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             IMovieDbApi movieApi,
             ISettingsService<EmbySettings> embySettings, IEmbyApiFactory embyApi,
             ISettingsService<JellyfinSettings> jellyfinSettings, IJellyfinApiFactory jellyfinApi,
-            IHubContext<NotificationHub> notification, IMediaCacheService mediaCacheService,
+            INotificationHubService notification, IMediaCacheService mediaCacheService,
             IPlexApi plexApi)
         {
             _plexRepo = plexRepo;
@@ -61,7 +60,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly ISettingsService<JellyfinSettings> _jellyfinSettings;
         private readonly IEmbyApiFactory _embyApiFactory;
         private readonly IJellyfinApiFactory _jellyfinApiFactory;
-        private readonly IHubContext<NotificationHub> _notification;
+        private readonly INotificationHubService _notification;
         private readonly IMediaCacheService _mediaCacheService;
         private readonly IPlexApi _plexApi;
 
@@ -72,8 +71,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         {
             _log.LogInformation("Starting the Metadata refresh");
 
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Metadata Refresh Started");
+            await _notification.SendNotificationToAdmins("Metadata Refresh Started");
             try
             {
                 var settings = await _plexSettings.GetSettingsAsync();
@@ -104,16 +102,14 @@ namespace Ombi.Schedule.Jobs.Ombi
             {
                 _log.LogError(e, $"Exception when refreshing the Metadata Refresh");
 
-                await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                    .SendAsync(NotificationHub.NotificationEvent, "Metadata Refresh Failed");
+                await _notification.SendNotificationToAdmins("Metadata Refresh Failed");
                 return;
             }
 
             await _mediaCacheService.Purge();
 
             _log.LogInformation("Metadata refresh finished");
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Metadata Refresh Finished");
+            await _notification.SendNotificationToAdmins("Metadata Refresh Finished");
         }
 
         private async Task StartPlex(PlexSettings settings)

@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Threading;
 using System.Threading.Tasks;
 using Castle.Components.DictionaryAdapter;
-using Microsoft.AspNetCore.SignalR;
 using Moq;
 using MockQueryable.Moq;
 using NUnit.Framework;
 using Ombi.Core;
-using Ombi.Core.Notifications;
 using Ombi.Hubs;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Store.Entities;
@@ -50,7 +45,7 @@ namespace Ombi.Schedule.Tests
             {
                 ImdbId = "test"
             };
-            _mocker.Setup<IMovieRequestRepository>(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
+            _mocker.Setup<IMovieRequestRepository, IQueryable<MovieRequests>>(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
             _mocker.Setup<IPlexContentRepository, Task<PlexServerContent>>(x => x.Get("test", ProviderType.ImdbId)).ReturnsAsync(new PlexServerContent());
 
             await _subject.Execute(null);
@@ -77,7 +72,7 @@ namespace Ombi.Schedule.Tests
                 ImdbId = null,
                 TheMovieDbId = 33
             };
-            _mocker.Setup<IMovieRequestRepository>(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
+            _mocker.Setup<IMovieRequestRepository, IQueryable<MovieRequests>>(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
             _mocker.Setup<IPlexContentRepository, Task<PlexServerContent>>(x => x.Get(It.IsAny<string>(), ProviderType.ImdbId)).ReturnsAsync((PlexServerContent)null);
             _mocker.Setup<IPlexContentRepository, Task<PlexServerContent>>(x => x.Get("33", ProviderType.TheMovieDbId)).ReturnsAsync(new PlexServerContent());
 
@@ -105,7 +100,7 @@ namespace Ombi.Schedule.Tests
             {
                 ImdbId = "test"
             };
-            _mocker.Setup<IMovieRequestRepository>(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
+            _mocker.Setup<IMovieRequestRepository, IQueryable<MovieRequests>>(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
             _mocker.Setup<IPlexContentRepository, Task<PlexServerContent>>(x => x.Get("test", ProviderType.ImdbId)).ReturnsAsync(new PlexServerContent {  Quality = "1080p" });
 
             await _subject.Execute(null);
@@ -134,7 +129,7 @@ namespace Ombi.Schedule.Tests
                 Is4kRequest = true,
                 Has4KRequest = true,
             };
-            _mocker.Setup<IMovieRequestRepository>(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
+            _mocker.Setup<IMovieRequestRepository, IQueryable<MovieRequests>>(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
             _mocker.Setup<IPlexContentRepository, Task<PlexServerContent>>(x => x.Get("test", ProviderType.ImdbId)).ReturnsAsync(new PlexServerContent { Has4K = true });
 
             await _subject.Execute(null);
@@ -162,7 +157,7 @@ namespace Ombi.Schedule.Tests
             {
                 ImdbId = "test"
             };
-            _mocker.Setup<IMovieRequestRepository>(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
+            _mocker.Setup<IMovieRequestRepository, IQueryable<MovieRequests>>(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
 
             await _subject.Execute(null);
 
@@ -173,7 +168,7 @@ namespace Ombi.Schedule.Tests
         public async Task ProcessTv_ShouldMark_Episode_Available_WhenInPlex_MovieDbId()
         {
             var request = CreateChildRequest(null, 33, 99);
-            _mocker.Setup<ITvRequestRepository>(x => x.GetChild()).Returns(new List<ChildRequests> { request }.AsQueryable().BuildMock().Object);
+            _mocker.Setup<ITvRequestRepository, IQueryable<ChildRequests>>(x => x.GetChild()).Returns(new List<ChildRequests> { request }.AsQueryable().BuildMock());
             _mocker.Setup<IPlexContentRepository, IQueryable<IMediaServerEpisode>>(x => x.GetAllEpisodes()).Returns(new List<PlexEpisode>
             {
                 new PlexEpisode
@@ -186,7 +181,7 @@ namespace Ombi.Schedule.Tests
                     EpisodeNumber = 1,
                     SeasonNumber = 2,
                 }
-            }.AsQueryable().BuildMock().Object);
+            }.AsQueryable().BuildMock());
 
             await _subject.Execute(null);
 
@@ -199,7 +194,7 @@ namespace Ombi.Schedule.Tests
         public async Task ProcessTv_ShouldMark_Episode_Available_WhenInPlex_ImdbId()
         {
             var request = CreateChildRequest("abc", -1, 99);
-            _mocker.Setup<ITvRequestRepository>(x => x.GetChild()).Returns(new List<ChildRequests> { request }.AsQueryable().BuildMock().Object);
+            _mocker.Setup<ITvRequestRepository, IQueryable<ChildRequests>>(x => x.GetChild()).Returns(new List<ChildRequests> { request }.AsQueryable().BuildMock());
             _mocker.Setup<IPlexContentRepository, IQueryable<IMediaServerEpisode>>(x => x.GetAllEpisodes()).Returns(new List<PlexEpisode>
             {
                 new PlexEpisode
@@ -211,7 +206,7 @@ namespace Ombi.Schedule.Tests
                     EpisodeNumber = 1,
                     SeasonNumber = 2,
                 }
-            }.AsQueryable().BuildMock().Object);
+            }.AsQueryable().BuildMock());
 
             await _subject.Execute(null);
 
@@ -224,7 +219,7 @@ namespace Ombi.Schedule.Tests
         public async Task ProcessTv_ShouldMark_Episode_Available_By_TitleMatch()
         {
             var request = CreateChildRequest("abc", -1, 99);
-            _mocker.Setup<ITvRequestRepository>(x => x.GetChild()).Returns(new List<ChildRequests> { request }.AsQueryable().BuildMock().Object);
+            _mocker.Setup<ITvRequestRepository, IQueryable<ChildRequests>>(x => x.GetChild()).Returns(new List<ChildRequests> { request }.AsQueryable().BuildMock());
             _mocker.Setup<IPlexContentRepository, IQueryable<IMediaServerEpisode>>(x => x.GetAllEpisodes()).Returns(new List<PlexEpisode>
             {
                 new PlexEpisode
@@ -237,7 +232,7 @@ namespace Ombi.Schedule.Tests
                     EpisodeNumber = 1,
                     SeasonNumber = 2,
                 }
-            }.AsQueryable().BuildMock().Object);
+            }.AsQueryable().BuildMock());
 
             await _subject.Execute(null);
 

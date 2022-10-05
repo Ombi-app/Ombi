@@ -9,7 +9,7 @@ namespace Ombi.Api.TheMovieDb.Models
         public bool Adult { get; set; }
         public string Overview { get; set; }
         public string ReleaseDate { get; set; }
-        public int?[] GenreIds { get; set; }
+        public int[] GenreIds { get; set; }
         public int Id { get; set; }
         public string OriginalTitle { get; set; }
         public string OriginalLanguage { get; set; }
