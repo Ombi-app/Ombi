@@ -54,7 +54,7 @@ namespace Ombi.Core.Tests.Senders
                     Id = "a",
                     Email = "Test@test.com"
                 }
-            }.AsQueryable().BuildMock().Object);
+            }.AsQueryable().BuildMock());
 
             var result = await _subject.SendMassEmail(model);
 
@@ -95,7 +95,7 @@ namespace Ombi.Core.Tests.Senders
                     Id = "b",
                     Email = "b@test.com"
                 }
-            }.AsQueryable().BuildMock().Object);
+            }.AsQueryable().BuildMock());
 
             var result = await _subject.SendMassEmail(model);
 
@@ -129,7 +129,7 @@ namespace Ombi.Core.Tests.Senders
                 {
                     Id = "a",
                 }
-            }.AsQueryable().BuildMock().Object);
+            }.AsQueryable().BuildMock());
 
             var result = await _subject.SendMassEmail(model);
             _mocker.Verify<ILogger<MassEmailSender>>(
@@ -177,7 +177,7 @@ namespace Ombi.Core.Tests.Senders
                     Id = "b",
                     Email = "b@test.com"
                 }
-            }.AsQueryable().BuildMock().Object);
+            }.AsQueryable().BuildMock());
 
             var result = await _subject.SendMassEmail(model);
 
@@ -217,7 +217,7 @@ namespace Ombi.Core.Tests.Senders
                 {
                     Id = "b",
                 }
-            }.AsQueryable().BuildMock().Object);
+            }.AsQueryable().BuildMock());
 
             var result = await _subject.SendMassEmail(model);
 

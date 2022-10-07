@@ -29,7 +29,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Jellyfin;
 using Ombi.Core.Settings;
@@ -46,7 +45,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
     public class JellyfinEpisodeSync : IJellyfinEpisodeSync
     {
         public JellyfinEpisodeSync(ISettingsService<JellyfinSettings> s, IJellyfinApiFactory api, ILogger<JellyfinEpisodeSync> l, IJellyfinContentRepository repo
-            , IHubContext<NotificationHub> notification)
+            , INotificationHubService notification)
         {
             _apiFactory = api;
             _logger = l;
@@ -59,7 +58,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
         private readonly IJellyfinApiFactory _apiFactory;
         private readonly ILogger<JellyfinEpisodeSync> _logger;
         private readonly IJellyfinContentRepository _repo;
-        private readonly IHubContext<NotificationHub> _notification;
+        private readonly INotificationHubService _notification;
         private IJellyfinApi Api { get; set; }
 
 
@@ -68,8 +67,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
             var settings = await _settings.GetSettingsAsync();
 
             Api = _apiFactory.CreateClient(settings);
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Jellyfin Episode Sync Started");
+            await _notification.SendNotificationToAdmins("Jellyfin Episode Sync Started");
             foreach (var server in settings.Servers)
             {
 
@@ -88,8 +86,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                 }
             }
 
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Jellyfin Episode Sync Finished");
+            await _notification.SendNotificationToAdmins("Jellyfin Episode Sync Finished");
             _logger.LogInformation("Jellyfin Episode Sync Finished - Triggering Metadata refresh");
             await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
         }

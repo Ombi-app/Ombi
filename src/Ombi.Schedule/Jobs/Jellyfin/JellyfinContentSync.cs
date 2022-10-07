@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Jellyfin;
 using Ombi.Api.Jellyfin.Models.Movie;
@@ -11,7 +10,6 @@ using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Hubs;
-using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Quartz;
@@ -22,7 +20,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
     public class JellyfinContentSync : IJellyfinContentSync
     {
         public JellyfinContentSync(ISettingsService<JellyfinSettings> settings, IJellyfinApiFactory api, ILogger<JellyfinContentSync> logger,
-            IJellyfinContentRepository repo, IHubContext<NotificationHub> notification)
+            IJellyfinContentRepository repo, INotificationHubService notification)
         {
             _logger = logger;
             _settings = settings;
@@ -35,7 +33,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
         private readonly ISettingsService<JellyfinSettings> _settings;
         private readonly IJellyfinApiFactory _apiFactory;
         private readonly IJellyfinContentRepository _repo;
-        private readonly IHubContext<NotificationHub> _notification;
+        private readonly INotificationHubService _notification;
 
         private IJellyfinApi Api { get; set; }
 
@@ -47,8 +45,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
             
             Api = _apiFactory.CreateClient(jellyfinSettings);
 
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Jellyfin Content Sync Started");
+            await _notification.SendNotificationToAdmins("Jellyfin Content Sync Started");
 
             foreach (var server in jellyfinSettings.Servers)
             {
@@ -58,13 +55,11 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                 }
                 catch (Exception e)
                 {
-                    await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                        .SendAsync(NotificationHub.NotificationEvent, "Jellyfin Content Sync Failed");
+                    await _notification.SendNotificationToAdmins("Jellyfin Content Sync Failed");
                     _logger.LogError(e, "Exception when caching Jellyfin for server {0}", server.Name);
                 }
             }
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Jellyfin Content Sync Finished");
+            await _notification.SendNotificationToAdmins("Jellyfin Content Sync Finished");
             // Episodes
 
             await OmbiQuartz.TriggerJob(nameof(IJellyfinEpisodeSync), "Jellyfin");

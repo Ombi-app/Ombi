@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using MockQueryable.Moq;
 using Moq;
 using Moq.AutoMock;
@@ -83,7 +82,7 @@ namespace Ombi.Schedule.Tests
                     EpisodeNumber = 2,
                     SeasonNumber = 1,
                 },
-            }.AsQueryable().BuildMock().Object;
+            }.AsQueryable().BuildMock();
 
             await _subject.ProcessTvShow(databaseEpisodes, request);
 
@@ -160,7 +159,7 @@ namespace Ombi.Schedule.Tests
                     EpisodeNumber = 3,
                     SeasonNumber = 1,
                 },
-            }.AsQueryable().BuildMock().Object;
+            }.AsQueryable().BuildMock();
 
             await _subject.ProcessTvShow(databaseEpisodes, request);
 
@@ -183,7 +182,7 @@ namespace Ombi.Schedule.Tests
 
     public class TestAvailabilityChecker : AvailabilityChecker
     {
-        public TestAvailabilityChecker(ITvRequestRepository tvRequest, INotificationHelper notification, ILogger log, IHubContext<NotificationHub> hub) : base(tvRequest, notification, log, hub)
+        public TestAvailabilityChecker(ITvRequestRepository tvRequest, INotificationHelper notification, ILogger log, INotificationHubService notificationHubService) : base(tvRequest, notification, log, notificationHubService)
         {
         }
 

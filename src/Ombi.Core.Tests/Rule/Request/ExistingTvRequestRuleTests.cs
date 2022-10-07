@@ -5,10 +5,8 @@ using Ombi.Core.Rule.Rules.Request;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository.Requests;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Ombi.Core.Tests.Rule.Request
@@ -29,7 +27,7 @@ namespace Ombi.Core.Tests.Rule.Request
         [Test]
         public async Task RequestShow_DoesNotExistAtAll_IsSuccessful()
         {
-            TvRequestRepo.Setup(x => x.GetChild()).Returns(new List<ChildRequests>().AsQueryable().BuildMock().Object);
+            TvRequestRepo.Setup(x => x.GetChild()).Returns(new List<ChildRequests>().AsQueryable().BuildMock());
             var req = new ChildRequests
             {
                 SeasonRequests = new List<SeasonRequests>
@@ -209,7 +207,7 @@ namespace Ombi.Core.Tests.Rule.Request
                     }
                 }
             };
-            TvRequestRepo.Setup(x => x.GetChild()).Returns(childRequests.AsQueryable().BuildMock().Object);
+            TvRequestRepo.Setup(x => x.GetChild()).Returns(childRequests.AsQueryable().BuildMock());
         }
     }
 }

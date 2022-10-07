@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Emby;
 using Ombi.Api.Emby.Models;
@@ -13,7 +12,6 @@ using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Hubs;
-using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Quartz;
@@ -24,7 +22,7 @@ namespace Ombi.Schedule.Jobs.Emby
     public class EmbyContentSync : IEmbyContentSync
     {
         public EmbyContentSync(ISettingsService<EmbySettings> settings, IEmbyApiFactory api, ILogger<EmbyContentSync> logger,
-            IEmbyContentRepository repo, IHubContext<NotificationHub> notification)
+            IEmbyContentRepository repo, INotificationHubService notification)
         {
             _logger = logger;
             _settings = settings;
@@ -37,7 +35,7 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly ISettingsService<EmbySettings> _settings;
         private readonly IEmbyApiFactory _apiFactory;
         private readonly IEmbyContentRepository _repo;
-        private readonly IHubContext<NotificationHub> _notification;
+        private readonly INotificationHubService _notification;
 
         private const int AmountToTake = 100;
 
@@ -58,8 +56,7 @@ namespace Ombi.Schedule.Jobs.Emby
 
             Api = _apiFactory.CreateClient(embySettings);
 
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, recentlyAddedSearch ? "Emby Recently Added Started" : "Emby Content Sync Started");
+            await _notification.SendNotificationToAdmins(recentlyAddedSearch ? "Emby Recently Added Started" : "Emby Content Sync Started");
 
             foreach (var server in embySettings.Servers)
             {
@@ -69,14 +66,12 @@ namespace Ombi.Schedule.Jobs.Emby
                 }
                 catch (Exception e)
                 {
-                    await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                        .SendAsync(NotificationHub.NotificationEvent, "Emby Content Sync Failed");
+                    await _notification.SendNotificationToAdmins("Emby Content Sync Failed");
                     _logger.LogError(e, "Exception when caching Emby for server {0}", server.Name);
                 }
             }
 
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Emby Content Sync Finished");
+            await _notification.SendNotificationToAdmins("Emby Content Sync Finished");
             // Episodes
 
 

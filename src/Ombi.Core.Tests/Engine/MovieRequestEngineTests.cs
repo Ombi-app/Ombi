@@ -2,7 +2,6 @@
 using Moq;
 using Moq.AutoMock;
 using NUnit.Framework;
-using Ombi.Core.Authentication;
 using Ombi.Core.Engine;
 using Ombi.Core.Helpers;
 using Ombi.Core.Models.Requests;
@@ -52,7 +51,7 @@ namespace Ombi.Core.Tests.Engine
 
             _subject = _mocker.CreateInstance<MovieRequestEngine>();
             var list = DbHelper.GetQueryableMockDbSet(new RequestSubscription());
-            _mocker.Setup<IRepository<RequestSubscription>, IQueryable<RequestSubscription>>(x => x.GetAll()).Returns(new List<RequestSubscription>().AsQueryable().BuildMock().Object);
+            _mocker.Setup<IRepository<RequestSubscription>, IQueryable<RequestSubscription>>(x => x.GetAll()).Returns(new List<RequestSubscription>().AsQueryable().BuildMock());
         }
 
         [Test]

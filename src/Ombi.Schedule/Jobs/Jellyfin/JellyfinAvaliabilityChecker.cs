@@ -28,7 +28,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core;
@@ -47,7 +46,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
     public class JellyfinAvaliabilityChecker : AvailabilityChecker, IJellyfinAvaliabilityChecker
     {
         public JellyfinAvaliabilityChecker(IJellyfinContentRepository repo, ITvRequestRepository t, IMovieRequestRepository m,
-            INotificationHelper n, ILogger<JellyfinAvaliabilityChecker> log, IHubContext<NotificationHub> notification, IFeatureService featureService)
+            INotificationHelper n, ILogger<JellyfinAvaliabilityChecker> log, INotificationHubService notification, IFeatureService featureService)
              : base(t, n, log, notification)
         {
             _repo = repo;
@@ -62,14 +61,12 @@ namespace Ombi.Schedule.Jobs.Jellyfin
         public async Task Execute(IJobExecutionContext job)
         {
             _log.LogInformation("Starting Jellyfin Availability Check");
-            await _hub.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Jellyfin Availability Checker Started");
+            await NotificationHubService.SendNotificationToAdmins("Jellyfin Availability Checker Started");
             await ProcessMovies();
             await ProcessTv();
 
             _log.LogInformation("Finished Jellyfin Availability Check");
-            await _hub.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Jellyfin Availability Checker Finished");
+            await NotificationHubService.SendNotificationToAdmins("Jellyfin Availability Checker Finished");
         }
 
         private async Task ProcessMovies()

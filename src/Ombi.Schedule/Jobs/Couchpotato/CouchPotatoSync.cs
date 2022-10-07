@@ -28,7 +28,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.CouchPotato;
@@ -45,13 +44,13 @@ namespace Ombi.Schedule.Jobs.Couchpotato
     public class CouchPotatoSync : ICouchPotatoSync
     {
         public CouchPotatoSync(ISettingsService<CouchPotatoSettings> cpSettings,
-            ICouchPotatoApi api, ILogger<CouchPotatoSync> log, ExternalContext ctx, IHubContext<NotificationHub> hub)
+            ICouchPotatoApi api, ILogger<CouchPotatoSync> log, ExternalContext ctx, INotificationHubService notificationHubService)
         {
             _settings = cpSettings;
             _api = api;
             _log = log;
             _ctx = ctx;
-            _notification = hub;
+            _notification = notificationHubService;
             _settings.ClearCache();
         }
 
@@ -59,7 +58,7 @@ namespace Ombi.Schedule.Jobs.Couchpotato
         private readonly ICouchPotatoApi _api;
         private readonly ILogger<CouchPotatoSync> _log;
         private readonly ExternalContext _ctx;
-        private readonly IHubContext<NotificationHub> _notification;
+        private readonly INotificationHubService _notification;
 
         public async Task Execute(IJobExecutionContext job)
         {
@@ -69,8 +68,7 @@ namespace Ombi.Schedule.Jobs.Couchpotato
                 return;
             }
 
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Couch Potato Sync Started");
+            await _notification.SendNotificationToAdmins("Couch Potato Sync Started");
             try
             {
                 _log.LogInformation(LoggingEvents.CouchPotatoCacher, "Getting all active movies from CP");
@@ -118,14 +116,12 @@ namespace Ombi.Schedule.Jobs.Couchpotato
                         }
                     });
 
-                    await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                        .SendAsync(NotificationHub.NotificationEvent, "Couch Potato Sync Finished");
+                    await _notification.SendNotificationToAdmins("Couch Potato Sync Finished");
                 }
             }
             catch (Exception e)
             {
-                await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                    .SendAsync(NotificationHub.NotificationEvent, "Couch Potato Sync Failed");
+                await _notification.SendNotificationToAdmins("Couch Potato Sync Failed");
                 _log.LogError(LoggingEvents.CouchPotatoCacher, e, "error when trying to get movies from CP");
                 throw;
             }
