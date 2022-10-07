@@ -125,7 +125,7 @@ namespace Ombi.Schedule.Jobs.Plex
                         switch (item.type)
                         {
                             case "show":
-                                await ProcessShow(int.Parse(providerIds.TheMovieDb), user);
+                                await ProcessShow(int.Parse(providerIds.TheMovieDb), user, settings.MonitorAll);
                                 break;
                             case "movie":
                                 await ProcessMovie(int.Parse(providerIds.TheMovieDb), user);
@@ -165,10 +165,16 @@ namespace Ombi.Schedule.Jobs.Plex
             }
         }
 
-        private async Task ProcessShow(int theMovieDbId, OmbiUser user)
+        private async Task ProcessShow(int theMovieDbId, OmbiUser user, bool requestAll)
         {
             _tvRequestEngine.SetUser(user);
-            var response = await _tvRequestEngine.RequestTvShow(new TvRequestViewModelV2 { LatestSeason = true, TheMovieDbId = theMovieDbId, Source = RequestSource.PlexWatchlist });
+            var requestModel = new TvRequestViewModelV2 { LatestSeason = true, TheMovieDbId = theMovieDbId, Source = RequestSource.PlexWatchlist };
+            if (requestAll)
+            {
+                requestModel.RequestAll = true;
+                requestModel.LatestSeason = false;
+            }
+            var response = await _tvRequestEngine.RequestTvShow(requestModel);
             if (response.IsError)
             {
                 if (response.ErrorCode == ErrorCode.AlreadyRequested)

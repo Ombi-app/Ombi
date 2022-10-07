@@ -113,6 +113,7 @@ export interface IPublicInfo {
 export interface IPlexSettings extends ISettings {
   enable: boolean;
   enableWatchlistImport: boolean;
+  monitorAll: boolean;
   servers: IPlexServer[];
 }
 
