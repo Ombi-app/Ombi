@@ -18,3 +18,7 @@
     width:100%;
     text-align:right;
 }
+
+::ng-deep div .mat-tab-body-content {
+    overflow: hidden;
+}

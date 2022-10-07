@@ -2,30 +2,16 @@
 <div class="small-middle-container" *ngIf="settings">
     <fieldset style="width:100%;">
         <legend>Plex Configuration</legend>
-        <div class="row">
-            <div class="col-md-6 col-12">
-                <div class="md-form-field">
-                    <mat-slide-toggle [(ngModel)]="settings.enable" [checked]="settings.enable">Enable
-                    </mat-slide-toggle>
-                </div>
-                <div class="md-form-field">
-                    <mat-slide-toggle [(ngModel)]="settings.enableWatchlistImport" [checked]="settings.enableWatchlistImport">Enable User Watchlist Requests
-                    </mat-slide-toggle>
-                    <p>When a Plex User adds something to their watchlist in Plex, it will turn up in Ombi as a Request if enabled. This <b>only</b> applies to users that are logging in with their Plex Account</p>
-                    <p>Request limits if set are all still applied etc.</p>
-                </div>
-                <div class="md-form-field">
-                    <mat-slide-toggle [(ngModel)]="advanced">Advanced</mat-slide-toggle>
-                </div>
- 
-            </div>
-            <div class="col-md-6 col-12">
-                <div class="md-form-field align-right">
-                    <button (click)="openWatchlistUserLog()" type="button" class="mat-focus-indicator mat-flat-button mat-button-base mat-accent">Watchlist User Errors</button>
-                </div>
- 
-            </div>
-        </div>
+
+        <settings-plex-form-field [label]="'Enable'" [type]="'checkbox'" [id]="'enable'" [(value)]="settings.enable"></settings-plex-form-field>
+
+        <settings-plex-form-field [label]="'Enable User Watchlist Requests'" [type]="'checkbox'" [id]="'enable'" [(value)]="settings.enableWatchlistImport">
+            <small bottom>When a Plex User adds something to their watchlist in Plex, it will turn up in Ombi as a Request if enabled. This <b>only</b> applies to users that are logging in with their Plex Account
+                <br>Request limits if set are all still applied
+            </small>
+        </settings-plex-form-field>
+
+        <settings-plex-form-field [label]="'Advanced Options'" [type]="'checkbox'" [id]="'advanced'" [(value)]="advanced"></settings-plex-form-field>
 
         <hr>
 
@@ -43,8 +29,10 @@
 
                     <settings-plex-form
                         [server]="server"
+                        [advancedEnabled]="advanced"
+                        [loadedServers]="loadedServers"
                         (loadLibraries)="loadLibraries(server)"
-                        (loadServers)="requestServers()"
+                        (loadServers)="requestServers($event)"
                         (test)="testPlex(server)"
                         (runSync)="runSync($event)"
                         (selectServer)="selectServer($event, server)"

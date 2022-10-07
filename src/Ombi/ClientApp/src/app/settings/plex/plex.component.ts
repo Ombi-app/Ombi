@@ -8,7 +8,7 @@ import { MatTabChangeEvent, MatTabGroup } from "@angular/material/tabs";
 import {UntypedFormControl} from '@angular/forms';
 import { MatDialog } from "@angular/material/dialog";
 import { PlexWatchlistComponent } from "./components/watchlist/plex-watchlist.component";
-import { PlexSyncType } from "./components/models";
+import { PlexCreds, PlexSyncType } from "./components/models";
 
 @Component({
     templateUrl: "./plex.component.html",
@@ -17,8 +17,6 @@ import { PlexSyncType } from "./components/models";
 export class PlexComponent implements OnInit, OnDestroy {
     public settings: IPlexSettings;
     public loadedServers: IPlexServerViewModel; // This comes from the api call for the user to select a server
-    public username: string;
-    public password: string;
     public serversButton = false;
     selected = new UntypedFormControl(0);
     @ViewChild("tabGroup", {static: false}) public tagGroup: MatTabGroup;
@@ -41,8 +39,8 @@ export class PlexComponent implements OnInit, OnDestroy {
         });
     }
 
-    public requestServers() {
-        this.plexService.getServers(this.username, this.password).pipe(
+    public requestServers({ username, password }: PlexCreds) {
+        this.plexService.getServers(username, password).pipe(
             takeUntil(this.subscriptions),
         ).subscribe(x => {
             if (x.success) {
