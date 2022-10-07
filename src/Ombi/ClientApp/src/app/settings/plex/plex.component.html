@@ -11,6 +11,12 @@
             </small>
         </settings-plex-form-field>
 
+        <settings-plex-form-field [label]="'Request All'" disabled [type]="'checkbox'" [id]="'monitorAll'" [(value)]="settings.monitorAll">
+            <small bottom>If true then watchlist requests for TV Shows, it will request the <strong><em>whole</em></strong> season. Otherwise it will only request the latest season.
+            </small>
+        </settings-plex-form-field>
+
+
         <settings-plex-form-field [label]="'Advanced Options'" [type]="'checkbox'" [id]="'advanced'" [(value)]="advanced"></settings-plex-form-field>
 
         <hr>
