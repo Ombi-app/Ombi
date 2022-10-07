@@ -1,0 +1,174 @@
+﻿<div class="col-md-7 col-8 col-sm-12">
+ 
+    <label for="username" class="control-label">
+        <h3>Plex Server Configuration</h3>
+    </label>
+    <div class="md-form-field">
+        <mat-form-field appearance="outline" floatLabel=auto>
+            <mat-label>Server Name</mat-label>
+            <input matInput id="name" name="name" 
+                [(ngModel)]="server.name" value="{{server.name}}">
+        </mat-form-field>
+    </div>
+
+    <div class="md-form-field">
+        <mat-form-field appearance="outline" floatLabel=auto>
+            <mat-label>Hostname or IP</mat-label>
+            <input matInput id="Ip" name="Ip" [(ngModel)]="server.ip"
+                value="{{server.ip}}">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" floatLabel=auto>
+            <mat-label>Port</mat-label>
+            <input matInput id="portNumber" name="Port" 
+                [(ngModel)]="server.port" value="{{server.port}}">
+        </mat-form-field>
+
+        <mat-slide-toggle id="ssl" [(ngModel)]="server.ssl" [checked]="server.ssl">
+            SSL
+        </mat-slide-toggle>
+    </div>
+    <div class="md-form-field">
+        <mat-form-field appearance="outline" floatLabel=auto>
+            <mat-label>Plex Authorization Token</mat-label>
+            <input matInput id="authToken"
+                [(ngModel)]="server.plexAuthToken" value="{{server.plexAuthToken}}">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" floatLabel=auto>
+            <mat-label>Machine Identifier</mat-label>
+            <input matInput id="MachineIdentifier" name="MachineIdentifier"
+                [(ngModel)]="server.machineIdentifier" value="{{server.machineIdentifier}}">
+        </mat-form-field>
+    </div>
+    <div class="md-form-field">
+        <mat-form-field appearance="outline" floatLabel=auto>
+            <mat-label>Externally Facing Hostname</mat-label>
+            <input matInput placeholder="e.g. https://app.plex.tv" [(ngModel)]="server.serverHostname" value="{{server.serverHostname}}" matTooltip="This will be the external address that users will navigate to when they press the 'View On Plex' button">
+        </mat-form-field>
+        <small>
+            <span *ngIf="server.serverHostname">Current URL: "{{server.serverHostname}}/web/app#!/server/{{server.machineIdentifier}}/details?key=%2flibrary%2Fmetadata%2F53334"</span>
+            <span *ngIf="!server.serverHostname">Current URL: "https://app.plex.tv/web/app#!/server/{{server.machineIdentifier}}/details?key=%2flibrary%2Fmetadata%2F53334"</span>
+        </small>
+    </div>
+    <div class="md-form-field">
+        <div class="md-form-field" *ngIf="advancedEnabled">
+            <mat-form-field appearance="outline" floatLabel=auto>
+                <mat-label for="episodeBatchSize" class="control-label">Episode Batch Size</mat-label>
+                <input matInput type="number" id="episodeBatchSize" name="episodeBatchSize"
+                    [(ngModel)]="server.episodeBatchSize" value="{{server.episodeBatchSize}}"
+                    matTooltip="This is used when we cache the episodes, we cache in batches of 150 by default, you can configure how many we do at a time here"
+                    matTooltipPosition="right">
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="md-form-field" *ngIf="loadedServers">
+        <label for="username" class="control-label">Please select the server</label>
+        <br />
+        <div class="btn-group">
+            <div class="btn-group">
+                <mat-form-field appearance="outline">
+                    <mat-label>Server</mat-label>
+                    <mat-select>
+                        <mat-option (click)="selectServer.emit(s)"
+                            *ngFor="let s of loadedServers.servers.server" [value]="s.server">
+                            {{s.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+    <label>Please select the libraries you want Ombi to look in for content</label>
+    <br />
+    <small>Note: if nothing is selected, we will monitor all libraries</small>
+    <div class="md-form-field">
+        <div>
+            <button mat-raised-button (click)="loadLibraries.emit()"
+                class="mat-focus-indicator mat-stroked-button mat-button-base">Load Libraries
+                <i class="fas fa-film"></i>
+            </button>
+        </div>
+    </div>
+    <br />
+    <div *ngIf="server.plexSelectedLibraries">
+        <div *ngFor="let lib of server.plexSelectedLibraries">
+            <div class="md-form-field">
+                <div class="checkbox">
+                    <mat-slide-toggle [(ngModel)]="lib.enabled" [checked]="lib.enabled"
+                        for="{{lib.title}}">{{lib.title}}</mat-slide-toggle>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<!-- Second section -->
+
+<div class="col-md-5 col-4 col-sm-12">
+    <div class="md-form-field">
+        <label for="username" class="control-label">
+            <h3>Plex Credentials</h3>
+            <small>These fields are optional to automatically fill in your Plex server settings</small>
+        </label>
+        <div>
+            <mat-form-field appearance="outline" floatLabel=auto>
+                <mat-label>Username</mat-label>
+                <input matInput id="username"  [(ngModel)]="username"
+                    value="{{username}}">
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field appearance="outline" floatLabel=auto>
+                <mat-label>Password</mat-label>
+                <input matInput type="password" id="password" 
+                    [(ngModel)]="password" value="{{password}}">
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="md-form-field">
+        <div>
+            <button mat-raised-button id="requestToken" (click)="loadServers.emit()"
+                class="mat-stroked-button">Load Servers
+                <i class="fas fa-key"></i>
+            </button>
+        </div>
+    </div>
+    <br />
+
+    <div class="form-group">
+        <div class="form-group">
+            <button mat-raised-button id="testPlex" type="button" (click)="test.emit()"
+                class="mat-focus-indicator mat-stroked-button mat-button-base">
+                Test Connectivity
+                <div id="spinner"></div>
+            </button>
+        </div>
+        <div class="form-group">
+            <button mat-raised-button (click)="runSync.emit(PlexSyncType.Full)" type="button" id="fullSync"
+                class="mat-focus-indicator mat-stroked-button mat-button-base">Manually Run Full
+                Sync</button><br />
+        </div>
+        <div class="form-group">
+            <button mat-raised-button (click)="runSync.emit(PlexSyncType.RecentlyAdded)" type="button" id="recentlyAddedSync"
+                class="mat-focus-indicator mat-stroked-button mat-button-base">Manually Run Recently
+                Added Sync</button>
+        </div>
+        <div class="form-group">
+            <button mat-raised-button (click)="runSync.emit(PlexSyncType.ClearAndReSync)" type="button" id="clearData"
+                class="mat-focus-indicator mat-stroked-button mat-button-base">
+                Clear Data And Resync
+            </button>
+        </div>
+        <div class="form-group">
+            <button mat-raised-button (click)="runSync.emit(PlexSyncType.WatchlistImport)" type="button" id="watchlistImport"
+                class="mat-focus-indicator mat-stroked-button mat-button-base">
+                Run Watchlist Import
+            </button>
+        </div>
+    </div>
+</div>
