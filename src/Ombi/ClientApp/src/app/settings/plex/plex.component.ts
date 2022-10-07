@@ -8,6 +8,7 @@ import { MatTabChangeEvent, MatTabGroup } from "@angular/material/tabs";
 import {UntypedFormControl} from '@angular/forms';
 import { MatDialog } from "@angular/material/dialog";
 import { PlexWatchlistComponent } from "./components/watchlist/plex-watchlist.component";
+import { PlexSyncType } from "./components/models";
 
 @Component({
     templateUrl: "./plex.component.html",
@@ -40,7 +41,7 @@ export class PlexComponent implements OnInit, OnDestroy {
         });
     }
 
-    public requestServers(server: IPlexServer) {
+    public requestServers() {
         this.plexService.getServers(this.username, this.password).pipe(
             takeUntil(this.subscriptions),
         ).subscribe(x => {
@@ -151,7 +152,24 @@ export class PlexComponent implements OnInit, OnDestroy {
         });
     }
 
-    public runCacher(): void {
+    public runSync(type: PlexSyncType) {
+        switch (type) {
+            case PlexSyncType.Full:
+                this.runCacher();
+                return;
+            case PlexSyncType.RecentlyAdded:
+                this.runRecentlyAddedCacher();
+                return;
+            case PlexSyncType.ClearAndReSync:
+                this.clearDataAndResync();
+                return;
+            case PlexSyncType.WatchlistImport:
+                this.runWatchlistImport();
+                return;
+        }
+    }
+
+    private runCacher(): void {
         this.jobService.runPlexCacher().subscribe(x => {
             if (x) {
                 this.notificationService.success("Triggered the Plex Full Sync");
@@ -159,7 +177,7 @@ export class PlexComponent implements OnInit, OnDestroy {
         });
     }
 
-    public runRecentlyAddedCacher(): void {
+    private runRecentlyAddedCacher(): void {
         this.jobService.runPlexRecentlyAddedCacher().subscribe(x => {
             if (x) {
                 this.notificationService.success("Triggered the Plex Recently Added Sync");
@@ -167,7 +185,7 @@ export class PlexComponent implements OnInit, OnDestroy {
         });
     }
 
-    public clearDataAndResync(): void {
+    private clearDataAndResync(): void {
         this.jobService.clearMediaserverData().subscribe(x => {
             if (x) {
                 this.notificationService.success("Triggered the Clear MediaServer Resync");
@@ -175,7 +193,7 @@ export class PlexComponent implements OnInit, OnDestroy {
         });
     }
 
-    public runWatchlistImport(): void {
+    private runWatchlistImport(): void {
         this.jobService.runPlexWatchlistImport().subscribe(x => {
             if (x) {
                 this.notificationService.success("Triggered the Watchlist Import");

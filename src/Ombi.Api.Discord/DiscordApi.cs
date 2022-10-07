@@ -14,12 +14,12 @@ namespace Ombi.Api.Discord
             Api = api;
         }
         
-        private const string BaseUrl = "https://discordapp.com/api/";
+        private const string _baseUrl = "https://discordapp.com/api/";
         private IApi Api { get; }
         
         public async Task SendMessage(DiscordWebhookBody body, string webhookId, string webhookToken)
         {
-            var request = new Request($"webhooks/{webhookId}/{webhookToken}", BaseUrl, HttpMethod.Post);
+            var request = new Request($"webhooks/{webhookId}/{webhookToken}", _baseUrl, HttpMethod.Post);
 
             request.AddJsonBody(body);
 
