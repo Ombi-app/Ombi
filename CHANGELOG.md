@@ -1,3 +1,12 @@
+## [4.27.7](https://github.com/Ombi-app/Ombi/compare/v4.27.6...v4.27.7) (2022-10-07)
+
+
+### Bug Fixes
+
+* Fixes default image for recently requested items. ([#4767](https://github.com/Ombi-app/Ombi/issues/4767)) ([2e6f35f](https://github.com/Ombi-app/Ombi/commit/2e6f35f89abb3dd3685ec8289f8620c7ef7072cd))
+
+
+
 ## [4.27.6](https://github.com/Ombi-app/Ombi/compare/v4.27.5...v4.27.6) (2022-10-01)
 
 
@@ -394,15 +403,6 @@
 
 
 ## [4.16.10](https://github.com/Ombi-app/Ombi/compare/v4.16.9...v4.16.10) (2022-04-13)
-
-
-
-## [4.16.9](https://github.com/Ombi-app/Ombi/compare/v4.16.8...v4.16.9) (2022-04-13)
-
-
-### Bug Fixes
-
-* **plex-watchlist:** Only request the latest season when importing from the watchlist ([77a47ff](https://github.com/Ombi-app/Ombi/commit/77a47ff157c6c5feafe3f2a29a3fcba8df4fdfef))
 
 
 
