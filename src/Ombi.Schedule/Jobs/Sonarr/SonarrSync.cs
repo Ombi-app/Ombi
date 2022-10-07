@@ -67,11 +67,9 @@ namespace Ombi.Schedule.Jobs.Sonarr
                     var strat = _ctx.Database.CreateExecutionStrategy();
                     await strat.ExecuteAsync(async () =>
                     {
-                        using (var tran = await _ctx.Database.BeginTransactionAsync())
-                        {
-                            await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrCache");
-                            tran.Commit();
-                        }
+                        using var tran = await _ctx.Database.BeginTransactionAsync();
+                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrCache");
+                        tran.Commit();
                     });
 
                     var sonarrCacheToSave = new HashSet<SonarrCache>();
@@ -97,11 +95,9 @@ namespace Ombi.Schedule.Jobs.Sonarr
                     strat = _ctx.Database.CreateExecutionStrategy();
                     await strat.ExecuteAsync(async () =>
                     {
-                        using (var tran = await _ctx.Database.BeginTransactionAsync())
-                        {
-                            await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrEpisodeCache");
-                            tran.Commit();
-                        }
+                        using var tran = await _ctx.Database.BeginTransactionAsync();
+                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrEpisodeCache");
+                        tran.Commit();
                     });
 
                     foreach (var s in ids)
@@ -111,7 +107,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
                             continue;
                         }
 
-                        _log.LogDebug("Syncing series: {0}", s.Title);
+                        _log.LogDebug($"Syncing series: {s.Title}");
                         var episodes = await _api.GetEpisodes(s.Id, settings.ApiKey, settings.FullUri);
                         var monitoredEpisodes = episodes.Where(x => x.monitored || x.hasFile);
 
@@ -156,13 +152,11 @@ namespace Ombi.Schedule.Jobs.Sonarr
                         strat = _ctx.Database.CreateExecutionStrategy();
                         await strat.ExecuteAsync(async () =>
                         {
-                            using (var tran = await _ctx.Database.BeginTransactionAsync())
-                            {
-                                await _ctx.SonarrEpisodeCache.AddRangeAsync(episodesToAdd);
-                                _log.LogDebug("Commiting the transaction");
-                                await _ctx.SaveChangesAsync();
-                                tran.Commit();
-                            }
+                            using var tran = await _ctx.Database.BeginTransactionAsync();
+                            await _ctx.SonarrEpisodeCache.AddRangeAsync(episodesToAdd);
+                            _log.LogDebug("Commiting the transaction");
+                            await _ctx.SaveChangesAsync();
+                            tran.Commit();
                         });
                     }
 

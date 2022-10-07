@@ -1,0 +1,154 @@
+﻿<div>
+
+    <div class="md-form-field">
+        <label for="username" class="control-label">
+            <h3>Plex Credentials</h3>
+            <small>These fields are optional to automatically fill in your Plex server settings. <br>
+            This will pass your username and password to the Plex.tv API to grab the servers associated with this user.
+        <br>
+        If you have 2FA enabled on your account, you need to append the 2FA code to the end of your password.</small>
+        </label>
+    </div>
+
+    <settings-plex-form-field [label]="'Username'" [id]="'username'" [(value)]="username"></settings-plex-form-field>
+    <settings-plex-form-field [label]="'Password'" [id]="'password'" [type]="'password'" [(value)]="password"></settings-plex-form-field>
+
+    <div class="md-form-field">
+        <div class="right">
+            <button mat-raised-button id="loadServers" (click)="loadServers.emit({username, password})"
+                class="mat-stroked-button">Load Servers
+                <i class="fas fa-key"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-2 align-self-center">
+            Please select the server:
+        </div>
+        <div class="md-form-field col-10">
+            <div *ngIf="!loadedServers">
+                <mat-form-field appearance="outline" floatLabel=auto>
+                    <input disabled  matInput placeholder="No Servers Loaded" id="selectServer-noservers">
+                </mat-form-field>
+            </div>
+
+            <div *ngIf="loadedServers">
+                <mat-form-field appearance="outline">
+                    <mat-select placeholder="Servers Loaded! Please Select">
+                        <mat-option (click)="selectServer.emit(s)"
+                            *ngFor="let s of loadedServers.servers.server" [value]="s.server">
+                            {{s.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 md-form-field">
+            <div>
+                <button mat-raised-button (click)="loadLibraries.emit()"
+                    class="mat-focus-indicator mat-stroked-button mat-button-base">Load Libraries
+                    <i class="fas fa-film"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="col-2 align-self-center">
+            Please select the libraries you want Ombi to monitor
+            <br>
+            <small>Note: if nothing is selected, we will monitor all libraries</small>
+        </div>
+        <div class="md-form-field col-10">
+            <div *ngIf="server.plexSelectedLibraries">
+                <div *ngFor="let lib of server.plexSelectedLibraries">
+                    <div class="md-form-field">
+                        <div class="checkbox">
+                            <mat-slide-toggle [(ngModel)]="lib.enabled" [checked]="lib.enabled"
+                                for="{{lib.title}}">{{lib.title}}</mat-slide-toggle>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <hr class="hr-margin">
+
+    <settings-plex-form-field [label]="'Server Name'" [id]="'name'" [(value)]="server.name"></settings-plex-form-field>
+    <settings-plex-form-field [label]="'Hostname or IP'" [id]="'ip'" [(value)]="server.ip"></settings-plex-form-field>
+    <settings-plex-form-field [label]="'Port'" [id]="'port'" [(value)]="server.port"></settings-plex-form-field>
+
+    <settings-plex-form-field [label]="'SSL'" [type]="'checkbox'" [id]="'ssl'" [(value)]="server.ssl"></settings-plex-form-field>
+
+    <settings-plex-form-field [label]="'Plex Authorization Token'" [id]="'authToken'" [(value)]="server.plexAuthToken"></settings-plex-form-field>
+    <settings-plex-form-field [label]="'Machine Identifier'" [id]="'MachineIdentifier'" [(value)]="server.machineIdentifier"></settings-plex-form-field>
+    <settings-plex-form-field
+        [label]="'Externally Facing Hostname'"
+        [placeholder]="'e.g. https://app.plex.tv'"
+        [id]="'hostname'"
+        [(value)]="server.serverHostname">
+
+        <small>This will be the external address that users will navigate to when they press the 'View On Plex' button</small>
+        <small below>
+            <span *ngIf="server.serverHostname">Current URL: "{{server.serverHostname}}/web/app#!/server/{{server.machineIdentifier}}/details?key=%2flibrary%2Fmetadata%2F53334"</span>
+            <span *ngIf="!server.serverHostname">Current URL: "https://app.plex.tv/web/app#!/server/{{server.machineIdentifier}}/details?key=%2flibrary%2Fmetadata%2F53334"</span>
+        </small>
+    </settings-plex-form-field>
+
+    <settings-plex-form-field
+        *ngIf="advancedEnabled"
+        [label]="'Episode Batch Size'"
+        [id]="'episodeBatchSize'"
+        [(value)]="server.episodeBatchSize">
+        <small>This is used when we cache the episodes, we cache in batches of 150 by default, you can configure how many we do at a time here</small>
+    </settings-plex-form-field>
+
+
+    <br>
+    <br>
+    <br>
+</div>
+
+
+
+
+
+
+<!-- Second section -->
+
+<div class="row">
+
+    <br />
+
+        <div class="form-group col-12">
+            <button mat-raised-button id="testPlex" type="button" (click)="test.emit()"
+                class="mat-focus-indicator mat-stroked-button mat-button-base">
+                Test Connectivity
+                <div id="spinner"></div>
+            </button>
+        </div>
+        <div class="form-group col-1">
+            <button mat-raised-button (click)="runSync.emit(PlexSyncType.Full)" type="button" id="fullSync"
+                class="mat-focus-indicator mat-stroked-button mat-button-base">Full
+                Sync</button><br />
+        </div>
+        <div class="form-group col-1">
+            <button mat-raised-button (click)="runSync.emit(PlexSyncType.RecentlyAdded)" type="button" id="recentlyAddedSync"
+                class="mat-focus-indicator mat-stroked-button mat-button-base">Partial Sync</button>
+        </div>
+        <div class="form-group col-1">
+            <button mat-raised-button (click)="runSync.emit(PlexSyncType.ClearAndReSync)" type="button" id="clearData"
+                class="mat-focus-indicator mat-stroked-button mat-button-base">
+                Clear Data And Resync
+            </button>
+        </div>
+        <div class="form-group col-12">
+            <button mat-raised-button (click)="runSync.emit(PlexSyncType.WatchlistImport)" type="button" id="watchlistImport"
+                class="mat-focus-indicator mat-stroked-button mat-button-base">
+                Run Watchlist Import
+            </button>
+        </div>
+</div>

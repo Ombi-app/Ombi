@@ -84,6 +84,8 @@ import { WebhookComponent } from "./notifications/webhook.component";
 import { WhatsAppComponent } from "./notifications/twilio/whatsapp.component";
 import { WikiComponent } from "./wiki.component";
 import { PlexWatchlistComponent } from "./plex/components/watchlist/plex-watchlist.component";
+import { PlexFormComponent } from "./plex/components/plex-form/plex-form.component";
+import { PlexFormFieldComponent } from "./plex/components/form-field/plex-form-field.component";
 
 const routes: Routes = [
     { path: "Ombi", component: OmbiComponent, canActivate: [AuthGuard] },
@@ -191,6 +193,8 @@ const routes: Routes = [
         CloudMobileComponent,
         UpdateDialogComponent,
         PlexWatchlistComponent,
+        PlexFormComponent,
+        PlexFormFieldComponent,
     ],
     exports: [
         RouterModule,
