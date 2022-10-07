@@ -19,7 +19,7 @@ import { ImageComponent } from 'app/components';
         MatButtonToggleModule,
         InfiniteScrollModule,
         SkeletonModule,
-        ImageComponent,
+        ImageComponent
     ],
     declarations: [
         ...fromComponents.components

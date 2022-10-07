@@ -213,7 +213,7 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Your TV request for {Title} is now partially available! Episodes {PartiallyAvailableEpisodesList}!",
+                                Message = "Your TV request for {Title} is now partially available! Season {PartiallyAvailableSeasonNumber} Episodes {PartiallyAvailableEpisodeNumbers}!",
                                 Subject = "{ApplicationName}: Partially Available Request!",
                                 Agent = agent,
                                 Enabled = true,

@@ -1,77 +1,57 @@
 import { OmbiCommonModules } from "../modules";
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Inject,
-  Input,
-  ViewEncapsulation,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, ElementRef, Inject, Input, ViewEncapsulation } from "@angular/core";
 import { RequestType } from "../../interfaces";
 import { APP_BASE_HREF } from "@angular/common";
 
 @Component({
-  standalone: true,
-  selector: "ombi-image",
-  imports: [...OmbiCommonModules],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: "./image.component.html",
-})
-export class ImageComponent {
-  @Input() public src: string;
-  @Input() public type: RequestType;
+    standalone: true,
+    selector: 'ombi-image',
+    imports: [...OmbiCommonModules],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './image.component.html',
+  })
+  export class ImageComponent {
 
-  // Attributes from the parent
-  @Input() public class: string;
-  @Input() public id: string;
-  @Input() public alt: string;
-  @Input() public style: string;
+    @Input() public src: string;
+    @Input() public type: RequestType;
 
-  private baseUrl: string = "";
+    // Attributes from the parent
+    @Input() public class: string;
+    @Input() public id: string;
+    @Input() public alt: string;
+    @Input() public style: string;
 
-  private defaultTv = "/images/default_tv_poster.png";
-  private defaultMovie = "/images/default_movie_poster.png";
-  private defaultMusic = "/images/default-music-placeholder.png";
+    public baseUrl: string = "";
 
-  private maxRetries = 1;
-  private retriesPerformed = 0;
+    public defaultTv = "/images/default_tv_poster.png";
+    private defaultMovie = "/images/default_movie_poster.png";
+    private defaultMusic = "i/mages/default-music-placeholder.png";
 
-  constructor(@Inject(APP_BASE_HREF) private href: string) {
-    if (this.href.length > 1) {
-      this.baseUrl = this.href;
-    }
-  }
-
-  ngOnInit() {
-    if (!this.src) {
-      // Prevent unnecessary error handling when src is not specified.
-      this.src = this.getPlaceholderImage();
-    }
-  }
-
-  public onError(event: any) {
-    event.target.src = this.getPlaceholderImage();
-
-    if (!this.src || this.retriesPerformed === this.maxRetries) {
-      return;
+    constructor (@Inject(APP_BASE_HREF) public href: string) {
+        if (this.href.length > 1) {
+            this.baseUrl = this.href;
+        }
     }
 
-    // Retry the original image.
-    this.retriesPerformed++;
-    const timeout = setTimeout(() => {
-      clearTimeout(timeout);
-      event.target.src = this.src;
-    }, Math.floor(Math.random() * (7000 - 1000 + 1)) + 1000);
-  }
+    public onError(event: any) {
+        // set to a placeholder
+        switch(this.type) {
+            case RequestType.movie:
+                event.target.src = this.baseUrl + this.defaultMovie;
+                break;
+            case RequestType.tvShow:
+                event.target.src = this.baseUrl + this.defaultTv;
+                break;
+            case RequestType.album:
+                event.target.src = this.baseUrl + this.defaultMusic;
+                break;
+        }
 
-  private getPlaceholderImage() {
-    switch (this.type) {
-      case RequestType.movie:
-        return this.baseUrl + this.defaultMovie;
-      case RequestType.tvShow:
-        return this.baseUrl + this.defaultTv;
-      case RequestType.album:
-        return this.baseUrl + this.defaultMusic;
+        // Retry the original image
+        const timeout = setTimeout(() => {
+            event.target.src = this.src;
+            clearTimeout(timeout);
+        }, Math.floor(Math.random() * (7000 - 1000 + 1)) + 1000);
     }
   }
-}

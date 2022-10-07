@@ -6,14 +6,13 @@ module.exports = {
   "addons": [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
-    "@storybook/addon-interactions",
-    "@storybook/preset-scss",
+    "@storybook/addon-interactions"
   ],
   "framework": "@storybook/angular",
   "core": {
     "builder": "@storybook/builder-webpack5"
   },
-    "staticDirs": [{ from: '../../wwwroot/images', to: 'images' }, { from: '../../wwwroot/translations', to: 'translations'}],
+  "staticDirs": [{from :'../../wwwroot/images', to: 'images'}],
   "features": {
     interactionsDebugger: true,
   }

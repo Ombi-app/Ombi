@@ -6,9 +6,6 @@ import { IPlexLibrariesSettings, IPlexServer, IPlexServerResponse, IPlexServerVi
 import { JobService, NotificationService, PlexService, SettingsService, TesterService } from "../../services";
 import { MatTabChangeEvent, MatTabGroup } from "@angular/material/tabs";
 import {UntypedFormControl} from '@angular/forms';
-import { MatDialog } from "@angular/material/dialog";
-import { PlexWatchlistComponent } from "./components/watchlist/plex-watchlist.component";
-import { PlexCreds, PlexSyncType } from "./components/models";
 
 @Component({
     templateUrl: "./plex.component.html",

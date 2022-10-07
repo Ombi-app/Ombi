@@ -46,7 +46,5 @@ namespace Ombi.Api.TheMovieDb
         Task<List<Language>> GetLanguages(CancellationToken cancellationToken);
         Task<List<WatchProvidersResults>> SearchWatchProviders(string media, string searchTerm, CancellationToken cancellationToken);
         Task<List<MovieDbSearchResult>> AdvancedSearch(DiscoverModel model, int page, CancellationToken cancellationToken);
-        Task<MovieDbImages> GetTvImages(string theMovieDbId, CancellationToken token);
-        Task<MovieDbImages> GetMovieImages(string theMovieDbId, CancellationToken token);
     }
 }
