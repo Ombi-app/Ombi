@@ -4,10 +4,12 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core;
+using Ombi.Core.Notifications;
 using Ombi.Core.Services;
 using Ombi.Helpers;
 using Ombi.Hubs;
 using Ombi.Notifications.Models;
+using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
@@ -19,16 +21,21 @@ namespace Ombi.Schedule.Jobs.Emby
     public class EmbyAvaliabilityChecker : AvailabilityChecker, IEmbyAvaliabilityChecker
     {
         public EmbyAvaliabilityChecker(IEmbyContentRepository repo, ITvRequestRepository t, IMovieRequestRepository m,
-            INotificationHelper n, ILogger<EmbyAvaliabilityChecker> log, INotificationHubService notification, IFeatureService featureService)
-            : base(t, n, log, notification)
+            INotificationHelper n, ILogger<EmbyAvaliabilityChecker> log, IHubContext<NotificationHub> notification, IFeatureService featureService)
         {
             _repo = repo;
             _movieRepo = m;
+            _notificationService = n;
+            _log = log;
+            _notification = notification;
             _featureService = featureService;
         }
 
         private readonly IMovieRequestRepository _movieRepo;
         private readonly IEmbyContentRepository _repo;
+        private readonly INotificationHelper _notificationService;
+        private readonly ILogger<EmbyAvaliabilityChecker> _log;
+        private readonly IHubContext<NotificationHub> _notification;
         private readonly IFeatureService _featureService;
 
         public async Task Execute(IJobExecutionContext job)

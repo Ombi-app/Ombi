@@ -82,7 +82,6 @@ export class MovieDetailsComponent implements OnInit{
             this.searchService.getMovieByImdbId(this.imdbId).subscribe(async x => {
                 this.movie = x;
                 this.checkPoster();
-                this.movie.credits.crew = this.orderCrew(this.movie.credits.crew);
                 if (this.movie.requestId > 0) {
                     // Load up this request
                     this.hasRequest = true;
@@ -94,7 +93,6 @@ export class MovieDetailsComponent implements OnInit{
             this.searchService.getFullMovieDetails(this.theMovidDbId).subscribe(async x => {
                 this.movie = x;
                 this.checkPoster();
-                this.movie.credits.crew = this.orderCrew(this.movie.credits.crew);
                 if (this.movie.requestId > 0) {
                     // Load up this request
                     this.hasRequest = true;

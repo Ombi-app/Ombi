@@ -46,16 +46,21 @@ namespace Ombi.Schedule.Jobs.Jellyfin
     public class JellyfinAvaliabilityChecker : AvailabilityChecker, IJellyfinAvaliabilityChecker
     {
         public JellyfinAvaliabilityChecker(IJellyfinContentRepository repo, ITvRequestRepository t, IMovieRequestRepository m,
-            INotificationHelper n, ILogger<JellyfinAvaliabilityChecker> log, INotificationHubService notification, IFeatureService featureService)
-             : base(t, n, log, notification)
+            INotificationHelper n, ILogger<JellyfinAvaliabilityChecker> log, IHubContext<NotificationHub> notification, IFeatureService featureService)
         {
             _repo = repo;
             _movieRepo = m;
+            _notificationService = n;
+            _log = log;
+            _notification = notification;
             _featureService = featureService;
         }
 
         private readonly IMovieRequestRepository _movieRepo;
         private readonly IJellyfinContentRepository _repo;
+        private readonly INotificationHelper _notificationService;
+        private readonly ILogger<JellyfinAvaliabilityChecker> _log;
+        private readonly IHubContext<NotificationHub> _notification;
         private readonly IFeatureService _featureService;
 
         public async Task Execute(IJobExecutionContext job)
