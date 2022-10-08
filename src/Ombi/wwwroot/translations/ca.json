@@ -396,9 +396,9 @@
     },
     "Discovery": {
         "PopularTab": "Popular",
-        "TrendingTab": "Trending",
-        "UpcomingTab": "Upcoming",
-        "SeasonalTab": "Seasonal",
+        "TrendingTab": "Tendències",
+        "UpcomingTab": "Pròximament",
+        "SeasonalTab": "Per temporada",
         "RecentlyRequestedTab": "Recently Requested",
         "Movies": "Movies",
         "Combined": "Combined",
