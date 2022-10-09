@@ -37,6 +37,7 @@ import { DiscordComponent } from "./notifications/discord.component";
 import { DogNzbComponent } from "./dognzb/dognzb.component";
 import { EmailNotificationComponent } from "./notifications/emailnotification.component";
 import { EmbyComponent } from "./emby/emby.component";
+import { EmbyServerDialog } from "./emby/emby-server-dialog/emby-server-dialog.component";
 import { FailedRequestsComponent } from "./failedrequests/failedrequests.component";
 import { FeaturesComponent } from "./features/features.component";
 import { GotifyComponent } from "./notifications/gotify.component";
@@ -153,6 +154,7 @@ const routes: Routes = [
         OmbiComponent,
         PlexComponent,
         EmbyComponent,
+        EmbyServerDialog,
         JellyfinComponent,
         JobsComponent,
         LandingPageComponent,
