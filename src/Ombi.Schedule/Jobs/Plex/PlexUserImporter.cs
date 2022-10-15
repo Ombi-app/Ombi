@@ -56,6 +56,8 @@ namespace Ombi.Schedule.Jobs.Plex
 
             await _notification.SendNotificationToAdmins("Plex User Importer Started");
             var allUsers = await _userManager.Users.Where(x => x.UserType == UserType.PlexUser).ToListAsync();
+            List<OmbiUser> newOrUpdatedUsers = new List<OmbiUser>();
+
             foreach (var server in settings.Servers)
             {
                 if (string.IsNullOrEmpty(server.PlexAuthToken))
@@ -63,23 +65,46 @@ namespace Ombi.Schedule.Jobs.Plex
                     continue;
                 }
 
+                
                 if (userManagementSettings.ImportPlexAdmin)
                 {
-                    await ImportAdmin(userManagementSettings, server, allUsers);
+                    OmbiUser newOrUpdatedAdmin = await ImportAdmin(userManagementSettings, server, allUsers);
+                    if (newOrUpdatedAdmin != null)
+                    {
+                        newOrUpdatedUsers.Add(newOrUpdatedAdmin);
+                    }
                 }
                 if (userManagementSettings.ImportPlexUsers)
                 {
-                    await ImportPlexUsers(userManagementSettings, allUsers, server);
+                    newOrUpdatedUsers.AddRange(await ImportPlexUsers(userManagementSettings, allUsers, server));
                 }
             }
+
+            if (userManagementSettings.CleanupPlexUsers)
+            {
+                // Refresh users from updates
+                allUsers = await _userManager.Users.Where(x => x.UserType == UserType.PlexUser)
+                    .ToListAsync();
+                var missingUsers = allUsers
+                    .Where(x => !newOrUpdatedUsers.Contains(x));
+                foreach (var ombiUser in missingUsers)
+                {
+                    _log.LogInformation("Deleting user {0} not found in Plex Server.", ombiUser.UserName);
+                    await _userManager.DeleteAsync(ombiUser);
+                }
+            }
+            
 
             await _notification.SendNotificationToAdmins("Plex User Importer Finished");
         }
 
-        private async Task ImportPlexUsers(UserManagementSettings userManagementSettings, List<OmbiUser> allUsers, PlexServers server)
+        private async Task<List<OmbiUser>> ImportPlexUsers(UserManagementSettings userManagementSettings, 
+            List<OmbiUser> allUsers, PlexServers server)
         {
             var users = await _api.GetUsers(server.PlexAuthToken);
 
+            List<OmbiUser> newOrUpdatedUsers = new List<OmbiUser>();
+            
             foreach (var plexUser in users.User)
             {
                 // Check if we should import this user
@@ -129,19 +154,21 @@ namespace Ombi.Schedule.Jobs.Plex
                     {
                         continue;
                     }
+                    // Get the new user object to avoid any concurrency failures
+                    var dbUser =
+                        await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == newUser.UserName);
                     if (userManagementSettings.DefaultRoles.Any())
                     {
-                        // Get the new user object to avoid any concurrency failures
-                        var dbUser =
-                            await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == newUser.UserName);
                         foreach (var defaultRole in userManagementSettings.DefaultRoles)
                         {
                             await _userManager.AddToRoleAsync(dbUser, defaultRole);
                         }
                     }
+                    newOrUpdatedUsers.Add(dbUser);
                 }
                 else
                 {
+                    newOrUpdatedUsers.Add(existingPlexUser);
                     // Do we need to update this user?
                     existingPlexUser.Email = plexUser.Email;
                     existingPlexUser.UserName = plexUser.Username;
@@ -149,9 +176,12 @@ namespace Ombi.Schedule.Jobs.Plex
                     await _userManager.UpdateAsync(existingPlexUser);
                 }
             }
+
+            return newOrUpdatedUsers;
         }
 
-        private async Task ImportAdmin(UserManagementSettings settings, PlexServers server, List<OmbiUser> allUsers)
+        private async Task<OmbiUser> ImportAdmin(UserManagementSettings settings, PlexServers server, 
+            List<OmbiUser> allUsers)
         {
             var plexAdmin = (await _api.GetAccount(server.PlexAuthToken)).user;
 
@@ -166,7 +196,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 adminUserFromDb.UserName = plexAdmin.username;
                 adminUserFromDb.ProviderUserId = plexAdmin.id;
                 await _userManager.UpdateAsync(adminUserFromDb);
-                return;
+                return adminUserFromDb;
             }
 
             // Ensure we don't have a user with the same username
@@ -174,7 +204,7 @@ namespace Ombi.Schedule.Jobs.Plex
             if (await _userManager.Users.AnyAsync(x => x.NormalizedUserName == normalUsername))
             {
                 _log.LogWarning($"Cannot add user {plexAdmin.username} because their username is already in Ombi, skipping this user");
-                return;
+                return null;
             }
 
             var newUser = new OmbiUser
@@ -190,11 +220,12 @@ namespace Ombi.Schedule.Jobs.Plex
             var result = await _userManager.CreateAsync(newUser);
             if (!LogResult(result))
             {
-                return;
+                return null;
             }
 
             var roleResult = await _userManager.AddToRoleAsync(newUser, OmbiRoles.Admin);
             LogResult(roleResult);
+            return newUser;
         }
 
         private bool LogResult(IdentityResult result)
