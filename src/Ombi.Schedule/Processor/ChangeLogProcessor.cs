@@ -40,6 +40,8 @@ namespace Ombi.Schedule.Processor
 
         private UpdateModel TransformUpdate(Release release)
         {
+            Version updateVersion = Version.Parse(release.Version.TrimStart('v'));
+            Version currentVersion = Version.Parse(AssemblyHelper.GetRuntimeVersion());
             var newUpdate = new UpdateModel
             {
                 UpdateVersionString = release.Version,
@@ -47,7 +49,7 @@ namespace Ombi.Schedule.Processor
                 UpdateDate = DateTime.Now,
                 ChangeLogs = release.Description,
                 Downloads = new List<Downloads>(),
-                UpdateAvailable = release.Version != "v" + AssemblyHelper.GetRuntimeVersion()
+                UpdateAvailable = updateVersion > currentVersion
             };
 
             foreach (var dl in release.Downloads)
