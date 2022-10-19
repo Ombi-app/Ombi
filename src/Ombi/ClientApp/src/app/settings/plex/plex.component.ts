@@ -8,7 +8,8 @@ import { MatTabChangeEvent, MatTabGroup } from "@angular/material/tabs";
 import {UntypedFormControl} from '@angular/forms';
 import { MatDialog } from "@angular/material/dialog";
 import { PlexWatchlistComponent } from "./components/watchlist/plex-watchlist.component";
-import { PlexCreds, PlexSyncType } from "./components/models";
+import { PlexServerDialogComponent } from "./components/plex-server-dialog/plex-server-dialog.component";
+import { PlexCreds, PlexServerDialogData, PlexSyncType } from "./components/models";
 
 @Component({
     templateUrl: "./plex.component.html",
@@ -21,9 +22,14 @@ export class PlexComponent implements OnInit, OnDestroy {
     selected = new UntypedFormControl(0);
     @ViewChild("tabGroup", {static: false}) public tagGroup: MatTabGroup;
 
+    
+    public username: string;
+    public password: string;
+
     public advanced = false;
 
     private subscriptions = new Subject<void>();
+    public PlexSyncType = PlexSyncType;
 
     constructor(
         private settingsService: SettingsService,
@@ -39,8 +45,8 @@ export class PlexComponent implements OnInit, OnDestroy {
         });
     }
 
-    public requestServers({ username, password }: PlexCreds) {
-        this.plexService.getServers(username, password).pipe(
+    public requestServers() {
+        this.plexService.getServers(this.username, this.password).pipe(
             takeUntil(this.subscriptions),
         ).subscribe(x => {
             if (x.success) {
@@ -53,7 +59,9 @@ export class PlexComponent implements OnInit, OnDestroy {
         });
     }
 
-    public selectServer(selectedServer: IPlexServerResponse, server: IPlexServer) {
+    public selectServer(selectedServer: IPlexServerResponse) {
+        const server = <IPlexServer> { name: "New" + this.settings.servers.length + "*", id: Math.floor(Math.random() * (99999 - 0 + 1) + 1) };
+        
         var splitServers = selectedServer.localAddresses.split(",");
         if (splitServers.length > 1) {
             server.ip = splitServers[splitServers.length - 1];
@@ -68,6 +76,7 @@ export class PlexComponent implements OnInit, OnDestroy {
         server.serverHostname = "";
 
         this.notificationService.success(`Selected ${server.name}!`);
+        this.newServer(server);
     }
 
     public testPlex(server: IPlexServer) {
@@ -165,6 +174,34 @@ export class PlexComponent implements OnInit, OnDestroy {
                 this.runWatchlistImport();
                 return;
         }
+    }
+
+    public edit(server: IPlexServer) {
+        const data: PlexServerDialogData = {
+            server: server,
+          };
+          const dialog = this.dialog.open(PlexServerDialogComponent, {
+            width: "700px",
+            data: data,
+            panelClass: "modal-panel",
+          });
+          dialog.afterClosed().subscribe((x) => {
+            console.log(x);
+          });
+    }
+
+    public newServer(server: IPlexServer) {
+        if(!server) {
+            server = <IPlexServer> { name: "New" + this.settings.servers.length + "*", id: Math.floor(Math.random() * (99999 - 0 + 1) + 1) };
+        }
+       const dialog = this.dialog.open(PlexServerDialogComponent, {
+            width: "700px",
+            data: {server: server},
+            panelClass: "modal-panel",
+          });
+          dialog.afterClosed().subscribe((x) => {
+            console.log(x);
+          });
     }
 
     private runCacher(): void {

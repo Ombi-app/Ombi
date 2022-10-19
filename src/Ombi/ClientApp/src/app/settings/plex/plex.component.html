@@ -14,36 +14,98 @@
         <settings-plex-form-field [label]="'Advanced Options'" [type]="'checkbox'" [id]="'advanced'" [(value)]="advanced"></settings-plex-form-field>
 
         <hr>
+    
+        <div class="md-form-field">
+            <label for="username" class="control-label">
+                <h3>Plex Credentials</h3>
+                <small>These fields are optional to automatically fill in your Plex server settings. <br>
+                This will pass your username and password to the Plex.tv API to grab the servers associated with this user.
+            <br>
+            If you have 2FA enabled on your account, you need to append the 2FA code to the end of your password.</small>
+            </label>
+        </div>
+    
+        <settings-plex-form-field [label]="'Username'" [id]="'username'" [(value)]="username"></settings-plex-form-field>
+        <settings-plex-form-field [label]="'Password'" [id]="'password'" [type]="'password'" [(value)]="password"></settings-plex-form-field>
+    
+        <div class="md-form-field">
+            <div class="right">
+                <button mat-raised-button id="loadServers" (click)="requestServers()"
+                    class="mat-stroked-button">Load Servers
+                    <i class="fas fa-key"></i>
+                </button>
+            </div>
+        </div>
 
         <div class="row">
-            <mat-tab-group #tabGroup [selectedIndex]="selected.value" (selectedTabChange)="addTab($event)"
-                (selectedIndexChange)="selected.setValue($event)" animationDuration="0ms" style="width:100%;">
-                <mat-tab *ngFor="let server of settings.servers" [label]="server.name">
+            <div class="col-2 align-self-center">
+                Please select the server:
+            </div>
+            <div class="md-form-field col-10">
+                <div *ngIf="!loadedServers">
+                    <mat-form-field appearance="outline" floatLabel=auto>
+                        <input disabled  matInput placeholder="No Servers Loaded" id="selectServer-noservers">
+                    </mat-form-field>
+                </div>
+    
+                <div *ngIf="loadedServers">
+                    <mat-form-field appearance="outline">
+                        <mat-select placeholder="Servers Loaded! Please Select">
+                            <mat-option (click)="selectServer(s)"
+                                *ngFor="let s of loadedServers.servers.server" [value]="s.server">
+                                {{s.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
 
-                    <div class="col-md-6 col-6 col-sm-6 align-right">
-                        <button type="button" (click)="removeServer(server)"
-                            class="mat-focus-indicator mat-flat-button mat-button-base mat-warn">Remove Server</button>
-                    </div>
-                    <br />
-                    <br />
 
-                    <settings-plex-form
-                        [server]="server"
-                        [advancedEnabled]="advanced"
-                        [loadedServers]="loadedServers"
-                        (loadLibraries)="loadLibraries(server)"
-                        (loadServers)="requestServers($event)"
-                        (test)="testPlex(server)"
-                        (runSync)="runSync($event)"
-                        (selectServer)="selectServer($event, server)"
-                        >
-                    </settings-plex-form>
+        <h2 style="margin: 1em 0 0 0;">Servers</h2>
+        <mat-list style="display:flex; flex-flow: wrap;">
+            <mat-card class="server-card" *ngFor="let server of settings.servers">
+                <button mat-button (click)="edit(server)">
+                    <h3>{{server.name}}</h3>
+                </button>
+            </mat-card>
 
-                </mat-tab>
-                <mat-tab label="" disabled=true> </mat-tab>
-                <mat-tab label="Add Server" position=100> </mat-tab>
+            <mat-card class="server-card new-server-card">
+                <button mat-button (click)="newServer()">
+                    <i class="fas fa-plus fa-xl"></i>
+                    <h3>Manually Add Server</h3>
+                </button>
+            </mat-card>
+        </mat-list>
 
-            </mat-tab-group>
+
+<div class="row">
+
+    <br />
+        <div class="form-group col-1">
+            <button mat-raised-button (click)="runSync(PlexSyncType.Full)" type="button" id="fullSync"
+                class="mat-focus-indicator mat-stroked-button mat-button-base">Full
+                Sync</button><br />
+        </div>
+        <div class="form-group col-1">
+            <button mat-raised-button (click)="runSync(PlexSyncType.RecentlyAdded)" type="button" id="recentlyAddedSync"
+                class="mat-focus-indicator mat-stroked-button mat-button-base">Partial Sync</button>
+        </div>
+        <div class="form-group col-1">
+            <button mat-raised-button (click)="runSync(PlexSyncType.ClearAndReSync)" type="button" id="clearData"
+                class="mat-focus-indicator mat-stroked-button mat-button-base">
+                Clear Data And Resync
+            </button>
+        </div>
+        <div class="form-group col-12">
+            <button mat-raised-button (click)="runSync(PlexSyncType.WatchlistImport)" type="button" id="watchlistImport"
+                class="mat-focus-indicator mat-stroked-button mat-button-base">
+                Run Watchlist Import
+            </button>
+        </div>
+</div>
+
+        <div class="row">
+
             <div class="col-md-2">
                 <div class="form-group">
                     <div>
