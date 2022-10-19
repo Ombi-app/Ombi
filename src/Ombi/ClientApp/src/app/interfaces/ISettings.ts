@@ -253,6 +253,7 @@ export interface ICustomPage extends ISettings {
 
 export interface IUserManagementSettings extends ISettings {
   importPlexUsers: boolean;
+  cleanupPlexUsers: boolean;
   importPlexAdmin: boolean;
   importEmbyUsers: boolean;
   importJellyfinUsers: boolean;
