@@ -5,7 +5,7 @@
 
         <settings-plex-form-field [label]="'Enable'" [type]="'checkbox'" [id]="'enable'" [(value)]="settings.enable"></settings-plex-form-field>
 
-        <settings-plex-form-field [label]="'Enable User Watchlist Requests'" [type]="'checkbox'" [id]="'enable'" [(value)]="settings.enableWatchlistImport">
+        <settings-plex-form-field [label]="'Enable User Watchlist Requests'" [type]="'checkbox'" [id]="'enableWatchlistImport'" [(value)]="settings.enableWatchlistImport">
             <small bottom>When a Plex User adds something to their watchlist in Plex, it will turn up in Ombi as a Request if enabled. This <b>only</b> applies to users that are logging in with their Plex Account
                 <br>Request limits if set are all still applied
             </small>
