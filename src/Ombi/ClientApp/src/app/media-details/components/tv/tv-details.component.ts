@@ -126,9 +126,10 @@ export class TvDetailsComponent implements OnInit {
         }
     }
 
-    public allEpisodesRequested(): boolean {
-        return this.tv.seasonRequests.every(e => e.episodes.every(x => x.approved || x.requested));
+    public allEpisodesRequestedOrAvailable(): boolean {
+      return this.tv.seasonRequests.every(e => e.episodes.every(x => x.available || x.approved || x.requested));
     }
+
     private checkPoster() {
       if (this.tv.images.original == null) {
         this.tv.images.original = "../../../images/default_movie_poster.png";

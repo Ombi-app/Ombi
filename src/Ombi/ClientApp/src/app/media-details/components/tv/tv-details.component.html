@@ -57,11 +57,11 @@
                                         <i class="far fa-play-circle fa-2x"></i>
                                     </a>
                                 </ng-container>
-                                <button *ngIf="!tv.fullyAvailable && !allEpisodesRequested()" mat-raised-button id="requestBtn" class="btn-spacing" color="primary"
-                                    (click)="request()"><i class="fas fa-plus"></i>
+                                <button *ngIf="(!tv.fullyAvailable || (tv.fullyAvailable && tv.partlyAvailable)) && !allEpisodesRequestedOrAvailable()" mat-raised-button id="requestBtn" class="btn-spacing" color="primary"
+                                        (click)="request()"><i class="fas fa-plus"></i>
                                     {{ 'Common.Request' | translate }}</button>
 
-                                    <button *ngIf="!tv.denied && allEpisodesRequested()" mat-raised-button class="btn-spacing" color="warn" [disabled]>
+                                    <button *ngIf="!tv.denied && allEpisodesRequestedOrAvailable()" mat-raised-button class="btn-spacing" color="warn" [disabled]>
                                         <i class="fas fa-check"></i>
                                         {{ 'Common.Requested' | translate }}</button>
 
