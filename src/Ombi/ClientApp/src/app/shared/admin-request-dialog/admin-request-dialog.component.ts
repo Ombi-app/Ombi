@@ -65,11 +65,9 @@ export class AdminRequestDialogComponent implements OnInit {
     if (this.data.type === RequestType.tvShow) {
       this.sonarrEnabled = await this.sonarrService.isEnabled();
       if (this.sonarrEnabled) {
-        this.settingsService.getSonarr().subscribe((settings: ISonarrSettings) => {
-            this.sonarrService.getV3LanguageProfiles(settings).subscribe((profiles: ILanguageProfiles[]) => {
-              this.sonarrLanguageProfiles = profiles;
-            })
-        });
+        this.sonarrService.getV3LanguageProfilesWithoutSettings().subscribe((profiles: ILanguageProfiles[]) => {
+          this.sonarrLanguageProfiles = profiles;
+        })
         this.sonarrService.getQualityProfilesWithoutSettings().subscribe(c => {
             this.sonarrProfiles = c;
         });
