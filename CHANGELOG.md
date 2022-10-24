@@ -1,3 +1,13 @@
+## [4.29.1](https://github.com/Ombi-app/Ombi/compare/v4.29.0...v4.29.1) (2022-10-22)
+
+
+### Bug Fixes
+
+* Consistently reset loading flag when requesting movies on discover page. ([#4777](https://github.com/Ombi-app/Ombi/issues/4777)) ([a40ab5c](https://github.com/Ombi-app/Ombi/commit/a40ab5cddf769d4147696eca50c1610b466ab99b))
+* **sonarr:** :bug: Fixed an issue where the language list didn't correctly load for power users in the advanced options [#4782](https://github.com/Ombi-app/Ombi/issues/4782) ([2173670](https://github.com/Ombi-app/Ombi/commit/217367047d1568070dd507e54ad3fd2c68f05b88))
+
+
+
 # [4.29.0](https://github.com/Ombi-app/Ombi/compare/v4.28.1...v4.29.0) (2022-10-19)
 
 
@@ -360,10 +370,6 @@
 
 
 ## [4.16.15](https://github.com/Ombi-app/Ombi/compare/v4.16.14...v4.16.15) (2022-04-24)
-
-
-
-## [4.16.14](https://github.com/Ombi-app/Ombi/compare/v4.16.13...v4.16.14) (2022-04-19)
 
 
 
