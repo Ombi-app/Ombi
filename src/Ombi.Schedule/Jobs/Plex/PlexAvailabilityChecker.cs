@@ -101,7 +101,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     // Let's try and match the series by name
                     seriesEpisodes = plexEpisodes.Where(x =>
-                        x.Series.Title.Equals(child.Title, StringComparison.InvariantCultureIgnoreCase));
+                        x.Series.Title == child.Title);
                 }
 
                 await ProcessTvShow(seriesEpisodes, child);
