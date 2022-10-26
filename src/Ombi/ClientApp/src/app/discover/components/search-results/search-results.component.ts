@@ -9,7 +9,7 @@ import { IDiscoverCardResult } from "../../interfaces";
 import { SearchFilter } from "../../../my-nav/SearchFilter";
 import { SearchV2Service } from "../../../services";
 import { StorageService } from "../../../shared/storage/storage-service";
-import { isEqual } from "lodash";
+import { isEqual } from "lodash-es";
 import { FeaturesFacade } from "../../../state/features/features.facade";
 
 @Component({
