@@ -18,7 +18,6 @@ import {
 })
 export class EmbyComponent implements OnInit {
   public savedSettings: IEmbySettings;
-  public currentSettings: IEmbySettings;
 
   constructor(
     private settingsService: SettingsService,
@@ -32,7 +31,6 @@ export class EmbyComponent implements OnInit {
       next: (result) => {
         if (result.servers == null) result.servers = [];
         this.savedSettings = result;
-        this.currentSettings = result;
       },
       error: () => {
         this.notificationService.error("Failed to retrieve Emby settings.");
@@ -41,9 +39,13 @@ export class EmbyComponent implements OnInit {
   }
 
   public toggleEnableFlag(event: MatSlideToggleChange) {
-    const newSettings: IEmbySettings = structuredClone(this.savedSettings);
-    newSettings.enable = event.checked;
-    const errorMessage = "There was an error saving Emby settings.";
+    const newSettings: IEmbySettings = {
+      ...structuredClone(this.savedSettings),
+      enable: event.checked,
+    };
+    const errorMessage = event.checked
+      ? "There was an error enabling Emby settings. Check that all servers are configured correctly."
+      : "There was an error disabling Emby settings.";
     this.settingsService.saveEmby(newSettings).subscribe({
       next: (result) => {
         if (result) {
@@ -54,10 +56,12 @@ export class EmbyComponent implements OnInit {
             } Emby settings.`
           );
         } else {
+          event.source.checked = !event.checked;
           this.notificationService.error(errorMessage);
         }
       },
       error: () => {
+        event.source.checked = !event.checked;
         this.notificationService.error(errorMessage);
       },
     });

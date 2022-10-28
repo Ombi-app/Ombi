@@ -1,44 +1,54 @@
 ﻿<settings-menu></settings-menu>
 <div class="small-middle-container">
-    <div *ngIf="currentSettings">
+    <div *ngIf="savedSettings">
         <fieldset>
             <legend style="margin-bottom: 1em;">Emby Configuration</legend>
             <div class="form-group">
-                <mat-slide-toggle (change)="toggleEnableFlag($event)" [checked]="savedSettings.enable">
-                    Enable
-                </mat-slide-toggle>
+                <div style="margin-bottom: 2em;">
+                    <mat-slide-toggle (change)="toggleEnableFlag($event)" [checked]="savedSettings.enable">
+                        Enable
+                    </mat-slide-toggle>
+                </div>
 
-                <h2 style="margin: 1em 0 0 0;">Servers</h2>
-                <mat-list style="display:flex; flex-flow: wrap;">
-                    <mat-card class="emby-server-card" *ngFor="let server of currentSettings.servers">
-                        <button mat-button (click)="editServer(server)">
-                            <h3>{{server.name}}</h3>
+                <div style="margin-bottom: 1em;">
+                    <h2 style="margin: 0 0 .5em 0;">Servers</h2>
+                    <div style="display:flex; flex-flow: wrap;">
+                        <mat-card class="emby-server-card" *ngFor="let server of savedSettings.servers">
+                            <button mat-button (click)="editServer(server)">
+                                <h3>{{server.name}}</h3>
+                            </button>
+                        </mat-card>
+
+                        <mat-card class="emby-server-card new-server-card">
+                            <button mat-button (click)="newServer()">
+                                <i class="fas fa-plus fa-xl"></i>
+                                <h3>New Server</h3>
+                            </button>
+                        </mat-card>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 1em;">
+                    <h2 style="margin: 0 0 .5em 0;">Actions</h2>
+                    <div class="md-form-field">
+                        <button mat-stroked-button
+                            [disabled]="!savedSettings.enable || savedSettings.servers.length == 0"
+                            style="margin: 0 1em 1em 0;" (click)="runIncrementalSync()" type="button"
+                            id="recentlyAddedSync">
+                            Run Incremental Sync
                         </button>
-                    </mat-card>
-
-                    <mat-card class="emby-server-card new-server-card">
-                        <button mat-button (click)="newServer()">
-                            <i class="fas fa-plus fa-xl"></i>
-                            <h3>New Server</h3>
+                        <button mat-stroked-button
+                            [disabled]="!savedSettings.enable|| savedSettings.servers.length == 0"
+                            style="margin: 0 1em 1em 0;" (click)="runFullSync()" type="button" id="save">
+                            Run Full Sync
                         </button>
-                    </mat-card>
-                </mat-list>
-
-                <h2 style="margin: 1em 0 0 0;">Actions</h2>
-                <div class="md-form-field">
-                    <button mat-stroked-button [disabled]="!savedSettings.enable || savedSettings.servers.length == 0"
-                        style="margin: 0 1em 1em 0;" (click)="runIncrementalSync()" type="button"
-                        id="recentlyAddedSync">
-                        Run Incremental Sync
-                    </button>
-                    <button mat-stroked-button [disabled]="!savedSettings.enable|| savedSettings.servers.length == 0"
-                        style="margin: 0 1em 1em 0;" (click)="runFullSync()" type="button" id="save">
-                        Run Full Sync
-                    </button>
-                    <button mat-stroked-button [disabled]="!savedSettings.enable|| savedSettings.servers.length == 0"
-                        style="margin: 0 1em 1em 0;" (click)="runCacheWipeWithFullSync()" type="button" id="clearData">
-                        Clear Data And Resync
-                    </button>
+                        <button mat-stroked-button
+                            [disabled]="!savedSettings.enable|| savedSettings.servers.length == 0"
+                            style="margin: 0 1em 1em 0;" (click)="runCacheWipeWithFullSync()" type="button"
+                            id="clearData">
+                            Clear Data And Resync
+                        </button>
+                    </div>
                 </div>
             </div>
         </fieldset>
