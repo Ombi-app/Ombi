@@ -87,13 +87,10 @@ export class EmbyComponent implements OnInit {
       isNewServer: true,
       savedSettings: this.savedSettings,
     };
-    const dialog = this.dialog.open(EmbyServerDialog, {
+    this.dialog.open(EmbyServerDialog, {
       width: "700px",
       data: data,
       panelClass: "modal-panel",
-    });
-    dialog.afterClosed().subscribe((x) => {
-      return console.log(x);
     });
   }
 
@@ -103,14 +100,10 @@ export class EmbyComponent implements OnInit {
       isNewServer: false,
       savedSettings: this.savedSettings,
     };
-    const dialog = this.dialog.open(EmbyServerDialog, {
+    this.dialog.open(EmbyServerDialog, {
       width: "700px",
       data: data,
       panelClass: "modal-panel",
-    });
-    dialog.afterClosed().subscribe((x) => {
-      console.log(server);
-      return console.log(x);
     });
   }
 
