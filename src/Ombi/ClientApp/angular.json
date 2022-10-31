@@ -42,6 +42,12 @@
               "node_modules/chart.js/dist/Chart.js",
               "./node_modules/@fullcalendar/core/main.js",
               "./node_modules/@fullcalendar/interaction/main.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "jquery", 
+              "bootstrap",
+              "moment",
+              "@cordobo/qrcode"
             ]
           },
           "configurations": {
