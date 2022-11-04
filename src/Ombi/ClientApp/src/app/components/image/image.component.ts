@@ -29,9 +29,9 @@ export class ImageComponent {
 
   private baseUrl: string = "";
 
-  private defaultTv = "/images/default_tv_poster.png";
-  private defaultMovie = "/images/default_movie_poster.png";
-  private defaultMusic = "/images/default-music-placeholder.png";
+  private defaultTv = "images/default_tv_poster.png";
+  private defaultMovie = "images/default_movie_poster.png";
+  private defaultMusic = "images/default-music-placeholder.png";
 
   private maxRetries = 1;
   private retriesPerformed = 0;
