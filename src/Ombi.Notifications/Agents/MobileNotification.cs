@@ -63,7 +63,7 @@ namespace Ombi.Notifications.Agents
 
             // Get admin devices
             var playerIds = await GetPrivilegedUsersPlayerIds();
-            await Send(playerIds, notification, settings, model, true);
+            await Send(playerIds, notification);
         }
 
         protected override async Task NewIssue(NotificationOptions model, MobileNotificationSettings settings)
@@ -83,7 +83,7 @@ namespace Ombi.Notifications.Agents
 
             // Get admin devices
             var playerIds = await GetAdmins();
-            await Send(playerIds, notification, settings, model);
+            await Send(playerIds, notification);
         }
 
         protected override async Task IssueComment(NotificationOptions model, MobileNotificationSettings settings)
@@ -107,13 +107,13 @@ namespace Ombi.Notifications.Agents
                     model.Substitutes.TryGetValue("IssueId", out var issueId);
                     // Send to user
                     var playerIds = await GetUsersForIssue(model, int.Parse(issueId), NotificationType.IssueComment);
-                    await Send(playerIds, notification, settings, model);
+                    await Send(playerIds, notification);
                 }
                 else
                 {
                     // Send to admin
                     var playerIds = await GetAdmins();
-                    await Send(playerIds, notification, settings, model);
+                    await Send(playerIds, notification);
                 }
             }
         }
@@ -136,7 +136,7 @@ namespace Ombi.Notifications.Agents
             // Send to user
             var playerIds = await GetUsers(model, NotificationType.IssueResolved);
 
-            await Send(playerIds, notification, settings, model);
+            await Send(playerIds, notification);
         }
 
 
@@ -158,7 +158,7 @@ namespace Ombi.Notifications.Agents
 
             // Get admin devices
             var playerIds = await GetAdmins();
-            await Send(playerIds, notification, settings, model);
+            await Send(playerIds, notification);
         }
 
         protected override async Task RequestDeclined(NotificationOptions model, MobileNotificationSettings settings)
@@ -179,7 +179,7 @@ namespace Ombi.Notifications.Agents
             // Send to user
             var playerIds = await GetUsers(model, NotificationType.RequestDeclined);
             await AddSubscribedUsers(playerIds);
-            await Send(playerIds, notification, settings, model);
+            await Send(playerIds, notification);
         }
 
         protected override async Task RequestApproved(NotificationOptions model, MobileNotificationSettings settings)
@@ -201,7 +201,7 @@ namespace Ombi.Notifications.Agents
             var playerIds = await GetUsers(model, NotificationType.RequestApproved);
 
             await AddSubscribedUsers(playerIds);
-            await Send(playerIds, notification, settings, model);
+            await Send(playerIds, notification);
         }
 
         protected override async Task AvailableRequest(NotificationOptions model, MobileNotificationSettings settings)
@@ -225,7 +225,7 @@ namespace Ombi.Notifications.Agents
             var playerIds = await GetUsers(model, NotificationType.RequestAvailable);
 
             await AddSubscribedUsers(playerIds);
-            await Send(playerIds, notification, settings, model);
+            await Send(playerIds, notification);
         }
 
         private static Dictionary<string,string> GetNotificationData(NotificationMessageContent parsed, NotificationType type)
@@ -240,7 +240,7 @@ namespace Ombi.Notifications.Agents
             throw new NotImplementedException();
         }
 
-        protected async Task Send(List<string> playerIds, NotificationMessage model, MobileNotificationSettings settings, NotificationOptions requestModel, bool isAdminNotification = false)
+        protected async Task Send(List<string> playerIds, NotificationMessage model)
         {
             if (playerIds == null || !playerIds.Any())
             {
@@ -276,7 +276,7 @@ namespace Ombi.Notifications.Agents
             }
 
             var playerIds = user.NotificationUserIds.Select(x => x.PlayerId).ToList();
-            await Send(playerIds, notification, settings, model);
+            await Send(playerIds, notification);
         }
 
         private async Task<List<string>> GetAdmins()
@@ -382,13 +382,15 @@ namespace Ombi.Notifications.Agents
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
-                Subject = "New Request",
+                Subject = "Request Partially Available",
                 Data = GetNotificationData(parsed, NotificationType.PartiallyAvailable)
             };
 
-            // Get admin devices
-            var playerIds = await GetAdmins();
-            await Send(playerIds, notification, settings, model, true);
+
+            var playerIds = await GetUsers(model, NotificationType.PartiallyAvailable);
+
+            await AddSubscribedUsers(playerIds);
+            await Send(playerIds, notification);
         }
     }
 }
