@@ -1,3 +1,13 @@
+## [4.29.3](https://github.com/Ombi-app/Ombi/compare/v4.29.2...v4.29.3) (2022-11-14)
+
+
+### Bug Fixes
+
+* **notifications:** Fixed the Partially TV notifications going to the admin [#4797](https://github.com/Ombi-app/Ombi/issues/4797) ([#4799](https://github.com/Ombi-app/Ombi/issues/4799)) ([bcb3e7f](https://github.com/Ombi-app/Ombi/commit/bcb3e7f00380a4c4278f59dc55febf43e6d05d47))
+* Only log error messages from Microsoft ([#4787](https://github.com/Ombi-app/Ombi/issues/4787)) ([c614e0c](https://github.com/Ombi-app/Ombi/commit/c614e0ca5fe5023cbe7ced326145273cd75be85d))
+
+
+
 ## [4.29.2](https://github.com/Ombi-app/Ombi/compare/v4.29.1...v4.29.2) (2022-10-24)
 
 
@@ -366,15 +376,6 @@
 
 
 ## [4.16.17](https://github.com/Ombi-app/Ombi/compare/v4.16.16...v4.16.17) (2022-04-25)
-
-
-
-## [4.16.16](https://github.com/Ombi-app/Ombi/compare/v4.16.15...v4.16.16) (2022-04-25)
-
-
-### Bug Fixes
-
-* **4616:** :bug: fixed mandatory fields ([d8f2260](https://github.com/Ombi-app/Ombi/commit/d8f2260c7ae3ed48386743b7adbd06e284487034))
 
 
 
