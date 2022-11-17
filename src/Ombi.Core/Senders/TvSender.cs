@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic;
 using Ombi.Api.DogNzb;
 using Ombi.Api.DogNzb.Models;
 using Ombi.Api.SickRage;
@@ -155,11 +157,13 @@ namespace Ombi.Core.Senders
             {
                 return null;
             }
+            var options = new SonarrSendOptions();
 
             int qualityToUse;
             var languageProfileId = s.LanguageProfile;
             string rootFolderPath;
             string seriesType;
+            int? tagToUse = null;
 
             var profiles = await UserQualityProfiles.GetAll().FirstOrDefaultAsync(x => x.UserId == model.RequestedUserId);
 
@@ -190,6 +194,7 @@ namespace Ombi.Core.Senders
                     }
                 }
                 seriesType = "anime";
+                tagToUse = s.AnimeTag;
             }
             else
             {
@@ -209,6 +214,7 @@ namespace Ombi.Core.Senders
                     }
                 }
                 seriesType = "standard";
+                tagToUse = s.Tag;
             }
 
             // Overrides on the request take priority
@@ -240,6 +246,16 @@ namespace Ombi.Core.Senders
 
             try
             {
+                if (tagToUse.HasValue)
+                {
+                    options.Tags.Add(tagToUse.Value);
+                }
+                if (s.SendUserTags)
+                {
+                    var userTag = await GetOrCreateTag(model, s);
+                    options.Tags.Add(userTag.id);
+                }
+
                 // Does the series actually exist?
                 var allSeries = await SonarrApi.GetSeries(s.ApiKey, s.FullUri);
                 var existingSeries = allSeries.FirstOrDefault(x => x.tvdbId == model.ParentRequest.TvDbId);
@@ -265,10 +281,10 @@ namespace Ombi.Core.Senders
                             ignoreEpisodesWithoutFiles = false, // We want all missing
                             searchForMissingEpisodes = false // we want dont want to search yet. We want to make sure everything is unmonitored/monitored correctly.
                         },
-                        languageProfileId = languageProfileId
-                };
+                        languageProfileId = languageProfileId,
+                        tags = options.Tags
+                    };
 
-                
 
                     // Montitor the correct seasons,
                     // If we have that season in the model then it's monitored!
@@ -280,11 +296,11 @@ namespace Ombi.Core.Senders
                         throw new Exception(string.Join(',', result.ErrorMessages));
                     }
                     existingSeries = await SonarrApi.GetSeriesById(result.id, s.ApiKey, s.FullUri);
-                    await SendToSonarr(model, existingSeries, s);
+                    await SendToSonarr(model, existingSeries, s, options);
                 }
                 else
                 {
-                    await SendToSonarr(model, existingSeries, s);
+                    await SendToSonarr(model, existingSeries, s, options);
                 }
 
                 return new NewSeries
@@ -303,7 +319,30 @@ namespace Ombi.Core.Senders
             }
         }
 
-        private async Task SendToSonarr(ChildRequests model, SonarrSeries result, SonarrSettings s)
+        private async Task<Tag> GetOrCreateTag(ChildRequests model, SonarrSettings s)
+        {
+            var tagName = model.RequestedUser.UserName;
+            // Does tag exist?
+
+            var allTags = await SonarrV3Api.GetTags(s.ApiKey, s.FullUri);
+            var existingTag = allTags.FirstOrDefault(x => x.label.Equals(tagName, StringComparison.InvariantCultureIgnoreCase));
+            existingTag ??= await SonarrV3Api.CreateTag(s.ApiKey, s.FullUri, tagName);
+
+            return existingTag;
+        }
+
+        private async Task<Tag> GetTag(int tagId, SonarrSettings s)
+        {
+            var tag = await SonarrV3Api.GetTag(tagId, s.ApiKey, s.FullUri);
+            if (tag == null)
+            {
+                Logger.LogError($"Tag ID {tagId} does not exist in sonarr. Please update the settings");
+                return null;
+            }
+            return tag;
+        }
+
+        private async Task SendToSonarr(ChildRequests model, SonarrSeries result, SonarrSettings s, SonarrSendOptions options)
         {
             // Check to ensure we have the all the seasons, ensure the Sonarr metadata has grabbed all the data
             Season existingSeason = null;
@@ -321,15 +360,27 @@ namespace Ombi.Core.Senders
                 }
             }
 
-            var episodesToUpdate = new List<Episode>();
-            // Ok, now let's sort out the episodes.
+            // Does the show have the correct tags we are expecting
+            if (options.Tags.Any())
+            {
+                result.tags ??= options.Tags;
+                var tagsToAdd = options.Tags.Except(result.tags);
+
+                if (tagsToAdd.Any())
+                {
+                    result.tags.AddRange(tagsToAdd);
+                }
+                result = await SonarrApi.UpdateSeries(result, s.ApiKey, s.FullUri);
+            }
 
             if (model.SeriesType == SeriesType.Anime)
             {
                 result.seriesType = "anime";
-                await SonarrApi.UpdateSeries(result, s.ApiKey, s.FullUri);
+                result = await SonarrApi.UpdateSeries(result, s.ApiKey, s.FullUri);
             }
 
+            var episodesToUpdate = new List<Episode>();
+            // Ok, now let's sort out the episodes.
             var sonarrEpisodes = await SonarrApi.GetEpisodes(result.id, s.ApiKey, s.FullUri);
             var sonarrEpList = sonarrEpisodes.ToList() ?? new List<Episode>();
             while (!sonarrEpList.Any())

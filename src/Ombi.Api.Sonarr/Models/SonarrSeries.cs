@@ -40,7 +40,7 @@ namespace Ombi.Api.Sonarr.Models
         public string titleSlug { get; set; }
         public string certification { get; set; }
         public string[] genres { get; set; }
-        public object[] tags { get; set; }
+        public List<int> tags { get; set; }
         public DateTime added { get; set; }
         public Ratings ratings { get; set; }
         public int qualityProfileId { get; set; }

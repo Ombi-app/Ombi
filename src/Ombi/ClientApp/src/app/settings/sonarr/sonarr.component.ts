@@ -75,6 +75,7 @@ export class SonarrComponent implements OnInit {
                     languageProfile: [x.languageProfile, [Validators.required, validateProfile]],
                     languageProfileAnime: [x.languageProfileAnime],
                     scanForAvailability: [x.scanForAvailability],
+                    sendUserTags: [x.sendUserTags]
                 });
 
                 if (x.qualityProfile) {
