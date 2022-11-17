@@ -26,6 +26,7 @@ namespace Ombi.Api.Sonarr.Models
         public string seriesType { get; set; }
         public int id { get; set; }
         public List<SonarrImage> images { get; set; }
+        public List<int> tags { get; set; }
 
         // V3 Property
         public int languageProfileId { get; set; }

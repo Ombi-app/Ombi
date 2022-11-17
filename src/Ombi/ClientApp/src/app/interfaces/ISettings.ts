@@ -146,6 +146,9 @@ export interface ISonarrSettings extends IExternalSettings {
   languageProfile: number;
   languageProfileAnime: number;
   scanForAvailability: boolean;
+  sendUserTags: boolean;
+  tag: number | null;
+  animeTag: number | null;
 }
 
 export interface IRadarrSettings extends IExternalSettings {
