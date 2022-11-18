@@ -46,7 +46,7 @@ namespace Ombi.Controllers.V1.External
         /// </summary>
         public TesterController(INotificationService service, IDiscordNotification notification, IEmailNotification emailN,
             IPushbulletNotification pushbullet, ISlackNotification slack, IPushoverNotification po, IMattermostNotification mm,
-            IPlexApi plex, IEmbyApiFactory emby, IRadarrV3Api radarr, ISonarrApi sonarr, ILogger<TesterController> log, IEmailProvider provider,
+            IPlexApi plex, IEmbyApiFactory emby, IRadarrV3Api radarr, ISonarrV3Api sonarr, ILogger<TesterController> log, IEmailProvider provider,
             ICouchPotatoApi cpApi, ITelegramNotification telegram, ISickRageApi srApi, INewsletterJob newsletter, ILegacyMobileNotification mobileNotification,
             ILidarrApi lidarrApi, IGotifyNotification gotifyNotification, IWhatsAppApi whatsAppApi, OmbiUserManager um, IWebhookNotification webhookNotification,
             IJellyfinApi jellyfinApi, IPrincipal user)
@@ -90,7 +90,7 @@ namespace Ombi.Controllers.V1.External
         private IPlexApi PlexApi { get; }
         private IRadarrV3Api RadarrApi { get; }
         private IEmbyApiFactory EmbyApi { get; }
-        private ISonarrApi SonarrApi { get; }
+        private ISonarrV3Api SonarrApi { get; }
         private ICouchPotatoApi CouchPotatoApi { get; }
         private ILogger<TesterController> Log { get; }
         private IEmailProvider EmailProvider { get; }
@@ -415,6 +415,7 @@ namespace Ombi.Controllers.V1.External
                 return new TesterResultModel
                 {
                     IsValid = result.urlBase == settings.SubDir || string.IsNullOrEmpty(result.urlBase) && string.IsNullOrEmpty(settings.SubDir),
+                    Version = result.version,
                     ExpectedSubDir = result.urlBase
                 };
             }
