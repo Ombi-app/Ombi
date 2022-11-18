@@ -3,6 +3,7 @@
     public class TesterResultModel
     {
         public bool IsValid { get; set; }
+        public string Version { get; set; }
         public string ExpectedSubDir { get; set; }
     }
 }
