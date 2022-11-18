@@ -312,7 +312,7 @@ namespace Ombi.Schedule.Jobs.Plex
                             {
                                 break;
                             }
-                            if (quality.Equals(existing.Quality))
+                            if (quality == null || quality.Equals(existing.Quality))
                             {
                                 // We got it
                                 continue;

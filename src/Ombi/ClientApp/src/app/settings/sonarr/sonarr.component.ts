@@ -1,7 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { UntypedFormBuilder, FormControl, UntypedFormGroup, Validators } from "@angular/forms";
+import { finalize, map } from "rxjs";
 
-import { ILanguageProfiles, ISonarrProfile, ISonarrRootFolder } from "../../interfaces";
+import { ILanguageProfiles, ISonarrProfile, ISonarrRootFolder, ITag } from "../../interfaces";
 
 import { ISonarrSettings } from "../../interfaces";
 import { SonarrService } from "../../services";
@@ -21,14 +22,20 @@ export class SonarrComponent implements OnInit {
     public rootFoldersAnime: ISonarrRootFolder[];
     public languageProfiles: ILanguageProfiles[];
     public languageProfilesAnime: ILanguageProfiles[];
+    
+    public tags: ITag[];
+    public animeTags: ITag[];
+
     public selectedRootFolder: ISonarrRootFolder;
     public selectedQuality: ISonarrProfile;
     public selectedLanguageProfiles: ILanguageProfiles;
     public profilesRunning: boolean;
     public rootFoldersRunning: boolean;
+    public tagsRunning: boolean;
     public langRunning: boolean;
     public form: UntypedFormGroup;
     public advanced = false;
+    public sonarrVersion: string;
     formErrors: any;
 
     constructor(private settingsService: SettingsService,
@@ -72,10 +79,28 @@ export class SonarrComponent implements OnInit {
                     port: [x.port, [Validators.required]],
                     addOnly: [x.addOnly],
                     seasonFolders: [x.seasonFolders],
-                    languageProfile: [x.languageProfile, [Validators.required, validateProfile]],
+                    languageProfile: [x.languageProfile],
                     languageProfileAnime: [x.languageProfileAnime],
                     scanForAvailability: [x.scanForAvailability],
+                    sendUserTags: [x.sendUserTags],
+                    tag: [x.tag],
+                    animeTag: [x.animeTag]
                 });
+
+                this.rootFolders = [];
+                this.qualities = [];
+                this.languageProfiles = [];
+                this.tags = [];
+                this.animeTags = [];
+
+                if (x.enabled && this.form.valid) {
+                    this.testerService.sonarrTest(x).subscribe(result => {
+                        this.sonarrVersion = result.version[0];
+                        if (this.sonarrVersion === '3') {
+                            this.form.controls.languageProfile.addValidators([Validators.required, validateProfile]);
+                        }
+                    });
+                }
 
                 if (x.qualityProfile) {
                     this.getProfiles(this.form);
@@ -85,6 +110,9 @@ export class SonarrComponent implements OnInit {
                 }
                 if (x.languageProfile) {
                     this.getLanguageProfiles(this.form);
+                }
+                if (x.tag || x.animeTag) {
+                    this.getTags(this.form);
                 }
 
                 this.formErrors ={
@@ -96,12 +124,12 @@ export class SonarrComponent implements OnInit {
                 };
                 this.onFormValuesChanged();
             });
-        this.rootFolders = [];
-        this.qualities = [];
-        this.languageProfiles = [];
+
         this.rootFolders.push({ path: "Please Select", id: -1 });
         this.qualities.push({ name: "Please Select", id: -1 });
         this.languageProfiles.push({ name: "Please Select", id: -1 });
+        this.animeTags.push({label: "None", id: -1});
+        this.tags.push({label: "None", id: -1});
     }
 
     public getProfiles(form: UntypedFormGroup) {
@@ -141,14 +169,27 @@ export class SonarrComponent implements OnInit {
             });
     }
 
+    public getTags(form: UntypedFormGroup) {
+        this.tagsRunning = true;
+        this.sonarrService.getTags(form.value).pipe(
+            finalize(() => {
+                this.tagsRunning = false;
+                this.animeTags.unshift({ label: "None", id: -1 });
+                this.tags.unshift({ label: "None", id: -1 });
+                this.notificationService.success("Successfully retrieved the Tags");
+            }),
+            map(result => {
+                this.tags = result;
+                this.tags.forEach(val => this.animeTags.push(Object.assign({}, val)));
+            })
+        ).subscribe()
+    }
+
     public test(form: UntypedFormGroup) {
-        if (form.invalid) {
-            this.notificationService.error("Please check your entered values");
-            return;
-        }
         const settings = <ISonarrSettings> form.value;
         this.testerService.sonarrTest(settings).subscribe(result => {
             if (result.isValid) {
+                this.sonarrVersion = result.version[0];
                 this.notificationService.success("Successfully connected to Sonarr!");
             } else if (result.expectedSubDir) {
                 this.notificationService.error("Your Sonarr Base URL must be set to " + result.expectedSubDir);
@@ -178,6 +219,12 @@ export class SonarrComponent implements OnInit {
                 this.notificationService.error("Please check your entered values");
             }
         }
+        if (form.controls.animeTag.value == -1) {
+            form.controls.animeTag.setValue(null);
+        }
+        if (form.controls.tag.value == -1) {
+            form.controls.tag.setValue(null);
+        }
 
         this.settingsService.saveSonarr(form.value)
             .subscribe(x => {
@@ -189,6 +236,7 @@ export class SonarrComponent implements OnInit {
             });
     }
 }
+
 function validateProfile(qualityProfile): { [key: string]:boolean } | null {
 
     if (qualityProfile.value !== undefined && (isNaN(qualityProfile.value) || qualityProfile.value == -1)) {

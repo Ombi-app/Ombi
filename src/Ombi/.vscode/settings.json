@@ -23,7 +23,8 @@
         "availability-rules",
         "details",
         "requests",
-        "sonarr"
+        "sonarr",
+        "plex"
     ],
     "rpc.enabled": true
 }

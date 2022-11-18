@@ -324,5 +324,84 @@ namespace Ombi.Schedule.Tests
 
             _mocker.Verify<OmbiUserManager>(x => x.UpdateAsync(It.Is<OmbiUser>(x => x.ProviderUserId == "PLEX_ID" && x.Email == "email" && x.UserName == "user")), Times.Once);
         }
+        
+        
+        [Test]
+        public async Task Import_Cleanup_Missing_Plex_Users()
+        {
+            _mocker.Setup<ISettingsService<UserManagementSettings>, Task<UserManagementSettings>>(x => x.GetSettingsAsync())
+                .ReturnsAsync(new UserManagementSettings
+                {
+                    ImportPlexAdmin = true,
+                    ImportPlexUsers = true,
+                    DefaultRoles = new List<string>
+                    {
+                        OmbiRoles.RequestMovie
+                    },
+                    CleanupPlexUsers = true,
+                });
+            _mocker.Setup<IPlexApi, Task<PlexFriends>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexFriends
+            {
+                User = new UserFriends[]
+                {
+                }
+            });
+            _mocker.Setup<IPlexApi, Task<PlexAccount>>(x => x.GetAccount(It.IsAny<string>())).ReturnsAsync(new PlexAccount
+            {
+                user = new User
+                {
+                    email = "email",
+                    authentication_token = "user_token",
+                    title = "user_title",
+                    username = "user_username",
+                    id = "user_id",
+                }
+            });
+
+            _mocker.Setup<OmbiUserManager, Task<IdentityResult>>(x => x.CreateAsync(It.Is<OmbiUser>(x => x.UserName == "user_username" && x.Email == "email" && x.ProviderUserId == "user_id" && x.UserType == UserType.PlexUser)))
+                .ReturnsAsync(IdentityResult.Success);
+            _mocker.Setup<OmbiUserManager, Task<IdentityResult>>(x => x.AddToRoleAsync(It.Is<OmbiUser>(x => x.UserName == "user_username"), It.Is<string>(x => x == OmbiRoles.Admin)))
+                .ReturnsAsync(IdentityResult.Success);
+
+            await _subject.Execute(null);
+
+            _mocker.Verify<OmbiUserManager>(x => x.DeleteAsync(It.Is<OmbiUser>(x => x.ProviderUserId == "PLEX_ID" && x.Email == "dupe" && x.UserName == "plex")), Times.Once);
+        }
+        
+        [Test]
+        public async Task Import_Cleanup_Missing_Plex_Admin()
+        {
+            _mocker.Setup<ISettingsService<UserManagementSettings>, Task<UserManagementSettings>>(x => x.GetSettingsAsync())
+                .ReturnsAsync(new UserManagementSettings
+                {
+                    ImportPlexAdmin = true,
+                    ImportPlexUsers = false,
+                    DefaultRoles = new List<string>
+                    {
+                        OmbiRoles.RequestMovie
+                    },
+                    CleanupPlexUsers = true,
+                });
+            _mocker.Setup<IPlexApi, Task<PlexAccount>>(x => x.GetAccount(It.IsAny<string>())).ReturnsAsync(new PlexAccount
+            {
+                user = new User
+                {
+                    email = "diff_email",
+                    authentication_token = "user_token",
+                    title = "user_title",
+                    username = "diff_username",
+                    id = "diff_user_id",
+                }
+            });
+
+            _mocker.Setup<OmbiUserManager, Task<IdentityResult>>(x => x.CreateAsync(It.Is<OmbiUser>(x => x.UserName == "diff_username" && x.Email == "diff_email" && x.ProviderUserId == "diff_user_id" && x.UserType == UserType.PlexUser)))
+                .ReturnsAsync(IdentityResult.Success);
+            _mocker.Setup<OmbiUserManager, Task<IdentityResult>>(x => x.AddToRoleAsync(It.Is<OmbiUser>(x => x.UserName == "diff_username"), It.Is<string>(x => x == OmbiRoles.Admin)))
+                .ReturnsAsync(IdentityResult.Success);
+
+            await _subject.Execute(null);
+
+            _mocker.Verify<OmbiUserManager>(x => x.DeleteAsync(It.Is<OmbiUser>(x => x.ProviderUserId == "PLEX_ID" && x.Email == "dupe" && x.UserName == "plex")), Times.Once);
+        }
     }
 }

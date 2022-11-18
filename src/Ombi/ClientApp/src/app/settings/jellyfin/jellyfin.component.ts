@@ -73,6 +73,7 @@ export class JellyfinComponent implements OnInit {
         if (index > -1) {
             this.settings.servers.splice(index, 1);
             this.selected.setValue(this.settings.servers.length - 1);
+            this.toggle();
         }
     }
 

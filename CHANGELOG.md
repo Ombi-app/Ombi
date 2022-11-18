@@ -1,3 +1,84 @@
+# [4.31.0](https://github.com/Ombi-app/Ombi/compare/v4.30.0...v4.31.0) (2022-11-18)
+
+
+### Features
+
+* **sonarr:** Added the ability to add default tags when sending to Sonarr ([#4803](https://github.com/Ombi-app/Ombi/issues/4803)) ([ecfbb8e](https://github.com/Ombi-app/Ombi/commit/ecfbb8eda91e1a90239dcf8be847afcc2394a78e))
+
+
+
+# [4.30.0](https://github.com/Ombi-app/Ombi/compare/v4.29.3...v4.30.0) (2022-11-17)
+
+
+### Features
+
+* **sonarr:** :sparkles: Add the username to a Sonarr tag when sent to Sonarr ([#4802](https://github.com/Ombi-app/Ombi/issues/4802)) ([1d5fabd](https://github.com/Ombi-app/Ombi/commit/1d5fabd317e3ce8f6dd31f06d15dc81277f39dbd))
+
+
+
+## [4.29.3](https://github.com/Ombi-app/Ombi/compare/v4.29.2...v4.29.3) (2022-11-14)
+
+
+### Bug Fixes
+
+* **notifications:** Fixed the Partially TV notifications going to the admin [#4797](https://github.com/Ombi-app/Ombi/issues/4797) ([#4799](https://github.com/Ombi-app/Ombi/issues/4799)) ([bcb3e7f](https://github.com/Ombi-app/Ombi/commit/bcb3e7f00380a4c4278f59dc55febf43e6d05d47))
+* Only log error messages from Microsoft ([#4787](https://github.com/Ombi-app/Ombi/issues/4787)) ([c614e0c](https://github.com/Ombi-app/Ombi/commit/c614e0ca5fe5023cbe7ced326145273cd75be85d))
+
+
+
+## [4.29.2](https://github.com/Ombi-app/Ombi/compare/v4.29.1...v4.29.2) (2022-10-24)
+
+
+### Bug Fixes
+
+* **plex:** Fixed an issue where sometimes the availability checker would throw an exception when checking episodes ([17ba202](https://github.com/Ombi-app/Ombi/commit/17ba2020ee0950c2c0e0e03fdb7835b579da75a9))
+
+
+
+## [4.29.1](https://github.com/Ombi-app/Ombi/compare/v4.29.0...v4.29.1) (2022-10-22)
+
+
+### Bug Fixes
+
+* Consistently reset loading flag when requesting movies on discover page. ([#4777](https://github.com/Ombi-app/Ombi/issues/4777)) ([a40ab5c](https://github.com/Ombi-app/Ombi/commit/a40ab5cddf769d4147696eca50c1610b466ab99b))
+* **sonarr:** :bug: Fixed an issue where the language list didn't correctly load for power users in the advanced options [#4782](https://github.com/Ombi-app/Ombi/issues/4782) ([2173670](https://github.com/Ombi-app/Ombi/commit/217367047d1568070dd507e54ad3fd2c68f05b88))
+
+
+
+# [4.29.0](https://github.com/Ombi-app/Ombi/compare/v4.28.1...v4.29.0) (2022-10-19)
+
+
+### Bug Fixes
+
+* Partially Available prevents further TV requests ([#4768](https://github.com/Ombi-app/Ombi/issues/4768)) ([#4779](https://github.com/Ombi-app/Ombi/issues/4779)) ([031e2b9](https://github.com/Ombi-app/Ombi/commit/031e2b9283b239827cabaca4e35f69f2f93a4d7b))
+* Unable to Delete Jellyfin Server ([#4705](https://github.com/Ombi-app/Ombi/issues/4705)) ([#4780](https://github.com/Ombi-app/Ombi/issues/4780)) ([76a0d0d](https://github.com/Ombi-app/Ombi/commit/76a0d0d26893bd480fea4735f77522ac6261a425))
+
+
+### Features
+
+* Provide a flag for missing users on Plex Server ([#4688](https://github.com/Ombi-app/Ombi/issues/4688)) ([#4778](https://github.com/Ombi-app/Ombi/issues/4778)) ([b4a14c2](https://github.com/Ombi-app/Ombi/commit/b4a14c2d28218409390e517b226130e3e84efee1))
+
+
+
+## [4.28.1](https://github.com/Ombi-app/Ombi/compare/v4.28.0...v4.28.1) (2022-10-19)
+
+
+### Bug Fixes
+
+* **plex:** :bug: Fixed not being able to enable watchlist requests in the Plex settings ([3e5158e](https://github.com/Ombi-app/Ombi/commit/3e5158ef9cda58ea2dd3be143f07aa5433691d79))
+* Reworked the version check ([#4719](https://github.com/Ombi-app/Ombi/issues/4719)) ([#4781](https://github.com/Ombi-app/Ombi/issues/4781)) ([55855c5](https://github.com/Ombi-app/Ombi/commit/55855c5adda3cd1c51b7fbd0c19b469fc813f98e))
+
+
+
+# [4.28.0](https://github.com/Ombi-app/Ombi/compare/v4.27.8...v4.28.0) (2022-10-07)
+
+
+### Features
+
+* **plex:** ✨ Added the ability to configure the watchlist to request the whole TV show rather than latest season ([#4774](https://github.com/Ombi-app/Ombi/issues/4774)) ([fa65712](https://github.com/Ombi-app/Ombi/commit/fa65712bd570fe8d5d21b8ca0abe182b84960017))
+
+
+
 ## [4.27.8](https://github.com/Ombi-app/Ombi/compare/v4.27.7...v4.27.8) (2022-10-07)
 
 
@@ -300,109 +381,6 @@
 
 * **discover:** Add new trending source experimental feature ([1a0823c](https://github.com/Ombi-app/Ombi/commit/1a0823ca80559417c67323aaeaa1ef5243e98031))
 * **discover:** Default trending source to new logic ([4f12939](https://github.com/Ombi-app/Ombi/commit/4f12939e22020a67a5ee75e2907923faea136e8d))
-
-
-
-# [4.17.0](https://github.com/Ombi-app/Ombi/compare/v4.16.17...v4.17.0) (2022-04-25)
-
-
-### Features
-
-* **discover:** Add original language filter ([ef7ec86](https://github.com/Ombi-app/Ombi/commit/ef7ec861d8aede2a4817752c990617f583805391))
-
-
-
-## [4.16.17](https://github.com/Ombi-app/Ombi/compare/v4.16.16...v4.16.17) (2022-04-25)
-
-
-
-## [4.16.16](https://github.com/Ombi-app/Ombi/compare/v4.16.15...v4.16.16) (2022-04-25)
-
-
-### Bug Fixes
-
-* **4616:** :bug: fixed mandatory fields ([d8f2260](https://github.com/Ombi-app/Ombi/commit/d8f2260c7ae3ed48386743b7adbd06e284487034))
-
-
-
-## [4.16.15](https://github.com/Ombi-app/Ombi/compare/v4.16.14...v4.16.15) (2022-04-24)
-
-
-
-## [4.16.14](https://github.com/Ombi-app/Ombi/compare/v4.16.13...v4.16.14) (2022-04-19)
-
-
-
-## [4.16.13](https://github.com/Ombi-app/Ombi/compare/v4.16.12...v4.16.13) (2022-04-19)
-
-
-
-## [4.16.12](https://github.com/Ombi-app/Ombi/compare/v4.16.11...v4.16.12) (2022-04-19)
-
-
-
-## [4.16.11](https://github.com/Ombi-app/Ombi/compare/v4.16.10...v4.16.11) (2022-04-14)
-
-
-### Bug Fixes
-
-* Set the default job for the watchlist import to hourly instead of daily ([75906af](https://github.com/Ombi-app/Ombi/commit/75906af0adee3e3c68d825c3aaa8f7b918461b1f))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([0e8a64b](https://github.com/Ombi-app/Ombi/commit/0e8a64b8ca00d210fbe843ac2c3f6af218d80cbc))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([7b0ad61](https://github.com/Ombi-app/Ombi/commit/7b0ad61bfcff3986b33180dc64022cba7ea8eefb))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([4fc2c1f](https://github.com/Ombi-app/Ombi/commit/4fc2c1f24534085a783a3d5791f5533b68272153))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([76ab733](https://github.com/Ombi-app/Ombi/commit/76ab733b91791e4d93d184f3c7d0779c6a388695))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([06e4cef](https://github.com/Ombi-app/Ombi/commit/06e4cefa7b4e55b860da9a64f461f6ec8fa17367))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([c12d89d](https://github.com/Ombi-app/Ombi/commit/c12d89d6781a337520977ad285f8d08c93f434dd))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([bc0c2f6](https://github.com/Ombi-app/Ombi/commit/bc0c2f622e34fb5a2711039d9ed7aad34f982b15))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([e4b00e6](https://github.com/Ombi-app/Ombi/commit/e4b00e6b3468bd9389eeb02fc6ad7daf27abc3b3))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([d1998d3](https://github.com/Ombi-app/Ombi/commit/d1998d326f999a38586d0a351a20c5448df95842))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([bee4ccb](https://github.com/Ombi-app/Ombi/commit/bee4ccb804594e7385b1fbdc9fe2ef5c42e0d21f))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([80233ed](https://github.com/Ombi-app/Ombi/commit/80233ed560cc976e83570d0655c3472f20171fb3))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([8a78adc](https://github.com/Ombi-app/Ombi/commit/8a78adc9bb62f277f2b213dcb3847ed6d0089fcb))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([d04c60a](https://github.com/Ombi-app/Ombi/commit/d04c60aa5909b47ba6bffa6f66b03079cbd43521))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([92a785e](https://github.com/Ombi-app/Ombi/commit/92a785e736fa4b72a45270da2d0f4661df433078))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([634982d](https://github.com/Ombi-app/Ombi/commit/634982df2661cefab5ea9f5163fe04a005cc0171))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([b404baa](https://github.com/Ombi-app/Ombi/commit/b404baad6d0aeaa1561701e0db8db4e78613a364))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([d14f11e](https://github.com/Ombi-app/Ombi/commit/d14f11e0eb20ab0a68e765ee77968b3b3e54e995))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([7cf64f9](https://github.com/Ombi-app/Ombi/commit/7cf64f909d78908edaabeffb8a39a7d02e73fe7e))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([0c9e1ec](https://github.com/Ombi-app/Ombi/commit/0c9e1ec090827080cc8f7393e5e91456ff37d691))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([3b0b730](https://github.com/Ombi-app/Ombi/commit/3b0b730cb02efe24f6d4026e5fdb20d37e495119))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([6ed1a03](https://github.com/Ombi-app/Ombi/commit/6ed1a03b7ff4077f09ea9e13394b18b0d138f4c3))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([2941acd](https://github.com/Ombi-app/Ombi/commit/2941acd3b2ec74a5e6aeea275ab5a39d2653f37f))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([c075a1a](https://github.com/Ombi-app/Ombi/commit/c075a1a66784d975eaf60f2dfbbcbe048f2f63d7))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([76bd81c](https://github.com/Ombi-app/Ombi/commit/76bd81c3ca55a98c6ec944a838dc01294a6193a6))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([0d38275](https://github.com/Ombi-app/Ombi/commit/0d3827507e002bcf58f673e97ffcc3bd25dcf337))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([5c99601](https://github.com/Ombi-app/Ombi/commit/5c99601b07aec1a65d0186a4c4327440811e64c6))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([01546a0](https://github.com/Ombi-app/Ombi/commit/01546a0f7f86379528b486463246ef9bdfb9033e))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([d7fea78](https://github.com/Ombi-app/Ombi/commit/d7fea7843aaaab7ddff8dc31ca6d2a9117471dcc))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([1a6b95d](https://github.com/Ombi-app/Ombi/commit/1a6b95d45c220310213b8d811272a63f0f6ff42b))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([fa10174](https://github.com/Ombi-app/Ombi/commit/fa1017422c4efd4b0897871bd3c671151774d7c3))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([0c31e62](https://github.com/Ombi-app/Ombi/commit/0c31e628df376aac6d56ae67c7c705a9a4a7c080))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([6399643](https://github.com/Ombi-app/Ombi/commit/63996437a02fe10ffae6822ffa15369bec0a6b36))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([5826e2d](https://github.com/Ombi-app/Ombi/commit/5826e2d9a1c3f1210a87fa270dc0c81bac32944a))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([d434514](https://github.com/Ombi-app/Ombi/commit/d43451405be489254d7cdc7755d5f516a1e495a5))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([0b9596d](https://github.com/Ombi-app/Ombi/commit/0b9596d807178f5e071113ec0347868ec7f0960b))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([8c4c0b2](https://github.com/Ombi-app/Ombi/commit/8c4c0b262978c1303767af360d802c4b4c2b4d24))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([289ab77](https://github.com/Ombi-app/Ombi/commit/289ab77b0e04aae235b6f6cebc86e0a8d1f0cf2b))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([30e3417](https://github.com/Ombi-app/Ombi/commit/30e3417285a4eed18d429d7776f0e74096e834c0))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([6c0a5da](https://github.com/Ombi-app/Ombi/commit/6c0a5dadd4b8f37760252eb0fe7f88908f55506d))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([d5bf969](https://github.com/Ombi-app/Ombi/commit/d5bf9692ce1fc0ccfe7beca6dd200c78be177bdc))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([8a9e7ea](https://github.com/Ombi-app/Ombi/commit/8a9e7ea588aefbcd73ed82625887e3614e1703ea))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([01047a3](https://github.com/Ombi-app/Ombi/commit/01047a3fd67153f3ff16f860d2c7b50213e8d9b2))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([698a23f](https://github.com/Ombi-app/Ombi/commit/698a23fb83f323cdd1dd57cb49803079d44214a7))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([24eb842](https://github.com/Ombi-app/Ombi/commit/24eb842fc4424f7bcc3ec2949d7f5472492e96f6))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([ac8b16a](https://github.com/Ombi-app/Ombi/commit/ac8b16a3051ad71dbd54a8973c7dd847b564a515))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([f428ce6](https://github.com/Ombi-app/Ombi/commit/f428ce6a700c081437703839bc84d2f2b1138bcc))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([94b16df](https://github.com/Ombi-app/Ombi/commit/94b16dfe09bf1d2cd6286777d74eb5d4496abbbb))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([4881775](https://github.com/Ombi-app/Ombi/commit/4881775eda69a8f136ce0d8fbbf970e3d0406dc9))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([8297db9](https://github.com/Ombi-app/Ombi/commit/8297db91e85da308bde6fb09ad78347dee063630))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([d1152ab](https://github.com/Ombi-app/Ombi/commit/d1152ab7674243daa528c524c0cdc87d81ad49c9))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([eb2788b](https://github.com/Ombi-app/Ombi/commit/eb2788b761b55c487a59a049427ca08f6c10e836))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([21a794c](https://github.com/Ombi-app/Ombi/commit/21a794cbc0a5fa735ca0347c8f7f1ac04a487fbc))
-
-
-
-## [4.10.2](https://github.com/Ombi-app/Ombi/compare/v4.10.1...v4.10.2) (2022-01-22)
 
 
 

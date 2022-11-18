@@ -176,7 +176,7 @@ namespace Ombi.Schedule.Tests
                     Series = new PlexServerContent
                     {
                         TheMovieDbId = 33.ToString(),
-                        Title = "Test"
+                        Title = "abc"
                     },
                     EpisodeNumber = 1,
                     SeasonNumber = 2,
@@ -226,7 +226,7 @@ namespace Ombi.Schedule.Tests
                 {
                     Series = new  PlexServerContent
                     {
-                        Title = "UNITTEST",
+                        Title = "UnitTest",
                         ImdbId = "invlaid",
                     },
                     EpisodeNumber = 1,

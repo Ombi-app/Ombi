@@ -113,6 +113,7 @@ export interface IPublicInfo {
 export interface IPlexSettings extends ISettings {
   enable: boolean;
   enableWatchlistImport: boolean;
+  monitorAll: boolean;
   servers: IPlexServer[];
 }
 
@@ -145,6 +146,9 @@ export interface ISonarrSettings extends IExternalSettings {
   languageProfile: number;
   languageProfileAnime: number;
   scanForAvailability: boolean;
+  sendUserTags: boolean;
+  tag: number | null;
+  animeTag: number | null;
 }
 
 export interface IRadarrSettings extends IExternalSettings {
@@ -252,6 +256,7 @@ export interface ICustomPage extends ISettings {
 
 export interface IUserManagementSettings extends ISettings {
   importPlexUsers: boolean;
+  cleanupPlexUsers: boolean;
   importPlexAdmin: boolean;
   importEmbyUsers: boolean;
   importJellyfinUsers: boolean;

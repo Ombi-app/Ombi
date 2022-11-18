@@ -11,7 +11,6 @@ namespace Ombi.Api.Sonarr
     {
         public SonarrV3Api(IApi api) : base(api)
         {
-
         }
 
         protected override string ApiBaseUrl => "/api/v3/";
@@ -29,6 +28,23 @@ namespace Ombi.Api.Sonarr
             var request = new Request($"{ApiBaseUrl}qualityprofile", baseUrl, HttpMethod.Get);
             request.AddHeader("X-Api-Key", apiKey);
             return await Api.Request<List<SonarrProfile>>(request);
+        }
+
+        public Task<Tag> CreateTag(string apiKey, string baseUrl, string tagName)
+        {
+            var request = new Request($"{ApiBaseUrl}tag", baseUrl, HttpMethod.Post);
+            request.AddHeader("X-Api-Key", apiKey);
+            request.AddJsonBody(new { Label = tagName });
+
+            return Api.Request<Tag>(request);
+        }
+
+        public Task<Tag> GetTag(int tagId, string apiKey, string baseUrl)
+        {
+            var request = new Request($"{ApiBaseUrl}tag/{tagId}", baseUrl, HttpMethod.Get);
+            request.AddHeader("X-Api-Key", apiKey);
+
+            return Api.Request<Tag>(request);
         }
     }
 }

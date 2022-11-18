@@ -10,13 +10,13 @@
         <div class="row">
             <div class="col-md-6 col-6 col-sm-6">
                 <div class="md-form-field">
-                    <mat-slide-toggle [(ngModel)]="settings.enable" [checked]="settings.enable">Enable
+                    <mat-slide-toggle [(ngModel)]="settings.enable" (change)="toggle()" [checked]="settings.enable">Enable
                     </mat-slide-toggle>
                 </div>
 
             </div>
         </div>
-        <mat-tab-group #tabGroup [selectedIndex]="selected.value" (selectedTabChange)="addTab($event)" (selectedIndexChange)="selected.setValue($event)" animationDuration="0ms" style="display:block;"> 
+        <mat-tab-group #tabGroup [selectedIndex]="selected.value" (selectedTabChange)="addTab($event)" (selectedIndexChange)="selected.setValue($event)" animationDuration="0ms" style="display:block;">
             <mat-tab *ngFor="let server of settings.servers" [label]="server.name">
                     <div class="col-md-6 col-6 col-sm-6" style="float: right; width:100%; text-align:right;">
                         <button type="button" (click)="removeServer(server)" class="mat-focus-indicator mat-flat-button mat-button-base mat-warn">Remove Server</button>
