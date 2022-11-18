@@ -3,15 +3,9 @@
     <h2>Connection</h2>
 
 
-
-
-
-
-
     <mat-form-field appearance="outline" floatLabel=auto>
       <mat-label>Server Name</mat-label>
       <input matInput placeholder="Server Name" name="name" [(ngModel)]="this.data.server.name" value="{{this.data.server.name}}">
-      <mat-hint>Auto populated during discovery of the server if left empty.</mat-hint>
     </mat-form-field>
 
     <div class="row">
@@ -62,6 +56,14 @@
       </mat-hint>
     </mat-form-field>
 
+    <mat-form-field appearance="outline" floatLabel=auto>
+      <mat-label>Episode Batch Size</mat-label>
+      <input matInput placeholder="150" name="MachineIdentifier" [(ngModel)]="this.data.server.episodeBatchSize" value="{{this.data.server.episodeBatchSize}}">
+      <mat-hint>
+        150 by default, you shouldn't need to change this, this sets how many episodes we request from Plex at a single time.
+      </mat-hint>
+    </mat-form-field>
+
     <h2>Libraries</h2>
     <div>
       <button mat-raised-button (click)="loadLibraries()"
@@ -85,13 +87,21 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align=end>
-  <button style="margin: .5em 0 0 .5em;" align-middle mat-stroked-button color="warn"
-    (click)="delete()">
+  <button style="margin: .5em 0 0 .5em;" align-middle mat-stroked-button color="accent"
+    (click)="testPlex()">
     <span style="display: flex; align-items: baseline; white-space: pre-wrap;">
-      <i class="fas fa-trash"></i>
-      <span> Delete</span>
+      <i class="fas fa-vial"></i>
+      <span> Test</span>
     </span>
   </button>
+
+  <button style="margin: .5em 0 0 .5em;" align-middle mat-stroked-button color="warn"
+  (click)="delete()">
+  <span style="display: flex; align-items: baseline; white-space: pre-wrap;">
+    <i class="fas fa-trash"></i>
+    <span> Delete</span>
+  </span>
+</button>
 
   <button style="margin: .5em 0 0 0.5em;" mat-stroked-button color="basic" (click)="cancel()">
     <span style="display: flex; align-items: baseline; white-space: pre-wrap;">
@@ -104,7 +114,7 @@
   <button style="margin: .5em 0 0 .5em;" mat-stroked-button color="accent"
      (click)="save()">
     <span style="display: flex; align-items: baseline; white-space: pre-wrap;">
-      <i style="vertical-align: text-top;" class="fas fa-plus"></i>
+      <i style="vertical-align: text-top;" class="fas fa-check"></i>
       <span> Save</span>
     </span>
   </button>

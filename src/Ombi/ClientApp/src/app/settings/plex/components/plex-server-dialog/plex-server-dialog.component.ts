@@ -7,7 +7,7 @@ import {
   TesterService,
 } from "../../../../services";
 import { take } from "rxjs";
-import { IPlexLibrariesSettings, IPlexServer } from "../../../../interfaces";
+import { IPlexLibrariesSettings } from "../../../../interfaces";
 import { PlexServerDialogData } from "../models";
 
 @Component({
