@@ -1,14 +1,14 @@
-import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { EMPTY, Subject } from "rxjs";
+import { catchError, takeUntil } from "rxjs/operators";
 
-import { IPlexLibrariesSettings, IPlexServer, IPlexServerResponse, IPlexServerViewModel, IPlexSettings } from "../../interfaces";
-import { JobService, NotificationService, PlexService, SettingsService, TesterService } from "../../services";
-import { MatTabChangeEvent, MatTabGroup } from "@angular/material/tabs";
+import { IPlexServer, IPlexServerResponse, IPlexServerViewModel, IPlexSettings } from "../../interfaces";
+import { JobService, NotificationService, PlexService, SettingsService } from "../../services";
 import {UntypedFormControl} from '@angular/forms';
 import { MatDialog } from "@angular/material/dialog";
 import { PlexWatchlistComponent } from "./components/watchlist/plex-watchlist.component";
-import { PlexCreds, PlexSyncType } from "./components/models";
+import { PlexServerDialogComponent } from "./components/plex-server-dialog/plex-server-dialog.component";
+import { PlexServerDialogData, PlexSyncType } from "./components/models";
 
 @Component({
     templateUrl: "./plex.component.html",
@@ -19,17 +19,17 @@ export class PlexComponent implements OnInit, OnDestroy {
     public loadedServers: IPlexServerViewModel; // This comes from the api call for the user to select a server
     public serversButton = false;
     selected = new UntypedFormControl(0);
-    @ViewChild("tabGroup", {static: false}) public tagGroup: MatTabGroup;
 
-    public advanced = false;
+    public username: string;
+    public password: string;
 
     private subscriptions = new Subject<void>();
+    public PlexSyncType = PlexSyncType;
 
     constructor(
         private settingsService: SettingsService,
         private notificationService: NotificationService,
         private plexService: PlexService,
-        private testerService: TesterService,
         private jobService: JobService,
         private dialog: MatDialog) { }
 
@@ -39,9 +39,13 @@ export class PlexComponent implements OnInit, OnDestroy {
         });
     }
 
-    public requestServers({ username, password }: PlexCreds) {
-        this.plexService.getServers(username, password).pipe(
+    public requestServers() {
+        this.plexService.getServers(this.username, this.password).pipe(
             takeUntil(this.subscriptions),
+            catchError(() => {
+                this.notificationService.error("There was an issue. Please make sure your username and password are correct");
+                return EMPTY;
+            })
         ).subscribe(x => {
             if (x.success) {
                 this.loadedServers = x;
@@ -53,7 +57,9 @@ export class PlexComponent implements OnInit, OnDestroy {
         });
     }
 
-    public selectServer(selectedServer: IPlexServerResponse, server: IPlexServer) {
+    public selectServer(selectedServer: IPlexServerResponse) {
+        const server = <IPlexServer> { name: "New" + this.settings.servers.length + "*", id: Math.floor(Math.random() * (99999 - 0 + 1) + 1) };
+
         var splitServers = selectedServer.localAddresses.split(",");
         if (splitServers.length > 1) {
             server.ip = splitServers[splitServers.length - 1];
@@ -68,61 +74,7 @@ export class PlexComponent implements OnInit, OnDestroy {
         server.serverHostname = "";
 
         this.notificationService.success(`Selected ${server.name}!`);
-    }
-
-    public testPlex(server: IPlexServer) {
-        this.testerService.plexTest(server).subscribe(x => {
-            if (x === true) {
-                this.notificationService.success(`Successfully connected to the Plex server ${server.name}!`);
-            } else {
-                this.notificationService.error(`We could not connect to the Plex server  ${server.name}!`);
-            }
-        });
-    }
-
-    public addTab(event: MatTabChangeEvent) {
-        const tabName = event.tab.textLabel;
-        if (tabName == "Add Server"){ 
-
-            if (this.settings.servers == null) {
-            this.settings.servers = [];
-            }
-            this.settings.servers.push(<IPlexServer> { name: "New" + this.settings.servers.length + "*", id: Math.floor(Math.random() * (99999 - 0 + 1) + 1) });
-
-            //this.tagGroup.selectedIndex = (0);
-            this.selected.setValue(this.settings.servers.length - 1);
-            }
-    }
-
-    public removeServer(server: IPlexServer) {
-        const index = this.settings.servers.indexOf(server, 0);
-        if (index > -1) {
-            this.settings.servers.splice(index, 1);
-            this.selected.setValue(this.settings.servers.length - 1);
-        }
-    }
-
-    public loadLibraries(server: IPlexServer) {
-        if (server.ip == null) {
-            this.notificationService.error("Plex is not yet configured correctly");
-            return;
-        }
-        this.plexService.getLibraries(server).subscribe(x => {
-            server.plexSelectedLibraries = [];
-            if (x.successful) {
-                x.data.mediaContainer.directory.forEach((item) => {
-                    const lib: IPlexLibrariesSettings = {
-                        key: item.key,
-                        title: item.title,
-                        enabled: false,
-                    };
-                    server.plexSelectedLibraries.push(lib);
-                });
-            } else {
-                this.notificationService.error(x.message);
-            }
-        },
-            err => { this.notificationService.error(err); });
+        this.newServer(server);
     }
 
     public save() {
@@ -164,6 +116,55 @@ export class PlexComponent implements OnInit, OnDestroy {
             case PlexSyncType.WatchlistImport:
                 this.runWatchlistImport();
                 return;
+        }
+    }
+
+    public edit(server: IPlexServer) {
+        const data: PlexServerDialogData = {
+            server: server,
+          };
+          const dialog = this.dialog.open(PlexServerDialogComponent, {
+            width: "700px",
+            data: data,
+            panelClass: "modal-panel",
+          });
+          dialog.afterClosed().subscribe((x) => {
+            if (x.deleted) {
+                this.removeServer(server);
+            }
+            if (x.server) {
+                console.log(x.server);
+                var idx = this.settings.servers.findIndex(server => server.id === x.server.id);
+                if (idx >= 0) {
+                    this.settings.servers[idx] = x.server;
+                } else {
+                    this.settings.servers.push(x.server);
+                }
+            }
+          });
+    }
+
+    public newServer(server: IPlexServer) {
+        if(!server) {
+            server = <IPlexServer> { name: "New" + this.settings.servers.length + "*", id: Math.floor(Math.random() * (99999 - 0 + 1) + 1) };
+        }
+       const dialog = this.dialog.open(PlexServerDialogComponent, {
+            width: "700px",
+            data: {server: server},
+            panelClass: "modal-panel",
+          });
+          dialog.afterClosed().subscribe((x) => {
+            if (x.server) {
+                this.settings.servers.push(x.server);
+            }
+          });
+    }
+
+    private removeServer(server: IPlexServer) {
+        const index = this.settings.servers.indexOf(server, 0);
+        if (index > -1) {
+            this.settings.servers.splice(index, 1);
+            this.selected.setValue(this.settings.servers.length - 1);
         }
     }
 
