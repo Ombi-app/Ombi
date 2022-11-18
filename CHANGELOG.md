@@ -1,3 +1,12 @@
+# [4.31.0](https://github.com/Ombi-app/Ombi/compare/v4.30.0...v4.31.0) (2022-11-18)
+
+
+### Features
+
+* **sonarr:** Added the ability to add default tags when sending to Sonarr ([#4803](https://github.com/Ombi-app/Ombi/issues/4803)) ([ecfbb8e](https://github.com/Ombi-app/Ombi/commit/ecfbb8eda91e1a90239dcf8be847afcc2394a78e))
+
+
+
 # [4.30.0](https://github.com/Ombi-app/Ombi/compare/v4.29.3...v4.30.0) (2022-11-17)
 
 
@@ -372,15 +381,6 @@
 
 * **discover:** Add new trending source experimental feature ([1a0823c](https://github.com/Ombi-app/Ombi/commit/1a0823ca80559417c67323aaeaa1ef5243e98031))
 * **discover:** Default trending source to new logic ([4f12939](https://github.com/Ombi-app/Ombi/commit/4f12939e22020a67a5ee75e2907923faea136e8d))
-
-
-
-# [4.17.0](https://github.com/Ombi-app/Ombi/compare/v4.16.17...v4.17.0) (2022-04-25)
-
-
-### Features
-
-* **discover:** Add original language filter ([ef7ec86](https://github.com/Ombi-app/Ombi/commit/ef7ec861d8aede2a4817752c990617f583805391))
 
 
 
