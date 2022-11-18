@@ -1,3 +1,17 @@
+# [4.32.0](https://github.com/Ombi-app/Ombi/compare/v4.31.0...v4.32.0) (2022-11-18)
+
+
+### Bug Fixes
+
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([#4801](https://github.com/Ombi-app/Ombi/issues/4801)) ([4692003](https://github.com/Ombi-app/Ombi/commit/46920032baed04675b2ffbe1700afdc0740a4ac4))
+
+
+### Features
+
+* **plex:** Rework the Plex Settings page ([#4805](https://github.com/Ombi-app/Ombi/issues/4805)) ([1b8c47f](https://github.com/Ombi-app/Ombi/commit/1b8c47f3163f618851d4904732cb07015e1e93ff))
+
+
+
 # [4.31.0](https://github.com/Ombi-app/Ombi/compare/v4.30.0...v4.31.0) (2022-11-18)
 
 
@@ -364,23 +378,6 @@
 
 * **sync:** Detect reidentified movies in Emby and Jellyfin ([5938077](https://github.com/Ombi-app/Ombi/commit/5938077d82a5357f79c07b218b3986557a5816e8))
 * **sync:** Detect reidentified series in Emby and Jellyfin ([9096e91](https://github.com/Ombi-app/Ombi/commit/9096e91d55d268819bce22831f8a8b27f2a1776b))
-
-
-
-# [4.18.0](https://github.com/Ombi-app/Ombi/compare/v4.17.0...v4.18.0) (2022-04-26)
-
-
-### Bug Fixes
-
-* **discover:** Fix cache mix up ([03d9422](https://github.com/Ombi-app/Ombi/commit/03d94220c7eaafb50c6c80a6ed1150794b873ac3))
-* **discover:** Fix new trending feature detection ([6794b88](https://github.com/Ombi-app/Ombi/commit/6794b887f6544fb41528bdd9728b7824b65e47ee))
-* **settings:** Allow toggling features when there are more than one ([a373359](https://github.com/Ombi-app/Ombi/commit/a373359ae8e6bad42b558a6e01a8ff2840d3bbaa))
-
-
-### Features
-
-* **discover:** Add new trending source experimental feature ([1a0823c](https://github.com/Ombi-app/Ombi/commit/1a0823ca80559417c67323aaeaa1ef5243e98031))
-* **discover:** Default trending source to new logic ([4f12939](https://github.com/Ombi-app/Ombi/commit/4f12939e22020a67a5ee75e2907923faea136e8d))
 
 
 
