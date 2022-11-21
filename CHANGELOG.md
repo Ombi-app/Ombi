@@ -1,3 +1,12 @@
+## [4.32.1](https://github.com/Ombi-app/Ombi/compare/v4.32.0...v4.32.1) (2022-11-21)
+
+
+### Bug Fixes
+
+* **plex:** :bug: Fixed the issue where you couldn't add a new server on a fresh setup after the settings page rework ([187b18d](https://github.com/Ombi-app/Ombi/commit/187b18d5c01f6a13831e4a410b5d7c349e27d847))
+
+
+
 # [4.32.0](https://github.com/Ombi-app/Ombi/compare/v4.31.0...v4.32.0) (2022-11-18)
 
 
@@ -368,16 +377,6 @@
 
 
 ## [4.19.1](https://github.com/Ombi-app/Ombi/compare/v4.19.0...v4.19.1) (2022-04-27)
-
-
-
-# [4.19.0](https://github.com/Ombi-app/Ombi/compare/v4.18.0...v4.19.0) (2022-04-27)
-
-
-### Features
-
-* **sync:** Detect reidentified movies in Emby and Jellyfin ([5938077](https://github.com/Ombi-app/Ombi/commit/5938077d82a5357f79c07b218b3986557a5816e8))
-* **sync:** Detect reidentified series in Emby and Jellyfin ([9096e91](https://github.com/Ombi-app/Ombi/commit/9096e91d55d268819bce22831f8a8b27f2a1776b))
 
 
 
