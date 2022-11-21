@@ -17,7 +17,6 @@ import { PlexServerDialogData } from "../models";
 })
 export class PlexServerDialogComponent {
 
-
     public password: string;
     public username: string;
 

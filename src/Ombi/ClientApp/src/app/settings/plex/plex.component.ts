@@ -36,6 +36,10 @@ export class PlexComponent implements OnInit, OnDestroy {
     public ngOnInit() {
         this.settingsService.getPlex().subscribe(x => {
             this.settings = x;
+
+            if (!this.settings.servers) {
+                this.settings.servers = [];
+            }
         });
     }
 
@@ -154,6 +158,9 @@ export class PlexComponent implements OnInit, OnDestroy {
             panelClass: "modal-panel",
           });
           dialog.afterClosed().subscribe((x) => {
+            if (x.closed) {
+                return;
+            }
             if (x.server) {
                 this.settings.servers.push(x.server);
             }
