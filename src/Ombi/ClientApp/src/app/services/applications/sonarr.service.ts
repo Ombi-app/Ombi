@@ -40,7 +40,11 @@ export class SonarrService extends ServiceHelpers {
         return this.http.post<ITag[]>(`${this.url}/tags/`, JSON.stringify(settings), {headers: this.headers});
     }
 
-    public isEnabled(): Promise<boolean> {
-        return this.http.get<boolean>(`${this.url}/enabled/`, { headers: this.headers }).toPromise();
+    public isEnabled(): Observable<boolean> {
+        return this.http.get<boolean>(`${this.url}/enabled/`, { headers: this.headers });
+    }
+
+    public getVersion(): Observable<string> {
+        return this.http.get<string>(`${this.url}/version/`, { headers: this.headers });
     }
 }
