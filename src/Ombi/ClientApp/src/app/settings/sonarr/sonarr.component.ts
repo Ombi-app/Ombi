@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { UntypedFormBuilder, FormControl, UntypedFormGroup, Validators } from "@angular/forms";
+import { SonarrFacade } from "app/state/sonarr/sonarr.facade";
 import { finalize, map } from "rxjs";
 
 import { ILanguageProfiles, ISonarrProfile, ISonarrRootFolder, ITag } from "../../interfaces";
@@ -8,7 +9,6 @@ import { ISonarrSettings } from "../../interfaces";
 import { SonarrService } from "../../services";
 import { TesterService } from "../../services";
 import { NotificationService } from "../../services";
-import { SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./sonarr.component.html",
@@ -22,7 +22,7 @@ export class SonarrComponent implements OnInit {
     public rootFoldersAnime: ISonarrRootFolder[];
     public languageProfiles: ILanguageProfiles[];
     public languageProfilesAnime: ILanguageProfiles[];
-    
+
     public tags: ITag[];
     public animeTags: ITag[];
 
@@ -38,11 +38,13 @@ export class SonarrComponent implements OnInit {
     public sonarrVersion: string;
     formErrors: any;
 
-    constructor(private settingsService: SettingsService,
-                private sonarrService: SonarrService,
+    public sonarrState$ = this.sonarrFacade.sonarrState$();
+
+    constructor(private sonarrService: SonarrService,
                 private notificationService: NotificationService,
                 private testerService: TesterService,
-                private fb: UntypedFormBuilder){}
+                private fb: UntypedFormBuilder,
+                private sonarrFacade: SonarrFacade){}
 
     onFormValuesChanged()
         {
@@ -64,27 +66,27 @@ export class SonarrComponent implements OnInit {
         }
 
     public ngOnInit() {
-        this.settingsService.getSonarr()
-            .subscribe(x => {
+        this.sonarrFacade.sonarrState$()
+            .subscribe(({settings, version}) => {
                 this.form = this.fb.group({
-                    enabled: [x.enabled],
-                    apiKey: [x.apiKey, [Validators.required]],
-                    qualityProfile: [x.qualityProfile, [Validators.required, validateProfile]],
-                    rootPath: [x.rootPath, [Validators.required, validateProfile]],
-                    qualityProfileAnime: [x.qualityProfileAnime],
-                    rootPathAnime: [x.rootPathAnime],
-                    ssl: [x.ssl],
-                    subDir: [x.subDir],
-                    ip: [x.ip, [Validators.required]],
-                    port: [x.port, [Validators.required]],
-                    addOnly: [x.addOnly],
-                    seasonFolders: [x.seasonFolders],
-                    languageProfile: [x.languageProfile],
-                    languageProfileAnime: [x.languageProfileAnime],
-                    scanForAvailability: [x.scanForAvailability],
-                    sendUserTags: [x.sendUserTags],
-                    tag: [x.tag],
-                    animeTag: [x.animeTag]
+                    enabled: [settings.enabled],
+                    apiKey: [settings.apiKey, [Validators.required]],
+                    qualityProfile: [settings.qualityProfile, [Validators.required, validateProfile]],
+                    rootPath: [settings.rootPath, [Validators.required, validateProfile]],
+                    qualityProfileAnime: [settings.qualityProfileAnime],
+                    rootPathAnime: [settings.rootPathAnime],
+                    ssl: [settings.ssl],
+                    subDir: [settings.subDir],
+                    ip: [settings.ip, [Validators.required]],
+                    port: [settings.port, [Validators.required]],
+                    addOnly: [settings.addOnly],
+                    seasonFolders: [settings.seasonFolders],
+                    languageProfile: [settings.languageProfile],
+                    languageProfileAnime: [settings.languageProfileAnime],
+                    scanForAvailability: [settings.scanForAvailability],
+                    sendUserTags: [settings.sendUserTags],
+                    tag: [settings.tag],
+                    animeTag: [settings.animeTag]
                 });
 
                 this.rootFolders = [];
@@ -93,25 +95,20 @@ export class SonarrComponent implements OnInit {
                 this.tags = [];
                 this.animeTags = [];
 
-                if (x.enabled && this.form.valid) {
-                    this.testerService.sonarrTest(x).subscribe(result => {
-                        this.sonarrVersion = result.version[0];
-                        if (this.sonarrVersion === '3') {
-                            this.form.controls.languageProfile.addValidators([Validators.required, validateProfile]);
-                        }
-                    });
+                if (version.length > 0) {
+                    this.sonarrVersion = version[0];
                 }
 
-                if (x.qualityProfile) {
+                if (settings.qualityProfile) {
                     this.getProfiles(this.form);
                 }
-                if (x.rootPath) {
+                if (settings.rootPath) {
                     this.getRootFolders(this.form);
                 }
-                if (x.languageProfile) {
+                if (settings.languageProfile) {
                     this.getLanguageProfiles(this.form);
                 }
-                if (x.tag || x.animeTag) {
+                if (settings.tag || settings.animeTag) {
                     this.getTags(this.form);
                 }
 
@@ -226,7 +223,7 @@ export class SonarrComponent implements OnInit {
             form.controls.tag.setValue(null);
         }
 
-        this.settingsService.saveSonarr(form.value)
+        this.sonarrFacade.updateSettings(form.value)
             .subscribe(x => {
                 if (x) {
                     this.notificationService.success("Successfully saved Sonarr settings");

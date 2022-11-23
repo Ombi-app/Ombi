@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, OnInit } from "@angular/core";
-import { ImageService, SearchV2Service, MessageService, RequestService, SonarrService, SettingsStateService } from "../../../services";
+import { SearchV2Service, MessageService, RequestService, SonarrService, SettingsStateService } from "../../../services";
 import { ActivatedRoute } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
@@ -11,9 +11,8 @@ import { AuthService } from "../../../auth/auth.service";
 import { NewIssueComponent } from "../shared/new-issue/new-issue.component";
 import { TvAdvancedOptionsComponent } from "./panels/tv-advanced-options/tv-advanced-options.component";
 import { RequestServiceV2 } from "../../../services/requestV2.service";
-import { RequestBehalfComponent } from "../shared/request-behalf/request-behalf.component";
 import { forkJoin } from "rxjs";
-import { TopBannerComponent } from "../shared/top-banner/top-banner.component";
+import { SonarrFacade } from "app/state/sonarr";
 
 @Component({
     templateUrl: "./tv-details.component.html",
@@ -36,10 +35,15 @@ export class TvDetailsComponent implements OnInit {
     private tvdbId: number;
 
     constructor(private searchService: SearchV2Service, private route: ActivatedRoute,
-        private sanitizer: DomSanitizer, private imageService: ImageService,
-        public dialog: MatDialog, public messageService: MessageService, private requestService: RequestService,
+        private sanitizer: DomSanitizer,
+        public dialog: MatDialog,
+        public messageService: MessageService,
+        private requestService: RequestService,
         private requestService2: RequestServiceV2,
-        private auth: AuthService, private sonarrService: SonarrService, private settingsState: SettingsStateService) {
+        private auth: AuthService,
+        private sonarrService: SonarrService,
+        private sonarrFacade: SonarrFacade,
+        private settingsState: SettingsStateService) {
         this.route.params.subscribe((params: any) => {
             this.tvdbId = params.tvdbId;
             this.fromSearch = params.search;
@@ -58,7 +62,7 @@ export class TvDetailsComponent implements OnInit {
         this.manageOwnRequests = this.auth.hasRole('ManageOwnRequests');
 
         if (this.isAdmin) {
-            this.showAdvanced = await this.sonarrService.isEnabled();
+            this.showAdvanced = this.sonarrFacade.isEnabled();
         }
 
         // if (this.fromSearch) {
@@ -138,6 +142,7 @@ export class TvDetailsComponent implements OnInit {
         this.tv.images.original = 'https://image.tmdb.org/t/p/w300/' + this.tv.images.original
       };
     }
+
     private loadAdvancedInfo() {
         const profile = this.sonarrService.getQualityProfilesWithoutSettings();
         const folders = this.sonarrService.getRootFoldersWithoutSettings();

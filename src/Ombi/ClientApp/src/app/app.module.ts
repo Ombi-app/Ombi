@@ -1,5 +1,5 @@
 import { APP_BASE_HREF, CommonModule, PlatformLocation } from "@angular/common";
-import { CustomPageService, ImageService, RequestService, SettingsService } from "./services";
+import { CustomPageService, ImageService, RequestService, SettingsService, SonarrService } from "./services";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from "@angular/common/http";
 import { IdentityService, IssuesService, JobService, MessageService, PlexTvService, SearchService, StatusService } from "./services";
@@ -13,6 +13,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BrowserModule } from "@angular/platform-browser";
 import { ButtonModule } from "primeng/button";
 import { CUSTOMIZATION_INITIALIZER } from "./state/customization/customization-initializer";
+import { SONARR_INITIALIZER } from "./state/sonarr/sonarr-initializer";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { CookieComponent } from "./auth/cookie.component";
 import { CookieService } from "ng2-cookies";
@@ -22,6 +23,7 @@ import { DataViewModule } from "primeng/dataview";
 import { DialogModule } from "primeng/dialog";
 import { FEATURES_INITIALIZER } from "./state/features/features-initializer";
 import { FeatureState } from "./state/features";
+import { SonarrSettingsState } from "./state/sonarr";
 import { JwtModule } from "@auth0/angular-jwt";
 import { LandingPageComponent } from "./landingpage/landingpage.component";
 import { LandingPageService } from "./services";
@@ -161,7 +163,7 @@ export function JwtTokenGetter() {
         }),
         SidebarModule,
         MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, LayoutModule, MatSlideToggleModule,
-        NgxsModule.forRoot([CustomizationState, FeatureState], {
+        NgxsModule.forRoot([CustomizationState, FeatureState, SonarrSettingsState], {
             developmentMode: !environment.production,
         }),
         ...environment.production ? [] :
@@ -205,8 +207,10 @@ export function JwtTokenGetter() {
         MessageService,
         StorageService,
         RequestService,
+        SonarrService,
         SignalRNotificationService,
         FEATURES_INITIALIZER,
+        SONARR_INITIALIZER,
         CUSTOMIZATION_INITIALIZER,
         {
             provide: APP_BASE_HREF,

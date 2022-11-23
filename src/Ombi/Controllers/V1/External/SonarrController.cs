@@ -151,5 +151,17 @@ namespace Ombi.Controllers.V1.External
             return settings.Enabled;
         }
 
+        [HttpGet("version")]
+        [PowerUser]
+        public async Task<string> SonarrVersion()
+        {
+            var settings = await SonarrSettings.GetSettingsAsync();
+            if (!settings.Enabled)
+            {
+                return string.Empty;
+            }
+            var status = await SonarrV3Api.SystemStatus(settings.ApiKey, settings.FullUri);
+            return status.version;
+        }
     }
 }

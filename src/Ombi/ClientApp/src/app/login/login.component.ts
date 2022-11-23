@@ -13,6 +13,7 @@ import { StatusService } from "../services";
 import { StorageService } from "../shared/storage/storage-service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { CustomizationFacade } from "../state/customization";
+import { SonarrFacade } from "app/state/sonarr";
 
 @Component({
   templateUrl: "./login.component.html",
@@ -60,6 +61,7 @@ export class LoginComponent implements OnDestroy, OnInit {
     private translate: TranslateService,
     private plexTv: PlexTvService,
     private store: StorageService,
+    private sonarrFacade: SonarrFacade,
     private readonly notify: MatSnackBar
   ) {
     this.href = href;
@@ -142,6 +144,7 @@ export class LoginComponent implements OnDestroy, OnInit {
 
           if (this.authService.loggedIn()) {
             this.ngOnDestroy();
+            this.sonarrFacade.load().subscribe();
             this.router.navigate(["/"]);
           } else {
             this.notify.open(this.errorBody, "OK", {
@@ -218,6 +221,7 @@ export class LoginComponent implements OnDestroy, OnInit {
               this.oAuthWindow.close();
             }
             this.oauthLoading = false;
+            this.sonarrFacade.load().subscribe();
             this.router.navigate(["search"]);
             return;
           }
@@ -248,6 +252,7 @@ export class LoginComponent implements OnDestroy, OnInit {
 
           if (this.authService.loggedIn()) {
             this.ngOnDestroy();
+            this.sonarrFacade.load().subscribe();
             this.router.navigate(["/"]);
           } else {
             this.notify.open(this.errorBody, "OK", {

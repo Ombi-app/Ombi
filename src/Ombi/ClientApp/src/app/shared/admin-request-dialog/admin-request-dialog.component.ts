@@ -1,11 +1,11 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { SonarrFacade } from "app/state/sonarr";
 import { firstValueFrom, Observable } from "rxjs";
 import { startWith, map } from "rxjs/operators";
-import { ILanguageProfiles, IRadarrProfile, IRadarrRootFolder, ISonarrProfile, ISonarrRootFolder, ISonarrSettings, IUserDropdown, RequestType } from "../../interfaces";
-import { IdentityService, MessageService, RadarrService, RequestService, SettingsService, SonarrService } from "../../services";
-import { RequestServiceV2 } from "../../services/requestV2.service";
+import { ILanguageProfiles, IRadarrProfile, IRadarrRootFolder, ISonarrProfile, ISonarrRootFolder, IUserDropdown, RequestType } from "../../interfaces";
+import { IdentityService, RadarrService, SonarrService } from "../../services";
 
 export interface IAdminRequestDialogData {
     type: RequestType,
@@ -23,9 +23,9 @@ export class AdminRequestDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: IAdminRequestDialogData,
     private identityService: IdentityService,
     private sonarrService: SonarrService,
-    private settingsService: SettingsService,
     private radarrService: RadarrService,
-    private fb: UntypedFormBuilder
+    private fb: UntypedFormBuilder,
+    private sonarrFacade: SonarrFacade
   ) {}
 
   public form: UntypedFormGroup;
@@ -63,11 +63,14 @@ export class AdminRequestDialogComponent implements OnInit {
     );
 
     if (this.data.type === RequestType.tvShow) {
-      this.sonarrEnabled = await this.sonarrService.isEnabled();
+      this.sonarrEnabled = this.sonarrFacade.isEnabled();
       if (this.sonarrEnabled) {
-        this.sonarrService.getV3LanguageProfilesWithoutSettings().subscribe((profiles: ILanguageProfiles[]) => {
-          this.sonarrLanguageProfiles = profiles;
-        })
+        console.log(this.sonarrFacade.version());
+        if (this.sonarrFacade.version()[0] === "3") {
+          this.sonarrService.getV3LanguageProfilesWithoutSettings().subscribe((profiles: ILanguageProfiles[]) => {
+            this.sonarrLanguageProfiles = profiles;
+          })
+        }
         this.sonarrService.getQualityProfilesWithoutSettings().subscribe(c => {
             this.sonarrProfiles = c;
         });
