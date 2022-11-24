@@ -105,7 +105,7 @@ export class SonarrComponent implements OnInit {
                 if (settings.rootPath) {
                     this.getRootFolders(this.form);
                 }
-                if (settings.languageProfile) {
+                if (settings.languageProfile && this.sonarrVersion === "3") {
                     this.getLanguageProfiles(this.form);
                 }
                 if (settings.tag || settings.animeTag) {

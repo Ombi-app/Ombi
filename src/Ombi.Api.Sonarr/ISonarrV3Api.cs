@@ -10,5 +10,6 @@ namespace Ombi.Api.Sonarr
         Task<IEnumerable<LanguageProfiles>> LanguageProfiles(string apiKey, string baseUrl);
         Task<Tag> CreateTag(string apiKey, string baseUrl, string tagName);
         Task<Tag> GetTag(int tagId, string apiKey, string baseUrl);
+        Task<List<MonitoredEpisodeResult>> MonitorEpisode(int[] episodeIds, bool monitor, string apiKey, string baseUrl);
     }
 }

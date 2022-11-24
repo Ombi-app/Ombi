@@ -27,8 +27,7 @@ namespace Ombi.Core.Senders
             ISettingsService<DogNzbSettings> dog, IDogNzbApi dogApi, ISettingsService<SickRageSettings> srSettings,
             ISickRageApi srApi, IRepository<UserQualityProfiles> userProfiles, IRepository<RequestQueue> requestQueue, INotificationHelper notify)
         {
-            SonarrApi = sonarrApi;
-            SonarrV3Api = sonarrV3Api;
+            SonarrApi = sonarrV3Api;
             Logger = log;
             SonarrSettings = sonarrSettings;
             DogNzbSettings = dog;
@@ -40,8 +39,7 @@ namespace Ombi.Core.Senders
             _notificationHelper = notify;
         }
 
-        private ISonarrApi SonarrApi { get; }
-        private ISonarrV3Api SonarrV3Api { get; }
+        private ISonarrV3Api SonarrApi { get; }
         private IDogNzbApi DogNzbApi { get; }
         private ISickRageApi SickRageApi { get; }
         private ILogger<TvSender> Logger { get; }
@@ -324,16 +322,16 @@ namespace Ombi.Core.Senders
             var tagName = model.RequestedUser.UserName;
             // Does tag exist?
 
-            var allTags = await SonarrV3Api.GetTags(s.ApiKey, s.FullUri);
+            var allTags = await SonarrApi.GetTags(s.ApiKey, s.FullUri);
             var existingTag = allTags.FirstOrDefault(x => x.label.Equals(tagName, StringComparison.InvariantCultureIgnoreCase));
-            existingTag ??= await SonarrV3Api.CreateTag(s.ApiKey, s.FullUri, tagName);
+            existingTag ??= await SonarrApi.CreateTag(s.ApiKey, s.FullUri, tagName);
 
             return existingTag;
         }
 
         private async Task<Tag> GetTag(int tagId, SonarrSettings s)
         {
-            var tag = await SonarrV3Api.GetTag(tagId, s.ApiKey, s.FullUri);
+            var tag = await SonarrApi.GetTag(tagId, s.ApiKey, s.FullUri);
             if (tag == null)
             {
                 Logger.LogError($"Tag ID {tagId} does not exist in sonarr. Please update the settings");
@@ -424,16 +422,10 @@ namespace Ombi.Core.Senders
                         epToUnmonitored.Add(ep);
                     }
 
-                    foreach (var epToUpdate in epToUnmonitored)
-                    {
-                        await SonarrApi.UpdateEpisode(epToUpdate, s.ApiKey, s.FullUri);
-                    }
+                    await SonarrApi.MonitorEpisode(epToUnmonitored.Select(x => x.id).ToArray(), false, s.ApiKey, s.FullUri);
                 }
                 // Now update the episodes that need updating
-                foreach (var epToUpdate in episodesToUpdate.Where(x => x.seasonNumber == season.SeasonNumber))
-                {
-                    await SonarrApi.UpdateEpisode(epToUpdate, s.ApiKey, s.FullUri);
-                }
+                await SonarrApi.MonitorEpisode(episodesToUpdate.Where(x => x.seasonNumber == season.SeasonNumber).Select(x => x.id).ToArray(), true, s.ApiKey, s.FullUri);
             }
 
             if (!s.AddOnly)
@@ -575,7 +567,7 @@ namespace Ombi.Core.Senders
                 return rootFoldersResult.FirstOrDefault().path;
             }
 
-            foreach (var r in rootFoldersResult.Where(r => r.id == pathId))
+            foreach (var r in rootFoldersResult?.Where(r => r.id == pathId))
             {
                 return r.path;
             }

@@ -8,7 +8,7 @@ namespace Ombi.Api.Sonarr.Models
     {
         public Episode()
         {
-            
+
         }
 
         public Episode(Episode ep)
@@ -53,7 +53,7 @@ namespace Ombi.Api.Sonarr.Models
     {
         public Episodefile()
         {
-            
+
         }
 
         public Episodefile(Episodefile e)
@@ -85,7 +85,7 @@ namespace Ombi.Api.Sonarr.Models
     {
         public EpisodeQuality()
         {
-            
+
         }
 
         public EpisodeQuality(EpisodeQuality e)
@@ -101,7 +101,7 @@ namespace Ombi.Api.Sonarr.Models
     {
         public Revision()
         {
-            
+
         }
 
         public Revision(Revision r)
@@ -113,6 +113,17 @@ namespace Ombi.Api.Sonarr.Models
         public int real { get; set; }
     }
 
+    public class MonitoredEpisodeResult
+    {
+        public int seriesId { get; set; }
+        public int tvdbId { get; set; }
+        public int episodeFileId { get; set; }
+        public int seasonNumber { get; set; }
+        public int episodeNumber { get; set; }
+        public string overview { get; set; }
+        public bool monitored { get; set; }
+        public int id { get; set; }
+    }
 
     public class EpisodeUpdateResult
     {
