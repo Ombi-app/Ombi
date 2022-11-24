@@ -1,3 +1,12 @@
+## [4.32.3](https://github.com/Ombi-app/Ombi/compare/v4.32.2...v4.32.3) (2022-11-24)
+
+
+### Bug Fixes
+
+* **sonarr:** V4 actually works this time around ([f62e70f](https://github.com/Ombi-app/Ombi/commit/f62e70fc493c7971da5e4508ce10522f5df0bbf7))
+
+
+
 ## [4.32.2](https://github.com/Ombi-app/Ombi/compare/v4.32.1...v4.32.2) (2022-11-23)
 
 
@@ -373,15 +382,6 @@
 * Missing Poster broken link fix ([#4637](https://github.com/Ombi-app/Ombi/issues/4637)) ([4070f0d](https://github.com/Ombi-app/Ombi/commit/4070f0d093b1c92487a1c80cabad8283a9650f51))
 * **sickrage:** Fixed issue with incorrect handling of SiCKRAGE episode results returned during episode status changes, now expects array of objects from data path if present ([#4648](https://github.com/Ombi-app/Ombi/issues/4648)) ([6d16442](https://github.com/Ombi-app/Ombi/commit/6d16442d4d714920367df065a3ced42b729f4233))
 * **sync:** Emby+Jellyfin - sync multi-episode files of 3+ episodes ([bd8fd89](https://github.com/Ombi-app/Ombi/commit/bd8fd890554c9d85d6da4d2cee813e82ce698e52))
-
-
-
-# [4.20.0](https://github.com/Ombi-app/Ombi/compare/v4.19.1...v4.20.0) (2022-04-28)
-
-
-### Features
-
-* **discover:** Show more relevant shows in upcoming TV ([8357819](https://github.com/Ombi-app/Ombi/commit/8357819b53b8c675c0b246d7006b5a778bdba33f))
 
 
 
