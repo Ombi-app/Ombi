@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable, Inject } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { IRadarrProfile, IRadarrRootFolder } from "../../interfaces";
+import { IRadarrProfile, IRadarrRootFolder, ITag } from "../../interfaces";
 import { IRadarrSettings } from "../../interfaces";
 import { ServiceHelpers } from "../service.helpers";
 
@@ -23,10 +23,20 @@ export class RadarrService extends ServiceHelpers {
     public getRootFoldersFromSettings(): Observable<IRadarrRootFolder[]> {
         return this.http.get<IRadarrRootFolder[]>(`${this.url}/RootFolders/`, { headers: this.headers });
     }
+
     public getQualityProfilesFromSettings(): Observable<IRadarrProfile[]> {
         return this.http.get<IRadarrProfile[]>(`${this.url}/Profiles/`, { headers: this.headers });
     }
-    public isRadarrEnabled(): Promise<boolean> {
-        return this.http.get<boolean>(`${this.url}/enabled/`, { headers: this.headers }).toPromise();
+
+    public isRadarrEnabled(): Observable<boolean> {
+        return this.http.get<boolean>(`${this.url}/enabled/`, { headers: this.headers });
+    }
+
+    public getTagsWithSettings(settings: IRadarrSettings): Observable<ITag[]> {
+        return this.http.post<ITag[]>(`${this.url}/enabled/`, JSON.stringify(settings), { headers: this.headers });
+    }
+
+    public getTags(): Observable<ITag[]> {
+        return this.http.get<ITag[]>(`${this.url}/enabled/`, { headers: this.headers })
     }
 }

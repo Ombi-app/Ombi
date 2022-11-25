@@ -1,8 +1,9 @@
-import { Component, OnInit, QueryList, ViewChild, ViewChildren } from "@angular/core";
+import { Component, OnInit, QueryList, ViewChildren } from "@angular/core";
 import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
+import { RadarrFacade } from "app/state/radarr";
 
 import { IMinimumAvailability, IRadarrCombined, IRadarrProfile, IRadarrRootFolder } from "../../interfaces";
-import { NotificationService, SettingsService } from "../../services";
+import { NotificationService } from "../../services";
 import { FeaturesFacade } from "../../state/features/features.facade";
 import { RadarrFormComponent } from "./components/radarr-form.component";
 
@@ -23,7 +24,7 @@ export class RadarrComponent implements OnInit {
     @ViewChildren('4kForm') public form4k: QueryList<RadarrFormComponent>;
     @ViewChildren('normalForm') public normalForm: QueryList<RadarrFormComponent>;
 
-    constructor(private settingsService: SettingsService,
+    constructor(private radarrFacade: RadarrFacade,
                 private notificationService: NotificationService,
                 private featureFacade: FeaturesFacade,
                 private fb: UntypedFormBuilder) { }
@@ -31,34 +32,34 @@ export class RadarrComponent implements OnInit {
 
     public ngOnInit() {
         this.is4kEnabled = this.featureFacade.is4kEnabled();
-        this.settingsService.getRadarr()
+        this.radarrFacade.state$()
             .subscribe(x => {
                 this.form = this.fb.group({
                     radarr: this.fb.group({
-                        enabled: [x.radarr.enabled],
-                        apiKey: [x.radarr.apiKey],
-                        defaultQualityProfile: [+x.radarr.defaultQualityProfile],
-                        defaultRootPath: [x.radarr.defaultRootPath],
-                        ssl: [x.radarr.ssl],
-                        subDir: [x.radarr.subDir],
-                        ip: [x.radarr.ip],
-                        port: [x.radarr.port],
-                        addOnly: [x.radarr.addOnly],
-                        minimumAvailability: [x.radarr.minimumAvailability],
-                        scanForAvailability: [x.radarr.scanForAvailability]
+                        enabled: [x.settings.radarr.enabled],
+                        apiKey: [x.settings.radarr.apiKey],
+                        defaultQualityProfile: [+x.settings.radarr.defaultQualityProfile],
+                        defaultRootPath: [x.settings.radarr.defaultRootPath],
+                        ssl: [x.settings.radarr.ssl],
+                        subDir: [x.settings.radarr.subDir],
+                        ip: [x.settings.radarr.ip],
+                        port: [x.settings.radarr.port],
+                        addOnly: [x.settings.radarr.addOnly],
+                        minimumAvailability: [x.settings.radarr.minimumAvailability],
+                        scanForAvailability: [x.settings.radarr.scanForAvailability]
                     }),
                     radarr4K: this.fb.group({
-                        enabled: [x.radarr4K.enabled],
-                        apiKey: [x.radarr4K.apiKey],
-                        defaultQualityProfile: [+x.radarr4K.defaultQualityProfile],
-                        defaultRootPath: [x.radarr4K.defaultRootPath],
-                        ssl: [x.radarr4K.ssl],
-                        subDir: [x.radarr4K.subDir],
-                        ip: [x.radarr4K.ip],
-                        port: [x.radarr4K.port],
-                        addOnly: [x.radarr4K.addOnly],
-                        minimumAvailability: [x.radarr4K.minimumAvailability],
-                        scanForAvailability: [x.radarr4K.scanForAvailability]
+                        enabled: [x.settings.radarr4K.enabled],
+                        apiKey: [x.settings.radarr4K.apiKey],
+                        defaultQualityProfile: [+x.settings.radarr4K.defaultQualityProfile],
+                        defaultRootPath: [x.settings.radarr4K.defaultRootPath],
+                        ssl: [x.settings.radarr4K.ssl],
+                        subDir: [x.settings.radarr4K.subDir],
+                        ip: [x.settings.radarr4K.ip],
+                        port: [x.settings.radarr4K.port],
+                        addOnly: [x.settings.radarr4K.addOnly],
+                        minimumAvailability: [x.settings.radarr4K.minimumAvailability],
+                        scanForAvailability: [x.settings.radarr4K.scanForAvailability]
                     }),
                 });
                 this.normalForm.changes.forEach((comp => {
@@ -92,7 +93,7 @@ export class RadarrComponent implements OnInit {
         }
 
         const settings = <IRadarrCombined> form.value;
-        this.settingsService.saveRadarr(settings).subscribe(x => {
+        this.radarrFacade.updateSettings(settings).subscribe(x => {
             if (x) {
                 this.notificationService.success("Successfully saved Radarr settings");
             } else {

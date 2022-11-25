@@ -14,6 +14,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { ButtonModule } from "primeng/button";
 import { CUSTOMIZATION_INITIALIZER } from "./state/customization/customization-initializer";
 import { SONARR_INITIALIZER } from "./state/sonarr/sonarr-initializer";
+import { RADARR_INITIALIZER } from "./state/radarr/radarr-initializer";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { CookieComponent } from "./auth/cookie.component";
 import { CookieService } from "ng2-cookies";
@@ -24,6 +25,7 @@ import { DialogModule } from "primeng/dialog";
 import { FEATURES_INITIALIZER } from "./state/features/features-initializer";
 import { FeatureState } from "./state/features";
 import { SonarrSettingsState } from "./state/sonarr";
+import { RadarrSettingsState } from "./state/radarr";
 import { JwtModule } from "@auth0/angular-jwt";
 import { LandingPageComponent } from "./landingpage/landingpage.component";
 import { LandingPageService } from "./services";
@@ -163,7 +165,7 @@ export function JwtTokenGetter() {
         }),
         SidebarModule,
         MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, LayoutModule, MatSlideToggleModule,
-        NgxsModule.forRoot([CustomizationState, FeatureState, SonarrSettingsState], {
+        NgxsModule.forRoot([CustomizationState, FeatureState, SonarrSettingsState, RadarrSettingsState], {
             developmentMode: !environment.production,
         }),
         ...environment.production ? [] :
@@ -212,6 +214,7 @@ export function JwtTokenGetter() {
         FEATURES_INITIALIZER,
         SONARR_INITIALIZER,
         CUSTOMIZATION_INITIALIZER,
+        RADARR_INITIALIZER,
         {
             provide: APP_BASE_HREF,
             useValue: window["baseHref"]

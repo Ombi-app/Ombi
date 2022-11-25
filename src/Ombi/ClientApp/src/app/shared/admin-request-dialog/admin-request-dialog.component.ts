@@ -80,7 +80,7 @@ export class AdminRequestDialogComponent implements OnInit {
       }
     }
     if (this.data.type === RequestType.movie) {
-        this.radarrEnabled = await this.radarrService.isRadarrEnabled();
+        this.radarrEnabled = await firstValueFrom(this.radarrService.isRadarrEnabled());
         if (this.radarrEnabled) {
             this.radarrService.getQualityProfilesFromSettings().subscribe(c => {
                 this.radarrProfiles = c;

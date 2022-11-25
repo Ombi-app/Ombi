@@ -75,7 +75,7 @@ export class MovieDetailsComponent implements OnInit{
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
 
         if (this.isAdmin) {
-            this.showAdvanced = await this.radarrService.isRadarrEnabled();
+            this.showAdvanced = await firstValueFrom(this.radarrService.isRadarrEnabled());
         }
 
         if (this.imdbId) {
