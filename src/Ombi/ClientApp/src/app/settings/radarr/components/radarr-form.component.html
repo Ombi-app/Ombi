@@ -8,6 +8,10 @@
                         <div class="md-form-field">
                             <mat-slide-toggle formControlName="scanForAvailability">Scan for Availability</mat-slide-toggle>
                         </div>
+                        <div class="md-form-field">
+                            <mat-slide-toggle formControlName="sendUserTags" id="sendUserTags">Add the user as a tag</mat-slide-toggle>
+                            <small><br>This will add the username of the requesting user as a tag in Sonarr. If the tag doesn't exist, Ombi will create it.</small>
+                        </div>
                         <div class="md-form-field" >
                             <mat-slide-toggle formControlName="addOnly">
                                 Do not search for Movies
@@ -79,6 +83,22 @@
                         </mat-form-field>
 
                     </div>
+                    <div class="md-form-field">
+                        <div class="md-form-field" style="display:inline;">
+                            <button mat-raised-button (click)="getTags(form)" type="button" color="primary">Load Tags <span *ngIf="tagsRunning" class="fas fa-spinner fa-spin"></span></button>
+                        </div>
+                        <div class="md-form-field" style="margin-top:1em;"></div>
+                        <mat-form-field appearance="outline" >
+                            <mat-label>Tag</mat-label>
+                            <mat-select formControlName="tag">
+                                <mat-option *ngFor="let tag of tags" [value]="tag.id">
+                                    {{tag.label}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                    </div>
+
                     <div class="md-form-field">
                         <mat-form-field appearance="outline" >
                             <mat-label>Default Minimum Availability</mat-label>

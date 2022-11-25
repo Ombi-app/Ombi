@@ -28,15 +28,23 @@ export class RadarrService extends ServiceHelpers {
         return this.http.get<IRadarrProfile[]>(`${this.url}/Profiles/`, { headers: this.headers });
     }
 
+    public getRootFolders4kFromSettings(): Observable<IRadarrRootFolder[]> {
+        return this.http.get<IRadarrRootFolder[]>(`${this.url}/RootFolders/4k`, { headers: this.headers });
+    }
+
+    public getQualityProfiles4kFromSettings(): Observable<IRadarrProfile[]> {
+        return this.http.get<IRadarrProfile[]>(`${this.url}/Profiles/4k`, { headers: this.headers });
+    }
+
     public isRadarrEnabled(): Observable<boolean> {
         return this.http.get<boolean>(`${this.url}/enabled/`, { headers: this.headers });
     }
 
     public getTagsWithSettings(settings: IRadarrSettings): Observable<ITag[]> {
-        return this.http.post<ITag[]>(`${this.url}/enabled/`, JSON.stringify(settings), { headers: this.headers });
+        return this.http.post<ITag[]>(`${this.url}/tags/`, JSON.stringify(settings), { headers: this.headers });
     }
 
     public getTags(): Observable<ITag[]> {
-        return this.http.get<ITag[]>(`${this.url}/enabled/`, { headers: this.headers })
+        return this.http.get<ITag[]>(`${this.url}/tags/`, { headers: this.headers })
     }
 }

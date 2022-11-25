@@ -15,6 +15,8 @@ using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using System.Collections.Generic;
 using Ombi.Api.Radarr.Models;
+using Microsoft.Extensions.Options;
+using Ombi.Api.Sonarr;
 
 namespace Ombi.Core.Senders
 {
@@ -67,7 +69,7 @@ namespace Ombi.Core.Senders
                 }
                 if (radarrSettings.Enabled)
                 {
-                    return await SendToRadarr(model, is4K, radarrSettings);
+                    return await SendToRadarr(model, radarrSettings);
                 }
 
                 var dogSettings = await _dogNzbSettings.GetSettingsAsync();
@@ -131,7 +133,7 @@ namespace Ombi.Core.Senders
             return await _dogNzbApi.AddMovie(settings.ApiKey, id);
         }
 
-        private async Task<SenderResult> SendToRadarr(MovieRequests model, bool is4K, RadarrSettings settings)
+        private async Task<SenderResult> SendToRadarr(MovieRequests model, RadarrSettings settings)
         {
             var qualityToUse = int.Parse(settings.DefaultQualityProfile);
 
@@ -154,6 +156,17 @@ namespace Ombi.Core.Senders
                 }
             }
 
+            var tags = new List<int>();
+            if (settings.Tag.HasValue)
+            {
+                tags.Add(settings.Tag.Value);
+            }
+            if (settings.SendUserTags)
+            {
+                var userTag = await GetOrCreateTag(model, settings);
+                tags.Add(userTag.id);
+            }
+
             // Overrides on the request take priority
             if (model.QualityOverride > 0)
             {
@@ -174,7 +187,7 @@ namespace Ombi.Core.Senders
             {
                 var result = await _radarrV3Api.AddMovie(model.TheMovieDbId, model.Title, model.ReleaseDate.Year,
                     qualityToUse, rootFolderPath, settings.ApiKey, settings.FullUri, !settings.AddOnly,
-                    settings.MinimumAvailability);
+                    settings.MinimumAvailability, tags);
 
                 if (!string.IsNullOrEmpty(result.Error?.message))
                 {
@@ -211,6 +224,18 @@ namespace Ombi.Core.Senders
             var paths = await _radarrV3Api.GetRootFolders(settings.ApiKey, settings.FullUri);
             var selectedPath = paths.FirstOrDefault(x => x.id == overrideId);
             return selectedPath?.path ?? string.Empty;
+        }
+
+        private async Task<Tag> GetOrCreateTag(MovieRequests model, RadarrSettings s)
+        {
+            var tagName = model.RequestedUser.UserName;
+            // Does tag exist?
+
+            var allTags = await _radarrV3Api.GetTags(s.ApiKey, s.FullUri);
+            var existingTag = allTags.FirstOrDefault(x => x.label.Equals(tagName, StringComparison.InvariantCultureIgnoreCase));
+            existingTag ??= await _radarrV3Api.CreateTag(s.ApiKey, s.FullUri, tagName);
+
+            return existingTag;
         }
     }
 }

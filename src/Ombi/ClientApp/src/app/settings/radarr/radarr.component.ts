@@ -40,6 +40,8 @@ export class RadarrComponent implements OnInit {
                         apiKey: [x.settings.radarr.apiKey],
                         defaultQualityProfile: [+x.settings.radarr.defaultQualityProfile],
                         defaultRootPath: [x.settings.radarr.defaultRootPath],
+                        tag: [x.settings.radarr.tag],
+                        sendUserTags: [x.settings.radarr.sendUserTags],
                         ssl: [x.settings.radarr.ssl],
                         subDir: [x.settings.radarr.subDir],
                         ip: [x.settings.radarr.ip],
@@ -53,6 +55,8 @@ export class RadarrComponent implements OnInit {
                         apiKey: [x.settings.radarr4K.apiKey],
                         defaultQualityProfile: [+x.settings.radarr4K.defaultQualityProfile],
                         defaultRootPath: [x.settings.radarr4K.defaultRootPath],
+                        tag: [x.settings.radarr4K.tag],
+                        sendUserTags: [x.settings.radarr4K.sendUserTags],
                         ssl: [x.settings.radarr4K.ssl],
                         subDir: [x.settings.radarr4K.subDir],
                         ip: [x.settings.radarr4K.ip],
@@ -71,7 +75,6 @@ export class RadarrComponent implements OnInit {
                     }))
                 }
             });
-
     }
 
 
@@ -83,13 +86,22 @@ export class RadarrComponent implements OnInit {
         const radarrForm = form.controls.radarr as UntypedFormGroup;
         const radarr4KForm = form.controls.radarr4K as UntypedFormGroup;
 
-        if (radarrForm.controls.enabled.value && (radarrForm.controls.defaultQualityProfile.value === -1 || radarrForm.controls.defaultRootPath.value === "Please Select")) {
+        if (radarrForm.controls.enabled.value && (radarrForm.controls.defaultQualityProfile.value === -1
+            || radarrForm.controls.defaultRootPath.value === "Please Select")) {
             this.notificationService.error("Please check your entered values for Radarr");
             return;
         }
-        if (radarr4KForm.controls.enabled.value && (radarr4KForm.controls.defaultQualityProfile.value === -1 || radarr4KForm.controls.defaultRootPath.value === "Please Select")) {
+        if (radarr4KForm.controls.enabled.value && (radarr4KForm.controls.defaultQualityProfile.value === -1
+            || radarr4KForm.controls.defaultRootPath.value === "Please Select")) {
             this.notificationService.error("Please check your entered values for Radarr 4K");
             return;
+        }
+
+        if (radarr4KForm.controls.tag.value === -1) {
+            radarr4KForm.controls.tag.setValue(null);
+        }
+        if (radarrForm.controls.tag.value === -1) {
+            radarr4KForm.controls.tag.setValue(null);
         }
 
         const settings = <IRadarrCombined> form.value;

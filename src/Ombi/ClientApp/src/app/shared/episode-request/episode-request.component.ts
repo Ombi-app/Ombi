@@ -62,7 +62,7 @@ export class EpisodeRequestComponent {
         });
 
         if (this.data.isAdmin) {
-            const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.tvShow, id: this.data.series.id }, panelClass: 'modal-panel' });
+            const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.tvShow, id: this.data.series.id, is4k: null }, panelClass: 'modal-panel' });
             dialog.afterClosed().subscribe(async (result) => {
                 if (result) {
                     viewModel.requestOnBehalf = result.username?.id;

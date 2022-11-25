@@ -111,7 +111,7 @@ export class MovieDetailsComponent implements OnInit{
             is4K = false;
         }
         if (this.isAdmin) {
-            const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.movie, id: this.movie.id }, panelClass: 'modal-panel' });
+            const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.movie, id: this.movie.id, is4K: is4K }, panelClass: 'modal-panel' });
             dialog.afterClosed().subscribe(async (result) => {
                 if (result) {
                     const requestResult = await firstValueFrom(this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId,
