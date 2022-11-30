@@ -9,17 +9,20 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es2020",
-    "types": ["node"],
-    "resolveJsonModule":true,
-    "allowSyntheticDefaultImports":true,
+    "target": "ES2022",
+    "types": [
+      "node"
+    ],
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "typeRoots": [
       "node_modules/@types"
     ],
     "lib": [
       "es2017",
       "dom"
-    ]
+    ],
+    "useDefineForClassFields": false
   }
 ,
   "files": [
