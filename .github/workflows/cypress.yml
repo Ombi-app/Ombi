@@ -22,7 +22,7 @@ jobs:
         dotnet-version: 6.0.x
     - uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: '18'
 
     - uses: actions/cache@v2
       with:
@@ -42,6 +42,9 @@ jobs:
 
     - name: Run Docker Image
       run: nohup docker run --rm -p 5000:5000 ombi &
+
+    # - name: Run Wiremock Plex
+    #   run: nohup docker run -it --rm -p 8080:8080 --name wiremock wiremock/wiremock:2.35.0
 
     - name: Sleep for server to start
       run: sleep 20
