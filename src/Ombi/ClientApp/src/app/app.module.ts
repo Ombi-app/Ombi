@@ -84,7 +84,6 @@ const routes: Routes = [
     { path: "token", component: TokenResetPasswordComponent },
     { path: "landingpage", component: LandingPageComponent },
     { path: "auth/cookie", component: CookieComponent },
-    { loadChildren: () => import("./calendar/calendar.module").then(m => m.CalendarModule), path: "calendar" },
     { loadChildren: () => import("./discover/discover.module").then(m => m.DiscoverModule), path: "discover" },
     { loadChildren: () => import("./issues/issues.module").then(m => m.IssuesModule), path: "issues" },
     { loadChildren: () => import("./settings/settings.module").then(m => m.SettingsModule), path: "Settings" },
