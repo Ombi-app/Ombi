@@ -57,7 +57,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^15.0.2",
-    "@angular/cli": "^14.2.10",
+    "@angular/cli": "^15.0.2",
     "@angular/compiler-cli": "^15.0.1",
     "@babel/core": "^7.18.9",
     "@compodoc/compodoc": "^1.1.19",
