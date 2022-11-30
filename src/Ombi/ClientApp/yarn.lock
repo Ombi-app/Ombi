@@ -243,20 +243,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/cdk@npm:^13.2.0":
-  version: 13.3.9
-  resolution: "@angular/cdk@npm:13.3.9"
+"@angular/cdk@npm:^14.2.7":
+  version: 14.2.7
+  resolution: "@angular/cdk@npm:14.2.7"
   dependencies:
     parse5: ^5.0.0
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/common": ^13.0.0 || ^14.0.0-0
-    "@angular/core": ^13.0.0 || ^14.0.0-0
+    "@angular/common": ^14.0.0 || ^15.0.0
+    "@angular/core": ^14.0.0 || ^15.0.0
     rxjs: ^6.5.3 || ^7.4.0
   dependenciesMeta:
     parse5:
       optional: true
-  checksum: cf312f3dedcaab0d985c3f12df1141f566760d57af579b1d7e2b2c6f23ea2960f8c9bbfe2a0863f7ac7b0bdd85b579bad6d8ab6f84af7f17af21d11c1207a9fc
+  checksum: 121cfbd556003e9e81115f43de3ff8597e2e2157dae91064d0e5c533e9c9e8378b5737d72cfd849dc93f9dcda0a8307aaaea1b2ae0605c6ddd6c1a11499da00a
   languageName: node
   linkType: hard
 
@@ -385,20 +385,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/material@npm:^13.2.0":
-  version: 13.3.9
-  resolution: "@angular/material@npm:13.3.9"
+"@angular/material@npm:^14.2.7":
+  version: 14.2.7
+  resolution: "@angular/material@npm:14.2.7"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/animations": ^13.0.0 || ^14.0.0-0
-    "@angular/cdk": 13.3.9
-    "@angular/common": ^13.0.0 || ^14.0.0-0
-    "@angular/core": ^13.0.0 || ^14.0.0-0
-    "@angular/forms": ^13.0.0 || ^14.0.0-0
-    "@angular/platform-browser": ^13.0.0 || ^14.0.0-0
+    "@angular/animations": ^14.0.0 || ^15.0.0
+    "@angular/cdk": 14.2.7
+    "@angular/common": ^14.0.0 || ^15.0.0
+    "@angular/core": ^14.0.0 || ^15.0.0
+    "@angular/forms": ^14.0.0 || ^15.0.0
+    "@angular/platform-browser": ^14.0.0 || ^15.0.0
     rxjs: ^6.5.3 || ^7.4.0
-  checksum: 97ea30065767288b525d5902691535f98c8aba2808f421f65683090cc16776d8f2ba858d1a1a95323d73c0aef05668df634f7b1537dbc2524bce2e6c6282d25c
+  checksum: 078e944fb852b7d727a879c7fb5a9914f12447dbb4686444405565ea4aa40b076a60624c9bf2b3d9bc568ac6a50026b8a5ca614494253328421f8d14adb4afde
   languageName: node
   linkType: hard
 
@@ -12828,7 +12828,7 @@ cors@latest:
   dependencies:
     "@angular-devkit/build-angular": ^15.0.2
     "@angular/animations": ^15.0.1
-    "@angular/cdk": ^13.2.0
+    "@angular/cdk": ^14.2.7
     "@angular/cli": ^14.2.10
     "@angular/common": ^15.0.1
     "@angular/compiler": ^15.0.1
@@ -12836,7 +12836,7 @@ cors@latest:
     "@angular/core": ^15.0.1
     "@angular/forms": ^15.0.1
     "@angular/localize": ^15.0.1
-    "@angular/material": ^13.2.0
+    "@angular/material": ^14.2.7
     "@angular/platform-browser": ^15.0.1
     "@angular/platform-browser-dynamic": ^15.0.1
     "@angular/platform-server": ^15.0.1
