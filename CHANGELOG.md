@@ -1,3 +1,12 @@
+# [4.33.0](https://github.com/Ombi-app/Ombi/compare/v4.32.3...v4.33.0) (2022-12-01)
+
+
+### Features
+
+* Angular 15 and Dependency upgrades ([#4818](https://github.com/Ombi-app/Ombi/issues/4818)) ([4816acf](https://github.com/Ombi-app/Ombi/commit/4816acf6f94443d23ebef6091d4cfcbca580f9ca))
+
+
+
 ## [4.32.3](https://github.com/Ombi-app/Ombi/compare/v4.32.2...v4.32.3) (2022-11-24)
 
 
@@ -367,21 +376,6 @@
 ### Bug Fixes
 
 * :bug: Fixed the Request on Behalf of having blanks ([#4667](https://github.com/Ombi-app/Ombi/issues/4667)) ([7dd9b1c](https://github.com/Ombi-app/Ombi/commit/7dd9b1cac07f571dd35b362544e4fe0226c4b817))
-
-
-
-## [4.20.1](https://github.com/Ombi-app/Ombi/compare/v4.20.0...v4.20.1) (2022-05-27)
-
-
-### Bug Fixes
-
-* added media type tag to media type text ([#4638](https://github.com/Ombi-app/Ombi/issues/4638)) ([fe501d3](https://github.com/Ombi-app/Ombi/commit/fe501d34a0c36ac9f000b107eca49dbc6694d006))
-* **API:** Fix pagination in some edge cases ([#4649](https://github.com/Ombi-app/Ombi/issues/4649)) ([a70bf8f](https://github.com/Ombi-app/Ombi/commit/a70bf8f46c76d74c9dfdf908c53bd9955ca0a35d))
-* **discover:** Carousel touch not working when scrolling page and recommendations and similar movie navigation ([#4633](https://github.com/Ombi-app/Ombi/issues/4633)) ([d5ef1d5](https://github.com/Ombi-app/Ombi/commit/d5ef1d53e5f77d19dba8b8059c80b538a3e14f2a))
-* Improve Swagger documentation ([#4652](https://github.com/Ombi-app/Ombi/issues/4652)) ([181892b](https://github.com/Ombi-app/Ombi/commit/181892bcfe88e6d76febf49ef57745d04552d08e))
-* Missing Poster broken link fix ([#4637](https://github.com/Ombi-app/Ombi/issues/4637)) ([4070f0d](https://github.com/Ombi-app/Ombi/commit/4070f0d093b1c92487a1c80cabad8283a9650f51))
-* **sickrage:** Fixed issue with incorrect handling of SiCKRAGE episode results returned during episode status changes, now expects array of objects from data path if present ([#4648](https://github.com/Ombi-app/Ombi/issues/4648)) ([6d16442](https://github.com/Ombi-app/Ombi/commit/6d16442d4d714920367df065a3ced42b729f4233))
-* **sync:** Emby+Jellyfin - sync multi-episode files of 3+ episodes ([bd8fd89](https://github.com/Ombi-app/Ombi/commit/bd8fd890554c9d85d6da4d2cee813e82ce698e52))
 
 
 
