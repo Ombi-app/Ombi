@@ -3,7 +3,6 @@ import "jquery";
 
 import "bootstrap/dist/js/bootstrap";
 
-import "./styles/_imports.scss";
 
 import { environment } from "./environments/environment";
 
