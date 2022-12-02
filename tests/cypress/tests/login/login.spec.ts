@@ -1,20 +1,6 @@
 import { loginPage as Page } from "@/integration/page-objects";
 
 describe("Login Tests", () => {
-  it("Landing Page is enabled, should redirect", () => {
-    cy.landingSettings(true);
-    Page.visit();
-    cy.location("pathname").should("eq", "/landingpage");
-    cy.get("[data-cy=continue]").click();
-    cy.location("pathname").should("contains", "/login");
-  });
-
-  it("Landing Page is disabled, should not redirect", () => {
-    cy.landingSettings(false);
-    Page.visit();
-
-    cy.location("pathname").should("eq", "/login");
-  });
 
   it("Plex OAuth Enabled, should be button", () => {
     cy.landingSettings(false);
