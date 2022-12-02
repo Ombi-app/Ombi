@@ -44,7 +44,7 @@ jobs:
       run: nohup docker run --rm -p 5000:5000 ombi &
 
     - name: Run Wiremock
-      run: nohup docker run --rm -p 32400:8080 --name wiremock wiremock/wiremock:2.35.0
+      run: nohup docker run --rm -p 32400:8080 --name wiremock wiremock/wiremock:2.35.0 &
 
     - name: Sleep for server to start
       run: sleep 20
