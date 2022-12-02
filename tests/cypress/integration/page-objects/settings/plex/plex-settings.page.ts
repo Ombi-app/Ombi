@@ -58,11 +58,19 @@ class PlexServerModal {
     get saveButton(): Cypress.Chainable<any> {
         return cy.get('#saveServer');
     }
+
+    getLib(index: number): Cypress.Chainable<any> {
+        return cy.get(`#lib-${index}`);
+    }
 }
 
 class PlexServersGrid {
     serverCardButton(name: string): Cypress.Chainable<any> {
         return cy.get(`#${name}-button`);
+    }
+
+    get newServerButton(): Cypress.Chainable<any> {
+        return cy.get('#newServer');
     }
 }
 

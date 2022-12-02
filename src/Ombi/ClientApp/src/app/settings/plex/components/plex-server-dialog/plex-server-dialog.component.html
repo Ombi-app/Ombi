@@ -77,7 +77,7 @@
         <div *ngFor="let lib of this.data.server.plexSelectedLibraries; let i = index">
           <div class="md-form-field">
               <div class="checkbox">
-                  <mat-slide-toggle [id]="lib[i]" [(ngModel)]="lib.enabled" [checked]="lib.enabled"
+                  <mat-slide-toggle id="lib-{{i}}" [(ngModel)]="lib.enabled" [checked]="lib.enabled"
                       for="{{lib.title}}">{{lib.title}}</mat-slide-toggle>
               </div>
           </div>

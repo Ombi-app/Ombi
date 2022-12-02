@@ -6,6 +6,10 @@ describe("Plex Settings Tests", () => {
     cy.clearPlexServers();
   });
 
+  afterEach(() => {
+    cy.clearMocks();
+  })
+
   const plexTvApiResponse = `{
     "success": true,
     "message": null,
@@ -80,8 +84,10 @@ describe("Plex Settings Tests", () => {
 
   });
 
-  // Need to finish the witemock container
-  it.skip("Load Servers from Plex.TV Api and Test", () => {
+  it("Load Servers from Plex.TV Api and Test", () => {
+    cy.fixture('/mocks/plex/plex-test.mock').then((json) => {
+      cy.addMock(json);
+    });
     loadServerFromPlexTvApi();
     cy.intercept("POST", "api/v1/tester/plex", (req) => {
       req.reply((res) => {
@@ -92,30 +98,84 @@ describe("Plex Settings Tests", () => {
     const modal = Page.plexServerModal;
 
     modal.testButton.click();
-    cy.wait("@testResponse");
+    cy.wait("@testResponse").then(() => {
+      cy.contains("Successfully connected to the Plex server AutomationServer");
+    });
 
   });
 
-function loadServerFromPlexTvApi() {
-  cy.intercept("POST", "api/v1/Plex/servers", (req) => {
-    req.reply((res) => {
-      res.send(plexTvApiResponse);
+  it("Load Libraries from New Server", () => {
+    cy.fixture('/mocks/plex/plex-libraries.mock').then((json) => {
+      cy.addMock(json);
     });
-  }).as("serverResponse");
+    cy.intercept("POST", "api/v1/Plex/Libraries").as("libRequest");
+    newServer();
 
-  cy.intercept("POST", "api/v1/Settings/Plex").as('plexSave');
+    const modal = Page.plexServerModal;
+    modal.loadLibraries.click();
 
-  Page.visit();
+    cy.wait("@libRequest");
 
-  Page.plexCredentials.username.type('username');
-  Page.plexCredentials.password.type('password');
+    modal.getLib(0).click();
+    modal.getLib(0).should('contain.text',"lib1");
+  });
 
-  Page.plexCredentials.loadServers.click();
+  it("Remove server", () => {
+    loadServerFromPlexTvApi();
+    const modal = Page.plexServerModal;
+    modal.saveButton.click();
 
-  cy.wait("@serverResponse");
+    newServer(false);
+    modal.saveButton.click();
 
-  Page.plexCredentials.serverDropdown.click().get('mat-option').contains('AutomationServer').click();
-}
+    Page.plexServerGrid.serverCardButton('AutomationServer').click();
+    modal.deleteButton.click();
+    Page.plexServerGrid.serverCardButton('ManualServer').click();
+    modal.deleteButton.click();
+
+    Page.plexServerGrid.serverCardButton('AutomationServer').should('not.exist');
+    Page.plexServerGrid.serverCardButton('ManualServer').should('not.exist');
+  });
+
+  function loadServerFromPlexTvApi(visitPage = true) {
+    cy.intercept("POST", "api/v1/Plex/servers", (req) => {
+      req.reply((res) => {
+        res.send(plexTvApiResponse);
+      });
+    }).as("serverResponse");
+
+    cy.intercept("POST", "api/v1/Settings/Plex").as('plexSave');
+
+    if (visitPage) {
+      Page.visit();
+    }
+
+    Page.plexCredentials.username.type('username');
+    Page.plexCredentials.password.type('password');
+
+    Page.plexCredentials.loadServers.click();
+
+    cy.wait("@serverResponse");
+
+    Page.plexCredentials.serverDropdown.click().get('mat-option').contains('AutomationServer').click();
+  }
+
+  function newServer(visitPage = true) {
+    if (visitPage) {
+      Page.visit();
+    }
+
+    Page.plexServerGrid.newServerButton.click();
+    const modal = Page.plexServerModal;
+
+    const server = JSON.parse(plexTvApiResponse);
+    modal.serverName.clear();
+    modal.serverName.type("ManualServer");
+    modal.hostName.type(server.servers.server[0].localAddresses);
+    modal.port.type(server.servers.server[0].port);
+    modal.authToken.type(server.servers.server[0].accessToken);
+    modal.machineIdentifier.type(server.servers.server[0].machineIdentifier);
+  }
 
 });
 
