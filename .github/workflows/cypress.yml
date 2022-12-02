@@ -61,7 +61,7 @@ jobs:
     #       nohup dotnet run --project ./src/Ombi -- --host http://*:3577 &
 
     - name: Cypress Tests
-      uses: cypress-io/github-action@v2.8.2
+      uses: cypress-io/github-action@v4
       with:
         record: true
         browser: chrome
