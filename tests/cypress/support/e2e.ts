@@ -16,6 +16,7 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
 import './request.commands';
+import './plex-settings.commands';
 import "cypress-real-events/support";
 import '@bahmutov/cy-api/support';
 

@@ -25,13 +25,13 @@
         <h2 style="margin: 1em 0 0 0;">Servers</h2>
         <mat-list style="display:flex; flex-flow: wrap;">
             <mat-card class="server-card" *ngFor="let server of settings.servers">
-                <button mat-button (click)="edit(server)">
+                <button mat-button (click)="edit(server)" id="{{server.name}}-button">
                     <h3>{{server.name}}</h3>
                 </button>
             </mat-card>
 
             <mat-card class="server-card new-server-card">
-                <button mat-button (click)="newServer()">
+                <button mat-button (click)="newServer()" id="newServer">
                     <i class="fas fa-plus fa-xl"></i>
                     <h3>Manually Add Server</h3>
                 </button>
@@ -109,13 +109,13 @@
             <div class="md-form-field col-10">
                 <div *ngIf="!loadedServers">
                     <mat-form-field appearance="outline" floatLabel=auto>
-                        <input disabled  matInput placeholder="No Servers Loaded" id="selectServer-noservers">
+                        <input disabled  matInput placeholder="No Servers Loaded" id="servers">
                     </mat-form-field>
                 </div>
     
                 <div *ngIf="loadedServers">
                     <mat-form-field appearance="outline">
-                        <mat-select placeholder="Servers Loaded! Please Select">
+                        <mat-select placeholder="Servers Loaded! Please Select" id="servers">
                             <mat-option (click)="selectServer(s)"
                                 *ngFor="let s of loadedServers.servers.server" [value]="s.server">
                                 {{s.name}}</mat-option>

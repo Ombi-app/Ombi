@@ -113,7 +113,7 @@ Cypress.Commands.add("getByData", (selector) => {
       if (element.fireEvent) {
         element.fireEvent('on' + event);
       } else {
-        var evObj = document.createEvent('Events');
+        const evObj = document.createEvent('Events');
 
         evObj.initEvent(event, true, false);
 
