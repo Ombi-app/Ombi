@@ -6,13 +6,17 @@ describe("Login Tests", () => {
     cy.landingSettings(false);
     cy.fixture("login/authenticationSettngs").then((settings) => {
       settings.enableOAuth = true;
-      cy.intercept("GET", "/Settings/Authentication", settings).as(
+      cy.intercept("GET", "api/v1/Settings/Authentication", (req) => {
+        req.reply((res) => {
+          res.send(settings);
+        });
+      }).as(
         "authSettings"
       );
     });
 
     Page.visit();
-
+cy.wait("@authSettings");
     Page.plexSignInButton.should("be.visible");
     Page.ombiSignInButton.should("be.visible");
   });
@@ -21,7 +25,7 @@ describe("Login Tests", () => {
     cy.landingSettings(false);
     cy.fixture("login/authenticationSettngs").then((settings) => {
       settings.enableOAuth = false;
-      cy.intercept("GET", "/Settings/Authentication", settings).as(
+      cy.intercept("GET", "api/v1//Settings/Authentication", settings).as(
         "authSettings"
       );
     });
