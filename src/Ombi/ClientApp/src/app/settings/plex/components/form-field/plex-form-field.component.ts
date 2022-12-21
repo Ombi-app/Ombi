@@ -21,7 +21,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
                 <input matInput placeholder={{placeholder}} [attr.type]="type" id="{{id}}" name="{{id}}" [ngModel]="value" (ngModelChange)="change($event)" value="{{value}}">
             </mat-form-field>
 
-            <mat-slide-toggle class="margin" *ngIf="type === 'checkbox'" id="{{id}}" [ngModel]="value" (ngModelChange)="change($event)" [checked]="value"></mat-slide-toggle>
+            <mat-slide-toggle [disabled]="disabled" class="margin" *ngIf="type === 'checkbox'" id="{{id}}" [ngModel]="value" (ngModelChange)="change($event)" [checked]="value"></mat-slide-toggle>
 
             <ng-content select="[below]"></ng-content>
         </div>
@@ -40,6 +40,7 @@ export class PlexFormFieldComponent {
     @Input() public id: string;
     @Input() public placeholder: string;
     @Input() public type: "input" | "checkbox" | "password" = "input"
+    @Input() public disabled = false;
 
     public change(newValue: string) {
         this.value = newValue;
