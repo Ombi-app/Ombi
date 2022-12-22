@@ -1,3 +1,12 @@
+## [4.33.1](https://github.com/Ombi-app/Ombi/compare/v4.33.0...v4.33.1) (2022-12-22)
+
+
+### Bug Fixes
+
+* **plex:** Added the watchlist request whole show back into the settings ([10701c4](https://github.com/Ombi-app/Ombi/commit/10701c4a0b6190eebb75c5d8b18224f3d0bc8502))
+
+
+
 # [4.33.0](https://github.com/Ombi-app/Ombi/compare/v4.32.3...v4.33.0) (2022-12-01)
 
 
@@ -367,15 +376,6 @@
 ### Bug Fixes
 
 * **plex:** 🐛 Fixed an issue with the Plex Sync ([ab1a11a](https://github.com/Ombi-app/Ombi/commit/ab1a11af78efbe9d37bd55aa80a640796c138a98))
-
-
-
-## [4.20.2](https://github.com/Ombi-app/Ombi/compare/v4.20.1...v4.20.2) (2022-06-03)
-
-
-### Bug Fixes
-
-* :bug: Fixed the Request on Behalf of having blanks ([#4667](https://github.com/Ombi-app/Ombi/issues/4667)) ([7dd9b1c](https://github.com/Ombi-app/Ombi/commit/7dd9b1cac07f571dd35b362544e4fe0226c4b817))
 
 
 
