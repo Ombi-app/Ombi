@@ -36,13 +36,15 @@ namespace Ombi.Controllers.V1
     public class TokenController : ControllerBase
     {
         public TokenController(OmbiUserManager um, ITokenRepository token,
-            IPlexOAuthManager oAuthManager, ILogger<TokenController> logger, ISettingsService<AuthenticationSettings> auth)
+            IPlexOAuthManager oAuthManager, ILogger<TokenController> logger, ISettingsService<AuthenticationSettings> auth,
+            ISettingsService<UserManagementSettings> userManagement)
         {
             _userManager = um;
             _token = token;
             _plexOAuthManager = oAuthManager;
             _log = logger;
             _authSettings = auth;
+            _userManagementSettings = userManagement;
         }
 
         private readonly ITokenRepository _token;
@@ -50,6 +52,7 @@ namespace Ombi.Controllers.V1
         private readonly IPlexOAuthManager _plexOAuthManager;
         private readonly ILogger<TokenController> _log;
         private readonly ISettingsService<AuthenticationSettings> _authSettings;
+        private readonly ISettingsService<UserManagementSettings> _userManagementSettings;
 
         /// <summary>
         /// Gets the token.
@@ -307,13 +310,21 @@ namespace Ombi.Controllers.V1
                     {
                         if (authSettings.HeaderAuthCreateUser)
                         {
+                            var defaultSettings = await _userManagementSettings.GetSettingsAsync();
                             user = new OmbiUser {
                                 UserName = username,
                                 UserType = UserType.LocalUser,
-                                StreamingCountry = "US",
+                                StreamingCountry = defaultSettings.DefaultStreamingCountry ?? "US",
+                                MovieRequestLimit = defaultSettings.MovieRequestLimit,
+                                MovieRequestLimitType = defaultSettings.MovieRequestLimitType,
+                                EpisodeRequestLimit = defaultSettings.EpisodeRequestLimit,
+                                EpisodeRequestLimitType = defaultSettings.EpisodeRequestLimitType,
+                                MusicRequestLimit = defaultSettings.MusicRequestLimit,
+                                MusicRequestLimitType = defaultSettings.MusicRequestLimitType,
                             };
 
                             await _userManager.CreateAsync(user);
+                            await _userManager.AddToRolesAsync(user, defaultSettings.DefaultRoles);
                         }
                         else
                         {
