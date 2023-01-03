@@ -305,7 +305,20 @@ namespace Ombi.Controllers.V1
                     var user = await _userManager.FindByNameAsync(username);
                     if (user == null)
                     {
-                        return new UnauthorizedResult();
+                        if (authSettings.HeaderAuthCreateUser)
+                        {
+                            user = new OmbiUser {
+                                UserName = username,
+                                UserType = UserType.LocalUser,
+                                StreamingCountry = "US",
+                            };
+
+                            await _userManager.CreateAsync(user);
+                        }
+                        else
+                        {
+                            return new UnauthorizedResult();
+                        }
                     }
 
                     return await CreateToken(true, user);
