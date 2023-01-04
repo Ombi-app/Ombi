@@ -18,18 +18,18 @@ namespace Ombi.Controllers.V1.External
     public class RadarrController : ControllerBase
     {
 
-        public RadarrController(IRadarrApi radarr, ISettingsService<RadarrSettings> settings,
-            ICacheService mem, IRadarrV3Api radarrV3Api)
+        public RadarrController(
+            ISettingsService<RadarrSettings> settings,
+            ISettingsService<Radarr4KSettings> radarr4kSettings,
+            IRadarrV3Api radarrV3Api)
         {
-            _radarrApi = radarr;
             _radarrSettings = settings;
-            _cache = mem;
+            _radarr4KSettings = radarr4kSettings;
             _radarrV3Api = radarrV3Api;
         }
 
-        private readonly IRadarrApi _radarrApi;
         private readonly ISettingsService<RadarrSettings> _radarrSettings;
-        private readonly ICacheService _cache;
+        private readonly ISettingsService<Radarr4KSettings> _radarr4KSettings;
         private readonly IRadarrV3Api _radarrV3Api;
         /// <summary>
         /// Gets the Radarr profiles.
@@ -81,6 +81,23 @@ namespace Ombi.Controllers.V1.External
         }
 
         /// <summary>
+        /// Gets the Radarr 4K profiles using the saved settings
+        /// <remarks>The data is cached for an hour</remarks>
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("Profiles/4k")]
+        [PowerUser]
+        public async Task<IActionResult> GetProfiles4K()
+        {
+            var settings = await _radarr4KSettings.GetSettingsAsync();
+            if (settings.Enabled)
+            {
+                return Ok(await _radarrV3Api.GetProfiles(settings.ApiKey, settings.FullUri));
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Gets the Radarr root folders using the saved settings.
         /// <remarks>The data is cached for an hour</remarks>
         /// </summary>
@@ -90,6 +107,23 @@ namespace Ombi.Controllers.V1.External
         public async Task<IEnumerable<RadarrRootFolder>> GetRootFolders()
         {
             var settings = await _radarrSettings.GetSettingsAsync();
+            if (settings.Enabled)
+            {
+                return await _radarrV3Api.GetRootFolders(settings.ApiKey, settings.FullUri);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the Radarr 4K root folders using the saved settings.
+        /// <remarks>The data is cached for an hour</remarks>
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("RootFolders/4k")]
+        [PowerUser]
+        public async Task<IEnumerable<RadarrRootFolder>> GetRootFolders4K()
+        {
+            var settings = await _radarr4KSettings.GetSettingsAsync();
             if (settings.Enabled)
             {
                 return await _radarrV3Api.GetRootFolders(settings.ApiKey, settings.FullUri);

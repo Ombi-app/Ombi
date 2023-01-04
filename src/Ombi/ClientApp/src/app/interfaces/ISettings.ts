@@ -160,6 +160,8 @@ export interface IRadarrSettings extends IExternalSettings {
   addOnly: boolean;
   minimumAvailability: string;
   scanForAvailability: boolean;
+  tag: number | null;
+  sendUserTags: boolean;
 }
 
 export interface IRadarrCombined {

@@ -62,7 +62,7 @@ export class TvRequestGridComponent {
         });
 
         if (this.isAdmin) {
-            const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.tvShow, id: this.tv.id }, panelClass: 'modal-panel' });
+            const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.tvShow, id: this.tv.id, is4k: null }, panelClass: 'modal-panel' });
             dialog.afterClosed().subscribe(async (result) => {
                 if (result) {
                     viewModel.requestOnBehalf = result.username?.id;

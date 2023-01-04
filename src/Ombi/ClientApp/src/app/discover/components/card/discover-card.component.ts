@@ -157,7 +157,7 @@ export class DiscoverCardComponent implements OnInit {
               AdminRequestDialogComponent,
               {
                 width: "700px",
-                data: { type: RequestType.movie, id: this.result.id },
+                data: { type: RequestType.movie, id: this.result.id, is4k: is4k },
                 panelClass: "modal-panel",
               }
             );
