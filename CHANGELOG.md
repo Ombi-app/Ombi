@@ -1,3 +1,12 @@
+# [4.35.0](https://github.com/Ombi-app/Ombi/compare/v4.34.1...v4.35.0) (2023-01-04)
+
+
+### Features
+
+* Add the option for header authentication to create users ([#4841](https://github.com/Ombi-app/Ombi/issues/4841)) ([e6c9ce5](https://github.com/Ombi-app/Ombi/commit/e6c9ce5ad0056608ecda8273fb8124ed292e2942))
+
+
+
 ## [4.34.1](https://github.com/Ombi-app/Ombi/compare/v4.34.0...v4.34.1) (2023-01-04)
 
 
@@ -362,20 +371,6 @@
 ### Bug Fixes
 
 * **images:** Retry images with a backoff when we get a Too Many requests from TheMovieDb [#4685](https://github.com/Ombi-app/Ombi/issues/4685) ([3f1f35d](https://github.com/Ombi-app/Ombi/commit/3f1f35df3164db6739691cdda8f925c296239791))
-
-
-
-# [4.21.0](https://github.com/Ombi-app/Ombi/compare/v4.20.4...v4.21.0) (2022-06-22)
-
-
-### Features
-
-* Upgrade to Angular14 ([#4668](https://github.com/Ombi-app/Ombi/issues/4668)) ([b9d55a4](https://github.com/Ombi-app/Ombi/commit/b9d55a469b412558cbf67c1e25db7fdda5964cd8))
-
-
-### Performance Improvements
-
-* stop populating obsolete subscribe fields ([#4625](https://github.com/Ombi-app/Ombi/issues/4625)) ([9a73463](https://github.com/Ombi-app/Ombi/commit/9a734637665f671b17c2bb440d93b35a891c142b))
 
 
 
