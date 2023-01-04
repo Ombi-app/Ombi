@@ -1,3 +1,12 @@
+# [4.34.0](https://github.com/Ombi-app/Ombi/compare/v4.33.1...v4.34.0) (2023-01-04)
+
+
+### Features
+
+* Radarr tags ([#4815](https://github.com/Ombi-app/Ombi/issues/4815)) ([6fa5064](https://github.com/Ombi-app/Ombi/commit/6fa506491fe867cdeef9df79991ae49319d71c3d))
+
+
+
 ## [4.33.1](https://github.com/Ombi-app/Ombi/compare/v4.33.0...v4.33.1) (2022-12-22)
 
 
@@ -367,15 +376,6 @@
 ### Bug Fixes
 
 * fixed build ([f877921](https://github.com/Ombi-app/Ombi/commit/f8779219146051ea74f8b6408658ff7975afb88b))
-
-
-
-## [4.20.3](https://github.com/Ombi-app/Ombi/compare/v4.20.2...v4.20.3) (2022-06-05)
-
-
-### Bug Fixes
-
-* **plex:** 🐛 Fixed an issue with the Plex Sync ([ab1a11a](https://github.com/Ombi-app/Ombi/commit/ab1a11af78efbe9d37bd55aa80a640796c138a98))
 
 
 
