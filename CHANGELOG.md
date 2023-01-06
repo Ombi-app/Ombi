@@ -1,3 +1,12 @@
+## [4.35.1](https://github.com/Ombi-app/Ombi/compare/v4.35.0...v4.35.1) (2023-01-06)
+
+
+### Bug Fixes
+
+* **plex-watchlist:** Index out of bounds error ([8cd556e](https://github.com/Ombi-app/Ombi/commit/8cd556e268931596b9c1d1ae0ce533bfaaf330f4))
+
+
+
 # [4.35.0](https://github.com/Ombi-app/Ombi/compare/v4.34.1...v4.35.0) (2023-01-04)
 
 
@@ -362,15 +371,6 @@
 ### Bug Fixes
 
 * Landing and Login page improvements ([#4690](https://github.com/Ombi-app/Ombi/issues/4690)) ([6d423b5](https://github.com/Ombi-app/Ombi/commit/6d423b5447c52c5e59d8d2bd92a23b47468eb736))
-
-
-
-## [4.21.1](https://github.com/Ombi-app/Ombi/compare/v4.21.0...v4.21.1) (2022-07-11)
-
-
-### Bug Fixes
-
-* **images:** Retry images with a backoff when we get a Too Many requests from TheMovieDb [#4685](https://github.com/Ombi-app/Ombi/issues/4685) ([3f1f35d](https://github.com/Ombi-app/Ombi/commit/3f1f35df3164db6739691cdda8f925c296239791))
 
 
 
