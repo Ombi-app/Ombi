@@ -164,7 +164,7 @@ namespace Ombi.Schedule.Jobs.Plex
             if (!string.IsNullOrEmpty(providerId.TheTvDb))
             {
                 result = await _movieDbApi.Find(providerId.TheTvDb, ExternalSource.tvdb_id);
-                hasResult = result?.tv_results?.Length > 0;
+                hasResult = movie ? result?.movie_results?.Length > 0 : result?.tv_results?.Length > 0;
             }
             if (!string.IsNullOrEmpty(providerId.ImdbId) && !hasResult)
             {
