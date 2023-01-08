@@ -6,14 +6,13 @@ import { TranslateService } from "@ngx-translate/core";
 import { APP_BASE_HREF } from "@angular/common";
 import { AuthService } from "../auth/auth.service";
 import { IAuthenticationSettings, ICustomizationSettings } from "../interfaces";
-import { PlexTvService } from "../services";
-import { SettingsService } from "../services";
-import { StatusService } from "../services";
+import { PlexTvService, StatusService, SettingsService } from "../services";
 
 import { StorageService } from "../shared/storage/storage-service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { CustomizationFacade } from "../state/customization";
 import { SonarrFacade } from "app/state/sonarr";
+import { RadarrFacade } from "app/state/radarr";
 
 @Component({
   templateUrl: "./login.component.html",
@@ -62,6 +61,7 @@ export class LoginComponent implements OnDestroy, OnInit {
     private plexTv: PlexTvService,
     private store: StorageService,
     private sonarrFacade: SonarrFacade,
+    private radarrFacade: RadarrFacade,
     private readonly notify: MatSnackBar
   ) {
     this.href = href;
@@ -89,7 +89,7 @@ export class LoginComponent implements OnDestroy, OnInit {
     });
 
     if (authService.loggedIn()) {
-      this.router.navigate(["/"]);
+      this.loadStores();
     }
   }
 
@@ -144,7 +144,7 @@ export class LoginComponent implements OnDestroy, OnInit {
 
           if (this.authService.loggedIn()) {
             this.ngOnDestroy();
-            this.sonarrFacade.load().subscribe();
+            this.loadStores();
             this.router.navigate(["/"]);
           } else {
             this.notify.open(this.errorBody, "OK", {
@@ -221,7 +221,7 @@ export class LoginComponent implements OnDestroy, OnInit {
               this.oAuthWindow.close();
             }
             this.oauthLoading = false;
-            this.sonarrFacade.load().subscribe();
+            this.loadStores();
             this.router.navigate(["search"]);
             return;
           }
@@ -252,7 +252,7 @@ export class LoginComponent implements OnDestroy, OnInit {
 
           if (this.authService.loggedIn()) {
             this.ngOnDestroy();
-            this.sonarrFacade.load().subscribe();
+            this.loadStores();
             this.router.navigate(["/"]);
           } else {
             this.notify.open(this.errorBody, "OK", {
@@ -273,5 +273,10 @@ export class LoginComponent implements OnDestroy, OnInit {
 
   public ngOnDestroy() {
     clearInterval(this.pinTimer);
+  }
+
+  private loadStores() {
+    this.sonarrFacade.load().subscribe();
+    this.radarrFacade.load().subscribe();
   }
 }
