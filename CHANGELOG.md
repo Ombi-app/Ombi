@@ -1,3 +1,12 @@
+## [4.35.3](https://github.com/Ombi-app/Ombi/compare/v4.35.2...v4.35.3) (2023-01-13)
+
+
+### Bug Fixes
+
+* **#4847:** Invalid Discord request fixed, also fixed an issue where App Only users would not show as logged in on the user management page ([#4848](https://github.com/Ombi-app/Ombi/issues/4848)) ([f229d88](https://github.com/Ombi-app/Ombi/commit/f229d88bd744bc5253b5d3db69ae5ef22d014230))
+
+
+
 ## [4.35.2](https://github.com/Ombi-app/Ombi/compare/v4.35.1...v4.35.2) (2023-01-08)
 
 
@@ -362,15 +371,6 @@
 ### Bug Fixes
 
 * **discover:** :bug: Created new Image component to handle 429's from TMDB ([#4698](https://github.com/Ombi-app/Ombi/issues/4698)) and fixed [#4635](https://github.com/Ombi-app/Ombi/issues/4635) ([#4699](https://github.com/Ombi-app/Ombi/issues/4699)) ([f22d3da](https://github.com/Ombi-app/Ombi/commit/f22d3da765799365455b919027f7563e52b347c3))
-
-
-
-# [4.22.0](https://github.com/Ombi-app/Ombi/compare/v4.21.2...v4.22.0) (2022-07-22)
-
-
-### Features
-
-* **discover:** ✨ Added infinite scroll on advanced search results ([898bc89](https://github.com/Ombi-app/Ombi/commit/898bc89fa78245c1f3de9481f6c724f087a16e39))
 
 
 
