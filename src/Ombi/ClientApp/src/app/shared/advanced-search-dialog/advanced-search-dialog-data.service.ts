@@ -38,7 +38,7 @@ export class AdvancedSearchDialogDataService {
     getOptions(): any {
         return this._options;
     }
-    
+
     getLoaded(): number {
         return this._options.loaded;
     }

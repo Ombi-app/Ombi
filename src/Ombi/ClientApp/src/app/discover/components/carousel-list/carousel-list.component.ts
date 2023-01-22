@@ -45,7 +45,7 @@ export class CarouselListComponent implements OnInit {
     };
     private amountToLoad = 17;
     private currentlyLoaded = 0;
-    private baseUrl: string;
+    private baseUrl: string = "";
 
 
     constructor(private searchService: SearchV2Service,

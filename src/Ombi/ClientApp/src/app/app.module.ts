@@ -1,5 +1,5 @@
 import { APP_BASE_HREF, CommonModule, PlatformLocation } from "@angular/common";
-import { CustomPageService, ImageService, RequestService, SettingsService, SonarrService } from "./services";
+import { CustomPageService, ImageService, LidarrService, RequestService, SettingsService, SonarrService } from "./services";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from "@angular/common/http";
 import { IdentityService, IssuesService, JobService, MessageService, PlexTvService, SearchService, StatusService } from "./services";
@@ -209,6 +209,7 @@ export function JwtTokenGetter() {
         StorageService,
         RequestService,
         SonarrService,
+        LidarrService,
         SignalRNotificationService,
         FEATURES_INITIALIZER,
         SONARR_INITIALIZER,
