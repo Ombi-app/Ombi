@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter, Inject } from "@angular/core";
 import { DiscoverOption, IDiscoverCardResult } from "../../interfaces";
 import { ISearchMovieResult, ISearchTvResult, RequestType } from "../../../interfaces";
 import { SearchV2Service } from "../../../services";
@@ -6,6 +6,7 @@ import { StorageService } from "../../../shared/storage/storage-service";
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { Carousel } from 'primeng/carousel';
 import { FeaturesFacade } from "../../../state/features/features.facade";
+import { APP_BASE_HREF } from "@angular/common";
 
 export enum DiscoverType {
     Upcoming,
@@ -44,10 +45,18 @@ export class CarouselListComponent implements OnInit {
     };
     private amountToLoad = 17;
     private currentlyLoaded = 0;
+    private baseUrl: string;
+
 
     constructor(private searchService: SearchV2Service,
         private storageService: StorageService,
-        private featureFacade: FeaturesFacade) {
+        private featureFacade: FeaturesFacade,
+        @Inject(APP_BASE_HREF) private href: string) {
+
+        if (this.href.length > 1) {
+            this.baseUrl = this.href;
+        }
+
         Carousel.prototype.onTouchMove = () => { },
         this.responsiveOptions = [
             {
@@ -294,7 +303,7 @@ export class CarouselListComponent implements OnInit {
         this.movies.forEach(m => {
             tempResults.push({
                 available: m.available,
-                posterPath: m.posterPath ? `https://image.tmdb.org/t/p/w500/${m.posterPath}` : "../../../images/default_movie_poster.png",
+                posterPath: m.posterPath ? `https://image.tmdb.org/t/p/w500/${m.posterPath}` : this.baseUrl + "/images/default_movie_poster.png",
                 requested: m.requested,
                 title: m.title,
                 type: RequestType.movie,
@@ -316,7 +325,7 @@ export class CarouselListComponent implements OnInit {
         this.tvShows.forEach(m => {
             tempResults.push({
                 available: m.fullyAvailable,
-                posterPath: m.backdropPath ? `https://image.tmdb.org/t/p/w500/${m.backdropPath}` : "../../../images/default_tv_poster.png",
+                posterPath: m.backdropPath ? `https://image.tmdb.org/t/p/w500/${m.backdropPath}` :  this.baseUrl + "/images/default_tv_poster.png",
                 requested: m.requested,
                 title: m.title,
                 type: RequestType.tvShow,
