@@ -1,3 +1,12 @@
+## [4.35.5](https://github.com/Ombi-app/Ombi/compare/v4.35.4...v4.35.5) (2023-01-24)
+
+
+### Bug Fixes
+
+* **radarr-settings:** 🐛 Fixed a typo ([4a50a00](https://github.com/Ombi-app/Ombi/commit/4a50a00d4729d99f4359874b9af4dbc58a0c220b))
+
+
+
 ## [4.35.4](https://github.com/Ombi-app/Ombi/compare/v4.35.3...v4.35.4) (2023-01-22)
 
 
@@ -363,15 +372,6 @@
 ### Bug Fixes
 
 * Override Sonarr V3 Profiles endpoint ([#4678](https://github.com/Ombi-app/Ombi/issues/4678)) ([875da95](https://github.com/Ombi-app/Ombi/commit/875da959f353119b05138d68ee6d32a49e14b91e))
-
-
-
-## [4.22.2](https://github.com/Ombi-app/Ombi/compare/v4.22.1...v4.22.2) (2022-07-25)
-
-
-### Bug Fixes
-
-* fixed an issue where I broke images for some users ([81ddc85](https://github.com/Ombi-app/Ombi/commit/81ddc8553b9094c3f6843b036daebb2eb9262e00))
 
 
 
