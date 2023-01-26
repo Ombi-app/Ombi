@@ -222,7 +222,7 @@ export class LoginComponent implements OnDestroy, OnInit {
             }
             this.oauthLoading = false;
             this.loadStores();
-            this.router.navigate(["search"]);
+            this.router.navigate([""]);
             return;
           }
         }
