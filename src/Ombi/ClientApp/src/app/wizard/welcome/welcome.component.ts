@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit, ViewChild } from "@angular/core";
-import { IdentityService, NotificationService, SettingsService } from "../../services";
+import { IdentityService, NotificationService, SettingsService, StatusService } from "../../services";
 
 import { CustomizationFacade } from "../../state/customization/customization.facade";
 import { ICreateWizardUser } from "../../interfaces";
@@ -7,6 +7,7 @@ import { IOmbiConfigModel } from "../models/OmbiConfigModel";
 import { MatStepper } from'@angular/material/stepper';
 import { Router } from "@angular/router";
 import { WizardService } from "../services/wizard.service";
+import { Observable, take } from "rxjs";
 
 @Component({
     templateUrl: "./welcome.component.html",
@@ -20,9 +21,16 @@ export class WelcomeComponent implements OnInit {
 
     constructor(private router: Router, private identityService: IdentityService,
         private notificationService: NotificationService, private WizardService: WizardService,
-        private settingsService: SettingsService, private customizationFacade: CustomizationFacade) { }
+        private settingsService: SettingsService, private customizationFacade: CustomizationFacade,
+        private status: StatusService) { }
 
     public ngOnInit(): void {
+        this.status.getWizardStatus().pipe(take(1))
+        .subscribe(x => {
+            if (x.result) {
+                this.router.navigate(["login"]);
+            }
+        });
         this.localUser = {
             password:"",
             username:"",
