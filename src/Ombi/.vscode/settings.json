@@ -24,7 +24,8 @@
         "details",
         "requests",
         "sonarr",
-        "plex"
+        "plex",
+        "wizard"
     ],
     "rpc.enabled": true
 }

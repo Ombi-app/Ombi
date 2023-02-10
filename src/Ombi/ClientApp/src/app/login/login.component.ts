@@ -90,6 +90,8 @@ export class LoginComponent implements OnDestroy, OnInit {
 
     if (authService.loggedIn()) {
       this.loadStores();
+      
+      this.router.navigate(["/"]);
     }
   }
 
