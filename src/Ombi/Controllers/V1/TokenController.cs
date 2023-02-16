@@ -209,14 +209,14 @@ namespace Ombi.Controllers.V1
                 // Could this be an email login?
                 user = await _userManager.FindByEmailAsync(account.user.email);
 
-                if (user == null)
+                if (user == null || user.UserType != UserType.PlexUser)
                 {
                     return new UnauthorizedResult();
                 }
             }
 
             user.MediaServerToken = account.user.authentication_token;
-            await  _userManager.UpdateAsync(user);
+            await _userManager.UpdateAsync(user);
 
             return await CreateToken(true, user);
         }
