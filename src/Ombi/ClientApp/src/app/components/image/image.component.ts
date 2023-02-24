@@ -75,3 +75,11 @@ export class ImageComponent {
     }
   }
 }
+
+        // Retry the original image
+        const timeout = setTimeout(() => {
+            event.target.src = this.src;
+            clearTimeout(timeout);
+        }, Math.floor(Math.random() * (7000 - 1000 + 1)) + 1000);
+    }
+  }

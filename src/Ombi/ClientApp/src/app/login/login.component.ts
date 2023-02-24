@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, Inject } from "@angular/core";
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 
@@ -19,6 +20,7 @@ import { RadarrFacade } from "app/state/radarr";
   styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnDestroy, OnInit {
+  public form: UntypedFormGroup;
   public form: UntypedFormGroup;
   public customizationSettings: ICustomizationSettings;
   public authenticationSettings: IAuthenticationSettings;
@@ -52,6 +54,7 @@ export class LoginComponent implements OnDestroy, OnInit {
     private authService: AuthService,
     private router: Router,
     private status: StatusService,
+    private fb: UntypedFormBuilder,
     private fb: UntypedFormBuilder,
     private settingsService: SettingsService,
     private customziationFacade: CustomizationFacade,
@@ -119,6 +122,7 @@ export class LoginComponent implements OnDestroy, OnInit {
       .subscribe((x) => (this.errorValidation = x));
   }
 
+  public onSubmit(form: UntypedFormGroup) {
   public onSubmit(form: UntypedFormGroup) {
     if (form.invalid) {
       this.notify.open(this.errorValidation, "OK", {

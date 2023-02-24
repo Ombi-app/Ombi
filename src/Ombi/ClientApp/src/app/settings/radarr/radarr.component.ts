@@ -75,6 +75,7 @@ export class RadarrComponent implements OnInit {
                     }))
                 }
             });
+
     }
 
 
