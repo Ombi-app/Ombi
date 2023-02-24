@@ -9,7 +9,6 @@ import { RouterModule } from "@angular/router";
 import { SharedModule } from "../shared/shared.module";
 import { SkeletonModule } from 'primeng/skeleton';
 import { ImageComponent } from 'app/components';
-import { ImageComponent } from 'app/components';
 
 @NgModule({
     imports: [

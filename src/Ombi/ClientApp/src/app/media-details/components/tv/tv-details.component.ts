@@ -142,14 +142,7 @@ export class TvDetailsComponent implements OnInit {
         this.tv.images.original = 'https://image.tmdb.org/t/p/w300/' + this.tv.images.original
       };
     }
-    private checkPoster() {
-      if (this.tv.images.original == null) {
-        this.tv.images.original = "../../../images/default_movie_poster.png";
-      }
-      else {
-        this.tv.images.original = 'https://image.tmdb.org/t/p/w300/' + this.tv.images.original
-      };
-    }
+
     private loadAdvancedInfo() {
         const profile = this.sonarrService.getQualityProfilesWithoutSettings();
         const folders = this.sonarrService.getRootFoldersWithoutSettings();
