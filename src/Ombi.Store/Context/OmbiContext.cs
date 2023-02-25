@@ -45,6 +45,7 @@ namespace Ombi.Store.Context
         public DbSet<RequestLog> RequestLogs { get; set; }
         public DbSet<RecentlyAddedLog> RecentlyAddedLogs { get; set; }
         public DbSet<Votes> Votes { get; set; }
+        public DbSet<PlexWatchlistUserError> PlexWatchListUserError { get; set; }
 
 
         public DbSet<Audit> Audit { get; set; }
@@ -60,22 +61,20 @@ namespace Ombi.Store.Context
             var strat = Database.CreateExecutionStrategy();
             strat.Execute(() =>
             {
-                using (var tran = Database.BeginTransaction())
+                using var tran = Database.BeginTransaction();
+                // Make sure we have the API User
+                var apiUserExists = Users.ToList().Any(x => x.NormalizedUserName == "API");
+                if (!apiUserExists)
                 {
-                    // Make sure we have the API User
-                    var apiUserExists = Users.ToList().Any(x => x.NormalizedUserName == "API");
-                    if (!apiUserExists)
+                    Users.Add(new OmbiUser
                     {
-                        Users.Add(new OmbiUser
-                        {
-                            UserName = "Api",
-                            UserType = UserType.SystemUser,
-                            NormalizedUserName = "API",
-                            StreamingCountry = "US"
-                        });
-                        SaveChanges();
-                        tran.Commit();
-                    }
+                        UserName = "Api",
+                        UserType = UserType.SystemUser,
+                        NormalizedUserName = "API",
+                        StreamingCountry = "US"
+                    });
+                    SaveChanges();
+                    tran.Commit();
                 }
             });
 
@@ -212,7 +211,7 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Your TV request for {Title} is now partially available! Season {PartiallyAvailableSeasonNumber} Episodes {PartiallyAvailableEpisodeNumbers}!",
+                                Message = "Your TV request for {Title} is now partially available! Episodes {PartiallyAvailableEpisodesList}!",
                                 Subject = "{ApplicationName}: Partially Available Request!",
                                 Agent = agent,
                                 Enabled = true,
@@ -232,11 +231,9 @@ namespace Ombi.Store.Context
             {
                 strat.Execute(() =>
                 {
-                    using (var tran = Database.BeginTransaction())
-                    {
-                        SaveChanges();
-                        tran.Commit();
-                    }
+                    using var tran = Database.BeginTransaction();
+                    SaveChanges();
+                    tran.Commit();
                 });
             }
         }

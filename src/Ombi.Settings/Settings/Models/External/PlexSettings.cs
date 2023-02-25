@@ -8,6 +8,7 @@ namespace Ombi.Core.Settings.Models.External
     {
         public bool Enable { get; set; }
         public bool EnableWatchlistImport { get; set; }
+        public bool MonitorAll { get; set; }
         /// <summary>
         /// This is the ClientId for OAuth
         /// </summary>

@@ -9,6 +9,8 @@
         public bool AddOnly { get; set; }
         public string MinimumAvailability { get; set; }
         public bool ScanForAvailability { get; set; }
+        public int? Tag { get; set; }
+        public bool SendUserTags { get; set; }
     }
 
     public class Radarr4KSettings : RadarrSettings

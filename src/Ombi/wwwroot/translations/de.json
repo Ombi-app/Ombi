@@ -364,6 +364,9 @@
         "Casts": {
             "CastTitle": "Besetzung"
         },
+        "Crews": {
+            "CrewTitle": "Crew"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Dies wird jede Saison für diese Show anfordern",
             "FirstSeasonTooltip": "Dies wird nur die erste Saison für diese Show anfordern",
@@ -377,6 +380,7 @@
         "PleaseSelectUser": "Bitte Benutzer auswählen",
         "StreamingOn": "Wird gestreamt auf:",
         "RequestedBy": "Angefordert von:",
+        "OnDate": "On:",
         "RequestedByOn": "Angefragt von {{user}} am {{date}}",
         "RequestDate": "Datum der Anfrage:",
         "DeniedReason": "Ablehnungsgrund:",

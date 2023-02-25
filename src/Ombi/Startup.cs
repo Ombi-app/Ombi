@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using AutoMapper.EquivalencyExpression;
+﻿using AutoMapper.EquivalencyExpression;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,12 +18,10 @@ using Ombi.Schedule;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
-using Ombi.Store.Repository;
 using Serilog;
 using System;
 using System.IO;
 using Microsoft.AspNetCore.StaticFiles.Infrastructure;
-using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using ILogger = Serilog.ILogger;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -50,7 +46,7 @@ namespace Ombi
 
             ILogger config = new LoggerConfiguration()
                 .ReadFrom.Configuration(Configuration)
-                .WriteTo.RollingFile(Path.Combine(StoragePath.StoragePath.IsNullOrEmpty() ? env.ContentRootPath : StoragePath.StoragePath, "Logs", "log-{Date}.txt"))
+                .WriteTo.File(Path.Combine(StoragePath.StoragePath.IsNullOrEmpty() ? env.ContentRootPath : StoragePath.StoragePath, "Logs", "log.txt"), rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
             Log.Logger = config;
@@ -112,7 +108,6 @@ namespace Ombi
             services.AddMvc();
             services.AddSignalR();
             services.AddSpaStaticFiles(configuration => configuration.RootPath = "ClientApp/dist");
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

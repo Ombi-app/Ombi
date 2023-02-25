@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.Network" Version="3.0.1" />
+    <PackageReference Include="AspNetCore.HealthChecks.Network" Version="6.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.HealthChecks" Version="2.2.0" />
     <PackageReference Include="System.Collections" Version="4.3.0" />
   </ItemGroup>

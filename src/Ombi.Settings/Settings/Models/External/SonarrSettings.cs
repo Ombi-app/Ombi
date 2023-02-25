@@ -17,10 +17,13 @@
 
         public string QualityProfileAnime { get; set; }
         public string RootPathAnime { get; set; }
+        public int? AnimeTag { get; set; }
+        public int? Tag { get; set; }
+        public bool SendUserTags { get; set; }
         public bool AddOnly { get; set; }
-        public bool V3 { get; set; }
         public int LanguageProfile { get; set; }
         public int LanguageProfileAnime { get; set; }
         public bool ScanForAvailability { get; set; }
+
     }
 }

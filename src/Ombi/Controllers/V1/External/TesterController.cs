@@ -46,7 +46,7 @@ namespace Ombi.Controllers.V1.External
         /// </summary>
         public TesterController(INotificationService service, IDiscordNotification notification, IEmailNotification emailN,
             IPushbulletNotification pushbullet, ISlackNotification slack, IPushoverNotification po, IMattermostNotification mm,
-            IPlexApi plex, IEmbyApiFactory emby, IRadarrV3Api radarr, ISonarrApi sonarr, ILogger<TesterController> log, IEmailProvider provider,
+            IPlexApi plex, IEmbyApiFactory emby, IRadarrV3Api radarr, ISonarrV3Api sonarr, ILogger<TesterController> log, IEmailProvider provider,
             ICouchPotatoApi cpApi, ITelegramNotification telegram, ISickRageApi srApi, INewsletterJob newsletter, ILegacyMobileNotification mobileNotification,
             ILidarrApi lidarrApi, IGotifyNotification gotifyNotification, IWhatsAppApi whatsAppApi, OmbiUserManager um, IWebhookNotification webhookNotification,
             IJellyfinApi jellyfinApi, IPrincipal user)
@@ -90,7 +90,7 @@ namespace Ombi.Controllers.V1.External
         private IPlexApi PlexApi { get; }
         private IRadarrV3Api RadarrApi { get; }
         private IEmbyApiFactory EmbyApi { get; }
-        private ISonarrApi SonarrApi { get; }
+        private ISonarrV3Api SonarrApi { get; }
         private ICouchPotatoApi CouchPotatoApi { get; }
         private ILogger<TesterController> Log { get; }
         private IEmailProvider EmailProvider { get; }
@@ -110,12 +110,12 @@ namespace Ombi.Controllers.V1.External
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("discord")]
-        public bool Discord([FromBody] DiscordNotificationSettings settings)
+        public async Task<bool> Discord([FromBody] DiscordNotificationSettings settings)
         {
             try
             {
                 settings.Enabled = true;
-                DiscordNotification.NotifyAsync(
+                await DiscordNotification.NotifyAsync(
                     new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
 
                 return true;
@@ -133,13 +133,13 @@ namespace Ombi.Controllers.V1.External
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("pushbullet")]
-        public bool Pushbullet([FromBody] PushbulletSettings settings)
+        public async Task<bool> Pushbullet([FromBody] PushbulletSettings settings)
         {
             try
             {
 
                 settings.Enabled = true;
-                PushbulletNotification.NotifyAsync(
+                await PushbulletNotification.NotifyAsync(
                     new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
 
                 return true;
@@ -157,12 +157,12 @@ namespace Ombi.Controllers.V1.External
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("pushover")]
-        public bool Pushover([FromBody] PushoverSettings settings)
+        public async Task<bool> Pushover([FromBody] PushoverSettings settings)
         {
             try
             {
                 settings.Enabled = true;
-                PushoverNotification.NotifyAsync(
+                await PushoverNotification.NotifyAsync(
                     new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
 
                 return true;
@@ -181,12 +181,12 @@ namespace Ombi.Controllers.V1.External
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("gotify")]
-        public bool Gotify([FromBody] GotifySettings settings)
+        public async Task<bool> Gotify([FromBody] GotifySettings settings)
         {
             try
             {
                 settings.Enabled = true;
-                GotifyNotification.NotifyAsync(
+                await GotifyNotification.NotifyAsync(
                     new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
 
                 return true;
@@ -205,12 +205,12 @@ namespace Ombi.Controllers.V1.External
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("webhook")]
-        public bool Webhook([FromBody] WebhookSettings settings)
+        public async Task<bool> Webhook([FromBody] WebhookSettings settings)
         {
             try
             {
                 settings.Enabled = true;
-                WebhookNotification.NotifyAsync(
+                await WebhookNotification.NotifyAsync(
                     new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
 
                 return true;
@@ -229,12 +229,12 @@ namespace Ombi.Controllers.V1.External
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("mattermost")]
-        public bool Mattermost([FromBody] MattermostNotificationSettings settings)
+        public async Task<bool> Mattermost([FromBody] MattermostNotificationSettings settings)
         {
             try
             {
                 settings.Enabled = true;
-                MattermostNotification.NotifyAsync(
+                await MattermostNotification.NotifyAsync(
                     new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
 
                 return true;
@@ -255,12 +255,12 @@ namespace Ombi.Controllers.V1.External
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("slack")]
-        public bool Slack([FromBody] SlackNotificationSettings settings)
+        public async Task<bool> Slack([FromBody] SlackNotificationSettings settings)
         {
             try
             {
                 settings.Enabled = true;
-                SlackNotification.NotifyAsync(
+                await SlackNotification.NotifyAsync(
                     new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
 
                 return true;
@@ -415,6 +415,7 @@ namespace Ombi.Controllers.V1.External
                 return new TesterResultModel
                 {
                     IsValid = result.urlBase == settings.SubDir || string.IsNullOrEmpty(result.urlBase) && string.IsNullOrEmpty(settings.SubDir),
+                    Version = result.version,
                     ExpectedSubDir = result.urlBase
                 };
             }

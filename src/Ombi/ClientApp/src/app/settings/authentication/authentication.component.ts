@@ -28,6 +28,7 @@ export class AuthenticationComponent implements OnInit {
                 enableOAuth: [x.enableOAuth],
                 enableHeaderAuth: [x.enableHeaderAuth],
                 headerAuthVariable: [x.headerAuthVariable],
+                headerAuthCreateUser: [x.headerAuthCreateUser],
             });
             this.form.controls.enableHeaderAuth.valueChanges.subscribe(x => {
                 if (x) {

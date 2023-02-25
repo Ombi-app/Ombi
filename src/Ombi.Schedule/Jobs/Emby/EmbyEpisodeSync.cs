@@ -29,7 +29,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Emby;
 using Ombi.Core.Settings;
@@ -48,7 +47,7 @@ namespace Ombi.Schedule.Jobs.Emby
     public class EmbyEpisodeSync : IEmbyEpisodeSync
     {
         public EmbyEpisodeSync(ISettingsService<EmbySettings> s, IEmbyApiFactory api, ILogger<EmbyEpisodeSync> l, IEmbyContentRepository repo
-            , IHubContext<NotificationHub> notification)
+            , INotificationHubService notification)
         {
             _apiFactory = api;
             _logger = l;
@@ -61,7 +60,7 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly IEmbyApiFactory _apiFactory;
         private readonly ILogger<EmbyEpisodeSync> _logger;
         private readonly IEmbyContentRepository _repo;
-        private readonly IHubContext<NotificationHub> _notification;
+        private readonly INotificationHubService _notification;
 
         private const int AmountToTake = 100;
 
@@ -80,8 +79,7 @@ namespace Ombi.Schedule.Jobs.Emby
             var settings = await _settings.GetSettingsAsync();
 
             Api = _apiFactory.CreateClient(settings);
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Emby Episode Sync Started");
+            await _notification.SendNotificationToAdmins("Emby Episode Sync Started");
             foreach (var server in settings.Servers)
             {
                 if (server.EmbySelectedLibraries.Any() && server.EmbySelectedLibraries.Any(x => x.Enabled))
@@ -99,8 +97,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 }
             }
 
-            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Emby Episode Sync Finished");
+            await _notification.SendNotificationToAdmins("Emby Episode Sync Finished");
             _logger.LogInformation("Emby Episode Sync Finished - Triggering Metadata refresh");
             await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
         }

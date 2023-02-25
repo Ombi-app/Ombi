@@ -364,6 +364,9 @@
         "Casts": {
             "CastTitle": "Rollista"
         },
+        "Crews": {
+            "CrewTitle": "Crew"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Detta kommer att begära varje säsong för denna serie",
             "FirstSeasonTooltip": "Detta kommer endast att begära den första säsongen för denna serie",
@@ -377,6 +380,7 @@
         "PleaseSelectUser": "Vänligen välj en användare",
         "StreamingOn": "Strömmar på:",
         "RequestedBy": "Efterfrågats av:",
+        "OnDate": "On:",
         "RequestedByOn": "Requested By {{user}} on {{date}}",
         "RequestDate": "Datum för begäran:",
         "DeniedReason": "Denied Reason:",

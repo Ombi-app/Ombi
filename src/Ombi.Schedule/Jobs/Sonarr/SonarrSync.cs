@@ -23,7 +23,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
 {
     public class SonarrSync : ISonarrSync
     {
-        public SonarrSync(ISettingsService<SonarrSettings> s, ISonarrApi api, ILogger<SonarrSync> l, ExternalContext ctx,
+        public SonarrSync(ISettingsService<SonarrSettings> s, ISonarrV3Api api, ILogger<SonarrSync> l, ExternalContext ctx,
             IMovieDbApi movieDbApi)
         {
             _settings = s;
@@ -35,7 +35,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
         }
 
         private readonly ISettingsService<SonarrSettings> _settings;
-        private readonly ISonarrApi _api;
+        private readonly ISonarrV3Api _api;
         private readonly ILogger<SonarrSync> _log;
         private readonly ExternalContext _ctx;
         private readonly IMovieDbApi _movieDbApi;
@@ -67,14 +67,10 @@ namespace Ombi.Schedule.Jobs.Sonarr
                     var strat = _ctx.Database.CreateExecutionStrategy();
                     await strat.ExecuteAsync(async () =>
                     {
-                        using (var tran = await _ctx.Database.BeginTransactionAsync())
-                        {
-                            await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrCache");
-                            tran.Commit();
-                        }
+                        using var tran = await _ctx.Database.BeginTransactionAsync();
+                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrCache");
+                        await tran.CommitAsync();
                     });
-
-                    var existingSeries = await _ctx.SonarrCache.Select(x => x.TvDbId).ToListAsync();
 
                     var sonarrCacheToSave = new HashSet<SonarrCache>();
                     foreach (var id in ids)
@@ -99,11 +95,9 @@ namespace Ombi.Schedule.Jobs.Sonarr
                     strat = _ctx.Database.CreateExecutionStrategy();
                     await strat.ExecuteAsync(async () =>
                     {
-                        using (var tran = await _ctx.Database.BeginTransactionAsync())
-                        {
-                            await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrEpisodeCache");
-                            tran.Commit();
-                        }
+                        using var tran = await _ctx.Database.BeginTransactionAsync();
+                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrEpisodeCache");
+                        await tran.CommitAsync();
                     });
 
                     foreach (var s in ids)
@@ -113,7 +107,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
                             continue;
                         }
 
-                        _log.LogDebug("Syncing series: {0}", s.Title);
+                        _log.LogDebug($"Syncing series: {s.Title}");
                         var episodes = await _api.GetEpisodes(s.Id, settings.ApiKey, settings.FullUri);
                         var monitoredEpisodes = episodes.Where(x => x.monitored || x.hasFile);
 
@@ -158,13 +152,11 @@ namespace Ombi.Schedule.Jobs.Sonarr
                         strat = _ctx.Database.CreateExecutionStrategy();
                         await strat.ExecuteAsync(async () =>
                         {
-                            using (var tran = await _ctx.Database.BeginTransactionAsync())
-                            {
-                                await _ctx.SonarrEpisodeCache.AddRangeAsync(episodesToAdd);
-                                _log.LogDebug("Commiting the transaction");
-                                await _ctx.SaveChangesAsync();
-                                tran.Commit();
-                            }
+                            using var tran = await _ctx.Database.BeginTransactionAsync();
+                            await _ctx.SonarrEpisodeCache.AddRangeAsync(episodesToAdd);
+                            _log.LogDebug("Commiting the transaction");
+                            await _ctx.SaveChangesAsync();
+                            await tran.CommitAsync();
                         });
                     }
 

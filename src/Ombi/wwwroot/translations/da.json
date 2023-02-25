@@ -364,6 +364,9 @@
         "Casts": {
             "CastTitle": "Medvirkende"
         },
+        "Crews": {
+            "CrewTitle": "Crew"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Dette vil anmode om hver sæson for denne tv-serie",
             "FirstSeasonTooltip": "Dette vil kun anmode om den første sæson for denne tv-serie",
@@ -377,6 +380,7 @@
         "PleaseSelectUser": "Vælg venligst en bruger",
         "StreamingOn": "Streaming På:",
         "RequestedBy": "Anmodet af:",
+        "OnDate": "On:",
         "RequestedByOn": "Anmodet af {{user}} d. {{date}}",
         "RequestDate": "Dato for anmodning:",
         "DeniedReason": "Afvisningsårsag:",

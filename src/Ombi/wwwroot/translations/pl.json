@@ -364,6 +364,9 @@
         "Casts": {
             "CastTitle": "Obsada"
         },
+        "Crews": {
+            "CrewTitle": "Crew"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Zgłoszenie obejmie wszystkie sezony tego serialu",
             "FirstSeasonTooltip": "Zgłoszenie obejmie pierwszy sezon tego serialu",
@@ -377,6 +380,7 @@
         "PleaseSelectUser": "Proszę wybrać użytkownika",
         "StreamingOn": "Strumieniowane w:",
         "RequestedBy": "Zgłoszone przez:",
+        "OnDate": "On:",
         "RequestedByOn": "Requested By {{user}} on {{date}}",
         "RequestDate": "Data zgłoszenia:",
         "DeniedReason": "Denied Reason:",

@@ -1,5 +1,5 @@
-@import "~@angular/material/theming";
-@import "~styles/variables.scss";
+@import "@angular/material/theming";
+@import "./styles/variables.scss";
 //MINE
 @media (max-width: 570px) {
     h1 {
@@ -180,6 +180,11 @@
     width: 170px;
 }
 
+
+.crew-profile-img {
+    border-radius: 100%;
+    width: 170px;
+}
 
 
 .small-middle-container {

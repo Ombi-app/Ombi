@@ -72,7 +72,7 @@ namespace Ombi.Api.Radarr
             return await Api.Request<MovieResponse>(request);
         }
 
-        public async Task<RadarrAddMovie> AddMovie(int tmdbId, string title, int year, int qualityId, string rootPath, string apiKey, string baseUrl, bool searchNow, string minimumAvailability)
+        public async Task<RadarrAddMovie> AddMovie(int tmdbId, string title, int year, int qualityId, string rootPath, string apiKey, string baseUrl, bool searchNow, string minimumAvailability, List<int> tags)
         {
             var request = new Request("/api/v3/movie", baseUrl, HttpMethod.Post);
 
@@ -86,7 +86,8 @@ namespace Ombi.Api.Radarr
                 monitored = true,
                 year = year,
                 minimumAvailability = minimumAvailability,
-                sizeOnDisk = 0
+                sizeOnDisk = 0,
+                tags = tags.Any() ? tags.ToArray() : Enumerable.Empty<int>().ToArray()
             };
 
             if (searchNow)
@@ -155,6 +156,15 @@ namespace Ombi.Api.Radarr
         private void AddHeaders(Request request, string key)
         {
             request.AddHeader("X-Api-Key", key);
+        }
+
+        public Task<Tag> CreateTag(string apiKey, string baseUrl, string tagName)
+        {
+            var request = new Request($"/api/v3/tag", baseUrl, HttpMethod.Post);
+            request.AddHeader("X-Api-Key", apiKey);
+            request.AddJsonBody(new { Label = tagName });
+
+            return Api.Request<Tag>(request);
         }
     }
 }

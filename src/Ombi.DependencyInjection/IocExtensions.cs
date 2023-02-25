@@ -71,6 +71,8 @@ using System.Net.Http;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Services;
 using Ombi.Core.Helpers;
+using Ombi.Hubs;
+using Hqub.MusicBrainz.API;
 
 namespace Ombi.DependencyInjection
 {
@@ -86,6 +88,7 @@ namespace Ombi.DependencyInjection
             services.RegisterServices();
             services.RegisterStore();
             services.RegisterJobs();
+            services.RegisterHubs();
         }
 
         public static void RegisterEngines(this IServiceCollection services)
@@ -171,6 +174,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ILidarrApi, LidarrApi>();
             services.AddTransient<IGroupMeApi, GroupMeApi>();
             services.AddTransient<IMusicBrainzApi, MusicBrainzApi>();
+            services.AddTransient(_ => new MusicBrainzClient());
             services.AddTransient<IWhatsAppApi, WhatsAppApi>();
             services.AddTransient<ICloudMobileNotification, CloudMobileNotification>();
             services.AddTransient<IEmbyApiFactory, EmbyApiFactory>();
@@ -228,8 +232,10 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ILegacyMobileNotification, LegacyMobileNotification>();
             services.AddTransient<IChangeLogProcessor, ChangeLogProcessor>();
             services.AddScoped<IFeatureService, FeatureService>();
+            services.AddTransient<IRecentlyRequestedService, RecentlyRequestedService>();
+            services.AddTransient<IPlexService, PlexService>();
         }
-
+        
         public static void RegisterJobs(this IServiceCollection services)
         {
             services.AddSingleton<QuartzJobRunner>();
@@ -265,6 +271,11 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMediaDatabaseRefresh, MediaDatabaseRefresh>();
             services.AddTransient<IArrAvailabilityChecker, ArrAvailabilityChecker>();
             services.AddTransient<IAutoDeleteRequests, AutoDeleteRequests>();
+        }
+
+        public static void RegisterHubs(this IServiceCollection services)
+        {
+            services.AddScoped<INotificationHubService, NotificationHubService>();
         }
     }
 }

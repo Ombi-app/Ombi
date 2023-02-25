@@ -9,6 +9,8 @@ using Ombi.Api.Plex;
 using Ombi.Api.Plex.Models;
 using Ombi.Attributes;
 using Ombi.Core.Authentication;
+using Ombi.Core.Models;
+using Ombi.Core.Services;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
@@ -23,18 +25,20 @@ namespace Ombi.Controllers.V1.External
     public class PlexController : Controller
     {
         public PlexController(IPlexApi plexApi, ISettingsService<PlexSettings> plexSettings,
-            ILogger<PlexController> logger, IPlexOAuthManager manager)
+            ILogger<PlexController> logger, IPlexOAuthManager manager, IPlexService plexService)
         {
             PlexApi = plexApi;
             PlexSettings = plexSettings;
             _log = logger;
             _plexOAuthManager = manager;
+            _plexService = plexService;
         }
 
         private IPlexApi PlexApi { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private readonly ILogger<PlexController> _log;
         private readonly IPlexOAuthManager _plexOAuthManager;
+        private readonly IPlexService _plexService;
 
         /// <summary>
         /// Signs into the Plex API.
@@ -300,5 +304,9 @@ namespace Ombi.Controllers.V1.External
 
             return new JsonResult(new {url = url.ToString()});
         }
+
+        [Admin]
+        [HttpGet("WatchlistUsers")]
+        public async Task<List<PlexUserWatchlistModel>> GetPlexWatchlistUsers() => await _plexService.GetWatchlistUsers(HttpContext.RequestAborted);
     }
 }

@@ -2,206 +2,76 @@
 <div class="small-middle-container" *ngIf="settings">
     <fieldset style="width:100%;">
         <legend>Plex Configuration</legend>
-        <div class="row">
-            <div class="col-md-6 col-6 col-sm-6">
-
-                <div class="md-form-field">
-                    <mat-slide-toggle [(ngModel)]="settings.enable" [checked]="settings.enable">Enable
-                    </mat-slide-toggle>
-                </div>
-                <div class="md-form-field">
-                    <mat-slide-toggle [(ngModel)]="settings.enableWatchlistImport" [checked]="settings.enableWatchlistImport">Enable User Watchlist Requests
-                    </mat-slide-toggle>
-                    <p>When a Plex User adds something to their watchlist in Plex, it will turn up in Ombi as a Request if enabled. This <b>only</b> applies to users that are logging in with their Plex Account</p>
-                    <p>Request limits if set are all still applied etc.</p>
-                </div>
-                <div class="md-form-field">
-                    <mat-slide-toggle [(ngModel)]="advanced">Advanced</mat-slide-toggle>
-                </div>
- 
+        <div class="col-12">
+            <div class="md-form-field align-right">
+                <button (click)="openWatchlistUserLog()" type="button" class="mat-focus-indicator mat-flat-button mat-button-base mat-accent">Watchlist User Errors</button>
             </div>
+
         </div>
+        <settings-plex-form-field [label]="'Enable'" [type]="'checkbox'" [id]="'enable'" [(value)]="settings.enable"></settings-plex-form-field>
+
+        <settings-plex-form-field [label]="'Enable User Watchlist Requests'" [type]="'checkbox'" [id]="'enableWatchlistImport'" [(value)]="settings.enableWatchlistImport">
+            <small bottom>When a Plex User adds something to their watchlist in Plex, it will turn up in Ombi as a Request if enabled. This <b>only</b> applies to users that are logging in with their Plex Account
+                <br>Request limits if set are all still applied
+            </small>
+        </settings-plex-form-field>
+
+        <settings-plex-form-field [disabled]="!settings.enableWatchlistImport" [label]="'Watchlist - Request Whole Show'" disabled [type]="'checkbox'" [id]="'monitorAll'" [(value)]="settings.monitorAll">
+            <small bottom>If enabled then watchlist requests for TV Shows will request the <strong><em>whole</em></strong> show. If not enabled it will only request the latest season.
+            </small>
+        </settings-plex-form-field>
+
+
+
+        <hr>
+
+<div class="row">
+<div class="col-md-7">
+        <h2 style="margin: 1em 0 0 0;">Servers</h2>
+        <mat-list style="display:flex; flex-flow: wrap;">
+            <mat-card class="server-card" *ngFor="let server of settings.servers">
+                <button mat-button (click)="edit(server)">
+                    <h3>{{server.name}}</h3>
+                </button>
+            </mat-card>
+
+            <mat-card class="server-card new-server-card">
+                <button mat-button (click)="newServer()">
+                    <i class="fas fa-plus fa-xl"></i>
+                    <h3>Manually Add Server</h3>
+                </button>
+            </mat-card>
+        </mat-list>
+
+
+<div class="row">
+
+    <br />
+        <div class="form-group col-2">
+            <button mat-raised-button (click)="runSync(PlexSyncType.Full)" type="button" id="fullSync"
+                class="mat-focus-indicator mat-stroked-button mat-button-base">Full
+                Sync</button><br />
+        </div>
+        <div class="form-group col-2">
+            <button mat-raised-button (click)="runSync(PlexSyncType.RecentlyAdded)" type="button" id="recentlyAddedSync"
+                class="mat-focus-indicator mat-stroked-button mat-button-base">Partial Sync</button>
+        </div>
+        <div class="form-group col-2">
+            <button mat-raised-button (click)="runSync(PlexSyncType.ClearAndReSync)" type="button" id="clearData"
+                class="mat-focus-indicator mat-stroked-button mat-button-base">
+                Clear Data And Resync
+            </button>
+        </div>
+        <div class="form-group col-12">
+            <button mat-raised-button (click)="runSync(PlexSyncType.WatchlistImport)" type="button" id="watchlistImport"
+                class="mat-focus-indicator mat-stroked-button mat-button-base">
+                Run Watchlist Import
+            </button>
+        </div>
+</div>
+
         <div class="row">
-            <mat-tab-group #tabGroup [selectedIndex]="selected.value" (selectedTabChange)="addTab($event)"
-                (selectedIndexChange)="selected.setValue($event)" animationDuration="0ms" style="width:100%;">
-                <mat-tab *ngFor="let server of settings.servers" [label]="server.name">
-                    <div class="col-md-6 col-6 col-sm-6" style="float: right; width:100%; text-align:right;">
-                        <button type="button" (click)="removeServer(server)"
-                            class="mat-focus-indicator mat-flat-button mat-button-base mat-warn">Remove Server</button>
-                    </div>
-                    <br />
-                    <br />
-                    <div class="col-md-7 col-8 col-sm-12">
-                        <!-- Main Content -->
-                        <label for="username" class="control-label">
-                            <h3>Plex Server Configuration</h3>
-                        </label>
-                        <div class="md-form-field">
-                            <mat-form-field appearance="outline" floatLabel=auto>
-                                <mat-label>Server Name</mat-label>
-                                <input matInput id="name" name="name" 
-                                    [(ngModel)]="server.name" value="{{server.name}}">
-                            </mat-form-field>
-                        </div>
 
-                        <div class="md-form-field">
-                            <mat-form-field appearance="outline" floatLabel=auto>
-                                <mat-label>Hostname or IP</mat-label>
-                                <input matInput id="Ip" name="Ip" [(ngModel)]="server.ip"
-                                    value="{{server.ip}}">
-                            </mat-form-field>
-
-                            <mat-form-field appearance="outline" floatLabel=auto>
-                                <mat-label>Port</mat-label>
-                                <input matInput id="portNumber" name="Port" 
-                                    [(ngModel)]="server.port" value="{{server.port}}">
-                            </mat-form-field>
-
-                            <mat-slide-toggle id="ssl" [(ngModel)]="server.ssl" [checked]="server.ssl">
-                                SSL
-                            </mat-slide-toggle>
-                        </div>
-                        <div class="md-form-field">
-                            <mat-form-field appearance="outline" floatLabel=auto>
-                                <mat-label>Plex Authorization Token</mat-label>
-                                <input matInput id="authToken"
-                                    [(ngModel)]="server.plexAuthToken" value="{{server.plexAuthToken}}">
-                            </mat-form-field>
-
-                            <mat-form-field appearance="outline" floatLabel=auto>
-                                <mat-label>Machine Identifier</mat-label>
-                                <input matInput id="MachineIdentifier" name="MachineIdentifier"
-                                    [(ngModel)]="server.machineIdentifier" value="{{server.machineIdentifier}}">
-                            </mat-form-field>
-                        </div>
-                        <div class="md-form-field">
-                            <mat-form-field appearance="outline" floatLabel=auto>
-                                <mat-label>Externally Facing Hostname</mat-label>
-                                <input matInput placeholder="e.g. https://app.plex.tv" [(ngModel)]="server.serverHostname" value="{{server.serverHostname}}" matTooltip="This will be the external address that users will navigate to when they press the 'View On Plex' button">
-                            </mat-form-field>
-                            <small>
-                                <span *ngIf="server.serverHostname">Current URL: "{{server.serverHostname}}/web/app#!/server/{{server.machineIdentifier}}/details?key=%2flibrary%2Fmetadata%2F53334"</span>
-                                <span *ngIf="!server.serverHostname">Current URL: "https://app.plex.tv/web/app#!/server/{{server.machineIdentifier}}/details?key=%2flibrary%2Fmetadata%2F53334"</span>
-                            </small>
-                        </div>
-                        <div class="md-form-field">
-                            <div class="md-form-field" *ngIf="advanced">
-                                <mat-form-field appearance="outline" floatLabel=auto>
-                                    <mat-label for="episodeBatchSize" class="control-label">Episode Batch Size</mat-label>
-                                    <input matInput type="number" id="episodeBatchSize" name="episodeBatchSize"
-                                        [(ngModel)]="server.episodeBatchSize" value="{{server.episodeBatchSize}}"
-                                        matTooltip="This is used when we cache the episodes, we cache in batches of 150 by default, you can configure how many we do at a time here"
-                                        matTooltipPosition="right">
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <div class="md-form-field" *ngIf="loadedServers">
-                            <label for="username" class="control-label">Please select the server</label>
-                            <br />
-                            <div class="btn-group">
-                                <div class="btn-group">
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>Server</mat-label>
-                                        <mat-select>
-                                            <mat-option (click)="selectServer(s,server)"
-                                                *ngFor="let s of loadedServers.servers.server" [value]="s.server">
-                                                {{s.name}}</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                        </div>
-                        <label>Please select the libraries you want Ombi to look in for content</label>
-                        <br />
-                        <small>Note: if nothing is selected, we will monitor all libraries</small>
-                        <div class="md-form-field">
-                            <div>
-                                <button mat-raised-button (click)="loadLibraries(server)"
-                                    class="mat-focus-indicator mat-stroked-button mat-button-base">Load Libraries
-                                    <i class="fas fa-film"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <br />
-                        <div *ngIf="server.plexSelectedLibraries">
-                            <div *ngFor="let lib of server.plexSelectedLibraries">
-                                <div class="md-form-field">
-                                    <div class="checkbox">
-                                        <mat-slide-toggle [(ngModel)]="lib.enabled" [checked]="lib.enabled"
-                                            for="{{lib.title}}">{{lib.title}}</mat-slide-toggle>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-5 col-4 col-sm-12">
-                        <div class="md-form-field">
-                            <label for="username" class="control-label">
-                                <h3>Plex Credentials</h3>
-                                <small>These fields are optional to automatically fill in your Plex server settings</small>
-                            </label>
-                            <div>
-                                <mat-form-field appearance="outline" floatLabel=auto>
-                                    <mat-label>Username</mat-label>
-                                    <input matInput id="username"  [(ngModel)]="username"
-                                        value="{{username}}">
-                                </mat-form-field>
-                            </div>
-                            <div>
-                                <mat-form-field appearance="outline" floatLabel=auto>
-                                    <mat-label>Password</mat-label>
-                                    <input matInput type="password" id="password" 
-                                        [(ngModel)]="password" value="{{password}}">
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <div class="md-form-field">
-                            <div>
-                                <button mat-raised-button id="requestToken" (click)="requestServers(server)"
-                                    class="mat-stroked-button">Load Servers
-                                    <i class="fas fa-key"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <br />
-
-                        <div class="form-group">
-                            <div class="form-group">
-                                <button mat-raised-button id="testPlex" type="button" (click)="testPlex(server)"
-                                    class="mat-focus-indicator mat-stroked-button mat-button-base">
-                                    Test Connectivity
-                                    <div id="spinner"></div>
-                                </button>
-                            </div>
-                            <div class="form-group">
-                                <button mat-raised-button (click)="runCacher()" type="button" id="fullSync"
-                                    class="mat-focus-indicator mat-stroked-button mat-button-base">Manually Run Full
-                                    Sync</button><br />
-                            </div>
-                            <div class="form-group">
-                                <button mat-raised-button (click)="runRecentlyAddedCacher()" type="button" id="recentlyAddedSync"
-                                    class="mat-focus-indicator mat-stroked-button mat-button-base">Manually Run Recently
-                                    Added Sync</button>
-                            </div>
-                            <div class="form-group">
-                                <button mat-raised-button (click)="clearDataAndResync()" type="button" id="clearData"
-                                    class="mat-focus-indicator mat-stroked-button mat-button-base">
-                                    Clear Data And Resync
-                                </button>
-                            </div>
-                            <div class="form-group">
-                                <button mat-raised-button (click)="runWatchlistImport()" type="button" id="watchlistImport"
-                                    class="mat-focus-indicator mat-stroked-button mat-button-base">
-                                    Run Watchlist Import
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </mat-tab>
-                <mat-tab label="" disabled=true> </mat-tab>
-                <mat-tab label="Add Server" position=100> </mat-tab>
-
-            </mat-tab-group>
             <div class="col-md-2">
                 <div class="form-group">
                     <div>
@@ -211,6 +81,57 @@
                 </div>
             </div>
         </div>
+        
+    </div>
+
+    <div class="col-md-5">
+        <div class="md-form-field">
+            <label for="username" class="control-label">
+                <h3>Plex Credentials</h3>
+                <small>These fields are optional to automatically fill in your Plex server settings. <br>
+                This will pass your username and password to the Plex.tv API to grab the servers associated with this user.
+            <br>
+            If you have 2FA enabled on your account, you need to append the 2FA code to the end of your password.</small>
+            </label>
+        </div>
+    
+        <settings-plex-form-field [label]="'Username'" [id]="'username'" [(value)]="username"></settings-plex-form-field>
+        <settings-plex-form-field [label]="'Password'" [id]="'password'" [type]="'password'" [(value)]="password"></settings-plex-form-field>
+    
+        <div class="md-form-field">
+            <div class="right">
+                <button mat-raised-button id="loadServers" (click)="requestServers()"
+                    class="mat-stroked-button">Load Servers
+                    <i class="fas fa-key"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-2 align-self-center">
+                Please select the server:
+            </div>
+            <div class="md-form-field col-10">
+                <div *ngIf="!loadedServers">
+                    <mat-form-field appearance="outline" floatLabel=auto>
+                        <input disabled  matInput placeholder="No Servers Loaded" id="selectServer-noservers">
+                    </mat-form-field>
+                </div>
+    
+                <div *ngIf="loadedServers">
+                    <mat-form-field appearance="outline">
+                        <mat-select placeholder="Servers Loaded! Please Select">
+                            <mat-option (click)="selectServer(s)"
+                                *ngFor="let s of loadedServers.servers.server" [value]="s.server">
+                                {{s.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
     </fieldset>
 </div>
 <!--(){{settings|json}}-->

@@ -29,7 +29,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
@@ -40,7 +39,6 @@ using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Hubs;
-using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Schedule.Jobs.Plex.Models;
 using Ombi.Store.Entities;
@@ -55,14 +53,14 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly IMediaCacheService _mediaCacheService;
 
         public PlexContentSync(ISettingsService<PlexSettings> plex, IPlexApi plexApi, ILogger<PlexContentSync> logger, IPlexContentRepository repo,
-            IPlexEpisodeSync epsiodeSync, IHubContext<NotificationHub> hub, IMovieDbApi movieDbApi, IMediaCacheService mediaCacheService)
+            IPlexEpisodeSync epsiodeSync, INotificationHubService notificationHubService, IMovieDbApi movieDbApi, IMediaCacheService mediaCacheService)
         {
             Plex = plex;
             PlexApi = plexApi;
             Logger = logger;
             Repo = repo;
             EpisodeSync = epsiodeSync;
-            Notification = hub;
+            Notification = notificationHubService;
             _movieApi = movieDbApi;
             _mediaCacheService = mediaCacheService;
             Plex.ClearCache();
@@ -73,7 +71,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private ILogger<PlexContentSync> Logger { get; }
         private IPlexContentRepository Repo { get; }
         private IPlexEpisodeSync EpisodeSync { get; }
-        private IHubContext<NotificationHub> Notification { get; set; }
+        private INotificationHubService Notification { get; set; }
 
         public async Task Execute(IJobExecutionContext context)
         {
@@ -124,7 +122,6 @@ namespace Ombi.Schedule.Jobs.Plex
             {
                 await NotifyClient("Plex Sync - Checking if any requests are now available");
                 Logger.LogInformation("Kicking off Plex Availability Checker");
-                await _mediaCacheService.Purge();
                 await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
             }
             var processedCont = processedContent?.Content?.Count() ?? 0;
@@ -133,6 +130,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
             await NotifyClient(recentlyAddedSearch ? $"Plex Recently Added Sync Finished, We processed {processedCont}, and {processedEp} Episodes" : "Plex Content Sync Finished");
 
+            await _mediaCacheService.Purge();
         }
 
         private async Task<ProcessedContent> StartTheCache(PlexSettings plexSettings, bool recentlyAddedSearch)
@@ -314,7 +312,7 @@ namespace Ombi.Schedule.Jobs.Plex
                             {
                                 break;
                             }
-                            if (quality.Equals(existing.Quality))
+                            if (quality == null || quality.Equals(existing.Quality))
                             {
                                 // We got it
                                 continue;
@@ -496,31 +494,31 @@ namespace Ombi.Schedule.Jobs.Plex
                     await Repo.Update(existingContent);
                 }
 
-                // Just check the key
-                if (existingKey != null)
-                {
-                    // The rating key is all good!
-                }
-                else
-                {
-                    // This means the rating key has changed somehow.
-                    // Should probably delete this and get the new one
-                    var oldKey = existingContent.Key;
-                    Repo.DeleteWithoutSave(existingContent);
+                //// Just check the key
+                //if (existingKey != null)
+                //{
+                //    // The rating key is all good!
+                //}
+                //else
+                //{
+                //    // This means the rating key has changed somehow.
+                //    // Should probably delete this and get the new one
+                //    var oldKey = existingContent.Key;
+                //    Repo.DeleteWithoutSave(existingContent);
 
-                    // Because we have changed the rating key, we need to change all children too
-                    var episodeToChange = Repo.GetAllEpisodes().Cast<PlexEpisode>().Where(x => x.GrandparentKey == oldKey);
-                    if (episodeToChange.Any())
-                    {
-                        foreach (var e in episodeToChange)
-                        {
-                            Repo.DeleteWithoutSave(e);
-                        }
-                    }
+                //    // Because we have changed the rating key, we need to change all children too
+                //    var episodeToChange = Repo.GetAllEpisodes().Cast<PlexEpisode>().Where(x => x.GrandparentKey == oldKey);
+                //    if (episodeToChange.Any())
+                //    {
+                //        foreach (var e in episodeToChange)
+                //        {
+                //            Repo.DeleteWithoutSave(e);
+                //        }
+                //    }
 
-                    await Repo.SaveChangesAsync();
-                    existingContent = null;
-                }
+                //    await Repo.SaveChangesAsync();
+                //    existingContent = null;
+                //}
             }
 
             // Also make sure it's not already being processed...
@@ -743,8 +741,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
         private async Task NotifyClient(string message)
         {
-            await Notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, $"Plex Sync - {message}");
+            await Notification.SendNotificationToAdmins($"Plex Sync - {message}");
         }
 
         private static bool ValidateSettings(PlexSettings plex)

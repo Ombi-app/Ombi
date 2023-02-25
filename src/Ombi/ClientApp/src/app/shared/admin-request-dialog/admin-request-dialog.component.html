@@ -53,7 +53,7 @@
     </mat-form-field>
   </div>
   <div>
-    <mat-form-field appearance="outline" floatLabel=auto>
+    <mat-form-field *ngIf="sonarrLanguageProfiles" appearance="outline" floatLabel=auto>
         <mat-label>{{'MediaDetails.LanguageProfileSelect' | translate }}</mat-label>
         <mat-select id="sonarrLanguageId" formControlName="sonarrLanguageId">
             <mat-option id="sonarrLanguageId{{profile.id}}" *ngFor="let profile of sonarrLanguageProfiles" value="{{profile.id}}">{{profile.name}}</mat-option>
@@ -65,25 +65,25 @@
 
   <!-- Radarr -->
   <div *ngIf="data.type === RequestType.movie && radarrEnabled"><hr />
-  <div>
-    <h3>Radarr Overrides</h3>
-      <mat-form-field appearance="outline" floatLabel=auto>
-          <mat-label>{{'MediaDetails.QualityProfilesSelect' | translate }}</mat-label>
-          <mat-select id="radarrQualitySelect" formControlName="radarrPathId">
-              <mat-option id="radarrQualitySelect{{profile.id}}" *ngFor="let profile of radarrProfiles" value="{{profile.id}}">{{profile.name}}</mat-option>
-          </mat-select>
-      </mat-form-field>
+    <div>
+      <h3>Radarr Overrides</h3>
+        <mat-form-field appearance="outline" floatLabel=auto>
+            <mat-label>{{'MediaDetails.QualityProfilesSelect' | translate }}</mat-label>
+            <mat-select id="radarrQualitySelect" formControlName="radarrPathId">
+                <mat-option id="radarrQualitySelect{{profile.id}}" *ngFor="let profile of radarrProfiles" value="{{profile.id}}">{{profile.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div mat-dialog-content>
+        <mat-form-field appearance="outline" floatLabel=auto>
+            <mat-label>{{'MediaDetails.RootFolderSelect' | translate }}</mat-label>
+            <mat-select id="radarrFolderSelect" formControlName="radarrFolderId">
+                <mat-option id="radarrFolderSelect{{profile.id}}" *ngFor="let profile of radarrRootFolders" value="{{profile.id}}">{{profile.path}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
   </div>
-  <div mat-dialog-content>
-      <mat-form-field appearance="outline" floatLabel=auto>
-          <mat-label>{{'MediaDetails.RootFolderSelect' | translate }}</mat-label>
-          <mat-select id="radarrFolderSelect" formControlName="radarrFolderId">
-              <mat-option id="radarrFolderSelect{{profile.id}}" *ngFor="let profile of radarrRootFolders" value="{{profile.id}}">{{profile.path}}</mat-option>
-          </mat-select>
-      </mat-form-field>
-  </div>
-</div>
-  <!-- End Radarr-->
+    <!-- End Radarr-->
 
 
 <div mat-dialog-actions class="right-buttons">

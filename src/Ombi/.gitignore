@@ -8,3 +8,4 @@ wwwroot/dist
 /coverage/*
 /Logs/**
 **.db
+.yarn

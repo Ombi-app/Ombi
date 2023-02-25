@@ -1,4 +1,4 @@
-@import "~styles/shared.scss";
+@import "./styles/shared.scss";
 .small-middle-container {
     margin: auto;
     width: 95%;
@@ -12,6 +12,35 @@
     display: inline-table;
 }
 
-.row {
-    display: block;
+
+.align-right {
+    float: right;
+    width:100%;
+    text-align:right;
 }
+
+::ng-deep div .mat-tab-body-content {
+    overflow: hidden;
+}
+.server-card {
+    margin: 0em 1em 1em 0;
+    width: 13em;
+    min-height: 8em;
+  
+    button {
+      text-align: center;
+      align-content: center;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      height: 100%;
+      width: 100%;
+    }
+  
+    i {
+      margin-top: 0.25em;
+    }
+  
+    h3 {
+      margin: 0;
+    }
+  }

@@ -364,6 +364,9 @@
         "Casts": {
             "CastTitle": "Szereplők"
         },
+        "Crews": {
+            "CrewTitle": "Crew"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Ezzel kérni fogja a sorozat összes évadát",
             "FirstSeasonTooltip": "Ezzel kérni fogja a sorozat első évadát",
@@ -377,6 +380,7 @@
         "PleaseSelectUser": "Válassz egy felhasználót",
         "StreamingOn": "Streaming csatorna:",
         "RequestedBy": "Kérte:",
+        "OnDate": "On:",
         "RequestedByOn": "Kérte: {{user}} ekkor: {{date}}",
         "RequestDate": "Kérés ideje:",
         "DeniedReason": "Elutasítás oka:",

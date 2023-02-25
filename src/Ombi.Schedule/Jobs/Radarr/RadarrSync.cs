@@ -40,14 +40,10 @@ namespace Ombi.Schedule.Jobs.Radarr
         {
             try
             {
-                var strat = _ctx.Database.CreateExecutionStrategy();
-                await strat.ExecuteAsync(async () =>
-                {
-                    // Let's remove the old cached data
-                    using var tran = await _ctx.Database.BeginTransactionAsync();
-                    await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM RadarrCache");
-                    tran.Commit();
-                });
+                // Let's remove the old cached data
+                using var tran = await _ctx.Database.BeginTransactionAsync();
+                await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM RadarrCache");
+                await tran.CommitAsync();
 
                 var radarrSettings = _radarrSettings.GetSettingsAsync();
                 var radarr4kSettings = _radarr4kSettings.GetSettingsAsync();

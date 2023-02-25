@@ -11,7 +11,7 @@
           <tv-grid (onOpenOptions)="onOpenOptions($event)"></tv-grid>
           </ng-template>
     </mat-tab>
-    <mat-tab label="{{ 'NavigationBar.Filter.Music' | translate }}">
+    <mat-tab *ngIf="musicEnabled$ | async" label="{{ 'NavigationBar.Filter.Music' | translate }}">
       <ng-template matTabContent>
         <albums-grid (onOpenOptions)="onOpenOptions($event)"></albums-grid>
         </ng-template>

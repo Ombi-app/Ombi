@@ -7,10 +7,8 @@ using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Ombi.Core.Tests.Rule.Request
@@ -31,7 +29,7 @@ namespace Ombi.Core.Tests.Rule.Request
         [Test]
         public async Task RequestShow_DoesNotExistAtAll_IsSuccessful()
         {
-            PlexContentRepo.Setup(x => x.GetAll()).Returns(new List<PlexServerContent>().AsQueryable().BuildMock().Object);
+            PlexContentRepo.Setup(x => x.GetAll()).Returns(new List<PlexServerContent>().AsQueryable().BuildMock());
             var req = new ChildRequests
             {
                 SeasonRequests = new List<SeasonRequests>
@@ -203,7 +201,7 @@ namespace Ombi.Core.Tests.Rule.Request
                     TheMovieDbId = 123.ToString(),
                 }
             };
-            PlexContentRepo.Setup(x => x.GetAll()).Returns(content.AsQueryable().BuildMock().Object);
+            PlexContentRepo.Setup(x => x.GetAll()).Returns(content.AsQueryable().BuildMock());
 
             var req = new MovieRequests
             {
@@ -245,7 +243,7 @@ namespace Ombi.Core.Tests.Rule.Request
                     }
                 }
             };
-            PlexContentRepo.Setup(x => x.GetAll()).Returns(childRequests.AsQueryable().BuildMock().Object);
+            PlexContentRepo.Setup(x => x.GetAll()).Returns(childRequests.AsQueryable().BuildMock());
         }
     }
 }

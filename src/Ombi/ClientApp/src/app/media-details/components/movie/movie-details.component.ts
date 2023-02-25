@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { ImageService, SearchV2Service, RequestService, MessageService, RadarrService, SettingsStateService } from "../../../services";
 import { ActivatedRoute, Router } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
-import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
+import { ICrewViewModel, ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
 import { MatDialog } from "@angular/material/dialog";
 import { YoutubeTrailerComponent } from "../shared/youtube-trailer.component";
 import { AuthService } from "../../../auth/auth.service";
@@ -75,13 +75,14 @@ export class MovieDetailsComponent implements OnInit{
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
 
         if (this.isAdmin) {
-            this.showAdvanced = await this.radarrService.isRadarrEnabled();
+            this.showAdvanced = await firstValueFrom(this.radarrService.isRadarrEnabled());
         }
 
         if (this.imdbId) {
             this.searchService.getMovieByImdbId(this.imdbId).subscribe(async x => {
                 this.movie = x;
                 this.checkPoster();
+                this.movie.credits.crew = this.orderCrew(this.movie.credits.crew);
                 if (this.movie.requestId > 0) {
                     // Load up this request
                     this.hasRequest = true;
@@ -93,6 +94,7 @@ export class MovieDetailsComponent implements OnInit{
             this.searchService.getFullMovieDetails(this.theMovidDbId).subscribe(async x => {
                 this.movie = x;
                 this.checkPoster();
+                this.movie.credits.crew = this.orderCrew(this.movie.credits.crew);
                 if (this.movie.requestId > 0) {
                     // Load up this request
                     this.hasRequest = true;
@@ -109,7 +111,7 @@ export class MovieDetailsComponent implements OnInit{
             is4K = false;
         }
         if (this.isAdmin) {
-            const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.movie, id: this.movie.id }, panelClass: 'modal-panel' });
+            const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.movie, id: this.movie.id, is4K: is4K }, panelClass: 'modal-panel' });
             dialog.afterClosed().subscribe(async (result) => {
                 if (result) {
                     const requestResult = await firstValueFrom(this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId,
@@ -317,6 +319,18 @@ export class MovieDetailsComponent implements OnInit{
                 this.movieRequest.rootPathOverrideTitle = path[0].path;
             }
 
+        });
+    }
+
+    private orderCrew(crew: ICrewViewModel[]): ICrewViewModel[] {
+        return crew.sort((a, b) => {
+            if (a.job === "Director") {
+                return -1;
+            } else if (b.job === "Director") {
+                return 1;
+            } else {
+                return 0;
+            }
         });
     }
 }

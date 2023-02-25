@@ -1,21 +1,15 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Principal;
 using System.Threading.Tasks;
 using MockQueryable.Moq;
 using Moq;
 using NUnit.Framework;
-using Ombi.Core.Authentication;
-using Ombi.Core.Rule.Rules;
 using Ombi.Core.Rule.Rules.Request;
 using Ombi.Core.Services;
-using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository.Requests;
-using Ombi.Test.Common;
 
 namespace Ombi.Core.Tests.Rule.Request
 {
@@ -45,7 +39,7 @@ namespace Ombi.Core.Tests.Rule.Request
                     TheMovieDbId = 1,
                     RequestType = RequestType.Movie
                 }
-            }.AsQueryable().BuildMock().Object);
+            }.AsQueryable().BuildMock());
             var o = new MovieRequests
             {
                 TheMovieDbId = 1,
@@ -67,7 +61,7 @@ namespace Ombi.Core.Tests.Rule.Request
                     ImdbId = 1.ToString(),
                     RequestType = RequestType.Movie
                 }
-            }.AsQueryable().BuildMock().Object);
+            }.AsQueryable().BuildMock());
             var o = new MovieRequests
             {
                 ImdbId = 1.ToString(),
@@ -89,7 +83,7 @@ namespace Ombi.Core.Tests.Rule.Request
                     ImdbId = "2",
                     RequestType = RequestType.Movie
                 }
-            }.AsQueryable().BuildMock().Object);
+            }.AsQueryable().BuildMock());
             var o = new MovieRequests
             {
                 TheMovieDbId = 1,
@@ -113,7 +107,7 @@ namespace Ombi.Core.Tests.Rule.Request
                     RequestType = RequestType.Movie,
                     Is4kRequest = true
                 }
-            }.AsQueryable().BuildMock().Object);
+            }.AsQueryable().BuildMock());
             var o = new MovieRequests
             {
                 TheMovieDbId = 2,
@@ -139,7 +133,7 @@ namespace Ombi.Core.Tests.Rule.Request
                     RequestType = RequestType.Movie,
                     Is4kRequest = false
                 }
-            }.AsQueryable().BuildMock().Object);
+            }.AsQueryable().BuildMock());
             var o = new MovieRequests
             {
                 TheMovieDbId = 2,
@@ -165,7 +159,7 @@ namespace Ombi.Core.Tests.Rule.Request
                     RequestType = RequestType.Movie,
                     Is4kRequest = false
                 }
-            }.AsQueryable().BuildMock().Object);
+            }.AsQueryable().BuildMock());
             var o = new MovieRequests
             {
                 TheMovieDbId = 2,

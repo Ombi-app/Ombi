@@ -8,7 +8,7 @@ import { IDiscoverCardResult } from "../../interfaces";
 import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
 import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
 import { MatDialog } from "@angular/material/dialog";
-import { RequestType } from "../../../interfaces";
+import { IMovieRequestModel, RequestType } from "../../../interfaces";
 import { TranslateService } from "@ngx-translate/core";
 
 @Component({
@@ -130,43 +130,73 @@ export class DiscoverCardComponent implements OnInit {
         event.preventDefault();
         this.loading = true;
         switch (this.result.type) {
-            case RequestType.tvShow:
-                const dia = this.dialog.open(EpisodeRequestComponent, { width: "700px", data: { series: this.tvSearchResult, isAdmin: this.isAdmin }, panelClass: 'modal-panel' });
-                dia.afterClosed().subscribe(x => this.loading = false);
-                return;
-            case RequestType.movie:
-                if (this.isAdmin) {
-                    const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.movie, id: this.result.id,  }, panelClass: 'modal-panel' });
-                    dialog.afterClosed().subscribe((result) => {
-                        if (result) {
-                                this.requestService.requestMovie({ theMovieDbId: +this.result.id,
-                                    languageCode: this.translate.currentLang,
-                                    qualityPathOverride: result.radarrPathId,
-                                    requestOnBehalf: result.username?.id,
-                                    rootFolderOverride: result.radarrFolderId,
-                                    is4KRequest: is4k }).subscribe(x => {
-                                if (x.result) {
-                                    this.result.requested = true;
-                                    this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.result.title }), "Ok");
-                                } else {
-                                    this.messageService.sendRequestEngineResultError(x);
-                                }
-                            });
-                        }
-                    });
-                } else {
-                this.requestService.requestMovie({ theMovieDbId: +this.result.id, languageCode: this.translate.currentLang, requestOnBehalf: null, qualityPathOverride: null, rootFolderOverride: null, is4KRequest: is4k }).subscribe(x => {
-                    if (x.result) {
-                        this.result.requested = true;
-                        this.messageService.send(this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.result.title }), "Ok");
-                    } else {
-                        this.messageService.sendRequestEngineResultError(x);
-                    }
-                    this.loading = false;
-                });
-                return;
+          case RequestType.tvShow:
+            const dialog = this.dialog.open(EpisodeRequestComponent, {
+              width: "700px",
+              data: { series: this.tvSearchResult, isAdmin: this.isAdmin },
+              panelClass: "modal-panel",
+            });
+            dialog.afterClosed().subscribe(() => (this.loading = false));
+            break;
+          case RequestType.movie:
+            const movieRequest: IMovieRequestModel = {
+              theMovieDbId: +this.result.id,
+              languageCode: this.translate.currentLang,
+              requestOnBehalf: null,
+              qualityPathOverride: null,
+              rootFolderOverride: null,
+              is4KRequest: is4k,
+            };
+
+            if (!this.isAdmin) {
+              this.requestMovie(movieRequest);
+              break;
             }
+
+            const adminRequestDialog = this.dialog.open(
+              AdminRequestDialogComponent,
+              {
+                width: "700px",
+                data: { type: RequestType.movie, id: this.result.id, is4k: is4k },
+                panelClass: "modal-panel",
+              }
+            );
+            adminRequestDialog.afterClosed().subscribe((result) => {
+              if (!result) {
+                this.loading = false;
+                return;
+              }
+
+              movieRequest.requestOnBehalf = result.username?.id;
+              movieRequest.qualityPathOverride = result.radarrPathId;
+              movieRequest.rootFolderOverride = result.radarrFolderId;
+              this.requestMovie(movieRequest);
+            });
+            break;
         }
+    }
+
+    private requestMovie(movieRequest: IMovieRequestModel) {
+        this.requestService.requestMovie(movieRequest).subscribe({
+          next: (response) => {
+            if (response.result) {
+              this.result.requested = true;
+              const message = this.translate.instant(
+                "Requests.RequestAddedSuccessfully",
+                { title: this.result.title }
+              );
+              this.messageService.send(message, "Ok");
+            } else {
+              this.messageService.sendRequestEngineResultError(response);
+            }
+
+            this.loading = false;
+          },
+          error: (error) => {
+            this.messageService.sendRequestEngineResultError(error);
+            this.loading = false;
+          },
+        });
     }
 
     public onImageError(event: any) {

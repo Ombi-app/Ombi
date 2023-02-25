@@ -11,7 +11,7 @@
                         <a *ngIf="item.profile_path" [routerLink]="'/discover/actor/' + item.id">
                             <ombi-image class="cast-profile-img" src="https://image.tmdb.org/t/p/w300{{item.profile_path}}"></ombi-image>
                         </a>
-                        <!-- TODO get profile image default -->
+                        <i *ngIf="!item.image && !item.profile_path"  class="fa-solid fa-user-large  fa-2xl crew-profile-img" aria-hidden="true"></i>
 
                     </div>
                     <div class="col-12">

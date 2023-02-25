@@ -364,6 +364,9 @@
         "Casts": {
             "CastTitle": "В ролите"
         },
+        "Crews": {
+            "CrewTitle": "Crew"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Това ще заяви всеки сезон на това предаване",
             "FirstSeasonTooltip": "Това ще заяви само първия сезон на това предаване",
@@ -377,6 +380,7 @@
         "PleaseSelectUser": "Моля, изберете потребител",
         "StreamingOn": "Поточното изпълнение е включено:",
         "RequestedBy": "Заявено от:",
+        "OnDate": "On:",
         "RequestedByOn": "Requested By {{user}} on {{date}}",
         "RequestDate": "Дата на заявка:",
         "DeniedReason": "Причина за отхвърляне:",

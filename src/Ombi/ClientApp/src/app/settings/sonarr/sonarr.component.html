@@ -10,14 +10,15 @@
                         <div class="md-form-field">
                             <mat-slide-toggle formControlName="enabled" id="enable">Enable</mat-slide-toggle>
                         </div>
-                       <div class="md-form-field">
-                            <mat-slide-toggle formControlName="v3">V3</mat-slide-toggle>
-                        </div>
                         <div class="md-form-field">
                             <mat-slide-toggle [(ngModel)]="advanced" [ngModelOptions]="{standalone: true}">Advanced</mat-slide-toggle>
                         </div>
                         <div class="md-form-field">
                             <mat-slide-toggle formControlName="scanForAvailability">Scan for Availability</mat-slide-toggle>
+                        </div>
+                        <div class="md-form-field">
+                            <mat-slide-toggle formControlName="sendUserTags" id="sendUserTags">Add the user as a tag</mat-slide-toggle>
+                            <small><br>This will add the username of the requesting user as a tag in Sonarr. If the tag doesn't exist, Ombi will create it.</small>
                         </div>
                         <div class="md-form-field" style="margin-top:1em;"></div>
                     </div>
@@ -56,14 +57,17 @@
                     </div>
                 </div>
                 <div class="col-md-5 col-4 col-sm-12">
-                    <label for="username" class="control-label"><h3>Sonarr Interface</h3></label>
+
                     <div class="form-group col-md-12">
-                        <div id="profiles">
-                            <div class="md-form-field" style="display:inline;">
-                                <button mat-raised-button id="profiles" (click)="getProfiles(form)" class="mat-stroked-button">
-                                        Load Qualities <span *ngIf="profilesRunning" class="fas fa-spinner fa-spin"></span></button>
-                                        <div class="md-form-field" style="margin-top:1em;"></div>
-                                </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button mat-raised-button id="profiles"  type="button" (click)="getProfiles(form)" class="mat-stroked-button">
+                                    Load Qualities <span *ngIf="profilesRunning" class="fas fa-spinner fa-spin"></span></button>
+                                    <div class="md-form-field" style="margin-top:1em;"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                        <div id="profiles" class="col-md-6">
                             <div class="md-form-field" style="display:contents;">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Quality Profiles</mat-label>
@@ -75,7 +79,7 @@
                             </div>
 
                             </div>
-                        <div id="qualityProfileAnime">
+                        <div id="qualityProfileAnime" class="col-md-6">
                             <div class="md-form-field" style="display:contents;">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Quality Profiles (Anime)</mat-label>
@@ -87,14 +91,18 @@
                             </div>
                         </div>
                     </div>
+                    </div>
 
 
                     <div class="form-group col-md-12">
-                        <div id="rootFolders">
-                            <div class="md-form-field" style="display:inline">
-                                <button mat-raised-button id="rootFolder" (click)="getRootFolders(form)" class="mat-stroked-button">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button mat-raised-button id="rootFolder"  type="button" (click)="getRootFolders(form)" class="mat-stroked-button">
                                     Load Folders <span *ngIf="rootFoldersRunning" class="fas fa-spinner fa-spin"></span></button><div class="md-form-field" style="margin-top:1em;"></div>
                                 </div>
+                            </div>
+                        <div class="row">
+                        <div id="rootFolders" class="col-md-6">
                             <div class="md-form-field" style="display:contents;">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Default Root Folders</mat-label>
@@ -106,7 +114,7 @@
                             </div>
 
                         </div>
-                        <div id="rootFoldersAnime">
+                        <div id="rootFoldersAnime" class="col-md-6">
                             <div class="md-form-field" style="display:contents;">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Default Root Folders (Anime)</mat-label>
@@ -117,21 +125,58 @@
                                   </mat-form-field>
                             </div>
                         </div>
+                    </div></div>
 
-                    </div>
-
-                    <div class="form-group  col-md-12" *ngIf="form.controls.v3.value">
-                        <label for="select" class="control-label">Language Profiles 
-                            <i *ngIf="form.get('languageProfile').hasError('required')" class="fas fa-exclamation-circle error-text" pTooltip="A Language Profile is required"></i>
-                        </label>
-                        <div id="langaugeProfile">
-                            <div class="md-form-field" style="display:inline">
-                                <button type="button" mat-raised-button (click)="getLanguageProfiles(form)" class="mat-stroked-button">Load
-                                    Languages <span *ngIf="langRunning" class="fas fa-spinner fa-spin"> </span></button><div class="md-form-field" style="margin-top:1em;"></div>
+                    <div class="form-group col-md-12">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button mat-raised-button id="rootFolder" type="button" (click)="getTags(form)" class="mat-stroked-button">
+                                    Load Tags <span *ngIf="tagsRunning" class="fas fa-spinner fa-spin"></span></button><div class="md-form-field" style="margin-top:1em;"></div>
                                 </div>
+                            </div>
+                        <div class="row">
+                        <div id="tag" class="col-md-6">
                             <div class="md-form-field" style="display:contents;">
                                 <mat-form-field appearance="outline">
-                                    <mat-label>Language Profiles </mat-label>
+                                    <mat-label>Tag</mat-label>
+                                    <mat-select formControlName="tag">
+                                      <mat-option *ngFor="let tag of tags" [value]="tag.id">{{tag.label}} </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                            </div>
+                        </div>
+                        <div id="animeTag" class="col-md-6">
+                            <div class="md-form-field" style="display:contents;">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Anime Tags</mat-label>
+                                    <mat-select formControlName="animeTag">
+                                      <mat-option *ngFor="let tag of animeTags" [value]="tag.id">{{tag.label}} </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                            </div>
+                        </div>
+                    </div></div>
+
+        <div class="form-group  col-md-12" *ngIf="sonarrVersion == '3'">
+            <label for="select" class="control-label">Language Profiles
+                <i *ngIf="form.get('languageProfile').hasError('required')" class="fas fa-exclamation-circle error-text" pTooltip="A Language Profile is required"></i>
+            </label>
+
+                        
+            <div class="md-form-field" style="display:inline">                       
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="button" mat-raised-button (click)="getLanguageProfiles(form)" class="mat-stroked-button">Load
+                            Languages <span *ngIf="langRunning" class="fas fa-spinner fa-spin"> </span></button><div class="md-form-field" style="margin-top:1em;"></div>
+                        </div>
+                    </div>
+            </div>
+               <div class="row">
+                        <div id="langaugeProfile" class="col-md-6">
+
+                            <div class="md-form-field" style="display:contents;">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Language Profiles</mat-label>
                                     <mat-select formControlName="languageProfile">
                                       <mat-option *ngFor="let lang of languageProfiles" [value]="lang.id">{{lang.name}}</mat-option>
                                     </mat-select>
@@ -140,19 +185,20 @@
                             </div>
 
                         </div>
-                        <div id="langaugeProfileAnime">
+                        <div id="langaugeProfileAnime" class="col-md-6">
                             <div class="md-form-field" style="display:contents;">
                                 <mat-form-field appearance="outline">
-                                    <mat-label>Language Profiles Anime</mat-label>
+                                    <mat-label>Anime</mat-label>
                                     <mat-select formControlName="languageProfileAnime">
                                       <mat-option *ngFor="let lang of languageProfiles" [value]="lang.id">{{lang.name}}</mat-option>
                                     </mat-select>
                                     <mat-error>A Language Profile Anime is required</mat-error>
                                   </mat-form-field>
                             </div>
-
                         </div>
+
                     </div>
+                </div>
 
 
                     <div class="form-group col-md-12">
@@ -169,18 +215,19 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="form-group col-md-7">
-                        <div>
-                            <button mat-raised-button type="submit" class="mat-stroked-button accent mat-accent">Submit</button>
-                        </div>
-                    </div>
-
+                    
                     <div class="form-group col-md-7">
                         <div>
                             <button mat-raised-button type="button" (click)="test(form)" class="mat-stroked-button">Test Connectivity
                             <span id="spinner"> </span></button>
                         </div>
                     </div>
+                    <div class="form-group col-md-7">
+                        <div>
+                            <button mat-raised-button type="submit" class="mat-stroked-button accent mat-accent">Submit</button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </form>

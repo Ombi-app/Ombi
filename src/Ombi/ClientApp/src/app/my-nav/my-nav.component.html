@@ -84,7 +84,7 @@
                         <mat-slide-toggle id="filterTv" class="mat-menu-item slide-menu" [checked]="searchFilter.tvShows"
                             (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.TvShow)">
                             {{ 'NavigationBar.Filter.TvShows' | translate}}</mat-slide-toggle>
-                        <mat-slide-toggle id="filterMusic" class="mat-menu-item slide-menu" [checked]="searchFilter.music"
+                        <mat-slide-toggle *ngIf="musicEnabled$ | async" id="filterMusic" class="mat-menu-item slide-menu" [checked]="searchFilter.music"
                             (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Music)">
                             {{ 'NavigationBar.Filter.Music' | translate}}</mat-slide-toggle>
                         <!-- <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.people"

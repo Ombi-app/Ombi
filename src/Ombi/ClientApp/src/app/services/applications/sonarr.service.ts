@@ -4,7 +4,7 @@ import { Injectable, Inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
-import { ISonarrSettings } from "../../interfaces";
+import { ISonarrSettings, ITag } from "../../interfaces";
 import { ILanguageProfiles, ISonarrProfile, ISonarrRootFolder } from "../../interfaces";
 import { ServiceHelpers } from "../service.helpers";
 
@@ -36,7 +36,15 @@ export class SonarrService extends ServiceHelpers {
         return this.http.get<ILanguageProfiles[]>(`${this.url}/v3/languageprofiles/`, {headers: this.headers});
     }
 
-    public isEnabled(): Promise<boolean> {
-        return this.http.get<boolean>(`${this.url}/enabled/`, { headers: this.headers }).toPromise();
+    public getTags(settings: ISonarrSettings): Observable<ITag[]> {
+        return this.http.post<ITag[]>(`${this.url}/tags/`, JSON.stringify(settings), {headers: this.headers});
+    }
+
+    public isEnabled(): Observable<boolean> {
+        return this.http.get<boolean>(`${this.url}/enabled/`, { headers: this.headers });
+    }
+
+    public getVersion(): Observable<string> {
+        return this.http.get<string>(`${this.url}/version/`, { headers: this.headers });
     }
 }

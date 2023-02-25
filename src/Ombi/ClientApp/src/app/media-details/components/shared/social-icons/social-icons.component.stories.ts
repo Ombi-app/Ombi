@@ -4,8 +4,6 @@ import { Story, Meta, moduleMetadata } from '@storybook/angular';
 import { SocialIconsComponent } from './social-icons.component';
 import { MatMenuModule } from "@angular/material/menu";
 import { RequestType } from '../../../../interfaces';
-import { userEvent, waitFor, within } from '@storybook/testing-library';
-import { expect } from '@storybook/jest';
 
 // More on default export: https://storybook.js.org/docs/angular/writing-stories/introduction#default-export
 export default {

@@ -1,0 +1,27 @@
+@media (max-width: 978px) {
+  ::ng-deep .mat-dialog-container {
+    overflow: unset;
+    display: flex;
+    flex-direction: column;
+
+    .mat-dialog-content{
+        max-height: unset;
+    }
+
+    .mat-dialog-actions{
+        min-height: unset;
+    }
+
+    emby-server-dialog-component {
+      display: flex;
+      flex-direction: column;
+      min-height: 1px;
+    }
+  }
+}
+
+::ng-deep mat-form-field .mat-form-field {
+  &-subscript-wrapper {
+    position: static;
+  }
+}

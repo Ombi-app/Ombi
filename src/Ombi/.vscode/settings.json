@@ -22,7 +22,10 @@
         "emby",
         "availability-rules",
         "details",
-        "requests"
+        "requests",
+        "sonarr",
+        "plex",
+        "wizard"
     ],
     "rpc.enabled": true
 }

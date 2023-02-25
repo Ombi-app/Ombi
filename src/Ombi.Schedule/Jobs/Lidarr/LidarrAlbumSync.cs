@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Lidarr;
 using Ombi.Core.Settings;
@@ -21,7 +19,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
     public class LidarrAlbumSync : ILidarrAlbumSync
     {
         public LidarrAlbumSync(ISettingsService<LidarrSettings> lidarr, ILidarrApi lidarrApi, ILogger<LidarrAlbumSync> log, ExternalContext ctx,
-             IHubContext<NotificationHub> notification)
+             INotificationHubService notification)
         {
             _lidarrSettings = lidarr;
             _lidarrApi = lidarrApi;
@@ -34,7 +32,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
         private readonly ILidarrApi _lidarrApi;
         private readonly ILogger _logger;
         private readonly ExternalContext _ctx;
-        private readonly IHubContext<NotificationHub> _notification;
+        private readonly INotificationHubService _notification;
 
         public async Task Execute(IJobExecutionContext ctx)
         {
@@ -44,8 +42,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
                 if (settings.Enabled)
                 {
 
-                    await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                        .SendAsync(NotificationHub.NotificationEvent, "Lidarr Album Sync Started");
+                    await _notification.SendNotificationToAdmins("Lidarr Album Sync Started");
                     try
                     {
                         var albums = await _lidarrApi.GetAllAlbums(settings.ApiKey, settings.FullUri);
@@ -58,7 +55,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
                                 using (var tran = await _ctx.Database.BeginTransactionAsync())
                                 {
                                     await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM LidarrAlbumCache");
-                                    tran.Commit();
+                                    await tran.CommitAsync();
                                 }
                             });
 
@@ -88,20 +85,18 @@ namespace Ombi.Schedule.Jobs.Lidarr
                                     await _ctx.LidarrAlbumCache.AddRangeAsync(albumCache);
 
                                     await _ctx.SaveChangesAsync();
-                                    tran.Commit();
+                                    await tran.CommitAsync();
                                 }
                             });
                         }
                     }
                     catch (System.Exception ex)
                     {
-                        await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                            .SendAsync(NotificationHub.NotificationEvent, "Lidarr Album Sync Failed");
+                        await _notification.SendNotificationToAdmins("Lidarr Album Sync Failed");
                         _logger.LogError(LoggingEvents.Cacher, ex, "Failed caching queued items from Lidarr Album");
                     }
 
-                    await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                        .SendAsync(NotificationHub.NotificationEvent, "Lidarr Album Sync Finished");
+                    await _notification.SendNotificationToAdmins("Lidarr Album Sync Finished");
 
                     await OmbiQuartz.TriggerJob(nameof(ILidarrAvailabilityChecker), "DVR");
                 }

@@ -13,9 +13,14 @@ export class LidarrService extends ServiceHelpers {
         super(http, "/api/v1/Lidarr", href);
     }
 
+    public enabled(): Observable<boolean> {
+        return this.http.get<boolean>(`${this.url}/enabled/`,  {headers: this.headers});
+    }
+
     public getRootFolders(settings: ILidarrSettings): Observable<ILidarrRootFolder[]> {
         return this.http.post<ILidarrRootFolder[]>(`${this.url}/RootFolders/`, JSON.stringify(settings),  {headers: this.headers});
     }
+
     public getQualityProfiles(settings: ILidarrSettings): Observable<ILidarrProfile[]> {
         return this.http.post<ILidarrProfile[]>(`${this.url}/Profiles/`, JSON.stringify(settings),  {headers: this.headers});
     }

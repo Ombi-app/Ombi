@@ -364,6 +364,9 @@
         "Casts": {
             "CastTitle": "Hrají"
         },
+        "Crews": {
+            "CrewTitle": "Crew"
+        },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Toto vyžádá všechny serie pro tento pořad",
             "FirstSeasonTooltip": "Toto vyžádá jen první sérii pro tento pořad",
@@ -377,6 +380,7 @@
         "PleaseSelectUser": "Please select a user",
         "StreamingOn": "Streamuje na:",
         "RequestedBy": "Požadováno od:",
+        "OnDate": "On:",
         "RequestedByOn": "Požádáno uživatelem {{user}} dne {{date}}",
         "RequestDate": "Datum požadavku:",
         "DeniedReason": "Důvod zamítnutí:",

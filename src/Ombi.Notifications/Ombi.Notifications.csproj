@@ -11,8 +11,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ensure.That" Version="7.0.0-pre32" />
-    <PackageReference Include="MailKit" Version="2.5.0" />
+    <PackageReference Include="Ensure.That" Version="10.1.0" />
+    <PackageReference Include="MailKit" Version="3.4.1" />
   </ItemGroup>
 
   <ItemGroup>

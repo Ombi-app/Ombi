@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Lidarr;
@@ -20,7 +19,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
     public class LidarrArtistSync : ILidarrArtistSync
     {
         public LidarrArtistSync(ISettingsService<LidarrSettings> lidarr, ILidarrApi lidarrApi, ILogger<LidarrArtistSync> log, ExternalContext ctx
-            , IHubContext<NotificationHub> notification)
+            , INotificationHubService notification)
         {
             _lidarrSettings = lidarr;
             _lidarrApi = lidarrApi;
@@ -33,7 +32,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
         private readonly ILidarrApi _lidarrApi;
         private readonly ILogger _logger;
         private readonly ExternalContext _ctx;
-        private readonly IHubContext<NotificationHub> _notification;
+        private readonly INotificationHubService _notification;
 
         public async Task Execute(IJobExecutionContext job)
         {
@@ -43,8 +42,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
                 if (settings.Enabled)
                 {
 
-                    await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                        .SendAsync(NotificationHub.NotificationEvent, "Lidarr Artist Sync Started");
+                    await _notification.SendNotificationToAdmins("Lidarr Artist Sync Started");
                     try
                     {
                         var artists = await _lidarrApi.GetArtists(settings.ApiKey, settings.FullUri);
@@ -54,11 +52,9 @@ namespace Ombi.Schedule.Jobs.Lidarr
                             await strat.ExecuteAsync(async () =>
                             {
                                 // Let's remove the old cached data
-                                using (var tran = await _ctx.Database.BeginTransactionAsync())
-                                {
-                                    await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM LidarrArtistCache");
-                                    tran.Commit();
-                                }
+                                using var tran = await _ctx.Database.BeginTransactionAsync();
+                                await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM LidarrArtistCache");
+                                await tran.CommitAsync();
                             });
 
                             var artistCache = new List<LidarrArtistCache>();
@@ -78,25 +74,21 @@ namespace Ombi.Schedule.Jobs.Lidarr
                             strat = _ctx.Database.CreateExecutionStrategy();
                             await strat.ExecuteAsync(async () =>
                             {
-                                using (var tran = await _ctx.Database.BeginTransactionAsync())
-                                {
-                                    await _ctx.LidarrArtistCache.AddRangeAsync(artistCache);
+                                using var tran = await _ctx.Database.BeginTransactionAsync();
+                                await _ctx.LidarrArtistCache.AddRangeAsync(artistCache);
 
-                                    await _ctx.SaveChangesAsync();
-                                    tran.Commit();
-                                }
+                                await _ctx.SaveChangesAsync();
+                                await tran.CommitAsync();
                             });
                         }
                     }
                     catch (Exception ex)
                     {
-                        await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                            .SendAsync(NotificationHub.NotificationEvent, "Lidarr Artist Sync Failed");
+                        await _notification.SendNotificationToAdmins("Lidarr Artist Sync Failed");
                         _logger.LogError(LoggingEvents.Cacher, ex, "Failed caching queued items from Lidarr");
                     }
 
-                    await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                        .SendAsync(NotificationHub.NotificationEvent, "Lidarr Artist Sync Finished");
+                    await _notification.SendNotificationToAdmins("Lidarr Artist Sync Finished");
 
                     await OmbiQuartz.TriggerJob(nameof(ILidarrAlbumSync), "DVR");
                 }

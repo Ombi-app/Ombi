@@ -36,13 +36,15 @@ namespace Ombi.Controllers.V1
     public class TokenController : ControllerBase
     {
         public TokenController(OmbiUserManager um, ITokenRepository token,
-            IPlexOAuthManager oAuthManager, ILogger<TokenController> logger, ISettingsService<AuthenticationSettings> auth)
+            IPlexOAuthManager oAuthManager, ILogger<TokenController> logger, ISettingsService<AuthenticationSettings> auth,
+            ISettingsService<UserManagementSettings> userManagement)
         {
             _userManager = um;
             _token = token;
             _plexOAuthManager = oAuthManager;
             _log = logger;
             _authSettings = auth;
+            _userManagementSettings = userManagement;
         }
 
         private readonly ITokenRepository _token;
@@ -50,6 +52,7 @@ namespace Ombi.Controllers.V1
         private readonly IPlexOAuthManager _plexOAuthManager;
         private readonly ILogger<TokenController> _log;
         private readonly ISettingsService<AuthenticationSettings> _authSettings;
+        private readonly ISettingsService<UserManagementSettings> _userManagementSettings;
 
         /// <summary>
         /// Gets the token.
@@ -206,14 +209,14 @@ namespace Ombi.Controllers.V1
                 // Could this be an email login?
                 user = await _userManager.FindByEmailAsync(account.user.email);
 
-                if (user == null)
+                if (user == null || user.UserType != UserType.PlexUser)
                 {
                     return new UnauthorizedResult();
                 }
             }
 
             user.MediaServerToken = account.user.authentication_token;
-            await  _userManager.UpdateAsync(user);
+            await _userManager.UpdateAsync(user);
 
             return await CreateToken(true, user);
         }
@@ -305,7 +308,28 @@ namespace Ombi.Controllers.V1
                     var user = await _userManager.FindByNameAsync(username);
                     if (user == null)
                     {
-                        return new UnauthorizedResult();
+                        if (authSettings.HeaderAuthCreateUser)
+                        {
+                            var defaultSettings = await _userManagementSettings.GetSettingsAsync();
+                            user = new OmbiUser {
+                                UserName = username,
+                                UserType = UserType.LocalUser,
+                                StreamingCountry = defaultSettings.DefaultStreamingCountry ?? "US",
+                                MovieRequestLimit = defaultSettings.MovieRequestLimit,
+                                MovieRequestLimitType = defaultSettings.MovieRequestLimitType,
+                                EpisodeRequestLimit = defaultSettings.EpisodeRequestLimit,
+                                EpisodeRequestLimitType = defaultSettings.EpisodeRequestLimitType,
+                                MusicRequestLimit = defaultSettings.MusicRequestLimit,
+                                MusicRequestLimitType = defaultSettings.MusicRequestLimitType,
+                            };
+
+                            await _userManager.CreateAsync(user);
+                            await _userManager.AddToRolesAsync(user, defaultSettings.DefaultRoles);
+                        }
+                        else
+                        {
+                            return new UnauthorizedResult();
+                        }
                     }
 
                     return await CreateToken(true, user);

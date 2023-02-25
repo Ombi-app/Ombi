@@ -8,8 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-    <PackageReference Include="Moq" Version="4.10.0" />
-    <PackageReference Include="MockQueryable.Moq" Version="5.0.0-preview.7" />
+    <PackageReference Include="Moq" Version="4.18.2" />
+    <PackageReference Include="MockQueryable.Moq" Version="6.0.1" />
   </ItemGroup>
 
   <ItemGroup>

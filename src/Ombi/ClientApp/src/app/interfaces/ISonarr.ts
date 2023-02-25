@@ -12,3 +12,8 @@ export interface ILanguageProfiles {
     name: string;
     id: number;
 }
+
+export interface ITag {
+    label: string;
+    id: number;
+}

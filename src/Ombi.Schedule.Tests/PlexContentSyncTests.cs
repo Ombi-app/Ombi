@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.AutoMock;
 using NUnit.Framework;
@@ -48,7 +46,7 @@ namespace Ombi.Schedule.Tests
             };
             var contentToAdd = new HashSet<PlexServerContent>();
             var contentProcessed = new Dictionary<int, string>();
-            _mocker.Setup<IPlexContentRepository>(x =>
+            _mocker.Setup<IPlexContentRepository, Task<PlexServerContent>>(x =>
                     x.GetFirstContentByCustom(It.IsAny<Expression<Func<PlexServerContent, bool>>>()))
                 .Returns(Task.FromResult(new PlexServerContent()));
 
@@ -108,7 +106,7 @@ namespace Ombi.Schedule.Tests
             };
             var contentToAdd = new HashSet<PlexServerContent>();
             var contentProcessed = new Dictionary<int, string>();
-            _mocker.Setup<IPlexApi>(x => x.GetMetadata(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+            _mocker.Setup<IPlexApi, Task<PlexMetadata>>(x => x.GetMetadata(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(new PlexMetadata
                 {
                     MediaContainer = new Mediacontainer
@@ -166,7 +164,7 @@ namespace Ombi.Schedule.Tests
             };
             var contentToAdd = new HashSet<PlexServerContent>();
             var contentProcessed = new Dictionary<int, string>();
-            _mocker.Setup<IPlexContentRepository>(x =>
+            _mocker.Setup<IPlexContentRepository, Task<PlexServerContent>>(x =>
                     x.GetFirstContentByCustom(It.IsAny<Expression<Func<PlexServerContent, bool>>>()))
                 .Returns(Task.FromResult(new PlexServerContent
                 {
@@ -204,7 +202,7 @@ namespace Ombi.Schedule.Tests
             };
             var contentToAdd = new HashSet<PlexServerContent>();
             var contentProcessed = new Dictionary<int, string>();
-            _mocker.Setup<IPlexContentRepository>(x =>
+            _mocker.Setup<IPlexContentRepository, Task<PlexServerContent>>(x =>
                     x.GetFirstContentByCustom(It.IsAny<Expression<Func<PlexServerContent, bool>>>()))
                 .Returns(Task.FromResult(new PlexServerContent
                 {

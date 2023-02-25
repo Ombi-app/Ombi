@@ -7,7 +7,7 @@
 *.userosscache
 *.sln.docstates
 
-# User-specific files (MonoDevelop/Xamarin Studio)
+# User-specific files
 *.userprefs
 
 # Build results
@@ -252,3 +252,4 @@ _Pvt_Extensions
 /src/Ombi/healthchecksdb
 /src/Ombi/ClientApp/package-lock.json
 /src/Ombi.Core/Properties/launchSettings.json
+.yarn
