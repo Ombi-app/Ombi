@@ -51,12 +51,20 @@ export class JobService extends ServiceHelpers {
         return this.http.post<boolean>(`${this.url}embyrecentlyadded/`, {headers: this.headers});
     }
 
+    public runEmbyRecentlyPlayedCacher(): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}embyrecentlyplayed/`, {headers: this.headers});
+    }
+
     public clearMediaserverData(): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}clearmediaserverdata/`, {headers: this.headers});
     }
 
     public runEmbyCacher(): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}embycontentcacher/`, {headers: this.headers});
+    }
+
+    public runEmbyPlayedCacher(): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}embyplayedcacher/`, {headers: this.headers});
     }
 
     public runJellyfinCacher(): Observable<boolean> {

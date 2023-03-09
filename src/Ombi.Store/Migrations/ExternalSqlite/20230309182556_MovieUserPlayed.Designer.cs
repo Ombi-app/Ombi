@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Ombi.Store.Context.Sqlite;
 
@@ -10,9 +11,10 @@ using Ombi.Store.Context.Sqlite;
 namespace Ombi.Store.Migrations.ExternalSqlite
 {
     [DbContext(typeof(ExternalSqliteContext))]
-    partial class ExternalSqliteContextModelSnapshot : ModelSnapshot
+    [Migration("20230309182556_MovieUserPlayed")]
+    partial class MovieUserPlayed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.9");

@@ -41,6 +41,7 @@ namespace Ombi.Store.Context
         public DbSet<SonarrEpisodeCache> SonarrEpisodeCache { get; set; }
         public DbSet<SickRageCache> SickRageCache { get; set; }
         public DbSet<SickRageEpisodeCache> SickRageEpisodeCache { get; set; }
+        public DbSet<UserPlayedMovie> UserPlayedMovie { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

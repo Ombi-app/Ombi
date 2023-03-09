@@ -167,6 +167,19 @@ namespace Ombi.Controllers.V1
             await OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IEmbyContentSync), "Emby"), new JobDataMap(new Dictionary<string, string> { { JobDataKeys.EmbyRecentlyAddedSearch, "false" } }));
             return true;
         }
+        
+        [HttpPost("embyplayedcacher")]
+        public async Task<bool> StartEmbyPlayedCacher()
+        {
+            await OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IEmbyPlayedSync), "Emby"), new JobDataMap(new Dictionary<string, string> { { JobDataKeys.EmbyRecentlyAddedSearch, "false" } }));
+            return true;
+        }
+        [HttpPost("embyrecentlyplayed")]
+        public async Task<bool> StartEmbyRecentlyPlayedCacher()
+        {
+            await OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IEmbyPlayedSync), "Emby"), new JobDataMap(new Dictionary<string, string> { { JobDataKeys.EmbyRecentlyAddedSearch, "true" } }));
+            return true;
+        }
 
         /// <summary>
         /// Runs a smaller version of the content cacher

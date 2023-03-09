@@ -102,6 +102,22 @@ export class EmbyComponent implements OnInit {
         });
     }
 
+    public runPlayedCacher(): void {
+        this.jobService.runEmbyPlayedCacher().subscribe(x => {
+            if(x) {
+                this.notificationService.success("Triggered the Emby Played Cacher");
+            }
+        });
+    }
+
+    public runRecentlyPlayedCacher(): void {
+        this.jobService.runEmbyRecentlyPlayedCacher().subscribe(x => {
+            if (x) {
+                this.notificationService.success("Triggered the Emby Recently Played Sync");
+            }
+        });
+    }
+
     public clearDataAndResync(): void {
         this.jobService.clearMediaserverData().subscribe(x => {
             if (x) {

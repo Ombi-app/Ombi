@@ -248,5 +248,36 @@ namespace Ombi.Api.Emby
             req.AddContentHeader("Content-Type", "application/json");
             req.AddHeader("Device", "Ombi");
         }
+
+        public async Task<EmbyItemContainer<EmbyMovie>> GetMoviesPlayed(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri)
+        {
+            return await GetPlayed<EmbyMovie>("Movie", apiKey, userId, baseUri, startIndex, count, parentIdFilder);
+        }
+
+        private async Task<EmbyItemContainer<T>> GetPlayed<T>(string type, string apiKey, string userId, string baseUri, int startIndex, int count, string parentIdFilder = default)
+        {
+            var request = new Request($"emby/items", baseUri, HttpMethod.Get);
+
+            request.AddQueryString("Recursive", true.ToString());
+            request.AddQueryString("IncludeItemTypes", type);
+            request.AddQueryString("Fields", "ProviderIds");
+            request.AddQueryString("UserId", userId);
+
+            // paginate and display recently played items first
+            request.AddQueryString("sortBy", "DatePlayed");
+            request.AddQueryString("SortOrder", "Descending");
+            request.AddQueryString("startIndex", startIndex.ToString());
+            request.AddQueryString("limit", count.ToString());
+
+            if (!string.IsNullOrEmpty(parentIdFilder))
+            {
+                request.AddQueryString("ParentId", parentIdFilder);
+            }
+
+            AddHeaders(request, apiKey);
+
+            var obj = await Api.Request<EmbyItemContainer<T>>(request);
+            return obj;
+        }
     }
 }
