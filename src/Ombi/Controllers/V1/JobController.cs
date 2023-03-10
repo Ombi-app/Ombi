@@ -167,7 +167,7 @@ namespace Ombi.Controllers.V1
             await OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IEmbyContentSync), "Emby"), new JobDataMap(new Dictionary<string, string> { { JobDataKeys.EmbyRecentlyAddedSearch, "false" } }));
             return true;
         }
-        
+
         /// <summary>
         /// Runs a smaller version of the content cacher
         /// </summary>

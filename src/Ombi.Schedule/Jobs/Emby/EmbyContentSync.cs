@@ -51,7 +51,7 @@ namespace Ombi.Schedule.Jobs.Emby
             var isPlayedSyncEnabled = await _feature.FeatureEnabled(FeatureNames.PlayedSync); 
             if(isPlayedSyncEnabled) 
             {
-            await OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IEmbyPlayedSync), "Emby"), new JobDataMap(new Dictionary<string, string> { { JobDataKeys.EmbyRecentlyAddedSearch, recentlyAdded.ToString() } }));
+                await OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IEmbyPlayedSync), "Emby"), new JobDataMap(new Dictionary<string, string> { { JobDataKeys.EmbyRecentlyAddedSearch, recentlyAdded.ToString() } }));
             }
         }
 
