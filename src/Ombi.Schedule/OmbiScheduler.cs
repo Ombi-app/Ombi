@@ -98,8 +98,6 @@ namespace Ombi.Schedule
         {
             await OmbiQuartz.Instance.AddJob<IEmbyContentSync>(nameof(IEmbyContentSync), "Emby", JobSettingsHelper.EmbyContent(s));
             await OmbiQuartz.Instance.AddJob<IEmbyContentSync>(nameof(IEmbyContentSync) + "RecentlyAdded", "Emby", JobSettingsHelper.EmbyRecentlyAddedSync(s), new Dictionary<string, string> { { JobDataKeys.EmbyRecentlyAddedSearch, "true" } });
-            await OmbiQuartz.Instance.AddJob<IEmbyPlayedSync>(nameof(IEmbyPlayedSync), "Emby", JobSettingsHelper.EmbyContent(s));
-            await OmbiQuartz.Instance.AddJob<IEmbyPlayedSync>(nameof(IEmbyPlayedSync) + "RecentlyAdded", "Emby", JobSettingsHelper.EmbyRecentlyAddedSync(s), new Dictionary<string, string> { { JobDataKeys.EmbyRecentlyAddedSearch, "true" } });
             await OmbiQuartz.Instance.AddJob<IEmbyEpisodeSync>(nameof(IEmbyEpisodeSync), "Emby", null);
             await OmbiQuartz.Instance.AddJob<IEmbyAvaliabilityChecker>(nameof(IEmbyAvaliabilityChecker), "Emby", null);
             await OmbiQuartz.Instance.AddJob<IEmbyUserImporter>(nameof(IEmbyUserImporter), "Emby", JobSettingsHelper.UserImporter(s));
