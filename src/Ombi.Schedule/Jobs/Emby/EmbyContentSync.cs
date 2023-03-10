@@ -33,6 +33,7 @@ namespace Ombi.Schedule.Jobs.Emby
             base(settings, api, logger, notification)
         {
             _repo = repo;
+            _feature = feature;
         }
 
         private readonly IEmbyContentRepository _repo;
