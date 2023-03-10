@@ -492,8 +492,8 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("TheMovieDbId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("TheMovieDbId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("UserId")
                         .HasColumnType("TEXT");

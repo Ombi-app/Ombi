@@ -8,6 +8,6 @@ namespace Ombi.Store.Repository
 {
     public interface IUserPlayedMovieRepository : IExternalRepository<UserPlayedMovie>
     {
-        Task<UserPlayedMovie> Get(string theMovieDbId, string userId);
+        Task<UserPlayedMovie> Get(int theMovieDbId, string userId);
     }
 }

@@ -11,7 +11,7 @@ using Ombi.Store.Context.Sqlite;
 namespace Ombi.Store.Migrations.ExternalSqlite
 {
     [DbContext(typeof(ExternalSqliteContext))]
-    [Migration("20230309182556_MovieUserPlayed")]
+    [Migration("20230310130339_MovieUserPlayed")]
     partial class MovieUserPlayed
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -494,8 +494,8 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("TheMovieDbId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("TheMovieDbId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("UserId")
                         .HasColumnType("TEXT");

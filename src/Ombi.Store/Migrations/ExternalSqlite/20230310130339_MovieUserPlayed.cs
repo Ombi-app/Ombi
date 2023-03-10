@@ -14,7 +14,7 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    TheMovieDbId = table.Column<string>(type: "TEXT", nullable: true),
+                    TheMovieDbId = table.Column<int>(type: "INTEGER", nullable: false),
                     UserId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>

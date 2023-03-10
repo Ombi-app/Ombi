@@ -18,7 +18,7 @@ namespace Ombi.Store.Repository
             Db = db;
         }
 
-        public async Task<UserPlayedMovie> Get(string theMovieDbId, string userId)
+        public async Task<UserPlayedMovie> Get(int theMovieDbId, string userId)
         {
             return await Db.UserPlayedMovie.FirstOrDefaultAsync(x => x.TheMovieDbId == theMovieDbId && x.UserId == userId);
        

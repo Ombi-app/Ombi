@@ -65,7 +65,7 @@ namespace Ombi.Schedule.Jobs.Emby
             var totalCount = movies.TotalRecordCount;
             var processed = 0;
             var mediaToAdd = new HashSet<UserPlayedMovie>();
-            _logger.LogCritical($"Adding {totalCount.ToString()} for {user.UserName}");
+            
             while (processed < totalCount)
             {
                 foreach (var movie in movies.Items)
@@ -94,7 +94,7 @@ namespace Ombi.Schedule.Jobs.Emby
             }
             var userPlayedMovie = new UserPlayedMovie()
             {
-                TheMovieDbId = movieInfo.ProviderIds.Tmdb,
+                TheMovieDbId = int.Parse(movieInfo.ProviderIds.Tmdb),
                 UserId = user.Id
             };
             // Check if it exists
