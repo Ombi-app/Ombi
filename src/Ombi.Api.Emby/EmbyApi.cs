@@ -262,6 +262,7 @@ namespace Ombi.Api.Emby
             request.AddQueryString("IncludeItemTypes", type);
             request.AddQueryString("Fields", "ProviderIds");
             request.AddQueryString("UserId", userId);
+            request.AddQueryString("isPlayed", true.ToString());
 
             // paginate and display recently played items first
             request.AddQueryString("sortBy", "DatePlayed");
