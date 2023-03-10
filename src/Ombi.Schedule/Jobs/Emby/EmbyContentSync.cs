@@ -8,10 +8,12 @@ using Ombi.Api.Emby;
 using Ombi.Api.Emby.Models;
 using Ombi.Api.Emby.Models.Media.Tv;
 using Ombi.Api.Emby.Models.Movie;
+using Ombi.Core.Services;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Hubs;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Quartz;
@@ -21,14 +23,20 @@ namespace Ombi.Schedule.Jobs.Emby
 {
     public class EmbyContentSync : EmbyLibrarySync, IEmbyContentSync
     {
-        public EmbyContentSync(ISettingsService<EmbySettings> settings, IEmbyApiFactory api, ILogger<EmbyContentSync> logger,
-            IEmbyContentRepository repo, INotificationHubService notification):
+        public EmbyContentSync(
+            ISettingsService<EmbySettings> settings, 
+            IEmbyApiFactory api, 
+            ILogger<EmbyContentSync> logger,
+            IEmbyContentRepository repo, 
+            INotificationHubService notification, 
+            IFeatureService feature):
             base(settings, api, logger, notification)
         {
             _repo = repo;
         }
 
         private readonly IEmbyContentRepository _repo;
+        private readonly IFeatureService _feature;
 
 
         public async override Task Execute(IJobExecutionContext context)
@@ -38,6 +46,13 @@ namespace Ombi.Schedule.Jobs.Emby
 
             // Episodes
             await OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IEmbyEpisodeSync), "Emby"), new JobDataMap(new Dictionary<string, string> { { JobDataKeys.EmbyRecentlyAddedSearch, recentlyAdded.ToString() } }));
+
+            // Played state
+            var isPlayedSyncEnabled = await _feature.FeatureEnabled(FeatureNames.PlayedSync); 
+            if(isPlayedSyncEnabled) 
+            {
+            await OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IEmbyPlayedSync), "Emby"), new JobDataMap(new Dictionary<string, string> { { JobDataKeys.EmbyRecentlyAddedSearch, recentlyAdded.ToString() } }));
+            }
         }
 
 
