@@ -84,5 +84,10 @@ namespace Ombi.Store.Entities.Requests
 
         [NotMapped]
         public override bool CanApprove => !Approved && !Available || !Approved4K && !Available4K;
+        
+        [NotMapped]
+        public bool WatchedByRequestedUser { get; set; }
+        [NotMapped]
+        public int PlayedByUsersCount { get; set; }
     }
 }

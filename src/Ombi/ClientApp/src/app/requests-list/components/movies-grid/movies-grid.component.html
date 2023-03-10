@@ -80,6 +80,24 @@
             <td mat-cell id="requestedStatus{{element.id}}"  *matCellDef="let element"> {{element.requestStatus | translate}} </td>
         </ng-container>
 
+        <ng-container matColumnDef="watchedByRequestedUser">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              disableClear
+              matTooltip="{{ 'Requests.WatchedTooltip' | translate}}">
+              {{ 'Requests.Watched' | translate}}
+            </th>
+            <td mat-cell id="watchedByRequestedUser{{element.id}}"  *matCellDef="let element">
+                <mat-checkbox
+                  [checked]="element.watchedByRequestedUser"
+                  disabled="true"
+                  matTooltip="{{'Requests.WatchedByUsersCount' | translate: {count: element.playedByUsersCount} }}">
+                </mat-checkbox>
+            </td>
+        </ng-container>
+
         <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef> </th>
             <td mat-cell *matCellDef="let element">
