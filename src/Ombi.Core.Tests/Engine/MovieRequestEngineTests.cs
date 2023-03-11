@@ -52,7 +52,7 @@ namespace Ombi.Core.Tests.Engine
             _subject = _mocker.CreateInstance<MovieRequestEngine>();
             var list = DbHelper.GetQueryableMockDbSet(new RequestSubscription());
             _mocker.Setup<IRepository<RequestSubscription>, IQueryable<RequestSubscription>>(x => x.GetAll()).Returns(new List<RequestSubscription>().AsQueryable().BuildMock());
-            _mocker.Setup<IRepository<UserPlayedMovie>, IQueryable<UserPlayedMovie>>(x => x.GetAll()).Returns(new List<UserPlayedMovie>().AsQueryable().BuildMock());
+            _mocker.Setup<IUserPlayedMovieRepository, IQueryable<UserPlayedMovie>>(x => x.GetAll()).Returns(new List<UserPlayedMovie>().AsQueryable().BuildMock());
         }
 
         [Test]
