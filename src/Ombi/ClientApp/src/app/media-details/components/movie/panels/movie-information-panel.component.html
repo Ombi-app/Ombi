@@ -66,12 +66,12 @@
         {{RequestSource[request.source]}}
     </div>
 
-    <div *ngIf="request">
+    <div *ngIf="request && ( request.deniedReason || request.deniedReason4K )">
       <span class="label">{{'MediaDetails.DeniedReason' | translate }}</span>
-      <div *ngIf="request.denied">
+      <div *ngIf="request.deniedReason">
         <span id="deniedReasonInfo">{{request.deniedReason}}</span>
       </div>
-      <div *ngIf="request.denied4K">
+      <div *ngIf="request.deniedReason4K">
         <span id="deniedReasonInfo4K">{{request.deniedReason4K}}</span>
       </div>
     </div>
