@@ -2674,6 +2674,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@scarf/scarf@npm:^1.1.0":
+  version: 1.1.1
+  resolution: "@scarf/scarf@npm:1.1.1"
+  checksum: f3205e7a76fed1ec3328643a5f276f4aab5c67d0e17ca0a414755aacae529f4a3492b44607f9ad066470ecb3ee003e72b3d9581f58dc6c507c18180611ff113e
+  languageName: node
+  linkType: hard
+
 "@schematics/angular@npm:15.0.2":
   version: 15.0.2
   resolution: "@schematics/angular@npm:15.0.2"
@@ -12223,15 +12230,13 @@ cors@latest:
   languageName: node
   linkType: hard
 
-"ngx-infinite-scroll@npm:^14.0.0":
-  version: 14.0.1
-  resolution: "ngx-infinite-scroll@npm:14.0.1"
+"ngx-infinite-scroll@npm:^9.0.0":
+  version: 9.1.0
+  resolution: "ngx-infinite-scroll@npm:9.1.0"
   dependencies:
-    tslib: ^2.3.0
-  peerDependencies:
-    "@angular/common": ">=14.0.0 <15.0.0"
-    "@angular/core": ">=14.0.0 <15.0.0"
-  checksum: 7df67fc87a6638d4fa3ade5ea83549ccaf4ecf28e68eb2da81d8f8aec96c2edd69d7452de842f23d558f414cfb424738602aef509310ec25117eb25005056b75
+    "@scarf/scarf": ^1.1.0
+    opencollective-postinstall: ^2.0.2
+  checksum: c1cb914ed49d377daeddce346485d2228826a22af418f9b72f6aa02823f50feb85b248fde04664bb2075c64070b6c8958e4f06a61ec0f0c153a75a4edfff4945
   languageName: node
   linkType: hard
 
@@ -12810,7 +12815,7 @@ cors@latest:
     moment: ^2.29.1
     ng2-cookies: ^1.0.12
     ngx-clipboard: ^12.1.0
-    ngx-infinite-scroll: ^14.0.0
+    ngx-infinite-scroll: ^9.0.0
     ngx-moment: ^3.0.1
     ngx-order-pipe: ^2.2.0
     popper.js: ^1.14.3
@@ -12898,7 +12903,7 @@ cors@latest:
   languageName: node
   linkType: hard
 
-"opencollective-postinstall@npm:^2.0.3":
+"opencollective-postinstall@npm:^2.0.2, opencollective-postinstall@npm:^2.0.3":
   version: 2.0.3
   resolution: "opencollective-postinstall@npm:2.0.3"
   bin:
