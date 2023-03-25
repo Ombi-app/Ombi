@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { UntypedFormBuilder, FormControl, UntypedFormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { SonarrFacade } from "app/state/sonarr/sonarr.facade";
-import { finalize, map } from "rxjs";
+import { catchError, finalize, map, of } from "rxjs";
 
 import { ILanguageProfiles, ISonarrProfile, ISonarrRootFolder, ITag } from "../../interfaces";
 
@@ -95,7 +95,7 @@ export class SonarrComponent implements OnInit {
                 this.tags = [];
                 this.animeTags = [];
 
-                if (version.length > 0) {
+                if (version?.length > 0) {
                     this.sonarrVersion = version[0];
                 }
 
@@ -132,11 +132,19 @@ export class SonarrComponent implements OnInit {
     public getProfiles(form: UntypedFormGroup) {
         this.profilesRunning = true;
         this.sonarrService.getQualityProfiles(form.value)
+            .pipe(catchError((_) => {
+                this.notificationService.error("Could not load Quality Profiles");
+                return of([]);
+            }))
             .subscribe(x => {
+                this.profilesRunning = false;
+                if (x.length === 0) {
+                    return;
+                }
                 this.qualities = x;
                 this.qualitiesAnime = x;
                 this.qualities.unshift({ name: "Please Select", id: -1 });
-                this.profilesRunning = false;
+
                 this.notificationService.success("Successfully retrieved the Quality Profiles");
             });
     }
@@ -144,12 +152,19 @@ export class SonarrComponent implements OnInit {
     public getRootFolders(form: UntypedFormGroup) {
         this.rootFoldersRunning = true;
         this.sonarrService.getRootFolders(form.value)
+            .pipe(catchError((_) => {
+                this.notificationService.error("Could not load Root Folders");
+                return of([]);
+            }))
             .subscribe(x => {
+                this.rootFoldersRunning = false;
+                if (x.length === 0) {
+                    return;
+                }
                 this.rootFolders = x;
                 this.rootFolders.unshift({ path: "Please Select", id: -1 });
                 this.rootFoldersAnime = x;
 
-                this.rootFoldersRunning = false;
                 this.notificationService.success("Successfully retrieved the Root Folders");
             });
     }
@@ -157,11 +172,18 @@ export class SonarrComponent implements OnInit {
     public getLanguageProfiles(form: UntypedFormGroup) {
         this.langRunning = true;
         this.sonarrService.getV3LanguageProfiles(form.value)
+            .pipe(catchError((_) => {
+                this.notificationService.error("Could not load Language Profiles");
+                return of([]);
+            }))
             .subscribe(x => {
+                this.langRunning = false;
+                if (x.length === 0) {
+                    return;
+                }
                 this.languageProfiles = x;
                 this.languageProfilesAnime = x;
 
-                this.langRunning = false;
                 this.notificationService.success("Successfully retrieved the Language Profiles");
             });
     }
@@ -169,11 +191,18 @@ export class SonarrComponent implements OnInit {
     public getTags(form: UntypedFormGroup) {
         this.tagsRunning = true;
         this.sonarrService.getTags(form.value).pipe(
+            catchError((_) => {
+                this.notificationService.error("Could not load Tags");
+                return of([]);
+            }),
             finalize(() => {
                 this.tagsRunning = false;
+                if (this.tags.length === 0) {
+                    return;
+                }
                 this.animeTags.unshift({ label: "None", id: -1 });
                 this.tags.unshift({ label: "None", id: -1 });
-                this.notificationService.success("Successfully retrieved the Tags");
+                this.notificationService.success("Successfully retrieved the Tags")
             }),
             map(result => {
                 this.tags = result;
@@ -204,16 +233,19 @@ export class SonarrComponent implements OnInit {
         if (form.controls.defaultQualityProfile) {
             if (form.controls.defaultQualityProfile.value === "-1") {
                 this.notificationService.error("Please check your entered values");
+                return;
             }
         }
         if (form.controls.defaultRootPath) {
             if (form.controls.defaultRootPath.value === "Please Select") {
                 this.notificationService.error("Please check your entered values");
+                return;
             }
         }
         if (form.controls.languageProfile) {
             if (form.controls.languageProfile.value === "Please Select") {
                 this.notificationService.error("Please check your entered values");
+                return;
             }
         }
         if (form.controls.animeTag.value == -1) {

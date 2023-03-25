@@ -31,7 +31,7 @@ export class SonarrSettingsState {
     }
 
     @Action(UpdateSettings)
-    public enable(ctx: StateContext<SonarrState>, { settings }: UpdateSettings): Observable<SonarrState> {
+    public update(ctx: StateContext<SonarrState>, { settings }: UpdateSettings): Observable<SonarrState> {
         const state = ctx.getState();
         return this.settingsService.saveSonarr(settings).pipe(
             tap((_) => ctx.setState({...state, settings})),
