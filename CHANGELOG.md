@@ -1,3 +1,12 @@
+## [4.35.12](https://github.com/Ombi-app/Ombi/compare/v4.35.9...v4.35.12) (2023-03-25)
+
+
+### Bug Fixes
+
+* **sonarr:** :bug: Improved the error handling in the sonarr settings page in the UI ([fcd78fe](https://github.com/Ombi-app/Ombi/commit/fcd78fee619d10ec7d78e8c8ec6c3ac4b0a361a1)), closes [#4877](https://github.com/Ombi-app/Ombi/issues/4877)
+
+
+
 ## [4.35.9](https://github.com/Ombi-app/Ombi/compare/v4.35.8...v4.35.9) (2023-02-24)
 
 
@@ -355,15 +364,6 @@
 ### Features
 
 * add crew on movie page ([#4722](https://github.com/Ombi-app/Ombi/issues/4722)) ([1d53261](https://github.com/Ombi-app/Ombi/commit/1d532613823804b25984bd1d223d081a54ad143d))
-
-
-
-## [4.23.2](https://github.com/Ombi-app/Ombi/compare/v4.23.1...v4.23.2) (2022-08-22)
-
-
-### Bug Fixes
-
-* Fix conflicting property name for Swagger ([#4733](https://github.com/Ombi-app/Ombi/issues/4733)) ([d661f32](https://github.com/Ombi-app/Ombi/commit/d661f32e8a9e105faab6380b4b7b642896b98163))
 
 
 
