@@ -410,6 +410,30 @@ namespace Ombi.Controllers.V1.External
         {
             try
             {
+                if (string.IsNullOrEmpty(settings.ApiKey))
+                {
+                    return new TesterResultModel
+                    {
+                        IsValid = false,
+                        AdditionalInformation = "NullApiKey"
+                    };
+                }
+                if (string.IsNullOrEmpty(settings.Ip))
+                {
+                    return new TesterResultModel
+                    {
+                        IsValid = false,
+                        AdditionalInformation = "NullIp"
+                    };
+                }
+                if (settings.Port <= 0)
+                {
+                    return new TesterResultModel
+                    {
+                        IsValid = false,
+                        AdditionalInformation = "BadPort"
+                    };
+                }
 
                 var result = await SonarrApi.SystemStatus(settings.ApiKey, settings.FullUri);
                 return new TesterResultModel

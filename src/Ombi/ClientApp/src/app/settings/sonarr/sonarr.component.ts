@@ -220,7 +220,11 @@ export class SonarrComponent implements OnInit {
             } else if (result.expectedSubDir) {
                 this.notificationService.error("Your Sonarr Base URL must be set to " + result.expectedSubDir);
             } else {
-                this.notificationService.error("We could not connect to Sonarr!");
+                if (result.additionalInformation) {
+                    this.notificationService.error(result.additionalInformation);
+                } else {
+                    this.notificationService.error("We could not connect to Sonarr!");
+                }
             }
         });
     }
