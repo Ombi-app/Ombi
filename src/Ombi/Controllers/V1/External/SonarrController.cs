@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -59,6 +60,7 @@ namespace Ombi.Controllers.V1.External
         [PowerUser]
         public async Task<IEnumerable<SonarrProfile>> GetProfiles()
         {
+            SonarrSettings.ClearCache();
             var settings = await SonarrSettings.GetSettingsAsync();
             if (settings.Enabled)
             {
@@ -75,6 +77,7 @@ namespace Ombi.Controllers.V1.External
         [PowerUser]
         public async Task<IEnumerable<SonarrRootFolder>> GetRootFolders()
         {
+            SonarrSettings.ClearCache();
             var settings = await SonarrSettings.GetSettingsAsync();
             if (settings.Enabled)
             {
@@ -92,6 +95,7 @@ namespace Ombi.Controllers.V1.External
         [PowerUser]
         public async Task<IEnumerable<LanguageProfiles>> GetLanguageProfiles()
         {
+            SonarrSettings.ClearCache();
             var settings = await SonarrSettings.GetSettingsAsync();
             if (settings.Enabled)
             {
@@ -147,6 +151,7 @@ namespace Ombi.Controllers.V1.External
         [PowerUser]
         public async Task<bool> Enabled()
         {
+            SonarrSettings.ClearCache();
             var settings = await SonarrSettings.GetSettingsAsync();
             return settings.Enabled;
         }
@@ -155,13 +160,21 @@ namespace Ombi.Controllers.V1.External
         [PowerUser]
         public async Task<string> SonarrVersion()
         {
+            SonarrSettings.ClearCache();
             var settings = await SonarrSettings.GetSettingsAsync();
             if (!settings.Enabled)
             {
                 return string.Empty;
             }
-            var status = await SonarrV3Api.SystemStatus(settings.ApiKey, settings.FullUri);
-            return status.version;
+            try
+            {
+                var status = await SonarrV3Api.SystemStatus(settings.ApiKey, settings.FullUri);
+                return status.version;
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
         }
     }
 }
