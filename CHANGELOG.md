@@ -1,3 +1,12 @@
+## [4.35.14](https://github.com/Ombi-app/Ombi/compare/v4.35.13...v4.35.14) (2023-04-06)
+
+
+### Bug Fixes
+
+* Some minor tweaks to the movie info panel ([#4883](https://github.com/Ombi-app/Ombi/issues/4883)) ([1244487](https://github.com/Ombi-app/Ombi/commit/12444871df2f7602200f73971fce962f06b4a80b))
+
+
+
 ## [4.35.13](https://github.com/Ombi-app/Ombi/compare/v4.35.12...v4.35.13) (2023-03-28)
 
 
@@ -350,20 +359,6 @@
 ### Bug Fixes
 
 * **webhook:** Remove added trailing slash from webhook URL [#4710](https://github.com/Ombi-app/Ombi/issues/4710) ([369eb33](https://github.com/Ombi-app/Ombi/commit/369eb339171671101be219486e2aab27a20f3d74))
-
-
-
-# [4.25.0](https://github.com/Ombi-app/Ombi/compare/v4.24.0...v4.25.0) (2022-08-23)
-
-
-### Bug Fixes
-
-* fixed stats controller ([#4742](https://github.com/Ombi-app/Ombi/issues/4742)) ([47ea64b](https://github.com/Ombi-app/Ombi/commit/47ea64b5a401770f1943b575ca40f84d515e96b3))
-
-
-### Features
-
-* Watchlist history errors([#4741](https://github.com/Ombi-app/Ombi/issues/4741)) ([c222f1a](https://github.com/Ombi-app/Ombi/commit/c222f1a945e944ef34e68cad2b61f40e57cab823))
 
 
 
