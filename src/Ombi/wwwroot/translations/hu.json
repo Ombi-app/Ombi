@@ -14,7 +14,7 @@
     "Common": {
         "ContinueButton": "Tovább",
         "Available": "Elérhető",
-        "Available4K": "Available 4K",
+        "Available4K": "Elérhető 4K",
         "Approved": "Jóváhagyva",
         "Approve4K": "Approve 4K",
         "Pending": "Függőben",
@@ -24,7 +24,7 @@
         "ProcessingRequest": "Kérés feldolgozása",
         "ProcessingRequest4K": "Processing Request 4K",
         "PendingApproval": "Jóváhagyásra vár",
-        "PendingApproval4K": "Pending Approval 4K",
+        "PendingApproval4K": "Függőben 4K",
         "RequestDenied": "Kérés megtagadva",
         "RequestDenied4K": "Request Denied 4K",
         "NotRequested": "Nincs kérve",
@@ -312,7 +312,7 @@
     },
     "MediaDetails": {
         "Denied": "Megtagadva",
-        "Denied4K": "Denied 4K",
+        "Denied4K": "Megtagadva 4K",
         "Trailers": "Előzetesek",
         "RecommendationsTitle": "Ajánlások",
         "SimilarTitle": "Hasonló",
@@ -365,7 +365,7 @@
             "CastTitle": "Szereplők"
         },
         "Crews": {
-            "CrewTitle": "Crew"
+            "CrewTitle": "Stáb"
         },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Ezzel kérni fogja a sorozat összes évadát",
@@ -392,7 +392,7 @@
             "StartDate": "Kezdés dátuma:",
             "EndDate": "Befejezés dátuma:"
         },
-        "RequestSource": "Source:"
+        "RequestSource": "Forrás:"
     },
     "Discovery": {
         "PopularTab": "Népszerű",
