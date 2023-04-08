@@ -1,4 +1,4 @@
-﻿using Ombi.Helpers;
+using Ombi.Helpers;
 using Quartz;
 
 namespace Ombi.Settings.Settings.Models
@@ -104,7 +104,9 @@ namespace Ombi.Settings.Settings.Models
 
         private static string ValidateCron(string cron)
         {
-            if (CronExpression.IsValidExpression(cron))
+            CronExpression expression = new CronExpression(cron);
+            DateTimeOffset? nextFireUTCTime = expression.GetNextValidTimeAfter(DateTime.Now);
+            if (CronExpression.IsValidExpression(cron) && nextFireUTCTime != null)
             {
                 return cron;
             }
