@@ -1,5 +1,6 @@
-using Ombi.Helpers;
+﻿using Ombi.Helpers;
 using Quartz;
+using System;
 
 namespace Ombi.Settings.Settings.Models
 {
