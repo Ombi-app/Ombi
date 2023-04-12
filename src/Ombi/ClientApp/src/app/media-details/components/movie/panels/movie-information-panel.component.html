@@ -36,18 +36,7 @@
     </div>
     <div *ngIf="(!movie.available && movie.requested) || (!movie.available4K && movie.has4KRequest)">
       <span class="label">{{'MediaDetails.RequestStatus' | translate }}</span>
-      <div *ngIf="!movie.available && movie.requested">
-        <div *ngIf="movie.denied">{{'Common.RequestDenied' | translate}}</div>
-        <div *ngIf="movie.approved && !movie.available">{{'Common.ProcessingRequest' | translate}}</div>
-        <div *ngIf="!movie.denied && movie.requested && !movie.approved">{{'Common.PendingApproval' | translate}}</div>
-        <!--<div *ngIf="!movie.requested && !movie.available && !movie.approved">{{'Common.NotRequested' | translate}}</div>-->
-      </div>
-      <div *ngIf="!movie.available4K && movie.has4KRequest">
-        <div *ngIf="movie.denied4K">{{'Common.RequestDenied4K' | translate}}</div>
-        <div *ngIf="movie.approved4K && !movie.available4K">{{'Common.ProcessingRequest4K' | translate}}</div>
-        <div *ngIf="!movie.denied4K && movie.requested4K && !movie.approved4K && !movie.available4K">{{'Common.PendingApproval4K' | translate}}</div>
-        <!--<div *ngIf="!movie.requested4K && !movie.available4K && !movie.approved4K">{{'Common.NotRequested4K' | translate}}</div>-->
-      </div>
+      <div>{{getStatus(movie) | translate}}</div>
     </div>
 
     <div *ngIf="request">
