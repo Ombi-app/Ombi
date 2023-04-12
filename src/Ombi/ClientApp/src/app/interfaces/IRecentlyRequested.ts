@@ -11,6 +11,7 @@ export interface IRecentlyRequested {
     overview: string;
     releaseDate: Date;
     approved: boolean;
+    denied: boolean;
     mediaId: string;
     type: RequestType;
 
