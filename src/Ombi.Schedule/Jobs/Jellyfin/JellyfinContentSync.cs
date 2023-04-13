@@ -228,7 +228,12 @@ namespace Ombi.Schedule.Jobs.Jellyfin
             // Check if it exists
             var existingMovie = await _repo.GetByJellyfinId(movieInfo.Id);
             var alreadyGoingToAdd = content.Any(x => x.JellyfinId == movieInfo.Id);
-            if (existingMovie == null && !alreadyGoingToAdd)
+            if (alreadyGoingToAdd)
+            {
+                _logger.LogDebug($"Detected duplicate for {movieInfo.Name}");
+                return;
+            }
+            if (existingMovie == null)
             {
                 if (!movieInfo.ProviderIds.Any())
                 {

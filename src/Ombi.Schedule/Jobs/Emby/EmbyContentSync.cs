@@ -263,7 +263,12 @@ namespace Ombi.Schedule.Jobs.Emby
             // Check if it exists
             var existingMovie = await _repo.GetByEmbyId(movieInfo.Id);
             var alreadyGoingToAdd = content.Any(x => x.EmbyId == movieInfo.Id);
-            if (existingMovie == null && !alreadyGoingToAdd)
+            if (alreadyGoingToAdd)
+            {
+                _logger.LogDebug($"Detected duplicate for {movieInfo.Name}");
+                return;
+            }
+            if (existingMovie == null)
             {
                 if (!movieInfo.ProviderIds.Any())
                 {
