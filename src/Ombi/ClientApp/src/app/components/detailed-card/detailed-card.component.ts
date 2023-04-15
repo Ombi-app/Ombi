@@ -41,6 +41,9 @@ export class DetailedCardComponent implements OnInit, OnDestroy {
   }
 
   public getStatus(request: IRecentlyRequested) {
+    if (request.denied) {
+      return "Common.Denied";
+    }
     if (request.available) {
       return "Common.Available";
     }
@@ -63,6 +66,9 @@ export class DetailedCardComponent implements OnInit, OnDestroy {
   }
 
   public getClass(request: IRecentlyRequested) {
+    if (request.denied) {
+      return "danger";
+    }
     if (request.available || request.tvPartiallyAvailable) {
       return "success";
     }
@@ -113,7 +119,7 @@ export class DetailedCardComponent implements OnInit, OnDestroy {
       this.setBackgroundStyle(this.request.background);
       return;
     }
-    
+
     // Set background style while image path is loading.
     this.setBackgroundStyle(null);
     switch (this.request.type) {
