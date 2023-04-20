@@ -221,6 +221,7 @@
             "Denied": "Elementi selezionati rifiutati con successo"
         },
         "SuccessfullyApproved": "Approvata",
+        "SuccessfullyDenied": "Successfully Denied",
         "SuccessfullyDeleted": "Richiesta eliminata correttamente",
         "NowAvailable": "Richiesta ora disponibile",
         "NowUnavailable": "Richiesta ora non disponibile",
