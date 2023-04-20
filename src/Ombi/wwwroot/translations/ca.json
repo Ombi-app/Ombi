@@ -221,6 +221,7 @@
             "Denied": "Els elements seleccionats s'han denegat correctament"
         },
         "SuccessfullyApproved": "Aprovat correctament",
+        "SuccessfullyDenied": "Successfully Denied",
         "SuccessfullyDeleted": "La sol·licitud s'ha suprimit correctament",
         "NowAvailable": "La sol·licitud ja està disponible",
         "NowUnavailable": "La sol·licitud ja no està disponible",
