@@ -221,6 +221,7 @@
             "Denied": "所选项目已拒绝"
         },
         "SuccessfullyApproved": "批准成功",
+        "SuccessfullyDenied": "Successfully Denied",
         "SuccessfullyDeleted": "删除请求成功",
         "NowAvailable": "请求现在可观看",
         "NowUnavailable": "请求现在不可观看",
