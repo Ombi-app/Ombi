@@ -221,6 +221,7 @@
             "Denied": "Successfully denied selected items"
         },
         "SuccessfullyApproved": "Zatwierdzono pomyślnie",
+        "SuccessfullyDenied": "Successfully Denied",
         "SuccessfullyDeleted": "Prośba pomyślnie usunięta",
         "NowAvailable": "Request is now available",
         "NowUnavailable": "Request is now unavailable",
