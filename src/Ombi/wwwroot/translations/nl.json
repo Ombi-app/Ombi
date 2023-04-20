@@ -221,6 +221,7 @@
             "Denied": "Geselecteerde items succesvol afgekeurd"
         },
         "SuccessfullyApproved": "Succesvol goedgekeurd",
+        "SuccessfullyDenied": "Successfully Denied",
         "SuccessfullyDeleted": "Verzoek succesvol verwijderd",
         "NowAvailable": "Verzoek is nu beschikbaar",
         "NowUnavailable": "Verzoek is nu niet beschikbaar",
