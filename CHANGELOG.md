@@ -1,3 +1,12 @@
+## [4.35.19](https://github.com/Ombi-app/Ombi/compare/v4.35.18...v4.35.19) (2023-04-20)
+
+
+### Bug Fixes
+
+* **radarr:** Fixed an issue where the radarr sync would break ([de4baad](https://github.com/Ombi-app/Ombi/commit/de4baade9f87248d77106ff1a313a498870f4fb3))
+
+
+
 ## [4.35.18](https://github.com/Ombi-app/Ombi/compare/v4.35.17...v4.35.18) (2023-04-15)
 
 
@@ -351,15 +360,6 @@
 ### Bug Fixes
 
 * **availability:** 🐛 Fixed a issue with the availability checker after the previous update. Added full test coverage around that area ([28e2480](https://github.com/Ombi-app/Ombi/commit/28e248046ad56390595f84172bbd5f5961325b4d))
-
-
-
-## [4.27.2](https://github.com/Ombi-app/Ombi/compare/v4.27.1...v4.27.2) (2022-09-29)
-
-
-### Bug Fixes
-
-* **sonarr:** :bug: Cleaned up and removed Sonarr v3 option, sonarr v3 is now the default. This allows us to get ready for the upcoming Sonarr v4 ([#4764](https://github.com/Ombi-app/Ombi/issues/4764)) ([2cddec7](https://github.com/Ombi-app/Ombi/commit/2cddec759004b6490f686ff74cb092238e3dc946))
 
 
 
