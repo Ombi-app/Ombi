@@ -221,6 +221,7 @@
             "Denied": "Úspešne odstránené vybrané položky"
         },
         "SuccessfullyApproved": "Úspešne schválené",
+        "SuccessfullyDenied": "Successfully Denied",
         "SuccessfullyDeleted": "Žiadosť bola úspešne vymazaná",
         "NowAvailable": "Žiadosť je teraz k dispozícii",
         "NowUnavailable": "Žiadosť je teraz nedostupná",
