@@ -221,6 +221,7 @@
             "Denied": "Valgte elementer ble avvist"
         },
         "SuccessfullyApproved": "Godkjenning vellykket",
+        "SuccessfullyDenied": "Successfully Denied",
         "SuccessfullyDeleted": "Forespørselen ble slettet",
         "NowAvailable": "Forespørselen er nå tilgjengelig",
         "NowUnavailable": "Forespørselen er nå utilgjengelig",
