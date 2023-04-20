@@ -3,8 +3,13 @@
         <p-carousel #carousel [value]="requests" [numVisible]="3" [numScroll]="1"
             [responsiveOptions]="responsiveOptions" [page]="0">
             <ng-template let-result pTemplate="item">
-                <ombi-detailed-card [request]="result" [isAdmin]="isAdmin" (onClick)="navigate(result)"
-                    (onApprove)="approve(result)"></ombi-detailed-card>
+                <ombi-detailed-card
+                    [request]="result"
+                    [isAdmin]="isAdmin"
+                    (onClick)="navigate(result)"
+                    (onApprove)="approve(result)"
+                    (onDeny)="deny(result)">
+                </ombi-detailed-card>
             </ng-template>
         </p-carousel>
     </div>
