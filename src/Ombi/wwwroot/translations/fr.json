@@ -221,7 +221,7 @@
             "Denied": "Les éléments sélectionnés ont été refusés"
         },
         "SuccessfullyApproved": "Approuvée avec succès",
-        "SuccessfullyDenied": "Successfully Denied",
+        "SuccessfullyDenied": "Refusé avec succès",
         "SuccessfullyDeleted": "Demande supprimée avec succès",
         "NowAvailable": "La demande est maintenant disponible",
         "NowUnavailable": "La demande est maintenant indisponible",
