@@ -1,3 +1,12 @@
+## [4.36.1](https://github.com/Ombi-app/Ombi/compare/v4.36.0...v4.36.1) (2023-04-20)
+
+
+### Bug Fixes
+
+* **healthchecks:** Removed redundant ping check ([1751305](https://github.com/Ombi-app/Ombi/commit/1751305064176d2c0135f867773ccc46b03915ec))
+
+
+
 # [4.36.0](https://github.com/Ombi-app/Ombi/compare/v4.35.19...v4.36.0) (2023-04-20)
 
 
@@ -356,10 +365,6 @@
 ### Bug Fixes
 
 * **importer:** 🐛 Allow you to only import Plex Admins without the Plex Users ([8c9ad9b](https://github.com/Ombi-app/Ombi/commit/8c9ad9b414fdc6c88bdb911d6057ae5d38783b98))
-
-
-
-## [4.27.4](https://github.com/Ombi-app/Ombi/compare/v4.27.3...v4.27.4) (2022-09-30)
 
 
 
