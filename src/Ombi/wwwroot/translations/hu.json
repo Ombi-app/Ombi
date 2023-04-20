@@ -221,6 +221,7 @@
             "Denied": "Successfully denied selected items"
         },
         "SuccessfullyApproved": "Sikeresen jóváhagyva",
+        "SuccessfullyDenied": "Successfully Denied",
         "SuccessfullyDeleted": "Kérés sikeresen törölve",
         "NowAvailable": "Kérés elérhető",
         "NowUnavailable": "Kérés nem elérhető",
