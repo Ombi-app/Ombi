@@ -1,3 +1,12 @@
+# [4.36.0](https://github.com/Ombi-app/Ombi/compare/v4.35.19...v4.36.0) (2023-04-20)
+
+
+### Features
+
+* **discover:** Add deny option to recently requested ([#4907](https://github.com/Ombi-app/Ombi/issues/4907)) ([78f340e](https://github.com/Ombi-app/Ombi/commit/78f340ee5f309c55690497170897533801957668))
+
+
+
 ## [4.35.19](https://github.com/Ombi-app/Ombi/compare/v4.35.18...v4.35.19) (2023-04-20)
 
 
@@ -351,15 +360,6 @@
 
 
 ## [4.27.4](https://github.com/Ombi-app/Ombi/compare/v4.27.3...v4.27.4) (2022-09-30)
-
-
-
-## [4.27.3](https://github.com/Ombi-app/Ombi/compare/v4.27.2...v4.27.3) (2022-09-30)
-
-
-### Bug Fixes
-
-* **availability:** 🐛 Fixed a issue with the availability checker after the previous update. Added full test coverage around that area ([28e2480](https://github.com/Ombi-app/Ombi/commit/28e248046ad56390595f84172bbd5f5961325b4d))
 
 
 
