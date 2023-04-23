@@ -378,6 +378,7 @@
         "RadarrConfiguration": "Radarr Configuration",
         "RequestOnBehalf": "Request on behalf of",
         "PleaseSelectUser": "Please select a user",
+        "AddComment": "Add a comment",
         "StreamingOn": "Streaming On:",
         "RequestedBy": "Автор запроса:",
         "OnDate": "On:",

@@ -27,5 +27,7 @@ namespace Ombi.Store.Entities.Requests
         public int TotalSeasons { get; set; }
 
         public List<ChildRequests> ChildRequests { get; set; }
+        public string Comment { get; set; } 
+        
     }
 }

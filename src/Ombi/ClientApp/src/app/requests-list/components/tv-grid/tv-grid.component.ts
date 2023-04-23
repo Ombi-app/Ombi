@@ -19,7 +19,7 @@ export class TvGridComponent implements OnInit, AfterViewInit {
     public dataSource: IChildRequests[] = [];
     public resultsLength: number;
     public isLoadingResults = true;
-    public displayedColumns: string[] = ['series',  'requestedBy', 'status', 'requestStatus', 'requestedDate','actions'];
+    public displayedColumns: string[] = ['series',  'requestedBy', 'status', 'requestStatus', 'requestedDate', 'comment','actions'];
     public gridCount: string = "15";
     public isAdmin: boolean;
     public defaultSort: string = "requestedDate";

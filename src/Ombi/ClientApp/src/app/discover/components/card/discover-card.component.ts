@@ -126,7 +126,7 @@ export class DiscoverCardComponent implements OnInit {
         return "";
     }
 
-    public request(event: any, is4k: boolean) {
+    public request(event: any, is4k: boolean, comment: string) {
         event.preventDefault();
         this.loading = true;
         switch (this.result.type) {
@@ -146,6 +146,7 @@ export class DiscoverCardComponent implements OnInit {
               qualityPathOverride: null,
               rootFolderOverride: null,
               is4KRequest: is4k,
+              comment: comment
             };
 
             if (!this.isAdmin) {
@@ -157,7 +158,7 @@ export class DiscoverCardComponent implements OnInit {
               AdminRequestDialogComponent,
               {
                 width: "700px",
-                data: { type: RequestType.movie, id: this.result.id, is4k: is4k },
+                data: { type: RequestType.movie, id: this.result.id, is4k: is4k, comment: comment },
                 panelClass: "modal-panel",
               }
             );
@@ -170,6 +171,8 @@ export class DiscoverCardComponent implements OnInit {
               movieRequest.requestOnBehalf = result.username?.id;
               movieRequest.qualityPathOverride = result.radarrPathId;
               movieRequest.rootFolderOverride = result.radarrFolderId;
+              movieRequest.comment = result.comment;
+
               this.requestMovie(movieRequest);
             });
             break;

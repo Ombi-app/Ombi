@@ -25,7 +25,7 @@ export class TvRequestGridComponent {
         return this.tv?.seasonRequests?.length > 0
     }
 
-    public displayedColumns: string[] = ['select', 'number', 'title', 'airDate', 'status'];
+    public displayedColumns: string[] = ['select', 'number', 'title', 'airDate','status'];
 
     constructor(private requestService: RequestService, private requestServiceV2: RequestServiceV2, private notificationService: MessageService,
         private dialog: MatDialog, private translate: TranslateService) {
@@ -69,6 +69,7 @@ export class TvRequestGridComponent {
                     viewModel.qualityPathOverride = result?.sonarrPathId;
                     viewModel.rootFolderOverride = result?.sonarrFolderId;
                     viewModel.languageProfile = result?.sonarrLanguageId;
+                    //viewModel.comment = result?.comment;
 
                     const requestResult = await this.requestServiceV2.requestTv(viewModel).toPromise();
                     this.postRequest(requestResult);

@@ -23,6 +23,7 @@ namespace Ombi.Store.Entities.Requests
         public OmbiUser RequestedUser { get; set; }
 
         public RequestSource Source { get; set; } = RequestSource.Ombi;
+        public string Comment { get; set; }
 
 
         [NotMapped]
