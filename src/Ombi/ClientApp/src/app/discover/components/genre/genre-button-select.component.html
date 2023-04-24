@@ -1,0 +1,7 @@
+<div class="genre-container">
+    <mat-button-toggle-group name="discoverMode" (change)="toggleChanged($event)" *ngFor="let genre of genreList"
+        class="discover-filter-buttons-group">
+        <mat-button-toggle value="{{genre.id}}" class="discover-filter-button">{{genre.name}}</mat-button-toggle>
+    </mat-button-toggle-group>
+    <mat-spinner *ngIf="isLoading" [diameter]="30"></mat-spinner>
+</div>
