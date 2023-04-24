@@ -12,6 +12,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { RequestServiceV2 } from "../../services/requestV2.service";
 import { Routes } from "@angular/router";
 import { DetailedCardComponent } from "app/components";
+import { GenreButtonSelectComponent } from "./genre/genre-button-select.component";
 
 export const components: any[] = [
     DiscoverComponent,
@@ -22,6 +23,7 @@ export const components: any[] = [
     CarouselListComponent,
     RecentlyRequestedListComponent,
     DetailedCardComponent,
+    GenreButtonSelectComponent
 ];
 
 export const providers: any[] = [

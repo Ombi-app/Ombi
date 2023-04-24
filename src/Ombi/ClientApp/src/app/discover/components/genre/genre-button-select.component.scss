@@ -1,0 +1,32 @@
+
+h2{
+    margin-top:40px;
+    margin-left:40px;
+    font-size: 24px;
+}
+
+.discover-filter-buttons-group {
+    border: 1px solid #293a4c;
+    border-radius: 30px;
+    color:#fff;
+    margin-bottom:10px;
+  
+    .discover-filter-button{
+      background:inherit;
+      color:inherit;
+      padding:0 0px;
+      border-radius: 30px;
+      padding-left: 20px;
+      padding-right: 20px;
+      border-left:none;
+    }
+}
+
+.button-active{
+    background:#293a4c;
+  }
+
+.genre-container {
+    margin-left: 35px;
+}
+  
