@@ -12,6 +12,7 @@ export interface EpisodeRequestData {
     series: ISearchTvResultV2;
     isAdmin: boolean;
     requestOnBehalf: string | undefined;
+    comment: string | undefined;
 }
 @Component({
     selector: "episode-request",
@@ -69,6 +70,7 @@ export class EpisodeRequestComponent {
                     viewModel.qualityPathOverride = result?.sonarrPathId;
                     viewModel.rootFolderOverride = result?.sonarrFolderId;
                     viewModel.languageProfile = result?.sonarrLanguageId;
+                    viewModel.comment = result?.comment;
 
                     const requestResult = await this.requestService.requestTv(viewModel).toPromise();
                     this.postRequest(requestResult);

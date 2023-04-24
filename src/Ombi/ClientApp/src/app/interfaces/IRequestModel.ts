@@ -212,4 +212,5 @@ export class BaseRequestOptions {
   requestOnBehalf: string | undefined;
   rootFolderOverride: number | undefined;
   qualityPathOverride: number | undefined;
+  comment: string | undefined;
 }

@@ -106,7 +106,7 @@ export class MovieDetailsComponent implements OnInit{
         }
     }
 
-    public async request(is4K: boolean, userId?: string) {
+    public async request(is4K: boolean, userId?: string, comment?: string) {
         if (!this.is4KEnabled) {
             is4K = false;
         }
@@ -119,7 +119,8 @@ export class MovieDetailsComponent implements OnInit{
                         qualityPathOverride: result.radarrPathId,
                         requestOnBehalf: result.username?.id,
                         rootFolderOverride: result.radarrFolderId,
-                        is4KRequest: is4K }));
+                        is4KRequest: is4K,
+                        comment: result.comment }));
                     if (requestResult.result) {
                         if (is4K) {
                             this.movie.has4KRequest = true;
@@ -135,7 +136,7 @@ export class MovieDetailsComponent implements OnInit{
                 }
             });
         } else {
-        const result = await firstValueFrom(this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: this.translate.currentLang, requestOnBehalf: userId, qualityPathOverride: undefined, rootFolderOverride: undefined, is4KRequest: is4K }));
+        const result = await firstValueFrom(this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: this.translate.currentLang, requestOnBehalf: userId, qualityPathOverride: undefined, rootFolderOverride: undefined, is4KRequest: is4K, comment: comment }));
         if (result.result) {
             if (is4K) {
                 this.movie.has4KRequest = true;

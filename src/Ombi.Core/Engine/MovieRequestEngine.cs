@@ -145,7 +145,8 @@ namespace Ombi.Core.Engine
                     QualityOverride = model.QualityPathOverride.GetValueOrDefault(),
                     RequestedDate4k = model.Is4kRequest ? DateTime.UtcNow : DateTime.MinValue,
                     Is4kRequest = model.Is4kRequest,
-                    Source = model.Source
+                    Source = model.Source,
+                    Comment = model.Comment
                 };
             }
 

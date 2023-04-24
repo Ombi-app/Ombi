@@ -35,5 +35,7 @@ namespace Ombi.Core.Models.Requests
         public string RequestOnBehalf { get; set; }
         public int? RootFolderOverride { get; set; }
         public int? QualityPathOverride { get; set; }
+
+        public string Comment { get; set; }
     }
 }

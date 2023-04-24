@@ -66,6 +66,11 @@
             <td mat-cell id="status{{element.id}}"  *matCellDef="let element"> {{element.status |translateStatus }} </td>
         </ng-container>
 
+        <ng-container matColumnDef="comment">
+            <th mat-header-cell *matHeaderCellDef> {{'Requests.Comment' | translate}} </th>
+            <td mat-cell id="requestedBy{{element.id}}" *matCellDef="let element"> {{element.comment}} </td>
+        </ng-container>
+
         <ng-container matColumnDef="has4kRequest">
             <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{ 'Requests.Has4KRequest' | translate}} </th>
             <td mat-cell id="has4kRequest{{element.id}}"  *matCellDef="let element">

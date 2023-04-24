@@ -20,6 +20,7 @@ export interface IAdminRequestDialogData {
 	type: RequestType;
 	id: number;
 	is4k: boolean | null;
+	comment: string | null;
 }
 
 @Component({
@@ -59,6 +60,7 @@ export class AdminRequestDialogComponent implements OnInit {
 	public async ngOnInit() {
 		this.form = this.fb.group({
 			username: [null],
+			comment: [null],
 			sonarrPathId: [null],
 			sonarrFolderId: [null],
 			sonarrLanguageId: [null],
