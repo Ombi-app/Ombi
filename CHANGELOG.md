@@ -1,3 +1,12 @@
+# [4.37.0](https://github.com/Ombi-app/Ombi/compare/v4.36.1...v4.37.0) (2023-04-24)
+
+
+### Features
+
+* Search by genre ([1837419](https://github.com/Ombi-app/Ombi/commit/18374198f9f2462ba85c5781b0fcc05892728b21))
+
+
+
 ## [4.36.1](https://github.com/Ombi-app/Ombi/compare/v4.36.0...v4.36.1) (2023-04-20)
 
 
@@ -356,15 +365,6 @@
 ### Bug Fixes
 
 * **notifications:** Fixed the error when sending multiple test notifications. Added more logging when Discord complains the message is invalid ([fc14780](https://github.com/Ombi-app/Ombi/commit/fc14780bd354483119ddcbb55a8c382e1890a783))
-
-
-
-## [4.27.5](https://github.com/Ombi-app/Ombi/compare/v4.27.4...v4.27.5) (2022-09-30)
-
-
-### Bug Fixes
-
-* **importer:** 🐛 Allow you to only import Plex Admins without the Plex Users ([8c9ad9b](https://github.com/Ombi-app/Ombi/commit/8c9ad9b414fdc6c88bdb911d6057ae5d38783b98))
 
 
 
