@@ -404,6 +404,7 @@
         "Movies": "Movies",
         "Combined": "Combined",
         "Tv": "TV",
+        "Genres": "Genres",
         "CardDetails": {
             "Availability": "Availability",
             "Studio": "Studio",
