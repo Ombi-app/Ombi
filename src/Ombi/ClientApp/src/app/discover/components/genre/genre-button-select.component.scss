@@ -6,22 +6,28 @@ h2{
 }
 
 .discover-filter-buttons-group {
-    border: 1px solid #293a4c;
-    border-radius: 30px;
-    color:#fff;
-    margin-bottom:10px;
-  
-    .discover-filter-button{
-      background:inherit;
-      color:inherit;
-      padding:0 0px;
-      border-radius: 30px;
-      padding-left: 20px;
-      padding-right: 20px;
-      border-left:none;
-    }
-}
+  border: 1px solid #293a4c;
+  border-radius: 30px;
+  border-radius: 15px;
+  color:#fff;
+  margin-bottom:10px;
+  margin-bottom:5px;
+  margin-right: 5px;
 
+  .discover-filter-button{
+
+   transform: scale(0.9);
+    background:inherit;
+    color:inherit;
+    padding:0 0px;
+    border-radius: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-left:none;
+  }
+}
 .button-active{
     background:#293a4c;
   }
@@ -29,4 +35,23 @@ h2{
 .genre-container {
     margin-left: 35px;
 }
+
+.type-select-container {
+  margin-left: 40px;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+.type-select-container label {
+  margin-right: 10px;
+}
+
+.type-select-container input {
+  margin-right: 2px;
+}
   
+
+
+.hidden {
+  display: none;
+}

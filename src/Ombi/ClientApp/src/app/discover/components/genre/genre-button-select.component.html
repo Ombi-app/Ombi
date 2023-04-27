@@ -1,5 +1,19 @@
-<div class="genre-container">
-    <mat-button-toggle-group name="discoverMode" (change)="toggleChanged($event)" *ngFor="let genre of genreList"
+<div class="type-select-container">
+    <input type="radio" id="Movies" name="Movies" [checked]="this.selectedType == 'movie'"
+        (change)="onTypeChange('movie')">
+    <label for="Movies">Movies</label>
+    <input type="radio" id="TvShows" name="TvShows" [checked]="this.selectedType == 'tv'" (change)="onTypeChange('tv')">
+    <label for="TvShows">Tv Shows</label>
+</div>
+<div class="genre-container" *ngIf="movieGenreList$ | async as movies"
+    [ngClass]="{'hidden' : this.selectedType != 'movie' }">
+    <mat-button-toggle-group name="discoverMode" (change)="toggleChanged($event, genre.type)"
+        *ngFor="let genre of movies" class="discover-filter-buttons-group">
+        <mat-button-toggle value="{{genre.id}}" class="discover-filter-button">{{genre.name}}</mat-button-toggle>
+    </mat-button-toggle-group>
+</div>
+<div class="genre-container" *ngIf="tvGenreList$ | async as tv" [ngClass]="{'hidden' : this.selectedType != 'tv' }">
+    <mat-button-toggle-group name="discoverMode" (change)="toggleChanged($event, genre.type)" *ngFor="let genre of tv"
         class="discover-filter-buttons-group">
         <mat-button-toggle value="{{genre.id}}" class="discover-filter-button">{{genre.name}}</mat-button-toggle>
     </mat-button-toggle-group>

@@ -403,7 +403,8 @@
         "RecentlyRequestedTab": "Recently Requested",
         "Movies": "Movies",
         "Combined": "Combined",
-        "Tv": "TV",
+      "Tv": "TV",
+      "Genres": "Genres",
         "CardDetails": {
             "Availability": "Availability",
             "Studio": "Studio",
