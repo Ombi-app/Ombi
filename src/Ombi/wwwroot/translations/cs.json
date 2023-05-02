@@ -221,6 +221,7 @@
             "Denied": "Successfully denied selected items"
         },
         "SuccessfullyApproved": "Úspěšně schváleno",
+        "SuccessfullyDenied": "Successfully Denied",
         "SuccessfullyDeleted": "Požadavek byl úspěšně odstraněn",
         "NowAvailable": "Požadavek je nyní k dispozici",
         "NowUnavailable": "Požadavek je nyní nedostupný",
@@ -403,6 +404,7 @@
         "Movies": "Filmy",
         "Combined": "Kombinované",
         "Tv": "TV",
+        "Genres": "Genres",
         "CardDetails": {
             "Availability": "Dostupnost",
             "Studio": "Studio",

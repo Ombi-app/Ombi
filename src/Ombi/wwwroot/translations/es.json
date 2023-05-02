@@ -221,6 +221,7 @@
             "Denied": "Elementos seleccionados rechazados con éxito"
         },
         "SuccessfullyApproved": "Se ha aprobado con éxito",
+        "SuccessfullyDenied": "Denegado Correctamente",
         "SuccessfullyDeleted": "Solicitud eliminada con éxito",
         "NowAvailable": "La solicitud está disponible",
         "NowUnavailable": "La solicitud no está disponible",
@@ -403,6 +404,7 @@
         "Movies": "Películas",
         "Combined": "Combinado",
         "Tv": "TV",
+        "Genres": "Genres",
         "CardDetails": {
             "Availability": "Disponibilidad",
             "Studio": "Estudio",
