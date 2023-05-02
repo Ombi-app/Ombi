@@ -221,6 +221,7 @@
             "Denied": "Elementi selezionati rifiutati con successo"
         },
         "SuccessfullyApproved": "Approvata",
+        "SuccessfullyDenied": "Negata Con Successo",
         "SuccessfullyDeleted": "Richiesta eliminata correttamente",
         "NowAvailable": "Richiesta ora disponibile",
         "NowUnavailable": "Richiesta ora non disponibile",
@@ -365,7 +366,7 @@
             "CastTitle": "Trasmetti"
         },
         "Crews": {
-            "CrewTitle": "Crew"
+            "CrewTitle": "Gruppo"
         },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Richiederà tutte le stagioni per questa serie",
@@ -403,6 +404,7 @@
         "Movies": "Film",
         "Combined": "Combinato",
         "Tv": "TV",
+        "Genres": "Generi",
         "CardDetails": {
             "Availability": "Disponibilità",
             "Studio": "Studio",

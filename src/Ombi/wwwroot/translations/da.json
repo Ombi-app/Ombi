@@ -221,6 +221,7 @@
             "Denied": "Successfully denied selected items"
         },
         "SuccessfullyApproved": "Godkendt",
+        "SuccessfullyDenied": "Successfully Denied",
         "SuccessfullyDeleted": "Anmodningen blev slettet",
         "NowAvailable": "Anmodningen er nu tilgængelig",
         "NowUnavailable": "Anmodningen er nu utilgængelig",
@@ -403,6 +404,7 @@
         "Movies": "Film",
         "Combined": "Kombineret",
         "Tv": "TV",
+        "Genres": "Genres",
         "CardDetails": {
             "Availability": "Tilgængelighed",
             "Studio": "Studie",

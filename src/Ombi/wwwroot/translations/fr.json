@@ -221,6 +221,7 @@
             "Denied": "Les éléments sélectionnés ont été refusés"
         },
         "SuccessfullyApproved": "Approuvée avec succès",
+        "SuccessfullyDenied": "Refusé avec succès",
         "SuccessfullyDeleted": "Demande supprimée avec succès",
         "NowAvailable": "La demande est maintenant disponible",
         "NowUnavailable": "La demande est maintenant indisponible",
@@ -403,6 +404,7 @@
         "Movies": "Films",
         "Combined": "Tous",
         "Tv": "Séries",
+        "Genres": "Genres",
         "CardDetails": {
             "Availability": "Disponibilité",
             "Studio": "Studio",

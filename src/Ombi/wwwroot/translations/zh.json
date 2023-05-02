@@ -221,6 +221,7 @@
             "Denied": "所选项目已拒绝"
         },
         "SuccessfullyApproved": "批准成功",
+        "SuccessfullyDenied": "Successfully Denied",
         "SuccessfullyDeleted": "删除请求成功",
         "NowAvailable": "请求现在可观看",
         "NowUnavailable": "请求现在不可观看",
@@ -403,6 +404,7 @@
         "Movies": "电影",
         "Combined": "混合",
         "Tv": "电视节目",
+        "Genres": "Genres",
         "CardDetails": {
             "Availability": "可用性",
             "Studio": "工作室",
