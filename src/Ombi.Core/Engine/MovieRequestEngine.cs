@@ -77,7 +77,8 @@ namespace Ombi.Core.Engine
             var userDetails = await GetUser();
             var canRequestOnBehalf = model.RequestOnBehalf.HasValue();
 
-            var isAdmin = await UserManager.IsInRoleAsync(userDetails, OmbiRoles.PowerUser)
+            var isAdmin = Username.Equals("API", StringComparison.CurrentCultureIgnoreCase)
+                || await UserManager.IsInRoleAsync(userDetails, OmbiRoles.PowerUser)
                 || await UserManager.IsInRoleAsync(userDetails, OmbiRoles.Admin);
             if (canRequestOnBehalf && !isAdmin)
             {

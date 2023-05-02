@@ -161,7 +161,7 @@ namespace Ombi.Core.Engine
             var user = await GetUser();
             var canRequestOnBehalf = tv.RequestOnBehalf.HasValue();
 
-            var isAdmin = await UserManager.IsInRoleAsync(user, OmbiRoles.PowerUser) || await UserManager.IsInRoleAsync(user, OmbiRoles.Admin);
+            var isAdmin = Username.Equals("API", StringComparison.CurrentCultureIgnoreCase) || await UserManager.IsInRoleAsync(user, OmbiRoles.PowerUser) || await UserManager.IsInRoleAsync(user, OmbiRoles.Admin);
             if (tv.RequestOnBehalf.HasValue() && !isAdmin)
             {
                 return new RequestEngineResult
