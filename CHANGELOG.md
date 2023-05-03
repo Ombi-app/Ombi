@@ -1,3 +1,12 @@
+## [4.37.2](https://github.com/Ombi-app/Ombi/compare/v4.37.1...v4.37.2) (2023-05-03)
+
+
+### Bug Fixes
+
+* **jellyfin:** Fixed an issue where the sync could stop working. Removed unused properties so the deseralization no longer fails ([0e5e0ad](https://github.com/Ombi-app/Ombi/commit/0e5e0adf862701d0f672beff14ec0aa75e4b5220))
+
+
+
 ## [4.37.1](https://github.com/Ombi-app/Ombi/compare/v4.37.0...v4.37.1) (2023-05-02)
 
 
@@ -358,15 +367,6 @@
 
 
 ## [4.27.8](https://github.com/Ombi-app/Ombi/compare/v4.27.7...v4.27.8) (2022-10-07)
-
-
-
-## [4.27.7](https://github.com/Ombi-app/Ombi/compare/v4.27.6...v4.27.7) (2022-10-07)
-
-
-### Bug Fixes
-
-* Fixes default image for recently requested items. ([#4767](https://github.com/Ombi-app/Ombi/issues/4767)) ([2e6f35f](https://github.com/Ombi-app/Ombi/commit/2e6f35f89abb3dd3685ec8289f8620c7ef7072cd))
 
 
 
