@@ -33,7 +33,8 @@ namespace Ombi.Core.Engine
             INotificationHelper helper, IRuleEvaluator r, IMovieSender sender, ILogger<MovieRequestEngine> log,
             OmbiUserManager manager, IRepository<RequestLog> rl, ICacheService cache,
             ISettingsService<OmbiSettings> ombiSettings, IRepository<RequestSubscription> sub, IMediaCacheService mediaCacheService,
-            IFeatureService featureService)
+            IFeatureService featureService,
+            IUserPlayedMovieRepository userPlayedMovieRepository)
             : base(user, requestService, r, manager, cache, ombiSettings, sub)
         {
             MovieApi = movieApi;
@@ -43,6 +44,7 @@ namespace Ombi.Core.Engine
             _requestLog = rl;
             _mediaCacheService = mediaCacheService;
             _featureService = featureService;
+            _userPlayedMovieRepository = userPlayedMovieRepository;
         }
 
         private IMovieDbApi MovieApi { get; }
@@ -52,6 +54,7 @@ namespace Ombi.Core.Engine
         private readonly IRepository<RequestLog> _requestLog;
         private readonly IMediaCacheService _mediaCacheService;
         private readonly IFeatureService _featureService;
+        protected readonly IUserPlayedMovieRepository _userPlayedMovieRepository;
 
         /// <summary>
         /// Requests the movie.
@@ -252,7 +255,7 @@ namespace Ombi.Core.Engine
             var requests = await (OrderMovies(allRequests, orderFilter.OrderType)).Skip(position).Take(count)
                 .ToListAsync();
 
-            await CheckForSubscription(shouldHide.UserId, requests);
+            await FillAdditionalFields(shouldHide, requests);
             return new RequestsViewModel<MovieRequests>
             {
                 Collection = requests,
@@ -296,7 +299,7 @@ namespace Ombi.Core.Engine
             var total = requests.Count();
             requests = requests.Skip(position).Take(count).ToList();
 
-            await CheckForSubscription(shouldHide.UserId, requests);
+            await FillAdditionalFields(shouldHide, requests);
             return new RequestsViewModel<MovieRequests>
             {
                 Collection = requests,
@@ -381,7 +384,7 @@ namespace Ombi.Core.Engine
             // TODO fix this so we execute this on the server
             requests = requests.Skip(position).Take(count).ToList();
 
-            await CheckForSubscription(shouldHide.UserId, requests);
+            await FillAdditionalFields(shouldHide, requests);
             return new RequestsViewModel<MovieRequests>
             {
                 Collection = requests,
@@ -424,7 +427,7 @@ namespace Ombi.Core.Engine
             var total = requests.Count();
             requests = requests.Skip(position).Take(count).ToList();
 
-            await CheckForSubscription(shouldHide.UserId, requests);
+            await FillAdditionalFields(shouldHide, requests);
             return new RequestsViewModel<MovieRequests>
             {
                 Collection = requests,
@@ -506,17 +509,24 @@ namespace Ombi.Core.Engine
                 allRequests = await MovieRepository.GetWithUser().ToListAsync();
             }
 
-            await CheckForSubscription(shouldHide.UserId, allRequests);
+            await FillAdditionalFields(shouldHide, allRequests);
 
             return allRequests;
         }
 
         public async Task<MovieRequests> GetRequest(int requestId)
         {
+            var shouldHide = await HideFromOtherUsers();
+            // TODO: this query should return the request only if the user is allowed to see it (see shouldHide implementations)
             var request = await MovieRepository.GetWithUser().Where(x => x.Id == requestId).FirstOrDefaultAsync();
-            await CheckForSubscription((await GetUser()).Id, new List<MovieRequests> { request });
+            await FillAdditionalFields(shouldHide, new List<MovieRequests> { request });
 
             return request;
+        }
+        private async Task FillAdditionalFields(HideResult shouldHide, List<MovieRequests> requests)
+        {
+            await CheckForSubscription(shouldHide.UserId, requests);
+            await CheckForPlayed(shouldHide, requests);
         }
 
         private async Task CheckForSubscription(string UserId, List<MovieRequests> movieRequests)
@@ -543,6 +553,23 @@ namespace Ombi.Core.Engine
                 }
             }
         }
+        
+        private async Task CheckForPlayed(HideResult shouldHide, List<MovieRequests> movieRequests)
+        {
+            var theMovieDbIds = movieRequests.Select(x => x.TheMovieDbId);
+            var plays = await _userPlayedMovieRepository.GetAll().Where(x =>
+                theMovieDbIds.Contains(x.TheMovieDbId))
+                .ToListAsync();
+            foreach (var request in movieRequests)
+            {
+                request.WatchedByRequestedUser = plays.Exists(x => x.TheMovieDbId == request.TheMovieDbId && x.UserId == request.RequestedUserId);
+                
+                if (!shouldHide.Hide) 
+                {
+                    request.PlayedByUsersCount = plays.Count(x => x.TheMovieDbId == request.TheMovieDbId);
+                }
+            }
+        }
 
         /// <summary>
         /// Searches the movie request.
@@ -563,7 +590,7 @@ namespace Ombi.Core.Engine
             }
 
             var results = allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase)).ToList();
-            await CheckForSubscription(shouldHide.UserId, results);
+            await FillAdditionalFields(shouldHide, results);
 
             return results;
         }

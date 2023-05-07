@@ -24,10 +24,11 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     public dataSource: MatTableDataSource<IMovieRequests>;
     public resultsLength: number;
     public isLoadingResults = true;
-    public displayedColumns: string[] = ['title', 'requestedUser.requestedBy',  'status', 'requestStatus','requestedDate', 'actions'];
+    public displayedColumns: string[] = ['title', 'requestedUser.requestedBy',  'status', 'requestStatus','requestedDate'];
     public gridCount: string = "15";
     public isAdmin: boolean;
     public is4kEnabled = false;
+    public isPlayedSyncEnabled = false;
     public manageOwnRequests: boolean;
     public defaultSort: string = "requestedDate";
     public defaultOrder: string = "desc";
@@ -65,10 +66,9 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
         }
 
         this.is4kEnabled = this.featureFacade.is4kEnabled();
-        if ((this.isAdmin || this.auth.hasRole("Request4KMovie"))
-            && this.is4kEnabled) {
-            this.displayedColumns.splice(4, 0, 'has4kRequest');
-        }
+        this.isPlayedSyncEnabled = this.featureFacade.isPlayedSyncEnabled();
+
+        this.addDynamicColumns();
 
         const defaultCount = this.storageService.get(this.storageKeyGridCount);
         const defaultSort = this.storageService.get(this.storageKey);
@@ -86,6 +86,20 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
         if (defaultFilter) {
             this.currentFilter = defaultFilter;
         }
+    }
+
+    addDynamicColumns() {
+      if ((this.isAdmin || this.auth.hasRole("Request4KMovie"))
+          && this.is4kEnabled) {
+          this.displayedColumns.splice(4, 0, 'has4kRequest');
+      }
+
+      if (this.isPlayedSyncEnabled) {
+          this.displayedColumns.push('watchedByRequestedUser');
+      }
+
+      // always put the actions column at the end
+      this.displayedColumns.push('actions');
     }
 
     public async ngAfterViewInit() {
