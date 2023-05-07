@@ -841,7 +841,7 @@ Here are some of the features Ombi has:
         <a href="https://github.com/phildups7">
             <img src="https://avatars.githubusercontent.com/u/60622768?v=4" width="50;" alt="phildups7"/>
             <br />
-            <sub><b>phildups7</b></sub>
+            <sub><b>Phildups7</b></sub>
         </a>
     </td></tr>
 <tr>
