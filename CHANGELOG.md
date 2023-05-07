@@ -1,3 +1,17 @@
+# [4.38.0](https://github.com/Ombi-app/Ombi/compare/v4.37.3...v4.38.0) (2023-05-07)
+
+
+### Bug Fixes
+
+* remove sort header ([969bc7b](https://github.com/Ombi-app/Ombi/commit/969bc7bb25ea900ab9199509b079b36843e5bd6f))
+
+
+### Features
+
+* **emby:** Show watched status for Movie requests ([9cfb10b](https://github.com/Ombi-app/Ombi/commit/9cfb10bb1ee69067a6f47bd2c8a72d4e6834350e))
+
+
+
 ## [4.37.3](https://github.com/Ombi-app/Ombi/compare/v4.37.2...v4.37.3) (2023-05-07)
 
 
@@ -363,15 +377,6 @@
 
 * **plex:** :bug: Fixed not being able to enable watchlist requests in the Plex settings ([3e5158e](https://github.com/Ombi-app/Ombi/commit/3e5158ef9cda58ea2dd3be143f07aa5433691d79))
 * Reworked the version check ([#4719](https://github.com/Ombi-app/Ombi/issues/4719)) ([#4781](https://github.com/Ombi-app/Ombi/issues/4781)) ([55855c5](https://github.com/Ombi-app/Ombi/commit/55855c5adda3cd1c51b7fbd0c19b469fc813f98e))
-
-
-
-# [4.28.0](https://github.com/Ombi-app/Ombi/compare/v4.27.8...v4.28.0) (2022-10-07)
-
-
-### Features
-
-* **plex:** ✨ Added the ability to configure the watchlist to request the whole TV show rather than latest season ([#4774](https://github.com/Ombi-app/Ombi/issues/4774)) ([fa65712](https://github.com/Ombi-app/Ombi/commit/fa65712bd570fe8d5d21b8ca0abe182b84960017))
 
 
 
