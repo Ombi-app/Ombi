@@ -1,3 +1,13 @@
+## [4.38.1](https://github.com/Ombi-app/Ombi/compare/v4.38.0...v4.38.1) (2023-05-09)
+
+
+### Bug Fixes
+
+* **API:** Allow RequestOnBehalf rights if requested from the API ([#4919](https://github.com/Ombi-app/Ombi/issues/4919)) ([bb6dedd](https://github.com/Ombi-app/Ombi/commit/bb6deddfaecb3d6c7c3c6970414444b619bb9106))
+* **notificaitons:** Add the RequestedByAlias field to the Notification Message ([7e9c8be](https://github.com/Ombi-app/Ombi/commit/7e9c8bec6b02bb4e11f8db50394e493d4dd07723))
+
+
+
 # [4.38.0](https://github.com/Ombi-app/Ombi/compare/v4.37.3...v4.38.0) (2023-05-07)
 
 
@@ -367,16 +377,6 @@
 ### Features
 
 * Provide a flag for missing users on Plex Server ([#4688](https://github.com/Ombi-app/Ombi/issues/4688)) ([#4778](https://github.com/Ombi-app/Ombi/issues/4778)) ([b4a14c2](https://github.com/Ombi-app/Ombi/commit/b4a14c2d28218409390e517b226130e3e84efee1))
-
-
-
-## [4.28.1](https://github.com/Ombi-app/Ombi/compare/v4.28.0...v4.28.1) (2022-10-19)
-
-
-### Bug Fixes
-
-* **plex:** :bug: Fixed not being able to enable watchlist requests in the Plex settings ([3e5158e](https://github.com/Ombi-app/Ombi/commit/3e5158ef9cda58ea2dd3be143f07aa5433691d79))
-* Reworked the version check ([#4719](https://github.com/Ombi-app/Ombi/issues/4719)) ([#4781](https://github.com/Ombi-app/Ombi/issues/4781)) ([55855c5](https://github.com/Ombi-app/Ombi/commit/55855c5adda3cd1c51b7fbd0c19b469fc813f98e))
 
 
 
