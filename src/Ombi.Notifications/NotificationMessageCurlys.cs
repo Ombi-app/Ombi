@@ -153,6 +153,7 @@ namespace Ombi.Notifications
             RequestedUser = req?.RequestedUser?.UserName;
             RequestedDate = req?.RequestedDate.ToString("D");
             DetailsUrl = GetDetailsUrl(s, req);
+            RequestedByAlias = req?.RequestedByAlias;
 
             if (Type.IsNullOrEmpty())
             {
@@ -276,6 +277,7 @@ namespace Ombi.Notifications
         // User Defined
         public string RequestId { get; set; }
         public string RequestedUser { get; set; }
+        public string RequestedByAlias { get; set; }
         public string UserName { get; set; }
         public string IssueUser => UserName;
         public string Alias { get; set; }
@@ -339,6 +341,7 @@ namespace Ombi.Notifications
             { nameof(IssueUser), IssueUser },
             { nameof(UserName), UserName },
             { nameof(Alias), Alias },
+            { nameof(RequestedByAlias), RequestedByAlias },
             { nameof(UserPreference), UserPreference },
             { nameof(DenyReason), DenyReason },
             { nameof(AvailableDate), AvailableDate },
