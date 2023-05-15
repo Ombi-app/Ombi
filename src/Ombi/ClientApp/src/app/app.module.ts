@@ -46,6 +46,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatPaginatorI18n } from "./localization/MatPaginatorI18n";
 import { MatPaginatorIntl } from "@angular/material/paginator";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -150,6 +151,7 @@ export function JwtTokenGetter() {
         OverlayModule,
         MatCheckboxModule,
         MatProgressSpinnerModule,
+        MatProgressBarModule,
         JwtModule.forRoot({
             config: {
                 tokenGetter: JwtTokenGetter,

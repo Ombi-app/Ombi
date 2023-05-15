@@ -34,5 +34,6 @@ namespace Ombi.Api.Emby
         Task<EmbyItemContainer<EmbySeries>> RecentlyAddedShows(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri);
         
         Task<EmbyItemContainer<EmbyMovie>> GetMoviesPlayed(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri);
+        Task<EmbyItemContainer<EmbyEpisodes>> GetTvPlayed(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri);
     }
 }
