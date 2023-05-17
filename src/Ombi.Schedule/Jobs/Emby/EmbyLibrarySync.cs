@@ -35,7 +35,7 @@ namespace Ombi.Schedule.Jobs.Emby
         public virtual async Task Execute(IJobExecutionContext context)
         {
             
-            JobDataMap dataMap = context.JobDetail.JobDataMap;
+            JobDataMap dataMap = context.MergedJobDataMap;
             if (dataMap.TryGetValue(JobDataKeys.EmbyRecentlyAddedSearch, out var recentlyAddedObj))
             {
                 recentlyAdded = Convert.ToBoolean(recentlyAddedObj);
