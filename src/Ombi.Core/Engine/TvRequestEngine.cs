@@ -905,26 +905,48 @@ namespace Ombi.Core.Engine
             }
         }
 
+        private class EpisodeKey
+        {
+            public int SeasonNumber;
+            public int EpisodeNumber;
+        }
+
         private void CheckForPlayed(HideResult shouldHide, List<ChildRequests> childRequests)
         {
             var theMovieDbIds = childRequests.Select(x => x.Id);
             foreach (var request in childRequests)
             {
-                // TODO: consider only episodes that are part of the request (request.SeasonRequests.Episodes)
-                var playedCount = _userPlayedEpisodeRepository.GetAll().Count(x => x.TheMovieDbId == request.Id && x.UserId == request.RequestedUserId);
-                    
-                var toWatchCount = countRequestedEpisodes(request);
+                var requestedEpisodes = getEpisodesKeys(request);
+
+                var playedEpisodes = _userPlayedEpisodeRepository
+                    .GetAll()
+                    .Where(x => x.TheMovieDbId == request.Id && x.UserId == request.RequestedUserId)
+                    .AsEnumerable()
+                    .Join(requestedEpisodes,
+                        played => new { played.SeasonNumber, played.EpisodeNumber },
+                        requested => new { requested.SeasonNumber, requested.EpisodeNumber },
+                        (played, requested) => new { played });
+
+                var playedCount = playedEpisodes.Count();
+                var toWatchCount = requestedEpisodes.Count();
                 request.RequestedUserPlayedProgress = 100 * playedCount / toWatchCount;
                 
             }
         }
 
-        private int countRequestedEpisodes(ChildRequests request)
+        private List<EpisodeKey> getEpisodesKeys(ChildRequests request)
         {
-            int result = 0;
+            List<EpisodeKey> result = new List<EpisodeKey>();
             foreach(var season in request.SeasonRequests) 
             {
-                result += season.Episodes.Count();
+                foreach(var episode in season.Episodes) 
+                {
+                    result.Add(new EpisodeKey
+                    {
+                        SeasonNumber = season.SeasonNumber,
+                        EpisodeNumber = episode.EpisodeNumber
+                    });
+                }
             }
             return result;
         }
