@@ -1,3 +1,7 @@
+## [4.35.11](https://github.com/Ombi-app/Ombi/compare/v4.35.10...v4.35.11) (2023-05-17)
+
+
+
 ## [4.35.10](https://github.com/Ombi-app/Ombi/compare/v4.22.5...v4.35.10) (2023-02-25)
 
 
@@ -336,15 +340,6 @@
 ### Bug Fixes
 
 * **settings:** :bug: Fixed an issue where we were not displaying the excluded keyworks correctly in the TheMovieDbSettings page ([d3b3316](https://github.com/Ombi-app/Ombi/commit/d3b3316cbac18356b2f6b0912a3deb2c183e6534))
-
-
-
-## [4.11.7](https://github.com/Ombi-app/Ombi/compare/v4.11.6...v4.11.7) (2022-02-12)
-
-
-### Bug Fixes
-
-* **notifications:** :bug: This is a fix for some of the duplicate notification issues [#3825](https://github.com/Ombi-app/Ombi/issues/3825) ([22bb422](https://github.com/Ombi-app/Ombi/commit/22bb4226ead2d62e8c2c2c05be47d7da621402e2))
 
 
 
