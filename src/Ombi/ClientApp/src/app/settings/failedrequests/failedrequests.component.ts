@@ -8,6 +8,7 @@ import { RequestRetryService } from "../../services";
 })
 export class FailedRequestsComponent implements OnInit {
 
+    public columnsToDisplay = ["title", "type", "retryCount", "errorDescription", "deleteBtn"];
     public vm: IFailedRequestsViewModel[];
     public RequestType = RequestType;
 

@@ -7,31 +7,26 @@
             <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
 
                 <div class="form-group">
-                    <div class="checkbox">
-                        <input type="checkbox" id="enable" formControlName="enabled">
-                        <label for="enable">Enabled</label>
-                    </div>
+                    <mat-checkbox id="enable" formControlName="enabled">Enabled</mat-checkbox>
                 </div>
 
                 <div class="form-group">
-                    <label for="baseUrl" class="control-label">Base URL</label>
-
-                    <input type="text" class="form-control form-control-custom " id="webhookUrl" name="webhookUrl" [ngClass]="{'form-error': form.get('webhookUrl').hasError('required')}" formControlName="webhookUrl" pTooltip="Enter the URL of your webhook server.">
-                    <small *ngIf="form.get('webhookUrl').hasError('required')" class="error-text">The Webhook URL is required</small>
+                    <mat-form-field>
+                        <mat-label>Base URL</mat-label>
+                        <input matInput type="text" id="webhookUrl" name="webhookUrl" [ngClass]="{'form-error': form.get('webhookUrl').hasError('required')}" formControlName="webhookUrl" pTooltip="Enter the URL of your webhook server.">
+                    </mat-form-field>
                 </div>
 
                 <div class="form-group">
-                    <label for="applicationToken" class="control-label">Application Token
-                        <i class="far fa-question-circle" pTooltip="Optional authentication token. Will be sent as 'Access-Token' header."></i>
-                    </label>
-
-                    <input type="text" class="form-control form-control-custom " id="applicationToken" name="applicationToken" [ngClass]="{'form-error': form.get('applicationToken').hasError('required')}" formControlName="applicationToken" pTooltip="Enter your Application token from Webhook.">
-                    <small *ngIf="form.get('applicationToken').hasError('required')" class="error-text">The Application Token is required</small>
+                    <mat-form-field>
+                        <mat-label>Application Token</mat-label>
+                          <input matInput type="text" id="applicationToken" name="applicationToken" [ngClass]="{'form-error': form.get('applicationToken').hasError('required')}" formControlName="applicationToken" pTooltip="Optional authentication token. Will be sent as 'Access-Token' header.">
+                    </mat-form-field>
                 </div>
 
                 <div class="form-group">
                     <div>
-                        <button [disabled]="form.invalid" mat-raised-button type="button" (click)="test(form)" class="btn btn-primary-outline">
+                        <button [disabled]="form.invalid" mat-raised-button type="button" (click)="test(form)">
                             Test
                             <div id="spinner"></div>
                         </button>
@@ -40,7 +35,7 @@
 
                 <div class="form-group">
                     <div>
-                        <button [disabled]="form.invalid" mat-raised-button type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                        <button [disabled]="form.invalid" mat-raised-button type="submit" id="save">Submit</button>
                     </div>
                 </div>
             </form>
