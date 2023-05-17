@@ -1,3 +1,17 @@
+# [4.39.0](https://github.com/Ombi-app/Ombi/compare/v4.38.2...v4.39.0) (2023-05-17)
+
+
+### Bug Fixes
+
+* **emby:** Fix Emby played sync running a full sync during recently added sync ([#4932](https://github.com/Ombi-app/Ombi/issues/4932)) ([9424586](https://github.com/Ombi-app/Ombi/commit/9424586e9c1b622b6475aeb8ee3cf4a8f346da6e))
+
+
+### Features
+
+* Hide watched status when request is not available ([#4934](https://github.com/Ombi-app/Ombi/issues/4934)) ([82c7f1c](https://github.com/Ombi-app/Ombi/commit/82c7f1c44fd7c87d57cc2b0c34a10fcda7628f4e))
+
+
+
 ## [4.38.2](https://github.com/Ombi-app/Ombi/compare/v4.38.1...v4.38.2) (2023-05-17)
 
 
@@ -356,16 +370,6 @@
 ### Bug Fixes
 
 * **plex:** Fixed an issue where sometimes the availability checker would throw an exception when checking episodes ([17ba202](https://github.com/Ombi-app/Ombi/commit/17ba2020ee0950c2c0e0e03fdb7835b579da75a9))
-
-
-
-## [4.29.1](https://github.com/Ombi-app/Ombi/compare/v4.29.0...v4.29.1) (2022-10-22)
-
-
-### Bug Fixes
-
-* Consistently reset loading flag when requesting movies on discover page. ([#4777](https://github.com/Ombi-app/Ombi/issues/4777)) ([a40ab5c](https://github.com/Ombi-app/Ombi/commit/a40ab5cddf769d4147696eca50c1610b466ab99b))
-* **sonarr:** :bug: Fixed an issue where the language list didn't correctly load for power users in the advanced options [#4782](https://github.com/Ombi-app/Ombi/issues/4782) ([2173670](https://github.com/Ombi-app/Ombi/commit/217367047d1568070dd507e54ad3fd2c68f05b88))
 
 
 
