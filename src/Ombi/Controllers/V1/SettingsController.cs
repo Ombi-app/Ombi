@@ -652,7 +652,9 @@ namespace Ombi.Controllers.V1
                 try
                 {
                     var isValid = CronExpression.IsValidExpression(expression);
-                    if (!isValid)
+                    CronExpression cron = new CronExpression(expression);
+                    DateTimeOffset? nextFireUTCTime = cron.GetNextValidTimeAfter(DateTime.Now);
+                    if (!isValid || nextFireUTCTime == null)
                     {
                         return new JobSettingsViewModel
                         {

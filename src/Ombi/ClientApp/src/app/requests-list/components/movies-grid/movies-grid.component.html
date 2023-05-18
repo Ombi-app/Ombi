@@ -52,7 +52,7 @@
 
         <ng-container matColumnDef="requestedUser.requestedBy">
             <th mat-header-cell *matHeaderCellDef> {{'Requests.RequestedBy' | translate}} </th>
-            <td mat-cell id="requestedBy{{element.id}}" *matCellDef="let element"> {{element.requestedUser?.userAlias}} </td>
+            <td mat-cell id="requestedBy{{element.id}}" *matCellDef="let element"> {{element.requestedByAlias ? element.requestedByAlias : element.requestedUser?.userAlias}} </td>
         </ng-container>
 
 
@@ -78,6 +78,23 @@
         <ng-container matColumnDef="requestStatus">
             <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{ 'Requests.RequestStatus' | translate}} </th>
             <td mat-cell id="requestedStatus{{element.id}}"  *matCellDef="let element"> {{element.requestStatus | translate}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="watchedByRequestedUser">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              disableClear
+              matTooltip="{{ 'Requests.WatchedTooltip' | translate}}">
+              {{ 'Requests.Watched' | translate}}
+            </th>
+            <td mat-cell id="watchedByRequestedUser{{element.id}}"  *matCellDef="let element">
+                <mat-checkbox
+                  [checked]="element.watchedByRequestedUser"
+                  disabled="true"
+                  matTooltip="{{'Requests.WatchedByUsersCount' | translate: {count: element.playedByUsersCount} }}">
+                </mat-checkbox>
+            </td>
         </ng-container>
 
         <ng-container matColumnDef="actions">

@@ -27,7 +27,7 @@ namespace Ombi.HealthChecks.Checks
                 var settings = await settingsProvider.GetSettingsAsync();
                 if (settings == null)
                 {
-                    return HealthCheckResult.Healthy("Plex is not confiured.");
+                    return HealthCheckResult.Healthy("Plex is not configured.");
                 }
 
                 var taskResult = new List<Task<PlexStatus>>();

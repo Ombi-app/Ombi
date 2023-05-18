@@ -38,7 +38,7 @@
 
         <ng-container matColumnDef="requestedBy">
             <th mat-header-cell *matHeaderCellDef> {{'Requests.RequestedBy' | translate}} </th>
-            <td mat-cell id="requestedBy{{element.id}}" *matCellDef="let element"> {{element.requestedUser.userAlias}} </td>
+            <td mat-cell id="requestedBy{{element.id}}" *matCellDef="let element"> {{element.requestedByAlias ? element.requestedByAlias : element.requestedUser.userAlias}} </td>
         </ng-container>
 
         <ng-container matColumnDef="requestedDate">

@@ -24,10 +24,11 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     public dataSource: MatTableDataSource<IMovieRequests>;
     public resultsLength: number;
     public isLoadingResults = true;
-    public displayedColumns: string[] = ['title', 'requestedUser.requestedBy',  'status', 'requestStatus','requestedDate', 'actions'];
+    public displayedColumns: string[];
     public gridCount: string = "15";
     public isAdmin: boolean;
     public is4kEnabled = false;
+    public isPlayedSyncEnabled = false;
     public manageOwnRequests: boolean;
     public defaultSort: string = "requestedDate";
     public defaultOrder: string = "desc";
@@ -60,15 +61,10 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     public ngOnInit() {
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
         this.manageOwnRequests = this.auth.hasRole("ManageOwnRequests")
-        if (this.isAdmin) {
-            this.displayedColumns.unshift('select');
-        }
 
         this.is4kEnabled = this.featureFacade.is4kEnabled();
-        if ((this.isAdmin || this.auth.hasRole("Request4KMovie"))
-            && this.is4kEnabled) {
-            this.displayedColumns.splice(4, 0, 'has4kRequest');
-        }
+        this.isPlayedSyncEnabled = this.featureFacade.isPlayedSyncEnabled();
+
 
         const defaultCount = this.storageService.get(this.storageKeyGridCount);
         const defaultSort = this.storageService.get(this.storageKey);
@@ -88,7 +84,30 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
         }
     }
 
+    setDisplayedColumns() {
+      this.displayedColumns = ['title', 'requestedUser.requestedBy',  'status', 'requestStatus','requestedDate'];
+
+      if (this.isAdmin) {
+        this.displayedColumns.unshift('select');
+      }
+
+      if ((this.isAdmin || this.auth.hasRole("Request4KMovie"))
+          && this.is4kEnabled) {
+          this.displayedColumns.splice(4, 0, 'has4kRequest');
+      }
+
+      if (this.isPlayedSyncEnabled
+        && ( this.currentFilter == RequestFilterType.All || this.currentFilter == RequestFilterType.Available ) ) {
+          this.displayedColumns.push('watchedByRequestedUser');
+      }
+
+      // always put the actions column at the end
+      this.displayedColumns.push('actions');
+    }
+
     public async ngAfterViewInit() {
+
+        this.setDisplayedColumns();
 
         this.storageService.save(this.storageKeyGridCount, this.gridCount);
         this.storageService.save(this.storageKeyCurrentFilter, (+this.currentFilter).toString());

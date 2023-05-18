@@ -159,6 +159,9 @@
         "RequestedBy": "Efterfrågats av",
         "Status": "Status",
         "RequestStatus": "Status för begäran",
+        "Watched": "Watched",
+        "WatchedTooltip": "The user who made the request has watched it",
+        "WatchedByUsersCount": "{{count}} users have watched this.",
         "Denied": " Nekad:",
         "TheatricalRelease": "Biopremiär: {{date}}",
         "ReleaseDate": "Releasedatum: {{date}}",
@@ -221,6 +224,7 @@
             "Denied": "Successfully denied selected items"
         },
         "SuccessfullyApproved": "Successfully Approved",
+        "SuccessfullyDenied": "Successfully Denied",
         "SuccessfullyDeleted": "Request successfully deleted",
         "NowAvailable": "Request is now available",
         "NowUnavailable": "Request is now unavailable",
@@ -403,6 +407,7 @@
         "Movies": "Filmer",
         "Combined": "Kombinerad",
         "Tv": "TV",
+        "Genres": "Genres",
         "CardDetails": {
             "Availability": "Tillgänglighet",
             "Studio": "Filmstudio",

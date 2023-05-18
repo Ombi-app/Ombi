@@ -18,7 +18,7 @@ export class RadarrSettingsState {
 
     @Action(LoadSettings)
     public load({ setState }: StateContext<RadarrState>): Observable<RadarrState> {
-        const isAdmin = this.authService.isAdmin();
+        const isAdmin = this.authService.hasRole("Admin");
         const calls = isAdmin ? [this.settingsService.getRadarr()] : [of({})];
 
         return combineLatest(calls).pipe(

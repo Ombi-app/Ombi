@@ -18,7 +18,7 @@ export class SonarrSettingsState {
 
     @Action(LoadSettings)
     public load({ setState }: StateContext<SonarrState>): Observable<SonarrState> {
-        const isAdmin = this.authService.isAdmin();
+        const isAdmin = this.authService.hasRole("Admin");
         const calls = isAdmin ? [this.sonarrService.getVersion(), this.settingsService.getSonarr()] : [of(""), of({})];
 
         return combineLatest(calls).pipe(
@@ -31,7 +31,7 @@ export class SonarrSettingsState {
     }
 
     @Action(UpdateSettings)
-    public enable(ctx: StateContext<SonarrState>, { settings }: UpdateSettings): Observable<SonarrState> {
+    public update(ctx: StateContext<SonarrState>, { settings }: UpdateSettings): Observable<SonarrState> {
         const state = ctx.getState();
         return this.settingsService.saveSonarr(settings).pipe(
             tap((_) => ctx.setState({...state, settings})),

@@ -1,0 +1,13 @@
+<div class="genre-container" *ngIf="movieGenreList$ | async as movies">
+    <mat-button-toggle-group name="discoverMode" (change)="toggleChanged($event, genre.type)" *ngFor="let genre of movies"
+        class="discover-filter-buttons-group">
+        <mat-button-toggle value="{{genre.id}}" class="discover-filter-button">{{genre.name}}</mat-button-toggle>
+    </mat-button-toggle-group>
+</div>
+<div class="genre-container" *ngIf="tvGenreList$ | async as tv">
+    <mat-button-toggle-group name="discoverMode" (change)="toggleChanged($event, genre.type)" *ngFor="let genre of tv"
+        class="discover-filter-buttons-group">
+        <mat-button-toggle value="{{genre.id}}" class="discover-filter-button">{{genre.name}}</mat-button-toggle>
+    </mat-button-toggle-group>
+    <mat-spinner *ngIf="isLoading" [diameter]="30"></mat-spinner>
+</div>

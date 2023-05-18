@@ -8,6 +8,8 @@ import { Router } from "@angular/router";
 import { AuthService } from "app/auth/auth.service";
 import { NotificationService, RequestService } from "app/services";
 import { TranslateService } from "@ngx-translate/core";
+import { DenyDialogComponent } from '../../../media-details/components/shared/deny-dialog/deny-dialog.component';
+import { MatDialog } from "@angular/material/dialog";
 
 export enum DiscoverType {
     Upcoming,
@@ -42,7 +44,8 @@ export class RecentlyRequestedListComponent implements OnInit, OnDestroy {
         private router: Router,
         private authService: AuthService,
         private notificationService: NotificationService,
-        private translateService: TranslateService) {
+        private translateService: TranslateService,
+        public dialog: MatDialog) {
         Carousel.prototype.onTouchMove = () => {};
         this.responsiveOptions = ResponsiveOptions;
     }
@@ -79,6 +82,20 @@ export class RecentlyRequestedListComponent implements OnInit, OnDestroy {
                 ).subscribe();
                 break;
         }
+    }
+
+    public deny(request: IRecentlyRequested) {
+        const dialogRef = this.dialog.open(DenyDialogComponent, {
+            width: '250px',
+            data: { requestId: request.requestId, is4K: false, requestType: request.type }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+              this.notificationService.success(this.translateService.instant("Requests.SuccessfullyDenied"));
+              request.denied = true;
+          }
+        });
     }
 
     private handleApproval(result: IRequestEngineResult, request: IRecentlyRequested) {

@@ -15,4 +15,9 @@ export class FeaturesSelectors {
         return features.filter(x => x.name === "Movie4KRequests")[0].enabled;
     }
 
+    @Selector([FeaturesSelectors.features])
+    public static isPlayedSyncEnabled(features: IFeatureEnablement[]): boolean {
+        return features.filter(x => x.name === "PlayedSync")[0].enabled;
+    }
+
 }

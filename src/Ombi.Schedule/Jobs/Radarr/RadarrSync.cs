@@ -46,8 +46,8 @@ namespace Ombi.Schedule.Jobs.Radarr
                 await tran.CommitAsync();
 
                 var radarrSettings = _radarrSettings.GetSettingsAsync();
-                var radarr4kSettings = _radarr4kSettings.GetSettingsAsync();
                 await Process(await radarrSettings);
+                var radarr4kSettings = _radarr4kSettings.GetSettingsAsync();
                 await Process(await radarr4kSettings);
             }
             catch (Exception)

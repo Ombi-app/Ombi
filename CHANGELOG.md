@@ -1,345 +1,375 @@
-## [4.35.11](https://github.com/Ombi-app/Ombi/compare/v4.35.10...v4.35.11) (2023-05-17)
-
-
-
-## [4.35.10](https://github.com/Ombi-app/Ombi/compare/v4.22.5...v4.35.10) (2023-02-25)
-
-
-
-## [4.22.5](https://github.com/Ombi-app/Ombi/compare/v4.16.12...v4.22.5) (2022-08-05)
-
-
-
-## [4.16.12](https://github.com/Ombi-app/Ombi/compare/v4.16.11...v4.16.12) (2022-04-19)
-
-
-
-## [4.16.11](https://github.com/Ombi-app/Ombi/compare/v4.16.10...v4.16.11) (2022-04-14)
+# [4.39.0](https://github.com/Ombi-app/Ombi/compare/v4.38.2...v4.39.0) (2023-05-17)
 
 
 ### Bug Fixes
 
-* Set the default job for the watchlist import to hourly instead of daily ([75906af](https://github.com/Ombi-app/Ombi/commit/75906af0adee3e3c68d825c3aaa8f7b918461b1f))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([0e8a64b](https://github.com/Ombi-app/Ombi/commit/0e8a64b8ca00d210fbe843ac2c3f6af218d80cbc))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([7b0ad61](https://github.com/Ombi-app/Ombi/commit/7b0ad61bfcff3986b33180dc64022cba7ea8eefb))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([4fc2c1f](https://github.com/Ombi-app/Ombi/commit/4fc2c1f24534085a783a3d5791f5533b68272153))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([76ab733](https://github.com/Ombi-app/Ombi/commit/76ab733b91791e4d93d184f3c7d0779c6a388695))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([06e4cef](https://github.com/Ombi-app/Ombi/commit/06e4cefa7b4e55b860da9a64f461f6ec8fa17367))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([c12d89d](https://github.com/Ombi-app/Ombi/commit/c12d89d6781a337520977ad285f8d08c93f434dd))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([bc0c2f6](https://github.com/Ombi-app/Ombi/commit/bc0c2f622e34fb5a2711039d9ed7aad34f982b15))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([e4b00e6](https://github.com/Ombi-app/Ombi/commit/e4b00e6b3468bd9389eeb02fc6ad7daf27abc3b3))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([d1998d3](https://github.com/Ombi-app/Ombi/commit/d1998d326f999a38586d0a351a20c5448df95842))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([bee4ccb](https://github.com/Ombi-app/Ombi/commit/bee4ccb804594e7385b1fbdc9fe2ef5c42e0d21f))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([80233ed](https://github.com/Ombi-app/Ombi/commit/80233ed560cc976e83570d0655c3472f20171fb3))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([8a78adc](https://github.com/Ombi-app/Ombi/commit/8a78adc9bb62f277f2b213dcb3847ed6d0089fcb))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([d04c60a](https://github.com/Ombi-app/Ombi/commit/d04c60aa5909b47ba6bffa6f66b03079cbd43521))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([92a785e](https://github.com/Ombi-app/Ombi/commit/92a785e736fa4b72a45270da2d0f4661df433078))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([634982d](https://github.com/Ombi-app/Ombi/commit/634982df2661cefab5ea9f5163fe04a005cc0171))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([b404baa](https://github.com/Ombi-app/Ombi/commit/b404baad6d0aeaa1561701e0db8db4e78613a364))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([d14f11e](https://github.com/Ombi-app/Ombi/commit/d14f11e0eb20ab0a68e765ee77968b3b3e54e995))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([7cf64f9](https://github.com/Ombi-app/Ombi/commit/7cf64f909d78908edaabeffb8a39a7d02e73fe7e))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([0c9e1ec](https://github.com/Ombi-app/Ombi/commit/0c9e1ec090827080cc8f7393e5e91456ff37d691))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([3b0b730](https://github.com/Ombi-app/Ombi/commit/3b0b730cb02efe24f6d4026e5fdb20d37e495119))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([6ed1a03](https://github.com/Ombi-app/Ombi/commit/6ed1a03b7ff4077f09ea9e13394b18b0d138f4c3))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([2941acd](https://github.com/Ombi-app/Ombi/commit/2941acd3b2ec74a5e6aeea275ab5a39d2653f37f))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([c075a1a](https://github.com/Ombi-app/Ombi/commit/c075a1a66784d975eaf60f2dfbbcbe048f2f63d7))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([76bd81c](https://github.com/Ombi-app/Ombi/commit/76bd81c3ca55a98c6ec944a838dc01294a6193a6))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([0d38275](https://github.com/Ombi-app/Ombi/commit/0d3827507e002bcf58f673e97ffcc3bd25dcf337))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([5c99601](https://github.com/Ombi-app/Ombi/commit/5c99601b07aec1a65d0186a4c4327440811e64c6))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([01546a0](https://github.com/Ombi-app/Ombi/commit/01546a0f7f86379528b486463246ef9bdfb9033e))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([d7fea78](https://github.com/Ombi-app/Ombi/commit/d7fea7843aaaab7ddff8dc31ca6d2a9117471dcc))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([1a6b95d](https://github.com/Ombi-app/Ombi/commit/1a6b95d45c220310213b8d811272a63f0f6ff42b))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([fa10174](https://github.com/Ombi-app/Ombi/commit/fa1017422c4efd4b0897871bd3c671151774d7c3))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([0c31e62](https://github.com/Ombi-app/Ombi/commit/0c31e628df376aac6d56ae67c7c705a9a4a7c080))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([6399643](https://github.com/Ombi-app/Ombi/commit/63996437a02fe10ffae6822ffa15369bec0a6b36))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([5826e2d](https://github.com/Ombi-app/Ombi/commit/5826e2d9a1c3f1210a87fa270dc0c81bac32944a))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([d434514](https://github.com/Ombi-app/Ombi/commit/d43451405be489254d7cdc7755d5f516a1e495a5))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([0b9596d](https://github.com/Ombi-app/Ombi/commit/0b9596d807178f5e071113ec0347868ec7f0960b))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([8c4c0b2](https://github.com/Ombi-app/Ombi/commit/8c4c0b262978c1303767af360d802c4b4c2b4d24))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([289ab77](https://github.com/Ombi-app/Ombi/commit/289ab77b0e04aae235b6f6cebc86e0a8d1f0cf2b))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([30e3417](https://github.com/Ombi-app/Ombi/commit/30e3417285a4eed18d429d7776f0e74096e834c0))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([6c0a5da](https://github.com/Ombi-app/Ombi/commit/6c0a5dadd4b8f37760252eb0fe7f88908f55506d))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([d5bf969](https://github.com/Ombi-app/Ombi/commit/d5bf9692ce1fc0ccfe7beca6dd200c78be177bdc))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([8a9e7ea](https://github.com/Ombi-app/Ombi/commit/8a9e7ea588aefbcd73ed82625887e3614e1703ea))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([01047a3](https://github.com/Ombi-app/Ombi/commit/01047a3fd67153f3ff16f860d2c7b50213e8d9b2))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([698a23f](https://github.com/Ombi-app/Ombi/commit/698a23fb83f323cdd1dd57cb49803079d44214a7))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([24eb842](https://github.com/Ombi-app/Ombi/commit/24eb842fc4424f7bcc3ec2949d7f5472492e96f6))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([ac8b16a](https://github.com/Ombi-app/Ombi/commit/ac8b16a3051ad71dbd54a8973c7dd847b564a515))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([f428ce6](https://github.com/Ombi-app/Ombi/commit/f428ce6a700c081437703839bc84d2f2b1138bcc))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([94b16df](https://github.com/Ombi-app/Ombi/commit/94b16dfe09bf1d2cd6286777d74eb5d4496abbbb))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([4881775](https://github.com/Ombi-app/Ombi/commit/4881775eda69a8f136ce0d8fbbf970e3d0406dc9))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([8297db9](https://github.com/Ombi-app/Ombi/commit/8297db91e85da308bde6fb09ad78347dee063630))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([d1152ab](https://github.com/Ombi-app/Ombi/commit/d1152ab7674243daa528c524c0cdc87d81ad49c9))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([eb2788b](https://github.com/Ombi-app/Ombi/commit/eb2788b761b55c487a59a049427ca08f6c10e836))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([21a794c](https://github.com/Ombi-app/Ombi/commit/21a794cbc0a5fa735ca0347c8f7f1ac04a487fbc))
-
-
-
-## [4.10.2](https://github.com/Ombi-app/Ombi/compare/v4.10.1...v4.10.2) (2022-01-22)
-
-
-
-## [4.16.10](https://github.com/Ombi-app/Ombi/compare/v4.16.9...v4.16.10) (2022-04-13)
-
-
-
-## [4.16.9](https://github.com/Ombi-app/Ombi/compare/v4.16.8...v4.16.9) (2022-04-13)
-
-
-### Bug Fixes
-
-* **plex-watchlist:** Only request the latest season when importing from the watchlist ([77a47ff](https://github.com/Ombi-app/Ombi/commit/77a47ff157c6c5feafe3f2a29a3fcba8df4fdfef))
-
-
-
-## [4.16.8](https://github.com/Ombi-app/Ombi/compare/v4.16.7...v4.16.8) (2022-04-13)
-
-
-### Bug Fixes
-
-* **availability:** Fixed an issue where we wouldn't mark a available 4k movie as available (when 4K request feature is disabled) ([b492699](https://github.com/Ombi-app/Ombi/commit/b49269961d4830a530e3054976a47f519524948b))
-
-
-
-## [4.16.7](https://github.com/Ombi-app/Ombi/compare/v4.16.6...v4.16.7) (2022-04-12)
-
-
-
-## [4.16.6](https://github.com/Ombi-app/Ombi/compare/v4.16.5...v4.16.6) (2022-04-11)
-
-
-
-## [4.16.5](https://github.com/Ombi-app/Ombi/compare/v4.16.4...v4.16.5) (2022-04-08)
-
-
-### Bug Fixes
-
-* **watchlist:** actually fixed it this time... ([d962a32](https://github.com/Ombi-app/Ombi/commit/d962a3211eca29520662ddce962676e3aea17ec5))
-
-
-
-## [4.16.4](https://github.com/Ombi-app/Ombi/compare/v4.16.3...v4.16.4) (2022-04-08)
-
-
-
-## [4.16.3](https://github.com/Ombi-app/Ombi/compare/v4.16.2...v4.16.3) (2022-04-08)
-
-
-### Bug Fixes
-
-* **plex-watchlist:** :bug: Fixed the issue where the watchlist didn't work for users logging in via OAuth ([6398f6a](https://github.com/Ombi-app/Ombi/commit/6398f6a4f7755281ebeac537e3ff623df5cfa0f3))
-
-
-
-## [4.16.2](https://github.com/Ombi-app/Ombi/compare/v4.16.1...v4.16.2) (2022-04-07)
-
-
-### Bug Fixes
-
-* **wizard:** Fixed an issue when using Plex OAuth it could fail setting up ([b743cf4](https://github.com/Ombi-app/Ombi/commit/b743cf4fafa7341ad1b163276f006d7ab0e9dcff))
-
-
-
-## [4.16.1](https://github.com/Ombi-app/Ombi/compare/v4.16.0...v4.16.1) (2022-04-07)
-
-
-
-# [4.16.0](https://github.com/Ombi-app/Ombi/compare/v4.15.6...v4.16.0) (2022-04-07)
-
-
-
-## [4.15.6](https://github.com/Ombi-app/Ombi/compare/v4.15.5...v4.15.6) (2022-04-07)
-
-
-### Bug Fixes
-
-* **radarr:** Fixed an issue where we couldn't sync radarr content [#4577](https://github.com/Ombi-app/Ombi/issues/4577) ([a5355a3](https://github.com/Ombi-app/Ombi/commit/a5355a3023e6900c4dd1b0da4722d7596c03907f))
-
-
-
-## [4.15.5](https://github.com/Ombi-app/Ombi/compare/v4.15.4...v4.15.5) (2022-04-06)
-
-
-
-## [4.15.4](https://github.com/Ombi-app/Ombi/compare/v4.15.3...v4.15.4) (2022-03-29)
-
-
-
-## [4.15.3](https://github.com/Ombi-app/Ombi/compare/v4.15.2...v4.15.3) (2022-03-24)
-
-
-
-## [4.15.2](https://github.com/Ombi-app/Ombi/compare/v4.15.1...v4.15.2) (2022-03-23)
-
-
-### Bug Fixes
-
-* **metadata:** improved the metadata job to also lookup the media in Plex to see if it has any more uptodate metadata ([83d1a15](https://github.com/Ombi-app/Ombi/commit/83d1a15cc9d0ee91be73bd91c4672cf1bcf2728a))
-
-
-
-## [4.15.1](https://github.com/Ombi-app/Ombi/compare/v4.15.0...v4.15.1) (2022-03-18)
-
-
-### Bug Fixes
-
-* **mediaserver:** fixed an issue where we were not detecting available content correctly [#4542](https://github.com/Ombi-app/Ombi/issues/4542) ([9cdd6f4](https://github.com/Ombi-app/Ombi/commit/9cdd6f41cdab8825a984905c089611409c53c753))
-
-
-
-# [4.15.0](https://github.com/Ombi-app/Ombi/compare/v4.14.4...v4.15.0) (2022-03-17)
-
-
-### Bug Fixes
-
-* **jellyfin:** :bug: Fixed an issue where Jellyfin content was showing the Play on Emby button ([18b167d](https://github.com/Ombi-app/Ombi/commit/18b167d16a3d682b5060ee36dedbbb069bef09de)), closes [#4542](https://github.com/Ombi-app/Ombi/issues/4542)
-
-
-
-## [4.14.4](https://github.com/Ombi-app/Ombi/compare/v4.14.3...v4.14.4) (2022-03-10)
-
-
-### Bug Fixes
-
-* :bug: Fixed the Request On Behalf autocomplete not filtering correctly ([a8ba2f3](https://github.com/Ombi-app/Ombi/commit/a8ba2f3544a1c01c57f217c4036a277ab0e67a09)), closes [#4539](https://github.com/Ombi-app/Ombi/issues/4539)
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([356c742](https://github.com/Ombi-app/Ombi/commit/356c7424e0ce8c1c5063b04bc6ed9b809f214d65))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([6fcaecf](https://github.com/Ombi-app/Ombi/commit/6fcaecf80b766f2d43ac7082d74364238e1638b7))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([132f4d4](https://github.com/Ombi-app/Ombi/commit/132f4d4e609b7fb7e37f38ee2f395926e2911abe))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([f292006](https://github.com/Ombi-app/Ombi/commit/f292006a08894a8d0ba899c8c6e9fe863e558dda))
-
-
-
-## [4.14.3](https://github.com/Ombi-app/Ombi/compare/v4.14.2...v4.14.3) (2022-03-06)
-
-
-### Bug Fixes
-
-* **availability:** :bug: Fixed an issue where with 4k content, we could repeat notifications ([f9ebc1c](https://github.com/Ombi-app/Ombi/commit/f9ebc1cc2e13c7cd335121cd86295b10eda529ba))
-
-
-
-## [4.14.2](https://github.com/Ombi-app/Ombi/compare/v4.14.1...v4.14.2) (2022-03-05)
-
-
-### Bug Fixes
-
-* **Sonarr:** :bug: Fixed an issue where some seasons were not being monitored correctly in sonarr ([60cfd41](https://github.com/Ombi-app/Ombi/commit/60cfd41f68e9006555c1a419dcff1aaa24b3e09f)), closes [#4506](https://github.com/Ombi-app/Ombi/issues/4506)
-
-
-
-## [4.14.1](https://github.com/Ombi-app/Ombi/compare/v4.14.0...v4.14.1) (2022-03-03)
-
-
-
-# [4.14.0](https://github.com/Ombi-app/Ombi/compare/v4.13.2...v4.14.0) (2022-03-02)
-
-
-
-## [4.13.2](https://github.com/Ombi-app/Ombi/compare/v4.13.1...v4.13.2) (2022-03-01)
-
-
-### Bug Fixes
-
-* **requests:** :bug: Fixed an issue where you couldn't approve movies from the request list ([1611ef9](https://github.com/Ombi-app/Ombi/commit/1611ef9198befbb7a4db50a4f0953e50f29a788f))
-
-
-
-## [4.13.1](https://github.com/Ombi-app/Ombi/compare/v4.13.0...v4.13.1) (2022-03-01)
-
-
-### Bug Fixes
-
-* **details:** :bug: Fixed the missing Play on Media server button for 4k content [#4529](https://github.com/Ombi-app/Ombi/issues/4529) ([68600f3](https://github.com/Ombi-app/Ombi/commit/68600f3b45376e12dd2ef263d81ca4040c84cbca))
-* **discover:** :bug: Fixed the issue where there was an option on the discover to request 4k shows (that's not supported currently) ([dcfd688](https://github.com/Ombi-app/Ombi/commit/dcfd688c8d2337e55fa9c6c33b7c3e80fc560cda))
-* **requests:** :bug: Fixed the issue where we could no longer approve TV Requests from the requests list ([19fe4e3](https://github.com/Ombi-app/Ombi/commit/19fe4e342efe5578c26ab8ba7ee2f2e64bbc9418))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([#4526](https://github.com/Ombi-app/Ombi/issues/4526)) ([7e9f54f](https://github.com/Ombi-app/Ombi/commit/7e9f54fc80a09c938184e6be40ce5f49ce9673ef))
-
-
-
-# [4.13.0](https://github.com/Ombi-app/Ombi/compare/v4.12.7...v4.13.0) (2022-02-25)
-
-
-### Bug Fixes
-
-* **4k:** Hide 'Has 4K Request' column list if 4k feature is disabled ([#4521](https://github.com/Ombi-app/Ombi/issues/4521)) ([a9a6067](https://github.com/Ombi-app/Ombi/commit/a9a60678e74d22fa7ba34051a2645db86b600b4a))
-* **issues:** Fix label ID in chatbox page ([#4520](https://github.com/Ombi-app/Ombi/issues/4520)) ([76882ad](https://github.com/Ombi-app/Ombi/commit/76882adf231f92e1cdd396239933c13467c112b3))
-* **localisation:** Localize request types in notifications ([#4516](https://github.com/Ombi-app/Ombi/issues/4516)) ([e09435d](https://github.com/Ombi-app/Ombi/commit/e09435da455b12fc429f129372de31e0654da797))
-* **notifications:** Remove generic admin email in favour of admins' email ([#4519](https://github.com/Ombi-app/Ombi/issues/4519)) ([b90fc5f](https://github.com/Ombi-app/Ombi/commit/b90fc5fea771a83e6cf576c71a307066efd59ea4))
-* **tv:** Display TV show as requested if all episodes are requested ([#4518](https://github.com/Ombi-app/Ombi/issues/4518)) ([2ed8c48](https://github.com/Ombi-app/Ombi/commit/2ed8c48d128a69f0d144c5d332286dbf3b0bdf28))
+* **emby:** Fix Emby played sync running a full sync during recently added sync ([#4932](https://github.com/Ombi-app/Ombi/issues/4932)) ([9424586](https://github.com/Ombi-app/Ombi/commit/9424586e9c1b622b6475aeb8ee3cf4a8f346da6e))
 
 
 ### Features
 
-* **email-notifications:** Add a link to Ombi details page in email notifications ([#4517](https://github.com/Ombi-app/Ombi/issues/4517)) ([a3e97b3](https://github.com/Ombi-app/Ombi/commit/a3e97b31e2298d95e7deebd71268095b8ed5e9dc))
-* **media-details:** Add Trakt to social icons ([#4522](https://github.com/Ombi-app/Ombi/issues/4522)) ([d6ae79c](https://github.com/Ombi-app/Ombi/commit/d6ae79ce9eddbd5b7b888ab1b9f7e342d9d9ff9e))
+* Hide watched status when request is not available ([#4934](https://github.com/Ombi-app/Ombi/issues/4934)) ([82c7f1c](https://github.com/Ombi-app/Ombi/commit/82c7f1c44fd7c87d57cc2b0c34a10fcda7628f4e))
 
 
 
-## [4.12.7](https://github.com/Ombi-app/Ombi/compare/v4.12.6...v4.12.7) (2022-02-23)
+## [4.38.2](https://github.com/Ombi-app/Ombi/compare/v4.38.1...v4.38.2) (2023-05-17)
 
 
 
-## [4.12.6](https://github.com/Ombi-app/Ombi/compare/v4.12.5...v4.12.6) (2022-02-22)
-
-
-### Bug Fixes
-
-* **emby/jellyfin:** :bug: Fixed another issue where we were not correctly displaying the correct status' for movies ([5c0556e](https://github.com/Ombi-app/Ombi/commit/5c0556e6f44b8997a611f3a4d8e9e4e05d08bd13))
-* **mediaserver:** fixed some more issues in the media server sync and availability checks ([f3ea979](https://github.com/Ombi-app/Ombi/commit/f3ea979b8bd77842780ce8e6928b16237dd779cf))
-
-
-
-## [4.12.5](https://github.com/Ombi-app/Ombi/compare/v4.12.4...v4.12.5) (2022-02-21)
+## [4.38.1](https://github.com/Ombi-app/Ombi/compare/v4.38.0...v4.38.1) (2023-05-09)
 
 
 ### Bug Fixes
 
-* **emby:** :bug: Fixed the emby content sync [#4513](https://github.com/Ombi-app/Ombi/issues/4513) ([2927504](https://github.com/Ombi-app/Ombi/commit/2927504f0e0b4e7251e69b44e0e30c7ec9519980))
-* **emby:** :bug: Fixed the emby content sync [#4513](https://github.com/Ombi-app/Ombi/issues/4513) ([bd441cb](https://github.com/Ombi-app/Ombi/commit/bd441cb54fd77d6befb03fae321dc36c29f0de2e))
+* **API:** Allow RequestOnBehalf rights if requested from the API ([#4919](https://github.com/Ombi-app/Ombi/issues/4919)) ([bb6dedd](https://github.com/Ombi-app/Ombi/commit/bb6deddfaecb3d6c7c3c6970414444b619bb9106))
+* **notificaitons:** Add the RequestedByAlias field to the Notification Message ([7e9c8be](https://github.com/Ombi-app/Ombi/commit/7e9c8bec6b02bb4e11f8db50394e493d4dd07723))
 
 
 
-## [4.12.4](https://github.com/Ombi-app/Ombi/compare/v4.12.3...v4.12.4) (2022-02-17)
-
-
-
-## [4.12.3](https://github.com/Ombi-app/Ombi/compare/v4.12.2...v4.12.3) (2022-02-16)
-
-
-
-## [4.12.2](https://github.com/Ombi-app/Ombi/compare/v4.12.1...v4.12.2) (2022-02-16)
+# [4.38.0](https://github.com/Ombi-app/Ombi/compare/v4.37.3...v4.38.0) (2023-05-07)
 
 
 ### Bug Fixes
 
-* **requests:** :bug: Fixed the approve 4k option on the requests list not working as expected ([c0189da](https://github.com/Ombi-app/Ombi/commit/c0189dad478ea375beda61ba3bee3f029a39b8e5))
-
-
-
-## [4.12.1](https://github.com/Ombi-app/Ombi/compare/v4.12.0...v4.12.1) (2022-02-16)
-
-
-### Bug Fixes
-
-* **requests:** :bug: Fixed the issue where Approving a 4K Request wouldn't send it to the correct 4K radarr instance ([87cb990](https://github.com/Ombi-app/Ombi/commit/87cb9903db30e1dead25ee8c5ea34305eb084a03)), closes [#4509](https://github.com/Ombi-app/Ombi/issues/4509)
-
-
-
-# [4.12.0](https://github.com/Ombi-app/Ombi/compare/v4.11.8...v4.12.0) (2022-02-14)
+* remove sort header ([969bc7b](https://github.com/Ombi-app/Ombi/commit/969bc7bb25ea900ab9199509b079b36843e5bd6f))
 
 
 ### Features
 
-* **radarr:** 4K Requests and Radarr 4K support  ([ba88848](https://github.com/Ombi-app/Ombi/commit/ba88848866b0a9dedb1e79b55c4d81a0fd453843))
+* **emby:** Show watched status for Movie requests ([9cfb10b](https://github.com/Ombi-app/Ombi/commit/9cfb10bb1ee69067a6f47bd2c8a72d4e6834350e))
 
 
 
-## [4.11.8](https://github.com/Ombi-app/Ombi/compare/v4.11.7...v4.11.8) (2022-02-13)
+## [4.37.3](https://github.com/Ombi-app/Ombi/compare/v4.37.2...v4.37.3) (2023-05-07)
 
 
 ### Bug Fixes
 
-* **settings:** :bug: Fixed an issue where we were not displaying the excluded keyworks correctly in the TheMovieDbSettings page ([d3b3316](https://github.com/Ombi-app/Ombi/commit/d3b3316cbac18356b2f6b0912a3deb2c183e6534))
+* Show the ApiAlias in the requests-list ([9ff624c](https://github.com/Ombi-app/Ombi/commit/9ff624ce4646815b239fbb8327117947f0a90e4b))
+
+
+
+## [4.37.2](https://github.com/Ombi-app/Ombi/compare/v4.37.1...v4.37.2) (2023-05-03)
+
+
+### Bug Fixes
+
+* **jellyfin:** Fixed an issue where the sync could stop working. Removed unused properties so the deseralization no longer fails ([0e5e0ad](https://github.com/Ombi-app/Ombi/commit/0e5e0adf862701d0f672beff14ec0aa75e4b5220))
+
+
+
+## [4.37.1](https://github.com/Ombi-app/Ombi/compare/v4.37.0...v4.37.1) (2023-05-02)
+
+
+### Bug Fixes
+
+* Cron Validation ([#4842](https://github.com/Ombi-app/Ombi/issues/4842)) ([97cc42f](https://github.com/Ombi-app/Ombi/commit/97cc42ffa8672e7d0d0996b5fbda7f7fe699da2d))
+* **discover:** :children_crossing: Improved the new Genre buttons, it now includes TV results ([b087d60](https://github.com/Ombi-app/Ombi/commit/b087d606ff36565208e564f8856903f2a4098db5))
+* **lidarr:** Change monitor to Existing to properly add artist [#3597](https://github.com/Ombi-app/Ombi/issues/3597) ([506f607](https://github.com/Ombi-app/Ombi/commit/506f60773bf1031d0be51ccd34289b855a04ea40)), closes [/github.com/Lidarr/Lidarr/issues/3597#issuecomment-1530804055](https://github.com//github.com/Lidarr/Lidarr/issues/3597/issues/issuecomment-1530804055)
+
+
+
+# [4.37.0](https://github.com/Ombi-app/Ombi/compare/v4.36.1...v4.37.0) (2023-04-24)
+
+
+### Features
+
+* Search by genre ([1837419](https://github.com/Ombi-app/Ombi/commit/18374198f9f2462ba85c5781b0fcc05892728b21))
+
+
+
+## [4.36.1](https://github.com/Ombi-app/Ombi/compare/v4.36.0...v4.36.1) (2023-04-20)
+
+
+### Bug Fixes
+
+* **healthchecks:** Removed redundant ping check ([1751305](https://github.com/Ombi-app/Ombi/commit/1751305064176d2c0135f867773ccc46b03915ec))
+
+
+
+# [4.36.0](https://github.com/Ombi-app/Ombi/compare/v4.35.19...v4.36.0) (2023-04-20)
+
+
+### Features
+
+* **discover:** Add deny option to recently requested ([#4907](https://github.com/Ombi-app/Ombi/issues/4907)) ([78f340e](https://github.com/Ombi-app/Ombi/commit/78f340ee5f309c55690497170897533801957668))
+
+
+
+## [4.35.19](https://github.com/Ombi-app/Ombi/compare/v4.35.18...v4.35.19) (2023-04-20)
+
+
+### Bug Fixes
+
+* **radarr:** Fixed an issue where the radarr sync would break ([de4baad](https://github.com/Ombi-app/Ombi/commit/de4baade9f87248d77106ff1a313a498870f4fb3))
+
+
+
+## [4.35.18](https://github.com/Ombi-app/Ombi/compare/v4.35.17...v4.35.18) (2023-04-15)
+
+
+### Bug Fixes
+
+* **#4906:** :bug: Fixed an issue with power users and permissions ([80884bc](https://github.com/Ombi-app/Ombi/commit/80884bcd725c329867c278ad235cd4096cd4fe7a))
+
+
+
+## [4.35.17](https://github.com/Ombi-app/Ombi/compare/v4.35.16...v4.35.17) (2023-04-15)
+
+
+### Bug Fixes
+
+* **discover:** Fix denied requests displayed as approved ([#4901](https://github.com/Ombi-app/Ombi/issues/4901)) ([1e87f20](https://github.com/Ombi-app/Ombi/commit/1e87f2010491b0f3fdda70d2b19d9afd94438df7))
+* Fix denied movie shown as 'processing request' in details view ([#4900](https://github.com/Ombi-app/Ombi/issues/4900)) ([0069bfd](https://github.com/Ombi-app/Ombi/commit/0069bfdf54e0785bad45c832ca052f19fd4b940b))
+
+
+
+## [4.35.16](https://github.com/Ombi-app/Ombi/compare/v4.35.15...v4.35.16) (2023-04-13)
+
+
+### Bug Fixes
+
+* Support duplicates in Emby/JF collections ([#4902](https://github.com/Ombi-app/Ombi/issues/4902)) ([141f96d](https://github.com/Ombi-app/Ombi/commit/141f96da5e45d5b3fa5f496806b102e473da6607))
+
+
+
+## [4.35.15](https://github.com/Ombi-app/Ombi/compare/v4.35.14...v4.35.15) (2023-04-06)
+
+
+### Bug Fixes
+
+* **sonarr:** :bug: Stop the sonarr version endpoint from breaking when Sonarr is down [#4895](https://github.com/Ombi-app/Ombi/issues/4895) ([7bb8bec](https://github.com/Ombi-app/Ombi/commit/7bb8becfb140ef6012356752a71d53b5b404e482))
+
+
+
+## [4.35.14](https://github.com/Ombi-app/Ombi/compare/v4.35.13...v4.35.14) (2023-04-06)
+
+
+### Bug Fixes
+
+* Some minor tweaks to the movie info panel ([#4883](https://github.com/Ombi-app/Ombi/issues/4883)) ([1244487](https://github.com/Ombi-app/Ombi/commit/12444871df2f7602200f73971fce962f06b4a80b))
+
+
+
+## [4.35.13](https://github.com/Ombi-app/Ombi/compare/v4.35.12...v4.35.13) (2023-03-28)
+
+
+### Bug Fixes
+
+* **sonarr:** :bug: Added some more error handling and information around testing sonarr ([bd2c2d3](https://github.com/Ombi-app/Ombi/commit/bd2c2d3901e239393010fd582b207f1571fb4b7e)), closes [#4877](https://github.com/Ombi-app/Ombi/issues/4877)
+
+
+
+## [4.35.12](https://github.com/Ombi-app/Ombi/compare/v4.35.9...v4.35.12) (2023-03-25)
+
+
+### Bug Fixes
+
+* **sonarr:** :bug: Improved the error handling in the sonarr settings page in the UI ([fcd78fe](https://github.com/Ombi-app/Ombi/commit/fcd78fee619d10ec7d78e8c8ec6c3ac4b0a361a1)), closes [#4877](https://github.com/Ombi-app/Ombi/issues/4877)
+
+
+
+## [4.35.9](https://github.com/Ombi-app/Ombi/compare/v4.35.8...v4.35.9) (2023-02-24)
+
+
+
+## [4.22.5](https://github.com/Ombi-app/Ombi/compare/v4.22.4...v4.22.5) (2022-08-05)
+
+
+
+## [4.35.8](https://github.com/Ombi-app/Ombi/compare/v4.35.7...v4.35.8) (2023-02-17)
+
+
+### Bug Fixes
+
+* **plex-oauth:** 🐛 Fixed an issue where using OAuth you could log in as a Ombi Local user [#4835](https://github.com/Ombi-app/Ombi/issues/4835) ([4098da3](https://github.com/Ombi-app/Ombi/commit/4098da305aaea9dae9a552644268a4fed7204cfe))
+
+
+
+## [4.35.7](https://github.com/Ombi-app/Ombi/compare/v4.35.6...v4.35.7) (2023-02-10)
+
+
+### Bug Fixes
+
+* **wizard:** :bug: Stop access to the wizard when you have already setup ombi ([#4866](https://github.com/Ombi-app/Ombi/issues/4866)) ([353de98](https://github.com/Ombi-app/Ombi/commit/353de981a462e1753288d225ec4644a44a62d2bc))
+
+
+
+## [4.35.6](https://github.com/Ombi-app/Ombi/compare/v4.35.5...v4.35.6) (2023-01-31)
+
+
+### Bug Fixes
+
+* Fixed the issue where the login page is still present after logging in with oauth ([aca4ee3](https://github.com/Ombi-app/Ombi/commit/aca4ee37915a28200e5233be3dc711ccc4a5aee9))
+
+
+
+## [4.35.5](https://github.com/Ombi-app/Ombi/compare/v4.35.4...v4.35.5) (2023-01-24)
+
+
+### Bug Fixes
+
+* **radarr-settings:** 🐛 Fixed a typo ([4a50a00](https://github.com/Ombi-app/Ombi/commit/4a50a00d4729d99f4359874b9af4dbc58a0c220b))
+
+
+
+## [4.35.4](https://github.com/Ombi-app/Ombi/compare/v4.35.3...v4.35.4) (2023-01-22)
+
+
+### Bug Fixes
+
+* **discover:** :bug: Fixed the default poster not taking into account the base url in some scenarios [#4845](https://github.com/Ombi-app/Ombi/issues/4845) ([8eda250](https://github.com/Ombi-app/Ombi/commit/8eda250367953183daec03ccb5cdf9fe94275b27))
+* **Hide music from navbar and request list when not enabled:** :bug: ([5123a76](https://github.com/Ombi-app/Ombi/commit/5123a76954e9f81d58c05e31afc7a29aec19cb7a))
+
+
+
+## [4.35.3](https://github.com/Ombi-app/Ombi/compare/v4.35.2...v4.35.3) (2023-01-13)
+
+
+### Bug Fixes
+
+* **#4847:** Invalid Discord request fixed, also fixed an issue where App Only users would not show as logged in on the user management page ([#4848](https://github.com/Ombi-app/Ombi/issues/4848)) ([f229d88](https://github.com/Ombi-app/Ombi/commit/f229d88bd744bc5253b5d3db69ae5ef22d014230))
+
+
+
+## [4.35.2](https://github.com/Ombi-app/Ombi/compare/v4.35.1...v4.35.2) (2023-01-08)
+
+
+### Bug Fixes
+
+* **database:** Just some tweaks, shouldn't notice any difference, maybe a less error in the log ([67fb992](https://github.com/Ombi-app/Ombi/commit/67fb9921c0c025025286eb6c0a9d09fd01b18465))
+
+
+
+## [4.35.1](https://github.com/Ombi-app/Ombi/compare/v4.35.0...v4.35.1) (2023-01-06)
+
+
+### Bug Fixes
+
+* **plex-watchlist:** Index out of bounds error ([8cd556e](https://github.com/Ombi-app/Ombi/commit/8cd556e268931596b9c1d1ae0ce533bfaaf330f4))
+
+
+
+# [4.35.0](https://github.com/Ombi-app/Ombi/compare/v4.34.1...v4.35.0) (2023-01-04)
+
+
+### Features
+
+* Add the option for header authentication to create users ([#4841](https://github.com/Ombi-app/Ombi/issues/4841)) ([e6c9ce5](https://github.com/Ombi-app/Ombi/commit/e6c9ce5ad0056608ecda8273fb8124ed292e2942))
+
+
+
+## [4.34.1](https://github.com/Ombi-app/Ombi/compare/v4.34.0...v4.34.1) (2023-01-04)
+
+
+### Bug Fixes
+
+* **plex-watchlist:** Lookup the ID from different sources when Plex doesn't contain the metadata ([#4843](https://github.com/Ombi-app/Ombi/issues/4843)) ([a2cc23b](https://github.com/Ombi-app/Ombi/commit/a2cc23b351c4a568c44e6c855f94db9f71ad084a))
+
+
+
+# [4.34.0](https://github.com/Ombi-app/Ombi/compare/v4.33.1...v4.34.0) (2023-01-04)
+
+
+### Features
+
+* Radarr tags ([#4815](https://github.com/Ombi-app/Ombi/issues/4815)) ([6fa5064](https://github.com/Ombi-app/Ombi/commit/6fa506491fe867cdeef9df79991ae49319d71c3d))
+
+
+
+## [4.33.1](https://github.com/Ombi-app/Ombi/compare/v4.33.0...v4.33.1) (2022-12-22)
+
+
+### Bug Fixes
+
+* **plex:** Added the watchlist request whole show back into the settings ([10701c4](https://github.com/Ombi-app/Ombi/commit/10701c4a0b6190eebb75c5d8b18224f3d0bc8502))
+
+
+
+# [4.33.0](https://github.com/Ombi-app/Ombi/compare/v4.32.3...v4.33.0) (2022-12-01)
+
+
+### Features
+
+* Angular 15 and Dependency upgrades ([#4818](https://github.com/Ombi-app/Ombi/issues/4818)) ([4816acf](https://github.com/Ombi-app/Ombi/commit/4816acf6f94443d23ebef6091d4cfcbca580f9ca))
+
+
+
+## [4.32.3](https://github.com/Ombi-app/Ombi/compare/v4.32.2...v4.32.3) (2022-11-24)
+
+
+### Bug Fixes
+
+* **sonarr:** V4 actually works this time around ([f62e70f](https://github.com/Ombi-app/Ombi/commit/f62e70fc493c7971da5e4508ce10522f5df0bbf7))
+
+
+
+## [4.32.2](https://github.com/Ombi-app/Ombi/compare/v4.32.1...v4.32.2) (2022-11-23)
+
+
+### Bug Fixes
+
+* **sonarr:** :bug: Sonarr V4 should work now ([#4810](https://github.com/Ombi-app/Ombi/issues/4810)) ([37655af](https://github.com/Ombi-app/Ombi/commit/37655aff9d3d133b42f5664bc9445d6571e966d6))
+
+
+
+## [4.32.1](https://github.com/Ombi-app/Ombi/compare/v4.32.0...v4.32.1) (2022-11-21)
+
+
+### Bug Fixes
+
+* **plex:** :bug: Fixed the issue where you couldn't add a new server on a fresh setup after the settings page rework ([187b18d](https://github.com/Ombi-app/Ombi/commit/187b18d5c01f6a13831e4a410b5d7c349e27d847))
+
+
+
+# [4.32.0](https://github.com/Ombi-app/Ombi/compare/v4.31.0...v4.32.0) (2022-11-18)
+
+
+### Bug Fixes
+
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([#4801](https://github.com/Ombi-app/Ombi/issues/4801)) ([4692003](https://github.com/Ombi-app/Ombi/commit/46920032baed04675b2ffbe1700afdc0740a4ac4))
+
+
+### Features
+
+* **plex:** Rework the Plex Settings page ([#4805](https://github.com/Ombi-app/Ombi/issues/4805)) ([1b8c47f](https://github.com/Ombi-app/Ombi/commit/1b8c47f3163f618851d4904732cb07015e1e93ff))
+
+
+
+# [4.31.0](https://github.com/Ombi-app/Ombi/compare/v4.30.0...v4.31.0) (2022-11-18)
+
+
+### Features
+
+* **sonarr:** Added the ability to add default tags when sending to Sonarr ([#4803](https://github.com/Ombi-app/Ombi/issues/4803)) ([ecfbb8e](https://github.com/Ombi-app/Ombi/commit/ecfbb8eda91e1a90239dcf8be847afcc2394a78e))
+
+
+
+# [4.30.0](https://github.com/Ombi-app/Ombi/compare/v4.29.3...v4.30.0) (2022-11-17)
+
+
+### Features
+
+* **sonarr:** :sparkles: Add the username to a Sonarr tag when sent to Sonarr ([#4802](https://github.com/Ombi-app/Ombi/issues/4802)) ([1d5fabd](https://github.com/Ombi-app/Ombi/commit/1d5fabd317e3ce8f6dd31f06d15dc81277f39dbd))
+
+
+
+## [4.29.3](https://github.com/Ombi-app/Ombi/compare/v4.29.2...v4.29.3) (2022-11-14)
+
+
+### Bug Fixes
+
+* **notifications:** Fixed the Partially TV notifications going to the admin [#4797](https://github.com/Ombi-app/Ombi/issues/4797) ([#4799](https://github.com/Ombi-app/Ombi/issues/4799)) ([bcb3e7f](https://github.com/Ombi-app/Ombi/commit/bcb3e7f00380a4c4278f59dc55febf43e6d05d47))
+* Only log error messages from Microsoft ([#4787](https://github.com/Ombi-app/Ombi/issues/4787)) ([c614e0c](https://github.com/Ombi-app/Ombi/commit/c614e0ca5fe5023cbe7ced326145273cd75be85d))
+
+
+
+## [4.29.2](https://github.com/Ombi-app/Ombi/compare/v4.29.1...v4.29.2) (2022-10-24)
+
+
+### Bug Fixes
+
+* **plex:** Fixed an issue where sometimes the availability checker would throw an exception when checking episodes ([17ba202](https://github.com/Ombi-app/Ombi/commit/17ba2020ee0950c2c0e0e03fdb7835b579da75a9))
 
 
 
