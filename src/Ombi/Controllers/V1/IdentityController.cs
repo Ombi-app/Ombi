@@ -44,7 +44,7 @@ namespace Ombi.Controllers.V1
     [ApiV1]
     [Produces("application/json")]
     [ApiController]
-    public class IdentityController : Controller
+    public class IdentityController : BaseController
     {
         public IdentityController(OmbiUserManager user,
             RoleManager<IdentityRole> rm,
@@ -555,6 +555,7 @@ namespace Ombi.Controllers.V1
             }
 
             // Make sure the pass is ok
+            UserManager.ClientIpAddress = GetRequestIP();
             var passwordCheck = await UserManager.CheckPasswordAsync(user, ui.CurrentPassword);
             if (!passwordCheck)
             {

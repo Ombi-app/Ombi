@@ -56,7 +56,7 @@ namespace Ombi.Api.Emby
             return obj;
         }
 
-        public async Task<EmbyUser> LogIn(string username, string password, string apiKey, string baseUri)
+        public async Task<EmbyUser> LogIn(string username, string password, string apiKey, string baseUri, string clientIpAddress)
         {
             var request = new Request("emby/users/authenticatebyname", baseUri, HttpMethod.Post);
             var body = new
@@ -70,6 +70,11 @@ namespace Ombi.Api.Emby
             request.AddHeader("X-Emby-Authorization",
                 $"MediaBrowser Client=\"Ombi\", Device=\"Ombi\", DeviceId=\"v3\", Version=\"v3\"");
             AddHeaders(request, apiKey);
+
+            if (!string.IsNullOrEmpty(clientIpAddress))
+            {
+                request.AddHeader("X-Forwarded-For", clientIpAddress);
+            }
 
             var obj = await Api.Request<EmbyUser>(request);
             return obj;

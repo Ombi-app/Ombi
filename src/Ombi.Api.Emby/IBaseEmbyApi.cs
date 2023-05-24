@@ -11,7 +11,7 @@ namespace Ombi.Api.Emby
     {
         Task<EmbySystemInfo> GetSystemInformation(string apiKey, string baseUrl);
         Task<List<EmbyUser>> GetUsers(string baseUri, string apiKey);
-        Task<EmbyUser> LogIn(string username, string password, string apiKey, string baseUri);
+        Task<EmbyUser> LogIn(string username, string password, string apiKey, string baseUri, string clientIpAddress);
 
         Task<EmbyItemContainer<EmbyMovie>> GetAllMovies(string apiKey, string parentIdFilder, int startIndex, int count, string userId,
             string baseUri);
