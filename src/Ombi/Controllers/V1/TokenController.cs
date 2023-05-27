@@ -33,7 +33,7 @@ namespace Ombi.Controllers.V1
     [ApiV1]
     [Produces("application/json")]
     [ApiController]
-    public class TokenController : ControllerBase
+    public class TokenController : BaseController
     {
         public TokenController(OmbiUserManager um, ITokenRepository token,
             IPlexOAuthManager oAuthManager, ILogger<TokenController> logger, ISettingsService<AuthenticationSettings> auth,
@@ -82,7 +82,7 @@ namespace Ombi.Controllers.V1
                     user.EmailLogin = true;
                 }
 
-
+                _userManager.ClientIpAddress = GetRequestIP();
                 // Verify Password
                 if (await _userManager.CheckPasswordAsync(user, model.Password))
                 {
@@ -269,27 +269,6 @@ namespace Ombi.Controllers.V1
             public string Userename { get; set; }
         }
 
-        private string GetRequestIP()
-        {
-            string ip = null;
-
-            if (Request.HttpContext?.Request?.Headers != null && Request.HttpContext.Request.Headers.ContainsKey("X-Forwarded-For"))
-            {
-                var forwardedip = Request.HttpContext.Request.Headers["X-Forwarded-For"].ToString();
-                ip = forwardedip.TrimEnd(',').Split(",").Select(s => s.Trim()).FirstOrDefault();
-            }
-
-            if (string.IsNullOrWhiteSpace(ip) && Request.HttpContext?.Connection?.RemoteIpAddress != null)
-                ip = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-
-            if (string.IsNullOrWhiteSpace(ip) && Request.HttpContext?.Request?.Headers != null && Request.HttpContext.Request.Headers.ContainsKey("REMOTE_ADDR"))
-            {
-                var remoteip = Request.HttpContext.Request.Headers["REMOTE_ADDR"].ToString();
-                ip = remoteip.TrimEnd(',').Split(",").Select(s => s.Trim()).FirstOrDefault();
-            }
-
-            return ip;
-        }
 
         [HttpPost("header_auth")]
         [ProducesResponseType(401)]

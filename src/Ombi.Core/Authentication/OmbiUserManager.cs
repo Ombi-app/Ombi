@@ -69,6 +69,8 @@ namespace Ombi.Core.Authentication
         private readonly ISettingsService<EmbySettings> _embySettings;
         private readonly ISettingsService<JellyfinSettings> _jellyfinSettings;
         private readonly ISettingsService<AuthenticationSettings> _authSettings;
+        private string _clientIpAddress;
+        public string ClientIpAddress { get => _clientIpAddress; set => _clientIpAddress = value; }
 
         public override async Task<bool> CheckPasswordAsync(OmbiUser user, string password)
         {
@@ -88,7 +90,7 @@ namespace Ombi.Core.Authentication
             }
             if (user.UserType == UserType.EmbyUser || user.UserType == UserType.EmbyConnectUser)
             {
-                return await CheckEmbyPasswordAsync(user, password);
+                return await CheckEmbyPasswordAsync(user, password, ClientIpAddress);
             }
             if (user.UserType == UserType.JellyfinUser)
             {
@@ -168,7 +170,7 @@ namespace Ombi.Core.Authentication
         /// <param name="user"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        private async Task<bool> CheckEmbyPasswordAsync(OmbiUser user, string password)
+        private async Task<bool> CheckEmbyPasswordAsync(OmbiUser user, string password, string clientIpAddress="")
         {
             var embySettings = await _embySettings.GetSettingsAsync();
             var client = _embyApi.CreateClient(embySettings);
@@ -196,7 +198,7 @@ namespace Ombi.Core.Authentication
             {
                 try
                 {
-                    var result = await client.LogIn(user.UserName, password, server.ApiKey, server.FullUri);
+                    var result = await client.LogIn(user.UserName, password, server.ApiKey, server.FullUri, clientIpAddress);
                     if (result != null)
                     {
                         return true;
