@@ -301,10 +301,10 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/phildups7">
-            <img src="https://avatars.githubusercontent.com/u/60622768?v=4" width="50;" alt="phildups7"/>
+        <a href="https://github.com/Fire-Swan">
+            <img src="https://avatars.githubusercontent.com/u/60622768?v=4" width="50;" alt="Fire-Swan"/>
             <br />
-            <sub><b>Phildups7</b></sub>
+            <sub><b>Fire-Swan</b></sub>
         </a>
     </td>
     <td align="center">
