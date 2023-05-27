@@ -36,30 +36,29 @@
 
                     <div class="row lmobile-actions">
                         <div class="form-group">
-                            <label for="select" class="control-label">Users</label>
-                            <div>
-                                <select class="form-control form-control-custom" id="select" [(ngModel)]="testUserId" [ngModelOptions]="{standalone: true}">
-                                    <option value="">Please select</option>    
-                                    <option *ngFor="let x of userList" [value]="x.userId">{{x.username}}</option>
-                                </select>
-                            </div>
+                            <mat-form-field>
+                                <mat-label>Users</mat-label>
+                                <mat-select id="select" [(ngModel)]="testUserId" [ngModelOptions]="{standalone: true}">
+                                    <mat-option *ngFor="let x of userList" [value]="x.userId">{{x.username}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
                         </div>
 
                         <div class="form-group">
                             <div>
-                                <button [disabled]="form.invalid" mat-raised-button type="button" (click)="test(form)" class="btn btn-danger-outline">Send Test Notification</button>
+                                <button [disabled]="form.invalid" mat-raised-button type="button" (click)="test(form)" mat-raised-button>Send Test Notification</button>
                             </div>
                         </div>
                         <div class="form-group">
                             <div>
-                                <button [disabled]="form.invalid" mat-raised-button type="button" (click)="remove(form)" class="btn btn-danger-outline">Remove User</button>
+                                <button [disabled]="form.invalid" mat-raised-button type="button" (click)="remove(form)" mat-raised-button>Remove User</button>
                             </div>
                         </div>
 
 
                         <div class="form-group">
                             <div>
-                                <button [disabled]="form.invalid" mat-raised-button type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                                <button [disabled]="form.invalid" mat-raised-button type="submit" id="save" mat-raised-button>Submit</button>
                             </div>
                         </div>
                     </div>

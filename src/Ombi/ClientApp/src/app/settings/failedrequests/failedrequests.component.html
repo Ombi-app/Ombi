@@ -2,26 +2,35 @@
 <settings-menu></settings-menu>
 
 <div class="small-middle-container">
-<table class="table table-striped table-hover table-responsive table-condensed">
-    <thead>
-        <tr>
-            <td>Title</td>
-            <td>Type</td>
-            <td>Retry Count</td>
-            <td>Error Description</td>
-            <td>Delete</td>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let v of vm">
-            <td class="vcenter">
-                {{v.title}}
-            </td>
-            <td>{{RequestType[v.type] | humanize}}</td>
-            <td class="vcenter">{{v.retryCount}}</td>
-            <td class="vcenter"> <i [pTooltip]="v.error" class="fas fa-info-circle"></i></td>
-            <td class="vcenter"><button type="button" class="mat-focus-indicator mat-flat-button mat-button-base mat-warn" (click)="remove(v)">Remove</button></td>
-        </tr>
-    </tbody>
-</table>
+  <table mat-table [dataSource]="vm">
+
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef>Title</th>
+      <td mat-cell *matCellDef="let v">{{v.title}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef>Type</th>
+      <td mat-cell *matCellDef="let v">{{RequestType[v.type] | humanize}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="retryCount">
+      <th mat-header-cell *matHeaderCellDef>Retry Count</th>
+      <td mat-cell *matCellDef="let v">{{v.retryCount}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="errorDescription">
+      <th mat-header-cell *matHeaderCellDef>Error Description</th>
+      <td mat-cell *matCellDef="let v"><i [pTooltip]="v.error" class="fas fa-info-circle"></i></td>
+    </ng-container>
+
+    <ng-container matColumnDef="deleteBtn">
+      <th mat-header-cell *matHeaderCellDef>Delete</th>
+      <td mat-cell *matCellDef="let v"><button mat-raised-button color="warn" (click)="remove(v)">Remove</button></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay"></tr>
+
+  </table>
 </div>

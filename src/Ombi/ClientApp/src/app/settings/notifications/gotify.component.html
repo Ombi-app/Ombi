@@ -7,42 +7,42 @@
             <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
 
                 <div class="form-group">
-                    <div class="checkbox">
-                        <input type="checkbox" id="enable" formControlName="enabled">
-                        <label for="enable">Enabled</label>
+                    <mat-checkbox id="enable" formControlName="enabled">Enabled</mat-checkbox>
+                </div>
+
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>Base URL</mat-label>
+                        <input matInput type="text" id="baseUrl" name="baseUrl" [ngClass]="{'form-error': form.get('baseUrl').hasError('required')}" formControlName="baseUrl" pTooltip="Enter the URL of your gotify server.">
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>Application Token</mat-label>
+                        <input matInput type="text" id="applicationToken" name="applicationToken" [ngClass]="{'form-error': form.get('applicationToken').hasError('required')}" formControlName="applicationToken" pTooltip="Enter your Application token from Gotify.">
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>Priority</mat-label>
+
+                        <mat-select id="priority" name="priority" formControlName="priority" pTooltip="The priority you want your gotify notifications sent as.">
+                          <mat-option value="4">Normal</mat-option>
+                          <mat-option value="8">High</mat-option>
+                          <mat-option value="2">Low</mat-option>
+                          <mat-option value="0">Lowest</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="baseUrl" class="control-label">Base URL</label>
-
-                    <input type="text" class="form-control form-control-custom " id="baseUrl" name="baseUrl" [ngClass]="{'form-error': form.get('baseUrl').hasError('required')}" formControlName="baseUrl" pTooltip="Enter the URL of your gotify server.">
-                    <small *ngIf="form.get('baseUrl').hasError('required')" class="error-text">The Base URL is required</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="applicationToken" class="control-label">Application Token</label>
-
-                    <input type="text" class="form-control form-control-custom " id="applicationToken" name="applicationToken" [ngClass]="{'form-error': form.get('applicationToken').hasError('required')}" formControlName="applicationToken" pTooltip="Enter your Application token from Gotify.">
-                    <small *ngIf="form.get('applicationToken').hasError('required')" class="error-text">The Application Token is required</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="priority" class="control-label">Priority</label>
-                    <div>
-                        <select class="form-control form-control-custom " id="priority" name="priority" formControlName="priority" pTooltip="The priority you want your gotify notifications sent as.">
-                            <option value="4">Normal</option>
-                            <option value="8">High</option>
-                            <option value="2">Low</option>
-                            <option value="0">Lowest</option>
-                        </select>
-                    </div>
-                </div>
-
 
                 <div class="form-group">
                     <div>
-                        <button [disabled]="form.invalid" mat-raised-button type="button" (click)="test(form)" class="btn btn-primary-outline">
+                        <button [disabled]="form.invalid" mat-raised-button type="button" (click)="test(form)">
                             Test
                             <div id="spinner"></div>
                         </button>
@@ -53,7 +53,7 @@
 
                 <div class="form-group">
                     <div>
-                        <button [disabled]="form.invalid" mat-raised-button type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                        <button [disabled]="form.invalid" mat-raised-button type="submit" id="save">Submit</button>
                     </div>
                 </div>
             </form>

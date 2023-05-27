@@ -7,57 +7,51 @@
             <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
 
                 <div class="form-group">
-                   
-                    <div class="checkbox">
-                        <input type="checkbox" id="enable" formControlName="enabled">
-                        <label for="enable">Enabled</label>
-                    </div>
+                    <mat-checkbox id="enable" formControlName="enabled">Enabled</mat-checkbox>
                 </div>
 
- 
+
                 <div class="form-group">
-                    
-                    <label for="webhookUrl" class="control-label">Webhook Url</label>
-                    <div>
-                        
-                        <small class="control-label"> Click <a target="_blank" href="https://my.slack.com/services/new/incoming-webhook/">Here</a> and follow the guide. You will then have a Webhook Url</small>
-                        <input type="text" class="form-control form-control-custom " id="webhookUrl" name="webhookUrl" formControlName="webhookUrl"  [ngClass]="{'form-error': form.get('webhookUrl').hasError('required')}">
-                        <small *ngIf="form.get('webhookUrl').hasError('required')" class="error-text">The Webhook Url is required</small>
-                    </div>
+
+                    <small class="control-label"> Click <a target="_blank" href="https://my.slack.com/services/new/incoming-webhook/">Here</a> and follow the guide. You will then have a Webhook Url</small>
+                    <mat-form-field>
+                        <mat-label>Webhook Url</mat-label>
+                        <input matInput type="text" id="webhookUrl" name="webhookUrl" formControlName="webhookUrl"  [ngClass]="{'form-error': form.get('webhookUrl').hasError('required')}">
+                    </mat-form-field>
                 </div>
 
                 <div class="form-group">
-                    <label for="username" class="control-label">Username Override</label>
-                    <div>
-                        <input type="text" class="form-control form-control-custom " id="username" name="username" formControlName="username" pTooltip="Optional, this will override the username you used for the Webhook. Default is Ombi">
-                    </div>
+                    <mat-form-field>
+                        <mat-label>Username Override</mat-label>
+                        <input matInput type="text" id="username" name="username" formControlName="username" pTooltip="Optional, this will override the username you used for the Webhook. Default is Ombi">
+                    </mat-form-field>
                 </div>
                 <div class="form-group">
-                    <label for="channel" class="control-label">Channel Override</label>
-                    <div>
-                        <input type="text" class="form-control form-control-custom " id="channel" name="channel" formControlName="channel" pTooltip="Optional, this will override the channel you used for the Webhook">
-                    </div>
+                    <mat-form-field>
+                        <mat-label>Channel Override</mat-label>
+                        <input matInput type="text" id="channel" name="channel" formControlName="channel" pTooltip="Optional, this will override the channel you used for the Webhook">
+                    </mat-form-field>
                 </div>
 
-                <div class="form-group">
-                    <label for="iconEmoji" class="control-label">Emoji Icon Override</label>
-                    <div>
-                        <input type="text" class="form-control form-control-custom " id="iconEmoji" name="iconEmoji" formControlName="iconEmoji" pTooltip="Optional, this will override the Icon you used for the Webhook">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="iconUrl" class="control-label">Url Icon Override</label>
-                    <div>
-                        <input type="text" class="form-control form-control-custom " id="iconUrl" name="iconUrl" formControlName="iconUrl" pTooltip="Optional, this will override the Icon you used for the Webhook">
-                    </div>
-                </div>
-                
+              <div class="form-group">
+                <mat-form-field>
+                    <mat-label>Emoji Icon Override</mat-label>
+                    <input matInput type="text" id="iconEmoji" name="iconEmoji" formControlName="iconEmoji" pTooltip="Optional, this will override the Icon you used for the Webhook">
+                </mat-form-field>
+              </div>
+              <div class="form-group">
+                <mat-form-field>
+                    <mat-label>Url Icon Override</mat-label>
+                    <input matInput type="text" id="iconUrl" name="iconUrl" formControlName="iconUrl" pTooltip="Optional, this will override the Icon you used for the Webhook">
+                </mat-form-field>
+              </div>
+
                 <small>You can find more details about the Slack API <a target="_blank" href="https://api.slack.com/custom-integrations/incoming-webhooks">Here</a></small>
-               
+
 
                 <div class="form-group">
                     <div>
-                        <button [disabled]="form.invalid" mat-raised-button type="button" (click)="test(form)" class="btn btn-primary-outline">
+                        <button [disabled]="form.invalid" mat-raised-button type="button" (click)="test(form)">
                             Test
                             <div id="spinner"></div>
                         </button>
@@ -68,7 +62,7 @@
 
                 <div class="form-group">
                     <div>
-                        <button [disabled]="form.invalid" mat-raised-button type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                        <button [disabled]="form.invalid" mat-raised-button type="submit" id="save">Submit</button>
                     </div>
                 </div>
             </form>

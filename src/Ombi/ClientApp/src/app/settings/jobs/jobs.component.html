@@ -6,83 +6,83 @@
         <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
             <small>Changes require a restart.</small><p>
             <small>You can generate valid CRON Expressions here: <a href="http://www.cronmaker.com/" target="_blank">https://www.cronmaker.com/</a></small>
-            <div style="margin-top:1em;">    
+            <div style="margin-top:1em;">
                 <div class="form-group cronBox">
                     <mat-form-field appearance="outline" floatLabel=always>
-                    <mat-label for="sonarrSync" class="control-mat-label">Sonarr Sync</mat-label>              
+                    <mat-label for="sonarrSync" class="control-mat-label">Sonarr Sync</mat-label>
                         <input matInput type="text" [ngClass]="{'form-error': form.get('sonarrSync').hasError('required')}" id="sonarrSync" name="sonarrSync" formControlName="sonarrSync">
                         <small *ngIf="form.get('sonarrSync').hasError('required')" class="error-text">The Sonarr Sync is required</small></mat-form-field>
-                        <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('sonarrSync')?.value)">Test</button>
-                        
+                        <button mat-raised-button type="button" class="cronbtn" (click)="testCron(form.get('sonarrSync')?.value)">Test</button>
+
                 </div>
                 <div class="form-group cronBox">
                     <mat-form-field appearance="outline" floatLabel=always>
-                    <mat-label for="sickRageSync" class="control-mat-label">SickRage Sync</mat-label>              
+                    <mat-label for="sickRageSync" class="control-mat-label">SickRage Sync</mat-label>
                         <input type="text" matInput [ngClass]="{'form-error': form.get('sonarrSync').hasError('required')}" id="sickRageSync" name="sickRageSync" formControlName="sickRageSync">
                         <small *ngIf="form.get('sickRageSync').hasError('required')" class="error-text">The SickRage Sync is required</small></mat-form-field>
-                        <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('sickRageSync')?.value)">Test</button>
+                        <button mat-raised-button type="button" class="cronbtn" (click)="testCron(form.get('sickRageSync')?.value)">Test</button>
                 </div>
 
                 <div class="form-group cronBox">
                     <mat-form-field appearance="outline" floatLabel=always>
-                        <mat-label for="radarrSync" class="control-mat-label">Radarr Sync</mat-label>              
+                        <mat-label for="radarrSync" class="control-mat-label">Radarr Sync</mat-label>
                             <input type="text" matInput [ngClass]="{'form-error': form.get('radarrSync').hasError('required')}" id="radarrSync" name="radarrSync" formControlName="radarrSync">
                             <small *ngIf="form.get('radarrSync').hasError('required')" class="error-text">The Radarr Sync is required</small></mat-form-field>
-                            <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('radarrSync')?.value)">Test</button>
+                            <button mat-raised-button type="button" class="cronbtn" (click)="testCron(form.get('radarrSync')?.value)">Test</button>
                     </div>
 
                     <div class="form-group cronBox">
                         <mat-form-field appearance="outline" floatLabel=always>
-                            <mat-label for="lidarrArtistSync" class="control-mat-label">Lidarr Sync</mat-label>              
+                            <mat-label for="lidarrArtistSync" class="control-mat-label">Lidarr Sync</mat-label>
                                 <input type="text" matInput [ngClass]="{'form-error': form.get('lidarrArtistSync').hasError('required')}" id="lidarrArtistSync" name="lidarrArtistSync" formControlName="lidarrArtistSync">
                                 <small *ngIf="form.get('lidarrArtistSync').hasError('required')" class="error-text">The Lidarr Sync is required</small></mat-form-field>
-                                <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('lidarrArtistSync')?.value)">Test</button>
+                                <button mat-raised-button type="button" class="cronbtn" (click)="testCron(form.get('lidarrArtistSync')?.value)">Test</button>
                         </div>
-        
+
                 <div class="form-group cronBox">
                     <mat-form-field appearance="outline" floatLabel=always>
-                    <mat-label for="couchPotatoSync" class="control-mat-label">CouchPotato Sync</mat-label>              
+                    <mat-label for="couchPotatoSync" class="control-mat-label">CouchPotato Sync</mat-label>
                         <input type="text" matInput [ngClass]="{'form-error': form.get('radarrSync').hasError('required')}" id="couchPotatoSync" name="couchPotatoSync" formControlName="couchPotatoSync">
                         <small *ngIf="form.get('couchPotatoSync').hasError('required')" class="error-text">The CouchPotato Sync is required</small></mat-form-field>
-                        <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('couchPotatoSync')?.value)">Test</button>
+                        <button mat-raised-button type="button" class="cronbtn" (click)="testCron(form.get('couchPotatoSync')?.value)">Test</button>
                 </div>
-                
+
                 <div class="form-group cronBox">
                     <mat-form-field appearance="outline" floatLabel=always>
-                    <mat-label for="automaticUpdater" class="control-mat-label">Automatic Update</mat-label>              
+                    <mat-label for="automaticUpdater" class="control-mat-label">Automatic Update</mat-label>
                         <input type="text" matInput [ngClass]="{'form-error': form.get('automaticUpdater').hasError('required')}" id="automaticUpdater" name="automaticUpdater" formControlName="automaticUpdater">
                         <small *ngIf="form.get('automaticUpdater').hasError('required')" class="error-text">The Automatic Update is required</small></mat-form-field>
-                        <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('automaticUpdater')?.value)">Test</button>
+                        <button mat-raised-button type="button" class="cronbtn" (click)="testCron(form.get('automaticUpdater')?.value)">Test</button>
                 </div>
 
                 <div class="form-group cronBox">
                     <mat-form-field appearance="outline" floatLabel=always>
-                    <mat-label for="retryRequests" class="control-mat-label">Retry Failed Requests</mat-label>              
+                    <mat-label for="retryRequests" class="control-mat-label">Retry Failed Requests</mat-label>
                         <input type="text" matInput [ngClass]="{'form-error': form.get('retryRequests').hasError('required')}" id="retryRequests" name="retryRequests" formControlName="retryRequests">
                         <small *ngIf="form.get('retryRequests').hasError('required')" class="error-text">The Retry Requests is required</small></mat-form-field>
-                        <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('retryRequests')?.value)">Test</button>
+                        <button mat-raised-button type="button" class="cronbtn" (click)="testCron(form.get('retryRequests')?.value)">Test</button>
                 </div>
 
                 <div class="form-group cronBox">
                     <mat-form-field appearance="outline" floatLabel=always>
-                    <mat-label for="plexContentSync" class="control-mat-label">Plex Sync</mat-label>              
+                    <mat-label for="plexContentSync" class="control-mat-label">Plex Sync</mat-label>
                         <input type="text" matInput [ngClass]="{'form-error': form.get('plexContentSync').hasError('required')}" id="plexContentSync" name="plexContentSync" formControlName="plexContentSync">
                         <small *ngIf="form.get('plexContentSync').hasError('required')" class="error-text">The Plex Sync is required</small></mat-form-field>
-                        <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('plexContentSync')?.value)">Test</button>
+                        <button mat-raised-button type="button" class="cronbtn" (click)="testCron(form.get('plexContentSync')?.value)">Test</button>
                 </div>
                 <div class="form-group cronBox">
                     <mat-form-field appearance="outline" floatLabel=always>
-                        <mat-label for="plexRecentlyAddedSync" class="control-mat-label">Plex Recently Added Sync</mat-label>              
+                        <mat-label for="plexRecentlyAddedSync" class="control-mat-label">Plex Recently Added Sync</mat-label>
                         <input type="text" matInput [ngClass]="{'form-error': form.get('plexRecentlyAddedSync').hasError('required')}" id="plexRecentlyAddedSync" name="plexRecentlyAddedSync" formControlName="plexRecentlyAddedSync">
                         <small *ngIf="form.get('plexRecentlyAddedSync').hasError('required')" class="error-text">The Plex Sync is required</small></mat-form-field>
-                        <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('plexRecentlyAddedSync')?.value)">Test</button>
+                        <button mat-raised-button type="button" class="cronbtn" (click)="testCron(form.get('plexRecentlyAddedSync')?.value)">Test</button>
                 </div>
                 <div class="form-group cronBox">
                     <mat-form-field appearance="outline" floatLabel=always>
-                        <mat-label for="plexWatchlistImport" class="control-mat-label">Plex Watchlist Import</mat-label>              
+                        <mat-label for="plexWatchlistImport" class="control-mat-label">Plex Watchlist Import</mat-label>
                         <input type="text" matInput [ngClass]="{'form-error': form.get('plexWatchlistImport').hasError('required')}" id="plexWatchlistImport" name="plexWatchlistImport" formControlName="plexWatchlistImport">
                         <small *ngIf="form.get('plexWatchlistImport').hasError('required')" class="error-text">The Plex Watchlist Import is required</small></mat-form-field>
-                        <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('plexWatchlistImport')?.value)">Test</button>
+                        <button mat-raised-button type="button" class="cronbtn" (click)="testCron(form.get('plexWatchlistImport')?.value)">Test</button>
                 </div>
 
                 <div class="form-group cronBox">
@@ -90,15 +90,15 @@
                     <mat-label for="embyContentSync" class="control-mat-label">Emby Sync</mat-label>
                         <input type="text" matInput [ngClass]="{'form-error': form.get('embyContentSync').hasError('required')}" id="embyContentSync" name="embyContentSync" formControlName="embyContentSync">
                         <small *ngIf="form.get('embyContentSync').hasError('required')" class="error-text">The Emby Sync is required</small></mat-form-field>
-                        <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('embyContentSync')?.value)">Test</button>
+                        <button mat-raised-button type="button" class="cronbtn" (click)="testCron(form.get('embyContentSync')?.value)">Test</button>
                 </div>
 
                 <div class="form-group cronBox">
                     <mat-form-field appearance="outline" floatLabel=always>
-                        <mat-label for="embyRecentlyAddedSync" class="control-mat-label">Emby Recently Added Sync</mat-label>              
+                        <mat-label for="embyRecentlyAddedSync" class="control-mat-label">Emby Recently Added Sync</mat-label>
                         <input type="text" matInput [ngClass]="{'form-error': form.get('embyRecentlyAddedSync').hasError('required')}" id="embyRecentlyAddedSync" name="embyRecentlyAddedSync" formControlName="embyRecentlyAddedSync">
                         <small *ngIf="form.get('embyRecentlyAddedSync').hasError('required')" class="error-text">The Emby Recently Added Sync is required</small></mat-form-field>
-                        <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('embyRecentlyAddedSync')?.value)">Test</button>
+                        <button mat-raised-button type="button" class="cronbtn" (click)="testCron(form.get('embyRecentlyAddedSync')?.value)">Test</button>
                 </div>
 
                 <div class="form-group cronBox">
@@ -106,7 +106,7 @@
                     <mat-label for="jellyfinContentSync" class="control-label">Jellyfin Sync</mat-label>
                         <input type="text" matInput [ngClass]="{'form-error': form.get('jellyfinContentSync').hasError('required')}" id="jellyfinContentSync" name="jellyfinContentSync" formControlName="jellyfinContentSync">
                         <small *ngIf="form.get('jellyfinContentSync').hasError('required')" class="error-text">The Jellyfin Sync is required</small></mat-form-field>
-                        <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('jellyfinContentSync')?.value)">Test</button>
+                        <button mat-raised-button type="button" class="cronbtn" (click)="testCron(form.get('jellyfinContentSync')?.value)">Test</button>
                 </div>
 
                 <div class="form-group cronBox">
@@ -114,31 +114,31 @@
                     <mat-label for="userImporter" class="control-mat-label">User Importer</mat-label>
                         <input type="text" matInput [ngClass]="{'form-error': form.get('userImporter').hasError('required')}" id="userImporter" name="userImporter" formControlName="userImporter">
                         <small *ngIf="form.get('userImporter').hasError('required')" class="error-text">The User Importer is required</small></mat-form-field>
-                        <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('userImporter')?.value)">Test</button>
+                        <button mat-raised-button type="button" class="cronbtn" (click)="testCron(form.get('userImporter')?.value)">Test</button>
                 </div>
 
                     <div class="form-group cronBox">
                         <mat-form-field appearance="outline" floatLabel=always>
-                        <mat-label for="userImporter" class="control-mat-label">Newsletter</mat-label>              
+                        <mat-label for="userImporter" class="control-mat-label">Newsletter</mat-label>
                             <input type="text" matInput [ngClass]="{'form-error': form.get('newsletter').hasError('required')}" id="newsletter" name="newsletter" formControlName="newsletter">
                             <small *ngIf="form.get('newsletter').hasError('required')" class="error-text">The Newsletter is required</small></mat-form-field>
-                            <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('newsletter')?.value)">Test</button>
+                            <button mat-raised-button type="button" class="cronbtn" (click)="testCron(form.get('newsletter')?.value)">Test</button>
                     </div>
 
                     <div class="form-group cronBox">
                         <mat-form-field appearance="outline" floatLabel=always>
-                        <mat-label for="userImporter" class="control-mat-label">Issue Purge/Delete</mat-label>              
+                        <mat-label for="userImporter" class="control-mat-label">Issue Purge/Delete</mat-label>
                             <input type="text" matInput [ngClass]="{'form-error': form.get('issuesPurge').hasError('required')}" id="issuesPurge" name="issuesPurge" formControlName="issuesPurge">
                             <small *ngIf="form.get('issuesPurge').hasError('required')" class="error-text">The Issues Purge is required</small></mat-form-field>
-                            <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('issuesPurge')?.value)">Test</button>
+                            <button mat-raised-button type="button" class="cronbtn" (click)="testCron(form.get('issuesPurge')?.value)">Test</button>
                     </div>
 
                     <div class="form-group cronBox">
                         <mat-form-field appearance="outline" floatLabel=always>
-                        <mat-label for="userImporter" class="control-mat-label">Media Data Refresh</mat-label>              
+                        <mat-label for="userImporter" class="control-mat-label">Media Data Refresh</mat-label>
                             <input type="text" matInput [ngClass]="{'form-error': form.get('mediaDatabaseRefresh').hasError('required')}" id="mediaDatabaseRefresh" name="mediaDatabaseRefresh" formControlName="mediaDatabaseRefresh">
                             <small *ngIf="form.get('mediaDatabaseRefresh').hasError('required')" class="error-text">The Media Database Refresh is required</small></mat-form-field>
-                            <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('mediaDatabaseRefresh')?.value)">Test</button>
+                            <button mat-raised-button type="button" class="cronbtn" (click)="testCron(form.get('mediaDatabaseRefresh')?.value)">Test</button>
                     </div>
 
                     <div class="form-group cronBox">
@@ -146,13 +146,13 @@
                         <mat-label for="userImporter" class="control-mat-label">Auto Available Request Deletion</mat-label>
                             <input type="text" matInput [ngClass]="{'form-error': form.get('autoDeleteRequests').hasError('required')}" id="autoDeleteRequests" name="autoDeleteRequests" formControlName="autoDeleteRequests">
                             <small *ngIf="form.get('autoDeleteRequests').hasError('required')" class="error-text">Auto Available Request Deletion is required</small></mat-form-field>
-                            <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('autoDeleteRequests')?.value)">Test</button>
+                            <button mat-raised-button type="button" class="cronbtn" (click)="testCron(form.get('autoDeleteRequests')?.value)">Test</button>
                     </div>
             </div>
             <div class="form-group cronBox">
                     <div>
                         <button mat-raised-button type="submit" [disabled]="form.invalid" class="mat-focus-indicator mat-raised-button mat-button-base mat-accent">Submit</button>
-                        
+
                     </div>
                 </div>
         </form>
