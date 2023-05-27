@@ -1,3 +1,17 @@
+# [4.41.0](https://github.com/Ombi-app/Ombi/compare/v4.40.0...v4.41.0) (2023-05-27)
+
+
+### Bug Fixes
+
+* Fix various styling issues ([#4935](https://github.com/Ombi-app/Ombi/issues/4935)) ([90b934a](https://github.com/Ombi-app/Ombi/commit/90b934a36996c0f489096f3641350a1c0d3b7c89))
+
+
+### Features
+
+* **emby:** Show end-user external IP address to Emby when logging in as an Emby user ([#4949](https://github.com/Ombi-app/Ombi/issues/4949)) ([79cef7e](https://github.com/Ombi-app/Ombi/commit/79cef7e0f8643e36536a9ea84dd1a07c232403a9)), closes [#4947](https://github.com/Ombi-app/Ombi/issues/4947)
+
+
+
 # [4.40.0](https://github.com/Ombi-app/Ombi/compare/v4.39.1...v4.40.0) (2023-05-18)
 
 
@@ -2424,20 +2438,6 @@
 ### Bug Fixes
 
 * **plex:** :bug: Fixed the issue where you couldn't add a new server on a fresh setup after the settings page rework ([187b18d](https://github.com/Ombi-app/Ombi/commit/187b18d5c01f6a13831e4a410b5d7c349e27d847))
-
-
-
-# [4.32.0](https://github.com/Ombi-app/Ombi/compare/v4.31.0...v4.32.0) (2022-11-18)
-
-
-### Bug Fixes
-
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([#4801](https://github.com/Ombi-app/Ombi/issues/4801)) ([4692003](https://github.com/Ombi-app/Ombi/commit/46920032baed04675b2ffbe1700afdc0740a4ac4))
-
-
-### Features
-
-* **plex:** Rework the Plex Settings page ([#4805](https://github.com/Ombi-app/Ombi/issues/4805)) ([1b8c47f](https://github.com/Ombi-app/Ombi/commit/1b8c47f3163f618851d4904732cb07015e1e93ff))
 
 
 
