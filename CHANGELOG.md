@@ -1,3 +1,7 @@
+## [4.41.1](https://github.com/Ombi-app/Ombi/compare/v4.41.0...v4.41.1) (2023-05-27)
+
+
+
 # [4.41.0](https://github.com/Ombi-app/Ombi/compare/v4.40.0...v4.41.0) (2023-05-27)
 
 
@@ -2429,15 +2433,6 @@
 ### Bug Fixes
 
 * **sonarr:** :bug: Sonarr V4 should work now ([#4810](https://github.com/Ombi-app/Ombi/issues/4810)) ([37655af](https://github.com/Ombi-app/Ombi/commit/37655aff9d3d133b42f5664bc9445d6571e966d6))
-
-
-
-## [4.32.1](https://github.com/Ombi-app/Ombi/compare/v4.32.0...v4.32.1) (2022-11-21)
-
-
-### Bug Fixes
-
-* **plex:** :bug: Fixed the issue where you couldn't add a new server on a fresh setup after the settings page rework ([187b18d](https://github.com/Ombi-app/Ombi/commit/187b18d5c01f6a13831e4a410b5d7c349e27d847))
 
 
 
