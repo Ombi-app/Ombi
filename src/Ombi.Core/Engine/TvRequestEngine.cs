@@ -916,7 +916,7 @@ namespace Ombi.Core.Engine
             var theMovieDbIds = childRequests.Select(x => x.Id);
             foreach (var request in childRequests)
             {
-                var requestedEpisodes = getEpisodesKeys(request);
+                var requestedEpisodes = GetEpisodesKeys(request);
 
                 var playedEpisodes = _userPlayedEpisodeRepository
                     .GetAll()
@@ -934,7 +934,7 @@ namespace Ombi.Core.Engine
             }
         }
 
-        private List<EpisodeKey> getEpisodesKeys(ChildRequests request)
+        private List<EpisodeKey> GetEpisodesKeys(ChildRequests request)
         {
             List<EpisodeKey> result = new List<EpisodeKey>();
             foreach(var season in request.SeasonRequests) 

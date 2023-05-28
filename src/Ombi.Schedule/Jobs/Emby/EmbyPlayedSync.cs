@@ -178,7 +178,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 return;
             }
 
-            await addToContent(content, new UserPlayedEpisode()
+            await AddToContent(content, new UserPlayedEpisode()
             {
                 TheMovieDbId = int.Parse(parent.TheMovieDbId),
                 SeasonNumber = episode.ParentIndexNumber,
@@ -194,7 +194,7 @@ namespace Ombi.Schedule.Jobs.Emby
                     _logger.LogDebug($"Multiple-episode file detected. Adding episode ${episodeNumber}");
                     episodeNumber++;
 
-                    await addToContent(content, new UserPlayedEpisode()
+                    await AddToContent(content, new UserPlayedEpisode()
                     {
                         TheMovieDbId = int.Parse(parent.TheMovieDbId),
                         SeasonNumber = episode.ParentIndexNumber,
@@ -208,7 +208,7 @@ namespace Ombi.Schedule.Jobs.Emby
             }
         }
 
-        private async Task addToContent(ICollection<UserPlayedEpisode> content, UserPlayedEpisode episode)
+        private async Task AddToContent(ICollection<UserPlayedEpisode> content, UserPlayedEpisode episode)
         {
 
             // Check if it exists

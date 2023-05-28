@@ -249,15 +249,11 @@ namespace Ombi.Api.Emby
             req.AddHeader("Device", "Ombi");
         }
 
-        public async Task<EmbyItemContainer<EmbyMovie>> GetMoviesPlayed(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri)
-        {
-            return await GetPlayed<EmbyMovie>("Movie", apiKey, userId, baseUri, startIndex, count, parentIdFilder, "ProviderIds");
-        }
+        public async Task<EmbyItemContainer<EmbyMovie>> GetMoviesPlayed(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri) =>
+            await GetPlayed<EmbyMovie>("Movie", apiKey, userId, baseUri, startIndex, count, parentIdFilder, "ProviderIds");
 
-        public async Task<EmbyItemContainer<EmbyEpisodes>> GetTvPlayed(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri)
-        {
-            return await GetPlayed<EmbyEpisodes>("Episode", apiKey, userId, baseUri, startIndex, count, parentIdFilder);
-        }
+        public async Task<EmbyItemContainer<EmbyEpisodes>> GetTvPlayed(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri) =>
+           await GetPlayed<EmbyEpisodes>("Episode", apiKey, userId, baseUri, startIndex, count, parentIdFilder);
 
         private async Task<EmbyItemContainer<T>> GetPlayed<T>(
             string type,
