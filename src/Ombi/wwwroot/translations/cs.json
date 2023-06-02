@@ -161,6 +161,7 @@
         "RequestStatus": "Stav požadavku",
         "Watched": "Watched",
         "WatchedTooltip": "The user who made the request has watched it",
+        "WatchedProgressTooltip": "Shows how much the user who made the request has watched it",
         "WatchedByUsersCount": "{{count}} users have watched this.",
         "Denied": " Zamítnuto:",
         "TheatricalRelease": "V kinech od: {{date}}",
