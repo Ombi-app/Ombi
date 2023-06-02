@@ -35,7 +35,8 @@ namespace Ombi.Core.Engine
         public TvRequestEngine(ITvMazeApi tvApi, IMovieDbApi movApi, IRequestServiceMain requestService, ICurrentUser user,
             INotificationHelper helper, IRuleEvaluator rule, OmbiUserManager manager, ILogger<TvRequestEngine> logger,
             ITvSender sender, IRepository<RequestLog> rl, ISettingsService<OmbiSettings> settings, ICacheService cache,
-            IRepository<RequestSubscription> sub, IMediaCacheService mediaCacheService) : base(user, requestService, rule, manager, cache, settings, sub)
+            IRepository<RequestSubscription> sub, IMediaCacheService mediaCacheService,
+            IUserPlayedEpisodeRepository userPlayedEpisodeRepository) : base(user, requestService, rule, manager, cache, settings, sub)
         {
             TvApi = tvApi;
             MovieDbApi = movApi;
@@ -44,6 +45,7 @@ namespace Ombi.Core.Engine
             TvSender = sender;
             _requestLog = rl;
             _mediaCacheService = mediaCacheService;
+            _userPlayedEpisodeRepository = userPlayedEpisodeRepository;
         }
 
         private INotificationHelper NotificationHelper { get; }
@@ -54,6 +56,7 @@ namespace Ombi.Core.Engine
         private readonly ILogger<TvRequestEngine> _logger;
         private readonly IRepository<RequestLog> _requestLog;
         private readonly IMediaCacheService _mediaCacheService;
+        private readonly IUserPlayedEpisodeRepository _userPlayedEpisodeRepository;
 
         public async Task<RequestEngineResult> RequestTvShow(TvRequestViewModel tv)
         {
@@ -292,7 +295,7 @@ namespace Ombi.Core.Engine
                     .Skip(position).Take(count).ToListAsync();
 
             }
-            await CheckForSubscription(shouldHide, allRequests);
+            await FillAdditionalFields(shouldHide, allRequests);
 
             return new RequestsViewModel<TvRequests>
             {
@@ -328,7 +331,7 @@ namespace Ombi.Core.Engine
                 return new RequestsViewModel<TvRequests>();
             }
 
-            await CheckForSubscription(shouldHide, allRequests);
+            await FillAdditionalFields(shouldHide, allRequests);
 
             return new RequestsViewModel<TvRequests>
             {
@@ -351,7 +354,7 @@ namespace Ombi.Core.Engine
                 allRequests = await TvRepository.Get().ToListAsync();
             }
 
-            await CheckForSubscription(shouldHide, allRequests);
+            await FillAdditionalFields(shouldHide, allRequests);
             return allRequests;
         }
 
@@ -396,7 +399,7 @@ namespace Ombi.Core.Engine
                 ? allRequests.OrderBy(x => prop.GetValue(x)).ToList()
                 : allRequests.OrderByDescending(x => prop.GetValue(x)).ToList();
             
-            await CheckForSubscription(shouldHide, allRequests);
+            await FillAdditionalFields(shouldHide, allRequests);
 
             // Make sure we do not show duplicate child requests
             allRequests = allRequests.DistinctBy(x => x.ParentRequest.Title).ToList();
@@ -469,7 +472,7 @@ namespace Ombi.Core.Engine
                 ? allRequests.OrderBy(x => prop.GetValue(x)).ToList()
                 : allRequests.OrderByDescending(x => prop.GetValue(x)).ToList();
             
-            await CheckForSubscription(shouldHide, allRequests);
+            await FillAdditionalFields(shouldHide, allRequests);
 
             // Make sure we do not show duplicate child requests
             allRequests = allRequests.DistinctBy(x => x.ParentRequest.Title).ToList();
@@ -523,7 +526,7 @@ namespace Ombi.Core.Engine
             allRequests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
                 ? allRequests.OrderBy(x => prop.GetValue(x)).ToList()
                 : allRequests.OrderByDescending(x => prop.GetValue(x)).ToList();
-            await CheckForSubscription(shouldHide, allRequests);
+            await FillAdditionalFields(shouldHide, allRequests);
 
             // Make sure we do not show duplicate child requests
             allRequests = allRequests.DistinctBy(x => x.ParentRequest.Title).ToList();
@@ -551,7 +554,7 @@ namespace Ombi.Core.Engine
                 allRequests = await TvRepository.GetLite().ToListAsync();
             }
 
-            await CheckForSubscription(shouldHide, allRequests);
+            await FillAdditionalFields(shouldHide, allRequests);
             return allRequests;
         }
 
@@ -570,7 +573,7 @@ namespace Ombi.Core.Engine
                 request = await TvRepository.Get().Where(x => x.Id == requestId).FirstOrDefaultAsync();
             }
 
-            await CheckForSubscription(shouldHide, new List<TvRequests>{request});
+            await FillAdditionalFields(shouldHide, new List<TvRequests>{request});
             return request;
         }
 
@@ -624,7 +627,7 @@ namespace Ombi.Core.Engine
                 allRequests = await TvRepository.GetChild().Include(x => x.SeasonRequests).Where(x => x.ParentRequestId == tvId).ToListAsync();
             }
 
-            await CheckForSubscription(shouldHide, allRequests);
+            await FillAdditionalFields(shouldHide, allRequests);
 
             return allRequests;
         }
@@ -643,7 +646,7 @@ namespace Ombi.Core.Engine
             }
             var results = await allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase)).ToListAsync();
 
-            await CheckForSubscription(shouldHide, results);
+            await FillAdditionalFields(shouldHide, results);
             return results;
         }
 
@@ -864,12 +867,18 @@ namespace Ombi.Core.Engine
             }
         }
 
-        private async Task CheckForSubscription(HideResult shouldHide, List<TvRequests> x)
+        private async Task FillAdditionalFields(HideResult shouldHide, List<TvRequests> x)
         {
             foreach (var tvRequest in x)
             {
-                await CheckForSubscription(shouldHide, tvRequest.ChildRequests);
+                await FillAdditionalFields(shouldHide, tvRequest.ChildRequests);
             }
+        }
+
+        private async Task FillAdditionalFields(HideResult shouldHide, List<ChildRequests> childRequests)
+        {
+            await CheckForSubscription(shouldHide, childRequests);
+            CheckForPlayed(shouldHide, childRequests);
         }
 
         private async Task CheckForSubscription(HideResult shouldHide, List<ChildRequests> childRequests)
@@ -894,6 +903,52 @@ namespace Ombi.Core.Engine
                     x.Subscribed = result != null;
                 }
             }
+        }
+
+        private class EpisodeKey
+        {
+            public int SeasonNumber;
+            public int EpisodeNumber;
+        }
+
+        private void CheckForPlayed(HideResult shouldHide, List<ChildRequests> childRequests)
+        {
+            var theMovieDbIds = childRequests.Select(x => x.Id);
+            foreach (var request in childRequests)
+            {
+                var requestedEpisodes = GetEpisodesKeys(request);
+
+                var playedEpisodes = _userPlayedEpisodeRepository
+                    .GetAll()
+                    .Where(x => x.TheMovieDbId == request.Id && x.UserId == request.RequestedUserId)
+                    .AsEnumerable()
+                    .Join(requestedEpisodes,
+                        played => new { played.SeasonNumber, played.EpisodeNumber },
+                        requested => new { requested.SeasonNumber, requested.EpisodeNumber },
+                        (played, requested) => new { played });
+
+                var playedCount = playedEpisodes.Count();
+                var toWatchCount = requestedEpisodes.Count();
+                request.RequestedUserPlayedProgress = 100 * playedCount / toWatchCount;
+                
+            }
+        }
+
+        private List<EpisodeKey> GetEpisodesKeys(ChildRequests request)
+        {
+            List<EpisodeKey> result = new List<EpisodeKey>();
+            foreach(var season in request.SeasonRequests) 
+            {
+                foreach(var episode in season.Episodes) 
+                {
+                    result.Add(new EpisodeKey
+                    {
+                        SeasonNumber = season.SeasonNumber,
+                        EpisodeNumber = episode.EpisodeNumber
+                    });
+                }
+            }
+            return result;
         }
 
         private async Task<RequestEngineResult> AddExistingRequest(ChildRequests newRequest, TvRequests existingRequest, string requestOnBehalf, int rootFolder, int qualityProfile)

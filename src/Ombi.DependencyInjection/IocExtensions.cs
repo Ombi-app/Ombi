@@ -198,6 +198,7 @@ namespace Ombi.DependencyInjection
             services.AddScoped<IJellyfinContentRepository, JellyfinContentRepository>();
             services.AddScoped<INotificationTemplatesRepository, NotificationTemplatesRepository>();
             services.AddScoped<IUserPlayedMovieRepository, UserPlayedMovieRepository>();
+            services.AddScoped<IUserPlayedEpisodeRepository, UserPlayedEpisodeRepository>();
 
             services.AddScoped<ITvRequestRepository, TvRequestRepository>();
             services.AddScoped<IMovieRequestRepository, MovieRequestRepository>();

@@ -132,6 +132,7 @@ export interface ITvRequests {
   background: any;
   totalSeasons: number;
   tvDbId: number; // NO LONGER USED
+  requestedUserPlayedProgress: number;
 
   open: boolean; // THIS IS FOR THE UI
 
