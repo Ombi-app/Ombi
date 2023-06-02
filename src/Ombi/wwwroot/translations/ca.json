@@ -161,6 +161,7 @@
         "RequestStatus": "Estat de la sol·licitud",
         "Watched": "Watched",
         "WatchedTooltip": "The user who made the request has watched it",
+        "WatchedProgressTooltip": "Shows how much the user who made the request has watched it",
         "WatchedByUsersCount": "{{count}} users have watched this.",
         "Denied": " Denegat:",
         "TheatricalRelease": "En cines: {{date}}",
