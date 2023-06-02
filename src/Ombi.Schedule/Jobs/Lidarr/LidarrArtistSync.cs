@@ -52,11 +52,9 @@ namespace Ombi.Schedule.Jobs.Lidarr
                             await strat.ExecuteAsync(async () =>
                             {
                                 // Let's remove the old cached data
-                                using (var tran = await _ctx.Database.BeginTransactionAsync())
-                                {
-                                    await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM LidarrArtistCache");
-                                    tran.Commit();
-                                }
+                                using var tran = await _ctx.Database.BeginTransactionAsync();
+                                await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM LidarrArtistCache");
+                                await tran.CommitAsync();
                             });
 
                             var artistCache = new List<LidarrArtistCache>();
@@ -76,13 +74,11 @@ namespace Ombi.Schedule.Jobs.Lidarr
                             strat = _ctx.Database.CreateExecutionStrategy();
                             await strat.ExecuteAsync(async () =>
                             {
-                                using (var tran = await _ctx.Database.BeginTransactionAsync())
-                                {
-                                    await _ctx.LidarrArtistCache.AddRangeAsync(artistCache);
+                                using var tran = await _ctx.Database.BeginTransactionAsync();
+                                await _ctx.LidarrArtistCache.AddRangeAsync(artistCache);
 
-                                    await _ctx.SaveChangesAsync();
-                                    tran.Commit();
-                                }
+                                await _ctx.SaveChangesAsync();
+                                await tran.CommitAsync();
                             });
                         }
                     }

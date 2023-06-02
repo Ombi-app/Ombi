@@ -34,4 +34,28 @@ export class MovieInformationPanelComponent implements OnInit {
 
             this.searchService.getMovieStreams(this.movie.id).subscribe(x => this.streams = x);
     }
+
+    public getStatus(movie: ISearchMovieResultV2) {
+      if (!movie.available && movie.requested) {
+        if (movie.denied) {
+          return "Common.RequestDenied";
+        }
+        if (movie.approved) {
+          return "Common.ProcessingRequest";
+        } else {
+          return "Common.PendingApproval";
+        }
+      }
+
+      if (!movie.available4K && movie.has4KRequest) {
+        if (movie.denied4K) {
+          return "Common.RequestDenied4K";
+        }
+        if (movie.approved4K) {
+          return "Common.ProcessingRequest4K";
+        } else {
+          return "Common.PendingApproval4K";
+        }
+      }
+    }
 }

@@ -49,11 +49,9 @@ namespace Ombi.Schedule.Jobs.SickRage
                     var strat = _ctx.Database.CreateExecutionStrategy();
                     await strat.ExecuteAsync(async () =>
                     {
-                        using (var tran = await _ctx.Database.BeginTransactionAsync())
-                        {
-                            await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SickRageCache");
-                            tran.Commit();
-                        }
+                        using var tran = await _ctx.Database.BeginTransactionAsync();
+                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SickRageCache");
+                        await tran.CommitAsync();
                     });
 
                     var entites = ids.Select(id => new SickRageCache { TvDbId = id }).ToList();
@@ -84,12 +82,10 @@ namespace Ombi.Schedule.Jobs.SickRage
                     strat = _ctx.Database.CreateExecutionStrategy();
                     await strat.ExecuteAsync(async () =>
                     {
-                        using (var tran = await _ctx.Database.BeginTransactionAsync())
-                        {
-                            await _ctx.SickRageEpisodeCache.AddRangeAsync(episodesToAdd);
-                            await _ctx.SaveChangesAsync();
-                            tran.Commit();
-                        }
+                        using var tran = await _ctx.Database.BeginTransactionAsync();
+                        await _ctx.SickRageEpisodeCache.AddRangeAsync(episodesToAdd);
+                        await _ctx.SaveChangesAsync();
+                        await tran.CommitAsync();
                     });
                 }
             }

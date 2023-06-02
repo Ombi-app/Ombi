@@ -69,7 +69,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
                     {
                         using var tran = await _ctx.Database.BeginTransactionAsync();
                         await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrCache");
-                        tran.Commit();
+                        await tran.CommitAsync();
                     });
 
                     var sonarrCacheToSave = new HashSet<SonarrCache>();
@@ -97,7 +97,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
                     {
                         using var tran = await _ctx.Database.BeginTransactionAsync();
                         await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrEpisodeCache");
-                        tran.Commit();
+                        await tran.CommitAsync();
                     });
 
                     foreach (var s in ids)
@@ -156,7 +156,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
                             await _ctx.SonarrEpisodeCache.AddRangeAsync(episodesToAdd);
                             _log.LogDebug("Commiting the transaction");
                             await _ctx.SaveChangesAsync();
-                            tran.Commit();
+                            await tran.CommitAsync();
                         });
                     }
 

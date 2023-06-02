@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { ControlContainer, UntypedFormGroup, Validators } from "@angular/forms";
+import { finalize, map } from "rxjs";
 
-import { IMinimumAvailability, IRadarrProfile, IRadarrRootFolder, IRadarrSettings } from "../../../interfaces";
+import { IMinimumAvailability, IRadarrProfile, IRadarrRootFolder, IRadarrSettings, ITag } from "../../../interfaces";
 import { TesterService, NotificationService, RadarrService } from "../../../services";
 
 
@@ -16,8 +17,10 @@ export class RadarrFormComponent implements OnInit {
     public qualities: IRadarrProfile[];
     public rootFolders: IRadarrRootFolder[];
     public minimumAvailabilityOptions: IMinimumAvailability[];
+    public tags: ITag[];
     public profilesRunning: boolean;
     public rootFoldersRunning: boolean;
+    public tagsRunning: boolean;
     public form: UntypedFormGroup;
 
     constructor(private radarrService: RadarrService,
@@ -34,6 +37,10 @@ export class RadarrFormComponent implements OnInit {
 
         this.rootFolders = [];
         this.rootFolders.push({ path: "Please Select", id: -1 });
+
+        this.tags = [];
+        this.tags.push({ label: "None", id: -1 });
+
         this.minimumAvailabilityOptions = [
             { name: "Announced", value: "Announced" },
             { name: "In Cinemas", value: "InCinemas" },
@@ -47,9 +54,16 @@ export class RadarrFormComponent implements OnInit {
         if (this.form.controls.defaultRootPath.value) {
             this.getRootFolders(this.form);
         }
+
+        if (this.form.controls.tag.value) {
+            this.getTags(this.form);
+        }
+
+        this.toggleValidators();
     }
 
     public toggleValidators() {
+        debugger;
         const enabled = this.form.controls.enabled.value as boolean;
         this.form.controls.apiKey.setValidators(enabled ? [Validators.required] : null);
         this.form.controls.defaultQualityProfile.setValidators(enabled ? [Validators.required] : null);
@@ -79,6 +93,20 @@ export class RadarrFormComponent implements OnInit {
              this.rootFoldersRunning = false;
              this.notificationService.success("Successfully retrieved the Root Folders");
          });
+    }
+
+    public getTags(form: UntypedFormGroup) {
+        this.tagsRunning = true;
+        this.radarrService.getTagsWithSettings(form.value).pipe(
+            finalize(() => {
+                this.tagsRunning = false;
+                this.tags.unshift({ label: "None", id: -1 });
+                this.notificationService.success("Successfully retrieved the Tags");
+            }),
+            map(result => {
+                this.tags = result;
+            })
+        ).subscribe()
     }
 
     public test(form: UntypedFormGroup) {

@@ -16,7 +16,7 @@ namespace Ombi.Store.Migrations.ExternalMySql
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("ProductVersion", "6.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Ombi.Store.Entities.CouchPotatoCache", b =>
@@ -486,6 +486,46 @@ namespace Ombi.Store.Migrations.ExternalMySql
                     b.HasKey("Id");
 
                     b.ToTable("SonarrEpisodeCache");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.UserPlayedEpisode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("EpisodeNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SeasonNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TheMovieDbId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserPlayedEpisode");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.UserPlayedMovie", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("TheMovieDbId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserPlayedMovie");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.EmbyEpisode", b =>

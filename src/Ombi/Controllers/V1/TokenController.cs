@@ -33,16 +33,18 @@ namespace Ombi.Controllers.V1
     [ApiV1]
     [Produces("application/json")]
     [ApiController]
-    public class TokenController : ControllerBase
+    public class TokenController : BaseController
     {
         public TokenController(OmbiUserManager um, ITokenRepository token,
-            IPlexOAuthManager oAuthManager, ILogger<TokenController> logger, ISettingsService<AuthenticationSettings> auth)
+            IPlexOAuthManager oAuthManager, ILogger<TokenController> logger, ISettingsService<AuthenticationSettings> auth,
+            ISettingsService<UserManagementSettings> userManagement)
         {
             _userManager = um;
             _token = token;
             _plexOAuthManager = oAuthManager;
             _log = logger;
             _authSettings = auth;
+            _userManagementSettings = userManagement;
         }
 
         private readonly ITokenRepository _token;
@@ -50,6 +52,7 @@ namespace Ombi.Controllers.V1
         private readonly IPlexOAuthManager _plexOAuthManager;
         private readonly ILogger<TokenController> _log;
         private readonly ISettingsService<AuthenticationSettings> _authSettings;
+        private readonly ISettingsService<UserManagementSettings> _userManagementSettings;
 
         /// <summary>
         /// Gets the token.
@@ -79,7 +82,7 @@ namespace Ombi.Controllers.V1
                     user.EmailLogin = true;
                 }
 
-
+                _userManager.ClientIpAddress = GetRequestIP();
                 // Verify Password
                 if (await _userManager.CheckPasswordAsync(user, model.Password))
                 {
@@ -206,14 +209,14 @@ namespace Ombi.Controllers.V1
                 // Could this be an email login?
                 user = await _userManager.FindByEmailAsync(account.user.email);
 
-                if (user == null)
+                if (user == null || user.UserType != UserType.PlexUser)
                 {
                     return new UnauthorizedResult();
                 }
             }
 
             user.MediaServerToken = account.user.authentication_token;
-            await  _userManager.UpdateAsync(user);
+            await _userManager.UpdateAsync(user);
 
             return await CreateToken(true, user);
         }
@@ -266,27 +269,6 @@ namespace Ombi.Controllers.V1
             public string Userename { get; set; }
         }
 
-        private string GetRequestIP()
-        {
-            string ip = null;
-
-            if (Request.HttpContext?.Request?.Headers != null && Request.HttpContext.Request.Headers.ContainsKey("X-Forwarded-For"))
-            {
-                var forwardedip = Request.HttpContext.Request.Headers["X-Forwarded-For"].ToString();
-                ip = forwardedip.TrimEnd(',').Split(",").Select(s => s.Trim()).FirstOrDefault();
-            }
-
-            if (string.IsNullOrWhiteSpace(ip) && Request.HttpContext?.Connection?.RemoteIpAddress != null)
-                ip = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-
-            if (string.IsNullOrWhiteSpace(ip) && Request.HttpContext?.Request?.Headers != null && Request.HttpContext.Request.Headers.ContainsKey("REMOTE_ADDR"))
-            {
-                var remoteip = Request.HttpContext.Request.Headers["REMOTE_ADDR"].ToString();
-                ip = remoteip.TrimEnd(',').Split(",").Select(s => s.Trim()).FirstOrDefault();
-            }
-
-            return ip;
-        }
 
         [HttpPost("header_auth")]
         [ProducesResponseType(401)]
@@ -305,7 +287,28 @@ namespace Ombi.Controllers.V1
                     var user = await _userManager.FindByNameAsync(username);
                     if (user == null)
                     {
-                        return new UnauthorizedResult();
+                        if (authSettings.HeaderAuthCreateUser)
+                        {
+                            var defaultSettings = await _userManagementSettings.GetSettingsAsync();
+                            user = new OmbiUser {
+                                UserName = username,
+                                UserType = UserType.LocalUser,
+                                StreamingCountry = defaultSettings.DefaultStreamingCountry ?? "US",
+                                MovieRequestLimit = defaultSettings.MovieRequestLimit,
+                                MovieRequestLimitType = defaultSettings.MovieRequestLimitType,
+                                EpisodeRequestLimit = defaultSettings.EpisodeRequestLimit,
+                                EpisodeRequestLimitType = defaultSettings.EpisodeRequestLimitType,
+                                MusicRequestLimit = defaultSettings.MusicRequestLimit,
+                                MusicRequestLimitType = defaultSettings.MusicRequestLimitType,
+                            };
+
+                            await _userManager.CreateAsync(user);
+                            await _userManager.AddToRolesAsync(user, defaultSettings.DefaultRoles);
+                        }
+                        else
+                        {
+                            return new UnauthorizedResult();
+                        }
                     }
 
                     return await CreateToken(true, user);

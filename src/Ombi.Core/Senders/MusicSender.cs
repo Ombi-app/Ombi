@@ -100,7 +100,7 @@ namespace Ombi.Core.Senders
                     addOptions = new Addoptions
                     {
                         monitored = true,
-                        monitor = MonitorTypes.None,
+                        monitor = MonitorTypes.Existing,
                         searchForMissingAlbums = false,
                         AlbumsToMonitor = new[] {model.ForeignAlbumId}
                     },

@@ -14,12 +14,17 @@
             <small bottom>When a Plex User adds something to their watchlist in Plex, it will turn up in Ombi as a Request if enabled. This <b>only</b> applies to users that are logging in with their Plex Account
                 <br>Request limits if set are all still applied
             </small>
-        </settings-plex-form-field>            
-        
+        </settings-plex-form-field>
+
+        <settings-plex-form-field [disabled]="!settings.enableWatchlistImport" [label]="'Watchlist - Request Whole Show'" disabled [type]="'checkbox'" [id]="'monitorAll'" [(value)]="settings.monitorAll">
+            <small bottom>If enabled then watchlist requests for TV Shows will request the <strong><em>whole</em></strong> show. If not enabled it will only request the latest season.
+            </small>
+        </settings-plex-form-field>
+
 
 
         <hr>
-        
+
 <div class="row">
 <div class="col-md-7">
         <h2 style="margin: 1em 0 0 0;">Servers</h2>

@@ -5,34 +5,42 @@
     <legend>Mass Email</legend>
 <div class="row">
     <div class="col-md-6">
-            <div class="form-group">
-                        <input type="text" class="form-control form-control-custom " id="subject" name="subject" placeholder="Subject" [(ngModel)]="subject" [ngClass]="{'form-error': missingSubject}">
-                        <small *ngIf="missingSubject" class="error-text">Hey! We need a subject!</small>
-                </div>
 
-                <div class="form-group" >
-                    <textarea rows="10" type="text" class="form-control-custom form-control" id="themeContent" name="themeContent" [(ngModel)]="message" placeholder="This supports HTML"></textarea>
-                </div>
+        <div class="form-group">
+            <mat-form-field>
+                <mat-label>Subject</mat-label>
+                <input matInput type="text" id="subject" name="subject" placeholder="Subject" [(ngModel)]="subject" [ngClass]="{'form-error': missingSubject}">
+                <small *ngIf="missingSubject" class="error-text">Hey! We need a subject!</small>
+            </mat-form-field>
+        </div>
 
-                <div class="form-group">
-                    <label for="logo" class="control-label">Message Preview</label>
-                    <br/>
-                    <small>May appear differently on email clients</small>
-                    <hr/>
-                    <div [innerHTML]="message"></div>
-                    <hr/>
-                </div>
-                <small>This will send out the Mass email BCC'ing all of the selected users rather than sending individual messages</small>
-                <div class="md-form-field">
-                    <mat-slide-toggle [(ngModel)]="bcc">BCC</mat-slide-toggle>
-                  </div>
-                  <br>
-                  <br>
-                <div class="form-group">
-                        <div>
-                            <button type="submit" id="save" (click)="send()" class="mat-focus-indicator btn-spacing mat-raised-button mat-button-base mat-accent">Send</button>
-                        </div>
-                    </div>
+        <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Content</mat-label>
+              <textarea matInput rows="10" type="text" id="themeContent" name="themeContent" [(ngModel)]="message" placeholder="This supports HTML"></textarea>
+            </mat-form-field>
+        </div>
+
+        <div class="form-group">
+            <label for="logo" class="control-label">Message Preview</label>
+            <br/>
+            <small>May appear differently on email clients</small>
+            <mat-divider></mat-divider>
+            <div [innerHTML]="message"></div>
+            <mat-divider></mat-divider>
+        </div>
+
+        <small>This will send out the Mass email BCC'ing all of the selected users rather than sending individual messages</small>
+        <div class="md-form-field">
+            <mat-slide-toggle [(ngModel)]="bcc">BCC</mat-slide-toggle>
+        </div>
+        <br>
+        <br>
+        <div class="form-group">
+            <div>
+                <button type="submit" id="save" (click)="send()" class="mat-focus-indicator btn-spacing mat-raised-button mat-button-base mat-accent">Send</button>
+            </div>
+        </div>
     </div>
     <div class="col-md-6">
         <!--Users Section-->

@@ -23,6 +23,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
 import {MatRadioModule} from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -66,6 +67,7 @@ import { WatchProvidersSelectComponent } from "./components/watch-providers-sele
     MomentModule,
     MatCardModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     MatAutocompleteModule,
     MatInputModule,
     MatTabsModule,
@@ -99,6 +101,7 @@ import { WatchProvidersSelectComponent } from "./components/watch-providers-sele
       TranslateModule,
       SidebarModule,
       MatProgressSpinnerModule,
+      MatProgressBarModule,
       IssuesReportComponent,
       EpisodeRequestComponent,
       AdminRequestDialogComponent,

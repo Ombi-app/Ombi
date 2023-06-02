@@ -23,6 +23,8 @@ export interface IMovieRequests extends IFullBaseRequest {
   deniedReason4K: string;
   requestedDate4k: Date;
   requestedDate: Date;
+  watchedByRequestedUser: boolean;
+  playedByUsersCount: number;
 
   // For the UI
   rootPathOverrideTitle: string;
@@ -130,6 +132,7 @@ export interface ITvRequests {
   background: any;
   totalSeasons: number;
   tvDbId: number; // NO LONGER USED
+  requestedUserPlayedProgress: number;
 
   open: boolean; // THIS IS FOR THE UI
 

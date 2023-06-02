@@ -1,7 +1,7 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ICustomizationSettings, IUser, RequestType, UserType } from '../interfaces';
-import { SettingsService, SettingsStateService } from '../services';
+import { LidarrService, SettingsService, SettingsStateService } from '../services';
 
 import { AdvancedSearchDialogComponent } from '../shared/advanced-search-dialog/advanced-search-dialog.component';
 import { CustomizationFacade } from '../state/customization';
@@ -15,7 +15,7 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { SearchFilter } from './SearchFilter';
 import { StorageService } from '../shared/storage/storage-service';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 
 export enum SearchFilterType {
   Movie = 1,
@@ -56,9 +56,12 @@ export class MyNavComponent implements OnInit {
 
   private customizationSettings: ICustomizationSettings;
 
+  public readonly musicEnabled$ = this.lidarrService.enabled().pipe(take(1));
+
   constructor(private breakpointObserver: BreakpointObserver,
     private settingsService: SettingsService,
     private customizationFacade: CustomizationFacade,
+    private lidarrService: LidarrService,
     private store: StorageService,
     private filterService: FilterService,
     private dialogService: MatDialog,

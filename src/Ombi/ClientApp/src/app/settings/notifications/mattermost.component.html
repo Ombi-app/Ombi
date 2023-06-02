@@ -7,47 +7,42 @@
             <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
 
                 <div class="form-group">
-                    <div class="checkbox">
-                        <input type="checkbox" id="enable" formControlName="enabled">
-                        <label for="enable">Enabled</label>
-                    </div>
+                    <mat-checkbox id="enable" formControlName="enabled">Enabled</mat-checkbox>
                 </div>
 
                 <div class="form-group">
                     <small class="control-label"> Mattermost > Integrations > Incoming Webhook > Add Incoming Webhook. You will then have a Webhook</small>
-                    <label for="webhookUrl" class="control-label">Incoming Webhook Url</label>
-                    
-                        <input type="text" class="form-control form-control-custom " id="webhookUrl" name="webhookUrl" formControlName="webhookUrl" [ngClass]="{'form-error': form.get('webhookUrl').hasError('required')}">
-                        <small *ngIf="form.get('webhookUrl').hasError('required')" class="error-text">The Webhook Url is required</small>
-                </div>
+                    <mat-form-field>
+                        <mat-label>Incoming Webhook Url</mat-label>
+                        <input matInput type="text" id="webhookUrl" name="webhookUrl" formControlName="webhookUrl" [ngClass]="{'form-error': form.get('webhookUrl').hasError('required')}">
+                    </mat-form-field>
+                  </div>
 
 
-                <div class="form-group">
-                    <label for="channel" class="control-label">Channel Override</label>
-                    <div>
-                        <input type="text" class="form-control form-control-custom " id="channel" name="channel" formControlName="channel" pTooltip="Optional, you can override the default channel">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="username" class="control-label">Username Override</label>
-                    <div>
-                        <input type="text" class="form-control form-control-custom " id="username" name="username" formControlName="username" pTooltip="Optional, this will override the username you used for the Webhook">
-                    </div>
+                  <div class="form-group">
+                  <mat-form-field>
+                      <mat-label>Channel Override</mat-label>
+                      <input matInput type="text" id="channel" name="channel" formControlName="channel" pTooltip="Optional, you can override the default channel">
+                  </mat-form-field>
                 </div>
 
                 <div class="form-group">
-                    <label for="iconUrl" class="control-label">Icon Override</label>
-                    <div>
-                        <input type="text" class="form-control form-control-custom " id="iconUrl" name="iconUrl" formControlName="iconUrl" pTooltip="Optional, this will override the icon you use for the Webhook">
-                    </div>
+                  <mat-form-field>
+                      <mat-label>Username Override</mat-label>
+                      <input matInput type="text" id="username" name="username" formControlName="username" pTooltip="Optional, this will override the username you used for the Webhook">
+                  </mat-form-field>
                 </div>
 
-
+                <div class="form-group">
+                  <mat-form-field>
+                      <mat-label>Icon Override</mat-label>
+                      <input matInput type="text" id="iconUrl" name="iconUrl" formControlName="iconUrl" pTooltip="Optional, this will override the icon you use for the Webhook">
+                  </mat-form-field>
+                </div>
 
                 <div class="form-group">
                     <div>
-                        <button [disabled]="form.invalid" mat-raised-button type="button" (click)="test(form)" class="btn btn-primary-outline">
+                        <button [disabled]="form.invalid" mat-raised-button type="button" (click)="test(form)">
                             Test
                             <div id="spinner"></div>
                         </button>
@@ -58,7 +53,7 @@
 
                 <div class="form-group">
                     <div>
-                        <button [disabled]="form.invalid" mat-raised-button type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                        <button [disabled]="form.invalid" mat-raised-button type="submit" id="save">Submit</button>
                     </div>
                 </div>
             </form>

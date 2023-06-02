@@ -73,6 +73,10 @@ namespace Ombi.Core.Services
             var lang = await DefaultLanguageCode();
             foreach (var item in await recentMovieRequests.ToListAsync(cancellationToken))
             {
+                if (hideUsers.Hide && item.RequestedUserId != hideUsers.UserId)
+                {
+                    continue;
+                }
                 var images = await _cache.GetOrAddAsync($"{CacheKeys.TmdbImages}movie{item.TheMovieDbId}", () => _movieDbApi.GetMovieImages(item.TheMovieDbId.ToString(), cancellationToken), DateTimeOffset.Now.AddDays(1));
                 model.Add(new RecentlyRequestedModel
                 {
@@ -84,8 +88,9 @@ namespace Ombi.Core.Services
                     Title = item.Title,
                     Type = RequestType.Movie,
                     Approved = item.Approved,
-                    UserId = hideUsers.Hide ? string.Empty : item.RequestedUserId,
-                    Username = hideUsers.Hide ? string.Empty : item.RequestedUser.UserAlias,
+                    Denied = item.Denied ?? false,
+                    UserId = item.RequestedUserId,
+                    Username = item.RequestedUser.UserAlias,
                     MediaId = item.TheMovieDbId.ToString(),
                     PosterPath = images?.posters?.Where(x => lang.Equals(x?.iso_639_1, StringComparison.InvariantCultureIgnoreCase))?.OrderByDescending(x => x.vote_count)?.Select(x => x.file_path)?.FirstOrDefault(),
                     Background = images?.backdrops?.Where(x => lang.Equals(x?.iso_639_1, StringComparison.InvariantCultureIgnoreCase))?.OrderByDescending(x => x.vote_count)?.Select(x => x.file_path)?.FirstOrDefault(),
@@ -94,24 +99,33 @@ namespace Ombi.Core.Services
 
             foreach (var item in await recentMusicRequests.ToListAsync(cancellationToken))
             {
+                if (hideUsers.Hide && item.RequestedUserId != hideUsers.UserId)
+                {
+                    continue;
+                }
                 model.Add(new RecentlyRequestedModel
                 {
                     RequestId = item.Id,
                     Available = item.Available,
                     Overview = item.ArtistName,
                     Approved = item.Approved,
+                    Denied = item.Denied ?? false,
                     ReleaseDate = item.ReleaseDate,
                     RequestDate = item.RequestedDate,
                     Title = item.Title,
                     Type = RequestType.Album,
-                    UserId = hideUsers.Hide ? string.Empty : item.RequestedUserId,
-                    Username = hideUsers.Hide ? string.Empty : item.RequestedUser.UserAlias,
+                    UserId = item.RequestedUserId,
+                    Username = item.RequestedUser.UserAlias,
                     MediaId = item.ForeignAlbumId,
                 });
             }
 
             foreach (var item in await recentTvRequests.ToListAsync(cancellationToken))
             {
+                if (hideUsers.Hide && item.RequestedUserId != hideUsers.UserId)
+                {
+                    continue;
+                }
                 var providerId = item.ParentRequest.ExternalProviderId.ToString();
                 var images = await _cache.GetOrAddAsync($"{CacheKeys.TmdbImages}tv{providerId}", () => _movieDbApi.GetTvImages(providerId.ToString(), cancellationToken), DateTimeOffset.Now.AddDays(1));
                 
@@ -123,12 +137,13 @@ namespace Ombi.Core.Services
                     Overview = item.ParentRequest.Overview,
                     ReleaseDate = item.ParentRequest.ReleaseDate,
                     Approved = item.Approved,
+                    Denied = item.Denied ?? false,
                     RequestDate = item.RequestedDate,
                     TvPartiallyAvailable = partialAvailability,
                     Title = item.ParentRequest.Title,
                     Type = RequestType.TvShow,
-                    UserId = hideUsers.Hide ? string.Empty : item.RequestedUserId,
-                    Username = hideUsers.Hide ? string.Empty : item.RequestedUser.UserAlias,
+                    UserId = item.RequestedUserId,
+                    Username = item.RequestedUser.UserAlias,
                     MediaId = providerId.ToString(),
                     PosterPath = images?.posters?.Where(x => lang.Equals(x?.iso_639_1, StringComparison.InvariantCultureIgnoreCase))?.OrderByDescending(x => x.vote_count)?.Select(x => x.file_path)?.FirstOrDefault(),
                     Background = images?.backdrops?.Where(x => lang.Equals(x?.iso_639_1, StringComparison.InvariantCultureIgnoreCase))?.OrderByDescending(x => x.vote_count)?.Select(x => x.file_path)?.FirstOrDefault(),

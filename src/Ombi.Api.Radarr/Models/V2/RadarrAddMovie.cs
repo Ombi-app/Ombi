@@ -29,5 +29,6 @@ namespace Ombi.Api.Radarr.Models
         public int year { get; set; }
         public string minimumAvailability { get; set; }
         public long sizeOnDisk { get; set; }
+        public int[] tags { get; set; }
     }
 }

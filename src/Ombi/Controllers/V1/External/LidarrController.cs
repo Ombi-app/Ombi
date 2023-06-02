@@ -11,7 +11,6 @@ using Ombi.Settings.Settings.Models.External;
 
 namespace Ombi.Controllers.V1.External
 {
-   [PowerUser]
    [ApiV1]
    [Produces("application/json")]
     public class LidarrController : Controller
@@ -28,11 +27,19 @@ namespace Ombi.Controllers.V1.External
         private readonly ISettingsService<LidarrSettings> _lidarrSettings;
         private ICacheService Cache { get; }
 
+        [HttpGet("enabled")]
+        public async Task<bool> Enabled()
+        {
+            var settings = await _lidarrSettings.GetSettingsAsync();
+            return settings.Enabled;
+        }
+
         /// <summary>
         /// Gets the Lidarr profiles.
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
+        [PowerUser]
         [HttpPost("Profiles")]
         public async Task<IEnumerable<LidarrProfile>> GetProfiles([FromBody] LidarrSettings settings)
         {
@@ -44,6 +51,7 @@ namespace Ombi.Controllers.V1.External
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
+        [PowerUser]
         [HttpPost("RootFolders")]
         public async Task<IEnumerable<LidarrRootFolder>> GetRootFolders([FromBody] LidarrSettings settings)
         {
@@ -55,6 +63,7 @@ namespace Ombi.Controllers.V1.External
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
+        [PowerUser]
         [HttpPost("Metadata")]
         public async Task<IEnumerable<MetadataProfile>> GetMetadataProfiles([FromBody] LidarrSettings settings)
         {
@@ -66,6 +75,7 @@ namespace Ombi.Controllers.V1.External
         /// <remarks>The data is cached for an hour</remarks>
         /// </summary>
         /// <returns></returns>
+        [PowerUser]
         [HttpGet("Profiles")]
         public async Task<IEnumerable<LidarrProfile>> GetProfiles()
         {
@@ -85,6 +95,7 @@ namespace Ombi.Controllers.V1.External
         /// <remarks>The data is cached for an hour</remarks>
         /// </summary>
         /// <returns></returns>
+        [PowerUser]
         [HttpGet("RootFolders")]
         public async Task<IEnumerable<LidarrRootFolder>> GetRootFolders()
         {

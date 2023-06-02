@@ -159,6 +159,9 @@
         "RequestedBy": "请求者",
         "Status": "发行状态",
         "RequestStatus": "申请状态",
+        "Watched": "已观看",
+        "WatchedTooltip": "提出请求的用户已经观看了",
+        "WatchedByUsersCount": "{{count}} 个用户已经观看了这个。",
         "Denied": "已拒绝：",
         "TheatricalRelease": "剧场版发行：{{date}}",
         "ReleaseDate": "已发行: {{date}}",
@@ -221,6 +224,7 @@
             "Denied": "所选项目已拒绝"
         },
         "SuccessfullyApproved": "批准成功",
+        "SuccessfullyDenied": "成功拒绝",
         "SuccessfullyDeleted": "删除请求成功",
         "NowAvailable": "请求现在可观看",
         "NowUnavailable": "请求现在不可观看",
@@ -403,6 +407,7 @@
         "Movies": "电影",
         "Combined": "混合",
         "Tv": "电视节目",
+        "Genres": "流派",
         "CardDetails": {
             "Availability": "可用性",
             "Studio": "工作室",

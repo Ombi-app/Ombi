@@ -15,7 +15,7 @@ namespace Ombi.Store.Migrations.ExternalSqlite
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.9");
 
             modelBuilder.Entity("Ombi.Store.Entities.CouchPotatoCache", b =>
                 {
@@ -484,6 +484,46 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                     b.HasKey("Id");
 
                     b.ToTable("SonarrEpisodeCache");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.UserPlayedEpisode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("EpisodeNumber")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("SeasonNumber")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TheMovieDbId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserPlayedEpisode");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.UserPlayedMovie", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TheMovieDbId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserPlayedMovie");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.EmbyEpisode", b =>

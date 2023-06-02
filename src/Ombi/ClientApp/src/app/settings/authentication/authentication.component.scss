@@ -13,3 +13,10 @@
     box-shadow: 0 5px 11px 0 rgba(255, 255, 255, 0.18), 0 4px 15px 0 rgba(255, 255, 255, 0.15);
     color: inherit;
 }
+
+.warning-box {
+    margin: 16px 0;
+    color: white;
+    background-color: $ombi-background-accent;
+    border-color: $warn;
+}

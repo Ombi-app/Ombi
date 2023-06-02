@@ -160,6 +160,8 @@ export interface IRadarrSettings extends IExternalSettings {
   addOnly: boolean;
   minimumAvailability: string;
   scanForAvailability: boolean;
+  tag: number | null;
+  sendUserTags: boolean;
 }
 
 export interface IRadarrCombined {
@@ -245,6 +247,7 @@ export interface IAuthenticationSettings extends ISettings {
   enableOAuth: boolean;
   enableHeaderAuth: boolean;
   headerAuthVariable: string;
+  headerAuthCreateUser: boolean;
 }
 
 export interface ICustomPage extends ISettings {

@@ -22,6 +22,7 @@ export class DetailedCardComponent implements OnInit, OnDestroy {
   @Input() public isAdmin: boolean = false;
   @Output() public onClick: EventEmitter<void> = new EventEmitter<void>();
   @Output() public onApprove: EventEmitter<void> = new EventEmitter<void>();
+  @Output() public onDeny: EventEmitter<void> = new EventEmitter<void>();
 
   public RequestType = RequestType;
   public loading: false;
@@ -41,6 +42,9 @@ export class DetailedCardComponent implements OnInit, OnDestroy {
   }
 
   public getStatus(request: IRecentlyRequested) {
+    if (request.denied) {
+      return "Common.Denied";
+    }
     if (request.available) {
       return "Common.Available";
     }
@@ -62,7 +66,14 @@ export class DetailedCardComponent implements OnInit, OnDestroy {
     this.onApprove.emit();
   }
 
+  public deny() {
+    this.onDeny.emit();
+  }
+
   public getClass(request: IRecentlyRequested) {
+    if (request.denied) {
+      return "danger";
+    }
     if (request.available || request.tvPartiallyAvailable) {
       return "success";
     }

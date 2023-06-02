@@ -59,6 +59,9 @@ namespace Ombi.Store.Entities.Requests
                 return string.Empty;
             }
         }
+
+        [NotMapped]
+        public int RequestedUserPlayedProgress { get; set; }
     }
 
     public enum SeriesType

@@ -7,74 +7,71 @@
             <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
 
                 <div class="form-group">
-                    <div class="checkbox">
-                        <input type="checkbox" id="enable" formControlName="enabled">
-                        <label for="enable">Enabled</label>
-                    </div>
+                    <mat-checkbox id="enable" formControlName="enabled">Enabled</mat-checkbox>
                 </div>
 
-      
+
                 <div class="form-group">
-                    <label for="accessToken" class="control-label">Access Token</label>
-                   
-                        <input type="text" class="form-control form-control-custom " id="accessToken" name="accessToken" [ngClass]="{'form-error': form.get('accessToken').hasError('required')}" formControlName="accessToken" pTooltip="Enter your API Key from Pushover.">
-                    <small *ngIf="form.get('accessToken').hasError('required')" class="error-text">The Access Token is required</small>
+                    <mat-form-field>
+                        <mat-label>Access Token</mat-label>
+                        <input matInput type="text" id="accessToken" name="accessToken" [ngClass]="{'form-error': form.get('accessToken').hasError('required')}" formControlName="accessToken" pTooltip="Enter your API Key from Pushover.">
+                    </mat-form-field>
                 </div>
 
                 <div class="form-group">
-                    <label for="userToken" class="control-label">User Token</label>
-                    <div>
-                        <input type="text" class="form-control form-control-custom " id="userToken" name="userToken" formControlName="userToken" pTooltip="Your user or group key from Pushover.">
-                    </div>
+                    <mat-form-field>
+                        <mat-label>User Token</mat-label>
+                        <input matInput type="text" id="userToken" name="userToken" formControlName="userToken" pTooltip="Your user or group key from Pushover.">
+                    </mat-form-field>
                 </div>
 
                 <div class="form-group">
-                    <label for="priority" class="control-label">Priority</label>
-                    <div>
-                        <select class="form-control form-control-custom " id="priority" name="priority" formControlName="priority" pTooltip="The priority you want your pushover notifications sent as.">
-                            <option value="0">Normal</option>
-                            <option value="1">High</option>
-                            <option value="-1">Low</option>
-                            <option value="-2">Lowest</option>
-                        </select>
-                    </div>
+                    <mat-form-field>
+                      <mat-label>Priority</mat-label>
+                      <mat-select id="priority" name="priority" formControlName="priority" pTooltip="The priority you want your pushover notifications sent as.">
+                        <mat-option value="0">Normal</mat-option>
+                        <mat-option value="1">High</mat-option>
+                        <mat-option value="-1">Low</mat-option>
+                        <mat-option value="-2">Lowest</mat-option>
+                      </mat-select>
+                    </mat-form-field>
                 </div>
 
                 <div class="form-group">
-                    <label for="sound" class="control-label">Sound</label>
-                    <div>
-                        <select class="form-control form-control-custom " id="sound" name="sound" formControlName="sound" pTooltip="The sound you want your pushover notifications sent with.">
-                            <option value="pushover">Pushover</option>
-                            <option value="bike">Bike</option>
-                            <option value="bugle">Bugle</option>
-                            <option value="cashregister">Cash Register</option>
-                            <option value="classical">Classical</option>
-                            <option value="cosmic">Cosmic</option>
-                            <option value="falling">Falling</option>
-                            <option value="gamelan">Gamelan</option>
-                            <option value="incoming">Incoming</option>
-                            <option value="intermission">Intermission</option>
-                            <option value="magic">Magic</option>
-                            <option value="mechanical">Mechanical</option>
-                            <option value="pianobar">Piano Bar</option>
-                            <option value="siren">Siren</option>
-                            <option value="spacealarm">Space Alarm</option>
-                            <option value="tugboat">Tug Boat</option>
-                            <option value="alien">Alien Alarm (long)</option>
-                            <option value="climb">Climb (long)</option>
-                            <option value="persistent">Persistent (long)</option>
-                            <option value="echo">Pushover Echo (long)</option>
-                            <option value="updown">Up Down (long)</option>
-                            <option value="none">None</option>
-                        </select>
-                    </div>
-                </div>
+                    <mat-form-field>
+                        <mat-label>Sound</mat-label>
+                        <mat-select id="sound" name="sound" formControlName="sound" pTooltip="The sound you want your pushover notifications sent with.">
+                            <mat-option value="pushover">Pushover</mat-option>
+                            <mat-option value="bike">Bike</mat-option>
+                            <mat-option value="bugle">Bugle</mat-option>
+                            <mat-option value="cashregister">Cash Register</mat-option>
+                            <mat-option value="classical">Classical</mat-option>
+                            <mat-option value="cosmic">Cosmic</mat-option>
+                            <mat-option value="falling">Falling</mat-option>
+                            <mat-option value="gamelan">Gamelan</mat-option>
+                            <mat-option value="incoming">Incoming</mat-option>
+                            <mat-option value="intermission">Intermission</mat-option>
+                            <mat-option value="magic">Magic</mat-option>
+                            <mat-option value="mechanical">Mechanical</mat-option>
+                            <mat-option value="pianobar">Piano Bar</mat-option>
+                            <mat-option value="siren">Siren</mat-option>
+                            <mat-option value="spacealarm">Space Alarm</mat-option>
+                            <mat-option value="tugboat">Tug Boat</mat-option>
+                            <mat-option value="alien">Alien Alarm (long)</mat-option>
+                            <mat-option value="climb">Climb (long)</mat-option>
+                            <mat-option value="persistent">Persistent (long)</mat-option>
+                            <mat-option value="echo">Pushover Echo (long)</mat-option>
+                            <mat-option value="updown">Up Down (long)</mat-option>
+                            <mat-option value="none">None</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                  </div>
 
-               
+
 
                 <div class="form-group">
                     <div>
-                        <button [disabled]="form.invalid" mat-raised-button type="button" (click)="test(form)" class="btn btn-primary-outline">
+                        <button [disabled]="form.invalid" mat-raised-button type="button" (click)="test(form)">
                             Test
                             <div id="spinner"></div>
                         </button>
@@ -85,7 +82,7 @@
 
                 <div class="form-group">
                     <div>
-                        <button [disabled]="form.invalid" mat-raised-button type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                        <button [disabled]="form.invalid" mat-raised-button type="submit" id="save">Submit</button>
                     </div>
                 </div>
             </form>

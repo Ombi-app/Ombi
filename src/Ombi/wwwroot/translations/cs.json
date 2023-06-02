@@ -159,6 +159,9 @@
         "RequestedBy": "Požadováno od",
         "Status": "Stav",
         "RequestStatus": "Stav požadavku",
+        "Watched": "Watched",
+        "WatchedTooltip": "The user who made the request has watched it",
+        "WatchedByUsersCount": "{{count}} users have watched this.",
         "Denied": " Zamítnuto:",
         "TheatricalRelease": "V kinech od: {{date}}",
         "ReleaseDate": "Vydáno: {{date}}",
@@ -221,6 +224,7 @@
             "Denied": "Successfully denied selected items"
         },
         "SuccessfullyApproved": "Úspěšně schváleno",
+        "SuccessfullyDenied": "Successfully Denied",
         "SuccessfullyDeleted": "Požadavek byl úspěšně odstraněn",
         "NowAvailable": "Požadavek je nyní k dispozici",
         "NowUnavailable": "Požadavek je nyní nedostupný",
@@ -403,6 +407,7 @@
         "Movies": "Filmy",
         "Combined": "Kombinované",
         "Tv": "TV",
+        "Genres": "Genres",
         "CardDetails": {
             "Availability": "Dostupnost",
             "Studio": "Studio",

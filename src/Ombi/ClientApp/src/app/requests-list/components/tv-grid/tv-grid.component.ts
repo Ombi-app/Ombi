@@ -4,6 +4,7 @@ import { Observable, merge, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 import { AuthService } from "../../../auth/auth.service";
+import { FeaturesFacade } from "../../../state/features/features.facade";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { RequestFilterType } from "../../models/RequestFilterType";
@@ -13,15 +14,16 @@ import { StorageService } from "../../../shared/storage/storage-service";
 @Component({
     templateUrl: "./tv-grid.component.html",
     selector: "tv-grid",
-    styleUrls: ["../requests-list.component.scss"]
+    styleUrls: ["../requests-list.component.scss", "tv-grid.component.scss"]
 })
 export class TvGridComponent implements OnInit, AfterViewInit {
     public dataSource: IChildRequests[] = [];
     public resultsLength: number;
     public isLoadingResults = true;
-    public displayedColumns: string[] = ['series',  'requestedBy', 'status', 'requestStatus', 'requestedDate','actions'];
+    public displayedColumns: string[] = ['series',  'requestedBy', 'status', 'requestStatus', 'requestedDate'];
     public gridCount: string = "15";
     public isAdmin: boolean;
+    public isPlayedSyncEnabled = false;
     public defaultSort: string = "requestedDate";
     public defaultOrder: string = "desc";
     public currentFilter: RequestFilterType = RequestFilterType.All;
@@ -40,12 +42,17 @@ export class TvGridComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort) sort: MatSort;
 
     constructor(private requestService: RequestServiceV2, private auth: AuthService,
-                private ref: ChangeDetectorRef, private storageService: StorageService) {
+                private ref: ChangeDetectorRef, private storageService: StorageService,
+                private featureFacade: FeaturesFacade) {
 
     }
 
-    public ngOnInit() {       
-        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser"); 
+    public ngOnInit() {
+        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+        this.isPlayedSyncEnabled = this.featureFacade.isPlayedSyncEnabled();
+
+        this.addDynamicColumns();
+
         const defaultCount = this.storageService.get(this.storageKeyGridCount);
         const defaultSort = this.storageService.get(this.storageKey);
         const defaultOrder = this.storageService.get(this.storageKeyOrder);
@@ -64,9 +71,18 @@ export class TvGridComponent implements OnInit, AfterViewInit {
         }
     }
 
+    addDynamicColumns() {
+      if (this.isPlayedSyncEnabled) {
+          this.displayedColumns.push('watchedByRequestedUser');
+      }
+
+      // always put the actions column at the end
+      this.displayedColumns.push('actions');
+    }
+
     public async ngAfterViewInit() {
 
-        this.storageService.save(this.storageKeyGridCount, this.gridCount);   
+        this.storageService.save(this.storageKeyGridCount, this.gridCount);
         this.storageService.save(this.storageKeyCurrentFilter, (+this.currentFilter).toString());
         this.paginator.showFirstLastButtons = true;
 
@@ -78,7 +94,7 @@ export class TvGridComponent implements OnInit, AfterViewInit {
                 startWith({}),
                 switchMap((value: any) => {
                     this.isLoadingResults = true;
-                    
+
                     if (value.active || value.direction) {
                         this.storageService.save(this.storageKey, value.active);
                         this.storageService.save(this.storageKeyOrder, value.direction);
@@ -103,7 +119,7 @@ export class TvGridComponent implements OnInit, AfterViewInit {
         const filter = () => { this.dataSource = this.dataSource.filter((req) => {
             return req.id !== request.id;
         })};
-        
+
         const onChange = () => {
             this.ref.detectChanges();
         };

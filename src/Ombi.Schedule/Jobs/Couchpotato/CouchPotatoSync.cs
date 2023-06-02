@@ -79,11 +79,9 @@ namespace Ombi.Schedule.Jobs.Couchpotato
                     await strat.ExecuteAsync(async () =>
                     {
                         // Let's remove the old cached data
-                        using (var tran = await _ctx.Database.BeginTransactionAsync())
-                        {
-                            await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM CouchPotatoCache");
-                            tran.Commit();
-                        }
+                        using var tran = await _ctx.Database.BeginTransactionAsync();
+                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM CouchPotatoCache");
+                        await tran.CommitAsync();
                     });
 
                     // Save
@@ -107,13 +105,11 @@ namespace Ombi.Schedule.Jobs.Couchpotato
                     strat = _ctx.Database.CreateExecutionStrategy();
                     await strat.ExecuteAsync(async () =>
                     {
-                        using (var tran = await _ctx.Database.BeginTransactionAsync())
-                        {
-                            await _ctx.CouchPotatoCache.AddRangeAsync(movieIds);
+                        using var tran = await _ctx.Database.BeginTransactionAsync();
+                        await _ctx.CouchPotatoCache.AddRangeAsync(movieIds);
 
-                            await _ctx.SaveChangesAsync();
-                            tran.Commit();
-                        }
+                        await _ctx.SaveChangesAsync();
+                        await tran.CommitAsync();
                     });
 
                     await _notification.SendNotificationToAdmins("Couch Potato Sync Finished");
