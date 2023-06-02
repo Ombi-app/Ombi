@@ -1,3 +1,17 @@
+# [4.42.0](https://github.com/Ombi-app/Ombi/compare/v4.41.1...v4.42.0) (2023-06-02)
+
+
+### Bug Fixes
+
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([#4926](https://github.com/Ombi-app/Ombi/issues/4926)) ([151efe1](https://github.com/Ombi-app/Ombi/commit/151efe19d0012b85f317c175da5ab4802ea14e20))
+
+
+### Features
+
+* **emby:** Show watched status for TV requests ([1f37de0](https://github.com/Ombi-app/Ombi/commit/1f37de08888812b6d130d92bb664a89e89149105))
+
+
+
 ## [4.41.1](https://github.com/Ombi-app/Ombi/compare/v4.41.0...v4.41.1) (2023-05-27)
 
 
@@ -2424,15 +2438,6 @@
 ### Bug Fixes
 
 * **sonarr:** V4 actually works this time around ([f62e70f](https://github.com/Ombi-app/Ombi/commit/f62e70fc493c7971da5e4508ce10522f5df0bbf7))
-
-
-
-## [4.32.2](https://github.com/Ombi-app/Ombi/compare/v4.32.1...v4.32.2) (2022-11-23)
-
-
-### Bug Fixes
-
-* **sonarr:** :bug: Sonarr V4 should work now ([#4810](https://github.com/Ombi-app/Ombi/issues/4810)) ([37655af](https://github.com/Ombi-app/Ombi/commit/37655aff9d3d133b42f5664bc9445d6571e966d6))
 
 
 
