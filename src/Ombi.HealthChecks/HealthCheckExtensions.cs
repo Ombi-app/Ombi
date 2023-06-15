@@ -1,8 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Ombi.HealthChecks.Checks;
-using System;
-using System.Collections.Generic;
 
 namespace Ombi.HealthChecks
 {
