@@ -337,24 +337,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/localize@npm:^15.0.4":
-  version: 15.2.4
-  resolution: "@angular/localize@npm:15.2.4"
-  dependencies:
-    "@babel/core": 7.19.3
-    glob: 8.1.0
-    yargs: ^17.2.1
-  peerDependencies:
-    "@angular/compiler": 15.2.4
-    "@angular/compiler-cli": 15.2.4
-  bin:
-    localize-extract: tools/bundles/src/extract/cli.js
-    localize-migrate: tools/bundles/src/migrate/cli.js
-    localize-translate: tools/bundles/src/translate/cli.js
-  checksum: 999976488ea1aacfd61f738bbb4933dff7e6b144bf066e3ede2ebd1bf267e70c8fffaeb8ef8666fe0c823827f35fc597dfb222014237c87cba92c06e753d0db5
-  languageName: node
-  linkType: hard
-
 "@angular/material@npm:^14.2.7":
   version: 14.2.7
   resolution: "@angular/material@npm:14.2.7"
@@ -2508,28 +2490,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ngxs/devtools-plugin@npm:3.7.3":
-  version: 3.7.3
-  resolution: "@ngxs/devtools-plugin@npm:3.7.3"
+"@ngxs/devtools-plugin@npm:3.8.1":
+  version: 3.8.1
+  resolution: "@ngxs/devtools-plugin@npm:3.8.1"
   dependencies:
-    tslib: ^1.9.0
+    tslib: ^2.2.0
   peerDependencies:
-    "@angular/core": ">=6.1.0 <14.0.0"
-    "@ngxs/store": ^3.7.3 || ^3.7.3-dev
+    "@angular/core": ">=12.0.0 <17.0.0"
+    "@ngxs/store": ^3.8.1 || ^3.8.1-dev
     rxjs: ">=6.5.5"
-  checksum: c6c4bcbda46be3d73bbece2c6f9f5002df2564850d2bb6ab66f66751e3b54d6aba4363a29e26ca0f205b509468ec5d8a82c25409b3eb377d4efe3026663baa6c
+  checksum: b6b2f93c92ed00503c7b99ea4b8e6acac2ba635fba2691a5b915538ac95d6a5291eb093fda3fb44730c52f084bed739771a0e4be1ddb6f842666b7f0f74d8c9f
   languageName: node
   linkType: hard
 
-"@ngxs/store@npm:3.7.3":
-  version: 3.7.3
-  resolution: "@ngxs/store@npm:3.7.3"
+"@ngxs/store@npm:3.8.1":
+  version: 3.8.1
+  resolution: "@ngxs/store@npm:3.8.1"
   dependencies:
-    tslib: ^1.9.0
+    tslib: ^2.2.0
   peerDependencies:
-    "@angular/core": ">=6.1.0 <14.0.0"
+    "@angular/core": ">=12.0.0 <17.0.0"
     rxjs: ">=6.5.5"
-  checksum: 756c47c3463a30bb0dc97a62d9a22928fbd4de1f15e05735457b3dfc0dadd6292273c5e8e71bf4b06f2ea9b339e995143284094264fa5136b82317c46ed61ae0
+  checksum: c655657c7b648949eca0cb7776bd312c04be8e8555eb7c852f6d205cd38571586f146f1f3b04ebdd9a7d57ad90b836ba1f7b81a94788bcf67ec2dffb8a0fb76d
   languageName: node
   linkType: hard
 
@@ -4513,17 +4495,6 @@ __metadata:
   version: 1.0.1
   resolution: "amdefine@npm:1.0.1"
   checksum: 9d4e15b94641643a9385b2841b4cb2bcf4e8e2f741ea4bd475c93ad7bab261ad4ed827a32e9c549b38b98759c4526c173ae4e6dde8caeb75ee5cebedc9863762
-  languageName: node
-  linkType: hard
-
-"angular-router-loader@npm:^0.8.5":
-  version: 0.8.5
-  resolution: "angular-router-loader@npm:0.8.5"
-  dependencies:
-    loader-utils: ^1.0.2
-  peerDependencies:
-    webpack: ">=2.4.0"
-  checksum: 72248f918da0937f650865127a69abd1ed520931442492bd1710f0c2f0363512ed44cda6cbcf25e6faca8ebe170b0092e92dc89c6d676ef1c739c6ddac86224c
   languageName: node
   linkType: hard
 
@@ -8982,7 +8953,7 @@ cors@latest:
 
 "fsevents@patch:fsevents@^1.2.7#~builtin<compat/fsevents>":
   version: 1.2.13
-  resolution: "fsevents@patch:fsevents@npm%3A1.2.13#~builtin<compat/fsevents>::version=1.2.13&hash=d11327"
+  resolution: "fsevents@patch:fsevents@npm%3A1.2.13#~builtin<compat/fsevents>::version=1.2.13&hash=18f3a7"
   dependencies:
     bindings: ^1.5.0
     nan: ^2.12.1
@@ -8992,7 +8963,7 @@ cors@latest:
 
 "fsevents@patch:fsevents@~2.3.2#~builtin<compat/fsevents>":
   version: 2.3.2
-  resolution: "fsevents@patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=df0bf1"
+  resolution: "fsevents@patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=18f3a7"
   dependencies:
     node-gyp: latest
   conditions: os=darwin
@@ -9225,19 +9196,6 @@ cors@latest:
     minimatch: ^5.0.1
     once: ^1.3.0
   checksum: 50bcdea19d8e79d8de5f460b1939ffc2b3299eac28deb502093fdca22a78efebc03e66bf54f0abc3d3d07d8134d19a32850288b7440d77e072aa55f9d33b18c5
-  languageName: node
-  linkType: hard
-
-"glob@npm:8.1.0":
-  version: 8.1.0
-  resolution: "glob@npm:8.1.0"
-  dependencies:
-    fs.realpath: ^1.0.0
-    inflight: ^1.0.4
-    inherits: 2
-    minimatch: ^5.0.1
-    once: ^1.3.0
-  checksum: 92fbea3221a7d12075f26f0227abac435de868dd0736a17170663783296d0dd8d3d532a5672b4488a439bf5d7fb85cdd07c11185d6cd39184f0385cbdfb86a47
   languageName: node
   linkType: hard
 
@@ -11243,17 +11201,6 @@ cors@latest:
   languageName: node
   linkType: hard
 
-"loader-utils@npm:^1.0.2":
-  version: 1.4.0
-  resolution: "loader-utils@npm:1.4.0"
-  dependencies:
-    big.js: ^5.2.2
-    emojis-list: ^3.0.0
-    json5: ^1.0.1
-  checksum: d150b15e7a42ac47d935c8b484b79e44ff6ab4c75df7cc4cb9093350cf014ec0b17bdb60c5d6f91a37b8b218bd63b973e263c65944f58ca2573e402b9a27e717
-  languageName: node
-  linkType: hard
-
 "loader-utils@npm:^1.2.3":
   version: 1.4.2
   resolution: "loader-utils@npm:1.4.2"
@@ -12799,7 +12746,6 @@ cors@latest:
     "@angular/compiler-cli": ^15.0.4
     "@angular/core": ^15.0.4
     "@angular/forms": ^15.0.4
-    "@angular/localize": ^15.0.4
     "@angular/material": ^14.2.7
     "@angular/platform-browser": ^15.0.4
     "@angular/platform-browser-dynamic": ^15.0.4
@@ -12813,12 +12759,11 @@ cors@latest:
     "@microsoft/signalr": ^6.0.7
     "@ngx-translate/core": ^14.0.0
     "@ngx-translate/http-loader": ^7.0.0
-    "@ngxs/devtools-plugin": 3.7.3
-    "@ngxs/store": 3.7.3
+    "@ngxs/devtools-plugin": 3.8.1
+    "@ngxs/store": 3.8.1
     "@storybook/angular": ^6.5.9
     "@types/jquery": ^3.5.14
     "@yellowspot/ng-truncate": ^2.0.0
-    angular-router-loader: ^0.8.5
     angularx-qrcode: ^15.0.0
     bootstrap: ^4.2.1
     chromatic: ^6.7.1
@@ -14754,14 +14699,14 @@ proxy-middleware@latest:
 
 "resolve@patch:resolve@1.1.7#~builtin<compat/resolve>":
   version: 1.1.7
-  resolution: "resolve@patch:resolve@npm%3A1.1.7#~builtin<compat/resolve>::version=1.1.7&hash=3bafbf"
+  resolution: "resolve@patch:resolve@npm%3A1.1.7#~builtin<compat/resolve>::version=1.1.7&hash=07638b"
   checksum: e9dbca78600ae56835c43a09f1276876c883e4b4bbd43e2683fa140671519d2bdebeb1c1576ca87c8c508ae2987b3ec481645ac5d3054b0f23254cfc1ce49942
   languageName: node
   linkType: hard
 
 "resolve@patch:resolve@1.22.1#~builtin<compat/resolve>, resolve@patch:resolve@^1.1.5#~builtin<compat/resolve>, resolve@patch:resolve@^1.10.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.14.2#~builtin<compat/resolve>, resolve@patch:resolve@^1.19.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.3.2#~builtin<compat/resolve>":
   version: 1.22.1
-  resolution: "resolve@patch:resolve@npm%3A1.22.1#~builtin<compat/resolve>::version=1.22.1&hash=c3c19d"
+  resolution: "resolve@patch:resolve@npm%3A1.22.1#~builtin<compat/resolve>::version=1.22.1&hash=07638b"
   dependencies:
     is-core-module: ^2.9.0
     path-parse: ^1.0.7
@@ -16628,6 +16573,13 @@ proxy-middleware@latest:
   languageName: node
   linkType: hard
 
+"tslib@npm:^2.2.0":
+  version: 2.5.3
+  resolution: "tslib@npm:2.5.3"
+  checksum: 88902b309afaf83259131c1e13da1dceb0ad1682a213143a1346a649143924d78cf3760c448b84d796938fd76127183894f8d85cbb3bf9c4fddbfcc140c0003c
+  languageName: node
+  linkType: hard
+
 "tslint-angular@npm:^1.1.2":
   version: 1.1.2
   resolution: "tslint-angular@npm:1.1.2"
@@ -16794,7 +16746,7 @@ proxy-middleware@latest:
 
 "typescript@patch:typescript@^4.0.3#~builtin<compat/typescript>":
   version: 4.7.4
-  resolution: "typescript@patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=65a307"
+  resolution: "typescript@patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=701156"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
@@ -16804,7 +16756,7 @@ proxy-middleware@latest:
 
 "typescript@patch:typescript@~4.8.4#~builtin<compat/typescript>":
   version: 4.8.4
-  resolution: "typescript@patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=0102e9"
+  resolution: "typescript@patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=701156"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
