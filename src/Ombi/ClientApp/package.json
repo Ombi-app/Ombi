@@ -26,7 +26,7 @@
     "@angular/router": "^15.0.4",
     "@angularclass/hmr": "^3.0.0",
     "@auth0/angular-jwt": "^5.0.2",
-    "@fortawesome/fontawesome-free": "^6.0.0",
+    "@fortawesome/fontawesome-free": "^6.4.0",
     "@microsoft/signalr": "^6.0.7",
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "^7.0.0",
