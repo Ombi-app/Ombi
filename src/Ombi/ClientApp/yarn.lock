@@ -12778,7 +12778,7 @@ cors@latest:
     ngx-order-pipe: ^2.2.0
     popper.js: ^1.14.3
     primeicons: ^6.0.1
-    primeng: ^15.0.0-rc.1
+    primeng: ^15.4.1
     protractor: ~5.4.0
     rxjs: ^7.5.4
     ts-md5: ^1.2.7
@@ -13831,19 +13831,18 @@ cors@latest:
   languageName: node
   linkType: hard
 
-"primeng@npm:^15.0.0-rc.1":
-  version: 15.0.0-rc.1
-  resolution: "primeng@npm:15.0.0-rc.1"
+"primeng@npm:^15.4.1":
+  version: 15.4.1
+  resolution: "primeng@npm:15.4.1"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/common": ^15.0.0
-    "@angular/core": ^15.0.0
-    "@angular/forms": ^15.0.0
-    primeicons: ^6.0.1
+    "@angular/common": ^15.2.1
+    "@angular/core": ^15.2.1
+    "@angular/forms": ^15.2.1
     rxjs: ^6.0.0 || ^7.5.0
-    zone.js: ^0.10.2 || ^0.11.0 || ^0.12.0
-  checksum: 1c2223b707e799385c609c6c073b04807896147eba4fdd428cc229f6627ba806be581f7de05f23c8835826d48c17d080c40a1793ac91ba4db8ca8f2e5d8dde9b
+    zone.js: ^0.10.2 || ^0.11.0 || ^0.12.0 || ^0.13.0
+  checksum: d40d6d8bec33ef68994c1b549e61cddbcb0d87f1b8aa70085444cbab83c95a33b79b438fd7b3aa9ec7b27b27dfe4d6a61e477d97f0a300ec3c3409b930a17610
   languageName: node
   linkType: hard
 
