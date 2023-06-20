@@ -23,7 +23,7 @@ describe("Plex Settings Tests", () => {
           "version": "1.30.0.6442-5070ad484",
           "scheme": "http",
           "host": "2.2.2.2",
-          "localAddresses": "localhost",
+          "localAddresses": "http://host.docker.internal",
           "machineIdentifier": "9999999999999999",
           "createdAt": "5555555555",
           "updatedAt": "6666666666",
