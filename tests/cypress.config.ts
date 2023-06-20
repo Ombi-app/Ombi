@@ -15,6 +15,7 @@ export default defineConfig({
   env: {
     username: 'a',
     password: 'a',
+    dockerhost: 'http://172.17.0.1'
   },
   projectId: 'o5451s',
   e2e: {

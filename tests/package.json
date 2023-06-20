@@ -19,7 +19,7 @@
   "scripts": {
     "cypress:version": "cypress version",
     "cypress:verify": "cypress verify",
-    "cypress:open": "cypress open --config baseUrl=http://localhost:3577",
+    "cypress:open": "cypress open --config baseUrl=http://localhost:3577 --env dockerhost=http://localhost",
     "cypress:run": "cypress run",
     "types": "tsc --noEmit",
     "e2e": "cypress run",

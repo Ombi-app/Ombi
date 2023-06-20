@@ -23,7 +23,7 @@ describe("Plex Settings Tests", () => {
           "version": "1.30.0.6442-5070ad484",
           "scheme": "http",
           "host": "2.2.2.2",
-          "localAddresses": "http://host.docker.internal",
+          "localAddresses": "${Cypress.env("dockerhost")}",
           "machineIdentifier": "9999999999999999",
           "createdAt": "5555555555",
           "updatedAt": "6666666666",
@@ -47,7 +47,7 @@ describe("Plex Settings Tests", () => {
 
     const modal = Page.plexServerModal;
     modal.serverName.should('have.value','AutomationServer');
-    modal.hostName.should('have.value','localhost');
+    modal.hostName.should('have.value', Cypress.env("dockerhost"));
     modal.port.should('have.value','32400');
     modal.authToken.should('have.value','myaccessToken');
     modal.machineIdentifier.should('have.value','9999999999999999');
@@ -77,7 +77,7 @@ describe("Plex Settings Tests", () => {
     // Edit server
     Page.plexServerGrid.serverCardButton('AutomationServer').click();
     modal.serverName.should('have.value','AutomationServer');
-    modal.hostName.should('have.value','localhost');
+    modal.hostName.should('have.value', Cypress.env("dockerhost"));
     modal.port.should('have.value','32400');
     modal.authToken.should('have.value','myaccessToken');
     modal.machineIdentifier.should('have.value','9999999999999999');
