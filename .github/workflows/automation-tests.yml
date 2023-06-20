@@ -73,3 +73,8 @@ jobs:
       env:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Stop Docker
+      run: |
+        docker ps -q | xargs -I {} docker logs {}
+        docker container kill $(docker ps -q)
