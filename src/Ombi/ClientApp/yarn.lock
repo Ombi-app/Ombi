@@ -2294,10 +2294,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fortawesome/fontawesome-free@npm:^6.0.0":
-  version: 6.1.2
-  resolution: "@fortawesome/fontawesome-free@npm:6.1.2"
-  checksum: 0d3c9d60ffbb9c1fa4041051eff6542adc1fc29653501399d0235c077a2195a35f286d979da42fe021f73649032f9eeae2c9a0511eaacda2896559155d40a0fc
+"@fortawesome/fontawesome-free@npm:^6.4.0":
+  version: 6.4.0
+  resolution: "@fortawesome/fontawesome-free@npm:6.4.0"
+  checksum: 0197cd7df96de375862fea561d69427deebb918cadc26074cc8d490180d536e7e58853d138ca74d081b46b2cbdec2783d01cdaccb8bd723d6ef6b4cc8455b84b
   languageName: node
   linkType: hard
 
@@ -12755,7 +12755,7 @@ cors@latest:
     "@auth0/angular-jwt": ^5.0.2
     "@babel/core": ^7.18.9
     "@compodoc/compodoc": ^1.1.19
-    "@fortawesome/fontawesome-free": ^6.0.0
+    "@fortawesome/fontawesome-free": ^6.4.0
     "@microsoft/signalr": ^6.0.16
     "@ngx-translate/core": ^14.0.0
     "@ngx-translate/http-loader": ^7.0.0
