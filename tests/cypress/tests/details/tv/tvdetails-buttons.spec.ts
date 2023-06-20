@@ -73,6 +73,9 @@ describe("TV Details Buttons", () => {
     cy.visit("/details/tv/1399");
 
     cy.wait('@issuesEnabled');
+    cy.waitUntil(() => {
+      return Page.reportIssueButton.should("be.visible");
+    });
     Page.reportIssueButton.should('be.visible');
   });
 

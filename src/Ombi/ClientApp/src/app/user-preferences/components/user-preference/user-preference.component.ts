@@ -49,7 +49,6 @@ export class UserPreferenceComponent implements OnInit {
         if (user.name) {
             this.username = user.name;
         }
-
         this.selectedLang = this.translate.currentLang;
 
         const accessToken = await this.identityService.getAccessToken().toPromise();
@@ -86,8 +85,10 @@ export class UserPreferenceComponent implements OnInit {
     }
 
     public languageSelected() {
-        this.identityService.updateLanguage(this.selectedLang).subscribe(x => this.notification.success(this.translate.instant("UserPreferences.Updated")));
-        this.translate.use(this.selectedLang);
+        this.identityService.updateLanguage(this.selectedLang).subscribe(_ => {
+            this.notification.success(this.translate.instant("UserPreferences.Updated"))
+            this.translate.use(this.selectedLang);
+        });
     }
 
     public countrySelected() {

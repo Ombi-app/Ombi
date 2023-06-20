@@ -199,7 +199,7 @@ describe("Discover Recently Requested Tests", () => {
     });
   });
 
-  it.only("Approve Requested Tv Show", () => {
+  it("Approve Requested Tv Show", () => {
 
     cy.requestAllTv(71712);
 
