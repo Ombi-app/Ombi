@@ -24,7 +24,7 @@ describe("Navigation Bar Tests", () => {
         cy.removeLogin();
         cy.loginWithCreds(id, "a");
 
-        cy.intercept("GET", "search/Movie/Popular").as("discoverLoad");
+        cy.intercept("GET", "api/v2/search/Movie/Popular/**").as("discoverLoad");
         Page.visit();
 
         cy.wait("@discoverLoad");

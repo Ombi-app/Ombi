@@ -5,47 +5,47 @@
 
     <mat-form-field appearance="outline" floatLabel=auto>
       <mat-label>Server Name</mat-label>
-      <input matInput placeholder="Server Name" name="name" [(ngModel)]="this.data.server.name" value="{{this.data.server.name}}">
+      <input matInput id="serverName" placeholder="Server Name" name="name" [(ngModel)]="this.data.server.name" value="{{this.data.server.name}}">
     </mat-form-field>
 
     <div class="row">
       <mat-form-field class="col-md-6 col-12" appearance="outline" floatLabel=auto>
         <mat-label>Hostname / IP</mat-label>
-        <input matInput placeholder="Hostname or IP" name="ip" [(ngModel)]="this.data.server.ip" value="{{this.data.server.ip}}"
+        <input matInput id="ip" placeholder="Hostname or IP" name="ip" [(ngModel)]="this.data.server.ip" value="{{this.data.server.ip}}"
            #serverHostnameIpControl="ngModel" required>
         <mat-error *ngIf="serverHostnameIpControl.hasError('required')">Must be specified.</mat-error>
       </mat-form-field>
 
       <mat-form-field class="col-md-4 col-7" appearance="outline" floatLabel=auto>
         <mat-label>Port</mat-label>
-        <input matInput placeholder="Port" name="port" [(ngModel)]="this.data.server.port" value="{{this.data.server.port}}"
+        <input id="port" matInput placeholder="Port" name="port" [(ngModel)]="this.data.server.port" value="{{this.data.server.port}}"
            #serverPortControl="ngModel" required pattern="^[0-9]*$">
         <mat-error *ngIf="serverPortControl.hasError('required')">Must be specified.</mat-error>
         <mat-error *ngIf="serverPortControl.hasError('pattern')">Must be a number.</mat-error>
       </mat-form-field>
 
-      <mat-slide-toggle class="col-md-2 col-5 mt-3" id="ssl" name="ssl" [(ngModel)]="this.data.server.ssl" [checked]="this.data.server.ssl">
+      <mat-slide-toggle id="ssl" class="col-md-2 col-5 mt-3" id="ssl" name="ssl" [(ngModel)]="this.data.server.ssl" [checked]="this.data.server.ssl">
         SSL
       </mat-slide-toggle>
     </div>
 
     <mat-form-field appearance="outline" floatLabel=auto>
       <mat-label>Plex Authorization Token</mat-label>
-      <input matInput placeholder="Plex Authorization Token" name="authToken" [(ngModel)]="this.data.server.plexAuthToken" value="{{this.data.server.plexAuthToken}}"
+      <input id="authToken" matInput placeholder="Plex Authorization Token" name="authToken" [(ngModel)]="this.data.server.plexAuthToken" value="{{this.data.server.plexAuthToken}}"
          #serverApiKeyControl="ngModel" required>
       <mat-error *ngIf="serverApiKeyControl.hasError('required')">Must be specified.</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline" floatLabel=auto>
       <mat-label>Machine Identifier</mat-label>
-      <input matInput placeholder="Machine Identifier" name="MachineIdentifier" [(ngModel)]="this.data.server.machineIdentifier" value="{{this.data.server.machineIdentifier}}"
+      <input id="machineId" matInput placeholder="Machine Identifier" name="MachineIdentifier" [(ngModel)]="this.data.server.machineIdentifier" value="{{this.data.server.machineIdentifier}}"
          #serverApiKeyControl="ngModel" required>
       <mat-error *ngIf="serverApiKeyControl.hasError('required')">Must be specified.</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline" floatLabel=auto>
       <mat-label>Externally Facing Hostname</mat-label>
-      <input matInput placeholder="e.g. https://emby.this.data.server.com/" name="serverHostname" name="hostname"
+      <input id="externalHostname" matInput placeholder="e.g. https://emby.this.data.server.com/" name="serverHostname" name="hostname"
         [(ngModel)]="this.data.server.serverHostname" value="{{this.data.server.serverHostname}}" >
       <mat-hint>
         This will be the external address that users will navigate to when they press the 'View On Plex' button
@@ -58,7 +58,7 @@
 
     <mat-form-field appearance="outline" floatLabel=auto>
       <mat-label>Episode Batch Size</mat-label>
-      <input matInput placeholder="150" name="MachineIdentifier" [(ngModel)]="this.data.server.episodeBatchSize" value="{{this.data.server.episodeBatchSize}}">
+      <input id="batchSize" matInput placeholder="150" name="MachineIdentifier" [(ngModel)]="this.data.server.episodeBatchSize" value="{{this.data.server.episodeBatchSize}}">
       <mat-hint>
         150 by default, you shouldn't need to change this, this sets how many episodes we request from Plex at a single time.
       </mat-hint>
@@ -66,7 +66,7 @@
 
     <h2>Libraries</h2>
     <div>
-      <button mat-raised-button (click)="loadLibraries()"
+      <button id="loadLibs" mat-raised-button (click)="loadLibraries()"
           class="mat-focus-indicator mat-stroked-button mat-button-base">Load Libraries
           <i class="fas fa-film"></i>
       </button>
@@ -74,10 +74,10 @@
     <div *ngIf="this.data.server.plexSelectedLibraries && this.data.server.plexSelectedLibraries.length > 0">
       <label>Please select the libraries for Ombi to monitor. If nothing is selected, Ombi will monitor all
         libraries.</label>
-        <div *ngFor="let lib of this.data.server.plexSelectedLibraries">
+        <div *ngFor="let lib of this.data.server.plexSelectedLibraries; let i = index">
           <div class="md-form-field">
               <div class="checkbox">
-                  <mat-slide-toggle [(ngModel)]="lib.enabled" [checked]="lib.enabled"
+                  <mat-slide-toggle id="lib-{{i}}" [(ngModel)]="lib.enabled" [checked]="lib.enabled"
                       for="{{lib.title}}">{{lib.title}}</mat-slide-toggle>
               </div>
           </div>
@@ -87,7 +87,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align=end>
-  <button style="margin: .5em 0 0 .5em;" align-middle mat-stroked-button color="accent"
+  <button id="testPlexButton" style="margin: .5em 0 0 .5em;" align-middle mat-stroked-button color="accent"
     (click)="testPlex()">
     <span style="display: flex; align-items: baseline; white-space: pre-wrap;">
       <i class="fas fa-vial"></i>
@@ -95,7 +95,7 @@
     </span>
   </button>
 
-  <button style="margin: .5em 0 0 .5em;" align-middle mat-stroked-button color="warn"
+  <button id="deleteServer" style="margin: .5em 0 0 .5em;" align-middle mat-stroked-button color="warn"
   (click)="delete()">
   <span style="display: flex; align-items: baseline; white-space: pre-wrap;">
     <i class="fas fa-trash"></i>
@@ -103,7 +103,7 @@
   </span>
 </button>
 
-  <button style="margin: .5em 0 0 0.5em;" mat-stroked-button color="basic" (click)="cancel()">
+  <button id="cancel" style="margin: .5em 0 0 0.5em;" mat-stroked-button color="basic" (click)="cancel()">
     <span style="display: flex; align-items: baseline; white-space: pre-wrap;">
       <i class="fas fa-times"></i>
       <span> Cancel</span>
@@ -111,7 +111,7 @@
   </button>
 
 
-  <button style="margin: .5em 0 0 .5em;" mat-stroked-button color="accent"
+  <button id="saveServer" style="margin: .5em 0 0 .5em;" mat-stroked-button color="accent"
      (click)="save()">
     <span style="display: flex; align-items: baseline; white-space: pre-wrap;">
       <i style="vertical-align: text-top;" class="fas fa-check"></i>

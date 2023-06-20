@@ -37,7 +37,7 @@ export class PlexServerDialogComponent {
   public testPlex() {
     this.testerService.plexTest(this.data.server).pipe(take(1))
         .subscribe(x => {
-        if (x === true) {
+        if (x) {
             this.notificationService.success(`Successfully connected to the Plex server ${this.data.server.name}!`);
         } else {
             this.notificationService.error(`We could not connect to the Plex server  ${this.data.server.name}!`);

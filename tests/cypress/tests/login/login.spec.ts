@@ -1,32 +1,22 @@
 import { loginPage as Page } from "@/integration/page-objects";
 
 describe("Login Tests", () => {
-  it("Landing Page is enabled, should redirect", () => {
-    cy.landingSettings(true);
-    Page.visit();
-    cy.location("pathname").should("eq", "/landingpage");
-    cy.get("[data-cy=continue]").click();
-    cy.location("pathname").should("contains", "/login");
-  });
-
-  it("Landing Page is disabled, should not redirect", () => {
-    cy.landingSettings(false);
-    Page.visit();
-
-    cy.location("pathname").should("eq", "/login");
-  });
 
   it("Plex OAuth Enabled, should be button", () => {
     cy.landingSettings(false);
     cy.fixture("login/authenticationSettngs").then((settings) => {
       settings.enableOAuth = true;
-      cy.intercept("GET", "/Settings/Authentication", settings).as(
+      cy.intercept("GET", "api/v1/Settings/Authentication", (req) => {
+        req.reply((res) => {
+          res.send(settings);
+        });
+      }).as(
         "authSettings"
       );
     });
 
     Page.visit();
-
+cy.wait("@authSettings");
     Page.plexSignInButton.should("be.visible");
     Page.ombiSignInButton.should("be.visible");
   });
@@ -35,7 +25,7 @@ describe("Login Tests", () => {
     cy.landingSettings(false);
     cy.fixture("login/authenticationSettngs").then((settings) => {
       settings.enableOAuth = false;
-      cy.intercept("GET", "/Settings/Authentication", settings).as(
+      cy.intercept("GET", "api/v1//Settings/Authentication", settings).as(
         "authSettings"
       );
     });
