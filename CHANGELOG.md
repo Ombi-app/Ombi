@@ -1,3 +1,18 @@
+## [4.42.1](https://github.com/Ombi-app/Ombi/compare/v4.42.0...v4.42.1) (2023-06-20)
+
+
+### Bug Fixes
+
+* More automation tests mainly around the Plex Settings page ([#4821](https://github.com/Ombi-app/Ombi/issues/4821)) ([21bfc5a](https://github.com/Ombi-app/Ombi/commit/21bfc5a45adf6da6a80854e19494a8ffdc9c0761))
+* src/Ombi.Notifications/Ombi.Notifications.csproj to reduce vulnerabilities ([#4969](https://github.com/Ombi-app/Ombi/issues/4969)) [skip ci] ([8584ad4](https://github.com/Ombi-app/Ombi/commit/8584ad46053c51f5da40b24f3efd1b9e5a031ddd))
+* upgrade @fortawesome/fontawesome-free from 6.1.2 to 6.4.0 ([#4965](https://github.com/Ombi-app/Ombi/issues/4965)) [skip ci] ([84454e5](https://github.com/Ombi-app/Ombi/commit/84454e53c00c808e8a393c7750bdc418a7593e91))
+* upgrade @microsoft/signalr from 6.0.11 to 6.0.16 ([#4964](https://github.com/Ombi-app/Ombi/issues/4964)) [skip ci] ([a0201e3](https://github.com/Ombi-app/Ombi/commit/a0201e3f585dc52f717e33c46ede35a4eccac736))
+* upgrade cypress-real-events from 1.7.4 to 1.8.1 ([#4968](https://github.com/Ombi-app/Ombi/issues/4968)) [skip ci] ([8a24b56](https://github.com/Ombi-app/Ombi/commit/8a24b56299c3bc98bf0d719ba448972aaa7f7461))
+* upgrade multiple dependencies with Snyk ([#4963](https://github.com/Ombi-app/Ombi/issues/4963)) [skip ci] ([6025c5e](https://github.com/Ombi-app/Ombi/commit/6025c5ed757438d3a5d79bd36fd789ef0297ce70))
+* upgrade primeng from 15.0.0-rc.1 to 15.4.1 ([#4962](https://github.com/Ombi-app/Ombi/issues/4962)) [skip ci] ([23a4fed](https://github.com/Ombi-app/Ombi/commit/23a4fede69898a25b342aed78a8cda553c1fd18d))
+
+
+
 # [4.42.0](https://github.com/Ombi-app/Ombi/compare/v4.41.1...v4.42.0) (2023-06-02)
 
 
@@ -2429,15 +2444,6 @@
 ### Features
 
 * Angular 15 and Dependency upgrades ([#4818](https://github.com/Ombi-app/Ombi/issues/4818)) ([4816acf](https://github.com/Ombi-app/Ombi/commit/4816acf6f94443d23ebef6091d4cfcbca580f9ca))
-
-
-
-## [4.32.3](https://github.com/Ombi-app/Ombi/compare/v4.32.2...v4.32.3) (2022-11-24)
-
-
-### Bug Fixes
-
-* **sonarr:** V4 actually works this time around ([f62e70f](https://github.com/Ombi-app/Ombi/commit/f62e70fc493c7971da5e4508ce10522f5df0bbf7))
 
 
 
