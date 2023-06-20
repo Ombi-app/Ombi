@@ -1,0 +1,16 @@
+{
+	"request": {
+		"method": "GET"
+	},
+	"response": {
+		"status": 200,
+		"jsonBody": {
+			"mediaContainer": {
+                "version": "99"
+            }
+		},
+		"headers": {
+			"Content-Type": "application/json"
+		}
+	}
+}

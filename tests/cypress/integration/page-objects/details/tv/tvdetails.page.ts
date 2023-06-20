@@ -75,8 +75,8 @@ class TvDetailsPage extends BasePage {
         return cy.get('#partiallyAvailableBtn');
     }
 
-    get reportIssueButton(): Cypress.Chainable<any> {
-        return cy.get('#reportIssueBtn');
+    reportIssueButton(timeout: number): Cypress.Chainable<any> {
+        return cy.get('#reportIssueBtn', { timeout: timeout});
     }
 
 

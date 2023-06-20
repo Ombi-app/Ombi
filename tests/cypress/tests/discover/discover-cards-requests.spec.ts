@@ -17,6 +17,7 @@ describe("Discover Cards Requests Tests", () => {
         movie.requested = false;
 
         body[0] = movie;
+        console.log('sending res')
         res.send(body);
       });
     }).as("cardsResponse");
@@ -24,7 +25,7 @@ describe("Discover Cards Requests Tests", () => {
     Page.visit();
 
     cy.wait("@cardsResponse").then((res) => {
-      const body = JSON.parse(res.response.body);
+      const body = res.response.body;
       var expectedId = body[0].id;
       var title = body[0].title;
 
@@ -76,7 +77,7 @@ describe("Discover Cards Requests Tests", () => {
         Page.visit();
 
         cy.wait("@cardsResponse").then((res) => {
-          const body = JSON.parse(res.response.body);
+          const body = res.response.body
           var expectedId = body[6].id;
           var title = body[6].title;
 
@@ -119,7 +120,7 @@ describe("Discover Cards Requests Tests", () => {
     Page.visit();
 
     cy.wait("@cardsResponse").then((res) => {
-      const body = JSON.parse(res.response.body);
+      const body = res.response.body
       var expectedId = body[1].id;
       var title = body[1].title;
 
@@ -151,7 +152,7 @@ describe("Discover Cards Requests Tests", () => {
     Page.visit();
 
     cy.wait("@cardsResponse").then((res) => {
-      const body = JSON.parse(res.response.body);
+      const body = res.response.body
       var expectedId = body[1].id;
       var title = body[1].title;
 
@@ -183,7 +184,7 @@ describe("Discover Cards Requests Tests", () => {
     Page.visit();
 
     cy.wait("@cardsResponse").then((res) => {
-      const body = JSON.parse(res.response.body);
+      const body = res.response.body
       var expectedId = body[1].id;
       var title = body[1].title;
 
@@ -220,7 +221,7 @@ describe("Discover Cards Requests Tests", () => {
     Page.visit();
 
     cy.wait("@cardsResponse").then((res) => {
-      const body = JSON.parse(res.response.body);
+      const body = res.response.body
       var expectedId = body[1].id;
       var title = body[1].title;
 
@@ -284,7 +285,7 @@ describe("Discover Cards Requests Tests", () => {
 
     cy.wait("@otherResponses");
     cy.wait("@cardsResponse").then((res) => {
-      const body = JSON.parse(res.response.body);
+      const body = res.response.body
       var expectedId = body[3].id;
       var title = body[3].title;
 
@@ -337,7 +338,7 @@ describe("Discover Cards Requests Tests", () => {
 
         cy.wait("@otherResponses");
         cy.wait("@cardsResponse").then((res) => {
-          const body = JSON.parse(res.response.body);
+          const body = res.response.body
           var expectedId = body[5].id;
           var title = body[5].title;
 
