@@ -55,7 +55,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
                                 using (var tran = await _ctx.Database.BeginTransactionAsync())
                                 {
                                     await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM LidarrAlbumCache");
-                                    tran.Commit();
+                                    await tran.CommitAsync();
                                 }
                             });
 
@@ -85,7 +85,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
                                     await _ctx.LidarrAlbumCache.AddRangeAsync(albumCache);
 
                                     await _ctx.SaveChangesAsync();
-                                    tran.Commit();
+                                    await tran.CommitAsync();
                                 }
                             });
                         }

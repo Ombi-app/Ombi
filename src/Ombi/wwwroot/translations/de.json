@@ -159,6 +159,10 @@
         "RequestedBy": "Angefordert von",
         "Status": "Status",
         "RequestStatus": "Anfrage Status",
+        "Watched": "Watched",
+        "WatchedTooltip": "The user who made the request has watched it",
+        "WatchedProgressTooltip": "Shows how much the user who made the request has watched it",
+        "WatchedByUsersCount": "{{count}} users have watched this.",
         "Denied": " Abgelehnt:",
         "TheatricalRelease": "Kinostart: {{date}}",
         "ReleaseDate": "Veröffentlicht: {{date}}",
@@ -221,6 +225,7 @@
             "Denied": "Ausgewählte Elemente erfolgreich abgelehnt"
         },
         "SuccessfullyApproved": "Erfolgreich genehmigt",
+        "SuccessfullyDenied": "Successfully Denied",
         "SuccessfullyDeleted": "Anfrage erfolgreich gelöscht",
         "NowAvailable": "Anfrage ist jetzt verfügbar",
         "NowUnavailable": "Anfrage ist jetzt verfügbar",
@@ -403,6 +408,7 @@
         "Movies": "Filme",
         "Combined": "Kombiniert",
         "Tv": "TV",
+        "Genres": "Genres",
         "CardDetails": {
             "Availability": "Verfügbarkeit",
             "Studio": "Studio",

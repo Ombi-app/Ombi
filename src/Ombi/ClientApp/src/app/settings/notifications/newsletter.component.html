@@ -11,7 +11,7 @@
                         <mat-slide-toggle  type="checkbox" id="enabled" [(ngModel)]="settings.enabled"  ng-checked="settings.enabled">Enable</mat-slide-toggle>
                     </div>
                 </div>
-    
+
                 <div class="form-group">
                     <div class="checkbox">
                         <mat-slide-toggle  type="checkbox" id="disableTv" [(ngModel)]="settings.disableTv"  ng-checked="settings.disableTv">Disable TV</mat-slide-toggle>
@@ -46,11 +46,11 @@
 
                 <div class="form-group">
                     <div>
-                        <button mat-raised-button type="submit" id="save" (click)="onSubmit()" class="btn btn-primary-outline">Submit</button>
-                        <button mat-raised-button type="button" (click)="test()" class="btn btn-danger-outline">Test</button>
-                        <button mat-raised-button type="button" (click)="updateDatabase()" class="btn btn-info-outline" tooltipPosition="top" matTooltip="I recommend running this with a fresh Ombi install, this will set all the current *found* content to have been sent via Newsletter, 
+                        <button mat-raised-button type="submit" id="save" (click)="onSubmit()">Submit</button>
+                        <button mat-raised-button type="button" (click)="test()">Test</button>
+                        <button mat-raised-button type="button" (click)="updateDatabase()"tooltipPosition="top" matTooltip="I recommend running this with a fresh Ombi install, this will set all the current *found* content to have been sent via Newsletter,
                         if you do not do this then everything that Ombi has found in your libraries will go out on the first email!">Update Database</button>
-                        <button mat-raised-button type="button" (click)="trigger()" class="btn btn-danger-outline">Trigger now</button>
+                        <button mat-raised-button type="button" (click)="trigger()">Trigger now</button>
                     </div>
                                  </div>
         </div>
@@ -73,7 +73,7 @@
                     </mat-form-field>
                 </div>
                 <div class="col-md-3">
-                    <button mat-raised-button class="btn btn-primary-outline" (click)="addEmail()" matTooltip="Don't forget to press the Submit button!">Add</button>
+                    <button mat-raised-button (click)="addEmail()" matTooltip="Don't forget to press the Submit button!">Add</button>
                 </div>
             </div>
 
@@ -83,7 +83,7 @@
                         {{email}}
                     </div>
                     <div class="col-md-3">
-                        <button mat-raised-button class="btn btn-sm btn-danger-outline" (click)="deleteEmail(email)">Delete</button>
+                        <button mat-raised-button (click)="deleteEmail(email)">Delete</button>
                     </div>
                 </div>
             </div>

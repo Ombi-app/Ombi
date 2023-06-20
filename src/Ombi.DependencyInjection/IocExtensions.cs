@@ -197,6 +197,8 @@ namespace Ombi.DependencyInjection
             services.AddScoped<IEmbyContentRepository, EmbyContentRepository>();
             services.AddScoped<IJellyfinContentRepository, JellyfinContentRepository>();
             services.AddScoped<INotificationTemplatesRepository, NotificationTemplatesRepository>();
+            services.AddScoped<IUserPlayedMovieRepository, UserPlayedMovieRepository>();
+            services.AddScoped<IUserPlayedEpisodeRepository, UserPlayedEpisodeRepository>();
 
             services.AddScoped<ITvRequestRepository, TvRequestRepository>();
             services.AddScoped<IMovieRequestRepository, MovieRequestRepository>();
@@ -244,6 +246,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IPlexContentSync, PlexContentSync>();
             services.AddTransient<IPlexWatchlistImport, PlexWatchlistImport>();
             services.AddTransient<IEmbyContentSync, EmbyContentSync>();
+            services.AddTransient<IEmbyPlayedSync, EmbyPlayedSync>();
             services.AddTransient<IEmbyEpisodeSync, EmbyEpisodeSync>();
             services.AddTransient<IEmbyAvaliabilityChecker, EmbyAvaliabilityChecker>();
             services.AddTransient<IJellyfinContentSync, JellyfinContentSync>();

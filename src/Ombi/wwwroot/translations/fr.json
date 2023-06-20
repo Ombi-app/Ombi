@@ -159,6 +159,10 @@
         "RequestedBy": "Demandé par",
         "Status": "Statut",
         "RequestStatus": "Statut de la demande",
+        "Watched": "Vu",
+        "WatchedTooltip": "L'utilisateur qui a fait la demande l'a regardé",
+        "WatchedProgressTooltip": "Indique la progression de lecture de l'utilisateur qui a demandé cette série",
+        "WatchedByUsersCount": "{{count}} utilisateurs l'ont regardé.",
         "Denied": " Refusé :",
         "TheatricalRelease": "Sortie en salle : {{date}}",
         "ReleaseDate": "Sortie : {{date}}",
@@ -221,6 +225,7 @@
             "Denied": "Les éléments sélectionnés ont été refusés"
         },
         "SuccessfullyApproved": "Approuvée avec succès",
+        "SuccessfullyDenied": "Refusé avec succès",
         "SuccessfullyDeleted": "Demande supprimée avec succès",
         "NowAvailable": "La demande est maintenant disponible",
         "NowUnavailable": "La demande est maintenant indisponible",
@@ -403,6 +408,7 @@
         "Movies": "Films",
         "Combined": "Tous",
         "Tv": "Séries",
+        "Genres": "Genres",
         "CardDetails": {
             "Availability": "Disponibilité",
             "Studio": "Studio",

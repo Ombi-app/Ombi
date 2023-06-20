@@ -48,12 +48,11 @@
     <div class="col-md-6">
         <div *ngIf="categories">
             <div class="form-group row">
-                <div class="col-md-12">
-                    <label for="categoryToAdd" class="control-label">Add Category</label>
-                </div>
                 <div class="col-md-9">
-                    <input type="text" [(ngModel)]="categoryToAdd.value" class="form-control form-control-custom " id="categoryToAdd"
-                        name="categoryToAdd" value="{{categoryToAdd.value}}">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Add Category</mat-label>
+                        <input matInput type="text" [(ngModel)]="categoryToAdd.value" id="categoryToAdd" name="categoryToAdd" value="{{categoryToAdd.value}}">
+                  </mat-form-field>
                 </div>
                 <div class="col-md-3">
                     <button mat-raised-button (click)="addCategory()">Add</button>

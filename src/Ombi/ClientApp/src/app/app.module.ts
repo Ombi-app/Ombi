@@ -1,5 +1,5 @@
 import { APP_BASE_HREF, CommonModule, PlatformLocation } from "@angular/common";
-import { CustomPageService, ImageService, RequestService, SettingsService, SonarrService } from "./services";
+import { CustomPageService, ImageService, LidarrService, RequestService, SettingsService, SonarrService } from "./services";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from "@angular/common/http";
 import { IdentityService, IssuesService, JobService, MessageService, PlexTvService, SearchService, StatusService } from "./services";
@@ -14,6 +14,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { ButtonModule } from "primeng/button";
 import { CUSTOMIZATION_INITIALIZER } from "./state/customization/customization-initializer";
 import { SONARR_INITIALIZER } from "./state/sonarr/sonarr-initializer";
+import { RADARR_INITIALIZER } from "./state/radarr/radarr-initializer";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { CookieComponent } from "./auth/cookie.component";
 import { CookieService } from "ng2-cookies";
@@ -24,6 +25,7 @@ import { DialogModule } from "primeng/dialog";
 import { FEATURES_INITIALIZER } from "./state/features/features-initializer";
 import { FeatureState } from "./state/features";
 import { SonarrSettingsState } from "./state/sonarr";
+import { RadarrSettingsState } from "./state/radarr";
 import { JwtModule } from "@auth0/angular-jwt";
 import { LandingPageComponent } from "./landingpage/landingpage.component";
 import { LandingPageService } from "./services";
@@ -44,6 +46,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatPaginatorI18n } from "./localization/MatPaginatorI18n";
 import { MatPaginatorIntl } from "@angular/material/paginator";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -148,6 +151,7 @@ export function JwtTokenGetter() {
         OverlayModule,
         MatCheckboxModule,
         MatProgressSpinnerModule,
+        MatProgressBarModule,
         JwtModule.forRoot({
             config: {
                 tokenGetter: JwtTokenGetter,
@@ -162,7 +166,7 @@ export function JwtTokenGetter() {
         }),
         SidebarModule,
         MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, LayoutModule, MatSlideToggleModule,
-        NgxsModule.forRoot([CustomizationState, FeatureState, SonarrSettingsState], {
+        NgxsModule.forRoot([CustomizationState, FeatureState, SonarrSettingsState, RadarrSettingsState], {
             developmentMode: !environment.production,
         }),
         ...environment.production ? [] :
@@ -207,10 +211,12 @@ export function JwtTokenGetter() {
         StorageService,
         RequestService,
         SonarrService,
+        LidarrService,
         SignalRNotificationService,
         FEATURES_INITIALIZER,
         SONARR_INITIALIZER,
         CUSTOMIZATION_INITIALIZER,
+        RADARR_INITIALIZER,
         {
             provide: APP_BASE_HREF,
             useValue: window["baseHref"]

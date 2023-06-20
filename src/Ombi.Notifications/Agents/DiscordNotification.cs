@@ -107,7 +107,7 @@ namespace Ombi.Notifications.Agents
                 var discordBody = new DiscordWebhookBody
                 {
                     content = model.Message,
-                    username = settings.Username,
+                    username = settings.Username ?? "Ombi",
                 };
 
                 var fields = new List<DiscordField>();

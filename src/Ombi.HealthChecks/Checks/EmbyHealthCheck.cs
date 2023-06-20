@@ -2,8 +2,6 @@
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Ombi.Api.Emby;
 using Ombi.Api.Emby.Models;
-using Ombi.Api.Plex;
-using Ombi.Api.Plex.Models.Status;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using System;

@@ -15,15 +15,24 @@ namespace Ombi.Schedule.Jobs.Ombi
 {
     public class MediaDatabaseRefresh : IMediaDatabaseRefresh
     {
-        public MediaDatabaseRefresh(ISettingsService<PlexSettings> s, ILogger<MediaDatabaseRefresh> log,
-            IPlexContentRepository plexRepo, IEmbyContentRepository embyRepo, IJellyfinContentRepository jellyfinRepo,
-            ISettingsService<EmbySettings> embySettings, ISettingsService<JellyfinSettings> jellyfinSettings)
+        public MediaDatabaseRefresh(
+            ISettingsService<PlexSettings> s, 
+            ILogger<MediaDatabaseRefresh> log,
+            IPlexContentRepository plexRepo, 
+            IEmbyContentRepository embyRepo, 
+            IJellyfinContentRepository jellyfinRepo,
+            IUserPlayedMovieRepository userPlayedMovieRepo,
+            IUserPlayedEpisodeRepository userPlayedEpisodeRepo,
+            ISettingsService<EmbySettings> embySettings, 
+            ISettingsService<JellyfinSettings> jellyfinSettings)
         {
             _plexSettings = s;
             _log = log;
             _plexRepo = plexRepo;
             _embyRepo = embyRepo;
             _jellyfinRepo = jellyfinRepo;
+            _userPlayedMovieRepo = userPlayedMovieRepo;
+            _userPlayedEpisodeRepo = userPlayedEpisodeRepo;
             _embySettings = embySettings;
             _jellyfinSettings = jellyfinSettings;
             _plexSettings.ClearCache();
@@ -34,6 +43,8 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly IPlexContentRepository _plexRepo;
         private readonly IEmbyContentRepository _embyRepo;
         private readonly IJellyfinContentRepository _jellyfinRepo;
+        private readonly IUserPlayedMovieRepository _userPlayedMovieRepo;
+        private readonly IUserPlayedEpisodeRepository _userPlayedEpisodeRepo;
         private readonly ISettingsService<EmbySettings> _embySettings;
         private readonly ISettingsService<JellyfinSettings> _jellyfinSettings;
 
@@ -41,6 +52,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         {
             try
             {
+                await RemovePlayedData();
                 await RemovePlexData();
                 await RemoveEmbyData();
                 await RemoveJellyfinData();
@@ -51,6 +63,23 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
 
         }
+
+        private async Task RemovePlayedData()
+        {
+            try
+            {
+                const string movieSql = "DELETE FROM UserPlayedMovie";
+                await _userPlayedMovieRepo.ExecuteSql(movieSql);
+
+                const string episodeSql = "DELETE FROM UserPlayedEpisode";
+                await _userPlayedEpisodeRepo.ExecuteSql(episodeSql);
+            }
+            catch (Exception e)
+            {
+                _log.LogError(LoggingEvents.MediaReferesh, e, "Refreshing Played Data Failed");
+            }
+        }
+
 
         private async Task RemoveEmbyData()
         {

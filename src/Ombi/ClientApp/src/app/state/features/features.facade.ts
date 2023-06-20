@@ -23,4 +23,6 @@ export class FeaturesFacade {
 
     public is4kEnabled = (): boolean => this.store.selectSnapshot(FeaturesSelectors.is4kEnabled);
 
+    public isPlayedSyncEnabled = (): boolean => this.store.selectSnapshot(FeaturesSelectors.isPlayedSyncEnabled);
+
 }

@@ -159,6 +159,10 @@
         "RequestedBy": "Anmodet af",
         "Status": "Status",
         "RequestStatus": "Status for anmodning",
+        "Watched": "Watched",
+        "WatchedTooltip": "The user who made the request has watched it",
+        "WatchedProgressTooltip": "Shows how much the user who made the request has watched it",
+        "WatchedByUsersCount": "{{count}} users have watched this.",
         "Denied": " Afvist:",
         "TheatricalRelease": "Biografudgivelse: {{date}}",
         "ReleaseDate": "Udgivet: {{date}}",
@@ -221,6 +225,7 @@
             "Denied": "Successfully denied selected items"
         },
         "SuccessfullyApproved": "Godkendt",
+        "SuccessfullyDenied": "Successfully Denied",
         "SuccessfullyDeleted": "Anmodningen blev slettet",
         "NowAvailable": "Anmodningen er nu tilgængelig",
         "NowUnavailable": "Anmodningen er nu utilgængelig",
@@ -403,6 +408,7 @@
         "Movies": "Film",
         "Combined": "Kombineret",
         "Tv": "TV",
+        "Genres": "Genres",
         "CardDetails": {
             "Availability": "Tilgængelighed",
             "Studio": "Studie",

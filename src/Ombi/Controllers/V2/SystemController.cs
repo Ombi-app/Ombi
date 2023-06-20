@@ -44,25 +44,33 @@ namespace Ombi.Controllers.V2
         }
 
         [HttpGet("logs/{logFileName}")]
-        public async Task<IActionResult> ReadLogFile(string logFileName, CancellationToken token)
+        public async Task<IActionResult> ReadLogFile(string logFileName)
         {
-            var logFile = Path.Combine(string.IsNullOrEmpty(Ombi.Helpers.StartupSingleton.Instance.StoragePath) ? _hosting.ContentRootPath : Helpers.StartupSingleton.Instance.StoragePath, "Logs", logFileName);
-            using (var fs = new FileStream(logFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            using (StreamReader reader = new StreamReader(fs))
+            var logsFolder = Path.Combine(string.IsNullOrEmpty(Ombi.Helpers.StartupSingleton.Instance.StoragePath) ? _hosting.ContentRootPath : Helpers.StartupSingleton.Instance.StoragePath, "Logs");
+            var files = Directory.EnumerateFiles(logsFolder);
+            var matchingFile = files.FirstOrDefault(x => Path.GetFileName(x).Equals(logFileName));
+            if (matchingFile != null)
             {
+                using var fs = new FileStream(matchingFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                using StreamReader reader = new(fs);
                 return Ok(await reader.ReadToEndAsync());
             }
+            return NotFound();
         }
 
         [HttpGet("logs/download/{logFileName}")]
-        public IActionResult Download(string logFileName, CancellationToken token)
+        public IActionResult Download(string logFileName)
         {
-            var logFile = Path.Combine(string.IsNullOrEmpty(Ombi.Helpers.StartupSingleton.Instance.StoragePath) ? _hosting.ContentRootPath : Helpers.StartupSingleton.Instance.StoragePath, "Logs", logFileName);
-            using (var fs = new FileStream(logFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            using (StreamReader reader = new StreamReader(fs))
+            var logsFolder = Path.Combine(string.IsNullOrEmpty(Ombi.Helpers.StartupSingleton.Instance.StoragePath) ? _hosting.ContentRootPath : Helpers.StartupSingleton.Instance.StoragePath, "Logs");
+            var files = Directory.EnumerateFiles(logsFolder);
+            var matchingFile = files.FirstOrDefault(x => Path.GetFileName(x).Equals(logFileName));
+            if (matchingFile != null)
             {
+                using var fs = new FileStream(matchingFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                using StreamReader reader = new(fs);
                 return File(reader.BaseStream, "application/octet-stream", logFileName);
             }
+            return NotFound();
         }
     }
 }

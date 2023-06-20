@@ -23,12 +23,24 @@
         <div class="checkbox">
           <mat-slide-toggle id="enableHeaderAuth" name="enableHeaderAuth" formControlName="enableHeaderAuth">Enable Authentication with Header Variable</mat-slide-toggle>
         </div>
+        <div class="alert warning-box">
+          Enabling Header Authentication will allow anyone to bypass authentication unless you are using a properly configured reverse proxy. Use with caution!
+        </div>
       </div>
 
       <div class="form-group" *ngIf="form.controls.enableHeaderAuth.value">
         <label for="headerAuthVariable" class="control-label">Header Authentication Variable</label>
         <div>
           <input type="text" class="form-control form-control-custom " id="headerAuthVariable" name="headerAuthVariable" formControlName="headerAuthVariable">
+        </div>
+      </div>
+
+      <div class="form-group" *ngIf="form.controls.enableHeaderAuth.value">
+        <div class="checkbox">
+          <mat-slide-toggle id="headerAuthCreateUser" name="headerAuthCreateUser" formControlName="headerAuthCreateUser">SSO creates new users automatically</mat-slide-toggle>
+        </div>
+        <div class="alert warning-box" *ngIf="form.controls.headerAuthCreateUser.value">
+          If the user in the Header Authentication variable does not exist, a new user will be created. You can configure the default permissions for new users in the <a target="_blank" href="/Settings/UserManagement">User Management settings</a>.
         </div>
       </div>
 

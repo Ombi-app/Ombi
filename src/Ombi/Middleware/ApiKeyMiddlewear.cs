@@ -57,7 +57,7 @@ namespace Ombi
             }
         }
 
-        private async Task ValidateUserAccessToken(HttpContext context, RequestDelegate next, string key)
+        private static async Task ValidateUserAccessToken(HttpContext context, RequestDelegate next, string key)
         {
             if (string.IsNullOrEmpty(key))
             {
@@ -74,11 +74,13 @@ namespace Ombi
             }
             else
             {
-
                 var identity = new GenericIdentity(user.UserName);
                 var roles = await um.GetRolesAsync(user);
                 var principal = new GenericPrincipal(identity, roles.ToArray());
                 context.User = principal;
+                user.LastLoggedIn = DateTime.UtcNow;
+                await um.UpdateAsync(user);
+
                 await next.Invoke(context);
             }
         }

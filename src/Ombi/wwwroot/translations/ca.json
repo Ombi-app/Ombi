@@ -159,6 +159,10 @@
         "RequestedBy": "Sol·licitat per",
         "Status": "Estat",
         "RequestStatus": "Estat de la sol·licitud",
+        "Watched": "Watched",
+        "WatchedTooltip": "The user who made the request has watched it",
+        "WatchedProgressTooltip": "Shows how much the user who made the request has watched it",
+        "WatchedByUsersCount": "{{count}} users have watched this.",
         "Denied": " Denegat:",
         "TheatricalRelease": "En cines: {{date}}",
         "ReleaseDate": "Llançament: {{date}}",
@@ -221,6 +225,7 @@
             "Denied": "Els elements seleccionats s'han denegat correctament"
         },
         "SuccessfullyApproved": "Aprovat correctament",
+        "SuccessfullyDenied": "Successfully Denied",
         "SuccessfullyDeleted": "La sol·licitud s'ha suprimit correctament",
         "NowAvailable": "La sol·licitud ja està disponible",
         "NowUnavailable": "La sol·licitud ja no està disponible",
@@ -403,6 +408,7 @@
         "Movies": "Pel·lícules",
         "Combined": "Combinat",
         "Tv": "TV",
+        "Genres": "Genres",
         "CardDetails": {
             "Availability": "Disponibilitat",
             "Studio": "Estudi",

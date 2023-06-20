@@ -56,7 +56,7 @@ namespace Ombi.Api.Emby
             return obj;
         }
 
-        public async Task<EmbyUser> LogIn(string username, string password, string apiKey, string baseUri)
+        public async Task<EmbyUser> LogIn(string username, string password, string apiKey, string baseUri, string clientIpAddress)
         {
             var request = new Request("emby/users/authenticatebyname", baseUri, HttpMethod.Post);
             var body = new
@@ -70,6 +70,11 @@ namespace Ombi.Api.Emby
             request.AddHeader("X-Emby-Authorization",
                 $"MediaBrowser Client=\"Ombi\", Device=\"Ombi\", DeviceId=\"v3\", Version=\"v3\"");
             AddHeaders(request, apiKey);
+
+            if (!string.IsNullOrEmpty(clientIpAddress))
+            {
+                request.AddHeader("X-Forwarded-For", clientIpAddress);
+            }
 
             var obj = await Api.Request<EmbyUser>(request);
             return obj;
@@ -247,6 +252,50 @@ namespace Ombi.Api.Emby
             req.AddHeader("Accept", "application/json");
             req.AddContentHeader("Content-Type", "application/json");
             req.AddHeader("Device", "Ombi");
+        }
+
+        public async Task<EmbyItemContainer<EmbyMovie>> GetMoviesPlayed(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri) =>
+            await GetPlayed<EmbyMovie>("Movie", apiKey, userId, baseUri, startIndex, count, parentIdFilder, "ProviderIds");
+
+        public async Task<EmbyItemContainer<EmbyEpisodes>> GetTvPlayed(string apiKey, string parentIdFilder, int startIndex, int count, string userId, string baseUri) =>
+           await GetPlayed<EmbyEpisodes>("Episode", apiKey, userId, baseUri, startIndex, count, parentIdFilder);
+
+        private async Task<EmbyItemContainer<T>> GetPlayed<T>(
+            string type,
+            string apiKey,
+            string userId,
+            string baseUri,
+            int startIndex,
+            int count,
+            string parentIdFilder = default,
+            string fields = default)
+        {
+            var request = new Request($"emby/items", baseUri, HttpMethod.Get);
+
+            request.AddQueryString("Recursive", true.ToString());
+            request.AddQueryString("IncludeItemTypes", type);
+            if (!string.IsNullOrEmpty(fields))
+            {
+                request.AddQueryString("Fields", fields);
+            }
+            request.AddQueryString("UserId", userId);
+            request.AddQueryString("isPlayed", true.ToString());
+
+            // paginate and display recently played items first
+            request.AddQueryString("sortBy", "DatePlayed");
+            request.AddQueryString("SortOrder", "Descending");
+            request.AddQueryString("startIndex", startIndex.ToString());
+            request.AddQueryString("limit", count.ToString());
+
+            if (!string.IsNullOrEmpty(parentIdFilder))
+            {
+                request.AddQueryString("ParentId", parentIdFilder);
+            }
+
+            AddHeaders(request, apiKey);
+
+            var obj = await Api.Request<EmbyItemContainer<T>>(request);
+            return obj;
         }
     }
 }

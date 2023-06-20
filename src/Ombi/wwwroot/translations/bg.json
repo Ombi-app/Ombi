@@ -159,6 +159,10 @@
         "RequestedBy": "Заявено от",
         "Status": "Състояние",
         "RequestStatus": "Състояние на заявката",
+        "Watched": "Watched",
+        "WatchedTooltip": "The user who made the request has watched it",
+        "WatchedProgressTooltip": "Shows how much the user who made the request has watched it",
+        "WatchedByUsersCount": "{{count}} users have watched this.",
         "Denied": " Отказано:",
         "TheatricalRelease": "Кино премиера: {{date}}",
         "ReleaseDate": "Премиера: {{date}}",
@@ -221,6 +225,7 @@
             "Denied": "Successfully denied selected items"
         },
         "SuccessfullyApproved": "Successfully Approved",
+        "SuccessfullyDenied": "Successfully Denied",
         "SuccessfullyDeleted": "Request successfully deleted",
         "NowAvailable": "Request is now available",
         "NowUnavailable": "Request is now unavailable",
@@ -403,6 +408,7 @@
         "Movies": "Филми",
         "Combined": "Комбинирано",
         "Tv": "Телевизия",
+        "Genres": "Genres",
         "CardDetails": {
             "Availability": "Наличност",
             "Studio": "Студио",

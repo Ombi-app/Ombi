@@ -37,7 +37,7 @@ export class AuthService extends ServiceHelpers {
     }
 
     public loggedIn() {
-        const token: string = this.jwtHelperService.tokenGetter();
+		const token = this.jwtHelperService.tokenGetter() as string;
 
         if (!token) {
             return false;

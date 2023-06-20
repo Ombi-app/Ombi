@@ -8,10 +8,12 @@ using Ombi.Api.Emby;
 using Ombi.Api.Emby.Models;
 using Ombi.Api.Emby.Models.Media.Tv;
 using Ombi.Api.Emby.Models.Movie;
+using Ombi.Core.Services;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Hubs;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Quartz;
@@ -19,108 +21,43 @@ using MediaType = Ombi.Store.Entities.MediaType;
 
 namespace Ombi.Schedule.Jobs.Emby
 {
-    public class EmbyContentSync : IEmbyContentSync
+    public class EmbyContentSync : EmbyLibrarySync, IEmbyContentSync
     {
-        public EmbyContentSync(ISettingsService<EmbySettings> settings, IEmbyApiFactory api, ILogger<EmbyContentSync> logger,
-            IEmbyContentRepository repo, INotificationHubService notification)
+        public EmbyContentSync(
+            ISettingsService<EmbySettings> settings, 
+            IEmbyApiFactory api, 
+            ILogger<EmbyContentSync> logger,
+            IEmbyContentRepository repo, 
+            INotificationHubService notification, 
+            IFeatureService feature):
+            base(settings, api, logger, notification)
         {
-            _logger = logger;
-            _settings = settings;
-            _apiFactory = api;
             _repo = repo;
-            _notification = notification;
+            _feature = feature;
         }
 
-        private readonly ILogger<EmbyContentSync> _logger;
-        private readonly ISettingsService<EmbySettings> _settings;
-        private readonly IEmbyApiFactory _apiFactory;
         private readonly IEmbyContentRepository _repo;
-        private readonly INotificationHubService _notification;
+        private readonly IFeatureService _feature;
 
-        private const int AmountToTake = 100;
 
-        private IEmbyApi Api { get; set; }
-
-        public async Task Execute(IJobExecutionContext context)
+        public async override Task Execute(IJobExecutionContext context)
         {
-            JobDataMap dataMap = context.JobDetail.JobDataMap;
-            var recentlyAddedSearch = false;
-            if (dataMap.TryGetValue(JobDataKeys.EmbyRecentlyAddedSearch, out var recentlyAddedObj))
-            {
-                recentlyAddedSearch = Convert.ToBoolean(recentlyAddedObj);
-            }
 
-            var embySettings = await _settings.GetSettingsAsync();
-            if (!embySettings.Enable)
-                return;
+            await base.Execute(context);
 
-            Api = _apiFactory.CreateClient(embySettings);
-
-            await _notification.SendNotificationToAdmins(recentlyAddedSearch ? "Emby Recently Added Started" : "Emby Content Sync Started");
-
-            foreach (var server in embySettings.Servers)
-            {
-                try
-                {
-                    await StartServerCache(server, recentlyAddedSearch);
-                }
-                catch (Exception e)
-                {
-                    await _notification.SendNotificationToAdmins("Emby Content Sync Failed");
-                    _logger.LogError(e, "Exception when caching Emby for server {0}", server.Name);
-                }
-            }
-
-            await _notification.SendNotificationToAdmins("Emby Content Sync Finished");
             // Episodes
+            await OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IEmbyEpisodeSync), "Emby"), new JobDataMap(new Dictionary<string, string> { { JobDataKeys.EmbyRecentlyAddedSearch, recentlyAdded.ToString() } }));
 
-
-            await OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IEmbyEpisodeSync), "Emby"), new JobDataMap(new Dictionary<string, string> { { JobDataKeys.EmbyRecentlyAddedSearch, recentlyAddedSearch.ToString() } }));
-        }
-
-
-        private async Task StartServerCache(EmbyServers server, bool recentlyAdded)
-        {
-            if (!ValidateSettings(server))
+            // Played state
+            var isPlayedSyncEnabled = await _feature.FeatureEnabled(FeatureNames.PlayedSync); 
+            if(isPlayedSyncEnabled) 
             {
-                return;
-            }
-
-
-            if (server.EmbySelectedLibraries.Any() && server.EmbySelectedLibraries.Any(x => x.Enabled))
-            {
-                var movieLibsToFilter = server.EmbySelectedLibraries.Where(x => x.Enabled && x.CollectionType == "movies");
-
-                foreach (var movieParentIdFilder in movieLibsToFilter)
-                {
-                    _logger.LogInformation($"Scanning Lib '{movieParentIdFilder.Title}'");
-                    await ProcessMovies(server, recentlyAdded, movieParentIdFilder.Key);
-                }
-
-                var tvLibsToFilter = server.EmbySelectedLibraries.Where(x => x.Enabled && x.CollectionType == "tvshows");
-                foreach (var tvParentIdFilter in tvLibsToFilter)
-                {
-                    _logger.LogInformation($"Scanning Lib '{tvParentIdFilter.Title}'");
-                    await ProcessTv(server, recentlyAdded, tvParentIdFilter.Key);
-                }
-
-
-                var mixedLibs = server.EmbySelectedLibraries.Where(x => x.Enabled && x.CollectionType == "mixed");
-                foreach (var m in mixedLibs)
-                {
-                    _logger.LogInformation($"Scanning Lib '{m.Title}'");
-                    await ProcessTv(server, recentlyAdded, m.Key);
-                    await ProcessMovies(server, recentlyAdded, m.Key);
-                }
-            }
-            else
-            {
-                await ProcessMovies(server, recentlyAdded);
-                await ProcessTv(server, recentlyAdded);
+                await OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IEmbyPlayedSync), "Emby"), new JobDataMap(new Dictionary<string, string> { { JobDataKeys.EmbyRecentlyAddedSearch, recentlyAdded.ToString() } }));
             }
         }
 
-        private async Task ProcessTv(EmbyServers server, bool recentlyAdded, string parentId = default)
+
+        protected async override Task ProcessTv(EmbyServers server, string parentId = default)
         {
             // TV Time
             var mediaToAdd = new HashSet<EmbyContent>();
@@ -196,7 +133,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 await _repo.AddRange(mediaToAdd);
         }
 
-        private async Task ProcessMovies(EmbyServers server, bool recentlyAdded, string parentId = default)
+        protected override async Task ProcessMovies(EmbyServers server, string parentId = default)
         {
             EmbyItemContainer<EmbyMovie> movies;
             if (recentlyAdded)
@@ -263,7 +200,12 @@ namespace Ombi.Schedule.Jobs.Emby
             // Check if it exists
             var existingMovie = await _repo.GetByEmbyId(movieInfo.Id);
             var alreadyGoingToAdd = content.Any(x => x.EmbyId == movieInfo.Id);
-            if (existingMovie == null && !alreadyGoingToAdd)
+            if (alreadyGoingToAdd)
+            {
+                _logger.LogDebug($"Detected duplicate for {movieInfo.Name}");
+                return;
+            }
+            if (existingMovie == null)
             {
                 if (!movieInfo.ProviderIds.Any())
                 {
@@ -318,36 +260,6 @@ namespace Ombi.Schedule.Jobs.Emby
             content.Url = EmbyHelper.GetEmbyMediaUrl(movieInfo.Id, server?.ServerId, server.ServerHostname);
             content.Quality = has4K ? null : quality;
             content.Has4K = has4K;
-        }
-
-        private bool ValidateSettings(EmbyServers server)
-        {
-            if (server?.Ip == null || string.IsNullOrEmpty(server?.ApiKey))
-            {
-                _logger.LogInformation(LoggingEvents.EmbyContentCacher, $"Server {server?.Name} is not configured correctly");
-                return false;
-            }
-
-            return true;
-        }
-
-        private bool _disposed;
-        protected virtual void Dispose(bool disposing)
-        {
-            if (_disposed)
-                return;
-
-            if (disposing)
-            {
-                //_settings?.Dispose();
-            }
-            _disposed = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 

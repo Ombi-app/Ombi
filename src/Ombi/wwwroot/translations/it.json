@@ -159,6 +159,10 @@
         "RequestedBy": "Richiesta da",
         "Status": "Stato",
         "RequestStatus": "Stato della richiesta",
+        "Watched": "Visti",
+        "WatchedTooltip": "L'utente che ha fatto la richiesta l'ha visto",
+        "WatchedProgressTooltip": "Mostra quanto ha guardato l'utente che ha fatto la richiesta",
+        "WatchedByUsersCount": "Visto da {{count}} utenti.",
         "Denied": "Negata:",
         "TheatricalRelease": "Uscita nei cinema: {{date}}",
         "ReleaseDate": "Rilasciato il {{date}}",
@@ -221,6 +225,7 @@
             "Denied": "Elementi selezionati rifiutati con successo"
         },
         "SuccessfullyApproved": "Approvata",
+        "SuccessfullyDenied": "Negata Con Successo",
         "SuccessfullyDeleted": "Richiesta eliminata correttamente",
         "NowAvailable": "Richiesta ora disponibile",
         "NowUnavailable": "Richiesta ora non disponibile",
@@ -365,7 +370,7 @@
             "CastTitle": "Trasmetti"
         },
         "Crews": {
-            "CrewTitle": "Crew"
+            "CrewTitle": "Gruppo"
         },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Richiederà tutte le stagioni per questa serie",
@@ -403,6 +408,7 @@
         "Movies": "Film",
         "Combined": "Combinato",
         "Tv": "TV",
+        "Genres": "Generi",
         "CardDetails": {
             "Availability": "Disponibilità",
             "Studio": "Studio",
