@@ -75,6 +75,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Stop Docker
+      if: always()
       run: |
         docker ps -q | xargs -I {} docker logs {}
         docker container kill $(docker ps -q)
