@@ -37,7 +37,7 @@ export default defineConfig({
       return config;
       // return require('./cypress/plugins/index.js')(on, config)
     },
-    baseUrl: 'http://localhost:3577',
+    baseUrl: 'http://localhost:5000',
     specPattern: ['cypress/tests/**/*.spec.ts*', '**/*.feature'],
     excludeSpecPattern: ['**/snapshots/*'],
   },
