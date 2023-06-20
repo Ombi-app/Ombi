@@ -86,7 +86,7 @@ export class UserPreferenceComponent implements OnInit {
 
     public languageSelected() {
         this.identityService.updateLanguage(this.selectedLang).subscribe(_ => {
-            this.translate.use(this.selectedLang);
+            this.translate.use(this.selectedLang).subscribe();
             this.notification.success(this.translate.instant("UserPreferences.Updated"))
         });
     }
