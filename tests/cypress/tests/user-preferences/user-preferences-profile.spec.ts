@@ -18,7 +18,6 @@ langs.forEach((l) => {
 
     Page.profile.languageSelectBox.click();
     Page.profile.languageSelectBoxOption(l.code).click();
-
     Page.navbar.discover.contains(l.discover);
 
     cy.wait('@langSave').then((intercept) => {
