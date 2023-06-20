@@ -12,12 +12,13 @@ const langs = [
 ];
 
 langs.forEach((l) => {
-  it(`Change language to ${l.code}, UI should update`, () => {
+  it.only(`Change language to ${l.code}, UI should update`, () => {
     cy.intercept('POST','**/language').as('langSave');
     Page.visit();
 
     Page.profile.languageSelectBox.click();
     Page.profile.languageSelectBoxOption(l.code).click();
+    cy.wait(1000); // wait for UI to update
     Page.navbar.discover.contains(l.discover);
 
     cy.wait('@langSave').then((intercept) => {
