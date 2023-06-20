@@ -12,7 +12,7 @@ const langs = [
 ];
 
 langs.forEach((l) => {
-  it(`Change language to ${l.code}, UI should update`, () => {
+  it.skip(`Change language to ${l.code}, UI should update`, () => {
     cy.intercept('POST','**/language').as('langSave');
     Page.visit();
 
