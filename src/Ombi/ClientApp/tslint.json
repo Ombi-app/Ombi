@@ -3,8 +3,7 @@
     "node_modules/codelyzer"
   ],
   "extends": [
-    "tslint:recommended",
-    "tslint-angular"
+    "tslint:recommended"
   ],
   "rules": {
     "max-line-length": [
