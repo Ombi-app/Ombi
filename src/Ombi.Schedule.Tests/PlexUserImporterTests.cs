@@ -6,6 +6,7 @@ using Ombi.Api.Plex;
 using Ombi.Api.Plex.Models;
 using Ombi.Api.Plex.Models.Friends;
 using Ombi.Core.Authentication;
+using Ombi.Core.Engine;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
@@ -365,7 +366,7 @@ namespace Ombi.Schedule.Tests
 
             await _subject.Execute(null);
 
-            _mocker.Verify<OmbiUserManager>(x => x.DeleteAsync(It.Is<OmbiUser>(x => x.ProviderUserId == "PLEX_ID" && x.Email == "dupe" && x.UserName == "plex")), Times.Once);
+            _mocker.Verify<IUserDeletionEngine>(x => x.DeleteUser(It.Is<OmbiUser>(x => x.ProviderUserId == "PLEX_ID" && x.Email == "dupe" && x.UserName == "plex")), Times.Once);
         }
         
         [Test]
@@ -401,7 +402,7 @@ namespace Ombi.Schedule.Tests
 
             await _subject.Execute(null);
 
-            _mocker.Verify<OmbiUserManager>(x => x.DeleteAsync(It.Is<OmbiUser>(x => x.ProviderUserId == "PLEX_ID" && x.Email == "dupe" && x.UserName == "plex")), Times.Once);
+            _mocker.Verify<IUserDeletionEngine>(x => x.DeleteUser(It.Is<OmbiUser>(x => x.ProviderUserId == "PLEX_ID" && x.Email == "dupe" && x.UserName == "plex")), Times.Once);
         }
     }
 }
