@@ -1,0 +1,23 @@
+{
+	"request": {
+		"method": "GET",
+		"urlPattern": "/library/sections"
+	},
+	"response": {
+		"status": 200,
+		"jsonBody": {
+			"mediaContainer": {
+                "directory":[
+					{ "key": "1", "title": "lib1"},
+					{ "key": "2", "title": "lib2"},
+					{ "key": "3", "title": "lib3"},
+					{ "key": "4", "title": "lib4"},
+					{ "key": "5", "title": "lib5"}
+				]
+            }
+		},
+		"headers": {
+			"Content-Type": "application/json"
+		}
+	}
+}
