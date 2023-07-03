@@ -616,8 +616,8 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/janderedev">
-            <img src="https://avatars.githubusercontent.com/u/26145882?v=4" width="50;" alt="janderedev"/>
+        <a href="https://github.com/sussycatgirl">
+            <img src="https://avatars.githubusercontent.com/u/26145882?v=4" width="50;" alt="sussycatgirl"/>
             <br />
             <sub><b>Lea</b></sub>
         </a>
