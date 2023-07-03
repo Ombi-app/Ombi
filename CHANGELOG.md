@@ -1,3 +1,15 @@
+## [4.42.2](https://github.com/Ombi-app/Ombi/compare/v4.42.1...v4.42.2) (2023-07-03)
+
+
+### Bug Fixes
+
+* Remove Angular TSLint ([#4973](https://github.com/Ombi-app/Ombi/issues/4973)) ([93969b5](https://github.com/Ombi-app/Ombi/commit/93969b5a2d82f442299bee418fae43cb590d7743))
+* upgrade jquery from 3.6.1 to 3.7.0 ([#4974](https://github.com/Ombi-app/Ombi/issues/4974)) ([f2552ef](https://github.com/Ombi-app/Ombi/commit/f2552ef6ede011080a8d5499e11930c4d41d04c2))
+* upgrade multiple dependencies with Snyk ([#4961](https://github.com/Ombi-app/Ombi/issues/4961)) ([3c3edf6](https://github.com/Ombi-app/Ombi/commit/3c3edf6273fa98c420989ebcebfee52b2545e402))
+* upgrade zone.js from 0.11.8 to 0.13.0 ([#4975](https://github.com/Ombi-app/Ombi/issues/4975)) ([37f6564](https://github.com/Ombi-app/Ombi/commit/37f65648a2f8742020b0954acec4168aee048942))
+
+
+
 ## [4.42.1](https://github.com/Ombi-app/Ombi/compare/v4.42.0...v4.42.1) (2023-06-20)
 
 
@@ -2435,15 +2447,6 @@
 ### Bug Fixes
 
 * **plex:** Added the watchlist request whole show back into the settings ([10701c4](https://github.com/Ombi-app/Ombi/commit/10701c4a0b6190eebb75c5d8b18224f3d0bc8502))
-
-
-
-# [4.33.0](https://github.com/Ombi-app/Ombi/compare/v4.32.3...v4.33.0) (2022-12-01)
-
-
-### Features
-
-* Angular 15 and Dependency upgrades ([#4818](https://github.com/Ombi-app/Ombi/issues/4818)) ([4816acf](https://github.com/Ombi-app/Ombi/commit/4816acf6f94443d23ebef6091d4cfcbca580f9ca))
 
 
 
