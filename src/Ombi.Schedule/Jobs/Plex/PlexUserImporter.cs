@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
 using Ombi.Core.Authentication;
+using Ombi.Core.Engine;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
@@ -20,7 +21,8 @@ namespace Ombi.Schedule.Jobs.Plex
     public class PlexUserImporter : IPlexUserImporter
     {
         public PlexUserImporter(IPlexApi api, OmbiUserManager um, ILogger<PlexUserImporter> log,
-            ISettingsService<PlexSettings> plexSettings, ISettingsService<UserManagementSettings> ums, INotificationHubService notificationHubService)
+            ISettingsService<PlexSettings> plexSettings, ISettingsService<UserManagementSettings> ums, INotificationHubService notificationHubService,
+            IUserDeletionEngine userDeletionEngine)
         {
             _api = api;
             _userManager = um;
@@ -28,6 +30,7 @@ namespace Ombi.Schedule.Jobs.Plex
             _plexSettings = plexSettings;
             _userManagementSettings = ums;
             _notification = notificationHubService;
+            _userDeletionEngine = userDeletionEngine;
             _plexSettings.ClearCache();
             _userManagementSettings.ClearCache();
         }
@@ -38,7 +41,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly ISettingsService<PlexSettings> _plexSettings;
         private readonly ISettingsService<UserManagementSettings> _userManagementSettings;
         private readonly INotificationHubService _notification;
-
+        private readonly IUserDeletionEngine _userDeletionEngine;
 
         public async Task Execute(IJobExecutionContext job)
         {
@@ -90,7 +93,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 foreach (var ombiUser in missingUsers)
                 {
                     _log.LogInformation("Deleting user {0} not found in Plex Server.", ombiUser.UserName);
-                    await _userManager.DeleteAsync(ombiUser);
+                    await _userDeletionEngine.DeleteUser(ombiUser);
                 }
             }
             
