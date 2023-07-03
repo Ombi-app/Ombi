@@ -929,7 +929,14 @@ namespace Ombi.Core.Engine
 
                 var playedCount = playedEpisodes.Count();
                 var toWatchCount = requestedEpisodes.Count();
-                request.RequestedUserPlayedProgress = 100 * playedCount / toWatchCount;
+                if (playedCount == 0 || toWatchCount == 0)
+                {
+                    request.RequestedUserPlayedProgress = 0;
+                }
+                else
+                {
+                    request.RequestedUserPlayedProgress = 100 * playedCount / toWatchCount;
+                }
                 
             }
         }
