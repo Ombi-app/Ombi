@@ -1,0 +1,51 @@
+name: "\U0001F41B Bug report"
+about: Create a report to help us improve
+description: 'Report a reproducible bug in Ombi'
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to file a bug report! Please fill out this form as completely as possible.
+  - type: markdown
+    attributes:
+      value: |
+        If you leave out sections there is a high likelihood your issue will be closed.
+        If you have a question or you think your issue might be caused by your application code, you can get help from the community on [Discord](https://discord.gg/Sa7wNWb).
+  - type: textarea
+    attributes:
+      label: Summary
+      description: |
+        Clearly describe what the expected behavior is vs. what is actually happening. Please include any reproduction steps that is required to reproduce this issue.
+        If your summary is simply, for example: "I cannot setup Plex", then you will need to [continue debugging on your own](https://docs.ombi.app/) to more precisely define your issue before proceeding.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Ombi Version
+      description: What version of ombi are you running?
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: What platform(s) does this occur on?
+      multiple: true
+      options:
+        - Docker
+        - Windows
+        - Linux
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: What database are you using?
+      options:
+        - SQLite (Default)
+        - MySQL
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
