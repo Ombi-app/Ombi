@@ -1,3 +1,12 @@
+## [4.42.3](https://github.com/Ombi-app/Ombi/compare/v4.42.2...v4.42.3) (2023-07-13)
+
+
+### Bug Fixes
+
+* **user-importer:** Do not delete the Plex Admin as part of the user Importer cleanup [#4870](https://github.com/Ombi-app/Ombi/issues/4870) ([#4981](https://github.com/Ombi-app/Ombi/issues/4981)) ([4e80e7b](https://github.com/Ombi-app/Ombi/commit/4e80e7b7c3239a46a645ab6d1054993734ad4dd6))
+
+
+
 ## [4.42.2](https://github.com/Ombi-app/Ombi/compare/v4.42.1...v4.42.2) (2023-07-03)
 
 
@@ -2438,15 +2447,6 @@
 ### Features
 
 * Radarr tags ([#4815](https://github.com/Ombi-app/Ombi/issues/4815)) ([6fa5064](https://github.com/Ombi-app/Ombi/commit/6fa506491fe867cdeef9df79991ae49319d71c3d))
-
-
-
-## [4.33.1](https://github.com/Ombi-app/Ombi/compare/v4.33.0...v4.33.1) (2022-12-22)
-
-
-### Bug Fixes
-
-* **plex:** Added the watchlist request whole show back into the settings ([10701c4](https://github.com/Ombi-app/Ombi/commit/10701c4a0b6190eebb75c5d8b18224f3d0bc8502))
 
 
 
