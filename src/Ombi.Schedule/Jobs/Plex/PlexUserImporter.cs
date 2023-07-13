@@ -71,11 +71,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 
                 if (userManagementSettings.ImportPlexAdmin)
                 {
-                    OmbiUser newOrUpdatedAdmin = await ImportAdmin(userManagementSettings, server, allUsers);
-                    if (newOrUpdatedAdmin != null)
-                    {
-                        newOrUpdatedUsers.Add(newOrUpdatedAdmin);
-                    }
+                    await ImportAdmin(userManagementSettings, server, allUsers);
                 }
                 if (userManagementSettings.ImportPlexUsers)
                 {
