@@ -229,6 +229,7 @@ namespace Ombi.Controllers.V1
             await CreateRole(OmbiRoles.EditCustomPage);
             await CreateRole(OmbiRoles.EditCustomPage);
             await CreateRole(OmbiRoles.Request4KMovie);
+            await CreateRole(OmbiRoles.AutoApprove4KMovie);
         }
 
         private async Task CreateRole(string role)

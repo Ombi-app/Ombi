@@ -36,7 +36,7 @@ namespace Ombi.Core.Rule.Rules.Request
             {
                 if (obj is MovieRequests movie)
                 {
-                    await Check4K(movie);
+                    await ApproveMovie(movie);
                 }
                 else
                 {
@@ -45,10 +45,14 @@ namespace Ombi.Core.Rule.Rules.Request
                 return Success();
             }
 
-            if (obj.RequestType == RequestType.Movie && await _manager.IsInRoleAsync(user, OmbiRoles.AutoApproveMovie))
+            if (obj.RequestType == RequestType.Movie)
             {
                 var movie = (MovieRequests)obj;
-                await Check4K(movie);
+                var autoApproveRole = movie.Is4kRequest ? OmbiRoles.AutoApprove4KMovie : OmbiRoles.AutoApproveMovie;
+                if (await _manager.IsInRoleAsync(user, autoApproveRole))
+                {
+                    await ApproveMovie(movie);
+                }
             }
             if (obj.RequestType == RequestType.TvShow && await _manager.IsInRoleAsync(user, OmbiRoles.AutoApproveTv))
                 obj.Approved = true;
@@ -57,7 +61,7 @@ namespace Ombi.Core.Rule.Rules.Request
             return Success(); // We don't really care, we just don't set the obj to approve
         }
 
-        private async Task Check4K(MovieRequests movie)
+        private async Task ApproveMovie(MovieRequests movie)
         {
             var featureEnabled = await _featureService.FeatureEnabled(FeatureNames.Movie4KRequests);
             if (movie.Is4kRequest && featureEnabled)
