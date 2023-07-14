@@ -1,3 +1,12 @@
+# [4.43.0](https://github.com/Ombi-app/Ombi/compare/v4.42.3...v4.43.0) (2023-07-14)
+
+
+### Features
+
+* Add Auto Approve 4K role ([#4982](https://github.com/Ombi-app/Ombi/issues/4982)) ([#4983](https://github.com/Ombi-app/Ombi/issues/4983)) ([ac05495](https://github.com/Ombi-app/Ombi/commit/ac054954254b9d77a42e057f1065570c7fdc1093)), closes [#4957](https://github.com/Ombi-app/Ombi/issues/4957)
+
+
+
 ## [4.42.3](https://github.com/Ombi-app/Ombi/compare/v4.42.2...v4.42.3) (2023-07-13)
 
 
@@ -2438,15 +2447,6 @@
 ### Bug Fixes
 
 * **plex-watchlist:** Lookup the ID from different sources when Plex doesn't contain the metadata ([#4843](https://github.com/Ombi-app/Ombi/issues/4843)) ([a2cc23b](https://github.com/Ombi-app/Ombi/commit/a2cc23b351c4a568c44e6c855f94db9f71ad084a))
-
-
-
-# [4.34.0](https://github.com/Ombi-app/Ombi/compare/v4.33.1...v4.34.0) (2023-01-04)
-
-
-### Features
-
-* Radarr tags ([#4815](https://github.com/Ombi-app/Ombi/issues/4815)) ([6fa5064](https://github.com/Ombi-app/Ombi/commit/6fa506491fe867cdeef9df79991ae49319d71c3d))
 
 
 
