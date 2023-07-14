@@ -60,7 +60,7 @@ export class UserManagementUserComponent implements OnInit {
         this.identityService.getUserById(this.userId).subscribe(x => {
             this.user = x;
             if (!is4KEnabled) {
-             this.user.claims = this.user.claims.filter(x => x.value !== "Request4KMovie");
+             this.user.claims = this.user.claims.filter(x => x.value !== "Request4KMovie" && x.value !== "AutoApprove4KMovie");
          }
            });
         this.requestLimitTypes = [RequestLimitType.Day, RequestLimitType.Week, RequestLimitType.Month];
@@ -68,7 +68,7 @@ export class UserManagementUserComponent implements OnInit {
         this.identityService.getAllAvailableClaims().subscribe(x => {
             this.availableClaims = x;
             if (!is4KEnabled) {
-                this.availableClaims = this.availableClaims.filter(y => y.value !== "Request4KMovie");
+                this.availableClaims = this.availableClaims.filter(y => y.value !== "Request4KMovie"  && y.value !== "AutoApprove4KMovie");
             }
         });
         if(this.edit) {
