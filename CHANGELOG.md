@@ -1,3 +1,12 @@
+## [4.43.1](https://github.com/Ombi-app/Ombi/compare/v4.43.0...v4.43.1) (2023-07-16)
+
+
+### Bug Fixes
+
+* **user-importer:** don't delete admins in the cleanup ([895b9bf](https://github.com/Ombi-app/Ombi/commit/895b9bf6a060a678d4b0cca8083aa96c38e47b95))
+
+
+
 # [4.43.0](https://github.com/Ombi-app/Ombi/compare/v4.42.3...v4.43.0) (2023-07-14)
 
 
@@ -2438,15 +2447,6 @@
 ### Features
 
 * Add the option for header authentication to create users ([#4841](https://github.com/Ombi-app/Ombi/issues/4841)) ([e6c9ce5](https://github.com/Ombi-app/Ombi/commit/e6c9ce5ad0056608ecda8273fb8124ed292e2942))
-
-
-
-## [4.34.1](https://github.com/Ombi-app/Ombi/compare/v4.34.0...v4.34.1) (2023-01-04)
-
-
-### Bug Fixes
-
-* **plex-watchlist:** Lookup the ID from different sources when Plex doesn't contain the metadata ([#4843](https://github.com/Ombi-app/Ombi/issues/4843)) ([a2cc23b](https://github.com/Ombi-app/Ombi/commit/a2cc23b351c4a568c44e6c855f94db9f71ad084a))
 
 
 
