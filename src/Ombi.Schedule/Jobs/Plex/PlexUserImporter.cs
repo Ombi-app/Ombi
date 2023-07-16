@@ -84,8 +84,22 @@ namespace Ombi.Schedule.Jobs.Plex
                 // Refresh users from updates
                 allUsers = await _userManager.Users.Where(x => x.UserType == UserType.PlexUser)
                     .ToListAsync();
-                var missingUsers = allUsers
-                    .Where(x => !newOrUpdatedUsers.Contains(x));
+
+               var missingUsers = allUsers
+                    .Where(x => !newOrUpdatedUsers.Contains(x)).ToList();
+
+                // Don't delete any admins
+                for (int i = missingUsers.Count() - 1; i >= 0; i--)
+                {
+                    var isAdmin = await _userManager.IsInRoleAsync(missingUsers[i], OmbiRoles.Admin);
+                    if (!isAdmin)
+                    {
+                        continue;
+                    }
+
+                    missingUsers.RemoveAt(i);
+                }
+                
                 foreach (var ombiUser in missingUsers)
                 {
                     _log.LogInformation("Deleting user {0} not found in Plex Server.", ombiUser.UserName);
