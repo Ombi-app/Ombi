@@ -27,5 +27,6 @@
         "plex",
         "wizard"
     ],
-    "rpc.enabled": true
+    "rpc.enabled": true,
+    "dotnet.defaultSolution": "Ombi.sln"
 }

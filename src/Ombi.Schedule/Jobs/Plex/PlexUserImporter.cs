@@ -127,15 +127,19 @@ namespace Ombi.Schedule.Jobs.Plex
                     continue;
                 }
 
+                if (plexUser.HomeUser)
+                {
+                    _log.LogInformation($"User '{plexUser.Title}' is a Plex Home User. Home Users are not supported");
+                    continue;
+                }
+
                 // Check if this Plex User already exists
-                // We are using the Plex USERNAME and Not the TITLE, the Title is for HOME USERS
                 var existingPlexUser = allUsers.FirstOrDefault(x => x.ProviderUserId == plexUser.Id);
                 if (existingPlexUser == null)
                 {
-
                     if (!plexUser.Username.HasValue())
                     {
-                        _log.LogInformation("Could not create Plex user since the have no username, PlexUserId: {0}", plexUser.Id);
+                        _log.LogInformation($"Could not create Plex user since the have no username, PlexUserId: {plexUser.Id}");
                         continue;
                     }
 
