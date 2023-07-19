@@ -1,3 +1,13 @@
+## [4.43.2](https://github.com/Ombi-app/Ombi/compare/v4.43.1...v4.43.2) (2023-07-19)
+
+
+### Bug Fixes
+
+* **plex-api:** Switch over to the new API to avoid deprecation & save… ([#4986](https://github.com/Ombi-app/Ombi/issues/4986)) ([2f2d35e](https://github.com/Ombi-app/Ombi/commit/2f2d35ec867a8e5488e368db294bd37bcf92d843))
+* Remove old trending source ([#4987](https://github.com/Ombi-app/Ombi/issues/4987)) ([aacaa3e](https://github.com/Ombi-app/Ombi/commit/aacaa3e140b43f5d196da612f785cc4451717752))
+
+
+
 ## [4.43.1](https://github.com/Ombi-app/Ombi/compare/v4.43.0...v4.43.1) (2023-07-16)
 
 
@@ -2438,15 +2448,6 @@
 ### Bug Fixes
 
 * **plex-watchlist:** Index out of bounds error ([8cd556e](https://github.com/Ombi-app/Ombi/commit/8cd556e268931596b9c1d1ae0ce533bfaaf330f4))
-
-
-
-# [4.35.0](https://github.com/Ombi-app/Ombi/compare/v4.34.1...v4.35.0) (2023-01-04)
-
-
-### Features
-
-* Add the option for header authentication to create users ([#4841](https://github.com/Ombi-app/Ombi/issues/4841)) ([e6c9ce5](https://github.com/Ombi-app/Ombi/commit/e6c9ce5ad0056608ecda8273fb8124ed292e2942))
 
 
 
