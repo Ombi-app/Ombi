@@ -137,13 +137,14 @@ export class PlexComponent implements OnInit, OnDestroy {
                 this.removeServer(server);
             }
             if (x.server) {
-                console.log(x.server);
                 var idx = this.settings.servers.findIndex(server => server.id === x.server.id);
                 if (idx >= 0) {
                     this.settings.servers[idx] = x.server;
                 } else {
                     this.settings.servers.push(x.server);
                 }
+
+                this.save();
             }
           });
     }
@@ -163,6 +164,7 @@ export class PlexComponent implements OnInit, OnDestroy {
             }
             if (x.server) {
                 this.settings.servers.push(x.server);
+                this.save();
             }
           });
     }
@@ -173,6 +175,7 @@ export class PlexComponent implements OnInit, OnDestroy {
             this.settings.servers.splice(index, 1);
             this.selected.setValue(this.settings.servers.length - 1);
         }
+        this.save();
     }
 
     private runCacher(): void {

@@ -189,7 +189,7 @@ namespace Ombi.Schedule.Tests
         {
             _mocker.Setup<ISettingsService<UserManagementSettings>, Task<UserManagementSettings>>(x => x.GetSettingsAsync())
                 .ReturnsAsync(new UserManagementSettings { ImportPlexAdmin = false, ImportPlexUsers = true, BannedPlexUserIds = new List<string> { "Banned" } });
-            _mocker.Setup<IPlexApi, Task<PlexFriends>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexFriends
+            _mocker.Setup<IPlexApi, Task<PlexUsers>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexUsers
             {
                 User = new UserFriends[]
                 {
@@ -213,7 +213,7 @@ namespace Ombi.Schedule.Tests
         {
             _mocker.Setup<ISettingsService<UserManagementSettings>, Task<UserManagementSettings>>(x => x.GetSettingsAsync())
                 .ReturnsAsync(new UserManagementSettings { ImportPlexAdmin = false, ImportPlexUsers = true });
-            _mocker.Setup<IPlexApi, Task<PlexFriends>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexFriends
+            _mocker.Setup<IPlexApi, Task<PlexUsers>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexUsers
             {
                 User = new UserFriends[]
                 {
@@ -222,6 +222,7 @@ namespace Ombi.Schedule.Tests
                         Email = "email",
                         Id = "id",
                         Title = "title",
+                        HomeUser = true
                     }
                 }
             });
@@ -236,7 +237,7 @@ namespace Ombi.Schedule.Tests
         {
             _mocker.Setup<ISettingsService<UserManagementSettings>, Task<UserManagementSettings>>(x => x.GetSettingsAsync())
                 .ReturnsAsync(new UserManagementSettings { ImportPlexAdmin = false, ImportPlexUsers = true });
-            _mocker.Setup<IPlexApi, Task<PlexFriends>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexFriends
+            _mocker.Setup<IPlexApi, Task<PlexUsers>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexUsers
             {
                 User = new UserFriends[]
                 {
@@ -266,7 +267,7 @@ namespace Ombi.Schedule.Tests
                     OmbiRoles.RequestMovie
                 }
                 });
-            _mocker.Setup<IPlexApi, Task<PlexFriends>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexFriends
+            _mocker.Setup<IPlexApi, Task<PlexUsers>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexUsers
             {
                 User = new UserFriends[]
                 {
@@ -303,7 +304,7 @@ namespace Ombi.Schedule.Tests
                     OmbiRoles.RequestMovie
                 }
                 });
-            _mocker.Setup<IPlexApi, Task<PlexFriends>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexFriends
+            _mocker.Setup<IPlexApi, Task<PlexUsers>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexUsers
             {
                 User = new UserFriends[]
                 {
@@ -342,7 +343,7 @@ namespace Ombi.Schedule.Tests
                     },
                     CleanupPlexUsers = true,
                 });
-            _mocker.Setup<IPlexApi, Task<PlexFriends>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexFriends
+            _mocker.Setup<IPlexApi, Task<PlexUsers>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexUsers
             {
                 User = new UserFriends[]
                 {

@@ -2,46 +2,26 @@
 
 namespace Ombi.Api.Plex.Models.Friends
 {
-    [XmlRoot(ElementName = "Server")]
-    public class Server
-    {
-        [XmlAttribute(AttributeName = "id")]
-        public string Id { get; set; }
-        [XmlAttribute(AttributeName = "serverId")]
-        public string ServerId { get; set; }
-        [XmlAttribute(AttributeName = "machineIdentifier")]
-        public string MachineIdentifier { get; set; }
-        [XmlAttribute(AttributeName = "name")]
-        public string Name { get; set; }
-        [XmlAttribute(AttributeName = "lastSeenAt")]
-        public string LastSeenAt { get; set; }
-        [XmlAttribute(AttributeName = "numLibraries")]
-        public string NumLibraries { get; set; }
-        [XmlAttribute(AttributeName = "owned")]
-        public string Owned { get; set; }
-    }
-
     [XmlRoot(ElementName = "User")]
     public class UserFriends
     {
-        [XmlElement(ElementName = "Server")]
-        public Server Server { get; set; }
         [XmlAttribute(AttributeName = "id")]
         public string Id { get; set; }
+        /// <summary>
+        /// Title is for Home Users only
+        /// </summary>
         [XmlAttribute(AttributeName = "title")]
         public string Title { get; set; }
         [XmlAttribute(AttributeName = "username")]
         public string Username { get; set; }
         [XmlAttribute(AttributeName = "email")]
         public string Email { get; set; }
-        [XmlAttribute(AttributeName = "recommendationsPlaylistId")]
-        public string RecommendationsPlaylistId { get; set; }
-        [XmlAttribute(AttributeName = "thumb")]
-        public string Thumb { get; set; }
+        [XmlAttribute(AttributeName = "home")]
+        public bool HomeUser { get; set; }
     }
 
     [XmlRoot(ElementName = "MediaContainer")]
-    public class PlexFriends
+    public class PlexUsers
     {
         [XmlElement(ElementName = "User")]
         public UserFriends[] User { get; set; }
