@@ -1,3 +1,12 @@
+## [4.43.4](https://github.com/Ombi-app/Ombi/compare/v4.43.3...v4.43.4) (2023-07-28)
+
+
+### Bug Fixes
+
+* **user-importer:** Fixed not importing all correct users [#4989](https://github.com/Ombi-app/Ombi/issues/4989) ([34c32f8](https://github.com/Ombi-app/Ombi/commit/34c32f8338705ea3f790d95b91c9ada21a41b9f2))
+
+
+
 ## [4.43.3](https://github.com/Ombi-app/Ombi/compare/v4.43.2...v4.43.3) (2023-07-28)
 
 
@@ -2439,15 +2448,6 @@
 ### Bug Fixes
 
 * **#4847:** Invalid Discord request fixed, also fixed an issue where App Only users would not show as logged in on the user management page ([#4848](https://github.com/Ombi-app/Ombi/issues/4848)) ([f229d88](https://github.com/Ombi-app/Ombi/commit/f229d88bd744bc5253b5d3db69ae5ef22d014230))
-
-
-
-## [4.35.2](https://github.com/Ombi-app/Ombi/compare/v4.35.1...v4.35.2) (2023-01-08)
-
-
-### Bug Fixes
-
-* **database:** Just some tweaks, shouldn't notice any difference, maybe a less error in the log ([67fb992](https://github.com/Ombi-app/Ombi/commit/67fb9921c0c025025286eb6c0a9d09fd01b18465))
 
 
 
