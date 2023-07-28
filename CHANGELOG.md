@@ -1,3 +1,12 @@
+## [4.43.3](https://github.com/Ombi-app/Ombi/compare/v4.43.2...v4.43.3) (2023-07-28)
+
+
+### Bug Fixes
+
+* switch back to the old plex friends API [#4989](https://github.com/Ombi-app/Ombi/issues/4989) ([c8ad12e](https://github.com/Ombi-app/Ombi/commit/c8ad12eb5f53889609d1793ae907afd33ba6ef38))
+
+
+
 ## [4.43.2](https://github.com/Ombi-app/Ombi/compare/v4.43.1...v4.43.2) (2023-07-19)
 
 
@@ -2439,15 +2448,6 @@
 ### Bug Fixes
 
 * **database:** Just some tweaks, shouldn't notice any difference, maybe a less error in the log ([67fb992](https://github.com/Ombi-app/Ombi/commit/67fb9921c0c025025286eb6c0a9d09fd01b18465))
-
-
-
-## [4.35.1](https://github.com/Ombi-app/Ombi/compare/v4.35.0...v4.35.1) (2023-01-06)
-
-
-### Bug Fixes
-
-* **plex-watchlist:** Index out of bounds error ([8cd556e](https://github.com/Ombi-app/Ombi/commit/8cd556e268931596b9c1d1ae0ce533bfaaf330f4))
 
 
 
