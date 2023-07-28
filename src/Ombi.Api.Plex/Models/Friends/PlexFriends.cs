@@ -16,6 +16,10 @@ namespace Ombi.Api.Plex.Models.Friends
         public string Username { get; set; }
         [XmlAttribute(AttributeName = "email")]
         public string Email { get; set; }
+        /// <summary>
+        /// DO NOT USE THIS
+        /// Home Users can actually be an unmanaged account with an email/username to log in.
+        /// </summary>
         [XmlAttribute(AttributeName = "home")]
         public bool HomeUser { get; set; }
     }

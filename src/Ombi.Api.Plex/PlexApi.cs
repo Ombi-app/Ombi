@@ -65,8 +65,7 @@ namespace Ombi.Api.Plex
         }
 
         private const string SignInUri = "https://plex.tv/users/sign_in.json";
-        private const string NewFriendsUri = "https://plex.tv/api/users"; 
-        private const string FriendsUri = "https://plex.tv/pms/friends/all";
+        private const string FriendsUri = "https://plex.tv/api/users"; 
         private const string GetAccountUri = "https://plex.tv/users/account.json";
         private const string ServerUri = "https://plex.tv/pms/servers.xml";
         private const string WatchlistUri = "https://metadata.provider.plex.tv/";
