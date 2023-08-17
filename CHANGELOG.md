@@ -2,10 +2,12 @@
 
 
 ### Bug Fixes
+### Bug Fixes
 
 * **user-importer:** Fixed not importing all correct users [#4989](https://github.com/Ombi-app/Ombi/issues/4989) ([34c32f8](https://github.com/Ombi-app/Ombi/commit/34c32f8338705ea3f790d95b91c9ada21a41b9f2))
 
 
+### Features
 
 ## [4.43.3](https://github.com/Ombi-app/Ombi/compare/v4.43.2...v4.43.3) (2023-07-28)
 
@@ -129,6 +131,7 @@
 * Hide watched status when request is not available ([#4934](https://github.com/Ombi-app/Ombi/issues/4934)) ([82c7f1c](https://github.com/Ombi-app/Ombi/commit/82c7f1c44fd7c87d57cc2b0c34a10fcda7628f4e))
 
 
+### Bug Fixes
 
 ## [4.38.2](https://github.com/Ombi-app/Ombi/compare/v4.38.1...v4.38.2) (2023-05-17)
 
@@ -235,6 +238,7 @@
 ## [4.35.17](https://github.com/Ombi-app/Ombi/compare/v4.35.16...v4.35.17) (2023-04-15)
 
 
+### Bug Fixes
 ### Bug Fixes
 
 * **discover:** Fix denied requests displayed as approved ([#4901](https://github.com/Ombi-app/Ombi/issues/4901)) ([1e87f20](https://github.com/Ombi-app/Ombi/commit/1e87f2010491b0f3fdda70d2b19d9afd94438df7))
@@ -415,27 +419,34 @@
 ### Bug Fixes
 
 * **sonarr:** V4 actually works this time around ([f62e70f](https://github.com/Ombi-app/Ombi/commit/f62e70fc493c7971da5e4508ce10522f5df0bbf7))
+* **sonarr:** V4 actually works this time around ([f62e70f](https://github.com/Ombi-app/Ombi/commit/f62e70fc493c7971da5e4508ce10522f5df0bbf7))
 
 
 
 ## [4.32.2](https://github.com/Ombi-app/Ombi/compare/v4.32.1...v4.32.2) (2022-11-23)
+## [4.32.2](https://github.com/Ombi-app/Ombi/compare/v4.32.1...v4.32.2) (2022-11-23)
 
 
 ### Bug Fixes
+### Bug Fixes
 
+* **sonarr:** :bug: Sonarr V4 should work now ([#4810](https://github.com/Ombi-app/Ombi/issues/4810)) ([37655af](https://github.com/Ombi-app/Ombi/commit/37655aff9d3d133b42f5664bc9445d6571e966d6))
 * **sonarr:** :bug: Sonarr V4 should work now ([#4810](https://github.com/Ombi-app/Ombi/issues/4810)) ([37655af](https://github.com/Ombi-app/Ombi/commit/37655aff9d3d133b42f5664bc9445d6571e966d6))
 
 
 
+## [4.32.1](https://github.com/Ombi-app/Ombi/compare/v4.32.0...v4.32.1) (2022-11-21)
 ## [4.32.1](https://github.com/Ombi-app/Ombi/compare/v4.32.0...v4.32.1) (2022-11-21)
 
 
 ### Bug Fixes
 
 * **plex:** :bug: Fixed the issue where you couldn't add a new server on a fresh setup after the settings page rework ([187b18d](https://github.com/Ombi-app/Ombi/commit/187b18d5c01f6a13831e4a410b5d7c349e27d847))
+* **plex:** :bug: Fixed the issue where you couldn't add a new server on a fresh setup after the settings page rework ([187b18d](https://github.com/Ombi-app/Ombi/commit/187b18d5c01f6a13831e4a410b5d7c349e27d847))
 
 
 
+# [4.32.0](https://github.com/Ombi-app/Ombi/compare/v4.31.0...v4.32.0) (2022-11-18)
 # [4.32.0](https://github.com/Ombi-app/Ombi/compare/v4.31.0...v4.32.0) (2022-11-18)
 
 
