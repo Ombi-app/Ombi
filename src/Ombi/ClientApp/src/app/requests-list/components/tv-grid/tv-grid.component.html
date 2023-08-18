@@ -5,13 +5,13 @@
 
     <div class="row justify-content-md-center top-spacing">
         <div class="btn-group" role="group">
-            <button type="button" id="filterAll" (click)="switchFilter(RequestFilter.All)" [attr.color]="currentFilter === RequestFilter.All ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.All ? 'mat-accent' : 'mat-primary'" mat-raised-button class="btn grow">{{'Requests.AllRequests' | translate}}</button>
-            <button type="button" id="filterPending" (click)="switchFilter(RequestFilter.Pending)" [attr.color]="currentFilter === RequestFilter.Pending ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.Pending ? 'mat-accent' : 'mat-primary'" mat-raised-button class="btn grow">{{'Requests.PendingRequests' | translate}}</button>
+            <button type="button" id="filterAll" (click)="switchFilter(RequestFilter.All)" [attr.color]="currentFilter === RequestFilter.All ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.All ? 'mat-accent' : 'mat-primary'" mat-raised-button class="grow">{{'Requests.AllRequests' | translate}}</button>
+            <button type="button" id="filterPending" (click)="switchFilter(RequestFilter.Pending)" [attr.color]="currentFilter === RequestFilter.Pending ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.Pending ? 'mat-accent' : 'mat-primary'" mat-raised-button class="grow">{{'Requests.PendingRequests' | translate}}</button>
             <button type="button" id="filterProcessing" (click)="switchFilter(RequestFilter.Processing)" [attr.color]="currentFilter === RequestFilter.Processing ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.Processing ? 'mat-accent' : 'mat-primary'" mat-raised-button
-                class="btn grow">{{'Requests.ProcessingRequests' | translate}}</button>
+                class="grow">{{'Requests.ProcessingRequests' | translate}}</button>
             <button type="button" id="filterAvailable" (click)="switchFilter(RequestFilter.Available)" [attr.color]="currentFilter === RequestFilter.Available ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.Available ? 'mat-accent' : 'mat-primary'" mat-raised-button
-                class="btn grow">{{'Requests.AvailableRequests' | translate}}</button>
-            <button type="button" id="filterDenied" (click)="switchFilter(RequestFilter.Denied)" [attr.color]="currentFilter === RequestFilter.Denied ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.Denied ? 'mat-accent' : 'mat-primary'" mat-raised-button class="btn grow">{{'Requests.DeniedRequests' | translate}}</button>
+                class="grow">{{'Requests.AvailableRequests' | translate}}</button>
+            <button type="button" id="filterDenied" (click)="switchFilter(RequestFilter.Denied)" [attr.color]="currentFilter === RequestFilter.Denied ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.Denied ? 'mat-accent' : 'mat-primary'" mat-raised-button class="grow">{{'Requests.DeniedRequests' | translate}}</button>
         </div>
     </div>
 
@@ -60,10 +60,23 @@
             </td>
         </ng-container>
 
+        <ng-container matColumnDef="watchedByRequestedUser">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            disableClear
+            matTooltip="{{ 'Requests.WatchedProgressTooltip' | translate}}">
+            {{ 'Requests.Watched' | translate}}
+          </th>
+          <td mat-cell id="requestedUserPlayedProgress{{element.id}}"  *matCellDef="let element">
+            <mat-progress-bar mode="determinate" value="{{element.requestedUserPlayedProgress}}" class="played-progress"></mat-progress-bar>
+          </td>
+      </ng-container>
+
         <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef> </th>
             <td mat-cell *matCellDef="let element">
-                <a id="detailsButton{{element.id}}" mat-raised-button color="accent" [routerLink]="'/details/tv/' + element.parentRequest.externalProviderId">{{'Requests.Details' | translate}}</a> 
+                <a id="detailsButton{{element.id}}" mat-raised-button color="accent" [routerLink]="'/details/tv/' + element.parentRequest.externalProviderId">{{'Requests.Details' | translate}}</a>
                 <button id="optionsButton{{element.id}}" mat-raised-button color="warn" (click)="openOptions(element)" *ngIf="isAdmin">{{'Requests.Options' | translate}}</button>
             </td>
         </ng-container>

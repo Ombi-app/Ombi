@@ -65,7 +65,7 @@ namespace Ombi.Api.Plex
         }
 
         private const string SignInUri = "https://plex.tv/users/sign_in.json";
-        private const string FriendsUri = "https://plex.tv/pms/friends/all";
+        private const string FriendsUri = "https://plex.tv/api/users"; 
         private const string GetAccountUri = "https://plex.tv/users/account.json";
         private const string ServerUri = "https://plex.tv/pms/servers.xml";
         private const string WatchlistUri = "https://metadata.provider.plex.tv/";
@@ -195,12 +195,12 @@ namespace Ombi.Api.Plex
         /// </summary>
         /// <param name="authToken"></param>
         /// <returns></returns>
-        public async Task<PlexFriends> GetUsers(string authToken)
+        public async Task<PlexUsers> GetUsers(string authToken)
         {
             var request = new Request(string.Empty, FriendsUri, HttpMethod.Get, ContentType.Xml);
             await AddHeaders(request, authToken);
 
-            return await Api.Request<PlexFriends>(request);
+            return await Api.Request<PlexUsers>(request);
         }
 
         public async Task<PlexMetadata> GetRecentlyAdded(string authToken, string uri, string sectionId)

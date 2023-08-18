@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using Ombi.Core.Authentication;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;

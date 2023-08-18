@@ -6,7 +6,7 @@ ____
 [![Github All Releases](https://img.shields.io/github/downloads/tidusjar/Ombi/total.svg)](https://github.com/ombi-app/Ombi)
 [![firsttimersonly](http://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/ombi/localized.svg)](https://crowdin.com/project/ombi)
-[![Automation Tests](https://github.com/Ombi-app/Ombi/actions/workflows/cypress.yml/badge.svg)](https://github.com/Ombi-app/Ombi/actions/workflows/cypress.yml)
+[![Automation Tests](https://github.com/Ombi-app/Ombi/actions/workflows/automation-tests.yml/badge.svg)](https://github.com/Ombi-app/Ombi/actions/workflows/automation-tests.yml)
 
 [![Patreon](https://img.shields.io/badge/patreon-donate-yellow.svg)](https://patreon.com/tidusjar/Ombi)
 [![Paypal](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://paypal.me/PlexRequestsNet)
@@ -301,10 +301,10 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/phildups7">
-            <img src="https://avatars.githubusercontent.com/u/60622768?v=4" width="50;" alt="phildups7"/>
+        <a href="https://github.com/Fire-Swan">
+            <img src="https://avatars.githubusercontent.com/u/60622768?v=4" width="50;" alt="Fire-Swan"/>
             <br />
-            <sub><b>Phildups7</b></sub>
+            <sub><b>Fire-Swan</b></sub>
         </a>
     </td>
     <td align="center">
@@ -616,8 +616,8 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/janderedev">
-            <img src="https://avatars.githubusercontent.com/u/26145882?v=4" width="50;" alt="janderedev"/>
+        <a href="https://github.com/sussycatgirl">
+            <img src="https://avatars.githubusercontent.com/u/26145882?v=4" width="50;" alt="sussycatgirl"/>
             <br />
             <sub><b>Lea</b></sub>
         </a>

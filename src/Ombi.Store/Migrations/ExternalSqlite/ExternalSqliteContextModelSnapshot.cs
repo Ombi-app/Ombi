@@ -486,6 +486,29 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                     b.ToTable("SonarrEpisodeCache");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.UserPlayedEpisode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("EpisodeNumber")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("SeasonNumber")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TheMovieDbId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserPlayedEpisode");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.UserPlayedMovie", b =>
                 {
                     b.Property<int>("Id")

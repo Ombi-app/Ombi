@@ -2,7 +2,7 @@
 {
     public static class OmbiRoles
     {
-        // DONT FORGET TO ADD TO IDENTITYCONTROLLER.CREATEROLES AND THE UI!
+        // DONT FORGET TO ADD TO IDENTITYCONTROLLER.CREATEROLES!
 
         public const string Admin = nameof(Admin);
         public const string AutoApproveMovie = nameof(AutoApproveMovie);
@@ -17,5 +17,6 @@
         public const string ManageOwnRequests = nameof(ManageOwnRequests);
         public const string EditCustomPage = nameof(EditCustomPage);
         public const string Request4KMovie = nameof(Request4KMovie);
+        public const string AutoApprove4KMovie = nameof(AutoApprove4KMovie);
     }
 }

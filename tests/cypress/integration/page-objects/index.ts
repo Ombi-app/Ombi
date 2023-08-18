@@ -6,3 +6,5 @@ export * from './search/search.page';
 export * from './user-preferences/user-preferences.page';
 export * from './requests/requests.page';
 export * from './details/movies/moviedetails.page';
+export * from './settings/settings.page';
+export * from './settings/plex/plex-settings.page';

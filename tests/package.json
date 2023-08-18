@@ -1,7 +1,9 @@
 {
   "devDependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "^14.0.0",
     "@bahmutov/cy-api": "^1.5.0",
-    "cypress": "6.8.0",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.1.5",
+    "cypress": "12.14.0",
     "cypress-wait-until": "^1.7.1",
     "typescript": "^4.2.3"
   },
@@ -17,7 +19,7 @@
   "scripts": {
     "cypress:version": "cypress version",
     "cypress:verify": "cypress verify",
-    "cypress:open": "cypress open",
+    "cypress:open": "cypress open --config baseUrl=http://localhost:3577 --env dockerhost=http://localhost",
     "cypress:run": "cypress run",
     "types": "tsc --noEmit",
     "e2e": "cypress run",
@@ -25,6 +27,6 @@
     "demo:open": "cypress open --config-file cypress/config/demo.json"
   },
   "dependencies": {
-    "cypress-real-events": "^1.3.0"
+    "cypress-real-events": "^1.9.1"
   }
 }

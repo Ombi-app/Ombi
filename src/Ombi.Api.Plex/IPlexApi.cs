@@ -21,7 +21,7 @@ namespace Ombi.Api.Plex
         Task<PlexMetadata> GetMetadata(string authToken, string plexFullHost, string itemId);
         Task<PlexMetadata> GetSeasons(string authToken, string plexFullHost, string ratingKey);
         Task<PlexContainer> GetAllEpisodes(string authToken, string host, string section, int start, int retCount);
-        Task<PlexFriends> GetUsers(string authToken);
+        Task<PlexUsers> GetUsers(string authToken);
         Task<PlexAccount> GetAccount(string authToken);
         Task<PlexMetadata> GetRecentlyAdded(string authToken, string uri, string sectionId);
         Task<OAuthContainer> GetPin(int pinId);

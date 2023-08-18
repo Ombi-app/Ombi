@@ -21,7 +21,8 @@ namespace Ombi.Schedule.Jobs.Ombi
             IPlexContentRepository plexRepo, 
             IEmbyContentRepository embyRepo, 
             IJellyfinContentRepository jellyfinRepo,
-            IUserPlayedMovieRepository userPlayedRepo,
+            IUserPlayedMovieRepository userPlayedMovieRepo,
+            IUserPlayedEpisodeRepository userPlayedEpisodeRepo,
             ISettingsService<EmbySettings> embySettings, 
             ISettingsService<JellyfinSettings> jellyfinSettings)
         {
@@ -30,7 +31,8 @@ namespace Ombi.Schedule.Jobs.Ombi
             _plexRepo = plexRepo;
             _embyRepo = embyRepo;
             _jellyfinRepo = jellyfinRepo;
-            _userPlayedRepo = userPlayedRepo;
+            _userPlayedMovieRepo = userPlayedMovieRepo;
+            _userPlayedEpisodeRepo = userPlayedEpisodeRepo;
             _embySettings = embySettings;
             _jellyfinSettings = jellyfinSettings;
             _plexSettings.ClearCache();
@@ -41,7 +43,8 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly IPlexContentRepository _plexRepo;
         private readonly IEmbyContentRepository _embyRepo;
         private readonly IJellyfinContentRepository _jellyfinRepo;
-        private readonly IUserPlayedMovieRepository _userPlayedRepo;
+        private readonly IUserPlayedMovieRepository _userPlayedMovieRepo;
+        private readonly IUserPlayedEpisodeRepository _userPlayedEpisodeRepo;
         private readonly ISettingsService<EmbySettings> _embySettings;
         private readonly ISettingsService<JellyfinSettings> _jellyfinSettings;
 
@@ -66,7 +69,10 @@ namespace Ombi.Schedule.Jobs.Ombi
             try
             {
                 const string movieSql = "DELETE FROM UserPlayedMovie";
-                await _userPlayedRepo.ExecuteSql(movieSql);
+                await _userPlayedMovieRepo.ExecuteSql(movieSql);
+
+                const string episodeSql = "DELETE FROM UserPlayedEpisode";
+                await _userPlayedEpisodeRepo.ExecuteSql(episodeSql);
             }
             catch (Exception e)
             {

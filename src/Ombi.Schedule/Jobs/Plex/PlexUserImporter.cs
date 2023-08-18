@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
 using Ombi.Core.Authentication;
+using Ombi.Core.Engine;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
@@ -20,7 +21,8 @@ namespace Ombi.Schedule.Jobs.Plex
     public class PlexUserImporter : IPlexUserImporter
     {
         public PlexUserImporter(IPlexApi api, OmbiUserManager um, ILogger<PlexUserImporter> log,
-            ISettingsService<PlexSettings> plexSettings, ISettingsService<UserManagementSettings> ums, INotificationHubService notificationHubService)
+            ISettingsService<PlexSettings> plexSettings, ISettingsService<UserManagementSettings> ums, INotificationHubService notificationHubService,
+            IUserDeletionEngine userDeletionEngine)
         {
             _api = api;
             _userManager = um;
@@ -28,6 +30,7 @@ namespace Ombi.Schedule.Jobs.Plex
             _plexSettings = plexSettings;
             _userManagementSettings = ums;
             _notification = notificationHubService;
+            _userDeletionEngine = userDeletionEngine;
             _plexSettings.ClearCache();
             _userManagementSettings.ClearCache();
         }
@@ -38,7 +41,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly ISettingsService<PlexSettings> _plexSettings;
         private readonly ISettingsService<UserManagementSettings> _userManagementSettings;
         private readonly INotificationHubService _notification;
-
+        private readonly IUserDeletionEngine _userDeletionEngine;
 
         public async Task Execute(IJobExecutionContext job)
         {
@@ -68,11 +71,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 
                 if (userManagementSettings.ImportPlexAdmin)
                 {
-                    OmbiUser newOrUpdatedAdmin = await ImportAdmin(userManagementSettings, server, allUsers);
-                    if (newOrUpdatedAdmin != null)
-                    {
-                        newOrUpdatedUsers.Add(newOrUpdatedAdmin);
-                    }
+                    await ImportAdmin(userManagementSettings, server, allUsers);
                 }
                 if (userManagementSettings.ImportPlexUsers)
                 {
@@ -85,12 +84,26 @@ namespace Ombi.Schedule.Jobs.Plex
                 // Refresh users from updates
                 allUsers = await _userManager.Users.Where(x => x.UserType == UserType.PlexUser)
                     .ToListAsync();
-                var missingUsers = allUsers
-                    .Where(x => !newOrUpdatedUsers.Contains(x));
+
+               var missingUsers = allUsers
+                    .Where(x => !newOrUpdatedUsers.Contains(x)).ToList();
+
+                // Don't delete any admins
+                for (int i = missingUsers.Count() - 1; i >= 0; i--)
+                {
+                    var isAdmin = await _userManager.IsInRoleAsync(missingUsers[i], OmbiRoles.Admin);
+                    if (!isAdmin)
+                    {
+                        continue;
+                    }
+
+                    missingUsers.RemoveAt(i);
+                }
+                
                 foreach (var ombiUser in missingUsers)
                 {
                     _log.LogInformation("Deleting user {0} not found in Plex Server.", ombiUser.UserName);
-                    await _userManager.DeleteAsync(ombiUser);
+                    await _userDeletionEngine.DeleteUser(ombiUser);
                 }
             }
             
@@ -115,14 +128,13 @@ namespace Ombi.Schedule.Jobs.Plex
                 }
 
                 // Check if this Plex User already exists
-                // We are using the Plex USERNAME and Not the TITLE, the Title is for HOME USERS
+                // We are using the Plex USERNAME and Not the TITLE, the Title is for HOME USERS without an account
                 var existingPlexUser = allUsers.FirstOrDefault(x => x.ProviderUserId == plexUser.Id);
                 if (existingPlexUser == null)
                 {
-
                     if (!plexUser.Username.HasValue())
                     {
-                        _log.LogInformation("Could not create Plex user since the have no username, PlexUserId: {0}", plexUser.Id);
+                        _log.LogInformation($"Could not create user since the have no username (Probably a Home User), PlexUserId: {plexUser.Id}, Title: {plexUser.Title}");
                         continue;
                     }
 

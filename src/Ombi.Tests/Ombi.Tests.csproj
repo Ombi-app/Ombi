@@ -1,26 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <IsPackable>false</IsPackable>
-    <Configurations>Debug;Release;NonUiBuild</Configurations>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<IsPackable>false</IsPackable>
+		<Configurations>Debug;Release;NonUiBuild</Configurations>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="6.0.9" />
-    <PackageReference Include="Moq" Version="4.18.2" />
-    <PackageReference Include="Moq.AutoMock" Version="3.4.0" />
-    <PackageReference Include="Nunit" Version="3.13.3" />
-    <PackageReference Include="Hangfire" Version="1.7.31" />
-    <PackageReference Include="NUnit.ConsoleRunner" Version="3.15.2" />
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-    <packagereference Include="Microsoft.NET.Test.Sdk" Version="17.3.2"></packagereference>
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.TestHost" Version="6.0.9" />
+		<PackageReference Include="Moq" Version="4.18.2" />
+		<PackageReference Include="Moq.AutoMock" Version="3.4.0" />
+		<PackageReference Include="Nunit" Version="3.13.3" />
+		<PackageReference Include="NUnit.ConsoleRunner" Version="3.15.2" />
+		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
+		<PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+		<packagereference Include="Microsoft.NET.Test.Sdk" Version="17.6.2"></packagereference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Ombi.Test.Common\Ombi.Test.Common.csproj" />
-    <ProjectReference Include="..\Ombi\Ombi.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Ombi.Test.Common\Ombi.Test.Common.csproj" />
+		<ProjectReference Include="..\Ombi\Ombi.csproj" />
+	</ItemGroup>
 
 </Project>

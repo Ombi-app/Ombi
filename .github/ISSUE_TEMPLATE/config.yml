@@ -3,8 +3,8 @@ contact_links:
   - name: Docs
     url: https://docs.ombi.app/
     about: The Ombi documentation should help guide you through installation and setup as well as help resolve common problems and answer frequently asked questions
-  - name: Reddit support
-    url: https://www.reddit.com/r/Ombi
+  - name: Discord support
+    url: https://discord.gg/Sa7wNWb
     about: Ask questions about Ombi
   - name: Feature suggestions
     url: https://ombifeatures.featureupvote.com

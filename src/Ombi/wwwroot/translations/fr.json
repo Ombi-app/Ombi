@@ -161,6 +161,7 @@
         "RequestStatus": "Statut de la demande",
         "Watched": "Vu",
         "WatchedTooltip": "L'utilisateur qui a fait la demande l'a regardé",
+        "WatchedProgressTooltip": "Indique la progression de lecture de l'utilisateur qui a demandé cette série",
         "WatchedByUsersCount": "{{count}} utilisateurs l'ont regardé.",
         "Denied": " Refusé :",
         "TheatricalRelease": "Sortie en salle : {{date}}",

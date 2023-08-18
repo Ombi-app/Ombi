@@ -6,6 +6,7 @@ using Ombi.Api.Plex;
 using Ombi.Api.Plex.Models;
 using Ombi.Api.Plex.Models.Friends;
 using Ombi.Core.Authentication;
+using Ombi.Core.Engine;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
@@ -31,6 +32,7 @@ namespace Ombi.Schedule.Tests
              new OmbiUser { Id = Guid.NewGuid().ToString("N"), UserName="abc", NormalizedUserName = "ABC", UserType = UserType.LocalUser},
              new OmbiUser { Id = Guid.NewGuid().ToString("N"), UserName="sys", NormalizedUserName = "SYS", UserType = UserType.SystemUser},
              new OmbiUser { Id = Guid.NewGuid().ToString("N"), UserName="plex", NormalizedUserName = "PLEX", UserType = UserType.PlexUser, ProviderUserId = "PLEX_ID", Email = "dupe"},
+             new OmbiUser { Id = Guid.NewGuid().ToString("N"), UserName="Admin", NormalizedUserName = "ADMIN", UserType = UserType.PlexUser, ProviderUserId = "ADMIN_ID", Email = "ADMIN@ADMIN.CO"},
         };
         private AutoMocker _mocker;
         private PlexUserImporter _subject;
@@ -187,7 +189,7 @@ namespace Ombi.Schedule.Tests
         {
             _mocker.Setup<ISettingsService<UserManagementSettings>, Task<UserManagementSettings>>(x => x.GetSettingsAsync())
                 .ReturnsAsync(new UserManagementSettings { ImportPlexAdmin = false, ImportPlexUsers = true, BannedPlexUserIds = new List<string> { "Banned" } });
-            _mocker.Setup<IPlexApi, Task<PlexFriends>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexFriends
+            _mocker.Setup<IPlexApi, Task<PlexUsers>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexUsers
             {
                 User = new UserFriends[]
                 {
@@ -211,7 +213,7 @@ namespace Ombi.Schedule.Tests
         {
             _mocker.Setup<ISettingsService<UserManagementSettings>, Task<UserManagementSettings>>(x => x.GetSettingsAsync())
                 .ReturnsAsync(new UserManagementSettings { ImportPlexAdmin = false, ImportPlexUsers = true });
-            _mocker.Setup<IPlexApi, Task<PlexFriends>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexFriends
+            _mocker.Setup<IPlexApi, Task<PlexUsers>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexUsers
             {
                 User = new UserFriends[]
                 {
@@ -220,6 +222,7 @@ namespace Ombi.Schedule.Tests
                         Email = "email",
                         Id = "id",
                         Title = "title",
+                        HomeUser = true
                     }
                 }
             });
@@ -229,12 +232,43 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<OmbiUserManager>(x => x.CreateAsync(It.IsAny<OmbiUser>()), Times.Never);
         }
 
+        [Test(Description = "You can have home users that are now unmanaged and can actually log into Plex")]
+        public async Task Imports_Unmanaged_Home_User()
+        {
+            _mocker.Setup<ISettingsService<UserManagementSettings>, Task<UserManagementSettings>>(x => x.GetSettingsAsync())
+                .ReturnsAsync(new UserManagementSettings { ImportPlexAdmin = false, ImportPlexUsers = true });
+            _mocker.Setup<IPlexApi, Task<PlexUsers>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexUsers
+            {
+                User = new UserFriends[]
+                {
+                    new UserFriends
+                    {
+                        Email = "email",
+                        Id = "id",
+                        Title = "title",
+                        Username = "username",
+                        HomeUser = true
+                    }
+                }
+            });
+            _mocker.Setup<OmbiUserManager, Task<IdentityResult>>(x => x.CreateAsync(It.Is<OmbiUser>(x => x.UserName == "username" && x.Email == "email" && x.ProviderUserId == "id" && x.UserType == UserType.PlexUser)))
+                .ReturnsAsync(IdentityResult.Success);
+
+            _mocker.Setup<OmbiUserManager, Task<IdentityResult>>(x => x.AddToRoleAsync(It.Is<OmbiUser>(x => x.UserName == "plex"), OmbiRoles.RequestMovie))
+                .ReturnsAsync(IdentityResult.Success);
+
+
+            await _subject.Execute(null);
+
+            _mocker.Verify<OmbiUserManager>(x => x.CreateAsync(It.IsAny<OmbiUser>()), Times.Once);
+        }
+
         [Test]
         public async Task Import_Doesnt_Import_DuplicateEmail()
         {
             _mocker.Setup<ISettingsService<UserManagementSettings>, Task<UserManagementSettings>>(x => x.GetSettingsAsync())
                 .ReturnsAsync(new UserManagementSettings { ImportPlexAdmin = false, ImportPlexUsers = true });
-            _mocker.Setup<IPlexApi, Task<PlexFriends>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexFriends
+            _mocker.Setup<IPlexApi, Task<PlexUsers>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexUsers
             {
                 User = new UserFriends[]
                 {
@@ -264,7 +298,7 @@ namespace Ombi.Schedule.Tests
                     OmbiRoles.RequestMovie
                 }
                 });
-            _mocker.Setup<IPlexApi, Task<PlexFriends>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexFriends
+            _mocker.Setup<IPlexApi, Task<PlexUsers>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexUsers
             {
                 User = new UserFriends[]
                 {
@@ -301,7 +335,7 @@ namespace Ombi.Schedule.Tests
                     OmbiRoles.RequestMovie
                 }
                 });
-            _mocker.Setup<IPlexApi, Task<PlexFriends>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexFriends
+            _mocker.Setup<IPlexApi, Task<PlexUsers>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexUsers
             {
                 User = new UserFriends[]
                 {
@@ -340,7 +374,7 @@ namespace Ombi.Schedule.Tests
                     },
                     CleanupPlexUsers = true,
                 });
-            _mocker.Setup<IPlexApi, Task<PlexFriends>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexFriends
+            _mocker.Setup<IPlexApi, Task<PlexUsers>>(x => x.GetUsers(It.IsAny<string>())).ReturnsAsync(new PlexUsers
             {
                 User = new UserFriends[]
                 {
@@ -365,11 +399,11 @@ namespace Ombi.Schedule.Tests
 
             await _subject.Execute(null);
 
-            _mocker.Verify<OmbiUserManager>(x => x.DeleteAsync(It.Is<OmbiUser>(x => x.ProviderUserId == "PLEX_ID" && x.Email == "dupe" && x.UserName == "plex")), Times.Once);
+            _mocker.Verify<IUserDeletionEngine>(x => x.DeleteUser(It.Is<OmbiUser>(x => x.ProviderUserId == "PLEX_ID" && x.Email == "dupe" && x.UserName == "plex")), Times.Once);
         }
-        
+
         [Test]
-        public async Task Import_Cleanup_Missing_Plex_Admin()
+        public async Task Import_Cleanup_Missing_Plex_Admin_Dont_Delete()
         {
             _mocker.Setup<ISettingsService<UserManagementSettings>, Task<UserManagementSettings>>(x => x.GetSettingsAsync())
                 .ReturnsAsync(new UserManagementSettings
@@ -386,22 +420,25 @@ namespace Ombi.Schedule.Tests
             {
                 user = new User
                 {
-                    email = "diff_email",
-                    authentication_token = "user_token",
-                    title = "user_title",
-                    username = "diff_username",
-                    id = "diff_user_id",
+                    email = "ADMIN@ADMIN.CO",
+                    authentication_token = "Admin",
+                    title = "Admin",
+                    username = "Admin",
+                    id = "ADMIN_ID",
                 }
             });
+
 
             _mocker.Setup<OmbiUserManager, Task<IdentityResult>>(x => x.CreateAsync(It.Is<OmbiUser>(x => x.UserName == "diff_username" && x.Email == "diff_email" && x.ProviderUserId == "diff_user_id" && x.UserType == UserType.PlexUser)))
                 .ReturnsAsync(IdentityResult.Success);
             _mocker.Setup<OmbiUserManager, Task<IdentityResult>>(x => x.AddToRoleAsync(It.Is<OmbiUser>(x => x.UserName == "diff_username"), It.Is<string>(x => x == OmbiRoles.Admin)))
                 .ReturnsAsync(IdentityResult.Success);
 
+            _mocker.Setup<OmbiUserManager, Task<bool>>(x => x.IsInRoleAsync(It.Is<OmbiUser>(x => x.UserName == "Admin"), OmbiRoles.Admin)).ReturnsAsync(true);
+
             await _subject.Execute(null);
 
-            _mocker.Verify<OmbiUserManager>(x => x.DeleteAsync(It.Is<OmbiUser>(x => x.ProviderUserId == "PLEX_ID" && x.Email == "dupe" && x.UserName == "plex")), Times.Once);
+            _mocker.Verify<IUserDeletionEngine>(x => x.DeleteUser(It.Is<OmbiUser>(x => x.ProviderUserId == "ADMIN_ID" && x.Email == "ADMIN@ADMIN.CO" && x.UserName == "Admin")), Times.Never);
         }
     }
 }

@@ -7,32 +7,24 @@
             <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
 
                 <div class="form-group">
-                    <div class="checkbox">
-                        <input type="checkbox" id="enable" formControlName="enabled">
-                        <label for="enable">Enabled</label>
-                    </div>
+                    <mat-checkbox id="enable" formControlName="enabled">Enabled</mat-checkbox>
                 </div>
 
                 <small>You can find this here: <a href="https://www.pushbullet.com/#settings/account" target="_blank">https://www.pushbullet.com/#settings/account </a></small>
-                <div class="form-group">
-                    <label for="accessToken" class="control-label">Access Token</label>
-              
-                        <input type="text" class="form-control form-control-custom " id="accessToken" name="accessToken" formControlName="accessToken" [ngClass]="{'form-error': form.get('accessToken').hasError('required')}">
-                        <small *ngIf="form.get('accessToken').hasError('required')" class="error-text">The Access Token is required</small>
-                </div>
 
-                <div class="form-group">
-                    <label for="channelTag" class="control-label">Channel Tag</label>
-                    <div>
-                        <input type="text" class="form-control form-control-custom " id="channelTag" name="channelTag" formControlName="channelTag" pTooltip="Optional, this is if you want to send a message to everyone subscribed to a channel">
-                    </div>
-                </div>
+                <mat-form-field>
+                    <mat-label>Access Token</mat-label>
+                    <input matInput type="text" id="accessToken" name="accessToken" formControlName="accessToken" [ngClass]="{'form-error': form.get('accessToken').hasError('required')}">
+                </mat-form-field>
 
-               
+                <mat-form-field>
+                    <mat-label>Channel Tag</mat-label>
+                    <input matInput type="text" id="channelTag" name="channelTag" formControlName="channelTag" pTooltip="Optional, this is if you want to send a message to everyone subscribed to a channel">
+                </mat-form-field>
 
                 <div class="form-group">
                     <div>
-                        <button [disabled]="form.invalid" mat-raised-button type="button" (click)="test(form)" class="btn btn-primary-outline">
+                        <button [disabled]="form.invalid" mat-raised-button type="button" (click)="test(form)">
                             Test
                             <div id="spinner"></div>
                         </button>
@@ -43,7 +35,7 @@
 
                 <div class="form-group">
                     <div>
-                        <button [disabled]="form.invalid" mat-raised-button type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                        <button [disabled]="form.invalid" mat-raised-button type="submit" id="save">Submit</button>
                     </div>
                 </div>
             </form>
