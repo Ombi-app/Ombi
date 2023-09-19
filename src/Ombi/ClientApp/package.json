@@ -37,7 +37,7 @@
     "angularx-qrcode": "^15.0.0",
     "bootstrap": "^4.2.1",
     "core-js": "^2.5.4",
-    "jquery": "3.7.0",
+    "jquery": "3.7.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "ng2-cookies": "^1.0.12",
