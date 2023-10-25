@@ -2094,10 +2094,10 @@
   resolved "https://registry.yarnpkg.com/@mdx-js/util/-/util-1.6.22.tgz#219dfd89ae5b97a8801f015323ffa4b62f45718b"
   integrity sha512-H1rQc1ZOHANWBvPcW+JpGwr+juXSxM8Q8YCkm3GhZd8REu1fHR3z99CErO1p9pkcfcxZnMdIZdIsXkOHY0NilA==
 
-"@microsoft/signalr@^6.0.20":
-  version "6.0.21"
-  resolved "https://registry.yarnpkg.com/@microsoft/signalr/-/signalr-6.0.21.tgz#b45f335df7011abba831cb3d7974b58da7e725c7"
-  integrity sha512-3MWhSUE7AxkQs3QBuJ/spJJpg1mAHo0/6yRGhs5+Hew3Z+iqYrHVfo0yTElC7W2bVA9t3fW3jliQ9rBN0OvJLA==
+"@microsoft/signalr@^6.0.22":
+  version "6.0.22"
+  resolved "https://registry.yarnpkg.com/@microsoft/signalr/-/signalr-6.0.22.tgz#f8f971ef833538dd39be68138ce55fcf2b32bc04"
+  integrity sha512-FgkzSyMNP6nnxqeCAvixYln3nBluOYA6+Y2c9EuzU3e1hs/SuWliuFdNe8mBecJomWx95hi1vu2pozsyMrsSww==
   dependencies:
     abort-controller "^3.0.0"
     eventsource "^1.0.7"
