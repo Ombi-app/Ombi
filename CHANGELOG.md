@@ -1,3 +1,23 @@
+## [4.43.6](https://github.com/Ombi-app/Ombi/compare/v4.43.4...v4.43.6) (2023-11-01)
+
+
+### Bug Fixes
+
+* **discord:** 🐛 Fixed an issue where the Icon in the discord notifications wouldn't apply ([32da949](https://github.com/Ombi-app/Ombi/commit/32da949a9547f68c57eb4338f749228b7de167c2))
+* src/Ombi/ClientApp/package.json & src/Ombi/ClientApp/yarn.lock to reduce vulnerabilities ([#5010](https://github.com/Ombi-app/Ombi/issues/5010)) [skip ci] ([9c2e1b4](https://github.com/Ombi-app/Ombi/commit/9c2e1b435305d51cc9ab7f5d6932ccd3fa723e6c))
+* upgrade @fortawesome/fontawesome-free from 6.4.0 to 6.4.2 ([#5005](https://github.com/Ombi-app/Ombi/issues/5005)) [skip ci] ([f703ff2](https://github.com/Ombi-app/Ombi/commit/f703ff255cf389a60bdece824214d38f57f03f90))
+* upgrade @microsoft/signalr from 6.0.18 to 6.0.20 ([#4999](https://github.com/Ombi-app/Ombi/issues/4999)) [skip ci] ([563a044](https://github.com/Ombi-app/Ombi/commit/563a0443ea09ff71c5aa740173b4f3c5627cb543))
+* upgrade @microsoft/signalr from 6.0.21 to 6.0.22 ([#5020](https://github.com/Ombi-app/Ombi/issues/5020)) ([1261a44](https://github.com/Ombi-app/Ombi/commit/1261a446e7ffa4d7540623f76ecc9d7e643ca4ce))
+* upgrade @types/jquery from 3.5.16 to 3.5.17 ([#5011](https://github.com/Ombi-app/Ombi/issues/5011)) [skip ci] ([40ee175](https://github.com/Ombi-app/Ombi/commit/40ee175ccd6e53b1254833163954b6a1be0d5251))
+* upgrade @types/jquery from 3.5.18 to 3.5.19 ([#5022](https://github.com/Ombi-app/Ombi/issues/5022)) ([291425e](https://github.com/Ombi-app/Ombi/commit/291425e6091d90ac07010ff65cc3a53309965546))
+* upgrade cypress-real-events from 1.10.0 to 1.10.1 ([#5014](https://github.com/Ombi-app/Ombi/issues/5014)) ([ed06c22](https://github.com/Ombi-app/Ombi/commit/ed06c22fb26fb605b857f3f8e1b26b2dbab15710))
+* upgrade cypress-real-events from 1.8.1 to 1.9.1 ([#5000](https://github.com/Ombi-app/Ombi/issues/5000)) [skip ci] ([19e0a88](https://github.com/Ombi-app/Ombi/commit/19e0a886ced344bfe6284f3916fba12826b7de08))
+* upgrade jquery from 3.7.0 to 3.7.1 ([#5015](https://github.com/Ombi-app/Ombi/issues/5015)) ([7bc915c](https://github.com/Ombi-app/Ombi/commit/7bc915cc14ed27ad0f35142279f9362e5b7b27b8))
+* upgrade multiple dependencies with Snyk ([#5030](https://github.com/Ombi-app/Ombi/issues/5030)) ([7e1e254](https://github.com/Ombi-app/Ombi/commit/7e1e254cfe6c84c1f143388f436d63efd4686e55))
+* upgrade zone.js from 0.13.1 to 0.13.2 ([#5019](https://github.com/Ombi-app/Ombi/issues/5019)) ([c5c8dda](https://github.com/Ombi-app/Ombi/commit/c5c8dda7e4f744fa47841efba9f0e8fee9ef67c6))
+
+
+
 ## [4.43.4](https://github.com/Ombi-app/Ombi/compare/v4.43.3...v4.43.4) (2023-07-28)
 
 
@@ -2439,15 +2459,6 @@
 
 * **discover:** :bug: Fixed the default poster not taking into account the base url in some scenarios [#4845](https://github.com/Ombi-app/Ombi/issues/4845) ([8eda250](https://github.com/Ombi-app/Ombi/commit/8eda250367953183daec03ccb5cdf9fe94275b27))
 * **Hide music from navbar and request list when not enabled:** :bug: ([5123a76](https://github.com/Ombi-app/Ombi/commit/5123a76954e9f81d58c05e31afc7a29aec19cb7a))
-
-
-
-## [4.35.3](https://github.com/Ombi-app/Ombi/compare/v4.35.2...v4.35.3) (2023-01-13)
-
-
-### Bug Fixes
-
-* **#4847:** Invalid Discord request fixed, also fixed an issue where App Only users would not show as logged in on the user management page ([#4848](https://github.com/Ombi-app/Ombi/issues/4848)) ([f229d88](https://github.com/Ombi-app/Ombi/commit/f229d88bd744bc5253b5d3db69ae5ef22d014230))
 
 
 
