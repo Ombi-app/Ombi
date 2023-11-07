@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using Ombi.I18n.Resources;
@@ -27,6 +27,7 @@ namespace Ombi.Notifications.Templates
         
         private const string SubjectKey = "{@SUBJECT}";
         private const string DateKey = "{@DATENOW}";
+        private const string AppUrl = "{@APPURL}";
         private const string Logo = "{@LOGO}";
         private const string TableLocation = "{@RECENTLYADDED}";
         private const string IntroText = "{@INTRO}";
@@ -35,13 +36,14 @@ namespace Ombi.Notifications.Templates
         private const string PoweredByText = "{@POWEREDBYTEXT}";
 
 
-        public string LoadTemplate(string subject, string intro, string tableHtml, string logo, string unsubscribeLink)
+        public string LoadTemplate(string subject, string intro, string tableHtml, string logo, string unsubscribeLink, string applicationUrl)
         {
             var sb = new StringBuilder(File.ReadAllText(TemplateLocation));
             sb.Replace(SubjectKey, subject);
             sb.Replace(TableLocation, tableHtml);
             sb.Replace(IntroText, intro);
             sb.Replace(DateKey, DateTime.Now.ToString("f"));
+            sb.Replace(AppUrl, applicationUrl);
             sb.Replace(Logo, string.IsNullOrEmpty(logo) ? OmbiLogo : logo);
             sb.Replace(Unsubscribe, string.IsNullOrEmpty(unsubscribeLink) ? string.Empty : unsubscribeLink);
             sb.Replace(UnsubscribeText, string.IsNullOrEmpty(unsubscribeLink) ? string.Empty : Texts.Unsubscribe);
