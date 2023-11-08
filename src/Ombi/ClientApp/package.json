@@ -32,7 +32,7 @@
     "@ngx-translate/http-loader": "^7.0.0",
     "@ngxs/devtools-plugin": "3.8.1",
     "@ngxs/store": "3.8.1",
-    "@types/jquery": "^3.5.19",
+    "@types/jquery": "^3.5.23",
     "@yellowspot/ng-truncate": "^2.0.0",
     "angularx-qrcode": "^15.0.0",
     "bootstrap": "^4.2.1",
