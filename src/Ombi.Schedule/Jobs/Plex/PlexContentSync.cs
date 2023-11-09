@@ -278,6 +278,10 @@ namespace Ombi.Schedule.Jobs.Plex
                 await Repo.AddRange(contentToAdd);
                 foreach (var c in contentToAdd)
                 {
+                    if (contentProcessed.ContainsKey(c.Id)) {
+                        continue;
+                    }
+
                     contentProcessed.Add(c.Id, c.Key);
                 }
             }
