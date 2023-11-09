@@ -1,3 +1,13 @@
+## [4.43.7](https://github.com/Ombi-app/Ombi/compare/v4.43.6...v4.43.7) (2023-11-09)
+
+
+### Bug Fixes
+
+* upgrade @microsoft/signalr from 6.0.22 to 6.0.23 ([#5032](https://github.com/Ombi-app/Ombi/issues/5032)) [skip ci] ([11edac9](https://github.com/Ombi-app/Ombi/commit/11edac961b0b828658be83a9c4e67079345d3b0b))
+* upgrade @types/jquery from 3.5.22 to 3.5.23 ([#5034](https://github.com/Ombi-app/Ombi/issues/5034)) [skip ci] ([9e28879](https://github.com/Ombi-app/Ombi/commit/9e28879fc1a479e1bd77ca003e3e748fec27f081))
+
+
+
 ## [4.43.6](https://github.com/Ombi-app/Ombi/compare/v4.43.4...v4.43.6) (2023-11-01)
 
 
@@ -2449,16 +2459,6 @@
 ### Bug Fixes
 
 * **radarr-settings:** 🐛 Fixed a typo ([4a50a00](https://github.com/Ombi-app/Ombi/commit/4a50a00d4729d99f4359874b9af4dbc58a0c220b))
-
-
-
-## [4.35.4](https://github.com/Ombi-app/Ombi/compare/v4.35.3...v4.35.4) (2023-01-22)
-
-
-### Bug Fixes
-
-* **discover:** :bug: Fixed the default poster not taking into account the base url in some scenarios [#4845](https://github.com/Ombi-app/Ombi/issues/4845) ([8eda250](https://github.com/Ombi-app/Ombi/commit/8eda250367953183daec03ccb5cdf9fe94275b27))
-* **Hide music from navbar and request list when not enabled:** :bug: ([5123a76](https://github.com/Ombi-app/Ombi/commit/5123a76954e9f81d58c05e31afc7a29aec19cb7a))
 
 
 
