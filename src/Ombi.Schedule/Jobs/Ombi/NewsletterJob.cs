@@ -174,7 +174,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         }
 
                         var url = GenerateUnsubscribeLink(customization.ApplicationUrl, user.Id);
-                        var html = email.LoadTemplate(messageContent.Subject, messageContent.Message, body, customization.Logo, url, customization.ApplicationUrl);
+                        var html = email.LoadTemplate(messageContent.Subject, messageContent.Message, body, customization.Logo, url, customization.ApplicationUrl ?? string.Empty);
 
                         var bodyBuilder = new BodyBuilder
                         {
