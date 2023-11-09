@@ -1,3 +1,7 @@
+## [4.43.8](https://github.com/Ombi-app/Ombi/compare/v4.43.7...v4.43.8) (2023-11-09)
+
+
+
 ## [4.43.7](https://github.com/Ombi-app/Ombi/compare/v4.43.6...v4.43.7) (2023-11-09)
 
 
@@ -2450,15 +2454,6 @@
 ### Bug Fixes
 
 * Fixed the issue where the login page is still present after logging in with oauth ([aca4ee3](https://github.com/Ombi-app/Ombi/commit/aca4ee37915a28200e5233be3dc711ccc4a5aee9))
-
-
-
-## [4.35.5](https://github.com/Ombi-app/Ombi/compare/v4.35.4...v4.35.5) (2023-01-24)
-
-
-### Bug Fixes
-
-* **radarr-settings:** 🐛 Fixed a typo ([4a50a00](https://github.com/Ombi-app/Ombi/commit/4a50a00d4729d99f4359874b9af4dbc58a0c220b))
 
 
 
