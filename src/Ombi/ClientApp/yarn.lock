@@ -3004,10 +3004,10 @@
   resolved "https://registry.yarnpkg.com/@types/is-function/-/is-function-1.0.1.tgz#2d024eace950c836d9e3335a66b97960ae41d022"
   integrity sha512-A79HEEiwXTFtfY+Bcbo58M2GRYzCr9itHWzbzHVFNEYCcoU/MMGwYYf721gBrnhpj1s6RGVVha/IgNFnR0Iw/Q==
 
-"@types/jquery@^3.5.19":
-  version "3.5.22"
-  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.5.22.tgz#893273736f5695a520986c019c873b75b157f26a"
-  integrity sha512-ISQFeUK5GwRftLK4PVvKTWEVCxZ2BpaqBz0TWkIq5w4vGojxZP9+XkqgcPjxoqmPeew+HLyWthCBvK7GdF5NYA==
+"@types/jquery@^3.5.23":
+  version "3.5.27"
+  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.5.27.tgz#d9d67a003d0292a36fe35868a618c82f8fd12b19"
+  integrity sha512-TR28Y8ezIGgfyA02UOh9x+Fy16/1qWYAnvtRd2gTBJuccX/vmddyti0MezLkTv7f+OLofVc2T961VPyKv1tXJQ==
   dependencies:
     "@types/sizzle" "*"
 
