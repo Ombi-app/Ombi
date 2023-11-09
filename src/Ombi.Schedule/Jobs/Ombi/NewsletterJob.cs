@@ -216,7 +216,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                         var email = new NewsletterTemplate();
 
-                        var html = email.LoadTemplate(messageContent.Subject, messageContent.Message, body, customization.Logo, unsubscribeLink, customization.ApplicationUrl);
+                        var html = email.LoadTemplate(messageContent.Subject, messageContent.Message, body, customization.Logo, unsubscribeLink, customization.ApplicationUrl ?? string.Empty);
 
                         await _email.Send(
                             new NotificationMessage { Message = html, Subject = messageContent.Subject, To = a.Email },
