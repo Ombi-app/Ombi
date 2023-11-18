@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
-using Ombi.Helpers;
 
 namespace Ombi.Store.Entities
 {
@@ -15,6 +14,8 @@ namespace Ombi.Store.Entities
         public int SonarrQualityProfile { get; set; }
         public int RadarrRootPath { get; set; }
         public int RadarrQualityProfile { get; set; }
+        public int Radarr4KRootPath { get; set; }
+        public int Radarr4KQualityProfile { get; set; }
 
         [ForeignKey(nameof(UserId))]
         [JsonIgnore]

@@ -24,6 +24,8 @@ export class UserManagementUserComponent implements OnInit {
     public sonarrRootFolders: ISonarrRootFolder[];
     public radarrQualities: IRadarrProfile[];
     public radarrRootFolders: IRadarrRootFolder[];
+    public radarr4KQualities: IRadarrProfile[];
+    public radarr4KRootFolders: IRadarrRootFolder[];
 
     public NotificationAgent = INotificationAgent;
     public edit: boolean;
@@ -93,6 +95,17 @@ export class UserManagementUserComponent implements OnInit {
             this.radarrRootFolders.unshift({id: 0, path: "None"});
         });
 
+        if (is4KEnabled) {
+            this.radarrService.getRootFolders4kFromSettings().subscribe(x => {
+                this.radarr4KRootFolders = x;
+                this.radarr4KRootFolders.unshift({id: 0, path: "None"});
+            });
+            this.radarrService.getQualityProfiles4kFromSettings().subscribe(x => {
+                this.radarr4KQualities = x;
+                this.radarr4KQualities.unshift({id: 0, name: "None"});
+            });
+        }
+
         this.identityService.getUserAccessToken(this.userId).subscribe(x => this.accessToken = x);
 
         if(!this.edit) {
@@ -118,6 +131,8 @@ export class UserManagementUserComponent implements OnInit {
                 userQualityProfiles: {
                     radarrQualityProfile: 0,
                     radarrRootPath: 0,
+                    radarr4KQualityProfile: 0,
+                    radarr4KRootPath: 0,
                     sonarrQualityProfile: 0,
                     sonarrQualityProfileAnime: 0,
                     sonarrRootPath: 0,

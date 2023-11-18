@@ -691,6 +691,8 @@ namespace Ombi.Controllers.V1
                 currentQualityProfiles.SonarrQualityProfileAnime = ui.UserQualityProfiles.SonarrQualityProfileAnime;
                 currentQualityProfiles.SonarrRootPath = ui.UserQualityProfiles.SonarrRootPath;
                 currentQualityProfiles.SonarrRootPathAnime = ui.UserQualityProfiles.SonarrRootPathAnime;
+                currentQualityProfiles.Radarr4KRootPath = ui.UserQualityProfiles.Radarr4KRootPath;
+                currentQualityProfiles.Radarr4KQualityProfile = ui.UserQualityProfiles.Radarr4KQualityProfile;
                 if (add)
                 {
                     await _userQualityProfiles.Add(currentQualityProfiles);

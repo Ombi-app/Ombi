@@ -52,6 +52,14 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Content Remove="database.json" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="database.json" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 

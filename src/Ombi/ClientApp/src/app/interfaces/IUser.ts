@@ -50,6 +50,8 @@ export interface IUserQualityProfiles {
     sonarrQualityProfile: number;
     radarrRootPath: number;
     radarrQualityProfile: number;
+    radarr4KRootPath: number;
+    radarr4KQualityProfile: number;
 }
 
 export interface ICreateWizardUser {
