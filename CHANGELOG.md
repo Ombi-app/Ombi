@@ -1,3 +1,12 @@
+## [4.43.9](https://github.com/Ombi-app/Ombi/compare/v4.43.8...v4.43.9) (2023-11-18)
+
+
+### Bug Fixes
+
+* **sonarr:** 🐛 Correctly monitor episodes ([57e7830](https://github.com/Ombi-app/Ombi/commit/57e7830f8e54b65ce3c1f0b122cbcc517d1af926))
+
+
+
 ## [4.43.8](https://github.com/Ombi-app/Ombi/compare/v4.43.7...v4.43.8) (2023-11-09)
 
 
@@ -2445,15 +2454,6 @@
 ### Bug Fixes
 
 * **wizard:** :bug: Stop access to the wizard when you have already setup ombi ([#4866](https://github.com/Ombi-app/Ombi/issues/4866)) ([353de98](https://github.com/Ombi-app/Ombi/commit/353de981a462e1753288d225ec4644a44a62d2bc))
-
-
-
-## [4.35.6](https://github.com/Ombi-app/Ombi/compare/v4.35.5...v4.35.6) (2023-01-31)
-
-
-### Bug Fixes
-
-* Fixed the issue where the login page is still present after logging in with oauth ([aca4ee3](https://github.com/Ombi-app/Ombi/commit/aca4ee37915a28200e5233be3dc711ccc4a5aee9))
 
 
 
