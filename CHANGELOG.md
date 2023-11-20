@@ -1,3 +1,12 @@
+## [4.43.10](https://github.com/Ombi-app/Ombi/compare/v4.43.9...v4.43.10) (2023-11-20)
+
+
+### Bug Fixes
+
+* **radarr-4k:** 🐛 Fixed an issue when using Radarr 4k with user set quality profiles. There are now user quality profiles for 4k profile [#5025](https://github.com/Ombi-app/Ombi/issues/5025) ([62b9a1f](https://github.com/Ombi-app/Ombi/commit/62b9a1f65fc4ee5f1eaf9dfabf37742a9007433e))
+
+
+
 ## [4.43.9](https://github.com/Ombi-app/Ombi/compare/v4.43.8...v4.43.9) (2023-11-18)
 
 
@@ -2445,15 +2454,6 @@
 ### Bug Fixes
 
 * **plex-oauth:** 🐛 Fixed an issue where using OAuth you could log in as a Ombi Local user [#4835](https://github.com/Ombi-app/Ombi/issues/4835) ([4098da3](https://github.com/Ombi-app/Ombi/commit/4098da305aaea9dae9a552644268a4fed7204cfe))
-
-
-
-## [4.35.7](https://github.com/Ombi-app/Ombi/compare/v4.35.6...v4.35.7) (2023-02-10)
-
-
-### Bug Fixes
-
-* **wizard:** :bug: Stop access to the wizard when you have already setup ombi ([#4866](https://github.com/Ombi-app/Ombi/issues/4866)) ([353de98](https://github.com/Ombi-app/Ombi/commit/353de981a462e1753288d225ec4644a44a62d2bc))
 
 
 
