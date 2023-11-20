@@ -18,7 +18,7 @@ import { fadeInOutAnimation } from "app/animations/fadeinout";
 
     public background: any;
     public name: string;
-    private timer: NodeJS.Timer;
+    private timer: NodeJS.Timeout;
 
     constructor(private images: ImageService, private sanitizer: DomSanitizer) { }
 
