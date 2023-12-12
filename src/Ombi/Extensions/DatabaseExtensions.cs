@@ -8,6 +8,7 @@ using Ombi.Helpers;
 using Ombi.Store.Context;
 using Ombi.Store.Context.MySql;
 using Ombi.Store.Context.Sqlite;
+using Ombi.Store.Context.Postgres;
 using SQLitePCL;
 
 namespace Ombi.Extensions
@@ -17,6 +18,7 @@ namespace Ombi.Extensions
 
         public const string SqliteDatabase = "Sqlite";
         public const string MySqlDatabase = "MySQL";
+        public const string PostgresDatabase = "Postgres";
 
         public static void ConfigureDatabases(this IServiceCollection services, IHealthChecksBuilder hcBuilder)
         {
@@ -33,6 +35,10 @@ namespace Ombi.Extensions
                     services.AddDbContext<OmbiContext, OmbiMySqlContext>(x => ConfigureMySql(x, configuration.OmbiDatabase));
                     AddMySqlHealthCheck(hcBuilder, "Ombi Database", configuration.OmbiDatabase);
                     break;
+                case var type when type.Equals(PostgresDatabase, StringComparison.InvariantCultureIgnoreCase):
+                    services.AddDbContext<OmbiContext, OmbiPostgresContext>(x => ConfigurePostgres(x, configuration.OmbiDatabase));
+                    AddPostgresHealthCheck(hcBuilder, "Ombi Database", configuration.OmbiDatabase);
+                    break;
             }
 
             switch (configuration.ExternalDatabase.Type)
@@ -45,6 +51,10 @@ namespace Ombi.Extensions
                     services.AddDbContext<ExternalContext, ExternalMySqlContext>(x => ConfigureMySql(x, configuration.ExternalDatabase));
                     AddMySqlHealthCheck(hcBuilder, "External Database", configuration.ExternalDatabase);
                     break;
+                case var type when type.Equals(PostgresDatabase, StringComparison.InvariantCultureIgnoreCase):
+                    services.AddDbContext<ExternalContext, ExternalPostgresContext>(x => ConfigurePostgres(x, configuration.ExternalDatabase));
+                    AddPostgresHealthCheck(hcBuilder, "External Database", configuration.ExternalDatabase);
+                    break;
             }
 
             switch (configuration.SettingsDatabase.Type)
@@ -56,6 +66,10 @@ namespace Ombi.Extensions
                 case var type when type.Equals(MySqlDatabase, StringComparison.InvariantCultureIgnoreCase):
                     services.AddDbContext<SettingsContext, SettingsMySqlContext>(x => ConfigureMySql(x, configuration.SettingsDatabase));
                     AddMySqlHealthCheck(hcBuilder, "Settings Database", configuration.SettingsDatabase);
+                    break;
+                case var type when type.Equals(PostgresDatabase, StringComparison.InvariantCultureIgnoreCase):
+                    services.AddDbContext<SettingsContext, SettingsPostgresContext>(x => ConfigurePostgres(x, configuration.SettingsDatabase));
+                    AddPostgresHealthCheck(hcBuilder, "Settings Database", configuration.SettingsDatabase);
                     break;
             }
         }
@@ -111,6 +125,19 @@ namespace Ombi.Extensions
             }
         }
 
+        private static void AddPostgresHealthCheck(IHealthChecksBuilder builder, string dbName, PerDatabaseConfiguration config)
+        {
+            if (builder != null)
+            {
+                builder.AddNpgSql(
+                    npgsqlConnectionString: config.ConnectionString,
+                    name: dbName,
+                    failureStatus: HealthStatus.Unhealthy,
+                    tags: new string[] { "db" }
+                    );
+            }
+        }
+
         public static void ConfigureSqlite(DbContextOptionsBuilder options, PerDatabaseConfiguration config)
         {
             SQLitePCL.Batteries.Init();
@@ -123,6 +150,14 @@ namespace Ombi.Extensions
             options.UseMySql(config.ConnectionString, ServerVersion.AutoDetect(config.ConnectionString), b =>
             {
                 //b.CharSetBehavior(Pomelo.EntityFrameworkCore.MySql.Infrastructure.CharSetBehavior.NeverAppend); // ##ISSUE, link to migrations?
+                b.EnableRetryOnFailure();
+            });
+        }
+
+        public static void ConfigurePostgres(DbContextOptionsBuilder options, PerDatabaseConfiguration config)
+        {
+            options.UseNpgsql(config.ConnectionString, b =>
+            {
                 b.EnableRetryOnFailure();
             });
         }
