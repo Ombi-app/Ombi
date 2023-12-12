@@ -1,9 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Newtonsoft.Json;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal;
 using Ombi.Helpers;
 using Ombi.Store.Context;
 using Ombi.Store.Context.MySql;
@@ -159,7 +162,7 @@ namespace Ombi.Extensions
             options.UseNpgsql(config.ConnectionString, b =>
             {
                 b.EnableRetryOnFailure();
-            });
+            }).ReplaceService<ISqlGenerationHelper, NpgsqlCaseInsensitiveSqlGenerationHelper>();
         }
 
         public class DatabaseConfiguration
@@ -195,6 +198,17 @@ namespace Ombi.Extensions
             }
             public string Type { get; set; }
             public string ConnectionString { get; set; }
+        }
+
+        public class NpgsqlCaseInsensitiveSqlGenerationHelper : NpgsqlSqlGenerationHelper
+        {
+            const string EFMigrationsHisory = "__EFMigrationsHistory";
+            public NpgsqlCaseInsensitiveSqlGenerationHelper(RelationalSqlGenerationHelperDependencies dependencies)
+                : base(dependencies) { }
+            public override string DelimitIdentifier(string identifier) =>
+                base.DelimitIdentifier(identifier == EFMigrationsHisory ? identifier : identifier.ToLower());
+            public override void DelimitIdentifier(StringBuilder builder, string identifier)
+                => base.DelimitIdentifier(builder, identifier == EFMigrationsHisory ? identifier : identifier.ToLower());
         }
     }
 }
