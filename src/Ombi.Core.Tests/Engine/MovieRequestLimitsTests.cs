@@ -300,13 +300,13 @@ namespace Ombi.Core.Tests.Engine
                 {
                     UserId = "id1",
                     RequestType = RequestType.Movie,
-                    RequestDate = today.AddHours(-1),
+                    RequestDate = today.AddMinutes(-1),
                 },
                 new RequestLog
                 {
                     UserId = "id1",
                     RequestType = RequestType.Movie,
-                    RequestDate = today.AddHours(-2),
+                    RequestDate = today.AddMinutes(-2),
                 },
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
