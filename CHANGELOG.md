@@ -1,3 +1,12 @@
+## [4.43.11](https://github.com/Ombi-app/Ombi/compare/v4.43.10...v4.43.11) (2024-01-11)
+
+
+### Bug Fixes
+
+* **emby:** Add more logging on the PlaySync to check for Tv Shows without a valid TMDB ([08eb13b](https://github.com/Ombi-app/Ombi/commit/08eb13b788582d576a0e1befdb8e84ef7ff0d2f3))
+
+
+
 ## [4.43.10](https://github.com/Ombi-app/Ombi/compare/v4.43.9...v4.43.10) (2023-11-20)
 
 
@@ -2445,15 +2454,6 @@
 
 
 ## [4.22.5](https://github.com/Ombi-app/Ombi/compare/v4.22.4...v4.22.5) (2022-08-05)
-
-
-
-## [4.35.8](https://github.com/Ombi-app/Ombi/compare/v4.35.7...v4.35.8) (2023-02-17)
-
-
-### Bug Fixes
-
-* **plex-oauth:** 🐛 Fixed an issue where using OAuth you could log in as a Ombi Local user [#4835](https://github.com/Ombi-app/Ombi/issues/4835) ([4098da3](https://github.com/Ombi-app/Ombi/commit/4098da305aaea9dae9a552644268a4fed7204cfe))
 
 
 
