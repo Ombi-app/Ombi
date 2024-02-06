@@ -39,7 +39,7 @@
     "core-js": "^2.5.4",
     "jquery": "3.7.1",
     "lodash": "^4.17.21",
-    "moment": "^2.29.1",
+    "moment": "^2.30.1",
     "ng2-cookies": "^1.0.12",
     "ngx-clipboard": "^12.1.0",
     "ngx-infinite-scroll": "^9.0.0",
