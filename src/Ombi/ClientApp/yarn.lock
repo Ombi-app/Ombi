@@ -9717,10 +9717,10 @@ primeicons@^6.0.1:
   resolved "https://registry.yarnpkg.com/primeicons/-/primeicons-6.0.1.tgz#431fa7c79825934eefd62087d8e1faa6a9e376ad"
   integrity sha512-KDeO94CbWI4pKsPnYpA1FPjo79EsY9I+M8ywoPBSf9XMXoe/0crjbUK7jcQEDHuc0ZMRIZsxH3TYLv4TUtHmAA==
 
-primeng@^15.4.1:
-  version "15.4.1"
-  resolved "https://registry.yarnpkg.com/primeng/-/primeng-15.4.1.tgz#a2a3eae9b557ba43cdedd32e8ec71d018f543b4c"
-  integrity sha512-j2unOQZk6756l6SgkzcmlHF6JlawF0bIjKTgAPWwT+S5RYeWEjpCPg/ABV8TylwW7CTNQX2oCHbyqCAuhtr++w==
+primeng@^17.6.0:
+  version "17.6.0"
+  resolved "https://registry.yarnpkg.com/primeng/-/primeng-17.6.0.tgz#a519d0e7f863ba0dbf776c0488148481f852ca39"
+  integrity sha512-Q9wEbTE1D+Tt0dtCg1lTt7JcV5klQhRByciU67SySYNaDQDutKUKtvMs2AUF5iZAbh8mp1GHzElJWzrXa+TuGw==
   dependencies:
     tslib "^2.3.0"
 
