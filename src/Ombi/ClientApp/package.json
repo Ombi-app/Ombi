@@ -14,12 +14,12 @@
 	"private": true,
 	"dependencies": {
 		"@angular/animations": "^16.2.12",
-		"@angular/cdk": "^14.2.7",
+		"@angular/cdk": "17.1.2",
 		"@angular/common": "^16.2.12",
 		"@angular/compiler": "^16.2.12",
 		"@angular/core": "^16.2.12",
 		"@angular/forms": "^16.2.12",
-		"@angular/material": "^14.2.7",
+		"@angular/material": "17.1.2",
 		"@angular/platform-browser": "^16.2.12",
 		"@angular/platform-browser-dynamic": "^16.2.12",
 		"@angular/platform-server": "^16.2.12",
@@ -58,7 +58,7 @@
 		"@angular/compiler-cli": "^16.2.12",
 		"@babel/core": "^7.18.9",
 		"@compodoc/compodoc": "^1.1.19",
-		"@storybook/angular": "^6.5.9",
+		"@storybook/angular": "7.6.14",
 		"@types/node": "^20.11.17",
 		"chromatic": "^6.7.1",
 		"typescript": "5.2.2"
