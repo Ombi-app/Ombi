@@ -14,7 +14,6 @@
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
     "importHelpers": true,
     "useDefineForClassFields": false,
     "target": "ES2022",
@@ -24,6 +23,9 @@
       "dom"
     ]
   },
+  "types": [
+    "node"
+  ],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
