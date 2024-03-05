@@ -192,7 +192,13 @@
 						</div>
 
 						<div class="col-12 col-md-10">
+							@defer {
 							<tv-request-grid id="requests-grid" [tvRequest]="tvRequest" [isAdmin]="isAdmin" [tv]="tv"></tv-request-grid>
+							} @placeholder {
+							<div class="loading-spinner">
+								<mat-spinner [color]="'accent'"></mat-spinner>
+							</div>
+							}
 						</div>
 
 						<div class="col-12 col-md-2">
@@ -210,11 +216,17 @@
 										</mat-panel-title>
 									</mat-expansion-panel-header>
 
+									@defer (on viewport) {
 									<tv-requests-panel
 										[tvRequest]="tvRequest"
 										[isAdmin]="isAdmin"
 										[manageOwnRequests]="manageOwnRequests"
 									></tv-requests-panel>
+									} @placeholder {
+									<div class="loading-spinner">
+										<mat-spinner [color]="'accent'"></mat-spinner>
+									</div>
+									}
 								</mat-expansion-panel>
 							</mat-accordion>
 						</div>
