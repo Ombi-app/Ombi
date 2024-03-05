@@ -6,8 +6,7 @@ import { CustomPageService, NotificationService } from "../services";
 
 @Component({
     templateUrl: "./custompage.component.html",
-    styleUrls: ["./custompage.component.scss"],
-})
+}) 
 export class CustomPageComponent implements OnInit {
 
     public form: UntypedFormGroup;
