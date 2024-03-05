@@ -298,7 +298,6 @@
 						</div>
 					</div>
 
-					@defer{
 					<div class="row">
 						<div class="col-12">
 							<cast-carousel [cast]="movie.credits.cast"></cast-carousel>
@@ -310,7 +309,6 @@
 							<crew-carousel [crew]="movie.credits.crew"></crew-carousel>
 						</div>
 					</div>
-					}
 
 					<!-- <div class="row card-spacer" *ngIf="movie.videos?.results?.length > 0">
 
@@ -318,7 +316,7 @@
                             <iframe width="100%" height="315px" [src]="'https://www.youtube.com/embed/' + video.key | safe" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>
                     </div> -->
-					@defer {
+
 					<div class="row" *ngIf="movie.videos?.results?.length > 0">
 						<div class="col-12">
 							<mat-card class="mat-elevation-z8">
@@ -340,7 +338,6 @@
 							</mat-card>
 						</div>
 					</div>
-					}
 
 					<div class="row">
 						<div class="col-12">
@@ -348,7 +345,6 @@
 								<issues-panel [providerId]="movie.imdbId" [isAdmin]="isAdmin"></issues-panel>
 							</div>
 
-							@defer (on viewport) {
 							<mat-accordion class="mat-elevation-z8 spacing-below">
 								<mat-expansion-panel *ngIf="movie.recommendations?.results?.length > 0">
 									<mat-expansion-panel-header>
@@ -402,11 +398,6 @@
 									</div>
 								</mat-expansion-panel>
 							</mat-accordion>
-							} @placeholder {
-							<div class="loading-spinner">
-								<mat-spinner [color]="'accent'"></mat-spinner>
-							</div>
-							}
 						</div>
 					</div>
 				</div>
