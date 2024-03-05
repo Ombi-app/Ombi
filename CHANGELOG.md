@@ -1,3 +1,18 @@
+## [4.43.12](https://github.com/Ombi-app/Ombi/compare/v4.43.11...v4.43.12) (2024-03-05)
+
+
+### Bug Fixes
+
+* src/Ombi/ClientApp/package.json & src/Ombi/ClientApp/yarn.lock to reduce vulnerabilities ([#5040](https://github.com/Ombi-app/Ombi/issues/5040))  [skip ci] ([955a742](https://github.com/Ombi-app/Ombi/commit/955a742fae1d0a3983c59cf77eb1a2d222f18b48))
+* src/Ombi/ClientApp/package.json & src/Ombi/ClientApp/yarn.lock to reduce vulnerabilities ([#5072](https://github.com/Ombi-app/Ombi/issues/5072)) [skip ci] ([af6a986](https://github.com/Ombi-app/Ombi/commit/af6a9867719deb7b651a6a78352a8ce0df7a0cf0))
+* src/Ombi/Ombi.csproj to reduce vulnerabilities ([#5066](https://github.com/Ombi-app/Ombi/issues/5066)) [skip ci] ([71df058](https://github.com/Ombi-app/Ombi/commit/71df05886512b8589f193a5cda0166c694438fc0))
+* upgrade @fortawesome/fontawesome-free from 6.4.2 to 6.5.0 ([#5053](https://github.com/Ombi-app/Ombi/issues/5053))  [skip ci] ([5017e38](https://github.com/Ombi-app/Ombi/commit/5017e38f87e32821adb744935fffcb2d76927e2c))
+* upgrade @types/jquery from 3.5.27 to 3.5.28 ([#5049](https://github.com/Ombi-app/Ombi/issues/5049))  [skip ci] ([2c8fe80](https://github.com/Ombi-app/Ombi/commit/2c8fe8087aea227e7425e82392ad9ccb3f8261b4))
+* upgrade moment from 2.29.4 to 2.30.1 ([#5075](https://github.com/Ombi-app/Ombi/issues/5075)) [skip ci] ([460fa39](https://github.com/Ombi-app/Ombi/commit/460fa39bb95c73bafcd65fcc394fecca04d3ac49))
+* upgrade multiple dependencies with Snyk ([#5073](https://github.com/Ombi-app/Ombi/issues/5073)) [skip ci] ([a27b459](https://github.com/Ombi-app/Ombi/commit/a27b4592471c58fca9ad5193b979171fa7c5e66d))
+
+
+
 ## [4.43.11](https://github.com/Ombi-app/Ombi/compare/v4.43.10...v4.43.11) (2024-01-11)
 
 
@@ -2446,14 +2461,6 @@
 
 
 ## [4.35.10](https://github.com/Ombi-app/Ombi/compare/v4.35.9...v4.35.10) (2023-02-25)
-
-
-
-## [4.35.9](https://github.com/Ombi-app/Ombi/compare/v4.35.8...v4.35.9) (2023-02-24)
-
-
-
-## [4.22.5](https://github.com/Ombi-app/Ombi/compare/v4.22.4...v4.22.5) (2022-08-05)
 
 
 
