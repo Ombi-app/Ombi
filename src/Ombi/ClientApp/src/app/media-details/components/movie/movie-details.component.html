@@ -292,7 +292,12 @@
 						<div class="col-12">
 							<mat-card class="mat-elevation-z8 spacing-below">
 								<mat-card-content>
+									@defer (on viewport; prefetch on idle) {
 									{{ movie.overview }}
+									}
+									@placeholder {
+									<p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+									}
 								</mat-card-content>
 							</mat-card>
 						</div>
@@ -300,13 +305,23 @@
 
 					<div class="row">
 						<div class="col-12">
-							<cast-carousel [cast]="movie.credits.cast"></cast-carousel>
+							@defer (on viewport; prefetch on idle) {
+								<cast-carousel [cast]="movie.credits.cast"></cast-carousel>
+							}
+							@placeholder {
+							<p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+							}
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="col-12">
-							<crew-carousel [crew]="movie.credits.crew"></crew-carousel>
+							@defer (on viewport; prefetch on idle) {
+								<cast-carousel [cast]="movie.credits.crew"></cast-carousel>
+							}
+							@placeholder {
+							<p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+							}
 						</div>
 					</div>
 
@@ -320,6 +335,7 @@
 					<div class="row" *ngIf="movie.videos?.results?.length > 0">
 						<div class="col-12">
 							<mat-card class="mat-elevation-z8">
+								@defer (on viewport; prefetch on idle) {
 								<mat-card-header>{{ 'MediaDetails.Trailers' | translate }}</mat-card-header>
 								<mat-card-content>
 									<p-carousel class="no-indicator" [numVisible]="2" [numScroll]="10" [page]="0" [value]="movie.videos?.results">
@@ -335,6 +351,10 @@
 										</ng-template>
 									</p-carousel>
 								</mat-card-content>
+							}
+							@placeholder {
+							<p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+							}
 							</mat-card>
 						</div>
 					</div>
@@ -345,6 +365,7 @@
 								<issues-panel [providerId]="movie.imdbId" [isAdmin]="isAdmin"></issues-panel>
 							</div>
 
+							@defer (on viewport; prefetch on idle) {
 							<mat-accordion class="mat-elevation-z8 spacing-below">
 								<mat-expansion-panel *ngIf="movie.recommendations?.results?.length > 0">
 									<mat-expansion-panel-header>
@@ -398,6 +419,10 @@
 									</div>
 								</mat-expansion-panel>
 							</mat-accordion>
+						}
+						@placeholder {
+							<p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+						}
 						</div>
 					</div>
 				</div>

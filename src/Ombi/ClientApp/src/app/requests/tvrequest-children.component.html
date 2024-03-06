@@ -115,7 +115,7 @@
 											{{ ep.title }}
 										</td>
 										<td>
-											{{ ep.airDate | dfnsFormat: 'P' }}
+											{{ ep.airDate | ombiDate: 'P' }}
 										</td>
 										<td>
 											<span *ngIf="child.denied" class="label label-danger" id="deniedLabel" [translate]="'Common.Denied'">

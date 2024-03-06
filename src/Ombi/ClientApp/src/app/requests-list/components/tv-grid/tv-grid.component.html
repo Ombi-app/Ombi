@@ -103,7 +103,7 @@
 		<ng-container matColumnDef="requestedDate">
 			<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>{{ 'Requests.RequestDate' | translate }}</th>
 			<td id="requestedDate{{ element.id }}" mat-cell *matCellDef="let element">
-				{{ element.requestedDate | dfnsFormat: 'PP' }}
+				{{ element.requestedDate | ombiDate: 'PP' }}
 			</td>
 		</ng-container>
 

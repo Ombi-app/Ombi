@@ -97,8 +97,8 @@
 						<i style="color: red" class="fas fa-check" pTooltip="{{ request.deniedReason }}"></i>
 					</div>
 
-					<div id="releaseDate">{{ 'Requests.ReleaseDate' | translate: { date: request.releaseDate | dfnsFormat: 'PP' } }}</div>
-					<div id="requestedDate">{{ 'Requests.RequestDate' | translate }} {{ request.requestedDate | dfnsFormat: 'PP' }}</div>
+					<div id="releaseDate">{{ 'Requests.ReleaseDate' | translate: { date: request.releaseDate | ombiDate: 'PP' } }}</div>
+					<div id="requestedDate">{{ 'Requests.RequestDate' | translate }} {{ request.requestedDate | ombiDate: 'PP' }}</div>
 					<br />
 				</div>
 				<!-- <div *ngIf="isAdmin">

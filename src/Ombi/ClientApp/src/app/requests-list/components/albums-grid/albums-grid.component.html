@@ -85,7 +85,7 @@
 		</ng-container>
 		<ng-container matColumnDef="title">
 			<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>{{ 'Requests.AlbumName' | translate }}</th>
-			<td mat-cell *matCellDef="let element">{{ element.title }} ({{ element.releaseDate | dfnsFormat: 'P' }})</td>
+			<td mat-cell *matCellDef="let element">{{ element.title }} ({{ element.releaseDate | ombiDate: 'P' }})</td>
 		</ng-container>
 
 		<ng-container matColumnDef="requestedUser.requestedBy">
@@ -95,7 +95,7 @@
 
 		<ng-container matColumnDef="requestedDate">
 			<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>{{ 'Requests.RequestDate' | translate }}</th>
-			<td mat-cell *matCellDef="let element">{{ element.requestedDate | dfnsFormat: 'PP' }}</td>
+			<td mat-cell *matCellDef="let element">{{ element.requestedDate | ombiDate: 'PP' }}</td>
 		</ng-container>
 
 		<ng-container matColumnDef="requestStatus">

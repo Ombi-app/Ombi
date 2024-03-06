@@ -8,7 +8,7 @@
 				<div class="mobile-top-text">
 					<h1 id="mediaTitle" class="large-text">
 						{{ title }}
-						<span *ngIf="releaseDateFormat" class="grey-text"> ({{ releaseDate | dfnsFormat: 'P' }})</span>
+						<span *ngIf="releaseDateFormat" class="grey-text"> ({{ releaseDate | ombiDate: 'P' }})</span>
 					</h1>
 
 					<h2 class="tagline">{{ tagline }}</h2>

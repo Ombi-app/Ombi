@@ -26,7 +26,7 @@
 				<div class="col-sm-5 small-padding">
 					<div>
 						<a href="http://www.imdb.com/title/{{ node.imdbId }}/" target="_blank">
-							<h4 class="request-title">{{ node.title }} ({{ node.releaseDate | dfnsFormat: 'P' }})</h4>
+							<h4 class="request-title">{{ node.title }} ({{ node.releaseDate | ombiDate: 'P' }})</h4>
 						</a>
 					</div>
 					<br />
@@ -35,7 +35,7 @@
 						<span class="label label-success">{{ node.status }}</span>
 					</div>
 
-					<div>Release Date: {{ node.releaseDate | dfnsFormat: 'PP' }}</div>
+					<div>Release Date: {{ node.releaseDate | ombiDate: 'PP' }}</div>
 					<div *ngIf="isAdmin">
 						<div *ngIf="node.qualityOverrideTitle" class="quality-override">
 							{{ 'Requests.QualityOverride' | translate }}

@@ -49,7 +49,7 @@
 			<div class="col-sm-5 small-padding">
 				<div>
 					<a href="http://www.imdb.com/title/{{ request.imdbId }}/" target="_blank">
-						<h4 class="request-title">{{ request.title }} ({{ request.releaseDate | dfnsFormat: 'P' }})</h4>
+						<h4 class="request-title">{{ request.title }} ({{ request.releaseDate | ombiDate: 'P' }})</h4>
 					</a>
 				</div>
 				<br />
@@ -91,12 +91,12 @@
 					</div>
 
 					<div id="releaseDate">
-						{{ 'Requests.TheatricalRelease' | translate: { date: request.releaseDate | dfnsFormat: 'PP' } }}
+						{{ 'Requests.TheatricalRelease' | translate: { date: request.releaseDate | ombiDate: 'PP' } }}
 					</div>
 					<div *ngIf="request.digitalReleaseDate" id="digitalReleaseDate">
-						{{ 'Requests.DigitalRelease' | translate: { date: request.digitalReleaseDate | dfnsFormat: 'PP' } }}
+						{{ 'Requests.DigitalRelease' | translate: { date: request.digitalReleaseDate | ombiDate: 'PP' } }}
 					</div>
-					<div id="requestedDate">{{ 'Requests.RequestDate' | translate }} {{ request.requestedDate | dfnsFormat: 'PP' }}</div>
+					<div id="requestedDate">{{ 'Requests.RequestDate' | translate }} {{ request.requestedDate | ombiDate: 'PP' }}</div>
 					<br />
 				</div>
 				<div *ngIf="isAdmin">

@@ -31,7 +31,7 @@
 			<span id="status"> {{ tv.status | translateStatus }}</span>
 		</div>
 		<span class="label">{{ 'MediaDetails.FirstAired' | translate }}</span>
-		{{ tv.firstAired | dfnsFormat: 'PP' }}
+		{{ tv.firstAired | ombiDate: 'PP' }}
 	</div>
 
 	<div *ngIf="seasonCount">

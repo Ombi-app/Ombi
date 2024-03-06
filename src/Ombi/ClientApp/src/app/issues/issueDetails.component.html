@@ -82,7 +82,7 @@
 										(click)="deleteComment(comment.id)"
 									></i>
 									<p>{{ comment.comment }}</p>
-									<time>{{ comment.username }} • {{ comment.date | dfnsFormat: 'Ppp' }}</time>
+									<time>{{ comment.username }} • {{ comment.date | ombiDate: 'Ppp' }}</time>
 								</div>
 							</div>
 						</div>

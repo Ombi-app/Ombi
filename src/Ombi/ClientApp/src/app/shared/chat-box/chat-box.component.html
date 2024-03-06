@@ -16,7 +16,7 @@
 						<p class="name" *ngIf="m?.username">{{ m.username }}</p>
 						<br />
 						<p class="message">{{ m.message }}</p>
-						<p class="timestamp">{{ m.date | dfnsFormat: 'Ppp' }}</p>
+						<p class="timestamp">{{ m.date | ombiDate: 'Ppp' }}</p>
 					</div>
 				</div>
 			</div>
