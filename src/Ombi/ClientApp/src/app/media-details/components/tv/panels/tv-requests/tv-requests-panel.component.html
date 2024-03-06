@@ -10,7 +10,7 @@
 						| translate
 							: {
 									user: request.requestedUser.userAlias,
-									date: request.requestedDate | dfnsFormat: 'PP'
+									date: request.requestedDate | ombiDate: 'PP'
 							  }
 				}}
 				<span *ngIf="request.denied"> - {{ request.deniedReason }}</span>
@@ -35,7 +35,7 @@
 
 					<ng-container matColumnDef="airDate">
 						<th mat-header-cell *matHeaderCellDef>{{ 'Requests.AirDate' | translate }}</th>
-						<td mat-cell *matCellDef="let element">{{ element.airDate | dfnsFormat: 'P' }}</td>
+						<td mat-cell *matCellDef="let element">{{ element.airDate | ombiDate: 'P' }}</td>
 					</ng-container>
 
 					<ng-container matColumnDef="status">

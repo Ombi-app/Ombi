@@ -49,8 +49,8 @@
 
 	<div *ngIf="request">
 		<span class="label">{{ 'MediaDetails.RequestDate' | translate }}</span>
-		<span *ngIf="request.requestedDate < request.requestedDate4k"> {{ request.requestedDate4k | dfnsFormat: 'PP' }}</span>
-		<span *ngIf="request.requestedDate > request.requestedDate4k"> {{ request.requestedDate | dfnsFormat: 'PP' }}</span>
+		<span *ngIf="request.requestedDate < request.requestedDate4k"> {{ request.requestedDate4k | ombiDate: 'PP' }}</span>
+		<span *ngIf="request.requestedDate > request.requestedDate4k"> {{ request.requestedDate | ombiDate: 'PP' }}</span>
 	</div>
 
 	<div *ngIf="request && request.source !== RequestSource.Ombi">
@@ -90,11 +90,11 @@
 	<hr />
 
 	<span class="label">{{ 'MediaDetails.TheatricalRelease' | translate }}</span>
-	{{ movie.releaseDate | dfnsFormat: 'PP' }}
+	{{ movie.releaseDate | ombiDate: 'PP' }}
 
 	<div *ngIf="movie.digitalReleaseDate">
 		<span class="label">{{ 'MediaDetails.DigitalRelease' | translate }}</span>
-		{{ movie.digitalReleaseDate | dfnsFormat: 'PP' }}
+		{{ movie.digitalReleaseDate | ombiDate: 'PP' }}
 	</div>
 
 	<div *ngIf="movie.voteCount">

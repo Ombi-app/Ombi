@@ -2,7 +2,7 @@
 	<mat-card-header>
 		<mat-card-title>{{ issue.subject }}</mat-card-title>
 		<mat-card-subtitle>{{
-			'Issues.UserOnDate' | translate: { user: issue.userReported?.userName, date: issue.createdDate | dfnsFormat: 'PP' }
+			'Issues.UserOnDate' | translate: { user: issue.userReported?.userName, date: issue.createdDate | ombiDate: 'PP' }
 		}}</mat-card-subtitle>
 		<mat-card-subtitle>{{ issue.issueCategory.value }}</mat-card-subtitle>
 	</mat-card-header>
