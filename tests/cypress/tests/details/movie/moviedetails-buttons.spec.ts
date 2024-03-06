@@ -85,7 +85,7 @@ describe('Movie Details Buttons', () => {
 		});
 	});
 
-	it.only('Movie Requested, mark as available', () => {
+	it('Movie Requested, mark as available', () => {
 		cy.login();
 
 		Page.visit('12444');
@@ -95,10 +95,10 @@ describe('Movie Details Buttons', () => {
 		Page.adminOptionsDialog.requestButton.click();
 		cy.verifyNotification('Request for Harry Potter and the Deathly Hallows: Part 1 has been added successfully');
 
-		cy.intercept('GET', '**/Request/movie/info/**').as('requestCall');
+		cy.intercept('GET', '**/Images/banner/movie/**').as('bannerLoad');
 		cy.reload();
 
-		cy.wait('@requestCall').then((__) => {
+		cy.wait('@bannerLoad').then((__) => {
 			Page.markAvailableButton.should('exist');
 			Page.markAvailableButton.click();
 
