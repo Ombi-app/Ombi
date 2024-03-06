@@ -1,5 +1,4 @@
 
-@defer (on viewport; prefetch on idle) {
 <div id="result{{result.id}}" *ngIf="fullyLoaded" class="ombi-card dark-card c" [style.display]="hide ? 'none' : 'block'">
     <div class="card-top-info">
         <div class="top-left" id="type{{result.id}}-{{RequestType[result.type]}}">
@@ -43,12 +42,5 @@
                     </button>
                 </div>
             </ng-template>
-
-
-
         </div>
 </div>
-}
-@placeholder {
-    <p-skeleton id="cardLoading{{result.id}}"  width="100%" height="315px"></p-skeleton>
-}
