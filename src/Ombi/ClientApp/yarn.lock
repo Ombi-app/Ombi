@@ -2039,17 +2039,17 @@
   dependencies:
     tslib "^2.3.0"
 
-"@ngxs/devtools-plugin@3.8.1":
-  version "3.8.1"
-  resolved "https://registry.yarnpkg.com/@ngxs/devtools-plugin/-/devtools-plugin-3.8.1.tgz#43f0bcc83ece59baa6d141e41fd026f91de831fb"
-  integrity sha512-IRHoHdV/lxNXaisKGdcGvSNbrgjCpM06eiqC93K+tOfwgmDY/hNsDNmKlXn9xmdYxF9U6v/1CXtAr0Q0Ux7dVQ==
+"@ngxs/devtools-plugin@3.8.2":
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/@ngxs/devtools-plugin/-/devtools-plugin-3.8.2.tgz#0deb8aac228483ede44c20ed3a6488e824c4f3fc"
+  integrity sha512-4FWZWJTtgrlTUsiprIBGHaQqvvFKiTesYK9+dg03NGv7z74Z5pNtPVbO1hMeuMmqaJ8r18fDZ3wIfXlXC6noNA==
   dependencies:
     tslib "^2.2.0"
 
-"@ngxs/store@3.8.1":
-  version "3.8.1"
-  resolved "https://registry.yarnpkg.com/@ngxs/store/-/store-3.8.1.tgz#dc4b823fc179149c32ac6158149877dda615abd2"
-  integrity sha512-nbapLdMx+mtnb57BUWXbD6qYfVICv6Rp2NdoGx1++qDbc44ALC49KbF7rSjyPltlExxharAzoNpzO3JuueCP+A==
+"@ngxs/store@3.8.2":
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/@ngxs/store/-/store-3.8.2.tgz#f6c8553e03db95baea7684f0f227c0e9a8095983"
+  integrity sha512-IovxuGQDEpB9VefmbTaV1k4hms4iZ4aS9gPVZOC+qzyfvpi7zrUEsjo+yT6FfVBmBg/RLUmPCtqArzbKU5XrLQ==
   dependencies:
     tslib "^2.2.0"
 
