@@ -192,12 +192,10 @@
 						</div>
 
 						<div class="col-12 col-md-10">
-							@defer {
+							@defer (on viewport; prefetch on idle) {
 							<tv-request-grid id="requests-grid" [tvRequest]="tvRequest" [isAdmin]="isAdmin" [tv]="tv"></tv-request-grid>
 							} @placeholder {
-							<div class="loading-spinner">
-								<mat-spinner [color]="'accent'"></mat-spinner>
-							</div>
+								<p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
 							}
 						</div>
 
@@ -216,14 +214,14 @@
 										</mat-panel-title>
 									</mat-expansion-panel-header>
 
-									@defer (on viewport) {
+									@defer (on viewport; prefetch on idle) {
 									<tv-requests-panel
 										[tvRequest]="tvRequest"
 										[isAdmin]="isAdmin"
 										[manageOwnRequests]="manageOwnRequests"
 									></tv-requests-panel>
 									} @placeholder {
-									<div class="loading-spinner">
+										<div class="loading-spinner" style="left: 50%;position: absolute;">
 										<mat-spinner [color]="'accent'"></mat-spinner>
 									</div>
 									}
