@@ -128,6 +128,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.I18n", "Ombi.I18n\Ombi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.MediaServer", "Ombi.Api.MediaServer\Ombi.Api.MediaServer.csproj", "{AFC0BA9B-E38D-479F-825A-2F94EE4D6120}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.Ntfy", "Ombi.Api.Ntfy\Ombi.Api.Ntfy.csproj", "{8E9AD285-C322-45CA-8D7B-6FE4E8E5D580}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -447,6 +449,12 @@ Global
 		{AFC0BA9B-E38D-479F-825A-2F94EE4D6120}.NonUiBuild|Any CPU.Build.0 = NonUiBuild|Any CPU
 		{AFC0BA9B-E38D-479F-825A-2F94EE4D6120}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFC0BA9B-E38D-479F-825A-2F94EE4D6120}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E9AD285-C322-45CA-8D7B-6FE4E8E5D580}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E9AD285-C322-45CA-8D7B-6FE4E8E5D580}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E9AD285-C322-45CA-8D7B-6FE4E8E5D580}.NonUiBuild|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E9AD285-C322-45CA-8D7B-6FE4E8E5D580}.NonUiBuild|Any CPU.Build.0 = Debug|Any CPU
+		{8E9AD285-C322-45CA-8D7B-6FE4E8E5D580}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E9AD285-C322-45CA-8D7B-6FE4E8E5D580}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -496,6 +504,7 @@ Global
 		{5DE40A66-B369-469E-8626-ECE23D9D8034} = {9293CA11-360A-4C20-A674-B9E794431BF5}
 		{8F19C701-7881-4BC7-8BBA-B068A6B954AD} = {9293CA11-360A-4C20-A674-B9E794431BF5}
 		{AFC0BA9B-E38D-479F-825A-2F94EE4D6120} = {9293CA11-360A-4C20-A674-B9E794431BF5}
+		{8E9AD285-C322-45CA-8D7B-6FE4E8E5D580} = {9293CA11-360A-4C20-A674-B9E794431BF5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {192E9BF8-00B4-45E4-BCCC-4C215725C869}

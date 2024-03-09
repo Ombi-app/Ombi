@@ -1142,6 +1142,40 @@ namespace Ombi.Controllers.V1
 
             return model;
         }
+        
+        /// <summary>
+        /// Saves the ntfy notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/ntfy")]
+        public async Task<bool> NtfyNotificationSettings([FromBody] NtfyNotificationViewModel model)
+        {
+            // Save the email settings
+            var settings = Mapper.Map<NtfySettings>(model);
+            var result = await Save(settings);
+
+            // Save the templates
+            await TemplateRepository.UpdateRange(model.NotificationTemplates);
+
+            return result;
+        }
+        
+        /// <summary>
+        /// Gets the ntfy Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/ntfy")]
+        public async Task<NtfyNotificationViewModel> NtfyNotificationSettings()
+        {
+            var settings = await Get<NtfySettings>();
+            var model = Mapper.Map<NtfyNotificationViewModel>(settings);
+
+            // Lookup to see if we have any templates saved
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Ntfy);
+
+            return model;
+        }
 
         /// <summary>
         /// Saves the webhook notification settings.

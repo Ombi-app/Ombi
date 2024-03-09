@@ -12,6 +12,7 @@
         Mobile = 7,
         Gotify = 8,
         Webhook = 9,
-        WhatsApp = 10
+        WhatsApp = 10,
+        Ntfy = 11
     }
 }
