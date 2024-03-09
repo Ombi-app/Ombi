@@ -244,6 +244,7 @@ namespace Ombi.DependencyInjection
             services.AddSingleton<IJobFactory, IoCJobFactory>();
 
             services.AddTransient<IPlexContentSync, PlexContentSync>();
+            services.AddTransient<IPlexPlayedSync, PlexPlayedSync>();
             services.AddTransient<IPlexWatchlistImport, PlexWatchlistImport>();
             services.AddTransient<IEmbyContentSync, EmbyContentSync>();
             services.AddTransient<IEmbyPlayedSync, EmbyPlayedSync>();
