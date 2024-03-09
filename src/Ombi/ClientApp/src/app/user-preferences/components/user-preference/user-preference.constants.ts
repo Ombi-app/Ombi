@@ -1,4 +1,5 @@
 export const AvailableLanguages: ILanguage[] = [
+    { display: 'Català', value: 'ca' },
     { display: 'Dansk', value: 'da' },
     { display: 'Deutsch', value: 'de' },
     { display: 'English', value: 'en' },
