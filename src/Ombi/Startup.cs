@@ -120,6 +120,7 @@ namespace Ombi
 
             serviceProvider.UseQuartz().GetAwaiter().GetResult();
 
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             var ctx = serviceProvider.GetService<OmbiContext>();
             loggerFactory.AddSerilog();
             var ombiService =
@@ -151,7 +152,6 @@ namespace Ombi
             {
                 app.UsePathBase(settings.BaseUrl);
             }
-
             ctx.Seed();
             var settingsctx = serviceProvider.GetService<SettingsContext>();
             settingsctx.Seed();
