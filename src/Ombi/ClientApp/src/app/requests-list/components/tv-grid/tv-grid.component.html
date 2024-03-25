@@ -1,89 +1,152 @@
 <div class="mat-elevation-z8">
+	<grid-spinner [loading]="isLoadingResults"></grid-spinner>
 
-    <grid-spinner [loading]="isLoadingResults"></grid-spinner>
+	<div class="row justify-content-md-center top-spacing">
+		<div class="btn-group" role="group">
+			<button
+				type="button"
+				id="filterAll"
+				(click)="switchFilter(RequestFilter.All)"
+				[attr.color]="currentFilter === RequestFilter.All ? 'accent' : 'primary'"
+				[ngClass]="currentFilter === RequestFilter.All ? 'mat-accent' : 'mat-primary'"
+				mat-raised-button
+				class="grow"
+			>
+				{{ 'Requests.AllRequests' | translate }}
+			</button>
+			<button
+				type="button"
+				id="filterPending"
+				(click)="switchFilter(RequestFilter.Pending)"
+				[attr.color]="currentFilter === RequestFilter.Pending ? 'accent' : 'primary'"
+				[ngClass]="currentFilter === RequestFilter.Pending ? 'mat-accent' : 'mat-primary'"
+				mat-raised-button
+				class="grow"
+			>
+				{{ 'Requests.PendingRequests' | translate }}
+			</button>
+			<button
+				type="button"
+				id="filterProcessing"
+				(click)="switchFilter(RequestFilter.Processing)"
+				[attr.color]="currentFilter === RequestFilter.Processing ? 'accent' : 'primary'"
+				[ngClass]="currentFilter === RequestFilter.Processing ? 'mat-accent' : 'mat-primary'"
+				mat-raised-button
+				class="grow"
+			>
+				{{ 'Requests.ProcessingRequests' | translate }}
+			</button>
+			<button
+				type="button"
+				id="filterAvailable"
+				(click)="switchFilter(RequestFilter.Available)"
+				[attr.color]="currentFilter === RequestFilter.Available ? 'accent' : 'primary'"
+				[ngClass]="currentFilter === RequestFilter.Available ? 'mat-accent' : 'mat-primary'"
+				mat-raised-button
+				class="grow"
+			>
+				{{ 'Requests.AvailableRequests' | translate }}
+			</button>
+			<button
+				type="button"
+				id="filterDenied"
+				(click)="switchFilter(RequestFilter.Denied)"
+				[attr.color]="currentFilter === RequestFilter.Denied ? 'accent' : 'primary'"
+				[ngClass]="currentFilter === RequestFilter.Denied ? 'mat-accent' : 'mat-primary'"
+				mat-raised-button
+				class="grow"
+			>
+				{{ 'Requests.DeniedRequests' | translate }}
+			</button>
+		</div>
+	</div>
 
+	<div class="row">
+		<div class="col-md-2 offset-md-10">
+			<mat-form-field>
+				<mat-select
+					id="requestsToDisplayDropdown"
+					placeholder="{{ 'Requests.RequestsToDisplay' | translate }}"
+					[(value)]="gridCount"
+					(selectionChange)="ngAfterViewInit()"
+				>
+					<mat-option value="10">10</mat-option>
+					<mat-option value="15">15</mat-option>
+					<mat-option value="30">30</mat-option>
+					<mat-option value="100">100</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</div>
+	</div>
 
-    <div class="row justify-content-md-center top-spacing">
-        <div class="btn-group" role="group">
-            <button type="button" id="filterAll" (click)="switchFilter(RequestFilter.All)" [attr.color]="currentFilter === RequestFilter.All ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.All ? 'mat-accent' : 'mat-primary'" mat-raised-button class="grow">{{'Requests.AllRequests' | translate}}</button>
-            <button type="button" id="filterPending" (click)="switchFilter(RequestFilter.Pending)" [attr.color]="currentFilter === RequestFilter.Pending ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.Pending ? 'mat-accent' : 'mat-primary'" mat-raised-button class="grow">{{'Requests.PendingRequests' | translate}}</button>
-            <button type="button" id="filterProcessing" (click)="switchFilter(RequestFilter.Processing)" [attr.color]="currentFilter === RequestFilter.Processing ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.Processing ? 'mat-accent' : 'mat-primary'" mat-raised-button
-                class="grow">{{'Requests.ProcessingRequests' | translate}}</button>
-            <button type="button" id="filterAvailable" (click)="switchFilter(RequestFilter.Available)" [attr.color]="currentFilter === RequestFilter.Available ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.Available ? 'mat-accent' : 'mat-primary'" mat-raised-button
-                class="grow">{{'Requests.AvailableRequests' | translate}}</button>
-            <button type="button" id="filterDenied" (click)="switchFilter(RequestFilter.Denied)" [attr.color]="currentFilter === RequestFilter.Denied ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.Denied ? 'mat-accent' : 'mat-primary'" mat-raised-button class="grow">{{'Requests.DeniedRequests' | translate}}</button>
-        </div>
-    </div>
+	<table
+		mat-table
+		[dataSource]="dataSource"
+		class="requests table"
+		matSort
+		[matSortActive]="defaultSort"
+		matSortDisableClear
+		[matSortDirection]="defaultOrder"
+	>
+		<ng-container matColumnDef="series">
+			<th mat-header-cell *matHeaderCellDef>{{ 'Requests.RequestsTitle' | translate }}</th>
+			<td mat-cell id="title{{ element.id }}" *matCellDef="let element">{{ element.parentRequest.title }}</td>
+		</ng-container>
 
-    <div class="row">
-        <div class="col-md-2 offset-md-10">
-            <mat-form-field>
-                <mat-select id="requestsToDisplayDropdown" placeholder="{{'Requests.RequestsToDisplay' | translate}}" [(value)]="gridCount" (selectionChange)="ngAfterViewInit()">
-                    <mat-option value="10">10</mat-option>
-                    <mat-option value="15">15</mat-option>
-                    <mat-option value="30">30</mat-option>
-                    <mat-option value="100">100</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-    </div>
+		<ng-container matColumnDef="requestedBy">
+			<th mat-header-cell *matHeaderCellDef>{{ 'Requests.RequestedBy' | translate }}</th>
+			<td mat-cell id="requestedBy{{ element.id }}" *matCellDef="let element">
+				{{ element.requestedByAlias ? element.requestedByAlias : element.requestedUser.userAlias }}
+			</td>
+		</ng-container>
 
-    <table mat-table [dataSource]="dataSource" class="requests table" matSort [matSortActive]="defaultSort" matSortDisableClear [matSortDirection]="defaultOrder">
+		<ng-container matColumnDef="requestedDate">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>{{ 'Requests.RequestDate' | translate }}</th>
+			<td id="requestedDate{{ element.id }}" mat-cell *matCellDef="let element">
+				{{ element.requestedDate | ombiDate: 'PP' }}
+			</td>
+		</ng-container>
 
+		<ng-container matColumnDef="requestStatus">
+			<th mat-header-cell *matHeaderCellDef>{{ 'Requests.RequestStatus' | translate }}</th>
+			<td mat-cell id="requestedStatus{{ element.id }}" *matCellDef="let element">{{ element.requestStatus | translate }}</td>
+		</ng-container>
 
-        <ng-container matColumnDef="series">
-            <th mat-header-cell *matHeaderCellDef> {{'Requests.RequestsTitle' | translate}} </th>
-            <td mat-cell id="title{{element.id}}" *matCellDef="let element"> {{element.parentRequest.title}} </td>
-        </ng-container>
+		<ng-container matColumnDef="status">
+			<th mat-header-cell *matHeaderCellDef>{{ 'Requests.Status' | translate }}</th>
+			<td mat-cell id="status{{ element.id }}" *matCellDef="let element">
+				{{ element.parentRequest.status | translateStatus }}
+			</td>
+		</ng-container>
 
-        <ng-container matColumnDef="requestedBy">
-            <th mat-header-cell *matHeaderCellDef> {{'Requests.RequestedBy' | translate}} </th>
-            <td mat-cell id="requestedBy{{element.id}}" *matCellDef="let element"> {{element.requestedByAlias ? element.requestedByAlias : element.requestedUser.userAlias}} </td>
-        </ng-container>
+		<ng-container matColumnDef="watchedByRequestedUser">
+			<th mat-header-cell *matHeaderCellDef disableClear matTooltip="{{ 'Requests.WatchedProgressTooltip' | translate }}">
+				{{ 'Requests.Watched' | translate }}
+			</th>
+			<td mat-cell id="requestedUserPlayedProgress{{ element.id }}" *matCellDef="let element">
+				<mat-progress-bar mode="determinate" value="{{ element.requestedUserPlayedProgress }}" class="played-progress"></mat-progress-bar>
+			</td>
+		</ng-container>
 
-        <ng-container matColumnDef="requestedDate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{'Requests.RequestDate' | translate}} </th>
-            <td id="requestedDate{{element.id}}"  mat-cell *matCellDef="let element">
-                {{element.requestedDate | amLocal | amUserLocale | amDateFormat: 'LL'}}
-            </td>
-        </ng-container>
+		<ng-container matColumnDef="actions">
+			<th mat-header-cell *matHeaderCellDef></th>
+			<td mat-cell *matCellDef="let element">
+				<a
+					id="detailsButton{{ element.id }}"
+					mat-raised-button
+					color="accent"
+					[routerLink]="'/details/tv/' + element.parentRequest.externalProviderId"
+					>{{ 'Requests.Details' | translate }}</a
+				>
+				<button id="optionsButton{{ element.id }}" mat-raised-button color="warn" (click)="openOptions(element)" *ngIf="isAdmin">
+					{{ 'Requests.Options' | translate }}
+				</button>
+			</td>
+		</ng-container>
 
-        <ng-container matColumnDef="requestStatus">
-            <th mat-header-cell *matHeaderCellDef> {{'Requests.RequestStatus' | translate}} </th>
-            <td mat-cell id="requestedStatus{{element.id}}"  *matCellDef="let element"> {{element.requestStatus | translate}} </td>
-        </ng-container>
+		<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+	</table>
 
-        <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef> {{'Requests.Status' | translate}} </th>
-            <td mat-cell id="status{{element.id}}" *matCellDef="let element">
-                {{element.parentRequest.status | translateStatus }}
-            </td>
-        </ng-container>
-
-        <ng-container matColumnDef="watchedByRequestedUser">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            disableClear
-            matTooltip="{{ 'Requests.WatchedProgressTooltip' | translate}}">
-            {{ 'Requests.Watched' | translate}}
-          </th>
-          <td mat-cell id="requestedUserPlayedProgress{{element.id}}"  *matCellDef="let element">
-            <mat-progress-bar mode="determinate" value="{{element.requestedUserPlayedProgress}}" class="played-progress"></mat-progress-bar>
-          </td>
-      </ng-container>
-
-        <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef> </th>
-            <td mat-cell *matCellDef="let element">
-                <a id="detailsButton{{element.id}}" mat-raised-button color="accent" [routerLink]="'/details/tv/' + element.parentRequest.externalProviderId">{{'Requests.Details' | translate}}</a>
-                <button id="optionsButton{{element.id}}" mat-raised-button color="warn" (click)="openOptions(element)" *ngIf="isAdmin">{{'Requests.Options' | translate}}</button>
-            </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-
-    <mat-paginator [length]="resultsLength" [pageSize]="gridCount"></mat-paginator>
+	<mat-paginator [length]="resultsLength" [pageSize]="gridCount"></mat-paginator>
 </div>

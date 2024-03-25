@@ -1,74 +1,93 @@
 <div mat-dialog-content class="background">
-<div *ngIf="!requestable">
-  {{'MediaDetails.EpisodeSelector.NoEpisodes' | translate}}
-</div>
-  <div *ngIf="requestable" class="row">
-    <div class="col-12 action-buttons-right">
-      <button id="episodeModalAllSeasons" (click)="requestAllSeasons()" color="primary" mat-raised-button class="btn-spacing" 
-      matTooltip="{{'MediaDetails.EpisodeSelector.AllSeasonsTooltip' | translate}}">{{'Search.TvShows.AllSeasons' | translate }}</button>
+	<div *ngIf="!requestable">
+		{{ 'MediaDetails.EpisodeSelector.NoEpisodes' | translate }}
+	</div>
+	<div *ngIf="requestable" class="row">
+		<div class="col-12 action-buttons-right">
+			<button
+				id="episodeModalAllSeasons"
+				(click)="requestAllSeasons()"
+				color="primary"
+				mat-raised-button
+				class="btn-spacing"
+				matTooltip="{{ 'MediaDetails.EpisodeSelector.AllSeasonsTooltip' | translate }}"
+			>
+				{{ 'Search.TvShows.AllSeasons' | translate }}
+			</button>
 
-        <button id="episodeModalFirstSeason" (click)="requestFirstSeason()" color="accent" mat-raised-button class="btn-spacing"
-        matTooltip="{{'MediaDetails.EpisodeSelector.FirstSeasonTooltip' | translate}}">{{ 'Search.TvShows.FirstSeason' | translate }}</button>
-          <button id="episodeModalLatestSeason"  (click)="requestLatestSeason()" color="warn" mat-raised-button class="btn-spacing"
-          matTooltip="{{'MediaDetails.EpisodeSelector.LatestSeasonTooltip' | translate}}">{{ 'Search.TvShows.LatestSeason' | translate }}</button>
-    </div>
-  </div>
+			<button
+				id="episodeModalFirstSeason"
+				(click)="requestFirstSeason()"
+				color="accent"
+				mat-raised-button
+				class="btn-spacing"
+				matTooltip="{{ 'MediaDetails.EpisodeSelector.FirstSeasonTooltip' | translate }}"
+			>
+				{{ 'Search.TvShows.FirstSeason' | translate }}
+			</button>
+			<button
+				id="episodeModalLatestSeason"
+				(click)="requestLatestSeason()"
+				color="warn"
+				mat-raised-button
+				class="btn-spacing"
+				matTooltip="{{ 'MediaDetails.EpisodeSelector.LatestSeasonTooltip' | translate }}"
+			>
+				{{ 'Search.TvShows.LatestSeason' | translate }}
+			</button>
+		</div>
+	</div>
 
-  <div class="row">
-    <div class="col-12" *ngFor="let season of data.series.seasonRequests">
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <mat-checkbox *ngIf="!season.seasonAvailable && isSeasonCheckable(season)" (click)="$event.stopPropagation();" (change)="seasonChanged($event, season)">
-              {{ 'MediaDetails.EpisodeSelector.SeasonNumber' | translate: { number: season.seasonNumber } }}</mat-checkbox>
-            <span *ngIf="season.seasonAvailable || !isSeasonCheckable(season)">{{ 'MediaDetails.EpisodeSelector.SeasonNumber' | translate: { number: season.seasonNumber } }}</span>
-          </mat-panel-title>
-          <mat-panel-description>
-            <!-- Description -->
-          </mat-panel-description>
-        </mat-expansion-panel-header>
+	<div class="row">
+		<div class="col-12" *ngFor="let season of data.series.seasonRequests">
+			<mat-expansion-panel>
+				<mat-expansion-panel-header>
+					<mat-panel-title>
+						<mat-checkbox
+							*ngIf="!season.seasonAvailable && isSeasonCheckable(season)"
+							(click)="$event.stopPropagation()"
+							(change)="seasonChanged($event, season)"
+						>
+							{{ 'MediaDetails.EpisodeSelector.SeasonNumber' | translate: { number: season.seasonNumber } }}</mat-checkbox
+						>
+						<span *ngIf="season.seasonAvailable || !isSeasonCheckable(season)">{{
+							'MediaDetails.EpisodeSelector.SeasonNumber' | translate: { number: season.seasonNumber }
+						}}</span>
+					</mat-panel-title>
+					<mat-panel-description>
+						<!-- Description -->
+					</mat-panel-description>
+				</mat-expansion-panel-header>
 
-        <div class="row" *ngFor="let ep of season.episodes">
-          <div class="col-1">
-            <div *ngIf="!ep.available && !ep.requested && !ep.approved">
-              <mat-checkbox *ngIf="!ep.selected" [ngModel]="ep.selected" (click)="addRequest(ep)"></mat-checkbox>
-              <mat-checkbox *ngIf="ep.selected" [ngModel]="ep.selected" (click)="removeRequest(ep)"></mat-checkbox>
-            </div>
-          </div>
-          <div class="col-1">
-            {{ep.episodeNumber}}
-          </div>
-          <div class="col-3">
-            {{ep.title}}
-          </div>
-          <div class="col-2" *ngIf="ep.airDateDisplay != 'Unknown'">
-            {{ep.airDate | amLocal | amUserLocale | amDateFormat: 'L' }}
-          </div>
-          <div class="col-2" *ngIf="ep.airDateDisplay == 'Unknown'">
-            {{ep.airDateDisplay }}
-          </div>
-          <div class="col-3">
-            {{ep.requestStatus | translate}}
-          </div>
-
-        </div>
-
-
-      </mat-expansion-panel>
-
-
-
-    </div>
-
-
-  </div>
+				<div class="row" *ngFor="let ep of season.episodes">
+					<div class="col-1">
+						<div *ngIf="!ep.available && !ep.requested && !ep.approved">
+							<mat-checkbox *ngIf="!ep.selected" [ngModel]="ep.selected" (click)="addRequest(ep)"></mat-checkbox>
+							<mat-checkbox *ngIf="ep.selected" [ngModel]="ep.selected" (click)="removeRequest(ep)"></mat-checkbox>
+						</div>
+					</div>
+					<div class="col-1">
+						{{ ep.episodeNumber }}
+					</div>
+					<div class="col-3">
+						{{ ep.title }}
+					</div>
+					<div class="col-2" *ngIf="ep.airDateDisplay != 'Unknown'">
+						{{ ep.airDate | ombiDate: 'P' }}
+					</div>
+					<div class="col-2" *ngIf="ep.airDateDisplay == 'Unknown'">
+						{{ ep.airDateDisplay }}
+					</div>
+					<div class="col-3">
+						{{ ep.requestStatus | translate }}
+					</div>
+				</div>
+			</mat-expansion-panel>
+		</div>
+	</div>
 </div>
 <div mat-dialog-actions *ngIf="requestable">
-  <div class="action-buttons-right">
-
-    <button (click)="submitRequests()" mat-raised-button class="btn-spacing  btn-orange">{{
-      'Common.Request' | translate }}</button>
-
-
-  </div>
+	<div class="action-buttons-right">
+		<button (click)="submitRequests()" mat-raised-button class="btn-spacing btn-orange">{{ 'Common.Request' | translate }}</button>
+	</div>
 </div>

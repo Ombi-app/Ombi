@@ -1,112 +1,146 @@
 ﻿<div class="form-group">
-    <div>
-        <input type="text" id="search" class="form-control form-control-custom"  [placeholder]="'Common.Search' | translate" (keyup)="search($event)">
-    </div>
+	<div>
+		<input
+			type="text"
+			id="search"
+			class="form-control form-control-custom"
+			[placeholder]="'Common.Search' | translate"
+			(keyup)="search($event)"
+		/>
+	</div>
 </div>
 <br />
 
 <div>
-    <div *ngFor="let node of tvRequests.collection">
-        <!--This is the section that holds the parent level results set-->
-        <div>
-            <div class="row">
-                <div class="myBg backdrop" [style.background-image]="node?.background"></div>
-                <div class="tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
+	<div *ngFor="let node of tvRequests.collection">
+		<!--This is the section that holds the parent level results set-->
+		<div>
+			<div class="row">
+				<div class="myBg backdrop" [style.background-image]="node?.background"></div>
+				<div class="tint" style="background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.6) 100%)"></div>
 
-                <div class="col-sm-2  small-padding">
+				<div class="col-sm-2 small-padding">
+					<img class="img-responsive poster" src="{{ node.posterPath || null }}" alt="poster" />
+				</div>
 
-                    <img class="img-responsive poster" src="{{node.posterPath || null}}" alt="poster">
+				<div class="col-sm-5 small-padding">
+					<div>
+						<a href="http://www.imdb.com/title/{{ node.imdbId }}/" target="_blank">
+							<h4 class="request-title">{{ node.title }} ({{ node.releaseDate | ombiDate: 'P' }})</h4>
+						</a>
+					</div>
+					<br />
+					<div>
+						<span>Status: </span>
+						<span class="label label-success">{{ node.status }}</span>
+					</div>
 
-                </div>
+					<div>Release Date: {{ node.releaseDate | ombiDate: 'PP' }}</div>
+					<div *ngIf="isAdmin">
+						<div *ngIf="node.qualityOverrideTitle" class="quality-override">
+							{{ 'Requests.QualityOverride' | translate }}
+							<span>{{ node.qualityOverrideTitle }} </span>
+						</div>
+						<div *ngIf="node.rootPathOverrideTitle" class="root-override">
+							{{ 'Requests.RootFolderOverride' | translate }}
+							<span>{{ node.rootPathOverrideTitle }} </span>
+						</div>
+					</div>
 
-                <div class="col-sm-5 small-padding">
-                    <div>
-                        <a href="http://www.imdb.com/title/{{node.imdbId}}/" target="_blank">
-                            <h4 class="request-title">{{node.title}} ({{node.releaseDate | amLocal| amUserLocale  | amDateFormat: 'YYYY'}})</h4>
-                        </a>
-                    </div>
-                    <br />
-                    <div>
-                        <span>Status: </span>
-                        <span class="label label-success">{{node.status}}</span>
-                    </div>
+					<br />
+				</div>
+				<div class="col-sm-3 col-sm-push-3 small-padding">
+					<button style="text-align: right" class="btn btn-sm btn-success-outline" (click)="openClosestTab(node, $event)">
+						<i class="fas fa-plus"></i> View
+					</button>
+					<div *ngIf="isAdmin">
+						<!--Sonarr Root Folder-->
+						<div *ngIf="sonarrRootFolders?.length > 1" class="btn-group btn-split" id="rootFolderBtn">
+							<button type="button" class="btn btn-sm btn-warning-outline">
+								<i class="fas fa-plus"></i> {{ 'Requests.ChangeRootFolder' | translate }}
+							</button>
+							<button
+								type="button"
+								class="btn btn-warning-outline dropdown-toggle"
+								data-toggle="dropdown"
+								aria-haspopup="true"
+								aria-expanded="false"
+							>
+								<span class="caret"></span>
+								<span class="sr-only">Toggle Dropdown</span>
+							</button>
+							<ul class="dropdown-menu">
+								<li *ngFor="let folder of sonarrRootFolders">
+									<a href="#" (click)="selectRootFolder(node, folder, $event)">{{ folder.path }}</a>
+								</li>
+							</ul>
+						</div>
 
+						<!--Sonarr Quality Profiles -->
+						<div *ngIf="sonarrProfiles?.length > 1" class="btn-group btn-split" id="changeQualityBtn">
+							<button type="button" class="btn btn-sm btn-warning-outline">
+								<i class="fas fa-plus"></i> {{ 'Requests.ChangeQualityProfile' | translate }}
+							</button>
+							<button
+								type="button"
+								class="btn btn-warning-outline dropdown-toggle"
+								data-toggle="dropdown"
+								aria-haspopup="true"
+								aria-expanded="false"
+							>
+								<span class="caret"></span>
+								<span class="sr-only">Toggle Dropdown</span>
+							</button>
+							<ul class="dropdown-menu">
+								<li *ngFor="let profile of sonarrProfiles">
+									<a href="#" (click)="selectQualityProfile(node, profile, $event)">{{ profile.name }}</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="dropdown" *ngIf="issueCategories && issuesEnabled" id="issueBtn">
+						<button
+							class="btn btn-sm btn-primary-outline dropdown-toggle"
+							type="button"
+							data-toggle="dropdown"
+							aria-haspopup="true"
+							aria-expanded="true"
+						>
+							<i class="fas fa-plus"></i> {{ 'Requests.ReportIssue' | translate }}
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+							<li *ngFor="let cat of issueCategories">
+								<a [routerLink]="" (click)="reportIssue(cat, node)">{{ cat.value }}</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--This is the section that holds the child seasons if they want to specify specific episodes-->
+		<div *ngIf="node.open">
+			<tvrequests-children
+				[childRequests]="node.childRequests"
+				[isAdmin]="isAdmin"
+				[currentUser]="currentUser"
+				(requestDeleted)="childRequestDeleted($event)"
+			></tvrequests-children>
+		</div>
 
-                    <div>Release Date: {{node.releaseDate | amLocal | amUserLocale | amDateFormat: 'LL'}}</div>
-                    <div *ngIf="isAdmin">
-                        <div *ngIf="node.qualityOverrideTitle" class="quality-override">{{ 'Requests.QualityOverride' | translate }}
-                            <span>{{node.qualityOverrideTitle}} </span>
-                        </div>
-                        <div *ngIf="node.rootPathOverrideTitle" class="root-override">{{ 'Requests.RootFolderOverride' | translate }}
-                            <span>{{node.rootPathOverrideTitle}} </span>
-                        </div>
-                    </div>
+		<br />
+		<br />
+	</div>
 
-                    <br />
-                </div>
-                <div class="col-sm-3 col-sm-push-3  small-padding">
-
-                    <button style="text-align: right" class="btn btn-sm btn-success-outline" (click)="openClosestTab(node,$event)">
-                            <i class="fas fa-plus"></i> View</button>
-                    <div *ngIf="isAdmin">
-                        <!--Sonarr Root Folder-->
-                        <div *ngIf="sonarrRootFolders?.length > 1" class="btn-group btn-split" id="rootFolderBtn">
-                            <button type="button" class="btn btn-sm btn-warning-outline">
-                                    <i class="fas fa-plus"></i> {{ 'Requests.ChangeRootFolder' | translate }}
-                                </button>
-                            <button type="button" class="btn btn-warning-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="caret"></span>
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-                            <ul class="dropdown-menu">
-                                <li *ngFor="let folder of sonarrRootFolders">
-                                    <a href="#" (click)="selectRootFolder(node, folder, $event)">{{folder.path}}</a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!--Sonarr Quality Profiles -->
-                        <div *ngIf="sonarrProfiles?.length > 1" class="btn-group btn-split" id="changeQualityBtn">
-                            <button type="button" class="btn btn-sm btn-warning-outline">
-                                    <i class="fas fa-plus"></i> {{ 'Requests.ChangeQualityProfile' | translate }}
-                                </button>
-                            <button type="button" class="btn btn-warning-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="caret"></span>
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-                            <ul class="dropdown-menu">
-                                <li *ngFor="let profile of sonarrProfiles">
-                                    <a href="#" (click)="selectQualityProfile(node, profile, $event)">{{profile.name}}</a>
-                                </li>
-                            </ul>
-                        </div>
-
-                    </div>
-                    <div class="dropdown" *ngIf="issueCategories && issuesEnabled" id="issueBtn">
-                        <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                <i class="fas fa-plus"></i> {{ 'Requests.ReportIssue' | translate }}
-                                <span class="caret"></span>
-                            </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                            <li *ngFor="let cat of issueCategories">
-                                <a [routerLink]="" (click)="reportIssue(cat, node)">{{cat.value}}</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--This is the section that holds the child seasons if they want to specify specific episodes-->
-        <div *ngIf="node.open">
-            <tvrequests-children [childRequests]="node.childRequests" [isAdmin]="isAdmin" [currentUser]="currentUser" (requestDeleted)="childRequestDeleted($event)"></tvrequests-children>
-        </div>
-
-        <br/>
-        <br/>
-
-    </div>
-
-    <p-paginator [rows]="10" [totalRecords]="totalTv" (onPageChange)="paginate($event)"></p-paginator>
+	<p-paginator [rows]="10" [totalRecords]="totalTv" (onPageChange)="paginate($event)"></p-paginator>
 </div>
 
-<issue-report [movie]="false" [visible]="issuesBarVisible" [title]="issueRequest?.title" [issueCategory]="issueCategorySelected" [id]="issueRequest?.id" [providerId]="issueProviderId" (visibleChange)="issuesBarVisible = $event;"></issue-report>
+<issue-report
+	[movie]="false"
+	[visible]="issuesBarVisible"
+	[title]="issueRequest?.title"
+	[issueCategory]="issueCategorySelected"
+	[id]="issueRequest?.id"
+	[providerId]="issueProviderId"
+	(visibleChange)="issuesBarVisible = $event"
+></issue-report>

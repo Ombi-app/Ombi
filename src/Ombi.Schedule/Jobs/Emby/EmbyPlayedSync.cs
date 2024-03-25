@@ -174,13 +174,18 @@ namespace Ombi.Schedule.Jobs.Emby
             }
             if (parent.TheMovieDbId.IsNullOrEmpty())
             {
-                _logger.LogWarning($"Episode {episode.Name} is not linked to a TMDB series. Skipping.");
+                _logger.LogWarning($"Episode {episode.Name} for Tv Show {parent.Title} Doesn't have a valid TheMovieDbId. Skipping.");
+                return;
+            }
+            if (!int.TryParse(parent.TheMovieDbId, out var parentMovieDb))
+            {
+                _logger.LogWarning($"Episode {episode.Name} for Tv Show {parent.Title} Doesn't have a valid TheMovieDbId. Skipping.");
                 return;
             }
 
             await AddToContent(content, new UserPlayedEpisode()
             {
-                TheMovieDbId = int.Parse(parent.TheMovieDbId),
+                TheMovieDbId = parentMovieDb,
                 SeasonNumber = episode.ParentIndexNumber,
                 EpisodeNumber = episode.IndexNumber,
                 UserId = user.Id
@@ -196,7 +201,7 @@ namespace Ombi.Schedule.Jobs.Emby
 
                     await AddToContent(content, new UserPlayedEpisode()
                     {
-                        TheMovieDbId = int.Parse(parent.TheMovieDbId),
+                        TheMovieDbId = parentMovieDb,
                         SeasonNumber = episode.ParentIndexNumber,
                         EpisodeNumber = episodeNumber,
                         UserId = user.Id

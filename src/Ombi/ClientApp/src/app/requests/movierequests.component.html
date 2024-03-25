@@ -1,288 +1,316 @@
 <div class="form-group">
-    <div class="input-group">
-        <input type="text" id="search" class="form-control form-control-custom searchwidth"  [placeholder]="'Search.Search' | translate"
-            (keyup)="search($event)">
-        <span class="input-group-btn">
-            <button id="filterBtn" class="btn btn-sm btn-info-outline" (click)="filterDisplay = !filterDisplay">
-                <i class="fas fa-filter"></i> {{ 'Requests.Filter' | translate }}
-            </button>
+	<div class="input-group">
+		<input
+			type="text"
+			id="search"
+			class="form-control form-control-custom searchwidth"
+			[placeholder]="'Search.Search' | translate"
+			(keyup)="search($event)"
+		/>
+		<span class="input-group-btn">
+			<button id="filterBtn" class="btn btn-sm btn-info-outline" (click)="filterDisplay = !filterDisplay">
+				<i class="fas fa-filter"></i> {{ 'Requests.Filter' | translate }}
+			</button>
 
-
-            <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="true">
-                <i class="fas fa-sort"></i> {{ 'Requests.Sort' | translate }}
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                <li>
-                    <a (click)="setOrder(OrderType.RequestedDateAsc, $event)">{{ 'Requests.SortRequestDateAsc' |
-                        translate }}
-
-                    </a>
-                    <a class="active" (click)="setOrder(OrderType.RequestedDateDesc, $event)">{{
-                        'Requests.SortRequestDateDesc' | translate }}
-
-                    </a>
-                    <a (click)="setOrder(OrderType.TitleAsc, $event)">{{ 'Requests.SortTitleAsc' | translate}}
-
-                    </a>
-                    <a (click)="setOrder(OrderType.TitleDesc, $event)">{{ 'Requests.SortTitleDesc' | translate}}
-
-                    </a>
-                    <a (click)="setOrder(OrderType.StatusAsc, $event)">{{ 'Requests.SortStatusAsc' | translate}}
-
-                    </a>
-                    <a (click)="setOrder(OrderType.StatusDesc, $event)">{{ 'Requests.SortStatusDesc' | translate}}
-
-                    </a>
-
-                </li>
-            </ul>
-        </span>
-
-    </div>
-
-
+			<button
+				class="btn btn-sm btn-primary-outline dropdown-toggle"
+				type="button"
+				data-toggle="dropdown"
+				aria-haspopup="true"
+				aria-expanded="true"
+			>
+				<i class="fas fa-sort"></i> {{ 'Requests.Sort' | translate }}
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+				<li>
+					<a (click)="setOrder(OrderType.RequestedDateAsc, $event)">{{ 'Requests.SortRequestDateAsc' | translate }} </a>
+					<a class="active" (click)="setOrder(OrderType.RequestedDateDesc, $event)">{{ 'Requests.SortRequestDateDesc' | translate }} </a>
+					<a (click)="setOrder(OrderType.TitleAsc, $event)">{{ 'Requests.SortTitleAsc' | translate }} </a>
+					<a (click)="setOrder(OrderType.TitleDesc, $event)">{{ 'Requests.SortTitleDesc' | translate }} </a>
+					<a (click)="setOrder(OrderType.StatusAsc, $event)">{{ 'Requests.SortStatusAsc' | translate }} </a>
+					<a (click)="setOrder(OrderType.StatusDesc, $event)">{{ 'Requests.SortStatusDesc' | translate }} </a>
+				</li>
+			</ul>
+		</span>
+	</div>
 </div>
 <br />
 
-
 <div>
-    <div *ngFor="let request of movieRequests">
-        <div class="row">
-            <div class="myBg backdrop" [style.background-image]="request.backgroundPath"></div>
-            <div class="tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
-            <div class="col-sm-2 small-padding">
+	<div *ngFor="let request of movieRequests">
+		<div class="row">
+			<div class="myBg backdrop" [style.background-image]="request.backgroundPath"></div>
+			<div class="tint" style="background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.6) 100%)"></div>
+			<div class="col-sm-2 small-padding">
+				<img class="img-responsive poster" src="{{ request.posterPath }}" alt="poster" />
+			</div>
 
-                <img class="img-responsive poster" src="{{request.posterPath}}" alt="poster">
+			<div class="col-sm-5 small-padding">
+				<div>
+					<a href="http://www.imdb.com/title/{{ request.imdbId }}/" target="_blank">
+						<h4 class="request-title">{{ request.title }} ({{ request.releaseDate | ombiDate: 'P' }})</h4>
+					</a>
+				</div>
+				<br />
+				<div class="request-info">
+					<div class="request-by">
+						<span>{{ 'Requests.RequestedBy' | translate }} </span>
+						<span *ngIf="request.requestedByAlias">{{ request.requestedByAlias }}</span>
+						<span *ngIf="!request.requestedByAlias">
+							<span *ngIf="!isAdmin">{{ request.requestedUser.userName }}</span>
+							<span *ngIf="isAdmin && request.requestedUser.alias">{{ request.requestedUser.alias }}</span>
+							<span *ngIf="isAdmin && !request.requestedUser.alias">{{ request.requestedUser.userName }}</span>
+						</span>
+					</div>
+					<div class="request-status">
+						<span>{{ 'Requests.Status' | translate }} </span>
+						<span class="label label-success" id="requestedStatusLabel">{{ request.status }}</span>
+					</div>
 
-            </div>
+					<div class="requested-status">
+						<span>{{ 'Requests.RequestStatus' | translate }} </span>
+						<span *ngIf="request.available" class="label label-success" id="availableLabel" [translate]="'Common.Available'"></span>
+						<span
+							*ngIf="request.approved && !request.available"
+							id="processingRequestLabel"
+							class="label label-info"
+							[translate]="'Common.ProcessingRequest'"
+						></span>
+						<span *ngIf="request.denied" class="label label-danger" id="requestDeclinedLabel" [translate]="'Common.RequestDenied'"></span>
+						<span
+							*ngIf="!request.approved && !request.availble && !request.denied"
+							id="pendingApprovalLabel"
+							class="label label-warning"
+							[translate]="'Common.PendingApproval'"
+						></span>
+					</div>
+					<div *ngIf="request.denied" id="requestDenied">
+						{{ 'Requests.Denied' | translate }}
+						<i style="color: red" class="fas fa-check" pTooltip="{{ request.deniedReason }}"></i>
+					</div>
 
-            <div class="col-sm-5 small-padding">
-                <div>
-                    <a href="http://www.imdb.com/title/{{request.imdbId}}/" target="_blank">
-                        <h4 class="request-title">{{request.title}} ({{request.releaseDate | amLocal | amDateFormat:
-                            'YYYY'}})</h4>
-                    </a>
-                </div>
-                <br />
-                <div class="request-info">
-                    <div class="request-by">
-                        <span>{{ 'Requests.RequestedBy' | translate }} </span>
-                        <span *ngIf="request.requestedByAlias">{{request.requestedByAlias}}</span>
-                        <span *ngIf="!request.requestedByAlias">
-                            <span *ngIf="!isAdmin">{{request.requestedUser.userName}}</span>
-                            <span *ngIf="isAdmin && request.requestedUser.alias">{{request.requestedUser.alias}}</span>
-                            <span *ngIf="isAdmin && !request.requestedUser.alias">{{request.requestedUser.userName}}</span>
-                        </span>
-                    </div>
-                    <div class="request-status">
-                        <span>{{ 'Requests.Status' | translate }} </span>
-                        <span class="label label-success" id="requestedStatusLabel">{{request.status}}</span>
-                    </div>
+					<div id="releaseDate">
+						{{ 'Requests.TheatricalRelease' | translate: { date: request.releaseDate | ombiDate: 'PP' } }}
+					</div>
+					<div *ngIf="request.digitalReleaseDate" id="digitalReleaseDate">
+						{{ 'Requests.DigitalRelease' | translate: { date: request.digitalReleaseDate | ombiDate: 'PP' } }}
+					</div>
+					<div id="requestedDate">{{ 'Requests.RequestDate' | translate }} {{ request.requestedDate | ombiDate: 'PP' }}</div>
+					<br />
+				</div>
+				<div *ngIf="isAdmin">
+					<div *ngIf="request.qualityOverrideTitle" class="quality-override">
+						{{ 'Requests.QualityOverride' | translate }}
+						<span>{{ request.qualityOverrideTitle }} </span>
+					</div>
+					<div *ngIf="request.rootPathOverrideTitle" class="root-override">
+						{{ 'Requests.RootFolderOverride' | translate }}
+						<span>{{ request.rootPathOverrideTitle }} </span>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3 col-sm-push-3 small-padding">
+				<div class="row">
+					<div class="col-md-2 col-md-push-6">
+						<a
+							*ngIf="request.showSubscribe && !request.subscribed"
+							style="color: white"
+							(click)="subscribe(request)"
+							pTooltip="Subscribe for notifications"
+						>
+							<i class="fas fa-rss"></i>
+						</a>
+						<a
+							*ngIf="request.showSubscribe && request.subscribed"
+							style="color: red"
+							(click)="unSubscribe(request)"
+							pTooltip="Unsubscribe notification"
+						>
+							<i class="fas fa-rss"></i>
+						</a>
+					</div>
+				</div>
+				<div *ngIf="isAdmin">
+					<div *ngIf="!request.approved" id="approveBtn">
+						<form>
+							<button (click)="approve(request)" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit">
+								<i class="fas fa-plus"></i> {{ 'Common.Approve' | translate }}
+							</button>
+						</form>
 
-                    <div class="requested-status">
-                        <span>{{ 'Requests.RequestStatus' | translate }} </span>
-                        <span *ngIf="request.available" class="label label-success" id="availableLabel" [translate]="'Common.Available'"></span>
-                        <span *ngIf="request.approved && !request.available" id="processingRequestLabel" class="label label-info"
-                            [translate]="'Common.ProcessingRequest'"></span>
-                        <span *ngIf="request.denied" class="label label-danger" id="requestDeclinedLabel" [translate]="'Common.RequestDenied'"></span>
-                        <span *ngIf="!request.approved && !request.availble && !request.denied" id="pendingApprovalLabel"
-                            class="label label-warning" [translate]="'Common.PendingApproval'"></span>
+						<!--Radarr Root Folder-->
+						<div *ngIf="radarrRootFolders?.length > 1" class="btn-group btn-split" id="rootFolderBtn">
+							<button type="button" class="btn btn-sm btn-warning-outline">
+								<i class="fas fa-plus"></i> {{ 'Requests.ChangeRootFolder' | translate }}
+							</button>
+							<button
+								type="button"
+								class="btn btn-warning-outline dropdown-toggle"
+								data-toggle="dropdown"
+								aria-haspopup="true"
+								aria-expanded="false"
+							>
+								<span class="caret"></span>
+								<span class="sr-only">Toggle Dropdown</span>
+							</button>
+							<ul class="dropdown-menu">
+								<li *ngFor="let folder of radarrRootFolders">
+									<a href="#" (click)="selectRootFolder(request, folder, $event)">{{ folder.path }}</a>
+								</li>
+							</ul>
+						</div>
 
-                    </div>
-                    <div *ngIf="request.denied" id="requestDenied">
-                        {{ 'Requests.Denied' | translate }}
-                        <i style="color:red;" class="fas fa-check" pTooltip="{{request.deniedReason}}"></i>
+						<!--Radarr Quality Profiles -->
+						<div *ngIf="radarrProfiles?.length > 1" class="btn-group btn-split" id="changeQualityBtn">
+							<button type="button" class="btn btn-sm btn-warning-outline">
+								<i class="fas fa-plus"></i> {{ 'Requests.ChangeQualityProfile' | translate }}
+							</button>
+							<button
+								type="button"
+								class="btn btn-warning-outline dropdown-toggle"
+								data-toggle="dropdown"
+								aria-haspopup="true"
+								aria-expanded="false"
+							>
+								<span class="caret"></span>
+								<span class="sr-only">Toggle Dropdown</span>
+							</button>
+							<ul class="dropdown-menu">
+								<li *ngFor="let profile of radarrProfiles">
+									<a href="#" (click)="selectQualityProfile(request, profile, $event)">{{ profile.name }}</a>
+								</li>
+							</ul>
+						</div>
 
-                    </div>
+						<div *ngIf="!request.denied" id="denyBtn">
+							<button type="button" (click)="deny(request)" class="btn btn-sm btn-danger-outline deny">
+								<i class="fas fa-times"></i> {{ 'Requests.Deny' | translate }}
+							</button>
+						</div>
+					</div>
 
+					<form id="markBtnGroup">
+						<button
+							id="unavailableBtn"
+							*ngIf="request.available"
+							(click)="changeAvailability(request, false)"
+							style="text-align: right"
+							value="false"
+							class="btn btn-sm btn-info-outline change"
+						>
+							<i class="fas fa-minus"></i> {{ 'Requests.MarkUnavailable' | translate }}
+						</button>
+						<button
+							id="availableBtn"
+							*ngIf="!request.available"
+							(click)="changeAvailability(request, true)"
+							style="text-align: right"
+							value="true"
+							class="btn btn-sm btn-success-outline change"
+						>
+							<i class="fas fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}
+						</button>
+					</form>
+				</div>
+				<div *ngIf="isAdmin || isRequestUser(request)">
+					<form>
+						<button
+							id="removeBtn"
+							(click)="removeRequest(request)"
+							style="text-align: right"
+							class="btn btn-sm btn-danger-outline delete"
+						>
+							<i class="fas fa-minus"></i> {{ 'Requests.Remove' | translate }}
+						</button>
+					</form>
+				</div>
+				<div class="dropdown" *ngIf="issueCategories && issuesEnabled" id="issuesBtn">
+					<button
+						class="btn btn-sm btn-primary-outline dropdown-toggle"
+						type="button"
+						data-toggle="dropdown"
+						aria-haspopup="true"
+						aria-expanded="true"
+					>
+						<i class="fas fa-plus"></i> {{ 'Requests.ReportIssue' | translate }}
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+						<li *ngFor="let cat of issueCategories">
+							<a [routerLink]="" (click)="reportIssue(cat, request)">{{ cat.value }}</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<br />
+		<br />
+	</div>
 
-                    <div id="releaseDate">{{ 'Requests.TheatricalRelease' | translate: {date: request.releaseDate |
-                        amLocal | amUserLocale | amDateFormat: 'LL'} }}</div>
-                    <div *ngIf="request.digitalReleaseDate" id="digitalReleaseDate">{{ 'Requests.DigitalRelease' |
-                        translate: {date: request.digitalReleaseDate | amLocal | amUserLocale | amDateFormat: 'LL'} }}</div>
-                    <div id="requestedDate">{{ 'Requests.RequestDate' | translate }} {{request.requestedDate | amLocal
-                        | amUserLocale | amDateFormat: 'LL'}}</div>
-                    <br />
-                </div>
-                <div *ngIf="isAdmin">
-                    <div *ngIf="request.qualityOverrideTitle" class="quality-override">{{ 'Requests.QualityOverride' |
-                        translate }}
-                        <span>{{request.qualityOverrideTitle}} </span>
-                    </div>
-                    <div *ngIf="request.rootPathOverrideTitle" class="root-override">{{ 'Requests.RootFolderOverride' |
-                        translate }}
-                        <span>{{request.rootPathOverrideTitle}} </span>
-                    </div>
-                </div>
-
-            </div>
-            <div class="col-sm-3 col-sm-push-3  small-padding">
-                <div class="row">
-                    <div class="col-md-2 col-md-push-6">
-
-                        <a *ngIf="request.showSubscribe && !request.subscribed" style="color:white" (click)="subscribe(request)"
-                            pTooltip="Subscribe for notifications">
-                            <i class="fas fa-rss"></i>
-                        </a>
-                        <a *ngIf="request.showSubscribe && request.subscribed" style="color:red" (click)="unSubscribe(request)"
-                            pTooltip="Unsubscribe notification">
-                            <i class="fas fa-rss"></i>
-                        </a>
-                    </div>
-                </div>
-                <div *ngIf="isAdmin">
-                    <div *ngIf="!request.approved" id="approveBtn">
-                        <form>
-                            <button (click)="approve(request)" style="text-align: right" class="btn btn-sm btn-success-outline approve"
-                                type="submit">
-                                <i class="fas fa-plus"></i> {{ 'Common.Approve' | translate }}
-                            </button>
-                        </form>
-
-                        <!--Radarr Root Folder-->
-                        <div *ngIf="radarrRootFolders?.length > 1" class="btn-group btn-split" id="rootFolderBtn">
-                            <button type="button" class="btn btn-sm btn-warning-outline">
-                                <i class="fas fa-plus"></i> {{ 'Requests.ChangeRootFolder' | translate }}
-                            </button>
-                            <button type="button" class="btn btn-warning-outline dropdown-toggle" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                                <span class="caret"></span>
-                                <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li *ngFor="let folder of radarrRootFolders">
-                                    <a href="#" (click)="selectRootFolder(request, folder, $event)">{{folder.path}}</a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!--Radarr Quality Profiles -->
-                        <div *ngIf="radarrProfiles?.length > 1" class="btn-group btn-split" id="changeQualityBtn">
-                            <button type="button" class="btn btn-sm btn-warning-outline">
-                                <i class="fas fa-plus"></i> {{ 'Requests.ChangeQualityProfile' | translate }}
-                            </button>
-                            <button type="button" class="btn btn-warning-outline dropdown-toggle" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                                <span class="caret"></span>
-                                <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li *ngFor="let profile of radarrProfiles">
-                                    <a href="#" (click)="selectQualityProfile(request, profile, $event)">{{profile.name}}</a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div *ngIf="!request.denied" id="denyBtn">
-                            <button type="button" (click)="deny(request)" class="btn btn-sm btn-danger-outline deny">
-                                <i class="fas fa-times"></i> {{ 'Requests.Deny' | translate }}
-                            </button>
-                        </div>
-                    </div>
-
-
-                    <form id="markBtnGroup">
-                        <button id="unavailableBtn" *ngIf="request.available" (click)="changeAvailability(request, false)"
-                            style="text-align: right" value="false" class="btn btn-sm btn-info-outline change">
-                            <i class="fas fa-minus"></i> {{ 'Requests.MarkUnavailable' | translate }}
-                        </button>
-                        <button id="availableBtn" *ngIf="!request.available" (click)="changeAvailability(request, true)"
-                            style="text-align: right" value="true" class="btn btn-sm btn-success-outline change">
-                            <i class="fas fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}
-                        </button>
-                    </form>
-
-
-
-                </div>
-                <div *ngIf="isAdmin || isRequestUser(request)">
-                    <form>
-                        <button id="removeBtn" (click)="removeRequest(request)" style="text-align: right" class="btn btn-sm btn-danger-outline delete">
-                            <i class="fas fa-minus"></i> {{ 'Requests.Remove' | translate }}
-                        </button>
-                    </form>
-                </div>
-                <div class="dropdown" *ngIf="issueCategories && issuesEnabled" id="issuesBtn">
-                    <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="true">
-                        <i class="fas fa-plus"></i> {{ 'Requests.ReportIssue' | translate }}
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li *ngFor="let cat of issueCategories">
-                            <a [routerLink]="" (click)="reportIssue(cat, request)">{{cat.value}}</a>
-                        </li>
-                    </ul>
-                </div>
-
-            </div>
-        </div>
-        <br />
-        <br />
-
-
-
-
-    </div>
-
-    <p-paginator [rows]="10" [totalRecords]="totalMovies" (onPageChange)="paginate($event)"></p-paginator>
+	<p-paginator [rows]="10" [totalRecords]="totalMovies" (onPageChange)="paginate($event)"></p-paginator>
 </div>
 
-<p-dialog *ngIf="requestToDeny" header="Deny Request '{{requestToDeny.title}}''" [(visible)]="denyDisplay" [draggable]="false">
-    <span>Please enter a rejection reason, the user will be notified of this:</span>
-    <textarea [(ngModel)]="rejectionReason" class="form-control-custom form-control"></textarea>
-    <p-footer>
-        <button type="button" (click)="denyRequest();" label="Reject" class="btn btn-success">Deny</button>
-        <button type="button" (click)="denyDisplay=false" label="Close" class="btn btn-danger">Close</button>
-    </p-footer>
+<p-dialog *ngIf="requestToDeny" header="Deny Request '{{ requestToDeny.title }}''" [(visible)]="denyDisplay" [draggable]="false">
+	<span>Please enter a rejection reason, the user will be notified of this:</span>
+	<textarea [(ngModel)]="rejectionReason" class="form-control-custom form-control"></textarea>
+	<p-footer>
+		<button type="button" (click)="denyRequest()" label="Reject" class="btn btn-success">Deny</button>
+		<button type="button" (click)="denyDisplay = false" label="Close" class="btn btn-danger">Close</button>
+	</p-footer>
 </p-dialog>
 
-<issue-report [movie]="true" [visible]="issuesBarVisible" (visibleChange)="issuesBarVisible = $event;" [title]="issueRequest?.title"
-    [issueCategory]="issueCategorySelected" [id]="issueRequest?.id" [providerId]="issueProviderId"></issue-report>
-
+<issue-report
+	[movie]="true"
+	[visible]="issuesBarVisible"
+	(visibleChange)="issuesBarVisible = $event"
+	[title]="issueRequest?.title"
+	[issueCategory]="issueCategorySelected"
+	[id]="issueRequest?.id"
+	[providerId]="issueProviderId"
+></issue-report>
 
 <p-sidebar [(visible)]="filterDisplay" styleClass="ui-sidebar-md side-back side-small">
-    <h3>{{ 'Requests.Filter' | translate }}</h3>
-    <hr>
-    <div>
-        <h4>{{ 'Filter.FilterHeaderAvailability' | translate }}</h4>
-        <div class="form-group">
-            <div class="radio">
-                <input type="radio" id="Available" name="Availability" (click)="filterAvailability(filterType.Available, $event)">
-                <label for="Available">{{ 'Common.Available' | translate }}</label>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="radio">
-                <input type="radio" id="notAvailable" name="Availability" (click)="filterAvailability(filterType.NotAvailable, $event)">
-                <label for="notAvailable">{{ 'Common.NotAvailable' | translate }}</label>
-            </div>
-        </div>
-    </div>
-    <div>
-        <h4>{{ 'Filter.FilterHeaderRequestStatus' | translate }}</h4>
-        <div class="form-group">
-            <div class="radio">
-                <input type="radio" id="approved" name="Status" (click)="filterStatus(filterType.Approved, $event)">
-                <label for="approved">{{ 'Filter.Approved' | translate }}</label>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="radio">
-                <input type="radio" id="Processing" name="Status" (click)="filterStatus(filterType.Processing, $event)">
-                <label for="Processing">{{ 'Common.ProcessingRequest' | translate }}</label>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="radio">
-                <input type="radio" id="pendingApproval" name="Status" (click)="filterStatus(filterType.PendingApproval, $event)">
-                <label for="pendingApproval">{{ 'Filter.PendingApproval' | translate }}</label>
-            </div>
-        </div>
-    </div>
+	<h3>{{ 'Requests.Filter' | translate }}</h3>
+	<hr />
+	<div>
+		<h4>{{ 'Filter.FilterHeaderAvailability' | translate }}</h4>
+		<div class="form-group">
+			<div class="radio">
+				<input type="radio" id="Available" name="Availability" (click)="filterAvailability(filterType.Available, $event)" />
+				<label for="Available">{{ 'Common.Available' | translate }}</label>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="radio">
+				<input type="radio" id="notAvailable" name="Availability" (click)="filterAvailability(filterType.NotAvailable, $event)" />
+				<label for="notAvailable">{{ 'Common.NotAvailable' | translate }}</label>
+			</div>
+		</div>
+	</div>
+	<div>
+		<h4>{{ 'Filter.FilterHeaderRequestStatus' | translate }}</h4>
+		<div class="form-group">
+			<div class="radio">
+				<input type="radio" id="approved" name="Status" (click)="filterStatus(filterType.Approved, $event)" />
+				<label for="approved">{{ 'Filter.Approved' | translate }}</label>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="radio">
+				<input type="radio" id="Processing" name="Status" (click)="filterStatus(filterType.Processing, $event)" />
+				<label for="Processing">{{ 'Common.ProcessingRequest' | translate }}</label>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="radio">
+				<input type="radio" id="pendingApproval" name="Status" (click)="filterStatus(filterType.PendingApproval, $event)" />
+				<label for="pendingApproval">{{ 'Filter.PendingApproval' | translate }}</label>
+			</div>
+		</div>
+	</div>
 
-    <button class="btn btn-sm btn-primary-outline" (click)="clearFilter($event)">
-        <i class="fas fa-filter"></i> {{ 'Filter.ClearFilter' | translate }}</button>
+	<button class="btn btn-sm btn-primary-outline" (click)="clearFilter($event)">
+		<i class="fas fa-filter"></i> {{ 'Filter.ClearFilter' | translate }}
+	</button>
 </p-sidebar>

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Api.Radarr;
 using Ombi.Api.Radarr.Models;
+using Ombi.Api.Radarr.Models.V3;
 using Ombi.Attributes;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
@@ -77,7 +78,7 @@ namespace Ombi.Controllers.V1.External
             {
                 return Ok(await _radarrV3Api.GetProfiles(settings.ApiKey, settings.FullUri));
             }
-            return null;
+            return Ok(new List<RadarrV3QualityProfile>());
         }
 
         /// <summary>
@@ -94,7 +95,7 @@ namespace Ombi.Controllers.V1.External
             {
                 return Ok(await _radarrV3Api.GetProfiles(settings.ApiKey, settings.FullUri));
             }
-            return null;
+            return Ok(new List<RadarrV3QualityProfile>());
         }
 
         /// <summary>

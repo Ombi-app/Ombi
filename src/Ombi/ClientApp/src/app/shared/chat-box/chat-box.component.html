@@ -1,25 +1,29 @@
-<div class='container'>
-    <div class='chatbox'>
-      <div class='chatbox__user-list'>
-        <h1>{{ "NavigationBar.UserManagement" | translate }}</h1>
-        <div class='chatbox__user--active' *ngFor="let user of userList">
-            <p>{{user}}</p>
-        </div>
-      </div>
-      <div class="chatbox-message-box">
-        <div class="chatbox__messages" *ngFor="let m of messages">
-          <div class="chatbox__messages__user-message">
-            <div class="chatbox__messages__user-message--ind-message" [ngClass]="{'sender': m.chatType === ChatType.Sender, 'reciever':m.chatType === ChatType.Reciever }">
-              <p class="name" *ngIf="m?.username">{{m.username}}</p>
-              <br/>
-              <p class="message">{{m.message}}</p>
-              <p class="timestamp">{{m.date | amFromUtc | amLocal | amUserLocale | amDateFormat: 'l LT'}}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="form">
-        <input type="text" [(ngModel)]="currentMessage" [placeholder]="'Issues.EnterYourMessage' | translate">
-        <button mat-raised-button class="add-message" (click)="addMessage()">{{ "Issues.SendMessageButton" | translate }}</button>
-      </div>
-    </div>
+<div class="container">
+	<div class="chatbox">
+		<div class="chatbox__user-list">
+			<h1>{{ 'NavigationBar.UserManagement' | translate }}</h1>
+			<div class="chatbox__user--active" *ngFor="let user of userList">
+				<p>{{ user }}</p>
+			</div>
+		</div>
+		<div class="chatbox-message-box">
+			<div class="chatbox__messages" *ngFor="let m of messages">
+				<div class="chatbox__messages__user-message">
+					<div
+						class="chatbox__messages__user-message--ind-message"
+						[ngClass]="{ sender: m.chatType === ChatType.Sender, reciever: m.chatType === ChatType.Reciever }"
+					>
+						<p class="name" *ngIf="m?.username">{{ m.username }}</p>
+						<br />
+						<p class="message">{{ m.message }}</p>
+						<p class="timestamp">{{ m.date | ombiDate: 'Ppp' }}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form">
+			<input type="text" [(ngModel)]="currentMessage" [placeholder]="'Issues.EnterYourMessage' | translate" />
+			<button mat-raised-button class="add-message" (click)="addMessage()">{{ 'Issues.SendMessageButton' | translate }}</button>
+		</div>
+	</div>
+</div>

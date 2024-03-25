@@ -1,82 +1,85 @@
 <div class="left-panel-details">
-    <div>
-        <div class="rating medium-font">
-            <span *ngIf="tv.rating">
-                <img class="rating-small" src="{{baseUrl}}/images/tmdb-logo.svg"> {{tv.rating * 10 | number : '1.2-2'}}%
-            </span>
-            <span *ngIf="ratings?.score && ratings?.class">
-                <img class="rating-small" src="{{baseUrl}}/images/{{ratings.class === 'rotten' ? 'rotten-rotten.svg' : 'rotten-fresh.svg'}}"> {{ratings.score}}%
-            </span>
-        </div>
-        <div *ngIf="streams?.length > 0" id="streamingContainer" class="streaming-on-container">
-            <hr>
-            <div class="streaming-on-content">
-                <span class="label">{{'MediaDetails.StreamingOn' | translate }}</span>
-                <div>
-                    <span *ngFor="let stream of sortBy('order')">
-                        <img class="stream-small" id="stream{{stream.streamingProvider}}" [matTooltip]="stream.streamingProvider" src="https://image.tmdb.org/t/p/original{{stream.logo}}">
-                    </span>
-                </div>
-            </div>
-        </div>
-        <hr>
-        <div *ngIf="tv.status">
-            <span  class="label">{{'MediaDetails.Status' | translate }}</span>
-                <span id="status"> {{ tv.status | translateStatus }}</span>
-        </div>
-        <span class="label">{{'MediaDetails.FirstAired' | translate }}</span>
-            {{tv.firstAired | amLocal | amUserLocale | amDateFormat: 'LL' }}
-    </div>
+	<div>
+		<div class="rating medium-font">
+			<span *ngIf="tv.rating">
+				<img class="rating-small" src="{{ baseUrl }}/images/tmdb-logo.svg" /> {{ tv.rating * 10 | number: '1.2-2' }}%
+			</span>
+			<span *ngIf="ratings?.score && ratings?.class">
+				<img class="rating-small" src="{{ baseUrl }}/images/{{ ratings.class === 'rotten' ? 'rotten-rotten.svg' : 'rotten-fresh.svg' }}" />
+				{{ ratings.score }}%
+			</span>
+		</div>
+		<div *ngIf="streams?.length > 0" id="streamingContainer" class="streaming-on-container">
+			<hr />
+			<div class="streaming-on-content">
+				<span class="label">{{ 'MediaDetails.StreamingOn' | translate }}</span>
+				<div>
+					<span *ngFor="let stream of sortBy('order')">
+						<img
+							class="stream-small"
+							id="stream{{ stream.streamingProvider }}"
+							[matTooltip]="stream.streamingProvider"
+							src="https://image.tmdb.org/t/p/original{{ stream.logo }}"
+						/>
+					</span>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div *ngIf="tv.status">
+			<span class="label">{{ 'MediaDetails.Status' | translate }}</span>
+			<span id="status"> {{ tv.status | translateStatus }}</span>
+		</div>
+		<span class="label">{{ 'MediaDetails.FirstAired' | translate }}</span>
+		{{ tv.firstAired | ombiDate: 'PP' }}
+	</div>
 
-    <div *ngIf="seasonCount">
-        <span class="label">{{'MediaDetails.Seasons' | translate }}</span>
-            {{seasonCount}}
-    </div>
-    <div *ngIf="totalEpisodes">
-        <span class="label">{{'MediaDetails.Episodes' | translate }}</span>
-            {{totalEpisodes}}
-    </div>
+	<div *ngIf="seasonCount">
+		<span class="label">{{ 'MediaDetails.Seasons' | translate }}</span>
+		{{ seasonCount }}
+	</div>
+	<div *ngIf="totalEpisodes">
+		<span class="label">{{ 'MediaDetails.Episodes' | translate }}</span>
+		{{ totalEpisodes }}
+	</div>
 
-    <div *ngIf="advancedOptions && request?.rootPathOverrideTitle">
-        <span class="label">{{'MediaDetails.RootFolderOverride' | translate }}</span>
-        <div>{{request.rootPathOverrideTitle}}</div>
-    </div>
-    <div *ngIf="advancedOptions && request?.qualityOverrideTitle">
-        <span class="label">{{'MediaDetails.QualityOverride' | translate }}</span>
-        <div>{{request.qualityOverrideTitle}}</div>
-    </div>
+	<div *ngIf="advancedOptions && request?.rootPathOverrideTitle">
+		<span class="label">{{ 'MediaDetails.RootFolderOverride' | translate }}</span>
+		<div>{{ request.rootPathOverrideTitle }}</div>
+	</div>
+	<div *ngIf="advancedOptions && request?.qualityOverrideTitle">
+		<span class="label">{{ 'MediaDetails.QualityOverride' | translate }}</span>
+		<div>{{ request.qualityOverrideTitle }}</div>
+	</div>
 
-    <div>
-        <span class="label">{{'MediaDetails.Runtime' | translate }}</span>
-            {{'MediaDetails.Minutes' | translate:{ runtime: tv.runtime} }}
-    </div>
+	<div>
+		<span class="label">{{ 'MediaDetails.Runtime' | translate }}</span>
+		{{ 'MediaDetails.Minutes' | translate: { runtime: tv.runtime } }}
+	</div>
 
-    <div *ngIf="tv.network">
-        <span class="label">{{'MediaDetails.Network' | translate }}</span>
-            {{tv.network.name}}
-    </div>
+	<div *ngIf="tv.network">
+		<span class="label">{{ 'MediaDetails.Network' | translate }}</span>
+		{{ tv.network.name }}
+	</div>
 
+	<div class="genre-button-container" *ngIf="tv.genres">
+		<span class="label">{{ 'MediaDetails.GenresLabel' | translate }}</span>
+		<div>
+			<mat-chip-list>
+				<mat-chip selected *ngFor="let genre of tv.genres">
+					{{ genre.name }}
+				</mat-chip>
+			</mat-chip-list>
+		</div>
+	</div>
 
-    <div class="genre-button-container" *ngIf="tv.genres">
-        <span class="label">{{'MediaDetails.GenresLabel' | translate }}</span>
-        <div>
-            <mat-chip-list>
-                <mat-chip selected *ngFor="let genre of tv.genres">
-                    {{genre.name}}
-                </mat-chip>
-            </mat-chip-list>
-        </div>
-    </div>
-
-    <hr />
-    <div class="keyword-button-container" *ngIf="tv?.keywords?.keywordsValue?.length > 0">
-        <span class="label">{{'MediaDetails.Keywords' | translate }}</span>
-        <mat-chip-list>
-            <mat-chip selected *ngFor="let keyword of tv.keywords.keywordsValue">
-                {{keyword.name}}
-            </mat-chip>
-        </mat-chip-list>
-    </div>
-
+	<hr />
+	<div class="keyword-button-container" *ngIf="tv?.keywords?.keywordsValue?.length > 0">
+		<span class="label">{{ 'MediaDetails.Keywords' | translate }}</span>
+		<mat-chip-list>
+			<mat-chip selected *ngFor="let keyword of tv.keywords.keywordsValue">
+				{{ keyword.name }}
+			</mat-chip>
+		</mat-chip-list>
+	</div>
 </div>
-

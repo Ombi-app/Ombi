@@ -1,123 +1,198 @@
 <div class="mat-elevation-z8">
-    <grid-spinner [loading]="isLoadingResults"></grid-spinner>
+	<grid-spinner [loading]="isLoadingResults"></grid-spinner>
 
+	<!-- <div class="row"> -->
+	<div class="row justify-content-md-center top-spacing">
+		<div class="btn-group" role="group">
+			<button
+				type="button"
+				id="filterAll"
+				(click)="switchFilter(RequestFilter.All)"
+				[attr.color]="currentFilter === RequestFilter.All ? 'accent' : 'primary'"
+				[ngClass]="currentFilter === RequestFilter.All ? 'mat-accent' : 'mat-primary'"
+				mat-raised-button
+				class="grow"
+			>
+				{{ 'Requests.AllRequests' | translate }}
+			</button>
+			<button
+				type="button"
+				id="filterPending"
+				(click)="switchFilter(RequestFilter.Pending)"
+				[attr.color]="currentFilter === RequestFilter.Pending ? 'accent' : 'primary'"
+				[ngClass]="currentFilter === RequestFilter.Pending ? 'mat-accent' : 'mat-primary'"
+				mat-raised-button
+				class="grow"
+			>
+				{{ 'Requests.PendingRequests' | translate }}
+			</button>
+			<button
+				type="button"
+				id="filterProcessing"
+				(click)="switchFilter(RequestFilter.Processing)"
+				[attr.color]="currentFilter === RequestFilter.Processing ? 'accent' : 'primary'"
+				[ngClass]="currentFilter === RequestFilter.Processing ? 'mat-accent' : 'mat-primary'"
+				mat-raised-button
+				class="grow"
+			>
+				{{ 'Requests.ProcessingRequests' | translate }}
+			</button>
+			<button
+				type="button"
+				id="filterAvailable"
+				(click)="switchFilter(RequestFilter.Available)"
+				[attr.color]="currentFilter === RequestFilter.Available ? 'accent' : 'primary'"
+				[ngClass]="currentFilter === RequestFilter.Available ? 'mat-accent' : 'mat-primary'"
+				mat-raised-button
+				class="grow"
+			>
+				{{ 'Requests.AvailableRequests' | translate }}
+			</button>
+			<button
+				type="button"
+				id="filterDenied"
+				(click)="switchFilter(RequestFilter.Denied)"
+				[attr.color]="currentFilter === RequestFilter.Denied ? 'accent' : 'primary'"
+				[ngClass]="currentFilter === RequestFilter.Denied ? 'mat-accent' : 'mat-primary'"
+				mat-raised-button
+				class="grow"
+			>
+				{{ 'Requests.DeniedRequests' | translate }}
+			</button>
+		</div>
+	</div>
 
-    <!-- <div class="row"> -->
-    <div class="row justify-content-md-center top-spacing">
-        <div class="btn-group" role="group">
-            <button type="button" id="filterAll" (click)="switchFilter(RequestFilter.All)" [attr.color]="currentFilter === RequestFilter.All ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.All ? 'mat-accent' : 'mat-primary'" mat-raised-button class="grow">{{'Requests.AllRequests' | translate}}</button>
-            <button type="button" id="filterPending" (click)="switchFilter(RequestFilter.Pending)" [attr.color]="currentFilter === RequestFilter.Pending ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.Pending ? 'mat-accent' : 'mat-primary'" mat-raised-button class="grow">{{'Requests.PendingRequests' | translate}}</button>
-            <button type="button" id="filterProcessing" (click)="switchFilter(RequestFilter.Processing)" [attr.color]="currentFilter === RequestFilter.Processing ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.Processing ? 'mat-accent' : 'mat-primary'" mat-raised-button
-                class="grow">{{'Requests.ProcessingRequests' | translate}}</button>
-            <button type="button" id="filterAvailable" (click)="switchFilter(RequestFilter.Available)" [attr.color]="currentFilter === RequestFilter.Available ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.Available ? 'mat-accent' : 'mat-primary'" mat-raised-button
-                class="grow">{{'Requests.AvailableRequests' | translate}}</button>
-            <button type="button" id="filterDenied" (click)="switchFilter(RequestFilter.Denied)" [attr.color]="currentFilter === RequestFilter.Denied ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.Denied ? 'mat-accent' : 'mat-primary'" mat-raised-button class="grow">{{'Requests.DeniedRequests' | translate}}</button>
-        </div>
-    </div>
+	<div class="row">
+		<div class="col-md-2 offset-md-10">
+			<mat-form-field>
+				<mat-select
+					id="requestsToDisplayDropdown"
+					placeholder="{{ 'Requests.RequestsToDisplay' | translate }}"
+					[(value)]="gridCount"
+					(selectionChange)="ngAfterViewInit()"
+				>
+					<mat-option value="10">10</mat-option>
+					<mat-option value="15">15</mat-option>
+					<mat-option value="30">30</mat-option>
+					<mat-option value="100">100</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</div>
+	</div>
+	<!-- </div> -->
+	<table
+		mat-table
+		[dataSource]="dataSource"
+		class="requests table"
+		matSort
+		[matSortActive]="defaultSort"
+		matSortDisableClear
+		[matSortDirection]="defaultOrder"
+	>
+		<ng-container matColumnDef="select" *ngIf="isAdmin">
+			<th mat-header-cell *matHeaderCellDef>
+				<mat-checkbox
+					id="adminMasterCheckbox"
+					(change)="$event ? masterToggle() : null"
+					[checked]="selection.hasValue() && isAllSelected()"
+					[indeterminate]="selection.hasValue() && !isAllSelected()"
+				>
+				</mat-checkbox>
+			</th>
+			<td mat-cell *matCellDef="let row">
+				<mat-checkbox
+					id="adminMasterCheckbox{{ row.id }}"
+					(click)="$event.stopPropagation()"
+					(change)="$event ? selection.toggle(row) : null"
+					[checked]="selection.isSelected(row)"
+				>
+				</mat-checkbox>
+			</td>
+		</ng-container>
 
-    <div class="row">
-        <div class="col-md-2 offset-md-10">
-            <mat-form-field>
-                <mat-select id="requestsToDisplayDropdown" placeholder="{{'Requests.RequestsToDisplay' | translate}}" [(value)]="gridCount" (selectionChange)="ngAfterViewInit()">
-                    <mat-option value="10">10</mat-option>
-                    <mat-option value="15">15</mat-option>
-                    <mat-option value="30">30</mat-option>
-                    <mat-option value="100">100</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-    </div>
-    <!-- </div> -->
-    <table mat-table [dataSource]="dataSource" class="requests table" matSort [matSortActive]="defaultSort" matSortDisableClear [matSortDirection]="defaultOrder">
+		<ng-container matColumnDef="title">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>{{ 'Requests.RequestsTitle' | translate }}</th>
+			<td mat-cell id="title{{ element.id }}" *matCellDef="let element">{{ element.title }} ({{ element.releaseDate | ombiDate: 'P' }})</td>
+		</ng-container>
 
-        <ng-container matColumnDef="select" *ngIf="isAdmin">
-            <th  mat-header-cell *matHeaderCellDef>
-              <mat-checkbox id="adminMasterCheckbox" (change)="$event ? masterToggle() : null"
-                            [checked]="selection.hasValue() && isAllSelected()"
-                            [indeterminate]="selection.hasValue() && !isAllSelected()">
-              </mat-checkbox>
-            </th>
-            <td mat-cell *matCellDef="let row">
-            <mat-checkbox  id="adminMasterCheckbox{{row.id}}"  (click)="$event.stopPropagation()"
-                            (change)="$event ? selection.toggle(row) : null"
-                            [checked]="selection.isSelected(row)">
-              </mat-checkbox>
-            </td>
-          </ng-container>
+		<ng-container matColumnDef="requestedUser.requestedBy">
+			<th mat-header-cell *matHeaderCellDef>{{ 'Requests.RequestedBy' | translate }}</th>
+			<td mat-cell id="requestedBy{{ element.id }}" *matCellDef="let element">
+				{{ element.requestedByAlias ? element.requestedByAlias : element.requestedUser?.userAlias }}
+			</td>
+		</ng-container>
 
-        <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{ 'Requests.RequestsTitle' | translate}} </th>
-            <td mat-cell id="title{{element.id}}" *matCellDef="let element"> {{element.title}} ({{element.releaseDate | amLocal | amDateFormat: 'YYYY'}}) </td>
-        </ng-container>
+		<ng-container matColumnDef="requestedDate">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>{{ 'Requests.RequestDate' | translate }}</th>
+			<td mat-cell id="requestedDate{{ element.id }}" *matCellDef="let element">{{ getRequestDate(element) | ombiDate: 'PP' }}</td>
+		</ng-container>
 
-        <ng-container matColumnDef="requestedUser.requestedBy">
-            <th mat-header-cell *matHeaderCellDef> {{'Requests.RequestedBy' | translate}} </th>
-            <td mat-cell id="requestedBy{{element.id}}" *matCellDef="let element"> {{element.requestedByAlias ? element.requestedByAlias : element.requestedUser?.userAlias}} </td>
-        </ng-container>
+		<ng-container matColumnDef="status">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>{{ 'Requests.Status' | translate }}</th>
+			<td mat-cell id="status{{ element.id }}" *matCellDef="let element">{{ element.status | translateStatus }}</td>
+		</ng-container>
 
+		<ng-container matColumnDef="has4kRequest">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>{{ 'Requests.Has4KRequest' | translate }}</th>
+			<td mat-cell id="has4kRequest{{ element.id }}" *matCellDef="let element">
+				<i *ngIf="element.has4KRequest" class="fas fa-check"></i>
+				<i *ngIf="!element.has4KRequest" class="fas fa-times"></i>
+			</td>
+		</ng-container>
 
-        <ng-container matColumnDef="requestedDate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{ 'Requests.RequestDate' | translate}} </th>
-            <td mat-cell id="requestedDate{{element.id}}" *matCellDef="let element"> {{getRequestDate(element) | amLocal | amUserLocale | amDateFormat: 'LL'}} </td>
-        </ng-container>
+		<ng-container matColumnDef="requestStatus">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>{{ 'Requests.RequestStatus' | translate }}</th>
+			<td mat-cell id="requestedStatus{{ element.id }}" *matCellDef="let element">{{ element.requestStatus | translate }}</td>
+		</ng-container>
 
-        <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{ 'Requests.Status' | translate}} </th>
-            <td mat-cell id="status{{element.id}}"  *matCellDef="let element"> {{element.status |translateStatus }} </td>
-        </ng-container>
+		<ng-container matColumnDef="watchedByRequestedUser">
+			<th mat-header-cell *matHeaderCellDef disableClear matTooltip="{{ 'Requests.WatchedTooltip' | translate }}">
+				{{ 'Requests.Watched' | translate }}
+			</th>
+			<td mat-cell id="watchedByRequestedUser{{ element.id }}" *matCellDef="let element">
+				<mat-checkbox
+					[checked]="element.watchedByRequestedUser"
+					disabled="true"
+					matTooltip="{{ 'Requests.WatchedByUsersCount' | translate: { count: element.playedByUsersCount } }}"
+				>
+				</mat-checkbox>
+			</td>
+		</ng-container>
 
-        <ng-container matColumnDef="has4kRequest">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{ 'Requests.Has4KRequest' | translate}} </th>
-            <td mat-cell id="has4kRequest{{element.id}}"  *matCellDef="let element">
-                <i *ngIf="element.has4KRequest" class="fas fa-check"></i>
-                <i *ngIf="!element.has4KRequest" class="fas fa-times"></i>
-            </td>
-        </ng-container>
+		<ng-container matColumnDef="actions">
+			<th mat-header-cell *matHeaderCellDef></th>
+			<td mat-cell *matCellDef="let element">
+				<a id="detailsButton{{ element.id }}" mat-raised-button color="accent" [routerLink]="'/details/movie/' + element.theMovieDbId">{{
+					'Requests.Details' | translate
+				}}</a>
+				<a
+					id="optionsButton{{ element.id }}"
+					mat-raised-button
+					color="warn"
+					(click)="openOptions(element)"
+					*ngIf="isAdmin || (manageOwnRequests && element.requestedUser?.userName == userName)"
+				>
+					{{ 'Requests.Options' | translate }}</a
+				>
+			</td>
+		</ng-container>
 
+		<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+	</table>
 
-        <ng-container matColumnDef="requestStatus">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{ 'Requests.RequestStatus' | translate}} </th>
-            <td mat-cell id="requestedStatus{{element.id}}"  *matCellDef="let element"> {{element.requestStatus | translate}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="watchedByRequestedUser">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              disableClear
-              matTooltip="{{ 'Requests.WatchedTooltip' | translate}}">
-              {{ 'Requests.Watched' | translate}}
-            </th>
-            <td mat-cell id="watchedByRequestedUser{{element.id}}"  *matCellDef="let element">
-                <mat-checkbox
-                  [checked]="element.watchedByRequestedUser"
-                  disabled="true"
-                  matTooltip="{{'Requests.WatchedByUsersCount' | translate: {count: element.playedByUsersCount} }}">
-                </mat-checkbox>
-            </td>
-        </ng-container>
-
-        <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef> </th>
-            <td mat-cell *matCellDef="let element">
-                <a id="detailsButton{{element.id}}" mat-raised-button color="accent" [routerLink]="'/details/movie/' + element.theMovieDbId">{{ 'Requests.Details' | translate}}</a>
-                <a id="optionsButton{{element.id}}" mat-raised-button color="warn" (click)="openOptions(element)" *ngIf="isAdmin || ( manageOwnRequests && element.requestedUser?.userName == userName ) "> {{ 'Requests.Options' | translate}}</a>
-            </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-
-    <mat-paginator [length]="resultsLength" [pageSize]="gridCount"></mat-paginator>
+	<mat-paginator [length]="resultsLength" [pageSize]="gridCount"></mat-paginator>
 </div>
 
 <button id="bulkFab" *ngIf="selection.hasValue() && isAdmin" mat-fab color="accent" class="floating-fab" [matMenuTriggerFor]="aboveMenu">
-    <i class="fas fa-bars"></i></button>
-  <mat-menu #aboveMenu="matMenu" yPosition="above">
-    <button id="approveFabButton" mat-menu-item (click)="bulkApprove()">{{'Requests.RequestPanel.Approve' | translate}}</button>
-    <button *ngIf="is4kEnabled" id="approve4kFabButton" mat-menu-item (click)="bulkApprove4K()">{{'Requests.RequestPanel.Approve4K' | translate}}</button>
-    <button id="denyFabButton" mat-menu-item (click)="bulkDeny()">{{'Requests.RequestPanel.Deny' | translate}}</button>
-    <button *ngIf="is4kEnabled" id="deny4kFabButton" mat-menu-item (click)="bulkDeny4K()">{{'Requests.RequestPanel.Deny4K' | translate}}</button>
-    <button id="deleteFabButton" mat-menu-item (click)="bulkDelete()">{{'Requests.RequestPanel.Delete' | translate}}</button>
-  </mat-menu>
+	<i class="fas fa-bars"></i>
+</button>
+<mat-menu #aboveMenu="matMenu" yPosition="above">
+	<button id="approveFabButton" mat-menu-item (click)="bulkApprove()">{{ 'Requests.RequestPanel.Approve' | translate }}</button>
+	<button *ngIf="is4kEnabled" id="approve4kFabButton" mat-menu-item (click)="bulkApprove4K()">
+		{{ 'Requests.RequestPanel.Approve4K' | translate }}
+	</button>
+	<button id="denyFabButton" mat-menu-item (click)="bulkDeny()">{{ 'Requests.RequestPanel.Deny' | translate }}</button>
+	<button *ngIf="is4kEnabled" id="deny4kFabButton" mat-menu-item (click)="bulkDeny4K()">{{ 'Requests.RequestPanel.Deny4K' | translate }}</button>
+	<button id="deleteFabButton" mat-menu-item (click)="bulkDelete()">{{ 'Requests.RequestPanel.Delete' | translate }}</button>
+</mat-menu>

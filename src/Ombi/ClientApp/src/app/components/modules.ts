@@ -1,4 +1,3 @@
-import { CommonModule } from "@angular/common";
-import { MomentModule } from "ngx-moment";
+import { CommonModule } from '@angular/common';
 
-export const OmbiCommonModules = [ CommonModule, MomentModule ];
+export const OmbiCommonModules = [CommonModule];

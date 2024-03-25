@@ -1,171 +1,238 @@
 <div *ngIf="!tv" class="justify-content-md-center top-spacing loading-spinner">
-    <mat-spinner [color]="'accent'"></mat-spinner>
+	<mat-spinner [color]="'accent'"></mat-spinner>
 </div>
 <div *ngIf="tv" class="main-content-container">
-    <div *ngIf="tv.id === 0; else main">
-        <div class="small-middle-container no-info">
-            <h1><i class="far fa-frown-o" aria-hidden="true"></i></h1>
-            <h3> {{ 'MediaDetails.NotEnoughInfo' | translate }}</h3>
-        </div>
-    </div>
+	<div *ngIf="tv.id === 0; else main">
+		<div class="small-middle-container no-info">
+			<h1><i class="far fa-frown-o" aria-hidden="true"></i></h1>
+			<h3>{{ 'MediaDetails.NotEnoughInfo' | translate }}</h3>
+		</div>
+	</div>
 
+	<ng-template #main>
+		<div>
+			<top-banner
+				[background]="tv.background"
+				[available]="tv.available"
+				[title]="tv.title"
+				[releaseDate]="tv.firstAired"
+				[tagline]="tv.tagline"
+			></top-banner>
+			<div class="social-icons-container">
+				<social-icons
+					[homepage]="tv.homepage"
+					[theMoviedbId]="tv.id"
+					[hasTrailer]="tv.trailer"
+					[twitter]="tv.externalIds?.twitterId"
+					[facebook]="tv.externalIds?.facebookId"
+					[instagram]="tv.externalIds?.instagramId"
+					(openTrailer)="openDialog()"
+					[imdbId]="tv.imdbId"
+					[isAdmin]="isAdmin"
+					[canShowAdvanced]="showAdvanced && showRequest"
+					[type]="requestType"
+					(onAdvancedOptions)="openAdvancedOptions()"
+				>
+				</social-icons>
+			</div>
 
-    <ng-template #main>
+			<section id="info-wrapper">
+				<div class="small-middle-container">
+					<div class="row justify-content-center justify-content-sm-start header-container">
+						<div class="details-poster-container">
+							<media-poster [posterPath]="tv.images.original"></media-poster>
+						</div>
+						<!--Next to poster-->
+						<div class="details-button-container">
+							<div class="col-12 media-row">
+								<ng-container *ngIf="tv.fullyAvailable || tv.partlyAvailable">
+									<a
+										id="viewOnPlexButton"
+										*ngIf="tv.plexUrl"
+										href="{{ tv.plexUrl }}"
+										mat-raised-button
+										target="_blank"
+										class="btn-spacing viewon-btn plex"
+									>
+										{{ 'Search.ViewOnPlex' | translate }}
+										<i class="far fa-play-circle fa-2x"></i>
+									</a>
+									<a
+										id="viewOnEmbyButton"
+										*ngIf="tv.embyUrl"
+										href="{{ tv.embyUrl }}"
+										mat-raised-button
+										target="_blank"
+										class="btn-spacing viewon-btn emby"
+									>
+										{{ 'Search.ViewOnEmby' | translate }}
+										<i class="far fa-play-circle fa-2x"></i>
+									</a>
+									<a
+										id="viewOnJellyfinButton"
+										*ngIf="tv.jellyfinUrl"
+										href="{{ tv.jellyfinUrl }}"
+										mat-raised-button
+										target="_blank"
+										class="btn-spacing viewon-btn jellyfin"
+									>
+										{{ 'Search.ViewOnJellyfin' | translate }}
+										<i class="far fa-play-circle fa-2x"></i>
+									</a>
+								</ng-container>
+								<button
+									*ngIf="(!tv.fullyAvailable || (tv.fullyAvailable && tv.partlyAvailable)) && !allEpisodesRequestedOrAvailable()"
+									mat-raised-button
+									id="requestBtn"
+									class="btn-spacing"
+									color="primary"
+									(click)="request()"
+								>
+									<i class="fas fa-plus"></i> {{ 'Common.Request' | translate }}
+								</button>
 
-        <div>
+								<button
+									*ngIf="!tv.denied && allEpisodesRequestedOrAvailable()"
+									mat-raised-button
+									class="btn-spacing"
+									color="warn"
+									[disabled]
+								>
+									<i class="fas fa-check"></i>
+									{{ 'Common.Requested' | translate }}
+								</button>
 
-            <top-banner [background]="tv.background" [available]="tv.available" [title]="tv.title"
-                [releaseDate]="tv.firstAired" [tagline]="tv.tagline"></top-banner>
-            <div class="social-icons-container">
-                <social-icons
-                    [homepage]="tv.homepage"
-                    [theMoviedbId]="tv.id"
-                    [hasTrailer]="tv.trailer"
-                    [twitter]="tv.externalIds?.twitterId"
-                    [facebook]="tv.externalIds?.facebookId"
-                    [instagram]="tv.externalIds?.instagramId"
-                    (openTrailer)="openDialog()"
-                    [imdbId]="tv.imdbId"
-                    [isAdmin]="isAdmin"
-                    [canShowAdvanced]="showAdvanced && showRequest"
-                    [type]="requestType"
-                    (onAdvancedOptions)="openAdvancedOptions()"
-                    >
-                </social-icons>
-            </div>
+								<button
+									*ngIf="tv.fullyAvailable && !tv.partlyAvailable"
+									id="availableBtn"
+									mat-raised-button
+									class="btn-spacing"
+									color="accent"
+									[disabled]
+								>
+									<i class="fas fa-check"></i> {{ 'Common.Available' | translate }}
+								</button>
 
-            <section id="info-wrapper">
-                <div class="small-middle-container">
-                    <div class="row justify-content-center justify-content-sm-start header-container">
-                        <div class="details-poster-container">
-                            <media-poster [posterPath]=tv.images.original></media-poster>
-                        </div>
-                        <!--Next to poster-->
-                        <div class="details-button-container">
-                            <div class="col-12 media-row">
-                                <ng-container *ngIf="tv.fullyAvailable || tv.partlyAvailable">
-                                    <a id="viewOnPlexButton" *ngIf="tv.plexUrl" href="{{tv.plexUrl}}" mat-raised-button  target="_blank" class="btn-spacing viewon-btn plex">
-                                        {{'Search.ViewOnPlex' | translate}}
-                                        <i class="far fa-play-circle fa-2x"></i>
-                                    </a>
-                                    <a id="viewOnEmbyButton" *ngIf="tv.embyUrl" href="{{tv.embyUrl}}" mat-raised-button  target="_blank" class="btn-spacing viewon-btn emby">
-                                        {{'Search.ViewOnEmby' | translate}}
-                                        <i class="far fa-play-circle fa-2x"></i>
-                                    </a>
-                                    <a id="viewOnJellyfinButton" *ngIf="tv.jellyfinUrl" href="{{tv.jellyfinUrl}}" mat-raised-button  target="_blank" class="btn-spacing viewon-btn jellyfin">
-                                        {{'Search.ViewOnJellyfin' | translate}}
-                                        <i class="far fa-play-circle fa-2x"></i>
-                                    </a>
-                                </ng-container>
-                                <button *ngIf="(!tv.fullyAvailable || (tv.fullyAvailable && tv.partlyAvailable)) && !allEpisodesRequestedOrAvailable()" mat-raised-button id="requestBtn" class="btn-spacing" color="primary"
-                                        (click)="request()"><i class="fas fa-plus"></i>
-                                    {{ 'Common.Request' | translate }}</button>
+								<button
+									*ngIf="tv.partlyAvailable && !tv.fullyAvailable"
+									id="partiallyAvailableBtn"
+									mat-raised-button
+									class="btn-spacing"
+									color="accent"
+									[disabled]
+								>
+									<i class="fas fa-check"></i> {{ 'Common.PartiallyAvailable' | translate }}
+								</button>
 
-                                    <button *ngIf="!tv.denied && allEpisodesRequestedOrAvailable()" mat-raised-button class="btn-spacing" color="warn" [disabled]>
-                                        <i class="fas fa-check"></i>
-                                        {{ 'Common.Requested' | translate }}</button>
+								<!-- There are unaired episodes-->
+								<button
+									*ngIf="tv.partlyAvailable && tv.fullyAvailable"
+									id="partiallyAvailableBtn"
+									mat-raised-button
+									class="btn-spacing"
+									color="accent"
+									[disabled]
+								>
+									<i class="fas fa-check"></i> {{ 'Common.PartiallyAvailable' | translate }}
+								</button>
+								<!-- end unaired episodes-->
 
-                                    <button *ngIf="tv.fullyAvailable && !tv.partlyAvailable" id="availableBtn" mat-raised-button class="btn-spacing" color="accent"
-                                    [disabled]>
-                                    <i class="fas fa-check"></i> {{'Common.Available' | translate }}</button>
+								<button
+									id="deniedButton"
+									*ngIf="tv.denied"
+									[matTooltip]="tv.deniedReason"
+									mat-raised-button
+									class="btn-spacing"
+									color="warn"
+								>
+									<i class="fas fa-times"></i> {{ 'Common.Denied' | translate }}
+								</button>
 
-                                    <button *ngIf="tv.partlyAvailable && !tv.fullyAvailable" id="partiallyAvailableBtn" mat-raised-button
-                                    class="btn-spacing" color="accent" [disabled]>
-                                    <i class="fas fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
+								<button
+									mat-raised-button
+									class="btn-spacing"
+									color="danger"
+									id="reportIssueBtn"
+									*ngIf="issuesEnabled"
+									(click)="issue()"
+								>
+									<i class="fas fa-exclamation"></i> {{ 'Requests.ReportIssue' | translate }}
+								</button>
+							</div>
+						</div>
+					</div>
 
-                                    <!-- There are unaired episodes-->
-                                    <button *ngIf="tv.partlyAvailable && tv.fullyAvailable" id="partiallyAvailableBtn" mat-raised-button
-                                        class="btn-spacing" color="accent" [disabled]>
-                                    <i class="fas fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
-                                    <!-- end unaired episodes-->
+					<div class="row">
+						<div class="col-12 col-md-2">
+							<mat-card class="mat-elevation-z8 spacing-below">
+								<mat-card-content>
+									<tv-information-panel [tv]="tv" [request]="showRequest" [advancedOptions]="showAdvanced"></tv-information-panel>
+								</mat-card-content>
+							</mat-card>
+						</div>
+						<div class="col-12 col-md-10">
+							<div class="row">
+								<div class="col-12">
+									<mat-card class="mat-elevation-z8 spacing-below">
+										<mat-card-content>
+											{{ tv.overview }}
+										</mat-card-content>
+									</mat-card>
+								</div>
+								<div class="col-12">
+									<cast-carousel [cast]="tv.cast"></cast-carousel>
+								</div>
+							</div>
+						</div>
+					</div>
 
-                                    <button id="deniedButton" *ngIf="tv.denied" [matTooltip]="tv.deniedReason" mat-raised-button class="btn-spacing" color="warn">
-                                        <i class="fas fa-times"></i> {{'Common.Denied' | translate }}
-                                    </button>
+					<div class="row">
+						<div class="col-12 col-md-2">
+							<!--Just some space yo-->
+						</div>
 
-                                <button mat-raised-button class="btn-spacing" color="danger" id="reportIssueBtn" *ngIf="issuesEnabled" (click)="issue()">
-                                    <i class="fas fa-exclamation"></i> {{
-                                    'Requests.ReportIssue' | translate }}</button>
+						<div class="col-12 col-md-10">
+							@defer (on viewport; prefetch on idle) {
+							<tv-request-grid id="requests-grid" [tvRequest]="tvRequest" [isAdmin]="isAdmin" [tv]="tv"></tv-request-grid>
+							} @placeholder {
+								<p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+							}
+						</div>
 
-                            </div>
-                        </div>
-                    </div>
+						<div class="col-12 col-md-2">
+							<!--Just some space yo-->
+						</div>
+						<div class="col-12 col-md-10">
+							<div class="issuesPanel">
+								<issues-panel [providerId]="tv.id" [isAdmin]="isAdmin"></issues-panel>
+							</div>
+							<mat-accordion id="requests-panel">
+								<mat-expansion-panel>
+									<mat-expansion-panel-header>
+										<mat-panel-title>
+											{{ 'Requests.Title' | translate }}
+										</mat-panel-title>
+									</mat-expansion-panel-header>
 
-                    <div class="row">
-                        <div class="col-12 col-md-2">
-                            <mat-card class="mat-elevation-z8 spacing-below">
-                                <mat-card-content>
-                                    <tv-information-panel [tv]="tv" [request]="showRequest"
-                                        [advancedOptions]="showAdvanced"></tv-information-panel>
-                                </mat-card-content>
-                            </mat-card>
-                        </div>
-                        <div class="col-12 col-md-10">
-                            <div class="row">
-                                <div class="col-12">
-                                    <mat-card class="mat-elevation-z8 spacing-below">
-                                        <mat-card-content>
-                                            {{tv.overview}}
-                                        </mat-card-content>
-                                    </mat-card>
-                                </div>
-                                <div class="col-12">
-                                    <cast-carousel [cast]="tv.cast"></cast-carousel>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+									@defer (on viewport; prefetch on idle) {
+									<tv-requests-panel
+										[tvRequest]="tvRequest"
+										[isAdmin]="isAdmin"
+										[manageOwnRequests]="manageOwnRequests"
+									></tv-requests-panel>
+									} @placeholder {
+										<div class="loading-spinner" style="left: 50%;position: absolute;">
+										<mat-spinner [color]="'accent'"></mat-spinner>
+									</div>
+									}
+								</mat-expansion-panel>
+							</mat-accordion>
+						</div>
+					</div>
+				</div>
 
-
-                    <div class="row">
-                        <div class="col-12 col-md-2">
-
-                            <!--Just some space yo-->
-
-                        </div>
-
-                        <div class="col-12 col-md-10">
-                            <tv-request-grid id="requests-grid" [tvRequest]="tvRequest" [isAdmin]="isAdmin" [tv]="tv"></tv-request-grid>
-                        </div>
-
-                        <div class="col-12 col-md-2">
-
-                            <!--Just some space yo-->
-
-                        </div>
-                        <div class="col-12 col-md-10">
-                            <div class="issuesPanel">
-                                <issues-panel [providerId]="tv.id" [isAdmin]="isAdmin"></issues-panel>
-                            </div>
-                            <mat-accordion id="requests-panel">
-                                <mat-expansion-panel>
-                                    <mat-expansion-panel-header>
-                                        <mat-panel-title>
-                                            {{'Requests.Title' | translate}}
-                                        </mat-panel-title>
-                                    </mat-expansion-panel-header>
-                                    <tv-requests-panel [tvRequest]="tvRequest" [isAdmin]="isAdmin" [manageOwnRequests]="manageOwnRequests"></tv-requests-panel>
-                                </mat-expansion-panel>
-
-                            </mat-accordion>
-
-                        </div>
-
-
-                    </div>
-
-
-
-                </div>
-
-
-
-
-
-                <div class="bottom-page-gap">
-                </div>
-            </section>
-
-        </div>
-    </ng-template>
+				<div class="bottom-page-gap"></div>
+			</section>
+		</div>
+	</ng-template>
 </div>
