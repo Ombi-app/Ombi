@@ -1,3 +1,12 @@
+## [4.43.15](https://github.com/Ombi-app/Ombi/compare/v4.43.14...v4.43.15) (2024-03-30)
+
+
+### Bug Fixes
+
+* fixed emails not being able to load the template ([6b49d9b](https://github.com/Ombi-app/Ombi/commit/6b49d9bc7108a0b663ca05de19dbf4841c9c43c1))
+
+
+
 ## [4.43.14](https://github.com/Ombi-app/Ombi/compare/v4.43.13...v4.43.14) (2024-03-06)
 
 
@@ -1869,15 +1878,6 @@
 ### Bug Fixes
 
 * Some minor tweaks to the movie info panel ([#4883](https://github.com/Ombi-app/Ombi/issues/4883)) ([1244487](https://github.com/Ombi-app/Ombi/commit/12444871df2f7602200f73971fce962f06b4a80b))
-
-
-
-## [4.35.13](https://github.com/Ombi-app/Ombi/compare/v4.35.12...v4.35.13) (2023-03-28)
-
-
-### Bug Fixes
-
-* **sonarr:** :bug: Added some more error handling and information around testing sonarr ([bd2c2d3](https://github.com/Ombi-app/Ombi/commit/bd2c2d3901e239393010fd582b207f1571fb4b7e)), closes [#4877](https://github.com/Ombi-app/Ombi/issues/4877)
 
 
 
