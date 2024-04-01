@@ -1,3 +1,7 @@
+## [4.43.16](https://github.com/Ombi-app/Ombi/compare/v4.43.15...v4.43.16) (2024-04-01)
+
+
+
 ## [4.43.15](https://github.com/Ombi-app/Ombi/compare/v4.43.14...v4.43.15) (2024-03-30)
 
 
@@ -1869,15 +1873,6 @@
 ### Bug Fixes
 
 * **sonarr:** :bug: Stop the sonarr version endpoint from breaking when Sonarr is down [#4895](https://github.com/Ombi-app/Ombi/issues/4895) ([7bb8bec](https://github.com/Ombi-app/Ombi/commit/7bb8becfb140ef6012356752a71d53b5b404e482))
-
-
-
-## [4.35.14](https://github.com/Ombi-app/Ombi/compare/v4.35.13...v4.35.14) (2023-04-06)
-
-
-### Bug Fixes
-
-* Some minor tweaks to the movie info panel ([#4883](https://github.com/Ombi-app/Ombi/issues/4883)) ([1244487](https://github.com/Ombi-app/Ombi/commit/12444871df2f7602200f73971fce962f06b4a80b))
 
 
 
