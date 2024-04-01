@@ -12,19 +12,16 @@ namespace Ombi.Notifications.Templates
             {
                 if (string.IsNullOrEmpty(_templateLocation))
                 {
-#if DEBUG
-                    _templateLocation = Path.Combine(Directory.GetCurrentDirectory(), "bin", "Debug", "net6.0", "Templates",
-                        "BasicTemplate.html");
-#else
-                _templateLocation = Path.Combine(Directory.GetCurrentDirectory(), "Templates","BasicTemplate.html");
-#endif
+                    //_templateLocation = Path.Combine(Directory.GetCurrentDirectory(), "bin", "Debug", "net6.0", "Templates",
+                    //    "BasicTemplate.html");
+                    _templateLocation = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "BasicTemplate.html");
                 }
                 return _templateLocation;
             }
         }
 
         private string _templateLocation;
-        
+
         private const string SubjectKey = "{@SUBJECT}";
         private const string BodyKey = "{@BODY}";
         private const string Poster = "{@POSTER}";
@@ -43,9 +40,10 @@ namespace Ombi.Notifications.Templates
             return sb.ToString();
         }
 
-        private string GetPosterContent(string imgsrc, string url) {
+        private string GetPosterContent(string imgsrc, string url)
+        {
             string posterContent;
-            
+
             if (string.IsNullOrEmpty(imgsrc))
             {
                 posterContent = string.Empty;
