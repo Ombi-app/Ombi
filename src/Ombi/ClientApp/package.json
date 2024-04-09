@@ -47,7 +47,7 @@
 		"ngx-infinite-scroll": "^17.0.0",
 		"popper.js": "^1.14.3",
 		"primeicons": "^6.0.1",
-		"primeng": "^17.6.0",
+		"primeng": "^17.11.0",
 		"rxjs": "^7.5.4",
 		"ts-md5": "^1.2.7",
 		"zone.js": "0.14.3"
