@@ -1,3 +1,12 @@
+## [4.43.17](https://github.com/Ombi-app/Ombi/compare/v4.43.16...v4.43.17) (2024-05-14)
+
+
+### Bug Fixes
+
+* upgrade multiple dependencies with Snyk ([#5104](https://github.com/Ombi-app/Ombi/issues/5104)) [skip ci] ([a1083f6](https://github.com/Ombi-app/Ombi/commit/a1083f67c73c968b9ff0a0feebe5a9aac6a7c7c9))
+
+
+
 ## [4.43.16](https://github.com/Ombi-app/Ombi/compare/v4.43.15...v4.43.16) (2024-04-01)
 
 
@@ -1864,15 +1873,6 @@
 ### Bug Fixes
 
 * Support duplicates in Emby/JF collections ([#4902](https://github.com/Ombi-app/Ombi/issues/4902)) ([141f96d](https://github.com/Ombi-app/Ombi/commit/141f96da5e45d5b3fa5f496806b102e473da6607))
-
-
-
-## [4.35.15](https://github.com/Ombi-app/Ombi/compare/v4.35.14...v4.35.15) (2023-04-06)
-
-
-### Bug Fixes
-
-* **sonarr:** :bug: Stop the sonarr version endpoint from breaking when Sonarr is down [#4895](https://github.com/Ombi-app/Ombi/issues/4895) ([7bb8bec](https://github.com/Ombi-app/Ombi/commit/7bb8becfb140ef6012356752a71d53b5b404e482))
 
 
 
