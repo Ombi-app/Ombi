@@ -1,5 +1,5 @@
 # build stage
-FROM mcr.microsoft.com/dotnet/sdk:6.0-bullseye-slim AS build
+FROM mcr.microsoft.com/dotnet/runtime-deps:8.0-jammy-chiseled AS build
 LABEL exclaimer-signature-analytics-build=true
 ARG VERSION=1.0.0
 WORKDIR /source
@@ -63,7 +63,7 @@ FROM build AS publish
 
 RUN dotnet publish "Ombi.csproj" -c release --no-restore --no-build -o /app/publish
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0-bullseye-slim as base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy-chiseled as base
 WORKDIR /src/Ombi
 EXPOSE 5000
 
