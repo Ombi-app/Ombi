@@ -84,10 +84,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: win10-x64
+          - os: win-x64
             format: zip
             compression: zip
-          - os: win10-x86
+          - os: win-x86
             format: zip
             compression: zip
           - os: linux-x64
