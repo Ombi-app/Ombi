@@ -1,12 +1,4 @@
-## [4.43.19](https://github.com/Ombi-app/Ombi/compare/v4.43.18...v4.43.19) (2024-05-14)
-
-
-
-## [4.43.18](https://github.com/Ombi-app/Ombi/compare/v4.43.17...v4.43.18) (2024-05-14)
-
-
-
-## [4.43.17](https://github.com/Ombi-app/Ombi/compare/v4.43.16...v4.43.17) (2024-05-14)
+## [4.43.20](https://github.com/Ombi-app/Ombi/compare/v4.43.16...v4.43.20) (2024-05-14)
 
 
 ### Bug Fixes
@@ -1862,6 +1854,25 @@
 ### Bug Fixes
 
 * **#4906:** :bug: Fixed an issue with power users and permissions ([80884bc](https://github.com/Ombi-app/Ombi/commit/80884bcd725c329867c278ad235cd4096cd4fe7a))
+
+
+
+## [4.35.17](https://github.com/Ombi-app/Ombi/compare/v4.35.16...v4.35.17) (2023-04-15)
+
+
+### Bug Fixes
+
+* **discover:** Fix denied requests displayed as approved ([#4901](https://github.com/Ombi-app/Ombi/issues/4901)) ([1e87f20](https://github.com/Ombi-app/Ombi/commit/1e87f2010491b0f3fdda70d2b19d9afd94438df7))
+* Fix denied movie shown as 'processing request' in details view ([#4900](https://github.com/Ombi-app/Ombi/issues/4900)) ([0069bfd](https://github.com/Ombi-app/Ombi/commit/0069bfdf54e0785bad45c832ca052f19fd4b940b))
+
+
+
+## [4.35.16](https://github.com/Ombi-app/Ombi/compare/v4.35.15...v4.35.16) (2023-04-13)
+
+
+### Bug Fixes
+
+* Support duplicates in Emby/JF collections ([#4902](https://github.com/Ombi-app/Ombi/issues/4902)) ([141f96d](https://github.com/Ombi-app/Ombi/commit/141f96da5e45d5b3fa5f496806b102e473da6607))
 
 
 
