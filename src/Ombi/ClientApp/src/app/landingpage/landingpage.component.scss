@@ -1,9 +1,11 @@
-﻿@import "./styles/variables.scss";
+@import "./styles/variables.scss";
 .small-middle-container{
         height:100vh;
+        overflow: auto; /* or overflow: auto; */
     }
 
 .row{
+    overflow: auto; /* or overflow: auto; */
     display:flex;
     align-items: center;
     justify-content: center;
