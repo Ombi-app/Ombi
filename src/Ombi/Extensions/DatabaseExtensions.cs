@@ -171,6 +171,7 @@ namespace Ombi.Extensions
             {
                 b.EnableRetryOnFailure();
             }).ReplaceService<ISqlGenerationHelper, NpgsqlCaseInsensitiveSqlGenerationHelper>();
+        }
 
         private static ServerVersion GetServerVersion(string connectionString)
         {
