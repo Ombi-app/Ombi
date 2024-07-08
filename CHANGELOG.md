@@ -1,3 +1,33 @@
+## [4.43.22](https://github.com/Ombi-app/Ombi/compare/v4.43.21...v4.43.22) (2024-07-08)
+
+
+
+## [4.43.21](https://github.com/Ombi-app/Ombi/compare/v4.43.20...v4.43.21) (2024-06-26)
+
+
+
+## [4.43.20](https://github.com/Ombi-app/Ombi/compare/v4.43.16...v4.43.20) (2024-05-14)
+
+
+### Bug Fixes
+
+* upgrade multiple dependencies with Snyk ([#5104](https://github.com/Ombi-app/Ombi/issues/5104)) [skip ci] ([a1083f6](https://github.com/Ombi-app/Ombi/commit/a1083f67c73c968b9ff0a0feebe5a9aac6a7c7c9))
+
+
+
+## [4.43.16](https://github.com/Ombi-app/Ombi/compare/v4.43.15...v4.43.16) (2024-04-01)
+
+
+
+## [4.43.15](https://github.com/Ombi-app/Ombi/compare/v4.43.14...v4.43.15) (2024-03-30)
+
+
+### Bug Fixes
+
+* fixed emails not being able to load the template ([6b49d9b](https://github.com/Ombi-app/Ombi/commit/6b49d9bc7108a0b663ca05de19dbf4841c9c43c1))
+
+
+
 ## [4.43.14](https://github.com/Ombi-app/Ombi/compare/v4.43.13...v4.43.14) (2024-03-06)
 
 
@@ -1832,52 +1862,6 @@
 ### Bug Fixes
 
 * **#4906:** :bug: Fixed an issue with power users and permissions ([80884bc](https://github.com/Ombi-app/Ombi/commit/80884bcd725c329867c278ad235cd4096cd4fe7a))
-
-
-
-## [4.35.17](https://github.com/Ombi-app/Ombi/compare/v4.35.16...v4.35.17) (2023-04-15)
-
-
-### Bug Fixes
-
-* **discover:** Fix denied requests displayed as approved ([#4901](https://github.com/Ombi-app/Ombi/issues/4901)) ([1e87f20](https://github.com/Ombi-app/Ombi/commit/1e87f2010491b0f3fdda70d2b19d9afd94438df7))
-* Fix denied movie shown as 'processing request' in details view ([#4900](https://github.com/Ombi-app/Ombi/issues/4900)) ([0069bfd](https://github.com/Ombi-app/Ombi/commit/0069bfdf54e0785bad45c832ca052f19fd4b940b))
-
-
-
-## [4.35.16](https://github.com/Ombi-app/Ombi/compare/v4.35.15...v4.35.16) (2023-04-13)
-
-
-### Bug Fixes
-
-* Support duplicates in Emby/JF collections ([#4902](https://github.com/Ombi-app/Ombi/issues/4902)) ([141f96d](https://github.com/Ombi-app/Ombi/commit/141f96da5e45d5b3fa5f496806b102e473da6607))
-
-
-
-## [4.35.15](https://github.com/Ombi-app/Ombi/compare/v4.35.14...v4.35.15) (2023-04-06)
-
-
-### Bug Fixes
-
-* **sonarr:** :bug: Stop the sonarr version endpoint from breaking when Sonarr is down [#4895](https://github.com/Ombi-app/Ombi/issues/4895) ([7bb8bec](https://github.com/Ombi-app/Ombi/commit/7bb8becfb140ef6012356752a71d53b5b404e482))
-
-
-
-## [4.35.14](https://github.com/Ombi-app/Ombi/compare/v4.35.13...v4.35.14) (2023-04-06)
-
-
-### Bug Fixes
-
-* Some minor tweaks to the movie info panel ([#4883](https://github.com/Ombi-app/Ombi/issues/4883)) ([1244487](https://github.com/Ombi-app/Ombi/commit/12444871df2f7602200f73971fce962f06b4a80b))
-
-
-
-## [4.35.13](https://github.com/Ombi-app/Ombi/compare/v4.35.12...v4.35.13) (2023-03-28)
-
-
-### Bug Fixes
-
-* **sonarr:** :bug: Added some more error handling and information around testing sonarr ([bd2c2d3](https://github.com/Ombi-app/Ombi/commit/bd2c2d3901e239393010fd582b207f1571fb4b7e)), closes [#4877](https://github.com/Ombi-app/Ombi/issues/4877)
 
 
 
