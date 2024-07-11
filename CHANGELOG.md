@@ -1,3 +1,12 @@
+# [4.44.0](https://github.com/Ombi-app/Ombi/compare/v4.43.22...v4.44.0) (2024-07-11)
+
+
+### Features
+
+* Adding postgres support to ombi (beta) ([#5050](https://github.com/Ombi-app/Ombi/issues/5050)) ([f8c6102](https://github.com/Ombi-app/Ombi/commit/f8c61027bf53d657d7955a98b69d7ab90b66a75a))
+
+
+
 ## [4.43.22](https://github.com/Ombi-app/Ombi/compare/v4.43.21...v4.43.22) (2024-07-08)
 
 
@@ -1853,15 +1862,6 @@
 ### Bug Fixes
 
 * **radarr:** Fixed an issue where the radarr sync would break ([de4baad](https://github.com/Ombi-app/Ombi/commit/de4baade9f87248d77106ff1a313a498870f4fb3))
-
-
-
-## [4.35.18](https://github.com/Ombi-app/Ombi/compare/v4.35.17...v4.35.18) (2023-04-15)
-
-
-### Bug Fixes
-
-* **#4906:** :bug: Fixed an issue with power users and permissions ([80884bc](https://github.com/Ombi-app/Ombi/commit/80884bcd725c329867c278ad235cd4096cd4fe7a))
 
 
 
