@@ -91,12 +91,12 @@ namespace Ombi.Schedule.Tests
                 new Issues
                 {
                     Status = IssueStatus.Resolved,
-                    ResovledDate = DateTime.Now.AddDays(-2)
+                    ResovledDate = DateTime.UtcNow.AddDays(-2)
                 },
                 new Issues
                 {
                     Status = IssueStatus.Resolved,
-                    ResovledDate = DateTime.Now.AddDays(-4)
+                    ResovledDate = DateTime.UtcNow.AddDays(-4)
                 }
             };
 
