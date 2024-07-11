@@ -161,7 +161,7 @@
         "RequestStatus": "申请状态",
         "Watched": "已观看",
         "WatchedTooltip": "提出请求的用户已经观看了",
-        "WatchedProgressTooltip": "Shows how much the user who made the request has watched it",
+        "WatchedProgressTooltip": "显示提出请求的用户观看次数",
         "WatchedByUsersCount": "{{count}} 个用户已经观看了这个。",
         "Denied": "已拒绝：",
         "TheatricalRelease": "剧场版发行：{{date}}",
