@@ -50,7 +50,7 @@
 		"primeng": "^17.6.0",
 		"rxjs": "^7.5.4",
 		"ts-md5": "^1.2.7",
-		"zone.js": "0.14.4"
+		"zone.js": "0.14.7"
 	},
 	"devDependencies": {
 		"@angular-devkit/build-angular": "^17.1.3",
