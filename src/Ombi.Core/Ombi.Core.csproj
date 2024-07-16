@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <FileVersion>3.0.0.0</FileVersion>
     <Version></Version>
@@ -13,8 +13,8 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="6.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="8.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.5" />
     <PackageReference Include="MusicBrainzAPI" Version="2.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.Diagnostics.Process" Version="4.3.0" />

@@ -1,7 +1,6 @@
 ﻿<Project ToolsVersion="15.0" Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <RuntimeIdentifiers>win10-x64;win10-x86;osx-x64;linux-x64;linux-arm;linux-arm64;</RuntimeIdentifiers>
+    <TargetFramework>net8.0</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <!-- <PublishTrimmed>true</PublishTrimmed>    
@@ -66,20 +65,21 @@
  
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.MySql" Version="6.0.2" />
+    <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="6.0.2" />
     <PackageReference Include="AspNetCore.HealthChecks.Sqlite" Version="6.0.2" />
     <PackageReference Include="AutoMapper" Version="12.0.0" />
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="LazyCache.AspNetCore" Version="2.4.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.26" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.9">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
     <PackageReference Include="ncrontab" Version="3.3.1" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.2" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
     <PackageReference Include="Serilog" Version="2.12.0" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
@@ -87,8 +87,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.4.0" />
     <PackageReference Include="System.Security.Cryptography.Csp" Version="4.3.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="8.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.5" />
   </ItemGroup>
 
   <ItemGroup>
@@ -107,7 +107,6 @@
     <ProjectReference Include="..\Ombi.Schedule\Ombi.Schedule.csproj" />
     <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
     <ProjectReference Include="..\Ombi.TheMovieDbApi\Ombi.Api.TheMovieDb.csproj" />
-    <ProjectReference Include="..\Ombi.Updater\Ombi.Updater.csproj" />
   </ItemGroup>
 
   

@@ -304,7 +304,7 @@ namespace Ombi.Core.Tests.Engine
                 {
                     UserId = "id1",
                     RequestType = RequestType.TvShow,
-                    RequestDate = today.AddHours(-1),
+                    RequestDate = today.AddMinutes(-1),
                     EpisodeCount = 1,
                 },
                 new RequestLog
@@ -312,7 +312,7 @@ namespace Ombi.Core.Tests.Engine
                     UserId = "id1",
                     RequestType = RequestType.TvShow,
                     EpisodeCount = 1,
-                    RequestDate = today.AddHours(-2),
+                    RequestDate = today.AddMinutes(-2),
                 },
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
@@ -345,7 +345,7 @@ namespace Ombi.Core.Tests.Engine
                 {
                     UserId = "id1",
                     RequestType = RequestType.TvShow,
-                    RequestDate = today.AddHours(-1),
+                    RequestDate = today.AddMinutes(-1),
                     EpisodeCount = 5,
                 },
                 new RequestLog
@@ -353,7 +353,7 @@ namespace Ombi.Core.Tests.Engine
                     UserId = "id1",
                     RequestType = RequestType.TvShow,
                     EpisodeCount = 4,
-                    RequestDate = today.AddHours(-2),
+                    RequestDate = today.AddMinutes(-2),
                 },
             };
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();

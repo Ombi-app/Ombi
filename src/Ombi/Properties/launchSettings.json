@@ -1,25 +1,5 @@
 {
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iis": {
-      "applicationUrl": "http://localhost/Ombi",
-      "sslPort": 0
-    },
-    "iisExpress": {
-      "applicationUrl": "http://localhost:3577/",
-      "sslPort": 0
-    }
-  },
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "commandLineArgs": "--host http://*:3577",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
     "Ombi": {
       "commandName": "Project",
       "commandLineArgs": "--host http://localhost:3577",
