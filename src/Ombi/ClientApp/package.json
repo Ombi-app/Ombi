@@ -44,7 +44,7 @@
 		"ng2-cookies": "^1.0.12",
 		"ngx-clipboard": "^16.0.0",
 		"ngx-date-fns": "^11.0.0",
-		"ngx-infinite-scroll": "^17.0.0",
+		"ngx-infinite-scroll": "^17.0.1",
 		"popper.js": "^1.14.3",
 		"primeicons": "^6.0.1",
 		"primeng": "^17.6.0",

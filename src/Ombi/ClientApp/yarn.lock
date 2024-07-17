@@ -7603,10 +7603,10 @@ ngx-date-fns@^11.0.0:
   dependencies:
     tslib "^2.3.0"
 
-ngx-infinite-scroll@^17.0.0:
-  version "17.0.0"
-  resolved "https://registry.yarnpkg.com/ngx-infinite-scroll/-/ngx-infinite-scroll-17.0.0.tgz#15726104d5b4e248a6eb96b03149959b20233ae8"
-  integrity sha512-pQXLuRiuhRuDKD3nmgyW1V08JVNBepmk6nb8qjHc5hgsWNts01+R/p33rYcRDzcut6/PWqGyrZ9o9i8swzMYMA==
+ngx-infinite-scroll@^17.0.1:
+  version "17.0.1"
+  resolved "https://registry.yarnpkg.com/ngx-infinite-scroll/-/ngx-infinite-scroll-17.0.1.tgz#2c8a8bf31ff7e8f695e12c479e84c0bc120befa2"
+  integrity sha512-T+XseajbmT9YTMmPnFV/AfSlwjaV9m2gZtbIIZH3S+yg/rvvfbgkThqs54UWIu+pqcqNR4UhrXfw6mUjCVZD2A==
   dependencies:
     tslib "^2.3.0"
 
