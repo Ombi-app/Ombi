@@ -301,10 +301,10 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/deepwather">
-            <img src="https://avatars.githubusercontent.com/u/12274612?v=4" width="50;" alt="deepwather"/>
+        <a href="https://github.com/phildups7">
+            <img src="https://avatars.githubusercontent.com/u/60622768?v=4" width="50;" alt="phildups7"/>
             <br />
-            <sub><b>Michael Reber</b></sub>
+            <sub><b>Phildups7</b></sub>
         </a>
     </td>
     <td align="center">
@@ -616,8 +616,8 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/camjac251">
-            <img src="https://avatars.githubusercontent.com/u/6313132?v=4" width="50;" alt="camjac251"/>
+        <a href="https://github.com/janderedev">
+            <img src="https://avatars.githubusercontent.com/u/26145882?v=4" width="50;" alt="janderedev"/>
             <br />
             <sub><b>Camjac251</b></sub>
         </a>

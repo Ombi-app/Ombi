@@ -25,6 +25,7 @@
       </mat-form-field>
 
       <mat-slide-toggle id="ssl" class="col-md-2 col-5 mt-3" id="ssl" name="ssl" [(ngModel)]="this.data.server.ssl" [checked]="this.data.server.ssl">
+      <mat-slide-toggle id="ssl" class="col-md-2 col-5 mt-3" id="ssl" name="ssl" [(ngModel)]="this.data.server.ssl" [checked]="this.data.server.ssl">
         SSL
       </mat-slide-toggle>
     </div>
@@ -74,6 +75,7 @@
     <div *ngIf="this.data.server.plexSelectedLibraries && this.data.server.plexSelectedLibraries.length > 0">
       <label>Please select the libraries for Ombi to monitor. If nothing is selected, Ombi will monitor all
         libraries.</label>
+        <div *ngFor="let lib of this.data.server.plexSelectedLibraries; let i = index">
         <div *ngFor="let lib of this.data.server.plexSelectedLibraries; let i = index">
           <div class="md-form-field">
               <div class="checkbox">
