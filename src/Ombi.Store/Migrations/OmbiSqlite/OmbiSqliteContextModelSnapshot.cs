@@ -921,6 +921,12 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Radarr4KQualityProfile")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Radarr4KRootPath")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("RadarrQualityProfile")
                         .HasColumnType("INTEGER");
 

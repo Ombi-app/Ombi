@@ -108,6 +108,7 @@ namespace Ombi.Notifications.Agents
                 {
                     content = model.Message,
                     username = settings.Username ?? "Ombi",
+                    avatar_url = settings.Icon.HasValue() ? settings.Icon : string.Empty
                 };
 
                 var fields = new List<DiscordField>();
@@ -157,10 +158,7 @@ namespace Ombi.Notifications.Agents
                     }
                 }
 
-                var author = new DiscordAuthor
-                {
-                    iconurl = settings.Icon.HasValue() ? settings.Icon : string.Empty
-                };
+                var author = new DiscordAuthor();
 
                 if (model.Data.TryGetValue("ApplicationUrl", out var appUrl))
                 {

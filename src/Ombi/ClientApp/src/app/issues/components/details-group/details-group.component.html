@@ -1,28 +1,42 @@
 <mat-card class="issue-card" *ngIf="!deleted">
-  <mat-card-header>
-    <mat-card-title>{{issue.subject}}</mat-card-title>
-    <mat-card-subtitle>{{'Issues.UserOnDate' | translate: { user: issue.userReported?.userName, date: issue.createdDate | amLocal | amUserLocale | amDateFormat: 'LL' } }}</mat-card-subtitle>
-    <mat-card-subtitle>{{issue.issueCategory.value}}</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content>
-    <p>
-      {{issue.description}}
-    </p>
-  </mat-card-content>
-  <mat-card-actions>
-    <button mat-raised-button (click)="openChat(issue)" color="accent"><i class="far fa-comments"></i> {{'Issues.Chat' | translate }}</button>
-    <div *ngIf="isAdmin && settings;then content else empty"></div>
-<ng-template #content>
-<button mat-raised-button color="accent"
-*ngIf="issue.status === IssueStatus.Pending && settings.enableInProgress"
-(click)="inProgress(issue)">{{'Issues.MarkInProgress' | translate }}</button>
+	<mat-card-header>
+		<mat-card-title>{{ issue.subject }}</mat-card-title>
+		<mat-card-subtitle>{{
+			'Issues.UserOnDate' | translate: { user: issue.userReported?.userName, date: issue.createdDate | ombiDate: 'PP' }
+		}}</mat-card-subtitle>
+		<mat-card-subtitle>{{ issue.issueCategory.value }}</mat-card-subtitle>
+	</mat-card-header>
+	<mat-card-content>
+		<p>
+			{{ issue.description }}
+		</p>
+	</mat-card-content>
+	<mat-card-actions>
+		<button mat-raised-button (click)="openChat(issue)" color="accent"><i class="far fa-comments"></i> {{ 'Issues.Chat' | translate }}</button>
+		<div *ngIf="isAdmin && settings; then content; else empty"></div>
+		<ng-template #content>
+			<button
+				mat-raised-button
+				color="accent"
+				*ngIf="issue.status === IssueStatus.Pending && settings.enableInProgress"
+				(click)="inProgress(issue)"
+			>
+				{{ 'Issues.MarkInProgress' | translate }}
+			</button>
 
-<button mat-raised-button color="accent"
-*ngIf="issue.status === IssueStatus.Pending && !settings.enableInProgress || issue.status == IssueStatus.InProgress"
-(click)="resolve(issue)">{{'Issues.MarkResolved' | translate}}</button>
+			<button
+				mat-raised-button
+				color="accent"
+				*ngIf="(issue.status === IssueStatus.Pending && !settings.enableInProgress) || issue.status == IssueStatus.InProgress"
+				(click)="resolve(issue)"
+			>
+				{{ 'Issues.MarkResolved' | translate }}
+			</button>
 
-<button mat-raised-button color="warn" (click)="delete(issue)"><i class="far fa-times-circle"></i> {{'Issues.Delete' | translate}}</button></ng-template>
-<ng-template #empty></ng-template>
-  </mat-card-actions>
+			<button mat-raised-button color="warn" (click)="delete(issue)">
+				<i class="far fa-times-circle"></i> {{ 'Issues.Delete' | translate }}
+			</button></ng-template
+		>
+		<ng-template #empty></ng-template>
+	</mat-card-actions>
 </mat-card>
-

@@ -141,6 +141,24 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+
+    <mat-form-field *ngIf="radarr4KQualities">
+      <mat-label>Radarr 4K Quality Profiles</mat-label>
+      <mat-select [(ngModel)]="user.userQualityProfiles.radarr4KQualityProfile">
+        <mat-option *ngFor="let folder of radarr4KQualities" [value]="folder.id">
+          {{folder.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="radarr4KRootFolders">
+      <mat-label>Radarr 4K Root Folder</mat-label>
+      <mat-select [(ngModel)]="user.userQualityProfiles.radarr4KRootPath">
+        <mat-option *ngFor="let folder of radarr4KRootFolders" [value]="folder.id">
+          {{folder.path}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
 
   <div class="col-md-2 col-sm-12">

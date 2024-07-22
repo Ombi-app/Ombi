@@ -1,128 +1,167 @@
 ﻿<div *ngIf="childRequests">
-    <hr />
-    <div *ngFor="let child of childRequests" class="clearfix">
-        <div class="col-md-12">
+	<hr />
+	<div *ngFor="let child of childRequests" class="clearfix">
+		<div class="col-md-12">
+			<div class="col-md-2">
+				<span [translate]="'Requests.RequestedBy'"></span>
+				<span *ngIf="child.requestedByAlias">{{ child.requestedByAlias }}</span>
+				<span *ngIf="!child.requestedByAlias">
+					<span *ngIf="!isAdmin">{{ child.requestedUser.userName }}</span>
+					<span *ngIf="isAdmin && child.requestedUser.alias">{{ child.requestedUser.alias }}</span>
+					<span *ngIf="isAdmin && !child.requestedUser.alias">{{ child.requestedUser.userName }}</span>
+				</span>
+			</div>
 
-            <div class="col-md-2">
-                <span [translate]="'Requests.RequestedBy'"></span>
-                <span *ngIf="child.requestedByAlias">{{child.requestedByAlias}}</span>
-                <span *ngIf="!child.requestedByAlias">
-                    <span *ngIf="!isAdmin">{{child.requestedUser.userName}}</span>
-                    <span *ngIf="isAdmin && child.requestedUser.alias">{{child.requestedUser.alias}}</span>
-                    <span *ngIf="isAdmin && !child.requestedUser.alias">{{child.requestedUser.userName}}</span>
-                </span>
-            </div>
+			<div class="col-md-1 col-md-push-9">
+				<button
+					id="subscribeBtn"
+					*ngIf="child.showSubscribe && !child.subscribed"
+					(click)="subscribe(child)"
+					class="btn btn-sm btn-primary-outline"
+					pTooltip="Subscribe for notifications"
+					type="submit"
+				>
+					<i class="fas fa-rss"></i> Subscribe
+				</button>
+				<button
+					id="subscribeBtn"
+					*ngIf="child.showSubscribe && child.subscribed"
+					(click)="unSubscribe(child)"
+					class="btn btn-sm btn-danger-outline"
+					pTooltip="UnSubscribe for notifications"
+					type="submit"
+				>
+					<i class="fas fa-rss"></i> UnSubscribe
+				</button>
 
-            <div class="col-md-1 col-md-push-9">
-                <button id="subscribeBtn" *ngIf="child.showSubscribe && !child.subscribed" (click)="subscribe(child)"
-                    class="btn btn-sm btn-primary-outline" pTooltip="Subscribe for notifications" type="submit"><i
-                        class="fas fa-rss"></i> Subscribe</button>
-                <button id="subscribeBtn" *ngIf="child.showSubscribe && child.subscribed" (click)="unSubscribe(child)"
-                    class="btn btn-sm btn-danger-outline" pTooltip="UnSubscribe for notifications" type="submit"><i
-                        class="fas fa-rss"></i> UnSubscribe</button>
+				<div *ngIf="isAdmin">
+					<button
+						id="approveBtn"
+						*ngIf="child.canApprove && !child.approved"
+						(click)="approve(child)"
+						class="btn btn-sm btn-success-outline"
+						type="submit"
+					>
+						<i class="fas fa-plus"></i> {{ 'Common.Approve' | translate }}
+					</button>
+					<button
+						id="unavailableBtn"
+						*ngIf="child.available"
+						(click)="changeAvailability(child, false)"
+						style="text-align: right"
+						value="false"
+						class="btn btn-sm btn-info-outline change"
+					>
+						<i class="fas fa-minus"></i> {{ 'Requests.MarkUnavailable' | translate }}
+					</button>
+					<button
+						id="availableBtn"
+						*ngIf="!child.available"
+						(click)="changeAvailability(child, true)"
+						style="text-align: right"
+						value="true"
+						class="btn btn-sm btn-success-outline change"
+					>
+						<i class="fas fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}
+					</button>
 
+					<button id="denyBtn" *ngIf="!child.denied" type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny">
+						<i class="fas fa-times"></i> {{ 'Requests.Deny' | translate }}
+					</button>
+				</div>
+				<div *ngIf="isAdmin || isRequestUser(child)">
+					<button id="removeBtn" type="button" (click)="removeRequest(child)" class="btn btn-sm btn-danger-outline deny">
+						<i class="fas fa-times"></i> {{ 'Requests.Remove' | translate }}
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12">
+			<ngb-tabset>
+				<div *ngFor="let season of child.seasonRequests">
+					<ngb-tab [id]="season.seasonNumber" [title]="season.seasonNumber">
+						<ng-template ngbTabContent>
+							<h2>{{ 'Requests.Season' | translate }} {{ season.seasonNumber }}</h2>
 
-                <div *ngIf="isAdmin">
-                    <button id="approveBtn" *ngIf="child.canApprove && !child.approved" (click)="approve(child)" class="btn btn-sm btn-success-outline"
-                        type="submit"><i class="fas fa-plus"></i> {{ 'Common.Approve' | translate }}</button>
-                    <button id="unavailableBtn" *ngIf="child.available" (click)="changeAvailability(child, false)"
-                        style="text-align: right" value="false" class="btn btn-sm btn-info-outline change"><i class="fas fa-minus"></i>
-                        {{ 'Requests.MarkUnavailable' | translate }}</button>
-                    <button id="availableBtn" *ngIf="!child.available" (click)="changeAvailability(child, true)" style="text-align: right"
-                        value="true" class="btn btn-sm btn-success-outline change"><i class="fas fa-plus"></i> {{
-                        'Requests.MarkAvailable' | translate }}</button>
-
-                    <button id="denyBtn" *ngIf="!child.denied" type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny">
-                        <i class="fas fa-times"></i> {{ 'Requests.Deny' | translate }}</button>
-
-                </div>
-                <div *ngIf="isAdmin || isRequestUser(child)">
-                    <button id="removeBtn" type="button" (click)="removeRequest(child)" class="btn btn-sm btn-danger-outline deny"><i
-                            class="fas fa-times"></i> {{ 'Requests.Remove' | translate }}</button>
-                </div>
-
-
-            </div>
-        </div>
-        <div class="col-md-12">
-            <ngb-tabset>
-
-                <div *ngFor="let season of child.seasonRequests">
-                    <ngb-tab [id]="season.seasonNumber" [title]="season.seasonNumber">
-                        <ng-template ngbTabContent>
-                            <h2>{{ 'Requests.Season' | translate }} {{season.seasonNumber}}</h2>
-
-                            <table class="table table-striped table-hover table-responsive table-condensed">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            <a>
-                                                #
-                                            </a>
-                                        </th>
-                                        <th>
-                                            <a>
-                                                {{ 'Requests.GridTitle' | translate }}
-                                            </a>
-                                        </th>
-                                        <th>
-                                            <a>
-                                                {{ 'Requests.AirDate' | translate }}
-                                            </a>
-                                        </th>
-                                        <th>
-                                            <a>
-                                                {{ 'Requests.GridStatus' | translate }}
-                                            </a>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let ep of season.episodes">
-                                        <td>
-                                            {{ep.episodeNumber}}
-                                        </td>
-                                        <td>
-                                            {{ep.title}}
-                                        </td>
-                                        <td>
-                                            {{ep.airDate | amLocal | amUserLocale | amDateFormat: 'L' }}
-                                        </td>
-                                        <td>
-                                            <span *ngIf="child.denied" class="label label-danger" id="deniedLabel"
-                                                [translate]="'Common.Denied'">
-                                                <i style="color:red;" class="fas fa-check" pTooltip="{{child.deniedReason}}"></i>
-                                            </span>
-                                            <span *ngIf="!child.denied && ep.available" class="label label-success" id="availableLabel"
-                                                [translate]="'Common.Available'"></span>
-                                            <span *ngIf="!child.denied &&ep.approved && !ep.available" class="label label-info"
-                                                id="processingRequestLabel" [translate]="'Common.ProcessingRequest'"></span>
-                                            <div *ngIf="!child.denied && !ep.approved">
-                                                <div *ngIf="!ep.available"><span class="label label-warning" id="pendingApprovalLabel"
-                                                        [translate]="'Common.PendingApproval'"></span></div>
-                                            </div>
-
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </ng-template>
-                    </ngb-tab>
-                </div>
-            </ngb-tabset>
-        </div>
-        <br />
-        <br />
-        <hr />
-    </div>
-
+							<table class="table table-striped table-hover table-responsive table-condensed">
+								<thead>
+									<tr>
+										<th>
+											<a> # </a>
+										</th>
+										<th>
+											<a>
+												{{ 'Requests.GridTitle' | translate }}
+											</a>
+										</th>
+										<th>
+											<a>
+												{{ 'Requests.AirDate' | translate }}
+											</a>
+										</th>
+										<th>
+											<a>
+												{{ 'Requests.GridStatus' | translate }}
+											</a>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr *ngFor="let ep of season.episodes">
+										<td>
+											{{ ep.episodeNumber }}
+										</td>
+										<td>
+											{{ ep.title }}
+										</td>
+										<td>
+											{{ ep.airDate | ombiDate: 'P' }}
+										</td>
+										<td>
+											<span *ngIf="child.denied" class="label label-danger" id="deniedLabel" [translate]="'Common.Denied'">
+												<i style="color: red" class="fas fa-check" pTooltip="{{ child.deniedReason }}"></i>
+											</span>
+											<span
+												*ngIf="!child.denied && ep.available"
+												class="label label-success"
+												id="availableLabel"
+												[translate]="'Common.Available'"
+											></span>
+											<span
+												*ngIf="!child.denied && ep.approved && !ep.available"
+												class="label label-info"
+												id="processingRequestLabel"
+												[translate]="'Common.ProcessingRequest'"
+											></span>
+											<div *ngIf="!child.denied && !ep.approved">
+												<div *ngIf="!ep.available">
+													<span
+														class="label label-warning"
+														id="pendingApprovalLabel"
+														[translate]="'Common.PendingApproval'"
+													></span>
+												</div>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</ng-template>
+					</ngb-tab>
+				</div>
+			</ngb-tabset>
+		</div>
+		<br />
+		<br />
+		<hr />
+	</div>
 </div>
 
-<p-dialog *ngIf="requestToDeny" header="Deny Request '{{requestToDeny.title}}''" [(visible)]="denyDisplay" [draggable]="false">
-    <span>Please enter a rejection reason, the user will be notified of this:</span>
-    <textarea [(ngModel)]="rejectionReason" class="form-control-custom form-control"></textarea>
-    <p-footer>
-        <button type="button" (click)="denyRequest();" label="Reject" class="btn btn-success">Deny</button>
-        <button type="button" (click)="denyDisplay=false" label="Close" class="btn btn-danger">Close</button>
-    </p-footer>
+<p-dialog *ngIf="requestToDeny" header="Deny Request '{{ requestToDeny.title }}''" [(visible)]="denyDisplay" [draggable]="false">
+	<span>Please enter a rejection reason, the user will be notified of this:</span>
+	<textarea [(ngModel)]="rejectionReason" class="form-control-custom form-control"></textarea>
+	<p-footer>
+		<button type="button" (click)="denyRequest()" label="Reject" class="btn btn-success">Deny</button>
+		<button type="button" (click)="denyDisplay = false" label="Close" class="btn btn-danger">Close</button>
+	</p-footer>
 </p-dialog>

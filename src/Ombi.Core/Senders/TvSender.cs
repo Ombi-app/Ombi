@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualBasic;
-using Ombi.Api.DogNzb;
-using Ombi.Api.DogNzb.Models;
 using Ombi.Api.SickRage;
 using Ombi.Api.SickRage.Models;
 using Ombi.Api.Sonarr;
@@ -23,15 +19,13 @@ namespace Ombi.Core.Senders
 {
     public class TvSender : ITvSender
     {
-        public TvSender(ISonarrApi sonarrApi, ISonarrV3Api sonarrV3Api, ILogger<TvSender> log, ISettingsService<SonarrSettings> sonarrSettings,
-            ISettingsService<DogNzbSettings> dog, IDogNzbApi dogApi, ISettingsService<SickRageSettings> srSettings,
+        public TvSender(ISonarrV3Api sonarrV3Api, ILogger<TvSender> log, ISettingsService<SonarrSettings> sonarrSettings,
+            ISettingsService<SickRageSettings> srSettings,
             ISickRageApi srApi, IRepository<UserQualityProfiles> userProfiles, IRepository<RequestQueue> requestQueue, INotificationHelper notify)
         {
             SonarrApi = sonarrV3Api;
             Logger = log;
             SonarrSettings = sonarrSettings;
-            DogNzbSettings = dog;
-            DogNzbApi = dogApi;
             SickRageSettings = srSettings;
             SickRageApi = srApi;
             UserQualityProfiles = userProfiles;
@@ -40,11 +34,9 @@ namespace Ombi.Core.Senders
         }
 
         private ISonarrV3Api SonarrApi { get; }
-        private IDogNzbApi DogNzbApi { get; }
         private ISickRageApi SickRageApi { get; }
         private ILogger<TvSender> Logger { get; }
         private ISettingsService<SonarrSettings> SonarrSettings { get; }
-        private ISettingsService<DogNzbSettings> DogNzbSettings { get; }
         private ISettingsService<SickRageSettings> SickRageSettings { get; }
         private IRepository<UserQualityProfiles> UserQualityProfiles { get; }
         private readonly IRepository<RequestQueue> _requestQueueRepository;
@@ -67,23 +59,7 @@ namespace Ombi.Core.Senders
                         };
                     }
                 }
-                var dog = await DogNzbSettings.GetSettingsAsync();
-                if (dog.Enabled)
-                {
-                    var result = await SendToDogNzb(model, dog);
-                    if (!result.Failure)
-                    {
-                        return new SenderResult
-                        {
-                            Sent = true,
-                            Success = true
-                        };
-                    }
-                    return new SenderResult
-                    {
-                        Message = result.ErrorMessage
-                    };
-                }
+                
                 var sr = await SickRageSettings.GetSettingsAsync();
                 if (sr.Enabled)
                 {
@@ -135,12 +111,6 @@ namespace Ombi.Core.Senders
             {
                 Success = false
             };
-        }
-
-        private async Task<DogNzbAddResult> SendToDogNzb(ChildRequests model, DogNzbSettings settings)
-        {
-            var id = model.ParentRequest.ExternalProviderId;
-            return await DogNzbApi.AddTvShow(settings.ApiKey, id.ToString());
         }
 
         /// <summary>
@@ -216,30 +186,19 @@ namespace Ombi.Core.Senders
             }
 
             // Overrides on the request take priority
-            if (model.ParentRequest.QualityOverride.HasValue)
+            if (model.ParentRequest.QualityOverride.HasValue && model.ParentRequest.QualityOverride.Value > 0)
             {
-                var qualityOverride = model.ParentRequest.QualityOverride.Value;
-                if (qualityOverride > 0)
-                {
-                    qualityToUse = qualityOverride;
-                }
-            }
-            if (model.ParentRequest.RootFolder.HasValue)
-            {
-                var rootfolderOverride = model.ParentRequest.RootFolder.Value;
-                if (rootfolderOverride > 0)
-                {
-                    rootFolderPath = await GetSonarrRootPath(rootfolderOverride, s);
-                }
+                qualityToUse = model.ParentRequest.QualityOverride.Value;
             }
 
-            if (model.ParentRequest.LanguageProfile.HasValue)
+            if (model.ParentRequest.RootFolder.HasValue && model.ParentRequest.RootFolder.Value > 0)
             {
-                var languageProfile = model.ParentRequest.LanguageProfile.Value;
-                if (languageProfile > 0)
-                {
-                    languageProfileId = languageProfile;
-                }
+                rootFolderPath = await GetSonarrRootPath(model.ParentRequest.RootFolder.Value, s);
+            }
+
+            if (model.ParentRequest.LanguageProfile.HasValue && model.ParentRequest.LanguageProfile.Value > 0)
+            {
+                languageProfileId = model.ParentRequest.LanguageProfile.Value;
             }
 
             try
@@ -424,9 +383,10 @@ namespace Ombi.Core.Senders
 
                     await SonarrApi.MonitorEpisode(epToUnmonitored.Select(x => x.id).ToArray(), false, s.ApiKey, s.FullUri);
                 }
-                // Now update the episodes that need updating
-                await SonarrApi.MonitorEpisode(episodesToUpdate.Where(x => x.seasonNumber == season.SeasonNumber).Select(x => x.id).ToArray(), true, s.ApiKey, s.FullUri);
             }
+
+            // Now update the episodes that need updating
+            await SonarrApi.MonitorEpisode(episodesToUpdate.Select(x => x.id).ToArray(), true, s.ApiKey, s.FullUri);
 
             if (!s.AddOnly)
             {

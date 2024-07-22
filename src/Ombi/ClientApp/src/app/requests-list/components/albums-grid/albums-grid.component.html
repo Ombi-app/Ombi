@@ -1,72 +1,128 @@
 <div class="mat-elevation-z8">
-    <grid-spinner [loading]="isLoadingResults"></grid-spinner>
+	<grid-spinner [loading]="isLoadingResults"></grid-spinner>
 
+	<!-- <div class="row"> -->
+	<div class="row justify-content-md-center top-spacing">
+		<div class="btn-group" role="group">
+			<button
+				type="button"
+				(click)="switchFilter(RequestFilter.All)"
+				[attr.color]="currentFilter === RequestFilter.All ? 'accent' : 'primary'"
+				[ngClass]="currentFilter === RequestFilter.All ? 'mat-accent' : 'mat-primary'"
+				mat-raised-button
+				class="grow"
+			>
+				{{ 'Requests.AllRequests' | translate }}
+			</button>
+			<button
+				type="button"
+				(click)="switchFilter(RequestFilter.Pending)"
+				[attr.color]="currentFilter === RequestFilter.Pending ? 'accent' : 'primary'"
+				[ngClass]="currentFilter === RequestFilter.Pending ? 'mat-accent' : 'mat-primary'"
+				mat-raised-button
+				class="grow"
+			>
+				{{ 'Requests.PendingRequests' | translate }}
+			</button>
+			<button
+				type="button"
+				(click)="switchFilter(RequestFilter.Processing)"
+				[attr.color]="currentFilter === RequestFilter.Processing ? 'accent' : 'primary'"
+				[ngClass]="currentFilter === RequestFilter.Processing ? 'mat-accent' : 'mat-primary'"
+				mat-raised-button
+				class="grow"
+			>
+				{{ 'Requests.ProcessingRequests' | translate }}
+			</button>
+			<button
+				type="button"
+				(click)="switchFilter(RequestFilter.Available)"
+				[attr.color]="currentFilter === RequestFilter.Available ? 'accent' : 'primary'"
+				[ngClass]="currentFilter === RequestFilter.Available ? 'mat-accent' : 'mat-primary'"
+				mat-raised-button
+				class="grow"
+			>
+				{{ 'Requests.AvailableRequests' | translate }}
+			</button>
+			<button
+				type="button"
+				(click)="switchFilter(RequestFilter.Denied)"
+				[attr.color]="currentFilter === RequestFilter.Denied ? 'accent' : 'primary'"
+				[ngClass]="currentFilter === RequestFilter.Denied ? 'mat-accent' : 'mat-primary'"
+				mat-raised-button
+				class="grow"
+			>
+				{{ 'Requests.DeniedRequests' | translate }}
+			</button>
+		</div>
+	</div>
 
-    <!-- <div class="row"> -->
-    <div class="row justify-content-md-center top-spacing">
-        <div class="btn-group" role="group">
-            <button type="button" (click)="switchFilter(RequestFilter.All)" [attr.color]="currentFilter === RequestFilter.All ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.All ? 'mat-accent' : 'mat-primary'" mat-raised-button class="grow">{{'Requests.AllRequests' | translate}}</button>
-            <button type="button" (click)="switchFilter(RequestFilter.Pending)" [attr.color]="currentFilter === RequestFilter.Pending ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.Pending ? 'mat-accent' : 'mat-primary'" mat-raised-button class="grow">{{'Requests.PendingRequests' | translate}}</button>
-            <button type="button" (click)="switchFilter(RequestFilter.Processing)" [attr.color]="currentFilter === RequestFilter.Processing ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.Processing ? 'mat-accent' : 'mat-primary'" mat-raised-button
-                class="grow">{{'Requests.ProcessingRequests' | translate}}</button>
-            <button type="button" (click)="switchFilter(RequestFilter.Available)" [attr.color]="currentFilter === RequestFilter.Available ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.Available ? 'mat-accent' : 'mat-primary'" mat-raised-button
-                class="grow">{{'Requests.AvailableRequests' | translate}}</button>
-            <button type="button" (click)="switchFilter(RequestFilter.Denied)" [attr.color]="currentFilter === RequestFilter.Denied ? 'accent' : 'primary'" [ngClass]="currentFilter === RequestFilter.Denied ? 'mat-accent' : 'mat-primary'" mat-raised-button class="grow">{{'Requests.DeniedRequests' | translate}}</button>
-        </div>
-    </div>
+	<div class="row">
+		<div class="col-md-2 offset-md-10">
+			<mat-form-field>
+				<mat-select placeholder="{{ 'Requests.RequestsToDisplay' | translate }}" [(value)]="gridCount" (selectionChange)="ngAfterViewInit()">
+					<mat-option value="10">10</mat-option>
+					<mat-option value="15">15</mat-option>
+					<mat-option value="30">30</mat-option>
+					<mat-option value="100">100</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</div>
+	</div>
+	<!-- </div> -->
+	<table
+		mat-table
+		[dataSource]="dataSource"
+		class="requests table"
+		matSort
+		[matSortActive]="defaultSort"
+		matSortDisableClear
+		[matSortDirection]="defaultOrder"
+	>
+		<ng-container matColumnDef="artistName">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>{{ 'Requests.ArtistName' | translate }}</th>
+			<td mat-cell *matCellDef="let element">{{ element.artistName }}</td>
+		</ng-container>
+		<ng-container matColumnDef="title">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>{{ 'Requests.AlbumName' | translate }}</th>
+			<td mat-cell *matCellDef="let element">{{ element.title }} ({{ element.releaseDate | ombiDate: 'P' }})</td>
+		</ng-container>
 
-    <div class="row">
-        <div class="col-md-2 offset-md-10">
-            <mat-form-field>
-                <mat-select placeholder="{{'Requests.RequestsToDisplay' | translate}}" [(value)]="gridCount" (selectionChange)="ngAfterViewInit()">
-                    <mat-option value="10">10</mat-option>
-                    <mat-option value="15">15</mat-option>
-                    <mat-option value="30">30</mat-option>
-                    <mat-option value="100">100</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-    </div>
-    <!-- </div> -->
-    <table mat-table [dataSource]="dataSource" class="requests table" matSort [matSortActive]="defaultSort" matSortDisableClear [matSortDirection]="defaultOrder">
+		<ng-container matColumnDef="requestedUser.requestedBy">
+			<th mat-header-cell *matHeaderCellDef>{{ 'Requests.RequestedBy' | translate }}</th>
+			<td mat-cell *matCellDef="let element">{{ element.requestedUser?.userAlias }}</td>
+		</ng-container>
 
+		<ng-container matColumnDef="requestedDate">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>{{ 'Requests.RequestDate' | translate }}</th>
+			<td mat-cell *matCellDef="let element">{{ element.requestedDate | ombiDate: 'PP' }}</td>
+		</ng-container>
 
+		<ng-container matColumnDef="requestStatus">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>{{ 'Requests.RequestStatus' | translate }}</th>
+			<td mat-cell *matCellDef="let element">{{ element.requestStatus | translate }}</td>
+		</ng-container>
 
-        <ng-container matColumnDef="artistName">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{ 'Requests.ArtistName' | translate}} </th>
-            <td mat-cell *matCellDef="let element"> {{element.artistName}} </td>
-        </ng-container>
-        <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{ 'Requests.AlbumName' | translate}} </th>
-            <td mat-cell *matCellDef="let element"> {{element.title}} ({{element.releaseDate | amLocal | amDateFormat: 'YYYY'}}) </td>
-        </ng-container>
+		<ng-container matColumnDef="actions">
+			<th mat-header-cell *matHeaderCellDef></th>
+			<td mat-cell *matCellDef="let element">
+				<a mat-raised-button color="accent" [routerLink]="'/details/artist/' + element.foreignArtistId">{{
+					'Requests.Details' | translate
+				}}</a>
+				<button
+					mat-raised-button
+					color="warn"
+					(click)="openOptions(element)"
+					*ngIf="isAdmin || (manageOwnRequests && element.requestedUser?.userName == userName)"
+				>
+					{{ 'Requests.Options' | translate }}
+				</button>
+			</td>
+		</ng-container>
 
-        <ng-container matColumnDef="requestedUser.requestedBy">
-            <th mat-header-cell *matHeaderCellDef> {{'Requests.RequestedBy' | translate}} </th>
-            <td mat-cell *matCellDef="let element"> {{element.requestedUser?.userAlias}} </td>
-        </ng-container>
+		<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+	</table>
 
-        <ng-container matColumnDef="requestedDate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{ 'Requests.RequestDate' | translate}} </th>
-            <td mat-cell *matCellDef="let element"> {{element.requestedDate | amLocal | amUserLocale | amDateFormat: 'LL'}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="requestStatus">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{ 'Requests.RequestStatus' | translate}} </th>
-            <td mat-cell *matCellDef="let element"> {{element.requestStatus | translate}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef> </th>
-            <td mat-cell *matCellDef="let element">
-                <a mat-raised-button color="accent" [routerLink]="'/details/artist/' + element.foreignArtistId">{{ 'Requests.Details' | translate}}</a>
-                <button mat-raised-button color="warn" (click)="openOptions(element)" *ngIf="isAdmin || ( manageOwnRequests && element.requestedUser?.userName == userName )"> {{ 'Requests.Options' | translate}}</button>
-            </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-
-    <mat-paginator [length]="resultsLength" [pageSize]="gridCount"></mat-paginator>
+	<mat-paginator [length]="resultsLength" [pageSize]="gridCount"></mat-paginator>
 </div>

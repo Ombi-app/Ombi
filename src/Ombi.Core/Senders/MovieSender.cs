@@ -69,7 +69,7 @@ namespace Ombi.Core.Senders
                 }
                 if (radarrSettings.Enabled)
                 {
-                    return await SendToRadarr(model, radarrSettings);
+                    return await SendToRadarr(model, radarrSettings, is4K);
                 }
 
                 var dogSettings = await _dogNzbSettings.GetSettingsAsync();
@@ -133,7 +133,7 @@ namespace Ombi.Core.Senders
             return await _dogNzbApi.AddMovie(settings.ApiKey, id);
         }
 
-        private async Task<SenderResult> SendToRadarr(MovieRequests model, RadarrSettings settings)
+        private async Task<SenderResult> SendToRadarr(MovieRequests model, RadarrSettings settings, bool is4k)
         {
             var qualityToUse = int.Parse(settings.DefaultQualityProfile);
 
@@ -142,17 +142,35 @@ namespace Ombi.Core.Senders
             var profiles = await _userProfiles.GetAll().FirstOrDefaultAsync(x => x.UserId == model.RequestedUserId);
             if (profiles != null)
             {
-                if (profiles.RadarrRootPath > 0)
+                if (is4k)
                 {
-                    var tempPath = await RadarrRootPath(profiles.RadarrRootPath, settings);
-                    if (tempPath.HasValue())
+                    if (profiles.Radarr4KRootPath > 0)
                     {
-                        rootFolderPath = tempPath;
+                        var tempPath = await RadarrRootPath(profiles.Radarr4KRootPath, settings);
+                        if (tempPath.HasValue())
+                        {
+                            rootFolderPath = tempPath;
+                        }
                     }
-                }
-                if (profiles.RadarrQualityProfile > 0)
+                    if (profiles.Radarr4KQualityProfile > 0)
+                    {
+                        qualityToUse = profiles.Radarr4KQualityProfile;
+                    }
+                } 
+                else
                 {
-                    qualityToUse = profiles.RadarrQualityProfile;
+                    if (profiles.RadarrRootPath > 0)
+                    {
+                        var tempPath = await RadarrRootPath(profiles.RadarrRootPath, settings);
+                        if (tempPath.HasValue())
+                        {
+                            rootFolderPath = tempPath;
+                        }
+                    }
+                    if (profiles.RadarrQualityProfile > 0)
+                    {
+                        qualityToUse = profiles.RadarrQualityProfile;
+                    }
                 }
             }
 

@@ -14,16 +14,21 @@
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
     "importHelpers": true,
     "useDefineForClassFields": false,
     "target": "ES2022",
     "module": "ES2022",
     "lib": [
       "ES2022",
-      "dom"
+      "dom",
+      "ESNext.Intl",
+      "ES2022.Intl"
     ]
   },
+  "types": [
+    "node"
+  ],
+  "typeRoots": [ "./node_modules/@types", "../node_modules/@types", "../../node_modules/@types" ],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,

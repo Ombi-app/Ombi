@@ -7,6 +7,7 @@ namespace Ombi.Api.Discord.Models
     {
         public string content { get; set; }
         public string username { get; set; }
+        public string avatar_url { get; set; }
         public List<DiscordEmbeds> embeds { get; set; }
     }
 
@@ -32,7 +33,6 @@ namespace Ombi.Api.Discord.Models
     {
         public string name { get; set; }
         public string url { get; set; }
-        public string iconurl { get; set; }
     }
 
     public class DiscordField

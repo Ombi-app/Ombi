@@ -923,6 +923,12 @@ namespace Ombi.Store.Migrations.OmbiMySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int>("Radarr4KQualityProfile")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Radarr4KRootPath")
+                        .HasColumnType("int");
+
                     b.Property<int>("RadarrQualityProfile")
                         .HasColumnType("int");
 

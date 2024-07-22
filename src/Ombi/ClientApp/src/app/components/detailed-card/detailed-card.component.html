@@ -14,7 +14,7 @@
                     <p id="detailed-request-requestedby-{{request.mediaId}}">{{'MediaDetails.RequestedBy' | translate}} {{request.username}}</p>
                 </div>
                 <div class="col-12">
-                    <p id="detailed-request-date-{{request.mediaId}}">{{'MediaDetails.OnDate' | translate}} {{request.requestDate | amFromUtc | amLocal | amUserLocale | amDateFormat: 'l LT'}}</p>
+                    <p id="detailed-request-date-{{request.mediaId}}">{{'MediaDetails.OnDate' | translate}} {{request.requestDate | ombiDate: 'Ppp'}}</p>
                 </div>
                 <div class="col-12">
                     <p id="detailed-request-status-{{request.mediaId}}">{{'MediaDetails.Status' | translate}} <span class="badge badge-{{getClass(request)}}">{{getStatus(request) | translate}}</span></p>

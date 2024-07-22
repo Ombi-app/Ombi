@@ -1,66 +1,69 @@
 <mat-accordion class="mat-elevation-z8">
-  <mat-expansion-panel *ngFor="let request of tvRequest">
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <div> {{ request.requestStatus | translate }}</div>
-      </mat-panel-title>
-      <mat-panel-description>
-        {{'MediaDetails.RequestedByOn' | translate: {
-            user: request.requestedUser.userAlias,
-            date: request.requestedDate | amLocal | amUserLocale | amDateFormat: 'LL' } }}
-        <span *ngIf="request.denied"> - {{request.deniedReason}}</span>
-        <span *ngIf="request.source !== RequestSource.Ombi">&nbsp;{{'MediaDetails.RequestSource' | translate }} {{RequestSource[request.source]}}</span>
-      </mat-panel-description>
-    </mat-expansion-panel-header>
+	<mat-expansion-panel *ngFor="let request of tvRequest">
+		<mat-expansion-panel-header>
+			<mat-panel-title>
+				<div>{{ request.requestStatus | translate }}</div>
+			</mat-panel-title>
+			<mat-panel-description>
+				{{
+					'MediaDetails.RequestedByOn'
+						| translate
+							: {
+									user: request.requestedUser.userAlias,
+									date: request.requestedDate | ombiDate: 'PP'
+							  }
+				}}
+				<span *ngIf="request.denied"> - {{ request.deniedReason }}</span>
+				<span *ngIf="request.source !== RequestSource.Ombi"
+					>&nbsp;{{ 'MediaDetails.RequestSource' | translate }} {{ RequestSource[request.source] }}</span
+				>
+			</mat-panel-description>
+		</mat-expansion-panel-header>
 
+		<mat-tab-group>
+			<mat-tab *ngFor="let season of request.seasonRequests" label="{{ 'Requests.Season' | translate }} {{ season.seasonNumber }}">
+				<table mat-table [dataSource]="season.episodes" class="mat-elevation-z8">
+					<ng-container matColumnDef="number">
+						<th mat-header-cell *matHeaderCellDef>#</th>
+						<td mat-cell *matCellDef="let element">{{ element.episodeNumber }}</td>
+					</ng-container>
 
-    <mat-tab-group>
-      <mat-tab *ngFor="let season of request.seasonRequests" label="{{ 'Requests.Season' | translate }} {{season.seasonNumber}}">
+					<ng-container matColumnDef="title">
+						<th mat-header-cell *matHeaderCellDef>{{ 'Requests.GridTitle' | translate }}</th>
+						<td mat-cell *matCellDef="let element">{{ element.title }}</td>
+					</ng-container>
 
-        <table mat-table [dataSource]="season.episodes" class="mat-elevation-z8">
+					<ng-container matColumnDef="airDate">
+						<th mat-header-cell *matHeaderCellDef>{{ 'Requests.AirDate' | translate }}</th>
+						<td mat-cell *matCellDef="let element">{{ element.airDate | ombiDate: 'P' }}</td>
+					</ng-container>
 
+					<ng-container matColumnDef="status">
+						<th mat-header-cell *matHeaderCellDef>{{ 'Requests.GridStatus' | translate }}</th>
+						<td mat-cell *matCellDef="let ep">
+							<span> {{ request.requestStatus | translate }} </span>
+						</td>
+					</ng-container>
 
-          <ng-container matColumnDef="number">
-            <th mat-header-cell *matHeaderCellDef> # </th>
-            <td mat-cell *matCellDef="let element"> {{element.episodeNumber}} </td>
-          </ng-container>
+					<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+					<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+				</table>
+			</mat-tab>
+		</mat-tab-group>
 
-          <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef> {{ 'Requests.GridTitle' | translate }} </th>
-            <td mat-cell *matCellDef="let element"> {{element.title}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="airDate">
-            <th mat-header-cell *matHeaderCellDef> {{ 'Requests.AirDate' | translate }} </th>
-            <td mat-cell *matCellDef="let element"> {{element.airDate | amLocal | amUserLocale | amDateFormat: 'L' }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef> {{ 'Requests.GridStatus' | translate }} </th>
-            <td mat-cell *matCellDef="let ep">
-              <span> {{ request.requestStatus | translate }} </span>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-      </mat-tab>
-
-    </mat-tab-group>
-
-<div *ngIf="isAdmin">
-    <button *ngIf="!request.approved" mat-raised-button color="accent" (click)="approve(request);"> {{ 'Common.Approve' | translate }}</button>
-    <button *ngIf="!request.available" mat-raised-button color="warn" (click)="changeAvailability(request, true);">{{ 'Requests.MarkAvailable' | translate }}</button>
-    <button *ngIf="request.available" mat-raised-button color="warn" (click)="changeAvailability(request, false);">{{ 'Requests.MarkUnavailable' | translate }}</button>
-    <button *ngIf="!request.denied" mat-raised-button color="danger" (click)="deny(request);">{{ 'Requests.Deny' | translate }}</button>
-    <button mat-raised-button color="accent" (click)="reProcessRequest(request);">{{ 'MediaDetails.ReProcessRequest' | translate }}</button>
-</div>
-<div *ngIf="isAdmin || manageOwnRequests">
-  <button mat-raised-button color="danger" (click)="delete(request);">{{ 'Requests.RequestPanel.Delete' | translate }}</button>
-</div>
-
-
-  </mat-expansion-panel>
-
+		<div *ngIf="isAdmin">
+			<button *ngIf="!request.approved" mat-raised-button color="accent" (click)="approve(request)">{{ 'Common.Approve' | translate }}</button>
+			<button *ngIf="!request.available" mat-raised-button color="warn" (click)="changeAvailability(request, true)">
+				{{ 'Requests.MarkAvailable' | translate }}
+			</button>
+			<button *ngIf="request.available" mat-raised-button color="warn" (click)="changeAvailability(request, false)">
+				{{ 'Requests.MarkUnavailable' | translate }}
+			</button>
+			<button *ngIf="!request.denied" mat-raised-button color="danger" (click)="deny(request)">{{ 'Requests.Deny' | translate }}</button>
+			<button mat-raised-button color="accent" (click)="reProcessRequest(request)">{{ 'MediaDetails.ReProcessRequest' | translate }}</button>
+		</div>
+		<div *ngIf="isAdmin || manageOwnRequests">
+			<button mat-raised-button color="danger" (click)="delete(request)">{{ 'Requests.RequestPanel.Delete' | translate }}</button>
+		</div>
+	</mat-expansion-panel>
 </mat-accordion>

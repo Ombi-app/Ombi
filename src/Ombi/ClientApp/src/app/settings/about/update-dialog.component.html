@@ -1,28 +1,21 @@
-
-
-<h1 mat-dialog-title><i class="fas fa-code-branch"></i> Latest Version: {{data.updateVersionString}}</h1>
+<h1 mat-dialog-title><i class="fas fa-code-branch"></i> Latest Version: {{ data.updateVersionString }}</h1>
 <mat-dialog-content>
-  <div [innerHTML]="data.changeLogs">
-  </div>
+	<div [innerHTML]="data.changeLogs"></div>
 
+	<div class="mat-table">
+		<div class="mat-header-row">
+			<div class="mat-header-cell">Binary</div>
+			<div class="mat-header-cell">Download</div>
+		</div>
+		<div *ngFor="let d of data.downloads" class="mat-row">
+			<div class="mat-cell">{{ d.name }}</div>
+			<div class="mat-cell"><a href="{{ d.url }}">Download</a></div>
+		</div>
+	</div>
 
-  
-  <div class="mat-table">
-    <div class="mat-header-row">
-    <div class="mat-header-cell">Binary</div>
-    <div class="mat-header-cell">Download</div></div>
-    <div *ngFor="let d of data.downloads" class="mat-row" >
-      <div class="mat-cell">{{d.name}}</div>
-      <div class="mat-cell"><a href="{{d.url}}">Download</a></div>
-    </div>
-  </div>
-
-
-<small>Updated at {{data.updateDate | amUserLocale | amDateFormat: 'LL' }}</small>
+	<small>Updated at {{ data.updateDate | ombiDate: 'PP' }}</small>
 </mat-dialog-content>
 
-
 <div mat-dialog-actions class="right-buttons">
-  <button mat-raised-button id="cancelButton" [mat-dialog-close]="" color="warn"><i class="fas fa-times"></i> Close</button>
+	<button mat-raised-button id="cancelButton" [mat-dialog-close]="" color="warn"><i class="fas fa-times"></i> Close</button>
 </div>
-
