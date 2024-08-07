@@ -69,6 +69,7 @@ using Ombi.Api.CloudService;
 using Ombi.Api.RottenTomatoes;
 using System.Net.Http;
 using Microsoft.Extensions.Logging;
+using Ombi.Api.Ntfy;
 using Ombi.Core.Services;
 using Ombi.Core.Helpers;
 using Ombi.Hubs;
@@ -162,6 +163,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IFanartTvApi, FanartTvApi>();
             services.AddTransient<IPushoverApi, PushoverApi>();
             services.AddTransient<IGotifyApi, GotifyApi>();
+            services.AddTransient<INtfyApi, NtfyApi>();
             services.AddTransient<IWebhookApi, WebhookApi>();
             services.AddTransient<IMattermostApi, MattermostApi>();
             services.AddTransient<ICouchPotatoApi, CouchPotatoApi>();
@@ -229,6 +231,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMattermostNotification, MattermostNotification>();
             services.AddTransient<IPushoverNotification, PushoverNotification>();
             services.AddTransient<IGotifyNotification, GotifyNotification>();
+            services.AddTransient<INtfyNotification, NtfyNotification>();
             services.AddTransient<IWebhookNotification, WebhookNotification>();
             services.AddTransient<ITelegramNotification, TelegramNotification>();
             services.AddTransient<ILegacyMobileNotification, LegacyMobileNotification>();
