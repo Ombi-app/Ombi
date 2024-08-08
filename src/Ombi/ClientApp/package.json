@@ -35,7 +35,7 @@
 		"@types/jquery": "^3.5.30",
 		"@yellowspot/ng-truncate": "^2.0.0",
 		"angularx-qrcode": "^16.0.0",
-		"bootstrap": "^4.2.1",
+		"bootstrap": "^5.3.3",
 		"core-js": "^2.5.4",
 		"date-fns": "3.3.1",
 		"jquery": "3.7.1",
