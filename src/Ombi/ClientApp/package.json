@@ -29,7 +29,7 @@
 		"@fortawesome/fontawesome-free": "^6.6.0",
 		"@microsoft/signalr": "^6.0.23",
 		"@ngx-translate/core": "^14.0.0",
-		"@ngx-translate/http-loader": "^7.0.0",
+		"@ngx-translate/http-loader": "^8.0.0",
 		"@ngxs/devtools-plugin": "3.8.2",
 		"@ngxs/store": "3.8.2",
 		"@types/jquery": "^3.5.30",
