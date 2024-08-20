@@ -304,6 +304,13 @@ namespace Ombi.Schedule.Jobs.Plex
                     var existing = await Repo.GetFirstContentByCustom(x => x.Title == movie.title
                                                                            && x.ReleaseYear == movie.year.ToString()
                                                                            && x.Type == MediaType.Movie);
+
+
+                    if (existing == null)
+                    {
+                        // Let's just check the key
+                        existing = await Repo.GetByKey(movie.ratingKey);
+                    }
                     if (existing != null)
                     {
                         // We need to see if this is a different quality,
@@ -340,13 +347,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
                         Logger.LogDebug($"We already have movie {movie.title}");
                         continue;
-                    }
-
-                    //var hasSameKey = await Repo.GetByKey(movie.ratingKey);
-                    //if (hasSameKey != null)
-                    //{
-                    //    await Repo.Delete(hasSameKey);
-                    //}
+                    } 
 
                     Logger.LogDebug("Adding movie {0}", movie.title);
                     var guids = new List<string>();
