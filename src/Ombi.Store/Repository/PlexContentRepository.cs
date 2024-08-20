@@ -94,7 +94,7 @@ namespace Ombi.Store.Repository
 
         public async Task<PlexServerContent> GetByKey(string key)
         {
-            return await Db.PlexServerContent.Include(x => x.Seasons).FirstOrDefaultAsync(x => x.Key == key);
+            return await Db.PlexServerContent.Include(x => x.Seasons).Include(x => x.Episodes).FirstOrDefaultAsync(x => x.Key == key);
         }
 
         public IEnumerable<PlexServerContent> GetWhereContentByCustom(Expression<Func<PlexServerContent, bool>> predicate)

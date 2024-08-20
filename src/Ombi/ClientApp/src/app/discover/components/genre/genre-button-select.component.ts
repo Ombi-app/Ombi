@@ -1,10 +1,11 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, computed, signal } from "@angular/core";
 import { SearchV2Service } from "../../../services";
 import { MatButtonToggleChange } from "@angular/material/button-toggle";
 import { RequestType } from "../../../interfaces";
 import { AdvancedSearchDialogDataService } from "app/shared/advanced-search-dialog/advanced-search-dialog-data.service";
 import { Router } from "@angular/router";
 import { map, Observable } from "rxjs";
+import { toSignal } from '@angular/core/rxjs-interop';
 
 interface IGenreSelect {
     name: string;
@@ -17,8 +18,10 @@ interface IGenreSelect {
     styleUrls: ["./genre-button-select.component.scss"],
 })
 export class GenreButtonSelectComponent implements OnInit {
-    public movieGenreList$: Observable<IGenreSelect[]> = null;
-    public tvGenreList$: Observable<IGenreSelect[]> = null;
+
+    public movieGenreList = signal<IGenreSelect[]>(null);
+    public tvGenreList = signal<IGenreSelect[]>(null);
+
 
     isLoading: boolean = false;
 
@@ -27,8 +30,14 @@ export class GenreButtonSelectComponent implements OnInit {
         private router: Router) { }
 
     public ngOnInit(): void {
-        this.movieGenreList$ = this.searchService.getGenres("movie").pipe(map(x => x.slice(0, 10).map(y => ({ name: y.name, id: y.id, type: "movie" }))));
-        this.tvGenreList$ = this.searchService.getGenres("tv").pipe(map(x => x.slice(0, 10).map(y => ({ name: y.name, id: y.id, type: "tv" }))));
+        this.searchService.getGenres("movie").pipe(map(x => x.slice(0, 10).map(y => ({ name: y.name, id: y.id, type: "movie" } as IGenreSelect))))
+            .subscribe(x => {
+                this.movieGenreList.set(x);
+            });
+        this.searchService.getGenres("tv").pipe(map(x => x.slice(0, 10).map(y => ({ name: y.name, id: y.id, type: "tv" } as IGenreSelect))))
+            .subscribe(x => {
+                this.tvGenreList.set(x);
+            });
     }
 
     public async toggleChanged(event: MatButtonToggleChange, type: "movie"|"tv") {
