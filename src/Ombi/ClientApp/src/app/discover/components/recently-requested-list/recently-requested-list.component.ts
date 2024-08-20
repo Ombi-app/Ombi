@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, OnDestroy } from "@angular/core";
+import { Component, OnInit, Input, ViewChild, OnDestroy, signal } from "@angular/core";
 import { IRecentlyRequested, IRequestEngineResult, RequestType } from "../../../interfaces";
 import { Carousel } from 'primeng/carousel';
 import { ResponsiveOptions } from "../carousel.options";
@@ -31,6 +31,7 @@ export class RecentlyRequestedListComponent implements OnInit, OnDestroy {
     @ViewChild('carousel', {static: false}) carousel: Carousel;
 
     public requests$: Observable<IRecentlyRequested[]>;
+    public requests = signal<IRecentlyRequested[]>(null);
 
     public responsiveOptions: any;
     public RequestType = RequestType;
@@ -119,11 +120,13 @@ export class RecentlyRequestedListComponent implements OnInit, OnDestroy {
     }
 
     private loadData() {
-        this.requests$ = this.requestServiceV2.getRecentlyRequested().pipe(
+        this.requestServiceV2.getRecentlyRequested().pipe(
             tap(() => this.loading()),
             takeUntil(this.$loadSub),
             finalize(() => this.finishLoading())
-        );
+        ).subscribe(x => {
+            this.requests.set(x);
+        });
     }
 
     private loading() {

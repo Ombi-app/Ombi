@@ -1,13 +1,26 @@
-<div class="genre-container" *ngIf="movieGenreList$ | async as movies">
-    <mat-button-toggle-group name="discoverMode" (change)="toggleChanged($event, genre.type)" *ngFor="let genre of movies"
-        class="discover-filter-buttons-group">
-        <mat-button-toggle value="{{genre.id}}" class="discover-filter-button">{{genre.name}}</mat-button-toggle>
-    </mat-button-toggle-group>
-</div>
-<div class="genre-container" *ngIf="tvGenreList$ | async as tv">
-    <mat-button-toggle-group name="discoverMode" (change)="toggleChanged($event, genre.type)" *ngFor="let genre of tv"
-        class="discover-filter-buttons-group">
-        <mat-button-toggle value="{{genre.id}}" class="discover-filter-button">{{genre.name}}</mat-button-toggle>
-    </mat-button-toggle-group>
-    <mat-spinner *ngIf="isLoading" [diameter]="30"></mat-spinner>
-</div>
+
+@defer (when movieGenreList()) {
+    <div class="genre-container">
+        <mat-button-toggle-group name="discoverMode" (change)="toggleChanged($event, genre.type)" *ngFor="let genre of movieGenreList()"
+            class="discover-filter-buttons-group">
+            <mat-button-toggle value="{{genre.id}}" class="discover-filter-button">{{genre.name}}</mat-button-toggle>
+        </mat-button-toggle-group>
+    </div>
+}
+@placeholder(minimum 500) {
+    <p-skeleton width="100%" height="3.5rem"></p-skeleton>
+}
+
+@defer (when tvGenreList()) {
+    <div class="genre-container">
+        <mat-button-toggle-group name="discoverMode" (change)="toggleChanged($event, genre.type)" *ngFor="let genre of tvGenreList()"
+            class="discover-filter-buttons-group">
+            <mat-button-toggle value="{{genre.id}}" class="discover-filter-button">{{genre.name}}</mat-button-toggle>
+        </mat-button-toggle-group>
+    </div>
+}
+@placeholder(minimum 500) {
+    <p-skeleton width="100%" height="3.5rem"></p-skeleton>
+}
+
+<mat-spinner *ngIf="isLoading" [diameter]="30"></mat-spinner>

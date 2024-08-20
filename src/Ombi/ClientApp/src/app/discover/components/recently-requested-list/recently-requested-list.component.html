@@ -1,9 +1,8 @@
-<div *ngIf="requests$ | async as requests">
-    <div *ngIf="requests.length > 0">
-        <p-carousel #carousel [value]="requests" [numVisible]="3" [numScroll]="1"
+@defer (when requests()) {
+    <div *ngIf="requests().length > 0">
+        <p-carousel #carousel [value]="requests()" [numVisible]="3" [numScroll]="1"
             [responsiveOptions]="responsiveOptions" [page]="0">
             <ng-template let-result pTemplate="item">
-                @defer (on viewport; prefetch on idle) {
                 <ombi-detailed-card
                     [request]="result"
                     [isAdmin]="isAdmin"
@@ -11,11 +10,25 @@
                     (onApprove)="approve(result)"
                     (onDeny)="deny(result)">
                 </ombi-detailed-card>
-            }
-            @placeholder {
-                <p-skeleton width="100%" height="315px"></p-skeleton>
-            }
             </ng-template>
         </p-carousel>
     </div>
-</div>
+}@placeholder(minimum 500) {
+    <div class="row loading-container">
+        <div class="col-2">
+            <p-skeleton width="100%" height="270px"></p-skeleton>
+        </div>
+        <div class="col-2">
+            <p-skeleton width="100%" height="270px"></p-skeleton>
+        </div>
+        <div class="col-2">
+            <p-skeleton width="100%" height="270px"></p-skeleton>
+        </div>
+        <div class="col-2">
+            <p-skeleton width="100%" height="270px"></p-skeleton>
+        </div>
+        <div class="col-2">
+            <p-skeleton width="100%" height="270px"></p-skeleton>
+        </div>
+    </div>
+}
