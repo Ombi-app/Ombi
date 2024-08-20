@@ -1,3 +1,19 @@
+# [4.46.0](https://github.com/Ombi-app/Ombi/compare/v4.45.1...v4.46.0) (2024-08-20)
+
+
+### Bug Fixes
+
+* **discover:** Improved rendering on the discover page ([ea00d6c](https://github.com/Ombi-app/Ombi/commit/ea00d6c12f4441da243287d0fbc706d66c0afd82))
+* src/Ombi.Store/Ombi.Store.csproj to reduce vulnerabilities ([#5160](https://github.com/Ombi-app/Ombi/issues/5160)) ([9c21074](https://github.com/Ombi-app/Ombi/commit/9c2107418939ee92e50c59765481f30efac12eff))
+
+
+### Features
+
+* upgrade @ngx-translate/core from 14.0.0 to 15.0.0 ([#5158](https://github.com/Ombi-app/Ombi/issues/5158)) ([48d3dec](https://github.com/Ombi-app/Ombi/commit/48d3dec26d36002a9d613432fb7f9232d8801cba))
+* upgrade @ngx-translate/http-loader from 7.0.0 to 8.0.0 ([#5159](https://github.com/Ombi-app/Ombi/issues/5159)) ([3bd98c1](https://github.com/Ombi-app/Ombi/commit/3bd98c1d711786bff66f1528dcdddcafe256abd2))
+
+
+
 ## [4.45.1](https://github.com/Ombi-app/Ombi/compare/v4.45.0...v4.45.1) (2024-08-20)
 
 
@@ -3712,17 +3728,6 @@
 ### Bug Fixes
 
 * **jellyfin:** Fixed an issue where the sync could stop working. Removed unused properties so the deseralization no longer fails ([0e5e0ad](https://github.com/Ombi-app/Ombi/commit/0e5e0adf862701d0f672beff14ec0aa75e4b5220))
-
-
-
-## [4.37.1](https://github.com/Ombi-app/Ombi/compare/v4.37.0...v4.37.1) (2023-05-02)
-
-
-### Bug Fixes
-
-* Cron Validation ([#4842](https://github.com/Ombi-app/Ombi/issues/4842)) ([97cc42f](https://github.com/Ombi-app/Ombi/commit/97cc42ffa8672e7d0d0996b5fbda7f7fe699da2d))
-* **discover:** :children_crossing: Improved the new Genre buttons, it now includes TV results ([b087d60](https://github.com/Ombi-app/Ombi/commit/b087d606ff36565208e564f8856903f2a4098db5))
-* **lidarr:** Change monitor to Existing to properly add artist [#3597](https://github.com/Ombi-app/Ombi/issues/3597) ([506f607](https://github.com/Ombi-app/Ombi/commit/506f60773bf1031d0be51ccd34289b855a04ea40)), closes [/github.com/Lidarr/Lidarr/issues/3597#issuecomment-1530804055](https://github.com//github.com/Lidarr/Lidarr/issues/3597/issues/issuecomment-1530804055)
 
 
 
