@@ -1,3 +1,12 @@
+## [4.45.1](https://github.com/Ombi-app/Ombi/compare/v4.45.0...v4.45.1) (2024-08-20)
+
+
+### Bug Fixes
+
+* **plex:** Fixed some errors around the scanner that was causing the scan to fail ([d9787dc](https://github.com/Ombi-app/Ombi/commit/d9787dc32aace808d196f6f87456ef45de3d7bbf))
+
+
+
 # [4.45.0](https://github.com/Ombi-app/Ombi/compare/v4.44.1...v4.45.0) (2024-08-07)
 
 
@@ -3714,15 +3723,6 @@
 * Cron Validation ([#4842](https://github.com/Ombi-app/Ombi/issues/4842)) ([97cc42f](https://github.com/Ombi-app/Ombi/commit/97cc42ffa8672e7d0d0996b5fbda7f7fe699da2d))
 * **discover:** :children_crossing: Improved the new Genre buttons, it now includes TV results ([b087d60](https://github.com/Ombi-app/Ombi/commit/b087d606ff36565208e564f8856903f2a4098db5))
 * **lidarr:** Change monitor to Existing to properly add artist [#3597](https://github.com/Ombi-app/Ombi/issues/3597) ([506f607](https://github.com/Ombi-app/Ombi/commit/506f60773bf1031d0be51ccd34289b855a04ea40)), closes [/github.com/Lidarr/Lidarr/issues/3597#issuecomment-1530804055](https://github.com//github.com/Lidarr/Lidarr/issues/3597/issues/issuecomment-1530804055)
-
-
-
-# [4.37.0](https://github.com/Ombi-app/Ombi/compare/v4.36.1...v4.37.0) (2023-04-24)
-
-
-### Features
-
-* Search by genre ([1837419](https://github.com/Ombi-app/Ombi/commit/18374198f9f2462ba85c5781b0fcc05892728b21))
 
 
 
