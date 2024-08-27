@@ -1,3 +1,12 @@
+## [4.46.1](https://github.com/Ombi-app/Ombi/compare/v4.46.0...v4.46.1) (2024-08-27)
+
+
+### Bug Fixes
+
+* src/Ombi.Notifications/Ombi.Notifications.csproj to reduce vulnerabilities ([#5167](https://github.com/Ombi-app/Ombi/issues/5167)) ([e1f2a84](https://github.com/Ombi-app/Ombi/commit/e1f2a848065d79c8bba9eafff4f1f5db4a994b53))
+
+
+
 # [4.46.0](https://github.com/Ombi-app/Ombi/compare/v4.45.1...v4.46.0) (2024-08-20)
 
 
@@ -3719,15 +3728,6 @@
 ### Bug Fixes
 
 * Show the ApiAlias in the requests-list ([9ff624c](https://github.com/Ombi-app/Ombi/commit/9ff624ce4646815b239fbb8327117947f0a90e4b))
-
-
-
-## [4.37.2](https://github.com/Ombi-app/Ombi/compare/v4.37.1...v4.37.2) (2023-05-03)
-
-
-### Bug Fixes
-
-* **jellyfin:** Fixed an issue where the sync could stop working. Removed unused properties so the deseralization no longer fails ([0e5e0ad](https://github.com/Ombi-app/Ombi/commit/0e5e0adf862701d0f672beff14ec0aa75e4b5220))
 
 
 
