@@ -1,3 +1,12 @@
+## [4.46.2](https://github.com/Ombi-app/Ombi/compare/v4.46.1...v4.46.2) (2024-09-03)
+
+
+### Bug Fixes
+
+* **radarr:** :bug: Enable validation on the radarr settings page ([0af3511](https://github.com/Ombi-app/Ombi/commit/0af3511e819d24e0f4edf6f33931e61bba743224))
+
+
+
 ## [4.46.1](https://github.com/Ombi-app/Ombi/compare/v4.46.0...v4.46.1) (2024-08-27)
 
 
@@ -3719,15 +3728,6 @@
 ### Features
 
 * **emby:** Show watched status for Movie requests ([9cfb10b](https://github.com/Ombi-app/Ombi/commit/9cfb10bb1ee69067a6f47bd2c8a72d4e6834350e))
-
-
-
-## [4.37.3](https://github.com/Ombi-app/Ombi/compare/v4.37.2...v4.37.3) (2023-05-07)
-
-
-### Bug Fixes
-
-* Show the ApiAlias in the requests-list ([9ff624c](https://github.com/Ombi-app/Ombi/commit/9ff624ce4646815b239fbb8327117947f0a90e4b))
 
 
 
