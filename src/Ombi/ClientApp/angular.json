@@ -105,7 +105,6 @@
           "options": {
             "tsConfig": [
               "src/tsconfig.json"
-              "src/tsconfig.json"
             ],
             "exclude": [
               "**/node_modules/**"
