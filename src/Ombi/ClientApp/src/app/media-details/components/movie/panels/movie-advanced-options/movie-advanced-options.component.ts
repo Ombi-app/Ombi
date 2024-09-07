@@ -26,12 +26,12 @@ export class MovieAdvancedOptionsComponent implements OnInit {
         if (this.show4k) {
             this.radarrService.getQualityProfiles4kFromSettings().subscribe(c => {
                 this.radarrProfiles = c;
-                this.data.profiles4k = c;
+                this.data.profiles = c;
                 this.setQualityOverrides();
             });
             this.radarrService.getRootFolders4kFromSettings().subscribe(c => {
                 this.radarrRootFolders = c;
-                this.data.rootFolders4k = c;
+                this.data.rootFolders = c;
                 this.setRootFolderOverrides();
             });
         } else { // Currently show either 4k or normal, if it's a dual request there needs to be more work done to save the overrides for 4k separately
