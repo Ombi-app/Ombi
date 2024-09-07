@@ -61,7 +61,14 @@
 		"@storybook/angular": "7.6.14",
 		"@types/node": "^20.11.17",
 		"chromatic": "^6.7.1",
-		"typescript": "5.2.2"
+		"typescript": "5.2.2",
+		"@nx/angular": "19.6.5",
+		"@nx/eslint": "19.6.5",
+		"@nx/eslint-plugin": "19.6.5",
+		"@nx/jest": "19.6.5",
+		"@nx/js": "19.6.5",
+		"@nx/web": "19.6.5",
+		"@nx/workspace": "19.6.5"
 	},
 	"optionalDependencies": {
 		"protractor": "~5.4.0",

@@ -107,7 +107,7 @@ namespace Ombi
 
             services.AddMvc();
             services.AddSignalR();
-            services.AddSpaStaticFiles(configuration => configuration.RootPath = "ClientApp/dist");
+            services.AddSpaStaticFiles(configuration => configuration.RootPath = "../app/dist");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -205,7 +205,7 @@ namespace Ombi
 
             app.UseSpa(spa =>
             {
-                spa.Options.SourcePath = "ClientApp";
+                spa.Options.SourcePath = "../app";
 #if DEBUG
                 spa.UseProxyToSpaDevelopmentServer("http://localhost:3578");
 #endif

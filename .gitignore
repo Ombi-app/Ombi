@@ -253,3 +253,6 @@ _Pvt_Extensions
 /src/Ombi/ClientApp/package-lock.json
 /src/Ombi.Core/Properties/launchSettings.json
 .yarn
+
+
+*.nx/
