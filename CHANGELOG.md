@@ -1,3 +1,12 @@
+## [4.46.3](https://github.com/Ombi-app/Ombi/compare/v4.46.2...v4.46.3) (2024-09-07)
+
+
+### Bug Fixes
+
+* **radarr-4k:** :bug: Fixed an issue where the overrides wouldn't work for 4k Requests ([0fb29a0](https://github.com/Ombi-app/Ombi/commit/0fb29a0b16b1fc87f71df1a589f6141324cf2f1b))
+
+
+
 ## [4.46.2](https://github.com/Ombi-app/Ombi/compare/v4.46.1...v4.46.2) (2024-09-03)
 
 
@@ -3714,20 +3723,6 @@
 
 * **API:** Allow RequestOnBehalf rights if requested from the API ([#4919](https://github.com/Ombi-app/Ombi/issues/4919)) ([bb6dedd](https://github.com/Ombi-app/Ombi/commit/bb6deddfaecb3d6c7c3c6970414444b619bb9106))
 * **notificaitons:** Add the RequestedByAlias field to the Notification Message ([7e9c8be](https://github.com/Ombi-app/Ombi/commit/7e9c8bec6b02bb4e11f8db50394e493d4dd07723))
-
-
-
-# [4.38.0](https://github.com/Ombi-app/Ombi/compare/v4.37.3...v4.38.0) (2023-05-07)
-
-
-### Bug Fixes
-
-* remove sort header ([969bc7b](https://github.com/Ombi-app/Ombi/commit/969bc7bb25ea900ab9199509b079b36843e5bd6f))
-
-
-### Features
-
-* **emby:** Show watched status for Movie requests ([9cfb10b](https://github.com/Ombi-app/Ombi/commit/9cfb10bb1ee69067a6f47bd2c8a72d4e6834350e))
 
 
 
