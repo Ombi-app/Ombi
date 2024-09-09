@@ -27,3 +27,48 @@ If running migrations for any db provider other than Sqlite, then ensure the dat
     cd src/Ombi.Store
     dotnet ef migrations add <name> --context <context> --startup-project ../Ombi/Ombi.csproj
     ```
+
+
+    docker run -d \
+	--name some-postgres \
+	-e POSTGRES_PASSWORD=ombi \
+    -e POSTGRES_USER=ombi \
+ 	-e POSTGRES_DB=ombi \
+	postgres
+
+### MySql example
+```
+{
+  "OmbiDatabase": {
+    "Type": "MySQL",
+    "ConnectionString": "Server=192.168.68.118;Port=3306;Database=ombiNew;User=ombi"
+  },
+  "SettingsDatabase": {
+    "Type": "MySQL",
+    "ConnectionString": "Server=192.168.68.118;Port=3306;Database=ombiNew;User=ombi"
+  },
+  "ExternalDatabase": {
+    "Type": "MySQL",
+    "ConnectionString": "Server=192.168.68.118;Port=3306;Database=ombiNew;User=ombi"
+  }
+}
+```
+
+
+### Postgres Example
+```
+{
+  "OmbiDatabase": {
+    "Type": "Postgres",
+    "ConnectionString": "Host=localhost;Port=5432;Database=ombi;Username=ombi;Password=ombi"
+  },
+  "SettingsDatabase": {
+    "Type": "Postgres",
+    "ConnectionString": "Host=localhost;Port=5432;Database=ombi;Username=ombi;Password=ombi"
+  },
+  "ExternalDatabase": {
+    "Type": "Postgres",
+    "ConnectionString": "Host=localhost;Port=5432;Database=ombi;Username=ombi;Password=ombi"
+  }
+}
+```

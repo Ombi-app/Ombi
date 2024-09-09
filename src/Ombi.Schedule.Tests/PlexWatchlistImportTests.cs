@@ -682,7 +682,6 @@ namespace Ombi.Schedule.Tests
         [Test]
         public async Task MovieRequestFromWatchList_AlreadyImported()
         {
-
             _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync()).ReturnsAsync(new PlexSettings { Enable = true, EnableWatchlistImport = true });
             _mocker.Setup<IPlexApi, Task<PlexWatchlistContainer>>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new PlexWatchlistContainer
             {
@@ -719,7 +718,7 @@ namespace Ombi.Schedule.Tests
 
                     }
                 });
-            _mocker.Setup<IExternalRepository<PlexWatchlistHistory>, IQueryable<PlexWatchlistHistory>>(x => x.GetAll()).Returns(new List<PlexWatchlistHistory> { new PlexWatchlistHistory { Id = 1, TmdbId = "123" } }.AsQueryable());
+            _mocker.Setup<IExternalRepository<PlexWatchlistHistory>, IQueryable<PlexWatchlistHistory>>(x => x.GetAll()).Returns(new List<PlexWatchlistHistory> { new PlexWatchlistHistory { Id = 1, TmdbId = "123", UserId = "abc" } }.AsQueryable());
             await _subject.Execute(_context.Object);
             _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()), Times.Never);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistMetadata("abc", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
