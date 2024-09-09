@@ -44,6 +44,21 @@ namespace Ombi.Store.Entities.Requests
         public DateTime MarkedAsDenied4K { get; set; }
         public string DeniedReason4K { get; set; }
 
+        [NotMapped]
+        public RequestCombination RequestCombination
+        {
+            get
+            {
+                if (Has4KRequest && RequestedDate != default)
+                {
+                    return RequestCombination.Both;
+                }
+                if (Has4KRequest) { return RequestCombination.FourK; }
+
+                return RequestCombination.Normal;
+            }
+        }
+
 
         /// <summary>
         /// Only Use for setting the Language Code, Use the LanguageCode property for reading
