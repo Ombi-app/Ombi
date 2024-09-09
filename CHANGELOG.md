@@ -1,3 +1,7 @@
+## [4.46.4](https://github.com/Ombi-app/Ombi/compare/v4.46.3...v4.46.4) (2024-09-09)
+
+
+
 ## [4.46.3](https://github.com/Ombi-app/Ombi/compare/v4.46.2...v4.46.3) (2024-09-07)
 
 
@@ -3713,16 +3717,6 @@
 
 
 ## [4.38.2](https://github.com/Ombi-app/Ombi/compare/v4.38.1...v4.38.2) (2023-05-17)
-
-
-
-## [4.38.1](https://github.com/Ombi-app/Ombi/compare/v4.38.0...v4.38.1) (2023-05-09)
-
-
-### Bug Fixes
-
-* **API:** Allow RequestOnBehalf rights if requested from the API ([#4919](https://github.com/Ombi-app/Ombi/issues/4919)) ([bb6dedd](https://github.com/Ombi-app/Ombi/commit/bb6deddfaecb3d6c7c3c6970414444b619bb9106))
-* **notificaitons:** Add the RequestedByAlias field to the Notification Message ([7e9c8be](https://github.com/Ombi-app/Ombi/commit/7e9c8bec6b02bb4e11f8db50394e493d4dd07723))
 
 
 
