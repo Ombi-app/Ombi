@@ -27,6 +27,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +42,7 @@ using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
+using Ombi.Store.Repository;
 
 namespace Ombi.Core.Authentication
 {
@@ -52,7 +54,7 @@ namespace Ombi.Core.Authentication
             IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<OmbiUser>> logger, IPlexApi plexApi,
             IEmbyApiFactory embyApi, ISettingsService<EmbySettings> embySettings,
             IJellyfinApiFactory jellyfinApi, ISettingsService<JellyfinSettings> jellyfinSettings,
-            ISettingsService<AuthenticationSettings> auth)
+            ISettingsService<AuthenticationSettings> auth, IRepository<PlexWatchlistUserError> userError)
             : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
         {
             _plexApi = plexApi;
@@ -61,6 +63,8 @@ namespace Ombi.Core.Authentication
             _embySettings = embySettings;
             _jellyfinSettings = jellyfinSettings;
             _authSettings = auth;
+            _userError = userError;
+            _logger = logger;
         }
 
         private readonly IPlexApi _plexApi;
@@ -69,6 +73,8 @@ namespace Ombi.Core.Authentication
         private readonly ISettingsService<EmbySettings> _embySettings;
         private readonly ISettingsService<JellyfinSettings> _jellyfinSettings;
         private readonly ISettingsService<AuthenticationSettings> _authSettings;
+        private readonly IRepository<PlexWatchlistUserError> _userError;
+        private readonly Microsoft.Extensions.Logging.ILogger _logger;
         private string _clientIpAddress;
         public string ClientIpAddress { get => _clientIpAddress; set => _clientIpAddress = value; }
 
@@ -139,6 +145,38 @@ namespace Ombi.Core.Authentication
 
         }
         
+        public async Task<ICollection<OmbiUser>> GetPlexUsersWithValidTokens() 
+        {
+            var plexUsersWithTokens = Users.Where(x => x.UserType == UserType.PlexUser && x.MediaServerToken != null).ToList();
+            _logger.LogDebug($"Found {plexUsersWithTokens.Count} users with tokens");
+            var result = new List<OmbiUser>();
+
+            foreach (var user in plexUsersWithTokens)
+            {
+                // Check if the user has errors and the token is the same (not refreshed)
+                var failedUser = await _userError.GetAll().Where(x => x.UserId == user.Id).FirstOrDefaultAsync();
+                if (failedUser != null)
+                {
+                    if (failedUser.MediaServerToken.Equals(user.MediaServerToken))
+                    {
+                        _logger.LogWarning($"Skipping user '{user.UserName}' as they failed previously and the token has not yet been refreshed. They need to re-authenticate with Ombi");
+                        continue;
+                    }
+                    else
+                    {
+                        // remove that guy
+                        await _userError.Delete(failedUser);
+                        failedUser = null;
+                    }
+                }
+                if (failedUser == null)
+                {
+                    result.Add(user);
+                }
+            }
+            return result;
+
+        }
 
         /// <summary>
         /// Sign the user into plex and make sure we can get the authentication token.

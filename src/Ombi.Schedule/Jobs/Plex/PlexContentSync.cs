@@ -35,82 +35,56 @@ using Ombi.Api.Plex;
 using Ombi.Api.Plex.Models;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
+using Ombi.Core.Services;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Hubs;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Schedule.Jobs.Plex.Models;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Quartz;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
-    public class PlexContentSync : IPlexContentSync
+    public class PlexContentSync : PlexLibrarySync, IPlexContentSync
     {
         private readonly IMovieDbApi _movieApi;
         private readonly IMediaCacheService _mediaCacheService;
+        private readonly IFeatureService _feature;
+        private ProcessedContent _processedContent;
 
-        public PlexContentSync(ISettingsService<PlexSettings> plex, IPlexApi plexApi, ILogger<PlexContentSync> logger, IPlexContentRepository repo,
-            IPlexEpisodeSync epsiodeSync, INotificationHubService notificationHubService, IMovieDbApi movieDbApi, IMediaCacheService mediaCacheService)
+
+        public PlexContentSync(
+            ISettingsService<PlexSettings> plex, 
+            IPlexApi plexApi, ILogger<PlexLibrarySync> logger, 
+            IPlexContentRepository repo,
+            IPlexEpisodeSync epsiodeSync, 
+            INotificationHubService notificationHubService, 
+            IMovieDbApi movieDbApi, 
+            IMediaCacheService mediaCacheService, 
+            IFeatureService feature):
+            base(plex, plexApi, logger, notificationHubService)
         {
-            Plex = plex;
-            PlexApi = plexApi;
-            Logger = logger;
             Repo = repo;
             EpisodeSync = epsiodeSync;
-            Notification = notificationHubService;
             _movieApi = movieDbApi;
             _mediaCacheService = mediaCacheService;
+            _feature = feature;
             Plex.ClearCache();
         }
 
-        private ISettingsService<PlexSettings> Plex { get; }
-        private IPlexApi PlexApi { get; }
-        private ILogger<PlexContentSync> Logger { get; }
         private IPlexContentRepository Repo { get; }
         private IPlexEpisodeSync EpisodeSync { get; }
-        private INotificationHubService Notification { get; set; }
-
-        public async Task Execute(IJobExecutionContext context)
+        public async override Task Execute(IJobExecutionContext context)
         {
-            JobDataMap dataMap = context.JobDetail.JobDataMap;
-            var recentlyAddedSearch = dataMap.GetBooleanValueFromString(JobDataKeys.RecentlyAddedSearch);
+            
+            _processedContent = new ProcessedContent();
 
-            var plexSettings = await Plex.GetSettingsAsync();
-            if (!plexSettings.Enable)
-            {
-                return;
-            }
-            await NotifyClient(recentlyAddedSearch ? "Plex Recently Added Sync Started" : "Plex Content Sync Started");
-            if (!ValidateSettings(plexSettings))
-            {
-                Logger.LogError("Plex Settings are not valid");
-                await NotifyClient(recentlyAddedSearch ? "Plex Recently Added Sync, Settings Not Valid" : "Plex Content, Settings Not Valid");
-                return;
-            }
-            var processedContent = new ProcessedContent();
-            Logger.LogInformation(recentlyAddedSearch
-                ? "Starting Plex Content Cacher Recently Added Scan"
-                : "Starting Plex Content Cacher");
-            try
-            {
-                if (recentlyAddedSearch)
-                {
-                    processedContent = await StartTheCache(plexSettings, true);
-                }
-                else
-                {
-                    await StartTheCache(plexSettings, false);
-                }
-            }
-            catch (Exception e)
-            {
-                await NotifyClient(recentlyAddedSearch ? "Plex Recently Added Sync Errored" : "Plex Content Sync Errored");
-                Logger.LogWarning(LoggingEvents.PlexContentCacher, e, "Exception thrown when attempting to cache the Plex Content");
-            }
-
+            await base.Execute(context);
+            
             if (!recentlyAddedSearch)
             {
                 await NotifyClient("Plex Sync - Starting Episode Sync");
@@ -118,53 +92,32 @@ namespace Ombi.Schedule.Jobs.Plex
                 await OmbiQuartz.TriggerJob(nameof(IPlexEpisodeSync), "Plex");
             }
 
-            if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
+            if ((_processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
             {
                 await NotifyClient("Plex Sync - Checking if any requests are now available");
                 Logger.LogInformation("Kicking off Plex Availability Checker");
                 await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
             }
-            var processedCont = processedContent?.Content?.Count() ?? 0;
-            var processedEp = processedContent?.Episodes?.Count() ?? 0;
+            var processedCont = _processedContent?.Content?.Count() ?? 0;
+            var processedEp = _processedContent?.Episodes?.Count() ?? 0;
             Logger.LogInformation("Finished Plex Content Cacher, with processed content: {0}, episodes: {1}. Recently Added Scan: {2}", processedCont, processedEp, recentlyAddedSearch);
 
             await NotifyClient(recentlyAddedSearch ? $"Plex Recently Added Sync Finished, We processed {processedCont}, and {processedEp} Episodes" : "Plex Content Sync Finished");
 
-            await _mediaCacheService.Purge();
-        }
-
-        private async Task<ProcessedContent> StartTheCache(PlexSettings plexSettings, bool recentlyAddedSearch)
-        {
-            var processedContent = new ProcessedContent();
-            foreach (var servers in plexSettings.Servers ?? new List<PlexServers>())
+            // Played state
+            var isPlayedSyncEnabled = await _feature.FeatureEnabled(FeatureNames.PlayedSync); 
+            if(isPlayedSyncEnabled) 
             {
-                try
-                {
-                    Logger.LogInformation("Starting to cache the content on server {0}", servers.Name);
-
-                    if (recentlyAddedSearch)
-                    {
-                        // If it's recently added search then we want the results to pass to the metadata job
-                        // This way the metadata job is smaller in size to process, it only need to look at newly added shit
-                        return await ProcessServer(servers, true);
-                    }
-                    else
-                    {
-                        await ProcessServer(servers, false);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Logger.LogWarning(LoggingEvents.PlexContentCacher, e, "Exception thrown when attempting to cache the Plex Content in server {0}", servers.Name);
-                }
+                await OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IPlexPlayedSync), "Plex"), new JobDataMap(new Dictionary<string, string> { { JobDataKeys.RecentlyAddedSearch, recentlyAddedSearch.ToString() } }));
             }
 
-            return processedContent;
+            await _mediaCacheService.Purge();
+            
         }
 
-        private async Task<ProcessedContent> ProcessServer(PlexServers servers, bool recentlyAddedSearch)
+
+        protected override async Task ProcessServer(PlexServers servers)
         {
-            var retVal = new ProcessedContent();
             var contentProcessed = new Dictionary<int, string>();
             var episodesProcessed = new List<int>();
             Logger.LogDebug("Getting all content from server {0}", servers.Name);
@@ -286,9 +239,8 @@ namespace Ombi.Schedule.Jobs.Plex
                 }
             }
 
-            retVal.Content = contentProcessed.Values;
-            retVal.Episodes = episodesProcessed;
-            return retVal;
+            _processedContent.Content = contentProcessed.Values;
+            _processedContent.Episodes = episodesProcessed;
         }
 
         public async Task MovieLoop(PlexServers servers, Mediacontainer content, HashSet<PlexServerContent> contentToAdd,
@@ -698,45 +650,27 @@ namespace Ombi.Schedule.Jobs.Plex
         /// <returns></returns>
         private async Task<List<Mediacontainer>> GetAllContent(PlexServers plexSettings, bool recentlyAddedSearch)
         {
-            var sections = await PlexApi.GetLibrarySections(plexSettings.PlexAuthToken, plexSettings.FullUri);
-
             var libs = new List<Mediacontainer>();
-            if (sections != null)
-            {
-                foreach (var dir in sections.MediaContainer.Directory ?? new List<Directory>())
-                {
-                    if (plexSettings.PlexSelectedLibraries.Any())
-                    {
-                        if (plexSettings.PlexSelectedLibraries.Any(x => x.Enabled))
-                        {
-                            // Only get the enabled libs
-                            var keys = plexSettings.PlexSelectedLibraries.Where(x => x.Enabled)
-                                .Select(x => x.Key.ToString()).ToList();
-                            if (!keys.Contains(dir.key))
-                            {
-                                Logger.LogDebug("Lib {0} is not monitored, so skipping", dir.key);
-                                // We are not monitoring this lib
-                                continue;
-                            }
-                        }
-                    }
 
-                    if (recentlyAddedSearch)
+            var directories = await GetEnabledLibraries(plexSettings);
+
+            foreach (var directory in directories)
+            {
+                if (recentlyAddedSearch)
+                {
+                    var container = await PlexApi.GetRecentlyAdded(plexSettings.PlexAuthToken, plexSettings.FullUri,
+                        directory.key);
+                    if (container != null)
                     {
-                        var container = await PlexApi.GetRecentlyAdded(plexSettings.PlexAuthToken, plexSettings.FullUri,
-                            dir.key);
-                        if (container != null)
-                        {
-                            libs.Add(container.MediaContainer);
-                        }
+                        libs.Add(container.MediaContainer);
                     }
-                    else
+                }
+                else
+                {
+                    var lib = await PlexApi.GetLibrary(plexSettings.PlexAuthToken, plexSettings.FullUri, directory.key);
+                    if (lib != null)
                     {
-                        var lib = await PlexApi.GetLibrary(plexSettings.PlexAuthToken, plexSettings.FullUri, dir.key);
-                        if (lib != null)
-                        {
-                            libs.Add(lib.MediaContainer);
-                        }
+                        libs.Add(lib.MediaContainer);
                     }
                 }
             }
@@ -744,25 +678,6 @@ namespace Ombi.Schedule.Jobs.Plex
             return libs;
         }
 
-        private async Task NotifyClient(string message)
-        {
-            await Notification.SendNotificationToAdmins($"Plex Sync - {message}");
-        }
-
-        private static bool ValidateSettings(PlexSettings plex)
-        {
-            if (plex.Enable)
-            {
-                foreach (var server in plex.Servers ?? new List<PlexServers>())
-                {
-                    if (string.IsNullOrEmpty(server?.Ip) || string.IsNullOrEmpty(server?.PlexAuthToken))
-                    {
-                        return false;
-                    }
-                }
-            }
-            return plex.Enable;
-        }
 
         private bool _disposed;
 

@@ -64,30 +64,12 @@ namespace Ombi.Schedule.Jobs.Plex
                 return;
             }
 
-            var plexUsersWithTokens = _ombiUserManager.Users.Where(x => x.UserType == UserType.PlexUser && x.MediaServerToken != null).ToList();
-            _logger.LogInformation($"Found {plexUsersWithTokens.Count} users with tokens");
             await NotifyClient("Starting Watchlist Import");
-
-            foreach (var user in plexUsersWithTokens)
+            var plexUsers = await _ombiUserManager.GetPlexUsersWithValidTokens();
+            foreach (var user in plexUsers)
             {
                 try
                 {
-                    // Check if the user has errors and the token is the same (not refreshed)
-                    var failedUser = await _userError.GetAll().Where(x => x.UserId == user.Id).FirstOrDefaultAsync();
-                    if (failedUser != null)
-                    {
-                        if (failedUser.MediaServerToken.Equals(user.MediaServerToken))
-                        {
-                            _logger.LogInformation($"Skipping Plex Watchlist Import for user '{user.UserName}' as they failed previously and the token has not yet been refreshed");
-                            continue;
-                        }
-                        else
-                        {
-                            // remove that guy
-                            await _userError.Delete(failedUser);
-                            failedUser = null;
-                        }
-                    }
 
                     _logger.LogDebug($"Starting Watchlist Import for {user.UserName} with token {user.MediaServerToken}");
                     var watchlist = await _plexApi.GetWatchlist(user.MediaServerToken, context?.CancellationToken ?? CancellationToken.None);
