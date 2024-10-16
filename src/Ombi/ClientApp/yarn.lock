@@ -3490,10 +3490,10 @@ ajv@^8.0.0, ajv@^8.9.0:
     json-schema-traverse "^1.0.0"
     require-from-string "^2.0.2"
 
-angularx-qrcode@^16.0.0:
-  version "16.0.2"
-  resolved "https://registry.yarnpkg.com/angularx-qrcode/-/angularx-qrcode-16.0.2.tgz#86af924191546394cb93f9fb8d0c42edd0132894"
-  integrity sha512-FztOM7vjNu88sGxUU5jG2I+A9TxZBXXYBWINjpwIBbTL+COMgrtzXnScG7TyQeNknv5w3WFJWn59PcngRRYVXA==
+angularx-qrcode@^17.0.1:
+  version "17.0.1"
+  resolved "https://registry.yarnpkg.com/angularx-qrcode/-/angularx-qrcode-17.0.1.tgz#e641031544b1296ebd35f1506b6b8c9efb877b7f"
+  integrity sha512-23ZkkaMVtQU2DvyNDj7kTaZRRwYP6R3Vkoa6NmlfkdO/JACv5ppPKYceq2mG3mxP+7N7FCcIO5gpM67Lspm1hQ==
   dependencies:
     qrcode "1.5.3"
     tslib "^2.3.0"
