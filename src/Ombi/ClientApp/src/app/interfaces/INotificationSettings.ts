@@ -35,7 +35,8 @@ export enum NotificationAgent {
     Mattermost = 6,
     Mobile = 7,
     Gotify = 8,
-    WhatsApp = 9
+    WhatsApp = 9,
+    Ntfy = 10
 }
 
 export enum NotificationType {
@@ -118,6 +119,14 @@ export interface IGotifyNotificationSettings extends INotificationSettings {
     baseUrl: string;
     applicationToken: string;
     priority: number;
+}
+
+export interface INtfyNotificationSettings extends INotificationSettings {
+  notificationTemplates: INotificationTemplates[];
+  baseUrl: string;
+  authorizationHeader: string;
+  topic: string;
+  priority: number;
 }
 
 export interface IWebhookNotificationSettings extends INotificationSettings {
