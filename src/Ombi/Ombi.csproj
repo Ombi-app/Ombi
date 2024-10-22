@@ -67,6 +67,7 @@
     <PackageReference Include="AspNetCore.HealthChecks.MySql" Version="6.0.2" />
     <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="6.0.2" />
     <PackageReference Include="AspNetCore.HealthChecks.Sqlite" Version="6.0.2" />
+    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="8.0.2" />
     <PackageReference Include="AutoMapper" Version="12.0.0" />
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="LazyCache.AspNetCore" Version="2.4.0" />

@@ -5,25 +5,26 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using MySqlConnector;
 using Newtonsoft.Json;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal;
 using Ombi.Helpers;
 using Ombi.Store.Context;
+using Ombi.Store.Context.MsSql;
 using Ombi.Store.Context.MySql;
 using Ombi.Store.Context.Sqlite;
 using Ombi.Store.Context.Postgres;
 using Polly;
 using Pomelo.EntityFrameworkCore.MySql.Storage.Internal;
 using SQLitePCL;
+using SettingsContext = Ombi.Store.Context.SettingsContext;
 
 namespace Ombi.Extensions
 {
     public static class DatabaseExtensions
     {
-
         public const string SqliteDatabase = "Sqlite";
         public const string MySqlDatabase = "MySQL";
+        public const string MsSqlDatabase = "MSSQL";
         public const string PostgresDatabase = "Postgres";
 
         public static void ConfigureDatabases(this IServiceCollection services, IHealthChecksBuilder hcBuilder)
@@ -41,6 +42,10 @@ namespace Ombi.Extensions
                     services.AddDbContext<OmbiContext, OmbiMySqlContext>(x => ConfigureMySql(x, configuration.OmbiDatabase));
                     AddMySqlHealthCheck(hcBuilder, "Ombi Database", configuration.OmbiDatabase);
                     break;
+                case var type when type.Equals(MsSqlDatabase, StringComparison.InvariantCultureIgnoreCase):
+                    services.AddDbContext<OmbiContext, OmbiMsSqlContext>(x => ConfigureMsSql(x, configuration.OmbiDatabase));
+                    AddMsSqlHealthCheck(hcBuilder, "Ombi Database", configuration.OmbiDatabase);
+                    break;
                 case var type when type.Equals(PostgresDatabase, StringComparison.InvariantCultureIgnoreCase):
                     services.AddDbContext<OmbiContext, OmbiPostgresContext>(x => ConfigurePostgres(x, configuration.OmbiDatabase));
                     AddPostgresHealthCheck(hcBuilder, "Ombi Database", configuration.OmbiDatabase);
@@ -57,6 +62,10 @@ namespace Ombi.Extensions
                     services.AddDbContext<ExternalContext, ExternalMySqlContext>(x => ConfigureMySql(x, configuration.ExternalDatabase));
                     AddMySqlHealthCheck(hcBuilder, "External Database", configuration.ExternalDatabase);
                     break;
+                case var type when type.Equals(MsSqlDatabase, StringComparison.InvariantCultureIgnoreCase):
+                    services.AddDbContext<ExternalContext, ExternalMsSqlContext>(x => ConfigureMsSql(x, configuration.ExternalDatabase));
+                    AddMsSqlHealthCheck(hcBuilder, "External Database", configuration.ExternalDatabase);
+                    break;
                 case var type when type.Equals(PostgresDatabase, StringComparison.InvariantCultureIgnoreCase):
                     services.AddDbContext<ExternalContext, ExternalPostgresContext>(x => ConfigurePostgres(x, configuration.ExternalDatabase));
                     AddPostgresHealthCheck(hcBuilder, "External Database", configuration.ExternalDatabase);
@@ -72,6 +81,10 @@ namespace Ombi.Extensions
                 case var type when type.Equals(MySqlDatabase, StringComparison.InvariantCultureIgnoreCase):
                     services.AddDbContext<SettingsContext, SettingsMySqlContext>(x => ConfigureMySql(x, configuration.SettingsDatabase));
                     AddMySqlHealthCheck(hcBuilder, "Settings Database", configuration.SettingsDatabase);
+                    break;
+                case var type when type.Equals(MsSqlDatabase, StringComparison.InvariantCultureIgnoreCase):
+                    services.AddDbContext<SettingsContext, SettingsMsSqlContext>(x => ConfigureMsSql(x, configuration.SettingsDatabase));
+                    AddMsSqlHealthCheck(hcBuilder, "Settings Database", configuration.SettingsDatabase);
                     break;
                 case var type when type.Equals(PostgresDatabase, StringComparison.InvariantCultureIgnoreCase):
                     services.AddDbContext<SettingsContext, SettingsPostgresContext>(x => ConfigurePostgres(x, configuration.SettingsDatabase));
@@ -131,6 +144,20 @@ namespace Ombi.Extensions
             }
         }
 
+        private static void AddMsSqlHealthCheck(IHealthChecksBuilder builder, string dbName,
+            PerDatabaseConfiguration config)
+        {
+            if (builder is not null)
+            {
+                builder.AddSqlServer(
+                    connectionString: config.ConnectionString,
+                    name: dbName,
+                    failureStatus: HealthStatus.Unhealthy,
+                    tags: ["db"]
+                );
+            }
+        }
+
         private static void AddPostgresHealthCheck(IHealthChecksBuilder builder, string dbName, PerDatabaseConfiguration config)
         {
             if (builder != null)
@@ -162,6 +189,19 @@ namespace Ombi.Extensions
             {
                 //b.CharSetBehavior(Pomelo.EntityFrameworkCore.MySql.Infrastructure.CharSetBehavior.NeverAppend); // ##ISSUE, link to migrations?
                 b.EnableRetryOnFailure();
+            });
+        }
+
+        public static void ConfigureMsSql(DbContextOptionsBuilder options, PerDatabaseConfiguration config)
+        {
+            if (string.IsNullOrEmpty(config.ConnectionString))
+            {
+                throw new ArgumentNullException("ConnectionString for the MsSql database is empty");
+            }
+
+            options.UseSqlServer(config.ConnectionString, e =>
+            {
+                e.EnableRetryOnFailure();
             });
         }
 
