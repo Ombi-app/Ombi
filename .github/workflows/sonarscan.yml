@@ -45,6 +45,6 @@ jobs:
           # The organization and project arguments (see /o and /k) are displayed
           # on the project dashboard in SonarCloud.
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Ombi-app_Ombi" /o:"ombi-app" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="src/Ombi.Store/Migrations/*"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Ombi-app_Ombi" /o:"ombi-app" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="src/Ombi.Store/Migrations/**"
           dotnet build src/Ombi.sln -c NonUiBuild
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
