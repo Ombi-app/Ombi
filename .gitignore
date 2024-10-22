@@ -245,8 +245,6 @@ _Pvt_Extensions
 /Tools/*
 *.db-journal
 
-# JetBrains Rider shame
-**/.idea/**
 # macOS shame
 .DS_Store
 
