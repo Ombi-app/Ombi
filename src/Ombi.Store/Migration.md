@@ -54,6 +54,23 @@ If running migrations for any db provider other than Sqlite, then ensure the dat
 }
 ```
 
+### MSSQL Example
+```
+{
+  "OmbiDatabase": {
+    "Type": "MSSQL",
+    "ConnectionString": "Server=localhost;Database=ombi;User Id=ombi;Password=ombi;TrustServerCertificate=True"
+  },
+  "SettingsDatabase": {
+    "Type": "MSSQL",
+    "ConnectionString": "Server=localhost;Database=ombi;User Id=ombi;Password=ombi;TrustServerCertificate=True"
+  },
+  "ExternalDatabase": {
+    "Type": "MSSQL",
+    "ConnectionString": "Server=localhost;Database=ombi;User Id=ombi;Password=ombi;TrustServerCertificate=True"
+  }
+}
+```
 
 ### Postgres Example
 ```
