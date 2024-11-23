@@ -130,7 +130,7 @@ jobs:
         working-directory: src/Ombi
 
       - name: Download Angular
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: angular_dist
           path: ~/src/Ombi/dist
@@ -170,7 +170,7 @@ jobs:
 
       - name: Download Artifacts
         id: download
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
 
