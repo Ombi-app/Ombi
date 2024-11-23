@@ -1,3 +1,12 @@
+## [4.46.5](https://github.com/Ombi-app/Ombi/compare/v4.46.4...v4.46.5) (2024-11-23)
+
+
+### Bug Fixes
+
+* **Fixed the UI not applying the correct timezone settings:** :bug: ([029ea79](https://github.com/Ombi-app/Ombi/commit/029ea7919220fbc506898733caeb4370053051a7))
+
+
+
 ## [4.46.4](https://github.com/Ombi-app/Ombi/compare/v4.46.3...v4.46.4) (2024-09-09)
 
 
@@ -3713,10 +3722,6 @@
 
 
 ## [4.35.10](https://github.com/Ombi-app/Ombi/compare/v4.35.9...v4.35.10) (2023-02-25)
-
-
-
-## [4.38.2](https://github.com/Ombi-app/Ombi/compare/v4.38.1...v4.38.2) (2023-05-17)
 
 
 
