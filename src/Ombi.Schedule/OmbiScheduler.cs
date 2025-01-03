@@ -90,6 +90,7 @@ namespace Ombi.Schedule
             await OmbiQuartz.Instance.AddJob<IPlexContentSync>(nameof(IPlexContentSync) + "RecentlyAdded", "Plex", JobSettingsHelper.PlexRecentlyAdded(s), new Dictionary<string, string> { { JobDataKeys.RecentlyAddedSearch, "true" } });
             await OmbiQuartz.Instance.AddJob<IPlexUserImporter>(nameof(IPlexUserImporter), "Plex", JobSettingsHelper.UserImporter(s));
             await OmbiQuartz.Instance.AddJob<IPlexEpisodeSync>(nameof(IPlexEpisodeSync), "Plex", null);
+            await OmbiQuartz.Instance.AddJob<IPlexPlayedSync>(nameof(IPlexPlayedSync), "Plex", null);
             await OmbiQuartz.Instance.AddJob<IPlexAvailabilityChecker>(nameof(IPlexAvailabilityChecker), "Plex", null);
             await OmbiQuartz.Instance.AddJob<IPlexWatchlistImport>(nameof(IPlexWatchlistImport), "Plex", JobSettingsHelper.PlexWatchlistImport(s));
         }
