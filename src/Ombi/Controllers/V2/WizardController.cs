@@ -90,7 +90,8 @@ namespace Ombi.Controllers.V2
                 return BadRequest();
             }
 
-            _logger.LogInformation("Setting up database type: {0}", config.Type);
+            var sanitizedType = config.Type.Replace(Environment.NewLine, "").Replace("\n", "").Replace("\r", "");
+            _logger.LogInformation("Setting up database type: {0}", sanitizedType);
 
             var connectionString = string.Empty;
             if (config.Type == IDatabaseConfigurationService.MySqlDatabase)
