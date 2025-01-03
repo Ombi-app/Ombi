@@ -1,6 +1,7 @@
 ﻿<div class="wizard-background">
   <div class="container wizard-inner">
-      <mat-stepper linear #stepper>
+    @if (!needsRestart) {  
+    <mat-stepper linear #stepper>
         <mat-step >
           <form >
             <ng-template matStepLabel>Welcome</ng-template>
@@ -28,6 +29,12 @@
               <button mat-button matStepperNext class="mat-raised-button mat-accent" data-test="nextWelcome">Next</button>
             </div>
           </form>
+        </mat-step>
+        <mat-step>
+            <ng-template matStepLabel>Database</ng-template>
+              <wizard-database-selector (configuredDatabase)="databaseConfigured()"></wizard-database-selector>
+              <button mat-button matStepperPrevious class="mat-raised-button mat-error left">Back</button>
+              <button mat-button matStepperNext class="mat-raised-button mat-accent right" data-test="nextMediaServer">Next</button>
         </mat-step>
 
         <mat-step  [optional]="true">
@@ -82,5 +89,22 @@
           </div>
         </mat-step>
       </mat-stepper>
+    } @else {
+      <mat-stepper linear>
+        <mat-step >
+            <ng-template matStepLabel>Restart</ng-template>
+            <div class="welcome-container">
+              <div class="left-container mediaserver">
+                <i class="fa fa-database text-logo"></i>
+            </div>
+              <div class="right-container">
+                <div class="right-container-content">
+                  <h1>Please Restart Ombi for the database changes to take effect!</h1>
+                </div>
+              </div>
+            </div>
+        </mat-step>
+        </mat-stepper>
+    }
   </div>
 </div>
