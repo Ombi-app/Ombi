@@ -28,10 +28,10 @@ export class RadarrComponent implements OnInit, OnDestroy {
     private readonly destroyed$: Subject<void>;
 
     constructor(
-        private radarrFacade: RadarrFacade,
-        private notificationService: NotificationService,
-        private featureFacade: FeaturesFacade,
-        fb: UntypedFormBuilder
+        private readonly radarrFacade: RadarrFacade,
+        private readonly notificationService: NotificationService,
+        private readonly featureFacade: FeaturesFacade,
+        readonly fb: UntypedFormBuilder
     ) {
         this.form4k$ = new ReplaySubject();
         this.normalForm$ = new ReplaySubject();
