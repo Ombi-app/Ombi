@@ -1,0 +1,113 @@
+<h1 mat-dialog-title>Server Configuration</h1>
+<mat-dialog-content>
+  <form #embyServerForm="ngForm">
+    <h2>Connection</h2>
+
+    <mat-form-field appearance="outline" floatLabel=auto>
+      <mat-label>Server Name</mat-label>
+      <input matInput placeholder="Server Name" name="name" [(ngModel)]="server.name" value="{{server.name}}"
+        (change)="processChangeEvent()">
+      <mat-hint>Auto populated during discovery of the server if left empty.</mat-hint>
+    </mat-form-field>
+
+    <div class="row">
+      <mat-form-field class="col-md-6 col-12" appearance="outline" floatLabel=auto>
+        <mat-label>Hostname / IP</mat-label>
+        <input matInput placeholder="Hostname or IP" name="ip" [(ngModel)]="server.ip" value="{{server.ip}}"
+          (change)="processChangeEvent()" #serverHostnameIpControl="ngModel" required>
+        <mat-error *ngIf="serverHostnameIpControl.hasError('required')">Must be specified.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="col-md-4 col-7" appearance="outline" floatLabel=auto>
+        <mat-label>Port</mat-label>
+        <input matInput placeholder="Port" name="port" [(ngModel)]="server.port" value="{{server.port}}"
+          (change)="processChangeEvent()" #serverPortControl="ngModel" required pattern="^[0-9]*$">
+        <mat-error *ngIf="serverPortControl.hasError('required')">Must be specified.</mat-error>
+        <mat-error *ngIf="serverPortControl.hasError('pattern')">Must be a number.</mat-error>
+      </mat-form-field>
+
+      <mat-slide-toggle class="col-md-2 col-5 mt-3" id="ssl" name="ssl" [(ngModel)]="server.ssl" [checked]="server.ssl"
+        (change)="processChangeEvent()">
+        SSL
+      </mat-slide-toggle>
+    </div>
+
+    <mat-form-field appearance="outline" floatLabel=auto>
+      <mat-label>Base URL</mat-label>
+      <input matInput placeholder="Base Url" name="subDir" [(ngModel)]="server.subDir" value="{{server.subDir}}"
+        (change)="processChangeEvent()">
+      <mat-hint>Optional url path to be used with reverse proxy. Example: 'emby' to get
+        'https://ip:port/emby'.</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" floatLabel=auto>
+      <mat-label>API Key</mat-label>
+      <input matInput placeholder="Api Key" name="apiKey" [(ngModel)]="server.apiKey" value="{{server.apiKey}}"
+        (change)="processChangeEvent()" #serverApiKeyControl="ngModel" required>
+      <mat-error *ngIf="serverApiKeyControl.hasError('required')">Must be specified.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" floatLabel=auto>
+      <mat-label>Externally Facing Hostname</mat-label>
+      <input matInput placeholder="e.g. https://emby.server.com/" name="serverHostname"
+        [(ngModel)]="server.serverHostname" value="{{server.serverHostname}}" (change)="processChangeEvent()">
+      <mat-hint>
+        The external address that users will navigate to when they press the 'View On Emby'
+        button.
+        <br />
+        <span>Current URL: {{server.serverHostname ? server.serverHostname :
+          'https://app.emby.media'}}/#!/item/item.html?id=1</span>
+      </mat-hint>
+    </mat-form-field>
+
+    <h2>Libraries</h2>
+    <label *ngIf="server.embySelectedLibraries && server.embySelectedLibraries.length == 0">
+      Discover the server to load available libraries. If you still not seeing any libraries, make sure they are
+      configured in Emby.</label>
+    <div *ngIf="server.embySelectedLibraries && server.embySelectedLibraries.length > 0">
+      <label>Please select the libraries for Ombi to monitor. If nothing is selected, Ombi will monitor all
+        libraries.</label>
+      <div *ngFor="let lib of server.embySelectedLibraries">
+        <div class="md-form-field">
+          <div class="checkbox">
+            <mat-slide-toggle name="library-{{lib.key}}" [(ngModel)]="lib.enabled" [checked]="lib.enabled"
+              (change)="processChangeEvent()">
+              {{lib.title}}
+            </mat-slide-toggle>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align=end>
+  <button style="margin: .5em 0 0 .5em;" align-middle mat-stroked-button color="warn" *ngIf="!data.isNewServer"
+    (click)="delete()">
+    <span style="display: flex; align-items: baseline; white-space: pre-wrap;">
+      <i class="fas fa-trash"></i>
+      <span> Delete</span>
+    </span>
+  </button>
+
+  <button style="margin: .5em 0 0 0.5em;" mat-stroked-button color="basic" (click)="cancel()">
+    <span style="display: flex; align-items: baseline; white-space: pre-wrap;">
+      <i class="fas fa-times"></i>
+      <span> Cancel</span>
+    </span>
+  </button>
+
+  <button style="margin: .5em 0 0 .5em;" mat-stroked-button color="{{serverDiscoveryRequired ? 'accent' : 'basic'}}"
+    (click)="discoverServer()" id="discover">
+    <span>Discover Server</span>
+  </button>
+
+  <button style="margin: .5em 0 0 .5em;" mat-stroked-button color="accent"
+    [disabled]="!isChangeDetected || serverDiscoveryRequired || isServerNameMissing" (click)="save()">
+    <span style="display: flex; align-items: baseline; white-space: pre-wrap;">
+      <i style="vertical-align: text-top;" class="fas fa-plus"></i>
+      <span> Save</span>
+    </span>
+  </button>
+</mat-dialog-actions>

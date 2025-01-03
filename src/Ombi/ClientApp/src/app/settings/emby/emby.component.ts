@@ -1,136 +1,160 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { EmbyService, JobService, NotificationService, SettingsService, TesterService } from "../../services";
-import { IEmbyLibrariesSettings, IEmbyServer, IEmbySettings } from "../../interfaces";
-
-import {UntypedFormControl} from '@angular/forms';
-import { MatTabChangeEvent } from "@angular/material/tabs";
+import {
+  JobService,
+  NotificationService,
+  SettingsService,
+} from "../../services";
+import { IEmbyServer, IEmbySettings } from "../../interfaces";
+import { MatSlideToggleChange } from "@angular/material/slide-toggle";
+import { MatDialog } from "@angular/material/dialog";
+import {
+  EmbyServerDialog,
+  EmbyServerDialogData,
+} from "./emby-server-dialog/emby-server-dialog.component";
 
 @Component({
-    templateUrl: "./emby.component.html",
-    styleUrls: ["./emby.component.scss"]
+  templateUrl: "./emby.component.html",
+  styleUrls: ["./emby.component.scss"],
 })
 export class EmbyComponent implements OnInit {
+  public savedSettings: IEmbySettings;
 
-    public settings: IEmbySettings;
-    public hasDiscoveredOrDirty: boolean;
-    selected = new UntypedFormControl(0);
+  constructor(
+    private settingsService: SettingsService,
+    private notificationService: NotificationService,
+    private jobService: JobService,
+    private dialog: MatDialog
+  ) {}
 
-    constructor(private settingsService: SettingsService,
-                private notificationService: NotificationService,
-                private testerService: TesterService,
-                private jobService: JobService,
-                private embyService: EmbyService) { }
+  public ngOnInit() {
+    this.settingsService.getEmby().subscribe({
+      next: (result) => {
+        if (result.servers == null) result.servers = [];
+        this.savedSettings = result;
+      },
+      error: () => {
+        this.notificationService.error("Failed to retrieve Emby settings.");
+      },
+    });
+  }
 
-    public ngOnInit() {
-        this.settingsService.getEmby().subscribe(x => this.settings = x);
-    }
-
-    public async discoverServerInfo(server: IEmbyServer) {
-        const result = await this.embyService.getPublicInfo(server).toPromise();
-        server.name = result.serverName;
-        server.serverId = result.id;
-        this.hasDiscoveredOrDirty = true;
-    }
-
-    public addTab(event: MatTabChangeEvent) {
-        const tabName = event.tab.textLabel;
-        if (tabName == "Add Server"){
-            if (this.settings.servers == null) {
-                this.settings.servers = [];
-            }
-            this.settings.servers.push({
-                name: "New " + this.settings.servers.length + "*",
-                id: Math.floor(Math.random() * (99999 - 0 + 1) + 1),
-                apiKey: "",
-                administratorId: "",
-                enableEpisodeSearching: false,
-                ip: "",
-                port: 0,
-                ssl: false,
-                subDir: "",
-            } as IEmbyServer);
-        this.selected.setValue(this.settings.servers.length - 1);
+  public toggleEnableFlag(event: MatSlideToggleChange) {
+    const newSettings: IEmbySettings = {
+      ...structuredClone(this.savedSettings),
+      enable: event.checked,
+    };
+    const errorMessage = event.checked
+      ? "There was an error enabling Emby settings. Check that all servers are configured correctly."
+      : "There was an error disabling Emby settings.";
+    this.settingsService.saveEmby(newSettings).subscribe({
+      next: (result) => {
+        if (result) {
+          this.savedSettings.enable = event.checked;
+          this.notificationService.success(
+            `Successfully ${
+              event.checked ? "enabled" : "disabled"
+            } Emby settings.`
+          );
+        } else {
+          event.source.checked = !event.checked;
+          this.notificationService.error(errorMessage);
         }
-    }
+      },
+      error: () => {
+        event.source.checked = !event.checked;
+        this.notificationService.error(errorMessage);
+      },
+    });
+  }
 
-    public toggle() {
-     this.hasDiscoveredOrDirty = true;
-    }
+  public newServer() {
+    const newServer: IEmbyServer = {
+      name: "",
+      id: Math.floor(Math.random() * 99999 + 1),
+      apiKey: "",
+      administratorId: "",
+      enableEpisodeSearching: false,
+      ip: "",
+      port: undefined,
+      ssl: false,
+      subDir: "",
+      serverId: "",
+      serverHostname: "",
+      embySelectedLibraries: [],
+    };
+    const data: EmbyServerDialogData = {
+      server: newServer,
+      isNewServer: true,
+      savedSettings: this.savedSettings,
+    };
+    this.dialog.open(EmbyServerDialog, {
+      width: "700px",
+      data: data,
+      panelClass: "modal-panel",
+    });
+  }
 
-    public test(server: IEmbyServer) {
-        this.testerService.embyTest(server).subscribe(x => {
-            if (x === true) {
-                this.notificationService.success(`Successfully connected to the Emby server ${server.name}!`);
-            } else {
-                this.notificationService.error(`We could not connect to the Emby server  ${server.name}!`);
-            }
-        });
-    }
+  public editServer(server: IEmbyServer) {
+    const data: EmbyServerDialogData = {
+      server: server,
+      isNewServer: false,
+      savedSettings: this.savedSettings,
+    };
+    this.dialog.open(EmbyServerDialog, {
+      width: "700px",
+      data: data,
+      panelClass: "modal-panel",
+    });
+  }
 
-    public removeServer(server: IEmbyServer) {
-        const index = this.settings.servers.indexOf(server, 0);
-        if (index > -1) {
-            this.settings.servers.splice(index, 1);
-            this.selected.setValue(this.settings.servers.length - 1);
-            this.toggle();
+  public runIncrementalSync(): void {
+    const errorMessage = "There was an error triggering the incremental sync.";
+    this.jobService.runEmbyRecentlyAddedCacher().subscribe({
+      next: (result) => {
+        if (result) {
+          this.notificationService.success("Triggered the incremental sync.");
+        } else {
+          this.notificationService.error(errorMessage);
         }
-    }
+      },
+      error: () => {
+        this.notificationService.error(errorMessage);
+      },
+    });
+  }
 
-    public save() {
-        this.settingsService.saveEmby(this.settings).subscribe(x => {
-            if (x) {
-                this.notificationService.success("Successfully saved Emby settings");
-            } else {
-                this.notificationService.success("There was an error when saving the Emby settings");
-            }
-        });
-    }
-
-    public runCacher(): void {
-        this.jobService.runEmbyCacher().subscribe(x => {
-            if(x) {
-                this.notificationService.success("Triggered the Emby Content Cacher");
-            }
-        });
-    }
-
-    public runRecentlyAddedCacher(): void {
-        this.jobService.runEmbyRecentlyAddedCacher().subscribe(x => {
-            if (x) {
-                this.notificationService.success("Triggered the Emby Recently Added Sync");
-            }
-        });
-    }
-
-    public clearDataAndResync(): void {
-        this.jobService.clearMediaserverData().subscribe(x => {
-            if (x) {
-                this.notificationService.success("Triggered the Clear MediaServer Resync");
-            }
-        });
-    }
-
-    public loadLibraries(server: IEmbyServer) {
-        if (server.ip == null) {
-            this.notificationService.error("Emby is not yet configured correctly");
-            return;
+  public runFullSync(): void {
+    const errorMessage = "There was an error triggering the full sync.";
+    this.jobService.runEmbyCacher().subscribe({
+      next: (result) => {
+        if (result) {
+          this.notificationService.success("Triggered the full sync.");
+        } else {
+          this.notificationService.error(errorMessage);
         }
-        this.embyService.getLibraries(server).subscribe(x => {
-            server.embySelectedLibraries = [];
-            if (x.totalRecordCount > 0) {
-                x.items.forEach((item) => {
-                    const lib: IEmbyLibrariesSettings = {
-                        key: item.id,
-                        title: item.name,
-                        enabled: false,
-                        collectionType: item.collectionType
-                    };
-                    server.embySelectedLibraries.push(lib);
-                });
-            } else {
-                this.notificationService.error("Couldn't find any libraries");
-            }
-        },
-            err => { this.notificationService.error(err); });
-    }
+      },
+      error: () => {
+        this.notificationService.error(errorMessage);
+      },
+    });
+  }
+
+  public runCacheWipeWithFullSync(): void {
+    const errorMessage =
+      "There was an error triggering the cache wipe with a full sync.";
+    this.jobService.clearMediaserverData().subscribe({
+      next: (result) => {
+        if (result) {
+          this.notificationService.success(
+            "Triggered the cache wipe with a full sync."
+          );
+        } else {
+          this.notificationService.error(errorMessage);
+        }
+      },
+      error: () => {
+        this.notificationService.error(errorMessage);
+      },
+    });
+  }
 }
