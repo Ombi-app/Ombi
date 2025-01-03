@@ -3,7 +3,7 @@
     "@badeball/cypress-cucumber-preprocessor": "^14.0.0",
     "@bahmutov/cy-api": "^1.5.0",
     "@bahmutov/cypress-esbuild-preprocessor": "^2.1.5",
-    "cypress": "12.14.0",
+    "cypress": "13.17.0",
     "cypress-wait-until": "^1.7.1",
     "typescript": "^4.2.3"
   },
