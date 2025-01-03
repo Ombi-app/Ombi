@@ -1,3 +1,12 @@
+## [4.46.8](https://github.com/Ombi-app/Ombi/compare/v4.46.7...v4.46.8) (2025-01-03)
+
+
+### Bug Fixes
+
+* **radarr-settings:** this.normalForm is undefined ([#5207](https://github.com/Ombi-app/Ombi/issues/5207)) ([dc2b958](https://github.com/Ombi-app/Ombi/commit/dc2b958915bf6cb77e093ada843ef6d9f62a3755)), closes [#4994](https://github.com/Ombi-app/Ombi/issues/4994)
+
+
+
 ## [4.46.7](https://github.com/Ombi-app/Ombi/compare/v4.46.6...v4.46.7) (2024-12-03)
 
 
@@ -2961,18 +2970,6 @@
 
 
 ## [4.16.13](https://github.com/Ombi-app/Ombi/compare/v4.16.12...v4.16.13) (2022-04-19)
-
-
-
-## [4.39.1](https://github.com/Ombi-app/Ombi/compare/v4.39.0...v4.39.1) (2023-05-18)
-
-
-
-## [4.35.11](https://github.com/Ombi-app/Ombi/compare/v4.38.2...v4.35.11) (2023-05-17)
-
-
-
-## [4.35.10](https://github.com/Ombi-app/Ombi/compare/v4.35.9...v4.35.10) (2023-02-25)
 
 
 
