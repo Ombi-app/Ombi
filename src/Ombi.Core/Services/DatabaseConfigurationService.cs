@@ -2,16 +2,11 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Ombi.Core.Helpers;
 using Ombi.Core.Models;
 using Ombi.Helpers;
-using Ombi.Store.Context;
-using Ombi.Store.Context.MySql;
-using Ombi.Store.Context.Postgres;
 
 namespace Ombi.Core.Services;
 
