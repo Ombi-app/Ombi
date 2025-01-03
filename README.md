@@ -659,10 +659,10 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/sussycatgirl">
-            <img src="https://avatars.githubusercontent.com/u/26145882?v=4" width="50;" alt="sussycatgirl"/>
+        <a href="https://github.com/Drewster727">
+            <img src="https://avatars.githubusercontent.com/u/4528753?v=4" width="50;" alt="Drewster727"/>
             <br />
-            <sub><b>Lea</b></sub>
+            <sub><b>Drew</b></sub>
         </a>
     </td>
     <td align="center">
@@ -760,13 +760,6 @@ Here are some of the features Ombi has:
     </td></tr>
 <tr>
     <td align="center">
-        <a href="https://github.com/AlexandrePicavet">
-            <img src="https://avatars.githubusercontent.com/u/25816980?v=4" width="50;" alt="AlexandrePicavet"/>
-            <br />
-            <sub><b>Alexandre Picavet</b></sub>
-        </a>
-    </td>
-    <td align="center">
         <a href="https://github.com/XanderStrike">
             <img src="https://avatars.githubusercontent.com/u/1565303?v=4" width="50;" alt="XanderStrike"/>
             <br />
@@ -785,6 +778,13 @@ Here are some of the features Ombi has:
             <img src="https://avatars.githubusercontent.com/u/8125653?v=4" width="50;" alt="AbeKline"/>
             <br />
             <sub><b>Abe Kline</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/sussycatgirl">
+            <img src="https://avatars.githubusercontent.com/u/26145882?v=4" width="50;" alt="sussycatgirl"/>
+            <br />
+            <sub><b>Lea</b></sub>
         </a>
     </td>
     <td align="center">
@@ -900,13 +900,6 @@ Here are some of the features Ombi has:
             <img src="https://avatars.githubusercontent.com/u/18365129?v=4" width="50;" alt="elisspace"/>
             <br />
             <sub><b>Eli</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/Drewster727">
-            <img src="https://avatars.githubusercontent.com/u/4528753?v=4" width="50;" alt="Drewster727"/>
-            <br />
-            <sub><b>Drew</b></sub>
         </a>
     </td></tr>
 </table>
