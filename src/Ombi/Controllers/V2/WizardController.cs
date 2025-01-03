@@ -89,7 +89,7 @@ namespace Ombi.Controllers.V2
                 _logger.LogError("Wizard has already been completed");
                 return BadRequest();
             }
-
+            var sanitizedType = config.Type.Replace(Environment.NewLine, "").Replace("\n", "").Replace("\r", "");
             _logger.LogInformation("Setting up database type: {0}", config.Type);
 
             var connectionString = string.Empty;

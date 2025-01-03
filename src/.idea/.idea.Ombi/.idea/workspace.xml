@@ -6,9 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="57001998-efde-494a-80b3-d7acfc91f770" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Ombi/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Ombi/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ombi.Core/Services/DatabaseConfigurationService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi.Core/Services/DatabaseConfigurationService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/wizard/database/database.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/wizard/database/database.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/wizard/database/database.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/wizard/database/database.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/wizard/welcome/welcome.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/wizard/welcome/welcome.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi/Controllers/V2/WizardController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/Controllers/V2/WizardController.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -379,7 +378,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Launch Settings Profile.Ombi.executor": "Debug",
+    ".NET Launch Settings Profile.Ombi.executor": "Run",
     "git-widget-placeholder": "#5208 on wizard-database",
     "node.js.selected.package.tslint": "(autodetect)"
   }
@@ -572,32 +571,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Ombi/Controllers/V2/WizardController.cs</url>
-          <line>112</line>
-          <properties documentPath="C:\git\Ombi\src\Ombi\Controllers\V2\WizardController.cs" containingFunctionPresentation="Method 'DatabaseConfig'">
-            <startOffsets>
-              <option value="3846" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3907" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="10" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Ombi/Controllers/V2/WizardController.cs</url>
-          <line>121</line>
-          <properties documentPath="C:\git\Ombi\src\Ombi\Controllers\V2\WizardController.cs" containingFunctionPresentation="Method 'DatabaseConfig'">
-            <startOffsets>
-              <option value="4240" />
-            </startOffsets>
-            <endOffsets>
-              <option value="4278" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="11" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
