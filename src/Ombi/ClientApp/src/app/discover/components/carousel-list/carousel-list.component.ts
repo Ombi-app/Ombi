@@ -293,7 +293,6 @@ export class CarouselListComponent implements OnInit {
         }
 
         this.discoverResults.push(...tempResults);
-        this.carousel.ngAfterContentInit();
 
         this.finishLoading();
     }

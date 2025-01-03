@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Ombi.Store.Context.MySql;
 
@@ -16,14 +17,18 @@ namespace Ombi.Store.Migrations.ExternalMySql
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.9")
+                .HasAnnotation("ProductVersion", "8.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
             modelBuilder.Entity("Ombi.Store.Entities.CouchPotatoCache", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("TheMovieDbId")
                         .HasColumnType("int");
@@ -38,6 +43,8 @@ namespace Ombi.Store.Migrations.ExternalMySql
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("datetime(6)");
@@ -84,6 +91,8 @@ namespace Ombi.Store.Migrations.ExternalMySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("datetime(6)");
 
@@ -126,6 +135,8 @@ namespace Ombi.Store.Migrations.ExternalMySql
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("datetime(6)");
@@ -172,6 +183,8 @@ namespace Ombi.Store.Migrations.ExternalMySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("datetime(6)");
 
@@ -215,6 +228,8 @@ namespace Ombi.Store.Migrations.ExternalMySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("datetime(6)");
 
@@ -250,6 +265,8 @@ namespace Ombi.Store.Migrations.ExternalMySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<int>("ArtistId")
                         .HasColumnType("int");
 
@@ -272,6 +289,8 @@ namespace Ombi.Store.Migrations.ExternalMySql
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("EpisodeNumber")
                         .HasColumnType("int");
@@ -304,6 +323,8 @@ namespace Ombi.Store.Migrations.ExternalMySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<string>("ParentKey")
                         .HasColumnType("longtext");
 
@@ -331,6 +352,8 @@ namespace Ombi.Store.Migrations.ExternalMySql
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("datetime(6)");
@@ -380,7 +403,15 @@ namespace Ombi.Store.Migrations.ExternalMySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("TmdbId")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserId")
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -393,6 +424,8 @@ namespace Ombi.Store.Migrations.ExternalMySql
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("Has4K")
                         .HasColumnType("tinyint(1)");
@@ -417,6 +450,8 @@ namespace Ombi.Store.Migrations.ExternalMySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<int>("TvDbId")
                         .HasColumnType("int");
 
@@ -430,6 +465,8 @@ namespace Ombi.Store.Migrations.ExternalMySql
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("EpisodeNumber")
                         .HasColumnType("int");
@@ -451,6 +488,8 @@ namespace Ombi.Store.Migrations.ExternalMySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<int>("TheMovieDbId")
                         .HasColumnType("int");
 
@@ -467,6 +506,8 @@ namespace Ombi.Store.Migrations.ExternalMySql
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("EpisodeNumber")
                         .HasColumnType("int");
@@ -494,6 +535,8 @@ namespace Ombi.Store.Migrations.ExternalMySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<int>("EpisodeNumber")
                         .HasColumnType("int");
 
@@ -516,6 +559,8 @@ namespace Ombi.Store.Migrations.ExternalMySql
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("TheMovieDbId")
                         .HasColumnType("int");

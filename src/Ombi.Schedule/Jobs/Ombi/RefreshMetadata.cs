@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Ombi.Api.Emby;
 using Ombi.Api.Jellyfin;
 using Ombi.Api.Plex;
+using Ombi.Api.Plex.Models;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Api.TvMaze;
@@ -286,7 +287,18 @@ namespace Ombi.Schedule.Jobs.Ombi
                         continue;
                     }
                     var servers = settings.Servers[0];
-                    var metaData = await _plexApi.GetMetadata(servers.PlexAuthToken, settings.Servers[0].FullUri, movie.Key);
+                    PlexMetadata metaData = null;
+
+                    try
+                    {
+                        metaData = await _plexApi.GetMetadata(servers.PlexAuthToken, settings.Servers[0].FullUri, movie.Key);
+                    }
+                    catch (Exception e)
+                    {
+                        _log.LogError($"Could not find the metadata for title: '{movie.Title}', skipping");
+                        _log.LogDebug(e, $"Could not find the metadata for title: '{movie.Title}', skipping");
+                        continue;
+                    }
                     var guids = new List<string>();
 
                     var meta = metaData.MediaContainer.Metadata.FirstOrDefault();

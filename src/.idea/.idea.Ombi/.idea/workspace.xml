@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="57001998-efde-494a-80b3-d7acfc91f770" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Ombi.Core/Engine/Interfaces/IMusicSearchEngineV2.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ombi.Core/Engine/V2/MusicSearchEngineV2.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ombi.Core/Models/Search/V2/Music/ArtistInformation.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Ombi/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Ombi/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Ombi/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Ombi/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/config/applicationhost.config" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/config/applicationhost.config" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ombi.Api.MusicBrainz/Models/Artist/ArtistInformation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi.Api.MusicBrainz/Models/Artist/ArtistInformation.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ombi.DependencyInjection/IocExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi.DependencyInjection/IocExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/media-details/components/artist/artist-details.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/media-details/components/artist/artist-details.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/services/searchV2.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/services/searchV2.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ombi/Controllers/V2/SearchController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/Controllers/V2/SearchController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/wizard/welcome/welcome.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/wizard/welcome/welcome.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi/Controllers/V2/WizardController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/Controllers/V2/WizardController.cs" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DpaMonitoringSettings">
+    <option name="firstShow" value="false" />
   </component>
   <component name="FileEditorManager">
     <leaf>
@@ -237,27 +234,63 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="wizard-database" />
+                    <option name="lastUsedInstant" value="1735917525" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="develop" />
+                    <option name="lastUsedInstant" value="1735917524" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$/.." />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="GithubProjectSettings">
+    <option name="branchProtectionPatterns">
+      <list>
+        <option value="master" />
+        <option value="develop" />
+      </list>
+    </option>
+  </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Ombi.Helpers.Tests/EmbyHelperTests.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Ombi.Api.MusicBrainz/MusicBrainzApi.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Ombi.Schedule.Tests/OmbiQuartzTests.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Ombi.Api.MusicBrainz/Models/Artist/ArtistInformation.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Ombi/Controllers/V2/SearchController.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Ombi.DependencyInjection/IocExtensions.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/V2/IMultiSearchEngine.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/990126b794024fe2bd16aebdd37eba1d7b600/93/25662f04/ServerVersion.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3bd4df5aff92cabbc4d630be64227073db1b8539b3a1e47786b4b189d7cdb7/DbContext.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/449b441523c469ed34ff5a5e14f0bafcd8f097aa463655303dc19048fa44ac3/EntityFrameworkServiceCollectionExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7d81b2d4f22bee75e5438c707251ae43cb0974c207db91ffc159118c84b4eb9/ServiceProvider.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/a424e6912048b4cd25715f158e789aae24db5c2911d9e622d39bc6ac3246c6/MySqlConnectionStringBuilder.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/bd1d5c50194fea68ff3559c160230b0ab50f5acf4ce3061bffd6d62958e2182/ExceptionDispatchInfo.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e9881a453a581134c1a18331ac1f8f1201a5382a685bf2a40777fa22619/DbContextOptions`.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Ombi.Api.MusicBrainz/IMusicBrainzApi.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.Api.MusicBrainz/MusicBrainzApi.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/Interfaces/IMusicSearchEngineV2.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Ombi.Core/Models/Search/V2/Music/ArtistInformation.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/V2/MusicSearchEngineV2.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/RecentlyAddedEngine.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Ombi/Controllers/V1/TokenController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/MusicSearchEngine.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Ombi/Program.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/RecentlyAddedEngine.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/UserStatsEngine.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/V2/IMultiSearchEngine.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/V2/MusicSearchEngineV2.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.Core/Models/Search/V2/Music/ArtistInformation.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.DependencyInjection/IocExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.Helpers.Tests/EmbyHelperTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.Schedule.Tests/OmbiQuartzTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi/Controllers/V1/TokenController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi/Controllers/V2/SearchController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi/Program.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -343,27 +376,14 @@
       <pane id="FileSystemExplorer" />
     </panes>
   </component>
-  <component name="PropertiesComponent">
-    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="Rider.DefaultBreakpoints.AreToggled" value="true" />
-    <property name="Rider.ProjectViewActivator.IsNotFirstRun" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="nodejs_package_manager_path" value="npm" />
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
-  <component name="RunManager" selected=".NET Launch Settings Profile.Ombi: IIS Express">
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.Ombi.executor": "Run",
+    "git-widget-placeholder": "#5208 on wizard-database",
+    "node.js.selected.package.tslint": "(autodetect)"
+  }
+}]]></component>
+  <component name="RunManager" selected=".NET Launch Settings Profile.Ombi">
     <configuration name="Ombi" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/Ombi/Ombi.csproj" />
       <option name="LAUNCH_PROFILE_TFM" value=".NETCoreApp,Version=v2.2" />
@@ -376,7 +396,7 @@
       <option name="SEND_DEBUG_REQUEST" value="1" />
       <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
       <method v="2">
-        <option name="Build" enabled="true" />
+        <option name="Build" />
       </method>
     </configuration>
     <configuration name="Ombi: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
@@ -391,7 +411,7 @@
       <option name="SEND_DEBUG_REQUEST" value="1" />
       <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
       <method v="2">
-        <option name="Build" enabled="true" />
+        <option name="Build" />
       </method>
     </configuration>
     <configuration name="Ombi.Schedule.Tests" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
@@ -406,7 +426,7 @@
       <option name="SEND_DEBUG_REQUEST" value="1" />
       <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
       <method v="2">
-        <option name="Build" enabled="true" />
+        <option name="Build" />
       </method>
     </configuration>
     <configuration name="Ombi.Schedule.Tests: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
@@ -421,7 +441,7 @@
       <option name="SEND_DEBUG_REQUEST" value="1" />
       <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
       <method v="2">
-        <option name="Build" enabled="true" />
+        <option name="Build" />
       </method>
     </configuration>
     <configuration name="Ombi.Updater" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
@@ -436,7 +456,7 @@
       <option name="SEND_DEBUG_REQUEST" value="1" />
       <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
       <method v="2">
-        <option name="Build" enabled="true" />
+        <option name="Build" />
       </method>
     </configuration>
   </component>
@@ -492,9 +512,7 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="4" weight="0.25" />
     </layout>
   </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
-  </component>
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
@@ -505,7 +523,7 @@
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Ombi/Controllers/V1/TokenController.cs</url>
           <line>48</line>
-          <properties documentPath="$PROJECT_DIR$/Ombi/Controllers/V1/TokenController.cs" initialLine="48">
+          <properties documentPath="$PROJECT_DIR$/Ombi/Controllers/V1/TokenController.cs">
             <startOffsets>
               <option value="1518" />
             </startOffsets>
@@ -518,7 +536,7 @@
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs</url>
           <line>59</line>
-          <properties documentPath="$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs" initialLine="59">
+          <properties documentPath="$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs">
             <startOffsets>
               <option value="2276" />
             </startOffsets>
@@ -531,7 +549,7 @@
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs</url>
           <line>49</line>
-          <properties documentPath="$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs" initialLine="49">
+          <properties documentPath="$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs">
             <startOffsets>
               <option value="2001" />
             </startOffsets>
@@ -544,7 +562,7 @@
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Ombi.Api.MusicBrainz/MusicBrainzApi.cs</url>
           <line>30</line>
-          <properties documentPath="$PROJECT_DIR$/Ombi.Api.MusicBrainz/MusicBrainzApi.cs" initialLine="30">
+          <properties documentPath="$PROJECT_DIR$/Ombi.Api.MusicBrainz/MusicBrainzApi.cs">
             <startOffsets>
               <option value="917" />
             </startOffsets>

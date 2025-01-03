@@ -301,8 +301,8 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/deepwather">
-            <img src="https://avatars.githubusercontent.com/u/12274612?v=4" width="50;" alt="deepwather"/>
+        <a href="https://github.com/tuxmi">
+            <img src="https://avatars.githubusercontent.com/u/12274612?v=4" width="50;" alt="tuxmi"/>
             <br />
             <sub><b>Michael Reber</b></sub>
         </a>
