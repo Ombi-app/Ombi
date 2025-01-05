@@ -1,3 +1,7 @@
+## [4.47.1](https://github.com/Ombi-app/Ombi/compare/v4.47.0...v4.47.1) (2025-01-05)
+
+
+
 # [4.47.0](https://github.com/Ombi-app/Ombi/compare/v4.46.8...v4.47.0) (2025-01-03)
 
 
@@ -2207,20 +2211,6 @@
 
 
 ## [4.41.1](https://github.com/Ombi-app/Ombi/compare/v4.41.0...v4.41.1) (2023-05-27)
-
-
-
-# [4.41.0](https://github.com/Ombi-app/Ombi/compare/v4.40.0...v4.41.0) (2023-05-27)
-
-
-### Bug Fixes
-
-* Fix various styling issues ([#4935](https://github.com/Ombi-app/Ombi/issues/4935)) ([90b934a](https://github.com/Ombi-app/Ombi/commit/90b934a36996c0f489096f3641350a1c0d3b7c89))
-
-
-### Features
-
-* **emby:** Show end-user external IP address to Emby when logging in as an Emby user ([#4949](https://github.com/Ombi-app/Ombi/issues/4949)) ([79cef7e](https://github.com/Ombi-app/Ombi/commit/79cef7e0f8643e36536a9ea84dd1a07c232403a9)), closes [#4947](https://github.com/Ombi-app/Ombi/issues/4947)
 
 
 
