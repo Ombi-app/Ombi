@@ -5,6 +5,7 @@ import createEsbuildPlugin from "@badeball/cypress-cucumber-preprocessor/esbuild
 
 export default defineConfig({
   watchForFileChanges: true,
+  video: true,
   chromeWebSecurity: false,
   viewportWidth: 2560,
   viewportHeight: 1440,

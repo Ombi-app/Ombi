@@ -17,6 +17,7 @@ export class WelcomeComponent implements OnInit {
 
     @ViewChild('stepper', {static: false}) public stepper: MatStepper;
     public localUser: ICreateWizardUser;
+    public needsRestart: boolean = false;
     public config: IOmbiConfigModel;
 
     constructor(private router: Router, private identityService: IdentityService,
@@ -48,7 +49,7 @@ export class WelcomeComponent implements OnInit {
             this.settingsService.verifyUrl(this.config.applicationUrl).subscribe(x => {
                     if (!x) {
                         this.notificationService.error(`The URL "${this.config.applicationUrl}" is not valid. Please format it correctly e.g. http://www.google.com/`);
-                        this.stepper.selectedIndex = 3;
+                        this.stepper.selectedIndex = 4;
                         return;
                     }
                     this.saveConfig();
@@ -56,6 +57,10 @@ export class WelcomeComponent implements OnInit {
             } else {
                 this.saveConfig();
             }
+    }
+
+    public databaseConfigured() {
+        this.needsRestart = true;
     }
 
     private saveConfig() {

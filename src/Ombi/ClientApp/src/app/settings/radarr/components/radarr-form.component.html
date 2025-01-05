@@ -28,10 +28,12 @@
                         <mat-form-field appearance="outline" >
                             <mat-label>Hostname or IP</mat-label>
                             <input matInput formControlName="ip">
+                            <mat-error>Please enter a valid hostname or ip address</mat-error>
                         </mat-form-field>
                         <mat-form-field appearance="outline" >
                             <mat-label>Port</mat-label>
                             <input matInput formControlName="port">
+                            <mat-error>Please enter a valid port number</mat-error>
                         </mat-form-field>
                         <mat-slide-toggle formControlName="ssl">
                             SSL
@@ -42,6 +44,7 @@
                         <mat-form-field appearance="outline" >
                             <mat-label>API key</mat-label>
                             <input matInput formControlName="apiKey">
+                            <mat-error>Please enter an API Key</mat-error>
                         </mat-form-field>
                     </div>
                     <div class="md-form-field">
@@ -65,6 +68,7 @@
                                     {{quality.name}}
                                 </mat-option>
                             </mat-select>
+                            <mat-error>Please select a value</mat-error>
                         </mat-form-field>
 
                     </div>
@@ -80,6 +84,7 @@
                                     {{folder.path}}
                                 </mat-option>
                             </mat-select>
+                            <mat-error>Please select a value</mat-error>
                         </mat-form-field>
 
                     </div>
@@ -95,6 +100,7 @@
                                     {{tag.label}}
                                 </mat-option>
                             </mat-select>
+                            <mat-error>Please select a value</mat-error>
                         </mat-form-field>
 
                     </div>
@@ -107,6 +113,7 @@
                                     {{min.name}}
                                 </mat-option>
                             </mat-select>
+                            <mat-error>Please select a value</mat-error>
                         </mat-form-field>
                     </div>
                 </div>

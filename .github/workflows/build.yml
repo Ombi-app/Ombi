@@ -27,7 +27,7 @@ jobs:
         run: yarn --cwd ./src/Ombi/ClientApp run build
 
       - name: Publish UI Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: angular_dist
           path: |
@@ -130,7 +130,7 @@ jobs:
         working-directory: src/Ombi
 
       - name: Download Angular
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: angular_dist
           path: ~/src/Ombi/dist
@@ -156,7 +156,7 @@ jobs:
           directory: 'src/Ombi/${{ matrix.os }}'
 
       - name: Publish Release
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}
           path: |
@@ -170,7 +170,7 @@ jobs:
 
       - name: Download Artifacts
         id: download
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
 

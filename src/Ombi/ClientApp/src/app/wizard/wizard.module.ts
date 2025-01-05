@@ -12,6 +12,7 @@ import { MediaServerComponent } from "./mediaserver/mediaserver.component";
 import { PlexComponent } from "./plex/plex.component";
 import { WelcomeComponent } from "./welcome/welcome.component";
 import { OmbiConfigComponent } from "./ombiconfig/ombiconfig.component";
+import { DatabaseComponent } from "./database/database.component";
 
 import { EmbyService } from "../services";
 import { JellyfinService } from "../services";
@@ -48,6 +49,7 @@ const routes: Routes = [
         EmbyComponent,
         JellyfinComponent,
         OmbiConfigComponent,
+        DatabaseComponent,
     ],
     exports: [
         RouterModule,

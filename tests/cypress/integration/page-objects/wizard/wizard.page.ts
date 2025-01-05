@@ -20,6 +20,12 @@ class WelcomeTab {
     }
 }
 
+class DatabaseTab {
+    get next(): Cypress.Chainable<any> {
+        return cy.getByData('nextDatabase');
+    }
+}
+
 class MediaServerTab {
     get next(): Cypress.Chainable<any> {
         return cy.getByData('nextMediaServer');
@@ -35,6 +41,7 @@ class OmbiConfigTab {
 
 class WizardPage extends BasePage {
 
+    databaseTab: DatabaseTab;
     localUserTab: LocalUserTab;
     welcomeTab: WelcomeTab;
     mediaServerTab: MediaServerTab;
@@ -54,6 +61,7 @@ class WizardPage extends BasePage {
         this.welcomeTab = new WelcomeTab();
         this.mediaServerTab = new MediaServerTab();
         this.ombiConfigTab = new OmbiConfigTab();
+        this.databaseTab = new DatabaseTab();
     }
 
     visit(options: Cypress.VisitOptions): Cypress.Chainable<Cypress.AUTWindow>;

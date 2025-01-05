@@ -8,6 +8,8 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MySqlConnector;
 using Newtonsoft.Json;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal;
+using Ombi.Core.Helpers;
+using Ombi.Core.Models;
 using Ombi.Helpers;
 using Ombi.Store.Context;
 using Ombi.Store.Context.MySql;
@@ -38,11 +40,11 @@ namespace Ombi.Extensions
                     AddSqliteHealthCheck(hcBuilder, "Ombi Database", configuration.OmbiDatabase);
                     break;
                 case var type when type.Equals(MySqlDatabase, StringComparison.InvariantCultureIgnoreCase):
-                    services.AddDbContext<OmbiContext, OmbiMySqlContext>(x => ConfigureMySql(x, configuration.OmbiDatabase));
+                    services.AddDbContext<OmbiContext, OmbiMySqlContext>(x => DatabaseConfigurationSetup.ConfigureMySql(x, configuration.OmbiDatabase));
                     AddMySqlHealthCheck(hcBuilder, "Ombi Database", configuration.OmbiDatabase);
                     break;
                 case var type when type.Equals(PostgresDatabase, StringComparison.InvariantCultureIgnoreCase):
-                    services.AddDbContext<OmbiContext, OmbiPostgresContext>(x => ConfigurePostgres(x, configuration.OmbiDatabase));
+                    services.AddDbContext<OmbiContext, OmbiPostgresContext>(x => DatabaseConfigurationSetup.ConfigurePostgres(x, configuration.OmbiDatabase));
                     AddPostgresHealthCheck(hcBuilder, "Ombi Database", configuration.OmbiDatabase);
                     break;
             }
@@ -54,11 +56,11 @@ namespace Ombi.Extensions
                     AddSqliteHealthCheck(hcBuilder, "External Database", configuration.ExternalDatabase);
                     break;
                 case var type when type.Equals(MySqlDatabase, StringComparison.InvariantCultureIgnoreCase):
-                    services.AddDbContext<ExternalContext, ExternalMySqlContext>(x => ConfigureMySql(x, configuration.ExternalDatabase));
+                    services.AddDbContext<ExternalContext, ExternalMySqlContext>(x => DatabaseConfigurationSetup.ConfigureMySql(x, configuration.ExternalDatabase));
                     AddMySqlHealthCheck(hcBuilder, "External Database", configuration.ExternalDatabase);
                     break;
                 case var type when type.Equals(PostgresDatabase, StringComparison.InvariantCultureIgnoreCase):
-                    services.AddDbContext<ExternalContext, ExternalPostgresContext>(x => ConfigurePostgres(x, configuration.ExternalDatabase));
+                    services.AddDbContext<ExternalContext, ExternalPostgresContext>(x => DatabaseConfigurationSetup.ConfigurePostgres(x, configuration.ExternalDatabase));
                     AddPostgresHealthCheck(hcBuilder, "External Database", configuration.ExternalDatabase);
                     break;
             }
@@ -70,11 +72,11 @@ namespace Ombi.Extensions
                     AddSqliteHealthCheck(hcBuilder, "Settings Database", configuration.SettingsDatabase);
                     break;
                 case var type when type.Equals(MySqlDatabase, StringComparison.InvariantCultureIgnoreCase):
-                    services.AddDbContext<SettingsContext, SettingsMySqlContext>(x => ConfigureMySql(x, configuration.SettingsDatabase));
+                    services.AddDbContext<SettingsContext, SettingsMySqlContext>(x => DatabaseConfigurationSetup.ConfigureMySql(x, configuration.SettingsDatabase));
                     AddMySqlHealthCheck(hcBuilder, "Settings Database", configuration.SettingsDatabase);
                     break;
                 case var type when type.Equals(PostgresDatabase, StringComparison.InvariantCultureIgnoreCase):
-                    services.AddDbContext<SettingsContext, SettingsPostgresContext>(x => ConfigurePostgres(x, configuration.SettingsDatabase));
+                    services.AddDbContext<SettingsContext, SettingsPostgresContext>(x => DatabaseConfigurationSetup.ConfigurePostgres(x, configuration.SettingsDatabase));
                     AddPostgresHealthCheck(hcBuilder, "Settings Database", configuration.SettingsDatabase);
                     break;
             }
@@ -149,96 +151,6 @@ namespace Ombi.Extensions
             SQLitePCL.Batteries.Init();
             SQLitePCL.raw.sqlite3_config(raw.SQLITE_CONFIG_MULTITHREAD);
             options.UseSqlite(config.ConnectionString);
-        }
-
-        public static void ConfigureMySql(DbContextOptionsBuilder options, PerDatabaseConfiguration config)
-        {
-            if (string.IsNullOrEmpty(config.ConnectionString))
-            {
-                throw new ArgumentNullException("ConnectionString for the MySql/Mariadb database is empty");
-            }
-
-            options.UseMySql(config.ConnectionString, GetServerVersion(config.ConnectionString), b =>
-            {
-                //b.CharSetBehavior(Pomelo.EntityFrameworkCore.MySql.Infrastructure.CharSetBehavior.NeverAppend); // ##ISSUE, link to migrations?
-                b.EnableRetryOnFailure();
-            });
-        }
-
-        public static void ConfigurePostgres(DbContextOptionsBuilder options, PerDatabaseConfiguration config)
-        {
-            options.UseNpgsql(config.ConnectionString, b =>
-            {
-                b.EnableRetryOnFailure();
-            }).ReplaceService<ISqlGenerationHelper, NpgsqlCaseInsensitiveSqlGenerationHelper>();
-        }
-
-        private static ServerVersion GetServerVersion(string connectionString)
-        {
-            // Workaround Windows bug, that can lead to the following exception:
-            //
-            // MySqlConnector.MySqlException (0x80004005): SSL Authentication Error
-            //     ---> System.Security.Authentication.AuthenticationException: Authentication failed, see inner exception.
-            //     ---> System.ComponentModel.Win32Exception (0x8009030F): The message or signature supplied for verification has been altered
-            //
-            // See https://github.com/dotnet/runtime/issues/17005#issuecomment-305848835
-            //
-            // Also workaround for the fact, that ServerVersion.AutoDetect() does not use any retrying strategy.
-            ServerVersion serverVersion = null;
-#pragma warning disable EF1001
-            var retryPolicy = Policy.Handle<Exception>(exception => MySqlTransientExceptionDetector.ShouldRetryOn(exception))
-#pragma warning restore EF1001
-                .WaitAndRetry(3, (count, context) => TimeSpan.FromMilliseconds(count * 250));
-
-            serverVersion = retryPolicy.Execute(() => serverVersion = ServerVersion.AutoDetect(connectionString));
-
-            return serverVersion;
-        }
-
-        public class DatabaseConfiguration
-        {
-            public DatabaseConfiguration()
-            {
-
-            }
-
-            public DatabaseConfiguration(string defaultSqlitePath)
-            {
-                OmbiDatabase = new PerDatabaseConfiguration(SqliteDatabase, $"Data Source={Path.Combine(defaultSqlitePath, "Ombi.db")}");
-                SettingsDatabase = new PerDatabaseConfiguration(SqliteDatabase, $"Data Source={Path.Combine(defaultSqlitePath, "OmbiSettings.db")}");
-                ExternalDatabase = new PerDatabaseConfiguration(SqliteDatabase, $"Data Source={Path.Combine(defaultSqlitePath, "OmbiExternal.db")}");
-            }
-            public PerDatabaseConfiguration OmbiDatabase { get; set; }
-            public PerDatabaseConfiguration SettingsDatabase { get; set; }
-            public PerDatabaseConfiguration ExternalDatabase { get; set; }
-        }
-
-        public class PerDatabaseConfiguration
-        {
-            public PerDatabaseConfiguration(string type, string connectionString)
-            {
-                Type = type;
-                ConnectionString = connectionString;
-            }
-
-            // Used in Deserialization
-            public PerDatabaseConfiguration()
-            {
-
-            }
-            public string Type { get; set; }
-            public string ConnectionString { get; set; }
-        }
-
-        public class NpgsqlCaseInsensitiveSqlGenerationHelper : NpgsqlSqlGenerationHelper
-        {
-            const string EFMigrationsHisory = "__EFMigrationsHistory";
-            public NpgsqlCaseInsensitiveSqlGenerationHelper(RelationalSqlGenerationHelperDependencies dependencies)
-                : base(dependencies) { }
-            public override string DelimitIdentifier(string identifier) =>
-                base.DelimitIdentifier(identifier == EFMigrationsHisory ? identifier : identifier.ToLower());
-            public override void DelimitIdentifier(StringBuilder builder, string identifier)
-                => base.DelimitIdentifier(builder, identifier == EFMigrationsHisory ? identifier : identifier.ToLower());
         }
     }
 }

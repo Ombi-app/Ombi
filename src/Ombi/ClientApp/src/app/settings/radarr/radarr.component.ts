@@ -1,4 +1,4 @@
-import { Component, OnInit, QueryList, ViewChildren } from "@angular/core";
+import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from "@angular/core";
 import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { RadarrFacade } from "app/state/radarr";
 
@@ -6,36 +6,41 @@ import { IMinimumAvailability, IRadarrCombined, IRadarrProfile, IRadarrRootFolde
 import { NotificationService } from "../../services";
 import { FeaturesFacade } from "../../state/features/features.facade";
 import { RadarrFormComponent } from "./components/radarr-form.component";
+import { Observable, ReplaySubject, Subject, combineLatest, map, switchMap, takeUntil, tap } from "rxjs";
 
 @Component({
     templateUrl: "./radarr.component.html",
     styleUrls: ["./radarr.component.scss"]
 })
-export class RadarrComponent implements OnInit {
+export class RadarrComponent implements OnInit, OnDestroy {
 
     public qualities: IRadarrProfile[];
     public rootFolders: IRadarrRootFolder[];
     public minimumAvailabilityOptions: IMinimumAvailability[];
     public profilesRunning: boolean;
     public rootFoldersRunning: boolean;
-    public form: UntypedFormGroup;
     public is4kEnabled: boolean = false;
 
-    @ViewChildren('4kForm') public form4k: QueryList<RadarrFormComponent>;
-    @ViewChildren('normalForm') public normalForm: QueryList<RadarrFormComponent>;
+    public readonly form$: Observable<UntypedFormGroup>;
 
-    constructor(private radarrFacade: RadarrFacade,
-                private notificationService: NotificationService,
-                private featureFacade: FeaturesFacade,
-                private fb: UntypedFormBuilder) { }
+    private readonly form4k$: ReplaySubject<QueryList<RadarrFormComponent>>;
+    private readonly normalForm$: ReplaySubject<QueryList<RadarrFormComponent>>;
+    private readonly destroyed$: Subject<void>;
 
+    constructor(
+        private readonly radarrFacade: RadarrFacade,
+        private readonly notificationService: NotificationService,
+        private readonly featureFacade: FeaturesFacade,
+        readonly fb: UntypedFormBuilder
+    ) {
+        this.form4k$ = new ReplaySubject();
+        this.normalForm$ = new ReplaySubject();
+        this.destroyed$ = new Subject();
 
-    public ngOnInit() {
-        this.is4kEnabled = this.featureFacade.is4kEnabled();
-        this.radarrFacade.state$()
-            .subscribe(x => {
-                this.form = this.fb.group({
-                    radarr: this.fb.group({
+        this.form$ = radarrFacade.state$()
+            .pipe(
+                map(x => fb.group({
+                    radarr: fb.group({
                         enabled: [x.settings.radarr.enabled],
                         apiKey: [x.settings.radarr.apiKey],
                         defaultQualityProfile: [+x.settings.radarr.defaultQualityProfile],
@@ -50,7 +55,7 @@ export class RadarrComponent implements OnInit {
                         minimumAvailability: [x.settings.radarr.minimumAvailability],
                         scanForAvailability: [x.settings.radarr.scanForAvailability]
                     }),
-                    radarr4K: this.fb.group({
+                    radarr4K: fb.group({
                         enabled: [x.settings.radarr4K.enabled],
                         apiKey: [x.settings.radarr4K.apiKey],
                         defaultQualityProfile: [+x.settings.radarr4K.defaultQualityProfile],
@@ -65,19 +70,44 @@ export class RadarrComponent implements OnInit {
                         minimumAvailability: [x.settings.radarr4K.minimumAvailability],
                         scanForAvailability: [x.settings.radarr4K.scanForAvailability]
                     }),
-                });
-                this.normalForm.changes.forEach((comp => {
-                    comp.first.toggleValidators();
                 }))
-                if (this.is4kEnabled) {
-                    this.form4k.changes.forEach((comp => {
-                        comp.first.toggleValidators();
-                    }))
-                }
-            });
-
+            )
     }
 
+    @ViewChildren('4kForm')
+    protected set form4k(component: QueryList<RadarrFormComponent>) {
+        this.form4k$.next(component);
+    }
+
+    @ViewChildren('normalForm')
+    protected set normalForm(component: QueryList<RadarrFormComponent>) {
+        this.normalForm$.next(component);
+    }
+
+    public ngOnInit() {
+        this.is4kEnabled = this.featureFacade.is4kEnabled();
+
+        combineLatest([this.form$, this.normalForm$])
+            .pipe(
+                switchMap(([, normalForm]) => normalForm.changes),
+                tap(comp => comp.first.toggleValidators()),
+                takeUntil(this.destroyed$)
+            ).subscribe();
+
+        if (this.is4kEnabled) {
+            combineLatest([this.form$, this.form4k$])
+                .pipe(
+                    switchMap(([, form4k]) => form4k.changes),
+                    tap(comp => comp.first.toggleValidators()),
+                    takeUntil(this.destroyed$)
+                ).subscribe();
+        }
+    }
+
+    public ngOnDestroy(): void {
+        this.destroyed$.next();
+        this.destroyed$.complete();
+    }
 
     public onSubmit(form: UntypedFormGroup) {
         if (form.invalid) {

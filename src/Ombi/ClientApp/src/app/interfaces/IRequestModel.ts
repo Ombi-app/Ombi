@@ -25,10 +25,17 @@ export interface IMovieRequests extends IFullBaseRequest {
   requestedDate: Date;
   watchedByRequestedUser: boolean;
   playedByUsersCount: number;
+  requestCombination: RequestCombination;
 
   // For the UI
   rootPathOverrideTitle: string;
   qualityOverrideTitle: string;
+}
+
+export enum RequestCombination {
+  Normal,
+  FourK,
+  Both
 }
 
 export interface IMovieAdvancedOptions {

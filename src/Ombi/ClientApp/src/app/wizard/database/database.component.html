@@ -1,0 +1,104 @@
+﻿<div class="mediaserver-container">
+    <div class="left-container mediaserver">
+        <i class="fa fa-database text-logo"></i>
+    </div>
+    <div class="right-container mediaserver">
+        <div class="right-container-content mediaserver">
+            <h1>Choose a Database</h1>
+            <h4>
+                SQLite is the default option and the easiest to set up, as it requires no additional configuration. 
+                <br>However, it has significant limitations, including potential performance issues and database locking.
+                <br>While many users start with SQLite and later migrate to MySQL or MariaDB, we <b>recommend</b> beginning with MySQL or MariaDB from the start for a more robust and scalable experience.
+                <br/>
+                <br/>
+                For more information on using alternate databases, <a target="_blank" href="https://docs.ombi.app/info/alternate-databases/">see the documentation.</a>
+            </h4>
+            <form [formGroup]="form">
+                <mat-tab-group (selectedTabChange)="tabChange($event)">
+                    <mat-tab label="SQLite">
+                        <p class="space-or">
+                            Just press next to continue with SQLite
+                        </p>
+                    </mat-tab>
+                    <mat-tab label="MySQL/MariaDB">
+                        <p class="space-or">
+                            Please enter your MySQL/MariaDB connection details below
+                        </p>
+                            <div>
+                                <mat-form-field>
+                                    <input matInput type="text" formControlName="host" id="host" placeholder="Host">
+                                    <mat-error>This field is required</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field>
+                                    <input matInput type="number" formControlName="port" id="port" placeholder="Port">
+                                    <mat-error>This field is required</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field>
+                                    <input matInput type="text" formControlName="name" id="database" placeholder="Database Name">
+                                    <mat-error>This field is required</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field>
+                                    <input matInput type="text"  formControlName="user" id="user" placeholder="User">
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field>
+                                    <input matInput type="password"  formControlName="password" id="password" placeholder="Password">
+                                </mat-form-field>
+                            </div>
+                            <p>{{connectionString | async}}</p>
+                            <div style="text-align: center; margin-top: 20px">
+                                <button (click)="save()" id="databaseSave" mat-raised-button color="accent" type="button" class="viewon-btn database" [disabled]="form.invalid">Save</button>
+                                <div id="spinner"></div>
+                            </div>
+                    </mat-tab>
+
+                    <mat-tab label="Postgres">
+                        <p class="space-or">
+                            Please enter your Postgres connection details below
+                        </p>
+                            <div>
+                                <mat-form-field>
+                                    <input matInput type="text" formControlName="host" id="host" placeholder="Host">
+                                    <mat-error>This field is required</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field>
+                                    <input matInput type="number" formControlName="port" id="port" placeholder="Port">
+                                    <mat-error>This field is required</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field>
+                                    <input matInput type="text" formControlName="name" id="database" placeholder="Database Name">
+                                    <mat-error>This field is required</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field>
+                                    <input matInput type="text"  formControlName="user" id="user" placeholder="User">
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field>
+                                    <input matInput type="password"  formControlName="password" id="password" placeholder="Password">
+                                </mat-form-field>
+                            </div>
+                            <p>{{connectionString | async}}</p>
+                            <div style="text-align: center; margin-top: 20px">
+                                <button (click)="save()" id="databaseSave" mat-raised-button color="accent" type="button" class="viewon-btn database" [disabled]="form.invalid">Save</button>
+                                <div id="spinner"></div>
+                            </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </form>
+        </div>
+    </div>
+</div>
