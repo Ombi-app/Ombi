@@ -128,7 +128,7 @@ namespace Ombi.Schedule.Jobs.Plex
                         }
 
                         // Check to see if we have already imported this item
-                        var alreadyImported = _watchlistRepo.GetAll().Any(x => x.TmdbId == providerIds.TheMovieDb);
+                        var alreadyImported = _watchlistRepo.GetAll().Any(x => x.TmdbId == providerIds.TheMovieDb && x.UserId == user.Id);
                         if (alreadyImported)
                         {
                             _logger.LogDebug($"{item.title} already imported via Plex WatchList, skipping");
@@ -202,14 +202,14 @@ namespace Ombi.Schedule.Jobs.Plex
                 if (response.ErrorCode == ErrorCode.AlreadyRequested)
                 {
                     _logger.LogDebug($"Movie already requested for user '{user.UserName}'");
-                    await AddToHistory(theMovieDbId);
+                    await AddToHistory(theMovieDbId, user.Id);
                     return;
                 }
                 _logger.LogInformation($"Error adding title from PlexWatchlist for user '{user.UserName}'. Message: '{response.ErrorMessage}'");
             }
             else
             {
-                await AddToHistory(theMovieDbId);
+                await AddToHistory(theMovieDbId, user.Id);
 
                 _logger.LogInformation($"Added title from PlexWatchlist for user '{user.UserName}'. {response.Message}");
             }
@@ -230,24 +230,26 @@ namespace Ombi.Schedule.Jobs.Plex
                 if (response.ErrorCode == ErrorCode.AlreadyRequested)
                 {
                     _logger.LogDebug($"Show already requested for user '{user.UserName}'");
-                    await AddToHistory(theMovieDbId);
+                    await AddToHistory(theMovieDbId, user.Id);
                     return;
                 }
                 _logger.LogInformation($"Error adding title from PlexWatchlist for user '{user.UserName}'. Message: '{response.ErrorMessage}'");
             }
             else
             {
-                await AddToHistory(theMovieDbId);
+                await AddToHistory(theMovieDbId, user.Id);
                 _logger.LogInformation($"Added title from PlexWatchlist for user '{user.UserName}'. {response.Message}");
             }
         }
-        private async Task AddToHistory(int theMovieDbId)
+        private async Task AddToHistory(int theMovieDbId, string userId)
         {
 
             // Add to the watchlist history
             var history = new PlexWatchlistHistory
             {
-                TmdbId = theMovieDbId.ToString()
+                TmdbId = theMovieDbId.ToString(),
+                AddedAt = DateTime.UtcNow,
+                UserId = userId
             };
             await _watchlistRepo.Add(history);
         }

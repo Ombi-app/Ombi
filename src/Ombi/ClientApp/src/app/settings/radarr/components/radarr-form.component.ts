@@ -63,14 +63,14 @@ export class RadarrFormComponent implements OnInit {
     }
 
     public toggleValidators() {
-        debugger;
         const enabled = this.form.controls.enabled.value as boolean;
         this.form.controls.apiKey.setValidators(enabled ? [Validators.required] : null);
-        this.form.controls.defaultQualityProfile.setValidators(enabled ? [Validators.required] : null);
+        this.form.controls.defaultQualityProfile.setValidators(enabled ? [Validators.required, Validators.min(1)] : null);
         this.form.controls.defaultRootPath.setValidators(enabled ? [Validators.required] : null);
         this.form.controls.ip.setValidators(enabled ? [Validators.required] : null);
-        this.form.controls.port.setValidators(enabled ? [Validators.required] : null);
+        this.form.controls.port.setValidators(enabled ? [Validators.required, Validators.min(1)] : null);
         this.form.controls.minimumAvailability.setValidators(enabled ? [Validators.required] : null);
+        enabled ? this.form.markAllAsTouched() : this.form.markAsUntouched();
     }
 
     public getProfiles(form: UntypedFormGroup) {
@@ -120,6 +120,7 @@ export class RadarrFormComponent implements OnInit {
                 this.notificationService.success("Successfully connected to Radarr!");
             } else if (result.expectedSubDir) {
                 this.notificationService.error("Your Radarr Base URL must be set to " + result.expectedSubDir);
+                form.controls.subDir.setValue(result.expectedSubDir);
             } else {
                 this.notificationService.error("We could not connect to Radarr!");
             }

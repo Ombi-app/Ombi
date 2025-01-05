@@ -11,6 +11,7 @@ When("I visit Ombi", () => {
 
 When("I click through all of the pages", () => {
   Page.welcomeTab.next.click();
+  Page.databaseTab.next.click();
   Page.mediaServerTab.next.click();
   Page.localUserTab.next.click();
   Page.ombiConfigTab.next.click();
@@ -22,6 +23,7 @@ When("I click through all of the pages", () => {
 
  When("I click through to the user page", () => {
     Page.welcomeTab.next.click();
+    Page.databaseTab.next.click();
     Page.mediaServerTab.next.click();
  });
 
@@ -48,6 +50,6 @@ Then("I should get a notification {string}", (string) => {
 
 Then("I should be on the User tab", () => {
   Page.matStepsHeader.then((_) => {
-    cy.get('#cdk-step-label-0-2').should('have.attr', 'aria-selected', 'true');
+    cy.get('#cdk-step-label-0-3').should('have.attr', 'aria-selected', 'true');
   });
 });

@@ -1,5 +1,5 @@
 ﻿<settings-menu></settings-menu>
-<div *ngIf="form" class="small-middle-container">
+<div *ngIf="form$ | async as form" class="small-middle-container">
     <fieldset>
         <legend>Radarr Settings</legend>
         <div class="md-form-field" style="margin-top:1em;"></div>
