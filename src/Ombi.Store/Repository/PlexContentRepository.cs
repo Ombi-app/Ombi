@@ -156,7 +156,7 @@ namespace Ombi.Store.Repository
 
         public async Task<PlexEpisode> GetEpisodeByKey(string key)
         {
-            return await Db.PlexEpisode.FirstOrDefaultAsync(x => x.Key == key);
+            return await Db.PlexEpisode.Include(x => x.Series).FirstOrDefaultAsync(x => x.Key == key);
         }
         public override async Task AddRange(IEnumerable<IMediaServerEpisode> content)
         {
