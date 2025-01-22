@@ -53,7 +53,7 @@ export class AppComponent implements OnInit {
         private readonly identity: IdentityService,
         @Inject(DOCUMENT) private document: Document) {
 
-        this.translate.addLangs(["da", "de", "en", "es", "fr", "it", "hu", "nl", "no", "pl", "pt", "sk", "sv", "bg", "ru", "cs", "zh"]);
+        this.translate.addLangs(["ca", "da", "de", "en", "es", "fr", "it", "hu", "nl", "no", "pl", "pt", "sk", "sv", "bg", "ru", "cs", "zh"]);
 
         if (this.authService.loggedIn()) {
             this.identity.getAccessToken().subscribe(x => this.accessToken = x);
@@ -81,7 +81,7 @@ export class AppComponent implements OnInit {
 
         // See if we can match the supported langs with the current browser lang
         const browserLang: string = translate.getBrowserLang();
-        this.translate.use(browserLang.match(/da|de|en|es|fr|it|hu|nl|no|pl|pt|sk|sv|bg|ru|cs|zh/) ? browserLang : "en");
+        this.translate.use(browserLang.match(/ca|da|de|en|es|fr|it|hu|nl|no|pl|pt|sk|sv|bg|ru|cs|zh/) ? browserLang : "en");
 
     }
 
