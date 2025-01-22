@@ -1,5 +1,6 @@
 ﻿@import '@angular/material/theming';
 @import "./variables.scss";
+@import "./fonts.scss";
 // Plus imports for other components in your app.
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
@@ -47,11 +48,11 @@
     .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick{
         color: $ombi-active;
     }
-    
+
     .mat-form-field.mat-focused .mat-form-field-label{
         color: $ombi-active;
     }
-    
+
     .mat-input-element{
         caret-color: $ombi-active;
     }
@@ -104,7 +105,7 @@
 
     .mat-tooltip{
         background: $ombi-background-accent;
-    } 
+    }
 
     //Wizard CSS
     .mat-stepper-horizontal, .mat-stepper-vertical{
