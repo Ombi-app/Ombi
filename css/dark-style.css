@@ -185,6 +185,10 @@ header {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   transform: translateY(0);
   transition: transform 0.5s ease-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .intro h1 {
@@ -199,9 +203,13 @@ header {
 }
 
 .intro img {
-  max-width: 250px;
-  margin-bottom: 2rem;
+  max-width: 200px;
+  width: 100%;
+  height: auto;
+  margin: 0 auto 2rem;
+  display: block;
   filter: drop-shadow(0 5px 15px rgba(255, 111, 0, 0.6));
+  object-fit: contain;
 }
 
 /* Buttons */
@@ -547,5 +555,10 @@ footer {
   .button-black {
     padding: 0.7rem 1.4rem;
     font-size: 0.9rem;
+  }
+  
+  .intro img {
+    max-width: 150px;
+    margin-bottom: 1.5rem;
   }
 }
