@@ -6,14 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simplelightbox/1.12.1/simplelightbox.min.css"/>
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Krona+One" rel="stylesheet">
-    <link rel="stylesheet" href="/css/style.css">
-    <title>Ombi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/dark-style.css">
+    <title>Ombi - Media Request System</title>
   </head>
   <body>
     <div class="loader">
-      <span>Loading images</span>
+      <span>Loading</span>
       <div class="sk-folding-cube">
         <div class="sk-cube1 sk-cube"></div>
         <div class="sk-cube2 sk-cube"></div>
@@ -21,174 +21,219 @@
         <div class="sk-cube3 sk-cube"></div>
       </div>
     </div>
+
+    <header id="navbar">
+      <div class="nav-container">
+        <a href="#" class="logo">
+          <img src="img/logo-orange-small.png" alt="Ombi logo">
+        </a>
+        <div class="nav-links">
+          <a href="#features">Features</a>
+          <a href="#how">How it Works</a>
+          <a href="#install">Install</a>
+          <a href="#team">Team</a>
+        </div>
+      </div>
+    </header>
+
     <div class="intro-container">
       <preload-images hidden="hidden">
-        <img src="/img/fanart/1.jpg">
-        <img src="/img/fanart/2.jpg">
-        <img src="/img/fanart/3.jpg">
-        <img src="/img/fanart/4.jpg">
-        <img src="/img/fanart/5.jpg">
-        <img src="/img/fanart/6.jpg">
-        <img src="/img/fanart/7.jpg">
-        <img src="/img/fanart/8.jpg">
-        <img src="/img/fanart/9.jpg">
-        <img src="/img/fanart/10.jpg">
-        <img src="/img/fanart/11.jpg">
-        <img src="/img/fanart/12.jpg">
+        <img src="img/fanart/1.jpg">
+        <img src="img/fanart/2.jpg">
+        <img src="img/fanart/3.jpg">
+        <img src="img/fanart/4.jpg">
+        <img src="img/fanart/5.jpg">
+        <img src="img/fanart/6.jpg">
+        <img src="img/fanart/7.jpg">
+        <img src="img/fanart/8.jpg">
+        <img src="img/fanart/9.jpg">
+        <img src="img/fanart/10.jpg">
+        <img src="img/fanart/11.jpg">
+        <img src="img/fanart/12.jpg">
       </preload-images>
       <div
         class="intro-bg"
         data-slides='[
-          "/img/fanart/1.jpg",
-          "/img/fanart/2.jpg",
-          "/img/fanart/3.jpg",
-          "/img/fanart/4.jpg",
-          "/img/fanart/5.jpg",
-          "/img/fanart/6.jpg",
-          "/img/fanart/7.jpg",
-          "/img/fanart/8.jpg",
-          "/img/fanart/9.jpg",
-          "/img/fanart/10.jpg",
-          "/img/fanart/11.jpg",
-          "/img/fanart/12.jpg"
-      ]'></div>
-      <svg class="triangle-top" fill="white" width="100vw" height="25vh" preserveaspectratio="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 500 103">
-        <polygon points="-0.5,-0.3 500.5,-0.3 -0.5,100"/>
-      </svg>
-      <svg
-        class="triangle-bottom"
-        fill="white"
-        width="100vw"
-        height="25vh"
-        preserveaspectratio="none"
-        xmlns="http://www.w3.org/2000/svg"
-        ;=";"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-        viewbox="0 0 500 103">
-        <polygon points="501,105.3 500.5,0.7 0.5,103"/>
-      </svg>
-      <div class="intro">
+          "img/fanart/1.jpg",
+          "img/fanart/2.jpg",
+          "img/fanart/3.jpg",
+          "img/fanart/4.jpg",
+          "img/fanart/5.jpg",
+          "img/fanart/6.jpg",
+          "img/fanart/7.jpg",
+          "img/fanart/8.jpg",
+          "img/fanart/9.jpg",
+          "img/fanart/10.jpg",
+          "img/fanart/11.jpg",
+          "img/fanart/12.jpg"
+        ]'></div>
+      
+      <div class="intro slide-up">
         <img src="img/logo-orange-small.png" alt="Ombi logo">
-        <a class="button-white" href="https://github.com/tidusjar/Ombi/releases">Download</a>
-        <a class="button-white" href="https://app.ombi.io/">Demo</a>
-      </div>
-      <div class="intro-read-more">
-        <p>more info</p>
-        <a href="#main">
-          <svg xmlns="http://www.w3.org/2000/svg" width="96" height="53.76" viewbox="0 0 96 53.76">
-            <polygon points="96 5.97 90.03 0 48 42.03 5.97 0 0 5.97 47.79 53.76 48 53.55 48.21 53.76 96 5.97"/>
-          </svg>
-        </a>
+        <h1>Your Media, On Demand</h1>
+        <p>The seamless way for your Plex and Emby users to request new content. Ombi integrates with your media server and automatically manages user requests.</p>
+        <div class="button-container">
+          <a class="button-primary" href="https://github.com/tidusjar/Ombi/releases">Download Now</a>
+          <a class="button-white" href="https://app.ombi.io/">Try Demo</a>
+        </div>
       </div>
     </div>
-    <main id="main">
-      <div class="what-container float-container">
-        <div class="left text-center">
-          <h1>What is Ombi?</h1>
-          <p>
-            Ombi is a self-hosted web application that automatically gives your shared Plex or Emby users the ability to request content by themselves! Ombi can be linked to multiple TV Show and Movie DVR tools
-            to create a seamless end-to-end experience for your users.
-          </p>
+
+    <section id="features" class="what-container">
+      <h1 class="text-center">Powerful Media Request Management</h1>
+      <p class="text-center">Ombi transforms how you manage your media server with these essential features:</p>
+      
+      <div class="features-grid">
+        <div class="feature-card slide-up">
+          <i class="fas fa-user-friends feature-icon"></i>
+          <h3>User Management</h3>
+          <p>Connect to your Plex or Emby server and automatically sync users, giving them a personalized request experience.</p>
         </div>
-        <div class="right text-center">
-          <h1>That's great and all, but how?</h1>
-          <ol>
-            <li>
-              <b>1.</b>
-              User visits website and requests content
-            </li>
-            <li>
-              <b>2.</b>
-              Ombi matches request and sends to DVR app
-            </li>
-            <li>
-              <b>3.</b>
-              DVR app retrieves content and pushes to Plex/Emby
-            </li>
-            <li>
-              <br>
-              (there's also a
-              <a href="https://app.ombi.io/">demo</a>
-              )
-            </li>
-          </ol>
-          <br>
+        
+        <div class="feature-card slide-up">
+          <i class="fas fa-search feature-icon"></i>
+          <h3>Smart Search</h3>
+          <p>Powerful search capabilities to find TV shows and movies across multiple providers with rich metadata.</p>
         </div>
-      </div>
-      <div class="screenshots-container">
-        <h1>Screenshots? ok.</h1>
-        <div class="screenshots">
-          <a href="/img/screens/1.png">
-            <img src="/img/screens/1-thumb.png" alt="Screenshot">
-          </a>
-          <a href="/img/screens/2.png">
-            <img src="/img/screens/2-thumb.png" alt="Screenshot">
-          </a>
-          <a href="/img/screens/3.png">
-            <img src="/img/screens/3-thumb.png" alt="Screenshot">
-          </a>
+        
+        <div class="feature-card slide-up">
+          <i class="fas fa-robot feature-icon"></i>
+          <h3>Automation</h3>
+          <p>Seamless integration with Sonarr, Radarr, CouchPotato, SickRage, and more to automatically fulfill requests.</p>
+        </div>
+        
+        <div class="feature-card slide-up">
+          <i class="fas fa-bell feature-icon"></i>
+          <h3>Notifications</h3>
+          <p>Customizable notifications through various channels to keep users updated on their requests.</p>
+        </div>
+        
+        <div class="feature-card slide-up">
+          <i class="fas fa-lock feature-icon"></i>
+          <h3>Request Approval</h3>
+          <p>Optional approval system for admins to manage and control what content gets added to your server.</p>
+        </div>
+        
+        <div class="feature-card slide-up">
+          <i class="fas fa-mobile-alt feature-icon"></i>
+          <h3>Mobile Apps</h3>
+          <p>Native mobile applications for iOS and Android for on-the-go request management.</p>
         </div>
       </div>
-      <div class="install-container">
-        <div class="center text-center">
-          <h1>I'm ready. How do I install it?</h1>
-          <a class="button-white" href="https://docs.ombi.app/guides/installation/">Here you go!</a>
+    </section>
+
+    <section id="how" class="how-container">
+      <div class="install-content">
+        <h1 class="text-center">How Ombi Works</h1>
+        <div class="steps">
+          <div class="step fade-in">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h3>User Requests Content</h3>
+              <p>Users browse the intuitive interface to find and request movies or TV shows they'd like to watch.</p>
+            </div>
+          </div>
+          
+          <div class="step fade-in">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h3>Ombi Processes Request</h3>
+              <p>Ombi checks if the content already exists and either notifies the user or forwards the request.</p>
+            </div>
+          </div>
+          
+          <div class="step fade-in">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h3>DVR Integration</h3>
+              <p>The request is automatically sent to your configured media management tools like Sonarr or Radarr.</p>
+            </div>
+          </div>
+          
+          <div class="step fade-in">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h3>Content is Added to Your Server</h3>
+              <p>Once the content is available, it's added to your Plex or Emby server and users are notified.</p>
+            </div>
+          </div>
         </div>
-        <div class="center text-center">
-          <h1>There's also a mobile app!</h1>
-          <a class="apple-badge badges" href="https://apps.apple.com/us/app/ombi/id1335260043?itscg=30200&itsct=apps_box_badge&mttnsubad=1335260043">
-            <img src="https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-app-store/black/en-us?releaseDate=1526601600" alt="Download on the App Store" />
+      </div>
+    </section>
+
+    <section id="install" class="install-container">
+      <div class="install-content">
+        <h1 class="text-center">Ready to Get Started?</h1>
+        <p class="text-center">Ombi works on Windows, macOS, Linux, Docker, and more!</p>
+        
+        <div class="button-container">
+          <a class="button-primary" href="https://docs.ombi.app/guides/installation/">Installation Guide</a>
+          <a class="button-white" href="https://github.com/tidusjar/Ombi/releases">Download Latest Release</a>
+        </div>
+        
+        <h2 class="text-center" style="margin-top: 3rem;">Mobile Apps</h2>
+        <p class="text-center">Take Ombi wherever you go with our mobile apps</p>
+        
+        <div>
+          <a class="apple-badge badges" href="https://apps.apple.com/us/app/ombi/id1335260043">
+            <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us" alt="Download on the App Store">
           </a>
-          <a class="google-badge badges" href='https://play.google.com/store/apps/details?id=com.tidusjar.Ombi&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>
-            <img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/>
+          <a class="google-badge badges" href="https://play.google.com/store/apps/details?id=com.tidusjar.Ombi">
+            <img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png">
           </a>
         </div>
       </div>
-      <div class="madeby-container float-container">
-        <div class="left text-center">
-          <h1>Who made this? Can I thank them?</h1>
-          <p>
-            Ombi is made by
-            <a href="https://www.linkedin.com/in/jamiearees">Jamie Rees</a>
-            and
-            <a href="https://github.com/tidusjar/Ombi/graphs/contributors">contributors</a>. This site is made by
-            <a href="https://louislaureys.com">Louis</a>.
-            <br>
-            You can donate to Jamie here:
-          </p>
-          <a class="button-black" href="https://www.paypal.me/PlexRequestsNet/25">PayPal</a>
-          <a class="button-black" href="https://www.patreon.com/tidusjar">Patreon</a>
+    </section>
+
+    <section id="team" class="madeby-container">
+      <h1 class="text-center">The Team Behind Ombi</h1>
+      
+      <div class="team-grid">
+        <div class="team-card fade-in">
+          <h3>Community Support</h3>
+          <p>Join our active community for help, feature discussions, and more.</p>
+          <div class="button-container">
+            <a class="button-black" href="https://discord.gg/Sa7wNWb">Discord</a>
+            <a class="button-black" href="https://github.com/tidusjar/Ombi/issues/new">Report an issue</a>
+          </div>
         </div>
-        <div class="right text-center">
-          <h1>HAAAALP! I'm stuck!</h1>
-          <p>
-            There's probably someone out there who can help you.
-            <br>
-            Check Discord, or report an issue on GitHub.
-          </p>
-          <a class="button-black" href="https://discord.gg/Sa7wNWb">Discord</a>
-          <a class="button-black" href="https://github.com/tidusjar/Ombi/issues/new">Report an issue</a>
+        
+        <div class="team-card fade-in">
+          <h3>Support the Project</h3>
+          <p>Ombi is developed by <a href="https://www.linkedin.com/in/jamiearees">Jamie Rees</a> and <a href="https://github.com/tidusjar/Ombi/graphs/contributors">contributors</a>.</p>
+          <div class="button-container">
+            <a class="button-black" href="https://www.paypal.me/PlexRequestsNet/25">PayPal</a>
+            <a class="button-black" href="https://www.patreon.com/tidusjar">Patreon</a>
+          </div>
         </div>
       </div>
+    </section>
+
+    <footer>
+      <div class="social-links">
+        <a href="https://github.com/tidusjar/Ombi"><i class="fab fa-github"></i></a>
+        <a href="https://discord.gg/Sa7wNWb"><i class="fab fa-discord"></i></a>
+        <a href="https://twitter.com/tidusjar"><i class="fab fa-twitter"></i></a>
+      </div>
+      
       <div class="legal text-center">
         <p>Apple and the Apple logo are trademarks of Apple Inc. App Store is a service mark of Apple Inc.</p>
         <p>Google Play and the Google Play logo are trademarks of Google LLC.</p>
       </div>
-    </main>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" charset="utf-8"></script>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/simplelightbox/1.12.1/simple-lightbox.min.js"></script>
-    <script src="/js/javascript.js" charset="utf-8"></script>
+    <script src="js/javascript.js"></script>
+    
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-89270627-1"></script>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-89270627-2"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89270627-2"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
       }
       gtag('js', new Date());
-
       gtag('config', 'UA-89270627-2');
     </script>
   </body>

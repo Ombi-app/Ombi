@@ -16,59 +16,132 @@
   };
 })($);
 
-// Smooth scrolling when clicking anchor
-$('a[href*="#"]')
-  .not('[href="#"]')
-  .not('[href="#0"]')
-  .click(function(event) {
-    if (
-      location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') &&
-      location.hostname == this.hostname
-    ) {
-      var target = $(this.hash);
-      target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
-      if (target.length) {
-        event.preventDefault();
-        $('html, body').animate({
-          scrollTop: target.offset().top
-        }, 1000, function() {
-          var $target = $(target);
-          $target.focus();
-          if ($target.is(":focus")) {
-            return false;
-          } else {
-            $target.attr('tabindex', '-1');
+// Document Ready
+$(document).ready(function() {
+  // Smooth scrolling when clicking anchor
+  $('a[href*="#"]')
+    .not('[href="#"]')
+    .not('[href="#0"]')
+    .click(function(event) {
+      if (
+        location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') &&
+        location.hostname == this.hostname
+      ) {
+        var target = $(this.hash);
+        target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+        if (target.length) {
+          event.preventDefault();
+          $('html, body').animate({
+            scrollTop: target.offset().top - 70 // Adjusted for fixed header
+          }, 800, function() {
+            var $target = $(target);
             $target.focus();
-          };
-        });
+            if ($target.is(":focus")) {
+              return false;
+            } else {
+              $target.attr('tabindex', '-1');
+              $target.focus();
+            };
+          });
+        }
       }
-    }
+    });
+
+  // Fit text for responsive headings
+  $("h1").fitText(1.2, {
+    'maxFontSize': 48
   });
 
-// Fit long h1 on small screen
-$("h1").fitText(1.2, {
-  'maxFontSize': 30
-});
+  // Remove lightbox initialization
+  // var lightbox = $('.screenshots a').simpleLightbox({
+  //   nav: true,
+  //   navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'],
+  //   closeText: '<i class="fas fa-times"></i>',
+  //   showCounter: false
+  // });
 
-// enable screenshot lightbox
-var lightbox = $('.screenshots a').simpleLightbox();
+  // Scroll animations for elements with animation classes
+  function revealOnScroll() {
+    var scrolled = $(window).scrollTop();
+    var windowHeight = $(window).height();
+
+    $('.fade-in, .slide-up').each(function() {
+      var $this = $(this);
+      var offsetTop = $this.offset().top;
+
+      if (scrolled + windowHeight - 100 > offsetTop) {
+        $this.css({
+          'opacity': 1,
+          'transform': 'translateY(0)'
+        });
+      }
+    });
+  }
+
+  // Run once on page load
+  setTimeout(revealOnScroll, 100);
+
+  // Run on scroll
+  $(window).on('scroll', revealOnScroll);
+
+  // Navbar scroll effect
+  $(window).scroll(function() {
+    if ($(window).scrollTop() > 50) {
+      $('#navbar').addClass('nav-scrolled');
+    } else {
+      $('#navbar').removeClass('nav-scrolled');
+    }
+  });
+});
 
 // only after all images have loaded
 $(window).on('load', function() {
-  $('body').addClass('load-done'); // unfold triangles etc
-  /*! slides | https://gist.github.com/mhulse/66bcbb7099bb4beae530 */
+  $('body').addClass('load-done'); // Show content once loaded
+  
+  // Enhanced Background slideshow with smooth transitions
   (function($) {
     'use strict';
     var $slides = $('[data-slides]');
     var images = $slides.data('slides');
     var count = images.length;
+    var current = 0;
+    var nextImage = 1;
+    
+    // Create a second background element for crossfade effect
+    var $nextSlide = $('<div class="intro-bg intro-bg-next"></div>');
+    $nextSlide.insertAfter($slides);
+    
+    // Initial setup
+    $slides.css('background-image', 'url("' + images[0] + '")');
+    $nextSlide.css({
+      'background-image': 'url("' + images[1] + '")',
+      'opacity': 0
+    });
+    
+    // Enhanced slideshow with crossfade
     var slideshow = function() {
-      $slides
-        .css('background-image', 'url("' + images[Math.floor(Math.random() * count)] + '")')
-        .show(0, function() {
-          setTimeout(slideshow, 5000);
-        });
+      nextImage = (current + 1) % count;
+      
+      // Set the next slide's background
+      $nextSlide.css('background-image', 'url("' + images[nextImage] + '")');
+      
+      // Fade in next slide
+      $nextSlide.animate({opacity: 1}, 1000, function() {
+        // Update current slide with next image (behind the scenes)
+        $slides.css('background-image', 'url("' + images[nextImage] + '")');
+        
+        // Reset next slide opacity
+        $nextSlide.css('opacity', 0);
+        
+        // Update current index
+        current = nextImage;
+        
+        // Queue next slide transition
+        setTimeout(slideshow, 5000);
+      });
     };
-    slideshow();
+    
+    // Start the slideshow after a delay
+    setTimeout(slideshow, 5000);
   }(jQuery));
-})
+});
