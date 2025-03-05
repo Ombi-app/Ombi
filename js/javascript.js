@@ -60,7 +60,7 @@ $(document).ready(function() {
   //   showCounter: false
   // });
 
-  // Scroll animations for elements with animation classes
+  // Improved scroll animations for elements with animation classes
   function revealOnScroll() {
     var scrolled = $(window).scrollTop();
     var windowHeight = $(window).height();
@@ -69,20 +69,29 @@ $(document).ready(function() {
       var $this = $(this);
       var offsetTop = $this.offset().top;
 
-      if (scrolled + windowHeight - 100 > offsetTop) {
-        $this.css({
-          'opacity': 1,
-          'transform': 'translateY(0)'
-        });
+      // Trigger animation when element is 200px from entering viewport
+      if (scrolled + windowHeight > offsetTop - 200) {
+        $this.addClass('animated');
       }
     });
   }
 
-  // Run once on page load
+  // Run once immediately to show elements above the fold
+  revealOnScroll();
+
+  // Run again after a short delay to catch all elements
   setTimeout(revealOnScroll, 100);
 
-  // Run on scroll
-  $(window).on('scroll', revealOnScroll);
+  // Run on scroll with throttling for performance
+  var scrollThrottleTimeout;
+  $(window).on('scroll', function() {
+    if (!scrollThrottleTimeout) {
+      scrollThrottleTimeout = setTimeout(function() {
+        revealOnScroll();
+        scrollThrottleTimeout = null;
+      }, 50);
+    }
+  });
 
   // Navbar scroll effect
   $(window).scroll(function() {

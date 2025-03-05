@@ -84,37 +84,37 @@
       <p class="text-center">Ombi transforms how you manage your media server with these essential features:</p>
       
       <div class="features-grid">
-        <div class="feature-card ">
+        <div class="feature-card slide-up">
           <i class="fas fa-user-friends feature-icon"></i>
           <h3>User Management</h3>
           <p>Connect to your Plex or Emby server and automatically sync users, giving them a personalized request experience.</p>
         </div>
         
-        <div class="feature-card ">
+        <div class="feature-card slide-up">
           <i class="fas fa-search feature-icon"></i>
           <h3>Smart Search</h3>
           <p>Powerful search capabilities to find TV shows and movies across multiple providers with rich metadata.</p>
         </div>
         
-        <div class="feature-card ">
+        <div class="feature-card slide-up">
           <i class="fas fa-robot feature-icon"></i>
           <h3>Automation</h3>
           <p>Seamless integration with Sonarr, Radarr, CouchPotato, SickRage, and more to automatically fulfill requests.</p>
         </div>
         
-        <div class="feature-card ">
+        <div class="feature-card slide-up">
           <i class="fas fa-bell feature-icon"></i>
           <h3>Notifications</h3>
           <p>Customizable notifications through various channels to keep users updated on their requests.</p>
         </div>
         
-        <div class="feature-card ">
+        <div class="feature-card slide-up">
           <i class="fas fa-lock feature-icon"></i>
           <h3>Request Approval</h3>
           <p>Optional approval system for admins to manage and control what content gets added to your server.</p>
         </div>
         
-        <div class="feature-card ">
+        <div class="feature-card slide-up">
           <i class="fas fa-mobile-alt feature-icon"></i>
           <h3>Mobile Apps</h3>
           <p>Native mobile applications for iOS and Android for on-the-go request management.</p>
@@ -224,6 +224,18 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/simplelightbox/1.12.1/simple-lightbox.min.js"></script>
+    <!-- Fallback for animations if main script fails -->
+    <script>
+      // Ensure content is visible after a delay even if animations fail
+      setTimeout(function() {
+        document.querySelectorAll('.fade-in, .slide-up').forEach(function(el) {
+          if (window.getComputedStyle(el).opacity < 1) {
+            el.style.opacity = 1;
+            el.style.transform = 'translateY(0)';
+          }
+        });
+      }, 2000);
+    </script>
     <script src="js/javascript.js"></script>
     
     <!-- Global site tag (gtag.js) - Google Analytics -->
