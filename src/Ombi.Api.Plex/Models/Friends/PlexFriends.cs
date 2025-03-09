@@ -22,6 +22,18 @@ namespace Ombi.Api.Plex.Models.Friends
         /// </summary>
         [XmlAttribute(AttributeName = "home")]
         public bool HomeUser { get; set; }
+        
+        [XmlElement(ElementName = "Server")]
+        public PlexUserServer[] Server { get; set; }
+    }
+
+    public class PlexUserServer
+    {
+        [XmlAttribute(AttributeName = "id")]
+        public string Id { get; set; }
+        
+        [XmlAttribute(AttributeName = "serverId")]
+        public string ServerId { get; set; }
     }
 
     [XmlRoot(ElementName = "MediaContainer")]
