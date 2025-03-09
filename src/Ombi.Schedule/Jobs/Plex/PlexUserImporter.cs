@@ -143,6 +143,14 @@ namespace Ombi.Schedule.Jobs.Plex
                         _log.LogWarning($"Cannot add user {plexUser.Username} because their email address is already in Ombi, skipping this user");
                         continue;
                     }
+
+                    // Check if the user has a <Server> entry
+                    if (plexUser.Server == null || !plexUser.Server.Any())
+                    {
+                        _log.LogInformation($"Skipping user {plexUser.Username} because they do not have access to any servers.");
+                        continue;
+                    }
+
                     // Create this users
                     // We do not store a password against the user since they will authenticate via Plex
                     var newUser = new OmbiUser
