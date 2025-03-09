@@ -120,6 +120,13 @@ namespace Ombi.Schedule.Jobs.Plex
             
             foreach (var plexUser in users.User)
             {
+                // Skip users without server access
+                if (plexUser.Server == null || !plexUser.Server.Any())
+                {
+                    _log.LogInformation($"Skipping user {plexUser.Username ?? plexUser.Id} as they have no server access");
+                    continue;
+                }
+
                 // Check if we should import this user
                 if (userManagementSettings.BannedPlexUserIds.Contains(plexUser.Id))
                 {
