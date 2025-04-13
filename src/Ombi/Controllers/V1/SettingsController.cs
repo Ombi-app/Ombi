@@ -377,6 +377,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <returns></returns>
         [HttpGet("sonarr")]
+        [PowerUser]
         public async Task<SonarrSettings> SonarrSettings()
         {
             return await Get<SonarrSettings>();
@@ -403,6 +404,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <returns></returns>
         [HttpGet("radarr")]
+        [PowerUser]
         public async Task<RadarrCombinedModel> RadarrSettings()
         {
             return new RadarrCombinedModel
