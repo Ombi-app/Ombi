@@ -1,3 +1,12 @@
+## [4.47.3](https://github.com/Ombi-app/Ombi/compare/v4.47.2...v4.47.3) (2025-04-13)
+
+
+### Bug Fixes
+
+* [#5223](https://github.com/Ombi-app/Ombi/issues/5223) ([cf0c161](https://github.com/Ombi-app/Ombi/commit/cf0c1614a496b4f7cf19d78e885c3e37dae5cf0f))
+
+
+
 ## [4.47.2](https://github.com/Ombi-app/Ombi/compare/v4.47.0...v4.47.2) (2025-03-11)
 
 
@@ -2212,10 +2221,6 @@
 ### Features
 
 * **emby:** Show watched status for TV requests ([1f37de0](https://github.com/Ombi-app/Ombi/commit/1f37de08888812b6d130d92bb664a89e89149105))
-
-
-
-## [4.41.1](https://github.com/Ombi-app/Ombi/compare/v4.41.0...v4.41.1) (2023-05-27)
 
 
 
