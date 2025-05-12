@@ -217,6 +217,16 @@ namespace Ombi.Store.Context
                                 Enabled = true,
                             };
                             break;
+                        case NotificationType.PlexWatchlistTokenExpired:
+                            notificationToAdd = new NotificationTemplates
+                            {
+                                NotificationType = notificationType,
+                                Message = "Hello {UserName}! Your Plex watchlist token has expired. Please re-authenticate with Ombi to continue using the watchlist feature.",
+                                Subject = "{ApplicationName}: Plex Watchlist Token Expired",
+                                Agent = agent,
+                                Enabled = true,
+                            };
+                            break;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }

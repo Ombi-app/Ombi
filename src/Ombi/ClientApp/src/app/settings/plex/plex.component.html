@@ -21,7 +21,11 @@
             </small>
         </settings-plex-form-field>
 
-
+        <settings-plex-form-field [disabled]="!settings.enableWatchlistImport" [label]="'Notify Users on Watchlist Token Expiration'" [type]="'checkbox'" [id]="'notifyOnWatchlistTokenExpiration'" [(value)]="settings.notifyOnWatchlistTokenExpiration">
+            <small bottom>When enabled, users will receive a notification if their Plex watchlist token expires and they need to log into Ombi again to continue using the watchlist feature.
+            <br><strong>Note:</strong> This requires email notifications to be configured in the notification settings, and users must have an email address set on their account to receive these notifications.
+            </small>
+        </settings-plex-form-field>
 
         <hr>
 

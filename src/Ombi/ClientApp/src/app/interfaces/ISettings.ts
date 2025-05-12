@@ -114,6 +114,7 @@ export interface IPlexSettings extends ISettings {
   enable: boolean;
   enableWatchlistImport: boolean;
   monitorAll: boolean;
+  notifyOnWatchlistTokenExpiration: boolean;
   servers: IPlexServer[];
 }
 

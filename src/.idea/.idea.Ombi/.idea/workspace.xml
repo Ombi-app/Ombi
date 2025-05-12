@@ -5,9 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="57001998-efde-494a-80b3-d7acfc91f770" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Ombi/.idea/contentModel.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Ombi/.idea/modules.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Ombi/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Ombi/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/wizard/welcome/welcome.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/wizard/welcome/welcome.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ombi/Controllers/V2/WizardController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/Controllers/V2/WizardController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Ombi/riderModule.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/tasks.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/tasks.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi.Helpers/NotificationType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi.Helpers/NotificationType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi.Schedule.Tests/Ombi.Schedule.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi.Schedule.Tests/Ombi.Schedule.Tests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi.Schedule.Tests/PlexWatchlistImportTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi.Schedule.Tests/PlexWatchlistImportTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi.Schedule.Tests/Properties/launchSettings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi.Schedule/Jobs/Plex/PlexWatchlistImport.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi.Schedule/Jobs/Plex/PlexWatchlistImport.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi.Settings/Settings/Models/External/PlexSettings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi.Settings/Settings/Models/External/PlexSettings.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi.Store/Context/OmbiContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi.Store/Context/OmbiContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/interfaces/INotificationSettings.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/interfaces/INotificationSettings.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/interfaces/ISettings.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/interfaces/ISettings.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/settings/plex/plex.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/settings/plex/plex.component.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -234,6 +246,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;tidusjar&quot;
+  }
+}</component>
   <component name="GitToolBoxStore">
     <option name="recentBranches">
       <RecentBranches>
@@ -267,6 +285,12 @@
       </list>
     </option>
   </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/ombi-app/ombi&quot;,
+    &quot;accountId&quot;: &quot;22dd09fe-fb9e-48a4-bfcc-3c152edf3f25&quot;
+  }
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/990126b794024fe2bd16aebdd37eba1d7b600/93/25662f04/ServerVersion.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3bd4df5aff92cabbc4d630be64227073db1b8539b3a1e47786b4b189d7cdb7/DbContext.cs" root0="FORCE_HIGHLIGHTING" />
@@ -308,12 +332,17 @@
   <component name="PackageJsonUpdateNotifier">
     <dismissed value="$PROJECT_DIR$/Ombi/ClientApp/package.json" />
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="1087" />
     <option name="y" value="-1113" />
     <option name="width" value="1400" />
     <option name="height" value="1000" />
   </component>
+  <component name="ProjectId" id="2wGwbN5gDqLwyiO1WJdlwJzZ5M9" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
@@ -376,11 +405,23 @@
       <pane id="FileSystemExplorer" />
     </panes>
   </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Launch Settings Profile.Ombi.executor": "Run",
-    "git-widget-placeholder": "#5208 on wizard-database",
-    "node.js.selected.package.tslint": "(autodetect)"
+    ".NET Launch Settings Profile.Ombi.Schedule.Tests.executor": "Run",
+    ".NET Launch Settings Profile.Ombi.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "fb34c741-04ca-4b4f-8ea1-651a011b42c8.executor": "Debug",
+    "git-widget-placeholder": "develop",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.Ombi">
@@ -460,6 +501,7 @@
       </method>
     </configuration>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="57001998-efde-494a-80b3-d7acfc91f770" name="Default Changelist" comment="" />
@@ -468,6 +510,9 @@
       <option name="presentableId" value="Default" />
       <updated>1563957157468</updated>
       <workItem from="1563957162999" duration="5401000" />
+      <workItem from="1745681294313" duration="1814000" />
+      <workItem from="1747080279165" duration="838000" />
+      <workItem from="1747082180432" duration="1399000" />
     </task>
     <servers />
   </component>
@@ -512,7 +557,13 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="4" weight="0.25" />
     </layout>
   </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
@@ -536,12 +587,12 @@
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs</url>
           <line>59</line>
-          <properties documentPath="$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs">
+          <properties documentPath="$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs" containingFunctionPresentation="Method 'MultiSearch'">
             <startOffsets>
-              <option value="2276" />
+              <option value="2369" />
             </startOffsets>
             <endOffsets>
-              <option value="2316" />
+              <option value="2576" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="4" />
@@ -549,12 +600,12 @@
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs</url>
           <line>49</line>
-          <properties documentPath="$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs">
+          <properties documentPath="$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs" containingFunctionPresentation="Method 'MultiSearch'">
             <startOffsets>
-              <option value="2001" />
+              <option value="1903" />
             </startOffsets>
             <endOffsets>
-              <option value="2002" />
+              <option value="1945" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="5" />
@@ -562,15 +613,41 @@
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Ombi.Api.MusicBrainz/MusicBrainzApi.cs</url>
           <line>30</line>
-          <properties documentPath="$PROJECT_DIR$/Ombi.Api.MusicBrainz/MusicBrainzApi.cs">
+          <properties documentPath="$PROJECT_DIR$/Ombi.Api.MusicBrainz/MusicBrainzApi.cs" containingFunctionPresentation="Method 'SearchArtist'">
             <startOffsets>
-              <option value="917" />
+              <option value="833" />
             </startOffsets>
             <endOffsets>
-              <option value="1016" />
+              <option value="834" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Ombi.Schedule/Jobs/Plex/PlexWatchlistImport.cs</url>
+          <line>110</line>
+          <properties documentPath="$PROJECT_DIR$/Ombi.Schedule/Jobs/Plex/PlexWatchlistImport.cs" containingFunctionPresentation="Method 'Execute'">
+            <startOffsets>
+              <option value="5123" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5206" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Ombi.Schedule/Jobs/Plex/PlexWatchlistImport.cs</url>
+          <line>77</line>
+          <properties documentPath="$PROJECT_DIR$/Ombi.Schedule/Jobs/Plex/PlexWatchlistImport.cs" containingFunctionPresentation="Method 'Execute'">
+            <startOffsets>
+              <option value="3324" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3365" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="11" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

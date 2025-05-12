@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+
     <Configurations>Debug;Release;NonUiBuild</Configurations>
   </PropertyGroup>
 
@@ -13,7 +16,7 @@
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
     <PackageReference Include="NUnit.ConsoleRunner" Version="3.15.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-    <packagereference Include="Microsoft.NET.Test.Sdk" Version="17.6.2"></packagereference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
   </ItemGroup>
 
   <ItemGroup>

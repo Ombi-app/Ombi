@@ -20,6 +20,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Ombi.Notifications.Models;
+using Ombi.Core.Notifications;
+using Ombi.Helpers;
+using Ombi.Core;
 
 namespace Ombi.Schedule.Tests
 {
@@ -35,12 +39,13 @@ namespace Ombi.Schedule.Tests
         public void Setup()
         {
             _mocker = new AutoMocker();
-            var um = MockHelper.MockUserManager(new List<OmbiUser> { new OmbiUser { Id = "abc", UserType = UserType.PlexUser, MediaServerToken = "token1", UserName = "abc", NormalizedUserName = "ABC" } });
+            var um = MockHelper.MockUserManager(new List<OmbiUser> { new OmbiUser { Id = "abc", Email = "email@email.com", UserType = UserType.PlexUser, MediaServerToken = "token1", UserName = "abc", NormalizedUserName = "ABC" } });
             _mocker.Use(um);
             _context = _mocker.GetMock<IJobExecutionContext>();
             _context.Setup(x => x.CancellationToken).Returns(CancellationToken.None);
             _subject = _mocker.CreateInstance<PlexWatchlistImport>();
             _mocker.Setup<IRepository<PlexWatchlistUserError>, IQueryable<PlexWatchlistUserError>>(x => x.GetAll()).Returns(new List<PlexWatchlistUserError>().AsQueryable().BuildMock());
+            _mocker.Setup<INotificationHelper>(x => x.Notify(It.IsAny<NotificationOptions>()));
         }
 
         [Test]
@@ -776,6 +781,63 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<ITvRequestEngine>(x => x.SetUser(It.Is<OmbiUser>(x => x.Id == "abc")), Times.Once);
             _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Once);
             _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Once);
+        }
+
+        [Test]
+        public async Task AuthenticationError_NotificationsEnabled_WithEmail_SendsNotification()
+        {
+            _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync())
+                .ReturnsAsync(new PlexSettings { Enable = true, EnableWatchlistImport = true, NotifyOnWatchlistTokenExpiration = true });
+            _mocker.Setup<IPlexApi, Task<PlexWatchlistContainer>>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new PlexWatchlistContainer { AuthError = true });
+
+            // Act
+            await _subject.Execute(_context.Object);
+
+            // Assert
+            _mocker.Verify<INotificationHelper>(x => x.Notify(It.Is<NotificationOptions>(n => 
+                n.NotificationType == NotificationType.PlexWatchlistTokenExpired &&
+                n.Recipient == "email@email.com" &&
+                n.Substitutes["UserName"] == "abc" &&
+                n.Substitutes["ApplicationName"] == "Ombi"
+            )), Times.Once);
+        }
+
+        [Test]
+        public async Task AuthenticationError_NotificationsDisabled_WithEmail_DoesNotSendNotification()
+        {
+            _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync())
+                .ReturnsAsync(new PlexSettings { Enable = true, EnableWatchlistImport = true, NotifyOnWatchlistTokenExpiration = false });
+            _mocker.Setup<IPlexApi, Task<PlexWatchlistContainer>>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new PlexWatchlistContainer { AuthError = true });
+
+            // Act
+            await _subject.Execute(_context.Object);
+
+            // Assert
+            _mocker.Verify<INotificationHelper>(x => x.Notify(It.IsAny<NotificationOptions>()), Times.Never);
+        }
+
+        [Test]
+        public async Task AuthenticationError_NotificationsEnabled_NoEmail_DoesNotSendNotification()
+        {
+            // Arrange
+            var user = new OmbiUser { Id = "abc", UserType = UserType.PlexUser, MediaServerToken = "token1", UserName = "abc", NormalizedUserName = "ABC" };
+            var um = MockHelper.MockUserManager(new List<OmbiUser> { user });
+            _mocker.Use(um);
+
+            _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync())
+                .ReturnsAsync(new PlexSettings { Enable = true, EnableWatchlistImport = true, NotifyOnWatchlistTokenExpiration = true });
+            _mocker.Setup<IPlexApi, Task<PlexWatchlistContainer>>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new PlexWatchlistContainer { AuthError = true });
+
+            _subject = _mocker.CreateInstance<PlexWatchlistImport>();
+            
+            // Act
+            await _subject.Execute(_context.Object);
+
+            // Assert
+            _mocker.Verify<INotificationHelper>(x => x.Notify(It.IsAny<NotificationOptions>()), Times.Never);
         }
     }
 }
