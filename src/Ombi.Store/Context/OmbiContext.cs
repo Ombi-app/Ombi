@@ -222,7 +222,7 @@ namespace Ombi.Store.Context
                             {
                                 NotificationType = notificationType,
                                 Message = "Hello {UserName}! Your Plex watchlist token has expired. Please re-authenticate with Ombi to continue using the watchlist feature.",
-                                Subject = "{ApplicationName}: Plex Watchlist Token Expired",
+                                Subject = "Plex Watchlist Token Expired",
                                 Agent = agent,
                                 Enabled = true,
                             };
