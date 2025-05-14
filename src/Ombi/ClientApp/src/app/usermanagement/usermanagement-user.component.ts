@@ -37,6 +37,13 @@ export class UserManagementUserComponent implements OnInit {
     private appUrl: string = this.customizationFacade.appUrl();
     private accessToken: string;
 
+    // List of excluded notification agents that should not be shown in user preferences
+    private readonly excludedAgents = [
+        INotificationAgent.Email,
+        INotificationAgent.Mobile,
+        INotificationAgent.Webhook
+    ];
+
     constructor(private identityService: IdentityService,
                 private notificationService: MessageService,
                 private router: Router,
@@ -74,9 +81,15 @@ export class UserManagementUserComponent implements OnInit {
             }
         });
         if(this.edit) {
-            this.identityService.getNotificationPreferencesForUser(this.userId).subscribe(x => this.notificationPreferences = x);
+            this.identityService.getNotificationPreferencesForUser(this.userId).subscribe(x => {
+                // Filter out excluded notification agents
+                this.notificationPreferences = x.filter(pref => !this.excludedAgents.includes(pref.agent));
+            });
         } else {
-            this.identityService.getNotificationPreferences().subscribe(x => this.notificationPreferences = x);
+            this.identityService.getNotificationPreferences().subscribe(x => {
+                // Filter out excluded notification agents
+                this.notificationPreferences = x.filter(pref => !this.excludedAgents.includes(pref.agent));
+            });
         }
         this.sonarrService.getQualityProfilesWithoutSettings().subscribe(x => {
             this.sonarrQualities = x;
