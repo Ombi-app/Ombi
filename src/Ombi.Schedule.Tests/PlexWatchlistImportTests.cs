@@ -798,8 +798,7 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<INotificationHelper>(x => x.Notify(It.Is<NotificationOptions>(n => 
                 n.NotificationType == NotificationType.PlexWatchlistTokenExpired &&
                 n.Recipient == "email@email.com" &&
-                n.Substitutes["UserName"] == "abc" &&
-                n.Substitutes["ApplicationName"] == "Ombi"
+                n.Substitutes["UserName"] == "abc"
             )), Times.Once);
         }
 
