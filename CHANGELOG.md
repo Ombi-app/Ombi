@@ -1,3 +1,12 @@
+## [4.48.5](https://github.com/Ombi-app/Ombi/compare/v4.48.4...v4.48.5) (2025-05-14)
+
+
+### Bug Fixes
+
+* filter out excluded notification agents from user preferences ([c9ab4f4](https://github.com/Ombi-app/Ombi/commit/c9ab4f4f9faa66dbf263da693db1eefcf68beeec)), closes [#5196](https://github.com/Ombi-app/Ombi/issues/5196)
+
+
+
 ## [4.48.4](https://github.com/Ombi-app/Ombi/compare/v4.48.3...v4.48.4) (2025-05-14)
 
 
@@ -2195,15 +2204,6 @@
 
 * **plex-api:** Switch over to the new API to avoid deprecation & save… ([#4986](https://github.com/Ombi-app/Ombi/issues/4986)) ([2f2d35e](https://github.com/Ombi-app/Ombi/commit/2f2d35ec867a8e5488e368db294bd37bcf92d843))
 * Remove old trending source ([#4987](https://github.com/Ombi-app/Ombi/issues/4987)) ([aacaa3e](https://github.com/Ombi-app/Ombi/commit/aacaa3e140b43f5d196da612f785cc4451717752))
-
-
-
-## [4.43.1](https://github.com/Ombi-app/Ombi/compare/v4.43.0...v4.43.1) (2023-07-16)
-
-
-### Bug Fixes
-
-* **user-importer:** don't delete admins in the cleanup ([895b9bf](https://github.com/Ombi-app/Ombi/commit/895b9bf6a060a678d4b0cca8083aa96c38e47b95))
 
 
 
