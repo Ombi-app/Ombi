@@ -1,3 +1,14 @@
+## [4.48.4](https://github.com/Ombi-app/Ombi/compare/v4.48.3...v4.48.4) (2025-05-14)
+
+
+### Bug Fixes
+
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([dbbfdd9](https://github.com/Ombi-app/Ombi/commit/dbbfdd926f0808f6d16f0b2cd8b5406e6b610c82))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([53a6a09](https://github.com/Ombi-app/Ombi/commit/53a6a092b14b8b8bdbff95d066926d3dbe6951f4))
+* **ui:** correct timezone handling in OmbiDatePipe ([f88c5ad](https://github.com/Ombi-app/Ombi/commit/f88c5ad818fadea7064e7dfbe46f07eae855109a)), closes [#5102](https://github.com/Ombi-app/Ombi/issues/5102)
+
+
+
 ## [4.48.3](https://github.com/Ombi-app/Ombi/compare/v4.48.2...v4.48.3) (2025-05-14)
 
 
@@ -2193,15 +2204,6 @@
 ### Bug Fixes
 
 * **user-importer:** don't delete admins in the cleanup ([895b9bf](https://github.com/Ombi-app/Ombi/commit/895b9bf6a060a678d4b0cca8083aa96c38e47b95))
-
-
-
-# [4.43.0](https://github.com/Ombi-app/Ombi/compare/v4.42.3...v4.43.0) (2023-07-14)
-
-
-### Features
-
-* Add Auto Approve 4K role ([#4982](https://github.com/Ombi-app/Ombi/issues/4982)) ([#4983](https://github.com/Ombi-app/Ombi/issues/4983)) ([ac05495](https://github.com/Ombi-app/Ombi/commit/ac054954254b9d77a42e057f1065570c7fdc1093)), closes [#4957](https://github.com/Ombi-app/Ombi/issues/4957)
 
 
 
