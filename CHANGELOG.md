@@ -1,3 +1,12 @@
+# [4.48.0](https://github.com/Ombi-app/Ombi/compare/v4.47.3...v4.48.0) (2025-05-14)
+
+
+### Features
+
+* added the watchlist notification ([0dfd453](https://github.com/Ombi-app/Ombi/commit/0dfd4533dba01cb04ea2217c020de8833ddf39c6))
+
+
+
 ## [4.47.3](https://github.com/Ombi-app/Ombi/compare/v4.47.2...v4.47.3) (2025-04-13)
 
 
@@ -2207,20 +2216,6 @@
 * upgrade cypress-real-events from 1.7.4 to 1.8.1 ([#4968](https://github.com/Ombi-app/Ombi/issues/4968)) [skip ci] ([8a24b56](https://github.com/Ombi-app/Ombi/commit/8a24b56299c3bc98bf0d719ba448972aaa7f7461))
 * upgrade multiple dependencies with Snyk ([#4963](https://github.com/Ombi-app/Ombi/issues/4963)) [skip ci] ([6025c5e](https://github.com/Ombi-app/Ombi/commit/6025c5ed757438d3a5d79bd36fd789ef0297ce70))
 * upgrade primeng from 15.0.0-rc.1 to 15.4.1 ([#4962](https://github.com/Ombi-app/Ombi/issues/4962)) [skip ci] ([23a4fed](https://github.com/Ombi-app/Ombi/commit/23a4fede69898a25b342aed78a8cda553c1fd18d))
-
-
-
-# [4.42.0](https://github.com/Ombi-app/Ombi/compare/v4.41.1...v4.42.0) (2023-06-02)
-
-
-### Bug Fixes
-
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([#4926](https://github.com/Ombi-app/Ombi/issues/4926)) ([151efe1](https://github.com/Ombi-app/Ombi/commit/151efe19d0012b85f317c175da5ab4802ea14e20))
-
-
-### Features
-
-* **emby:** Show watched status for TV requests ([1f37de0](https://github.com/Ombi-app/Ombi/commit/1f37de08888812b6d130d92bb664a89e89149105))
 
 
 
