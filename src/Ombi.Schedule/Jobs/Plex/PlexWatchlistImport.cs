@@ -22,6 +22,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Ombi.Notifications.Models;
+using Ombi.Core.Notifications;
+using Microsoft.AspNetCore.Identity;
+using Ombi.Store.Repository.Requests;
+using Ombi.Core;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
@@ -37,11 +42,12 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly IExternalRepository<PlexWatchlistHistory> _watchlistRepo;
         private readonly IRepository<PlexWatchlistUserError> _userError;
         private readonly IMovieDbApi _movieDbApi;
+        private readonly INotificationHelper _notificationHelper;
 
         public PlexWatchlistImport(IPlexApi plexApi, ISettingsService<PlexSettings> settings, OmbiUserManager ombiUserManager,
             IMovieRequestEngine movieRequestEngine, ITvRequestEngine tvRequestEngine, INotificationHubService notificationHubService,
             ILogger<PlexWatchlistImport> logger, IExternalRepository<PlexWatchlistHistory> watchlistRepo, IRepository<PlexWatchlistUserError> userError,
-            IMovieDbApi movieDbApi)
+            IMovieDbApi movieDbApi, INotificationHelper notificationHelper)
         {
             _plexApi = plexApi;
             _settings = settings;
@@ -53,6 +59,7 @@ namespace Ombi.Schedule.Jobs.Plex
             _watchlistRepo = watchlistRepo;
             _userError = userError;
             _movieDbApi = movieDbApi;
+            _notificationHelper = notificationHelper;
         }
 
         public async Task Execute(IJobExecutionContext context)
@@ -99,6 +106,22 @@ namespace Ombi.Schedule.Jobs.Plex
                             UserId = user.Id,
                             MediaServerToken = user.MediaServerToken,
                         });
+
+                        // Send notification to user about token expiration
+                        if (settings.NotifyOnWatchlistTokenExpiration && !string.IsNullOrEmpty(user.Email))
+                        {
+                            var notificationModel = new NotificationOptions
+                            {
+                                NotificationType = NotificationType.PlexWatchlistTokenExpired,
+                                Recipient = user.Email,
+                                DateTime = DateTime.Now,
+                                Substitutes = new Dictionary<string, string>
+                                {
+                                    { "UserName", user.UserName }
+                                }
+                            };
+                            await _notificationHelper.Notify(notificationModel);
+                        }
                         continue;
                     }
                     if (watchlist == null || !(watchlist.MediaContainer?.Metadata?.Any() ?? false))
