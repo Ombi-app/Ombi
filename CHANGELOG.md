@@ -1,3 +1,7 @@
+## [4.48.1](https://github.com/Ombi-app/Ombi/compare/v4.48.0...v4.48.1) (2025-05-14)
+
+
+
 # [4.48.0](https://github.com/Ombi-app/Ombi/compare/v4.47.3...v4.48.0) (2025-05-14)
 
 
@@ -2201,21 +2205,6 @@
 * upgrade jquery from 3.6.1 to 3.7.0 ([#4974](https://github.com/Ombi-app/Ombi/issues/4974)) ([f2552ef](https://github.com/Ombi-app/Ombi/commit/f2552ef6ede011080a8d5499e11930c4d41d04c2))
 * upgrade multiple dependencies with Snyk ([#4961](https://github.com/Ombi-app/Ombi/issues/4961)) ([3c3edf6](https://github.com/Ombi-app/Ombi/commit/3c3edf6273fa98c420989ebcebfee52b2545e402))
 * upgrade zone.js from 0.11.8 to 0.13.0 ([#4975](https://github.com/Ombi-app/Ombi/issues/4975)) ([37f6564](https://github.com/Ombi-app/Ombi/commit/37f65648a2f8742020b0954acec4168aee048942))
-
-
-
-## [4.42.1](https://github.com/Ombi-app/Ombi/compare/v4.42.0...v4.42.1) (2023-06-20)
-
-
-### Bug Fixes
-
-* More automation tests mainly around the Plex Settings page ([#4821](https://github.com/Ombi-app/Ombi/issues/4821)) ([21bfc5a](https://github.com/Ombi-app/Ombi/commit/21bfc5a45adf6da6a80854e19494a8ffdc9c0761))
-* src/Ombi.Notifications/Ombi.Notifications.csproj to reduce vulnerabilities ([#4969](https://github.com/Ombi-app/Ombi/issues/4969)) [skip ci] ([8584ad4](https://github.com/Ombi-app/Ombi/commit/8584ad46053c51f5da40b24f3efd1b9e5a031ddd))
-* upgrade @fortawesome/fontawesome-free from 6.1.2 to 6.4.0 ([#4965](https://github.com/Ombi-app/Ombi/issues/4965)) [skip ci] ([84454e5](https://github.com/Ombi-app/Ombi/commit/84454e53c00c808e8a393c7750bdc418a7593e91))
-* upgrade @microsoft/signalr from 6.0.11 to 6.0.16 ([#4964](https://github.com/Ombi-app/Ombi/issues/4964)) [skip ci] ([a0201e3](https://github.com/Ombi-app/Ombi/commit/a0201e3f585dc52f717e33c46ede35a4eccac736))
-* upgrade cypress-real-events from 1.7.4 to 1.8.1 ([#4968](https://github.com/Ombi-app/Ombi/issues/4968)) [skip ci] ([8a24b56](https://github.com/Ombi-app/Ombi/commit/8a24b56299c3bc98bf0d719ba448972aaa7f7461))
-* upgrade multiple dependencies with Snyk ([#4963](https://github.com/Ombi-app/Ombi/issues/4963)) [skip ci] ([6025c5e](https://github.com/Ombi-app/Ombi/commit/6025c5ed757438d3a5d79bd36fd789ef0297ce70))
-* upgrade primeng from 15.0.0-rc.1 to 15.4.1 ([#4962](https://github.com/Ombi-app/Ombi/issues/4962)) [skip ci] ([23a4fed](https://github.com/Ombi-app/Ombi/commit/23a4fede69898a25b342aed78a8cda553c1fd18d))
 
 
 
