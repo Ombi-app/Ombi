@@ -752,8 +752,8 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/Alasano">
-            <img src="https://avatars.githubusercontent.com/u/14372930?v=4" width="50;" alt="Alasano"/>
+        <a href="https://github.com/alasano">
+            <img src="https://avatars.githubusercontent.com/u/14372930?v=4" width="50;" alt="alasano"/>
             <br />
             <sub><b>Aljosa Asanovic</b></sub>
         </a>
