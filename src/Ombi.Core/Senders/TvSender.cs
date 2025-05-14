@@ -133,7 +133,14 @@ namespace Ombi.Core.Senders
             string seriesType;
             int? tagToUse = null;
 
+            Logger.LogInformation("Starting SendToSonarr for series {Title} (TvDbId: {TvDbId})", model.ParentRequest.Title, model.ParentRequest.TvDbId);
+            Logger.LogInformation("Series type: {SeriesType}", model.SeriesType);
+
             var profiles = await UserQualityProfiles.GetAll().FirstOrDefaultAsync(x => x.UserId == model.RequestedUserId);
+            if (profiles != null)
+            {
+                Logger.LogInformation("Found user quality profile for user {UserId}", model.RequestedUserId);
+            }
 
             if (model.SeriesType == SeriesType.Anime)
             {
@@ -141,8 +148,10 @@ namespace Ombi.Core.Senders
                 // For some reason, if we haven't got one use the first root folder in Sonarr
                 if (!int.TryParse(s.RootPathAnime, out int animePath))
                 {
+                    Logger.LogWarning("Failed to parse RootPathAnime: {RootPathAnime}, falling back to main root path", s.RootPathAnime);
                     animePath = int.Parse(s.RootPath); // Set it to the main root folder if we have no anime folder.
                 }
+                Logger.LogInformation("Using anime path ID: {AnimePath}", animePath);
                 rootFolderPath = await GetSonarrRootPath(animePath, s);
                 languageProfileId = s.LanguageProfileAnime > 0 ? s.LanguageProfileAnime : s.LanguageProfile;
 
@@ -154,6 +163,7 @@ namespace Ombi.Core.Senders
                 {
                     if (profiles.SonarrRootPathAnime > 0)
                     {
+                        Logger.LogInformation("Using user's anime root path override: {RootPath}", profiles.SonarrRootPathAnime);
                         rootFolderPath = await GetSonarrRootPath(profiles.SonarrRootPathAnime, s);
                     }
                     if (profiles.SonarrQualityProfileAnime > 0)
@@ -169,11 +179,13 @@ namespace Ombi.Core.Senders
                 int.TryParse(s.QualityProfile, out qualityToUse);
                 // Get the root path from the rootfolder selected.
                 // For some reason, if we haven't got one use the first root folder in Sonarr
+                Logger.LogInformation("Using standard path ID: {RootPath}", s.RootPath);
                 rootFolderPath = await GetSonarrRootPath(int.Parse(s.RootPath), s);
                 if (profiles != null)
                 {
                     if (profiles.SonarrRootPath > 0)
                     {
+                        Logger.LogInformation("Using user's standard root path override: {RootPath}", profiles.SonarrRootPath);
                         rootFolderPath = await GetSonarrRootPath(profiles.SonarrRootPath, s);
                     }
                     if (profiles.SonarrQualityProfile > 0)
@@ -193,6 +205,7 @@ namespace Ombi.Core.Senders
 
             if (model.ParentRequest.RootFolder.HasValue && model.ParentRequest.RootFolder.Value > 0)
             {
+                Logger.LogInformation("Using request root folder override: {RootFolder}", model.ParentRequest.RootFolder.Value);
                 rootFolderPath = await GetSonarrRootPath(model.ParentRequest.RootFolder.Value, s);
             }
 
@@ -200,6 +213,8 @@ namespace Ombi.Core.Senders
             {
                 languageProfileId = model.ParentRequest.LanguageProfile.Value;
             }
+
+            Logger.LogInformation("Final root folder path: {RootFolderPath}", rootFolderPath);
 
             try
             {
@@ -520,17 +535,36 @@ namespace Ombi.Core.Senders
 
         private async Task<string> GetSonarrRootPath(int pathId, SonarrSettings sonarrSettings)
         {
+            Logger.LogInformation("Getting Sonarr root path for ID: {PathId}", pathId);
             var rootFoldersResult = await SonarrApi.GetRootFolders(sonarrSettings.ApiKey, sonarrSettings.FullUri);
+            
+            if (rootFoldersResult == null || !rootFoldersResult.Any())
+            {
+                Logger.LogError("No root folders returned from Sonarr API");
+                return string.Empty;
+            }
+
+            Logger.LogInformation("Found {Count} root folders in Sonarr", rootFoldersResult.Count());
+            foreach (var folder in rootFoldersResult)
+            {
+                Logger.LogDebug("Root folder - ID: {Id}, Path: {Path}", folder.id, folder.path);
+            }
 
             if (pathId == 0)
             {
-                return rootFoldersResult.FirstOrDefault().path;
+                var defaultPath = rootFoldersResult.FirstOrDefault()?.path;
+                Logger.LogInformation("Using first root folder as default: {Path}", defaultPath);
+                return defaultPath;
             }
 
-            foreach (var r in rootFoldersResult?.Where(r => r.id == pathId))
+            var matchingFolder = rootFoldersResult.FirstOrDefault(r => r.id == pathId);
+            if (matchingFolder != null)
             {
-                return r.path;
+                Logger.LogInformation("Found matching root folder for ID {PathId}: {Path}", pathId, matchingFolder.path);
+                return matchingFolder.path;
             }
+
+            Logger.LogError("No matching root folder found for ID: {PathId}", pathId);
             return string.Empty;
         }
     }
