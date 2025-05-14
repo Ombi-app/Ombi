@@ -201,7 +201,9 @@ namespace Ombi.Core.Senders
             List<MovieResponse> movies;
             // Check if the movie already exists? Since it could be unmonitored
 
-            movies = await _radarrV3Api.GetMovies(settings.ApiKey, settings.FullUri);
+            // Get the appropriate Radarr instance settings for existence check
+            var existenceCheckSettings = is4k ? await _radarr4KSettings.GetSettingsAsync() : settings;
+            movies = await _radarrV3Api.GetMovies(existenceCheckSettings.ApiKey, existenceCheckSettings.FullUri);
 
             var existingMovie = movies.FirstOrDefault(x => x.tmdbId == model.TheMovieDbId);
             if (existingMovie == null)
