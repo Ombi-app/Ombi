@@ -1,3 +1,12 @@
+## [4.48.2](https://github.com/Ombi-app/Ombi/compare/v4.48.1...v4.48.2) (2025-05-14)
+
+
+### Bug Fixes
+
+* **radarr:** ensure RequestedUser is loaded when creating tags ([f8658fe](https://github.com/Ombi-app/Ombi/commit/f8658fe6d56488aa5caa68093245cbf021a31810)), closes [#5045](https://github.com/Ombi-app/Ombi/issues/5045)
+
+
+
 ## [4.48.1](https://github.com/Ombi-app/Ombi/compare/v4.48.0...v4.48.1) (2025-05-14)
 
 
@@ -2193,18 +2202,6 @@
 ### Bug Fixes
 
 * **user-importer:** Do not delete the Plex Admin as part of the user Importer cleanup [#4870](https://github.com/Ombi-app/Ombi/issues/4870) ([#4981](https://github.com/Ombi-app/Ombi/issues/4981)) ([4e80e7b](https://github.com/Ombi-app/Ombi/commit/4e80e7b7c3239a46a645ab6d1054993734ad4dd6))
-
-
-
-## [4.42.2](https://github.com/Ombi-app/Ombi/compare/v4.42.1...v4.42.2) (2023-07-03)
-
-
-### Bug Fixes
-
-* Remove Angular TSLint ([#4973](https://github.com/Ombi-app/Ombi/issues/4973)) ([93969b5](https://github.com/Ombi-app/Ombi/commit/93969b5a2d82f442299bee418fae43cb590d7743))
-* upgrade jquery from 3.6.1 to 3.7.0 ([#4974](https://github.com/Ombi-app/Ombi/issues/4974)) ([f2552ef](https://github.com/Ombi-app/Ombi/commit/f2552ef6ede011080a8d5499e11930c4d41d04c2))
-* upgrade multiple dependencies with Snyk ([#4961](https://github.com/Ombi-app/Ombi/issues/4961)) ([3c3edf6](https://github.com/Ombi-app/Ombi/commit/3c3edf6273fa98c420989ebcebfee52b2545e402))
-* upgrade zone.js from 0.11.8 to 0.13.0 ([#4975](https://github.com/Ombi-app/Ombi/issues/4975)) ([37f6564](https://github.com/Ombi-app/Ombi/commit/37f65648a2f8742020b0954acec4168aee048942))
 
 
 
