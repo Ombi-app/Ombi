@@ -182,7 +182,10 @@ namespace Ombi.Core.Senders
             if (settings.SendUserTags)
             {
                 var userTag = await GetOrCreateTag(model, settings);
-                tags.Add(userTag.id);
+                if (userTag != null)
+                {
+                    tags.Add(userTag.id);
+                }
             }
 
             // Overrides on the request take priority
@@ -246,6 +249,12 @@ namespace Ombi.Core.Senders
 
         private async Task<Tag> GetOrCreateTag(MovieRequests model, RadarrSettings s)
         {
+            if (model.RequestedUser == null)
+            {
+                _log.LogWarning("Cannot create tag - RequestedUser is null for movie request {MovieTitle}", model.Title);
+                return null;
+            }
+            
             var tagName = model.RequestedUser.UserName;
             // Does tag exist?
 
