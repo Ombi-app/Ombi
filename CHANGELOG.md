@@ -1,3 +1,12 @@
+## [4.48.3](https://github.com/Ombi-app/Ombi/compare/v4.48.2...v4.48.3) (2025-05-14)
+
+
+### Bug Fixes
+
+* Correct 4K movie request existence check ([ba6e708](https://github.com/Ombi-app/Ombi/commit/ba6e708e189f52f2ff4ebc073fa38a4f53f1061c)), closes [#4798](https://github.com/Ombi-app/Ombi/issues/4798)
+
+
+
 ## [4.48.2](https://github.com/Ombi-app/Ombi/compare/v4.48.1...v4.48.2) (2025-05-14)
 
 
@@ -2193,15 +2202,6 @@
 ### Features
 
 * Add Auto Approve 4K role ([#4982](https://github.com/Ombi-app/Ombi/issues/4982)) ([#4983](https://github.com/Ombi-app/Ombi/issues/4983)) ([ac05495](https://github.com/Ombi-app/Ombi/commit/ac054954254b9d77a42e057f1065570c7fdc1093)), closes [#4957](https://github.com/Ombi-app/Ombi/issues/4957)
-
-
-
-## [4.42.3](https://github.com/Ombi-app/Ombi/compare/v4.42.2...v4.42.3) (2023-07-13)
-
-
-### Bug Fixes
-
-* **user-importer:** Do not delete the Plex Admin as part of the user Importer cleanup [#4870](https://github.com/Ombi-app/Ombi/issues/4870) ([#4981](https://github.com/Ombi-app/Ombi/issues/4981)) ([4e80e7b](https://github.com/Ombi-app/Ombi/commit/4e80e7b7c3239a46a645ab6d1054993734ad4dd6))
 
 
 
