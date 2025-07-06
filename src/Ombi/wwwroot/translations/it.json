@@ -367,10 +367,10 @@
         "Budget": "Budget:",
         "Keywords": "Parole Chiave/Tag:",
         "Casts": {
-            "CastTitle": "Trasmetti"
+            "CastTitle": "Cast"
         },
         "Crews": {
-            "CrewTitle": "Gruppo"
+            "CrewTitle": "Crew"
         },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Richiederà tutte le stagioni per questa serie",
@@ -385,7 +385,7 @@
         "PleaseSelectUser": "Sei pregato di selezionare un utente",
         "StreamingOn": "In Streaming Su:",
         "RequestedBy": "Richiesto Da:",
-        "OnDate": "On:",
+        "OnDate": "Il:",
         "RequestedByOn": "Richiesto da {{user}} il {{date}}",
         "RequestDate": "Data di Richiesta:",
         "DeniedReason": "Motivo di Negazione:",
