@@ -122,10 +122,10 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/MattJeanes">
-            <img src="https://avatars.githubusercontent.com/u/2363642?v=4" width="50;" alt="MattJeanes"/>
+        <a href="https://github.com/AmyJeanes">
+            <img src="https://avatars.githubusercontent.com/u/2363642?v=4" width="50;" alt="AmyJeanes"/>
             <br />
-            <sub><b>Matt Jeanes</b></sub>
+            <sub><b>Amy Jeanes</b></sub>
         </a>
     </td>
     <td align="center">
