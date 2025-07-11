@@ -1,3 +1,12 @@
+# [4.49.0](https://github.com/Ombi-app/Ombi/compare/v4.48.5...v4.49.0) (2025-07-11)
+
+
+### Features
+
+* Added the ability for the Watchlist to automatically refresh the users token. This will reduce the need for the user to log in ([067c029](https://github.com/Ombi-app/Ombi/commit/067c029f42e9fd853d060fdb2093013b15ac14c0))
+
+
+
 ## [4.48.5](https://github.com/Ombi-app/Ombi/compare/v4.48.4...v4.48.5) (2025-05-14)
 
 
@@ -2194,16 +2203,6 @@
 ### Bug Fixes
 
 * switch back to the old plex friends API [#4989](https://github.com/Ombi-app/Ombi/issues/4989) ([c8ad12e](https://github.com/Ombi-app/Ombi/commit/c8ad12eb5f53889609d1793ae907afd33ba6ef38))
-
-
-
-## [4.43.2](https://github.com/Ombi-app/Ombi/compare/v4.43.1...v4.43.2) (2023-07-19)
-
-
-### Bug Fixes
-
-* **plex-api:** Switch over to the new API to avoid deprecation & save… ([#4986](https://github.com/Ombi-app/Ombi/issues/4986)) ([2f2d35e](https://github.com/Ombi-app/Ombi/commit/2f2d35ec867a8e5488e368db294bd37bcf92d843))
-* Remove old trending source ([#4987](https://github.com/Ombi-app/Ombi/issues/4987)) ([aacaa3e](https://github.com/Ombi-app/Ombi/commit/aacaa3e140b43f5d196da612f785cc4451717752))
 
 
 
