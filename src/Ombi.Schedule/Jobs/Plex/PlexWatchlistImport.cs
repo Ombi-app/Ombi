@@ -27,7 +27,6 @@ using Ombi.Core.Notifications;
 using Microsoft.AspNetCore.Identity;
 using Ombi.Store.Repository.Requests;
 using Ombi.Core;
-using Ombi.Core.Authentication;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
