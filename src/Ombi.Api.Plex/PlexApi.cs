@@ -320,6 +320,30 @@ namespace Ombi.Api.Plex
             return result;
         }
 
+        /// <summary>
+        /// Pings the Plex API to validate if a token is still valid
+        /// </summary>
+        /// <param name="authToken">The authentication token to validate</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>True if the token is valid, false otherwise</returns>
+        public async Task<bool> Ping(string authToken, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var request = new Request("api/v2/ping", "https://plex.tv/", HttpMethod.Get);
+                await AddHeaders(request, authToken);
+                
+                // We don't need to parse the response, just check if the request succeeds
+                await Api.Request(request, cancellationToken);
+                return true;
+            }
+            catch
+            {
+                // If the request fails (401, 403, etc.), the token is invalid
+                return false;
+            }
+        }
+
 
         /// <summary>
         /// Adds the required headers and also the authorization header

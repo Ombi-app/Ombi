@@ -24,6 +24,7 @@ using Ombi.Notifications.Models;
 using Ombi.Core.Notifications;
 using Ombi.Helpers;
 using Ombi.Core;
+using Ombi.Core.Authentication;
 
 namespace Ombi.Schedule.Tests
 {
@@ -43,6 +44,8 @@ namespace Ombi.Schedule.Tests
             _mocker.Use(um);
             _context = _mocker.GetMock<IJobExecutionContext>();
             _context.Setup(x => x.CancellationToken).Returns(CancellationToken.None);
+            // Mock the keep-alive service to return true by default
+            _mocker.Use<IPlexTokenKeepAliveService>(Mock.Of<IPlexTokenKeepAliveService>(s => s.KeepTokenAliveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()) == Task.FromResult(true)));
             _subject = _mocker.CreateInstance<PlexWatchlistImport>();
             _mocker.Setup<IRepository<PlexWatchlistUserError>, IQueryable<PlexWatchlistUserError>>(x => x.GetAll()).Returns(new List<PlexWatchlistUserError>().AsQueryable().BuildMock());
             _mocker.Setup<INotificationHelper>(x => x.Notify(It.IsAny<NotificationOptions>()));
@@ -837,6 +840,44 @@ namespace Ombi.Schedule.Tests
 
             // Assert
             _mocker.Verify<INotificationHelper>(x => x.Notify(It.IsAny<NotificationOptions>()), Times.Never);
+        }
+
+        [Test]
+        public async Task SkipsUserIfTokenKeepAliveFails()
+        {
+            // Arrange: Set up the keep-alive service to return false (token invalid/expired)
+            var keepAliveMock = new Mock<IPlexTokenKeepAliveService>();
+            keepAliveMock.Setup(x => x.KeepTokenAliveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(false);
+            _mocker.Use(keepAliveMock.Object);
+            _subject = _mocker.CreateInstance<PlexWatchlistImport>();
+            _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync()).ReturnsAsync(new PlexSettings { Enable = true, EnableWatchlistImport = true });
+            // Act
+            await _subject.Execute(_context.Object);
+            // Assert: Should not attempt to import watchlist if keep-alive fails
+            keepAliveMock.Verify(x => x.KeepTokenAliveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
+            _mocker.Verify<IPlexApi>(x => x.GetWatchlist(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+            _mocker.Verify<INotificationHelper>(x => x.Notify(It.IsAny<NotificationOptions>()), Times.Never); // or Times.Once if notification is expected
+        }
+        [Test]
+        public async Task CallsKeepAliveForEachPlexUser()
+        {
+            // Arrange: Multiple Plex users
+            var users = new List<OmbiUser>
+            {
+                new OmbiUser { Id = "abc1", UserType = UserType.PlexUser, MediaServerToken = "abc1", UserName = "abc1", NormalizedUserName = "ABC1" },
+                new OmbiUser { Id = "abc2", UserType = UserType.PlexUser, MediaServerToken = "abc2", UserName = "abc2", NormalizedUserName = "ABC2" },
+            };
+            var um = MockHelper.MockUserManager(users);
+            _mocker.Use(um);
+            var keepAliveMock = new Mock<IPlexTokenKeepAliveService>();
+            keepAliveMock.Setup(x => x.KeepTokenAliveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
+            _mocker.Use(keepAliveMock.Object);
+            _subject = _mocker.CreateInstance<PlexWatchlistImport>();
+            _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync()).ReturnsAsync(new PlexSettings { Enable = true, EnableWatchlistImport = true });
+            // Act
+            await _subject.Execute(_context.Object);
+            // Assert: KeepAlive should be called for each user
+            keepAliveMock.Verify(x => x.KeepTokenAliveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Exactly(users.Count));
         }
     }
 }

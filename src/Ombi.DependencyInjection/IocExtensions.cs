@@ -107,6 +107,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMusicSender, MusicSender>();
             services.AddTransient<IMassEmailSender, MassEmailSender>();
             services.AddTransient<IPlexOAuthManager, PlexOAuthManager>();
+            services.AddTransient<IPlexTokenKeepAliveService, PlexTokenKeepAliveService>();
             services.AddTransient<IVoteEngine, VoteEngine>();
             services.AddTransient<IDemoMovieSearchEngine, DemoMovieSearchEngine>();
             services.AddTransient<IDemoTvSearchEngine, DemoTvSearchEngine>();

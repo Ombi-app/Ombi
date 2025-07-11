@@ -29,5 +29,6 @@ namespace Ombi.Api.Plex
         Task<PlexAddWrapper> AddUser(string emailAddress, string serverId, string authToken, int[] libs);
         Task<PlexWatchlistContainer> GetWatchlist(string plexToken, CancellationToken cancellationToken);
         Task<PlexWatchlistMetadataContainer> GetWatchlistMetadata(string ratingKey, string plexToken, CancellationToken cancellationToken);
+        Task<bool> Ping(string authToken, CancellationToken cancellationToken = default);
     }
 }

@@ -27,6 +27,7 @@ using Ombi.Core.Notifications;
 using Microsoft.AspNetCore.Identity;
 using Ombi.Store.Repository.Requests;
 using Ombi.Core;
+using Ombi.Core.Authentication;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
@@ -43,11 +44,12 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly IRepository<PlexWatchlistUserError> _userError;
         private readonly IMovieDbApi _movieDbApi;
         private readonly INotificationHelper _notificationHelper;
+        private readonly IPlexTokenKeepAliveService _tokenKeepAliveService;
 
         public PlexWatchlistImport(IPlexApi plexApi, ISettingsService<PlexSettings> settings, OmbiUserManager ombiUserManager,
             IMovieRequestEngine movieRequestEngine, ITvRequestEngine tvRequestEngine, INotificationHubService notificationHubService,
             ILogger<PlexWatchlistImport> logger, IExternalRepository<PlexWatchlistHistory> watchlistRepo, IRepository<PlexWatchlistUserError> userError,
-            IMovieDbApi movieDbApi, INotificationHelper notificationHelper)
+            IMovieDbApi movieDbApi, INotificationHelper notificationHelper, IPlexTokenKeepAliveService tokenKeepAliveService)
         {
             _plexApi = plexApi;
             _settings = settings;
@@ -60,6 +62,7 @@ namespace Ombi.Schedule.Jobs.Plex
             _userError = userError;
             _movieDbApi = movieDbApi;
             _notificationHelper = notificationHelper;
+            _tokenKeepAliveService = tokenKeepAliveService;
         }
 
         public async Task Execute(IJobExecutionContext context)
@@ -97,6 +100,36 @@ namespace Ombi.Schedule.Jobs.Plex
                     }
 
                     _logger.LogDebug($"Starting Watchlist Import for {user.UserName} with token {user.MediaServerToken}");
+                    
+                    // Keep the token alive before attempting watchlist import
+                    var keepAliveSuccess = await _tokenKeepAliveService.KeepTokenAliveAsync(user.MediaServerToken, context?.CancellationToken ?? CancellationToken.None);
+                    if (!keepAliveSuccess)
+                    {
+                        _logger.LogWarning($"Token for user '{user.UserName}' is invalid or expired (keep-alive failed). Recording error and skipping.");
+                        await _userError.Add(new PlexWatchlistUserError
+                        {
+                            UserId = user.Id,
+                            MediaServerToken = user.MediaServerToken,
+                        });
+
+                        // Send notification to user about token expiration
+                        if (settings.NotifyOnWatchlistTokenExpiration && !string.IsNullOrEmpty(user.Email))
+                        {
+                            var notificationModel = new NotificationOptions
+                            {
+                                NotificationType = NotificationType.PlexWatchlistTokenExpired,
+                                Recipient = user.Email,
+                                DateTime = DateTime.Now,
+                                Substitutes = new Dictionary<string, string>
+                                {
+                                    { "UserName", user.UserName }
+                                }
+                            };
+                            await _notificationHelper.Notify(notificationModel);
+                        }
+                        continue;
+                    }
+                    
                     var watchlist = await _plexApi.GetWatchlist(user.MediaServerToken, context?.CancellationToken ?? CancellationToken.None);
                     if (watchlist?.AuthError ?? false)
                     {
