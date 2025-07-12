@@ -1,3 +1,12 @@
+## [4.49.1](https://github.com/Ombi-app/Ombi/compare/v4.49.0...v4.49.1) (2025-07-12)
+
+
+### Bug Fixes
+
+* **auth:** Fixed an issue where refreshing the page as a power user would stop the application from loading [#5242](https://github.com/Ombi-app/Ombi/issues/5242) ([cee4014](https://github.com/Ombi-app/Ombi/commit/cee40146ee02f7fb79e2019d6fe2f9d5c5dbdfc8))
+
+
+
 # [4.49.0](https://github.com/Ombi-app/Ombi/compare/v4.48.5...v4.49.0) (2025-07-11)
 
 
@@ -2194,15 +2203,6 @@
 ### Bug Fixes
 
 * **user-importer:** Fixed not importing all correct users [#4989](https://github.com/Ombi-app/Ombi/issues/4989) ([34c32f8](https://github.com/Ombi-app/Ombi/commit/34c32f8338705ea3f790d95b91c9ada21a41b9f2))
-
-
-
-## [4.43.3](https://github.com/Ombi-app/Ombi/compare/v4.43.2...v4.43.3) (2023-07-28)
-
-
-### Bug Fixes
-
-* switch back to the old plex friends API [#4989](https://github.com/Ombi-app/Ombi/issues/4989) ([c8ad12e](https://github.com/Ombi-app/Ombi/commit/c8ad12eb5f53889609d1793ae907afd33ba6ef38))
 
 
 
