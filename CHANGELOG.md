@@ -1,3 +1,12 @@
+## [4.49.2](https://github.com/Ombi-app/Ombi/compare/v4.49.1...v4.49.2) (2025-07-12)
+
+
+### Performance Improvements
+
+* **discover:** :zap: Improve the loading performance on the discover page ([97d5167](https://github.com/Ombi-app/Ombi/commit/97d5167db6c9f915021f32b96b281d7db3741d7f))
+
+
+
 ## [4.49.1](https://github.com/Ombi-app/Ombi/compare/v4.49.0...v4.49.1) (2025-07-12)
 
 
@@ -2194,15 +2203,6 @@
 
 
 ## [4.43.5](https://github.com/Ombi-app/Ombi/compare/v4.43.4...v4.43.5) (2023-08-24)
-
-
-
-## [4.43.4](https://github.com/Ombi-app/Ombi/compare/v4.43.3...v4.43.4) (2023-07-28)
-
-
-### Bug Fixes
-
-* **user-importer:** Fixed not importing all correct users [#4989](https://github.com/Ombi-app/Ombi/issues/4989) ([34c32f8](https://github.com/Ombi-app/Ombi/commit/34c32f8338705ea3f790d95b91c9ada21a41b9f2))
 
 
 
