@@ -5,13 +5,17 @@
     <mat-button-toggle id="{{id}}Tv" [ngClass]="{'button-active': discoverOptions === DiscoverOption.Tv}" value="{{DiscoverOption.Tv}}" class="discover-filter-button">{{'Discovery.Tv' | translate}}</mat-button-toggle>
   </mat-button-toggle-group>
 </div>
-@defer (when discoverResults.length > 0) {
+@defer (when discoverResults.length > 0; prefetch on idle) {
 <p-carousel #carousel [numVisible]="10" [numScroll]="10" [page]="0" [value]="discoverResults" [responsiveOptions]="responsiveOptions" (onPage)="newPage()">
     <ng-template let-result pTemplate="item">
         <discover-card [discoverType]="discoverType" [isAdmin]="isAdmin" [result]="result" [is4kEnabled]="is4kEnabled"></discover-card>
     </ng-template>
 </p-carousel>
 }
-@placeholder(minimum 500) {
-    <p-skeleton width="100%" height="18rem"></p-skeleton>
+@placeholder(minimum 300) {
+    <div class="row loading-container">
+        <div class="col-2" *ngFor="let item of [1,2,3,4,5,6,7,8,9,10]">
+            <p-skeleton width="100%" height="270px"></p-skeleton>
+        </div>
+    </div>
 }

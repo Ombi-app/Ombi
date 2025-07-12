@@ -43,7 +43,7 @@ export class CarouselListComponent implements OnInit {
     get mediaTypeStorageKey() {
         return "DiscoverOptions" + this.discoverType.toString();
     };
-    private amountToLoad = 17;
+    private amountToLoad = 10;
     private currentlyLoaded = 0;
     private baseUrl: string = "";
 
@@ -148,6 +148,7 @@ export class CarouselListComponent implements OnInit {
     }
 
     public async ngOnInit() {
+        
         this.is4kEnabled = this.featureFacade.is4kEnabled();
         this.currentlyLoaded = 0;
         const localDiscoverOptions = +this.storageService.get(this.mediaTypeStorageKey);
@@ -155,11 +156,15 @@ export class CarouselListComponent implements OnInit {
             this.discoverOptions = DiscoverOption[DiscoverOption[localDiscoverOptions]];
         }
 
-        let currentIteration = 0;
-        while (this.discoverResults.length <= 14 && currentIteration <= 3) {
-            currentIteration++;
+        // Load initial data - just enough to fill the first carousel page
+        // This reduces initial API calls and improves loading performance
+        await this.loadData(false);
+        
+        // If we don't have enough results to fill the carousel, load one more batch
+        if (this.discoverResults.length < 10) {
             await this.loadData(false);
         }
+        
     }
 
     public async toggleChanged(event: MatButtonToggleChange) {
