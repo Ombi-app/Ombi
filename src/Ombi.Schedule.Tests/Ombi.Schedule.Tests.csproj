@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MockQueryable.Moq" Version="6.0.1" />
+    <PackageReference Include="MockQueryable.Moq" Version="8.0.0" />
     <PackageReference Include="Moq" Version="4.18.2" />
     <PackageReference Include="Moq.AutoMock" Version="3.4.0" />
     <PackageReference Include="Nunit" Version="3.13.3" />
