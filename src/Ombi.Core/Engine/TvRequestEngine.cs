@@ -696,6 +696,8 @@ namespace Ombi.Core.Engine
                     ErrorMessage = "Child Request does not exist"
                 };
             }
+
+            request.MarkedAsApproved = DateTime.Now;
             request.Approved = true;
             request.Denied = false;
 
