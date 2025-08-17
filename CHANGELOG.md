@@ -1,3 +1,12 @@
+## [4.49.3](https://github.com/Ombi-app/Ombi/compare/v4.49.2...v4.49.3) (2025-08-17)
+
+
+### Bug Fixes
+
+* **plex-api:** update Plex Watchlist URL ([11fd7a5](https://github.com/Ombi-app/Ombi/commit/11fd7a5fc853da75974a16bf4fdecd72a836f54b))
+
+
+
 ## [4.49.2](https://github.com/Ombi-app/Ombi/compare/v4.49.1...v4.49.2) (2025-07-12)
 
 
@@ -2199,10 +2208,6 @@
 
 
 ## [4.16.13](https://github.com/Ombi-app/Ombi/compare/v4.16.12...v4.16.13) (2022-04-19)
-
-
-
-## [4.43.5](https://github.com/Ombi-app/Ombi/compare/v4.43.4...v4.43.5) (2023-08-24)
 
 
 
