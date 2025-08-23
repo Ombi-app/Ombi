@@ -229,6 +229,17 @@
 							</mat-accordion>
 						</div>
 					</div>
+
+					<!-- FAB Button moved outside of deferred components so it's always visible -->
+					<button *ngIf="!tv.fullyAvailable && (!tv.partlyAvailable || tv.partlyAvailable)" mat-fab color="accent" id="addFabBtn" class="floating-fab" [matMenuTriggerFor]="aboveMenu">
+						<i class="fas fa-plus fa-lg"></i>
+						<mat-menu #aboveMenu="matMenu" yPosition="above">
+							<button id="requestAll" mat-menu-item (click)="requestAllSeasons()">{{ 'Search.TvShows.AllSeasons' | translate }}</button>
+							<button id="requestFirst" mat-menu-item (click)="requestFirstSeason()">{{ 'Search.TvShows.FirstSeason' | translate }}</button>
+							<button id="requestLatest" mat-menu-item (click)="requestLatestSeason()">{{ 'Search.TvShows.LatestSeason' | translate }}</button>
+							<button id="requestSelected" mat-menu-item (click)="submitRequests()">{{ 'Common.Request' | translate }}</button>
+						</mat-menu>
+					</button>
 				</div>
 
 				<div class="bottom-page-gap"></div>
