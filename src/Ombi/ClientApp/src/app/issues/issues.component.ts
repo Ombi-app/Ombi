@@ -1,69 +1,84 @@
-import { Component, OnInit } from "@angular/core";
-
-import { IssuesService } from "../services";
-
-import { IIssueCount, IIssues, IIssuesSummary, IPagenator, IssueStatus } from "../interfaces";
-
+import { Component, computed, inject, signal, ChangeDetectionStrategy } from "@angular/core";
 import { PageEvent } from '@angular/material/paginator';
+import { IssuesService } from "../services";
 import { IssuesV2Service } from "../services/issuesv2.service";
+import { IIssueCount, IIssues, IIssuesSummary, IssueStatus } from "../interfaces";
+import { CommonModule } from "@angular/common";
+import { MatPaginatorModule } from "@angular/material/paginator";
 
 @Component({
-        standalone: false,
+    standalone: false,
     templateUrl: "issues.component.html",
     styleUrls: ['issues.component.scss']
 })
-export class IssuesComponent implements OnInit {
+export class IssuesComponent {
+    // Services using inject() function
+    private issuev2Service = inject(IssuesV2Service);
+    private issueService = inject(IssuesService);
 
-    public pendingIssues: IIssuesSummary[];
-    public inProgressIssues: IIssuesSummary[];
-    public resolvedIssues: IIssuesSummary[];
-
-    public count: IIssueCount;
-
+    // State using signals
+    private pendingSkip = signal(0);
+    private inProgressSkip = signal(0);
+    private resolvedSkip = signal(0);
+    
     private takeAmount = 50;
-    private pendingSkip = 0;
-    private inProgressSkip = 0;
-    private resolvedSkip = 0;
 
-    constructor(private issuev2Service: IssuesV2Service, private issueService: IssuesService) { }
+    // Public state signals
+    public pendingIssues = signal<IIssuesSummary[]>([]);
+    public inProgressIssues = signal<IIssuesSummary[]>([]);
+    public resolvedIssues = signal<IIssuesSummary[]>([]);
+    public count = signal<IIssueCount | null>(null);
 
-    public ngOnInit() {
+    // Computed properties for derived state
+    public hasPendingIssues = computed(() => this.pendingIssues().length > 0);
+    public hasInProgressIssues = computed(() => this.inProgressIssues().length > 0);
+    public hasResolvedIssues = computed(() => this.resolvedIssues().length > 0);
+    
+    public totalIssues = computed(() => {
+        const count = this.count();
+        if (!count) return 0;
+        return count.pending + count.inProgress + count.resolved;
+    });
+
+    constructor() {
+        // Initialize data
+        this.loadInitialData();
+    }
+
+    private loadInitialData(): void {
         this.getPending();
         this.getInProg();
         this.getResolved();
-        this.issueService.getIssuesCount().subscribe(x => this.count = x);
+        this.issueService.getIssuesCount().subscribe(count => this.count.set(count));
     }
 
-    public changePagePending(event: PageEvent) {
-        this.pendingSkip = event.pageSize * event.pageIndex++;
+    public changePagePending(event: PageEvent): void {
+        this.pendingSkip.set(event.pageSize * event.pageIndex);
         this.getPending();
     }
 
-    public changePageInProg(event: PageEvent) {
-        this.inProgressSkip = event.pageSize * event.pageIndex++;
+    public changePageInProg(event: PageEvent): void {
+        this.inProgressSkip.set(event.pageSize * event.pageIndex);
         this.getInProg();
     }
 
-    public changePageResolved(event: PageEvent) {
-        this.resolvedSkip = event.pageSize * event.pageIndex++;
+    public changePageResolved(event: PageEvent): void {
+        this.resolvedSkip.set(event.pageSize * event.pageIndex);
         this.getResolved();
     }
 
-    private getPending() {
-        this.issuev2Service.getIssues(this.pendingSkip, this.takeAmount, IssueStatus.Pending).subscribe(x => {
-            this.pendingIssues = x;
-        });
+    private getPending(): void {
+        this.issuev2Service.getIssues(this.pendingSkip(), this.takeAmount, IssueStatus.Pending)
+            .subscribe(issues => this.pendingIssues.set(issues));
     }
 
-    private getInProg() {
-        this.issuev2Service.getIssues(this.inProgressSkip, this.takeAmount, IssueStatus.InProgress).subscribe(x => {
-            this.inProgressIssues = x;
-        });
+    private getInProg(): void {
+        this.issuev2Service.getIssues(this.inProgressSkip(), this.takeAmount, IssueStatus.InProgress)
+            .subscribe(issues => this.inProgressIssues.set(issues));
     }
 
-    private getResolved() {
-        this.issuev2Service.getIssues(this.resolvedSkip, this.takeAmount, IssueStatus.Resolved).subscribe(x => {
-            this.resolvedIssues = x;
-        });
+    private getResolved(): void {
+        this.issuev2Service.getIssues(this.resolvedSkip(), this.takeAmount, IssueStatus.Resolved)
+            .subscribe(issues => this.resolvedIssues.set(issues));
     }
 }
