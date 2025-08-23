@@ -1,3 +1,12 @@
+## [4.49.5](https://github.com/Ombi-app/Ombi/compare/v4.49.4...v4.49.5) (2025-08-23)
+
+
+### Bug Fixes
+
+* set MarkedAsApproved on TV requests ([57d3880](https://github.com/Ombi-app/Ombi/commit/57d3880115f8e65e7d7d522aaa725b01878b45fe))
+
+
+
 ## [4.49.4](https://github.com/Ombi-app/Ombi/compare/v4.49.3...v4.49.4) (2025-08-23)
 
 
@@ -1310,16 +1319,6 @@
 
 
 ## [4.43.8](https://github.com/Ombi-app/Ombi/compare/v4.43.7...v4.43.8) (2023-11-09)
-
-
-
-## [4.43.7](https://github.com/Ombi-app/Ombi/compare/v4.43.6...v4.43.7) (2023-11-09)
-
-
-### Bug Fixes
-
-* upgrade @microsoft/signalr from 6.0.22 to 6.0.23 ([#5032](https://github.com/Ombi-app/Ombi/issues/5032)) [skip ci] ([11edac9](https://github.com/Ombi-app/Ombi/commit/11edac961b0b828658be83a9c4e67079345d3b0b))
-* upgrade @types/jquery from 3.5.22 to 3.5.23 ([#5034](https://github.com/Ombi-app/Ombi/issues/5034)) [skip ci] ([9e28879](https://github.com/Ombi-app/Ombi/commit/9e28879fc1a479e1bd77ca003e3e748fec27f081))
 
 
 
