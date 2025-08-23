@@ -13,6 +13,7 @@ import { TvAdvancedOptionsComponent } from "./panels/tv-advanced-options/tv-adva
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { forkJoin } from "rxjs";
 import { SonarrFacade } from "app/state/sonarr";
+import { ITvRequestViewModelV2 } from "../../../interfaces/ISearchTvResult";
 
 @Component({
         standalone: false,
@@ -133,6 +134,57 @@ export class TvDetailsComponent implements OnInit {
 
     public allEpisodesRequestedOrAvailable(): boolean {
       return this.tv.seasonRequests.every(e => e.episodes.every(x => x.available || x.approved || x.requested));
+    }
+
+    // FAB Button methods moved from tv-request-grid component
+    public requestAllSeasons() {
+        this.tv.requestAll = true;
+        this.tv.firstSeason = false;
+        this.tv.latestSeason = false;
+        this.submitRequests();
+    }
+
+    public requestFirstSeason() {
+        this.tv.requestAll = false;
+        this.tv.firstSeason = true;
+        this.tv.latestSeason = false;
+        this.submitRequests();
+    }
+
+    public requestLatestSeason() {
+        this.tv.requestAll = false;
+        this.tv.firstSeason = false;
+        this.tv.latestSeason = true;
+        this.submitRequests();
+    }
+
+    public async submitRequests() {
+        // Make sure something has been selected
+        if (!this.tv.requestAll && !this.tv.firstSeason && !this.tv.latestSeason) {
+            this.messageService.send('You need to select some episodes!');
+            return;
+        }
+
+        this.tv.requested = true;
+
+        const viewModel = <ITvRequestViewModelV2>{
+            firstSeason: this.tv.firstSeason, 
+            latestSeason: this.tv.latestSeason, 
+            requestAll: this.tv.requestAll, 
+            theMovieDbId: this.tv.id,
+            requestOnBehalf: null, 
+            languageCode: 'en' // Default language, can be enhanced later
+        };
+        viewModel.seasons = [];
+
+        try {
+            await this.requestService2.requestTv(viewModel).toPromise();
+            this.messageService.send(`Request for ${this.tv.title} has been added successfully`);
+            // Refresh the data
+            await this.load();
+        } catch (error) {
+            this.messageService.send('Failed to submit request');
+        }
     }
 
     private checkPoster() {

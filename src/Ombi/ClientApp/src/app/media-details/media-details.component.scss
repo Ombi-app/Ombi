@@ -99,6 +99,14 @@
     min-height: 600px;
 }
 
+// FAB Button styling moved from tv-request-grid component
+.floating-fab {
+    position: fixed;
+    right: 3%;
+    bottom: 6%;
+    z-index: 10;
+}
+
 #info-wrapper .sidebar.affixable.affix-top {
     position: relative !important;
 }
