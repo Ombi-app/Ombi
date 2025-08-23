@@ -28,7 +28,7 @@ export abstract class BasePage {
    * Scroll to element with smooth behavior
    */
   scrollToElement(selector: string): Cypress.Chainable<any> {
-    return cy.get(selector).scrollIntoView({ behavior: 'smooth' });
+    return cy.get(selector).scrollIntoView();
   }
 
   /**
@@ -74,6 +74,7 @@ export abstract class BasePage {
    * Log page action for debugging
    */
   logAction(action: string, details?: any): void {
-    cy.log(`[${this.constructor.name}] ${action}`, details);
+    // Use console.log instead of cy.log to avoid promise/cy command mixing
+    console.log(`[${this.constructor.name}] ${action}`, details);
   }
 }

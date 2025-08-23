@@ -43,11 +43,11 @@ Cypress.Commands.add('loginWithCreds', (username: string, password: string) => {
   }).then((resp) => {
     if (resp.status === 200) {
       window.localStorage.setItem('id_token', resp.body.access_token);
-      cy.log(`Successfully logged in as ${username}`);
-    } else {
-      cy.log(`Login failed for ${username}: ${resp.status}`);
     }
   });
+  
+  // Log outside of the promise chain
+  cy.log(`Login attempt for user: ${username}`);
 });
 
 // Enhanced default login
@@ -75,10 +75,7 @@ Cypress.Commands.add('removeLogin', () => {
 // Enhanced notification verification with better error handling
 Cypress.Commands.add('verifyNotification', (text: string) => {
   cy.contains(text, { timeout: 10000 })
-    .should('be.visible')
-    .then(() => {
-      cy.log(`Notification "${text}" verified successfully`);
-    });
+    .should('be.visible');
 });
 
 // Enhanced user creation with better error handling
@@ -101,12 +98,14 @@ Cypress.Commands.add('createUser', (username: string, password: string, claims: 
     },
     failOnStatusCode: false
   }).then((resp) => {
-    if (resp.status === 200) {
-      cy.log(`User ${username} created successfully`);
-    } else {
-      cy.log(`Failed to create user ${username}: ${resp.status}`);
+    if (resp.status !== 200) {
+      // Use console.log instead of cy.log inside promise
+      console.log(`Failed to create user ${username}: ${resp.status}`);
     }
   });
+  
+  // Log outside of the promise chain
+  cy.log(`Creating user: ${username}`);
 });
 
 // Enhanced unique ID generation
@@ -146,7 +145,7 @@ Cypress.Commands.add('waitForApiResponse', (alias: string, timeout: number = 100
 Cypress.Commands.add('clearTestData', () => {
   cy.clearLocalStorage();
   cy.clearCookies();
-  cy.clearSessionStorage();
+  cy.clearAllSessionStorage();
   cy.log('All test data cleared');
 });
 
@@ -154,21 +153,12 @@ Cypress.Commands.add('clearTestData', () => {
 Cypress.Commands.add('seedTestData', (fixture: string) => {
   cy.fixture(fixture).then((data) => {
     // Implementation depends on your seeding strategy
-    cy.log(`Seeding test data from ${fixture}`);
     // Example: cy.request('POST', '/api/v1/test/seed', data);
   });
+  
+  // Log outside of the promise chain
+  cy.log(`Seeding test data from ${fixture}`);
 });
 
-// Override visit command to add better logging
-Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
-  cy.log(`Visiting: ${url}`);
-  return originalFn(url, options);
-});
-
-// Override click command to add better logging
-Cypress.Commands.overwrite('click', (originalFn, subject, options) => {
-  cy.log(`Clicking element: ${subject.selector || 'unknown'}`);
-  return originalFn(subject, options);
-});
-
+  
   

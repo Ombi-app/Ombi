@@ -29,7 +29,7 @@ export default defineConfig({
     // Add test environment flags
     isCI: process.env.CI === 'true',
     // Add API base URL
-    apiBaseUrl: 'http://localhost:5000/api/v1'
+    apiBaseUrl: 'http://localhost:3577/api/v1'
   },
   
   // Project configuration
@@ -66,7 +66,7 @@ export default defineConfig({
     },
     
     // Base configuration
-    baseUrl: 'http://localhost:5000',
+    baseUrl: 'http://localhost:3577',
     specPattern: [
       'cypress/tests/**/*.spec.ts*', 
       'cypress/features/**/*.feature'
