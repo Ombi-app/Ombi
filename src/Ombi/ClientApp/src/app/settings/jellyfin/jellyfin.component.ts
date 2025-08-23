@@ -6,6 +6,7 @@ import {UntypedFormControl} from '@angular/forms';
 import { MatTabChangeEvent } from "@angular/material/tabs";
 
 @Component({
+        standalone: false,
     templateUrl: "./jellyfin.component.html",
     styleUrls: ["./jellyfin.component.scss"]
 })

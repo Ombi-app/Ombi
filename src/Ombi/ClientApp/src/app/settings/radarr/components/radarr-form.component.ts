@@ -7,6 +7,7 @@ import { TesterService, NotificationService, RadarrService } from "../../../serv
 
 
 @Component({
+        standalone: false,
     selector: "ombi-settings-radarr-form",
     templateUrl: "./radarr-form.component.html",
     styleUrls: ["./radarr-form.component.scss"],

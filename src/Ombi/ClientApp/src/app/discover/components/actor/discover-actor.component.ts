@@ -9,6 +9,7 @@ import { forkJoin } from "rxjs";
 import { FeaturesFacade } from "../../../state/features/features.facade";
 
 @Component({
+        standalone: false,
     templateUrl: "./discover-actor.component.html",
     styleUrls: ["./discover-actor.component.scss"],
 })

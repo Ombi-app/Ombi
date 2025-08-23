@@ -15,6 +15,7 @@ import { SonarrFacade } from "app/state/sonarr";
 import { RadarrFacade } from "app/state/radarr";
 
 @Component({
+        standalone: false,
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.scss"],
 })

@@ -7,6 +7,7 @@ import { RequestType, IRequestEngineResult } from "../../../../interfaces";
 import { firstValueFrom } from "rxjs";
 
 @Component({
+        standalone: false,
     selector: "deny-dialog",
     templateUrl: "./deny-dialog.component.html",
 })

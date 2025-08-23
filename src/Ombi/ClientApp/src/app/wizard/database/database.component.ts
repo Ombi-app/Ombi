@@ -6,6 +6,7 @@ import { NotificationService } from "app/services";
 import { MatTabChangeEvent } from "@angular/material/tabs";
 
 @Component({
+        standalone: false,
     templateUrl: "./database.component.html",
     styleUrls: ["../welcome/welcome.component.scss"],
     selector: "wizard-database-selector",

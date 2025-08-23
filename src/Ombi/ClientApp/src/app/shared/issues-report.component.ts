@@ -3,6 +3,7 @@ import { IIssueCategory, IIssues, IssueStatus, RequestType } from "../interfaces
 import { IssuesService, NotificationService } from "../services";
 
 @Component({
+        standalone: false,
     selector: "issue-report",
     templateUrl: "issues-report.component.html",
 

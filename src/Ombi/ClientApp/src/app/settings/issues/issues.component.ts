@@ -5,6 +5,7 @@ import { IIssueCategory } from "../../interfaces";
 import { IssuesService, NotificationService, SettingsService } from "../../services";
 
 @Component({
+        standalone: false,
     templateUrl: "./issues.component.html",
     styleUrls: ["./issues.component.scss"]
 })

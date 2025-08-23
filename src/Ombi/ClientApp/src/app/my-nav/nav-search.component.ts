@@ -11,6 +11,7 @@ import { Router } from "@angular/router";
 import { UntypedFormGroup, UntypedFormBuilder } from "@angular/forms";
 
 @Component({
+        standalone: false,
   selector: "app-nav-search",
   templateUrl: "./nav-search.component.html",
   styleUrls: ["./nav-search.component.scss"],

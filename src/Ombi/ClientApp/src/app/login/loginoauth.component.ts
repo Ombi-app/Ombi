@@ -6,6 +6,7 @@ import { NotificationService } from "../services";
 import { StorageService } from "../shared/storage/storage-service";
 
 @Component({
+        standalone: false,
     templateUrl: "./loginoauth.component.html",
 })
 export class LoginOAuthComponent implements OnInit {

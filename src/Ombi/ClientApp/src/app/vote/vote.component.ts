@@ -6,6 +6,7 @@ import { NotificationService, VoteService } from "../services";
 import { IVoteEngineResult, IVoteViewModel, RequestTypes, VoteType } from "../interfaces";
 
 @Component({
+        standalone: false,
     templateUrl: "vote.component.html",
     styleUrls: ["vote.component.scss"],
 })

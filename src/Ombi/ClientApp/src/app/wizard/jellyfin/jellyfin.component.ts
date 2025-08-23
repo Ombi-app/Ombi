@@ -5,6 +5,7 @@ import { JellyfinService } from "../../services";
 import { NotificationService } from "../../services";
 
 @Component({
+        standalone: false,
     selector: "wizard-jellyfin",
     templateUrl: "./jellyfin.component.html",
     styleUrls: ["../welcome/welcome.component.scss"]

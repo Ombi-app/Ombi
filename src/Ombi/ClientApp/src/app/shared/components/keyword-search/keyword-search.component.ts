@@ -8,6 +8,7 @@ import { Observable } from "rxjs";
 import { TheMovieDbService } from "../../../services";
 
 @Component({
+        standalone: false,
   selector: "keyword-search",
   templateUrl: "keyword-search.component.html"
 })

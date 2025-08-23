@@ -2,6 +2,7 @@ import { APP_BASE_HREF } from "@angular/common";
 import { Component, Input, Output, EventEmitter, Inject } from "@angular/core";
 import { RequestType } from "../../../../interfaces";
 @Component({
+        standalone: false,
     selector: "social-icons",
     templateUrl: "./social-icons.component.html",
     styleUrls: ["./social-icons.component.scss"]

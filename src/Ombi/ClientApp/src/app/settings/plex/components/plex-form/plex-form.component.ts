@@ -3,6 +3,7 @@ import { IPlexServer, IPlexServerResponse, IPlexServerViewModel } from "app/inte
 import { PlexCreds, PlexSyncType } from "../models";
 
 @Component({
+        standalone: false,
     templateUrl: "./plex-form.component.html",
     styleUrls: ["./plex-form.component.scss"],
     selector: "settings-plex-form"

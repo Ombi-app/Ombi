@@ -11,6 +11,7 @@ import { RequestType } from "../../../interfaces";
 import { FeaturesFacade } from "../../../state/features/features.facade";
 
 @Component({
+        standalone: false,
     templateUrl: "./discover-collections.component.html",
     styleUrls: ["./discover-collections.component.scss"],
 })

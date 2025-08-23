@@ -13,6 +13,7 @@ export interface ChatData {
   }
 
 @Component({
+        standalone: false,
     selector: "issue-chat",
     templateUrl: "issue-chat.component.html",
     styleUrls: ["issue-chat.component.scss"],

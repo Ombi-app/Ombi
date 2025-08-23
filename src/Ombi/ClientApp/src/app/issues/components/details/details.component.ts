@@ -15,6 +15,7 @@ export interface IssuesDetailsGroupData {
 }
 
 @Component({
+        standalone: false,
     selector: "issues-details",
     templateUrl: "details.component.html",
     styleUrls: ["details.component.scss"],

@@ -3,6 +3,7 @@ import { IReleaseGroups } from "../../../../../interfaces/IMusicSearchResultV2";
 import { SearchV2Service } from "../../../../../services/searchV2.service";
 
 @Component({
+        standalone: false,
     templateUrl: "./artist-release-panel.component.html",
     styleUrls: ["../../../../media-details.component.scss", "./artist-release-panel.component.scss"],
     selector: "artist-release-panel",

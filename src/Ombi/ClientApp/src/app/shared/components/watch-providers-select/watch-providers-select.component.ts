@@ -8,6 +8,7 @@ import { Observable } from "rxjs";
 import { TheMovieDbService } from "../../../services";
 
 @Component({
+        standalone: false,
   selector: "watch-providers-select",
   templateUrl: "watch-providers-select.component.html"
 })

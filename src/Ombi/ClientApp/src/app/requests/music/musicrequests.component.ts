@@ -9,6 +9,7 @@
 // import { NotificationService, RequestService } from "../../services";
 
 // @Component({
+        standalone: false,
 //     selector: "music-requests",
 //     templateUrl: "./musicrequests.component.html",
 // })

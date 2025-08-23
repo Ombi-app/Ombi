@@ -3,6 +3,7 @@ import { Component, OnInit } from "@angular/core";
 import { SystemService } from "../../services";
 
 @Component({
+        standalone: false,
     templateUrl: "./logs.component.html",
     styleUrls:["./logs.component.scss"]
 })

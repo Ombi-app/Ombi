@@ -20,6 +20,7 @@ export enum DiscoverType {
 }
 
 @Component({
+        standalone: false,
     selector: "ombi-recently-list",
     templateUrl: "./recently-requested-list.component.html",
     styleUrls: ["./recently-requested-list.component.scss"],

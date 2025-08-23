@@ -1,6 +1,7 @@
 import { Component, Input } from "@angular/core";
 
 @Component({
+        standalone: false,
     selector: "crew-carousel",
     templateUrl: "./crew-carousel.component.html",
     styleUrls: ["./crew-carousel.component.scss"]

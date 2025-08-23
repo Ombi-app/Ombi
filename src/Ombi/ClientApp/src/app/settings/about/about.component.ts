@@ -9,6 +9,7 @@ import { UpdateService } from "../../services/update.service";
 import { APP_BASE_HREF } from "@angular/common";
 
 @Component({
+        standalone: false,
     templateUrl: "./about.component.html",
     styleUrls: ["./about.component.scss"]
 })

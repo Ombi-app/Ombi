@@ -4,6 +4,7 @@ import { IAdvancedData, IRadarrProfile, IRadarrRootFolder, RequestCombination } 
 import { RadarrService } from "../../../../../services";
 
 @Component({
+        standalone: false,
     templateUrl: "./movie-advanced-options.component.html",
     selector: "movie-advanced-options",
 })

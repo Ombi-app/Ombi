@@ -9,6 +9,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { IIssues, IIssuesChat, IIssueSettings, INewIssueComments, IssueStatus } from "../interfaces";
 
 @Component({
+        standalone: false,
     templateUrl: "issueDetails.component.html",
     styleUrls: ["./issueDetails.component.scss"],
 })

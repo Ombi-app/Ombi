@@ -15,6 +15,7 @@ import { forkJoin } from "rxjs";
 import { SonarrFacade } from "app/state/sonarr";
 
 @Component({
+        standalone: false,
     templateUrl: "./tv-details.component.html",
     styleUrls: ["../../media-details.component.scss"],
     encapsulation: ViewEncapsulation.None

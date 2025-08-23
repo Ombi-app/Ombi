@@ -11,6 +11,7 @@ import { RequestServiceV2 } from "../../../../../services/requestV2.service";
 import { AdminRequestDialogComponent } from "../../../../../shared/admin-request-dialog/admin-request-dialog.component";
 
 @Component({
+        standalone: false,
     templateUrl: "./tv-request-grid.component.html",
     styleUrls: ["./tv-request-grid.component.scss"],
     selector: "tv-request-grid"

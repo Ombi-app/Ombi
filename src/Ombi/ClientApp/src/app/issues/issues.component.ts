@@ -8,6 +8,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { IssuesV2Service } from "../services/issuesv2.service";
 
 @Component({
+        standalone: false,
     templateUrl: "issues.component.html",
     styleUrls: ['issues.component.scss']
 })

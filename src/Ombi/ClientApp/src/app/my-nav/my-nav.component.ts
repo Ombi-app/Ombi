@@ -25,6 +25,7 @@ export enum SearchFilterType {
 }
 
 @Component({
+        standalone: false,
   selector: 'app-my-nav',
   templateUrl: './my-nav.component.html',
   styleUrls: ['./my-nav.component.scss'],

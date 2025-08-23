@@ -5,6 +5,7 @@ import { IEmbySettings } from "../../interfaces";
 import { NotificationService } from "../../services";
 
 @Component({
+        standalone: false,
     selector: "wizard-emby",
     templateUrl: "./emby.component.html",
     styleUrls: ["../welcome/welcome.component.scss"],

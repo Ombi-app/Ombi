@@ -3,6 +3,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms
 import { JobService, NotificationService, SettingsService } from "../../services";
 
 @Component({
+        standalone: false,
     templateUrl: "./jobs.component.html",
     styleUrls: ["./jobs.component.scss"]
 })

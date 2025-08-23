@@ -6,6 +6,7 @@ import { CouchPotatoService, NotificationService, SettingsService, TesterService
 import { ICouchPotatoProfiles } from "../../interfaces";
 
 @Component({
+        standalone: false,
     templateUrl: "./couchpotato.component.html",
     styleUrls: ["./couchpotato.component.scss"]
 })

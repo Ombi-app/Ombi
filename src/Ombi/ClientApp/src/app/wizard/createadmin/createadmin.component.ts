@@ -2,6 +2,7 @@
 import { ICreateWizardUser } from "../../interfaces";
 
 @Component({
+        standalone: false,
     selector: "wizard-local-admin",
     templateUrl: "./createadmin.component.html",
     styleUrls: ["../welcome/welcome.component.scss"]

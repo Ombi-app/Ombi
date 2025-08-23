@@ -13,6 +13,7 @@ import { isEqual } from "lodash";
 import { FeaturesFacade } from "../../../state/features/features.facade";
 
 @Component({
+        standalone: false,
     templateUrl: "./search-results.component.html",
     styleUrls: ["../discover/discover.component.scss"],
 })

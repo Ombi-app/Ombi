@@ -2,6 +2,7 @@ import { Component, Input } from "@angular/core";
 import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
 
 @Component({
+        standalone: false,
     selector: "top-banner",
     templateUrl: "./top-banner.component.html",
     styleUrls: ["top-banner.component.scss"]

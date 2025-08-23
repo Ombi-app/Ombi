@@ -9,6 +9,7 @@ import { Location } from "@angular/common";
 import { FeaturesFacade } from "../state/features/features.facade";
 
 @Component({
+        standalone: false,
     templateUrl: "./usermanagement-user.component.html",
     styleUrls: ["./usermanagement-user.component.scss"],
 })

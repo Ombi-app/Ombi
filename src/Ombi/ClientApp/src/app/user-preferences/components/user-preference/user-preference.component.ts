@@ -10,6 +10,7 @@ import { APP_BASE_HREF } from "@angular/common";
 import { CustomizationFacade } from "../../../state/customization";
 
 @Component({
+        standalone: false,
     templateUrl: "./user-preference.component.html",
     styleUrls: ["./user-preference.component.scss"],
 })

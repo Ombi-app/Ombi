@@ -5,6 +5,7 @@ import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
 
 @Component({
+        standalone: false,
     templateUrl: "./authentication.component.html",
     styleUrls: ["./authentication.component.scss"],
 })

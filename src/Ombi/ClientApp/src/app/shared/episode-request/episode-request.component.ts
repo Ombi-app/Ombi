@@ -14,6 +14,7 @@ export interface EpisodeRequestData {
     requestOnBehalf: string | undefined;
 }
 @Component({
+        standalone: false,
     selector: "episode-request",
     templateUrl: "episode-request.component.html",
 })

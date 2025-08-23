@@ -6,6 +6,7 @@ import { IssuesService, NotificationService } from "../../../services";
 import { IssueChatComponent } from "../issue-chat/issue-chat.component";
 
 @Component({
+        standalone: false,
     selector: "issues-details-group",
     templateUrl: "details-group.component.html",
     styleUrls: ["details-group.component.scss"],

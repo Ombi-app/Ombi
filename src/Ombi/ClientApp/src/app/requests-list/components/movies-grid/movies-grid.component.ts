@@ -16,6 +16,7 @@ import { StorageService } from "../../../shared/storage/storage-service";
 import { TranslateService } from "@ngx-translate/core";
 
 @Component({
+        standalone: false,
     templateUrl: "./movies-grid.component.html",
     selector: "movies-grid",
     styleUrls: ["./movies-grid.component.scss"]

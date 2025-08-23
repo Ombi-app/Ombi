@@ -16,6 +16,7 @@ interface IKeywordTag {
 }
 
 @Component({
+        standalone: false,
     templateUrl: "./themoviedb.component.html",
     styleUrls: ["./themoviedb.component.scss"]
 })

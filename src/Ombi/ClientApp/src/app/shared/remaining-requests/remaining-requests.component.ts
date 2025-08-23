@@ -6,6 +6,7 @@ import { RequestType } from "../../interfaces";
 import { TranslateService } from "@ngx-translate/core";
 
 @Component({
+        standalone: false,
     selector: "app-remaining-requests",
     templateUrl: "remaining-requests.component.html",
     styles: [`.mat-icon {

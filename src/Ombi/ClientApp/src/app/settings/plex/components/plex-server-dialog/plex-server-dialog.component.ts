@@ -11,6 +11,7 @@ import { IPlexLibrariesSettings } from "../../../../interfaces";
 import { PlexServerDialogData } from "../models";
 
 @Component({
+        standalone: false,
   selector: "plex-server-dialog-component",
   templateUrl: "plex-server-dialog.component.html",
   styleUrls: ["plex-server-dialog.component.scss"],

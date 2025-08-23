@@ -7,6 +7,7 @@ import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
 
 @Component({
+        standalone: false,
     templateUrl: "./sickrage.component.html",
     styleUrls: ["./sickrage.component.scss"]
 })
