@@ -12,6 +12,7 @@ import { IMovieRequestModel, RequestType } from "../../../interfaces";
 import { TranslateService } from "@ngx-translate/core";
 
 @Component({
+        standalone: false,
     selector: "discover-card",
     templateUrl: "./discover-card.component.html",
     styleUrls: ["./discover-card.component.scss"],

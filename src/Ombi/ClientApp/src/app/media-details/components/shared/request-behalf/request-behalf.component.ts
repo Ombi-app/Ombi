@@ -7,6 +7,7 @@ import { Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 
 @Component({
+        standalone: false,
     selector: "request-behalf",
     templateUrl: "./request-behalf.component.html",
 })

@@ -9,6 +9,7 @@ import { DenyDialogComponent } from '../../../media-details/components/shared/de
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
+        standalone: false,
   selector: 'request-options',
   templateUrl: './request-options.component.html',
 })

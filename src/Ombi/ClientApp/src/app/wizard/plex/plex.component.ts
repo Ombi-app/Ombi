@@ -7,6 +7,7 @@ import { IdentityService, NotificationService } from "../../services";
 import { StorageService } from "../../shared/storage/storage-service";
 
 @Component({
+        standalone: false,
     selector: "wizard-plex",
     templateUrl: "./plex.component.html",
     styleUrls: ["../welcome/welcome.component.scss"],

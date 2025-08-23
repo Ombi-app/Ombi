@@ -6,6 +6,7 @@ import { MatSlideToggleChange } from "@angular/material/slide-toggle";
 import { firstValueFrom } from "rxjs";
 
 @Component({
+        standalone: false,
     templateUrl: "./features.component.html",
     styleUrls: ["./features.component.scss"]
 })

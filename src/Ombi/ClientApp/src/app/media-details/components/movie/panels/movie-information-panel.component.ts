@@ -6,6 +6,7 @@ import { IMovieRatings } from "../../../../interfaces/IRatings";
 import { APP_BASE_HREF } from "@angular/common";
 import { IStreamingData } from "../../../../interfaces/IStreams";
 @Component({
+        standalone: false,
     templateUrl: "./movie-information-panel.component.html",
     styleUrls: ["../../../media-details.component.scss"],
     selector: "movie-information-panel",

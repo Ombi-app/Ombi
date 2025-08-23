@@ -4,6 +4,7 @@ import { IUpdateModel } from "../../interfaces";
 
 
 @Component({
+        standalone: false,
   templateUrl: "update-dialog.component.html",
   styleUrls: [ "update-dialog.component.scss" ]
 })

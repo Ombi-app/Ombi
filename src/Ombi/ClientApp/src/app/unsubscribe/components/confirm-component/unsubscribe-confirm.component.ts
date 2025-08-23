@@ -5,6 +5,7 @@ import { ActivatedRoute } from "@angular/router";
 import { AuthService } from "../../../auth/auth.service";
 
 @Component({
+        standalone: false,
     templateUrl: "./unsubscribe-confirm.component.html",
 })
 export class UnsubscribeConfirmComponent implements OnInit {

@@ -4,6 +4,7 @@ import { AuthService } from "../../../auth/auth.service";
 import { DiscoverType } from "../carousel-list/carousel-list.component";
 
 @Component({
+        standalone: false,
     templateUrl: "./discover.component.html",
     styleUrls: ["./discover.component.scss"],
 })

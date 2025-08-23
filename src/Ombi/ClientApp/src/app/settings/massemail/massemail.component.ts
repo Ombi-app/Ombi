@@ -4,6 +4,7 @@ import { IMassEmailModel, IMassEmailUserModel } from "../../interfaces";
 import { IdentityService, NotificationMessageService, NotificationService, SettingsService } from "../../services";
 
 @Component({
+        standalone: false,
     templateUrl: "./massemail.component.html",
     styleUrls: ["./massemail.component.scss"]
 })

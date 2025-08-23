@@ -6,6 +6,7 @@ import { SearchV2Service } from "../../services";
 import { AdvancedSearchDialogDataService } from "./advanced-search-dialog-data.service";
 
 @Component({
+        standalone: false,
   selector: "advanced-search-dialog",
   templateUrl: "advanced-search-dialog.component.html",
   styleUrls: [ "advanced-search-dialog.component.scss" ]

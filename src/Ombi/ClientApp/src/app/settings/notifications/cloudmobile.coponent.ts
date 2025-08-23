@@ -10,6 +10,7 @@ import { SelectionModel } from "@angular/cdk/collections";
 import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
+        standalone: false,
     templateUrl: "./cloudmobile.component.html",
     styleUrls: ["./notificationtemplate.component.scss"]
 })

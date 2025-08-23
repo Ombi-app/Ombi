@@ -4,6 +4,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms
 import { NotificationService, SettingsService } from "../../services";
 
 @Component({
+        standalone: false,
     templateUrl: "./dognzb.component.html",
     styleUrls: ["./dognzb.component.scss"]
 })

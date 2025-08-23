@@ -9,6 +9,7 @@ import { SettingsService } from "../services";
 import { CustomizationFacade } from "../state/customization";
 
 @Component({
+        standalone: false,
     templateUrl: "./landingpage.component.html",
     styleUrls: ["./landingpage.component.scss"],
 })

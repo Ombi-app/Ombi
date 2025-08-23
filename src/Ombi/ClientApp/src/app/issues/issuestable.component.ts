@@ -4,6 +4,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { IIssuesSummary, IPagenator, IssueStatus } from "../interfaces";
 
 @Component({
+        standalone: false,
     selector: "issues-table",
     templateUrl: "issuestable.component.html",
     styleUrls: ['issuestable.component.scss']

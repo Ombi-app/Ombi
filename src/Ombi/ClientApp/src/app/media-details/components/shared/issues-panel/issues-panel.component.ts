@@ -4,6 +4,7 @@ import { RequestType, IIssues, IssueStatus, IIssueSettings } from "../../../../i
 import { TranslateService } from "@ngx-translate/core";
 
 @Component({
+        standalone: false,
     selector: "issues-panel",
     templateUrl: "./issues-panel.component.html",
     styleUrls: ["./issues-panel.component.scss"],

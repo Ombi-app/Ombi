@@ -5,6 +5,7 @@ import { ICheckbox, IUserManagementSettings, RequestLimitType } from "../../inte
 import { IUsersModel } from "../../interfaces";
 
 @Component({
+        standalone: false,
     templateUrl: "./usermanagement.component.html",
     styleUrls: ["./usermanagement.component.scss"]
 })

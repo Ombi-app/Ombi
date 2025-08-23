@@ -9,6 +9,7 @@ import { RadarrFormComponent } from "./components/radarr-form.component";
 import { Observable, ReplaySubject, Subject, combineLatest, map, switchMap, takeUntil, tap } from "rxjs";
 
 @Component({
+        standalone: false,
     templateUrl: "./radarr.component.html",
     styleUrls: ["./radarr.component.scss"]
 })

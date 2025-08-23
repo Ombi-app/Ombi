@@ -17,6 +17,7 @@ import { AdminRequestDialogComponent } from '../../../shared/admin-request-dialo
 import { FeaturesFacade } from '../../../state/features/features.facade';
 
 @Component({
+        standalone: false,
 	templateUrl: './movie-details.component.html',
 	styleUrls: ['../../media-details.component.scss'],
 	encapsulation: ViewEncapsulation.None,

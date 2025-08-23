@@ -5,6 +5,7 @@ import { IPlexWatchlistUsers, WatchlistSyncStatus } from "../../../../interfaces
 import { PlexService } from "../../../../services";
 
 @Component({
+        standalone: false,
     templateUrl: "./plex-watchlist.component.html",
     styleUrls: ["./plex-watchlist.component.scss"]
 })

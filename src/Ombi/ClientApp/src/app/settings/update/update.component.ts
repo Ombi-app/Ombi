@@ -5,6 +5,7 @@ import { NotificationService } from "../../services";
 import { JobService, SettingsService } from "../../services";
 
 @Component({
+        standalone: false,
     templateUrl: "./update.component.html",
     styleUrls: ["./update.component.scss"]
 })

@@ -3,6 +3,7 @@ import { IFailedRequestsViewModel, RequestType } from "../../interfaces";
 import { RequestRetryService } from "../../services";
 
 @Component({
+        standalone: false,
     templateUrl: "./failedrequests.component.html",
     styleUrls: ["./failedrequests.component.scss"],
 })

@@ -17,6 +17,7 @@ import { CustomizationFacade } from './state/customization';
 
 
 @Component({
+        standalone: false,
     selector: "app-ombi",
     templateUrl: "./app.component.html",
     styleUrls: ["./app.component.scss"],

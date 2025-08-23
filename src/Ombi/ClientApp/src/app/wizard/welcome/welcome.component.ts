@@ -10,6 +10,7 @@ import { WizardService } from "../services/wizard.service";
 import { Observable, take } from "rxjs";
 
 @Component({
+        standalone: false,
     templateUrl: "./welcome.component.html",
     styleUrls: ["./welcome.component.scss"],
 })

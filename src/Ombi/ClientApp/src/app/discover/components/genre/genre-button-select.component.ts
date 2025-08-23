@@ -13,6 +13,7 @@ interface IGenreSelect {
     type: "movie"|"tv";
 }
 @Component({
+        standalone: false,
     selector: "genre-button-select",
     templateUrl: "./genre-button-select.component.html",
     styleUrls: ["./genre-button-select.component.scss"],

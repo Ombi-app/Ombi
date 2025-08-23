@@ -1,5 +1,6 @@
 ﻿import { Component } from "@angular/core";
 @Component({
+        standalone: false,
     selector: "settings-menu",
     templateUrl: "./settingsmenu.component.html",
     styleUrls: ["./settingsmenu.component.scss"]

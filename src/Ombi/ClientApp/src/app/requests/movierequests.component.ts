@@ -9,6 +9,7 @@
 // import { NotificationService, RadarrService, RequestService } from "../services";
 
 // @Component({
+        standalone: false,
 //     selector: "movie-requests",
 //     templateUrl: "./movierequests.component.html",
 // })

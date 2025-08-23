@@ -4,6 +4,7 @@ import { CookieService } from "ng2-cookies";
 import { StorageService } from "../shared/storage/storage-service";
 
 @Component({
+        standalone: false,
     templateUrl: "cookie.component.html",
 })
 export class CookieComponent implements OnInit {

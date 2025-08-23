@@ -11,6 +11,7 @@ import { TesterService } from "../../services";
 import { NotificationService } from "../../services";
 
 @Component({
+        standalone: false,
     templateUrl: "./sonarr.component.html",
     styleUrls: ["./sonarr.component.scss"]
 })

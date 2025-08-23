@@ -11,6 +11,7 @@ import { PlatformLocation } from "@angular/common";
 import { Router } from "@angular/router";
 
 @Component({
+        standalone: false,
     templateUrl: "./tokenresetpassword.component.html",
     styleUrls: ["./login.component.scss"],
 })

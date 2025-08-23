@@ -1,6 +1,7 @@
 import { Component, Input } from "@angular/core";
 
 @Component({
+        standalone: false,
     selector: "cast-carousel",
     templateUrl: "./cast-carousel.component.html",
     styleUrls: ["./cast-carousel.component.scss"]

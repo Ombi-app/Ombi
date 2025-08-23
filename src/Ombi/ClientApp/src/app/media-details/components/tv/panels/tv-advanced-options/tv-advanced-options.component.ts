@@ -10,6 +10,7 @@ import {
 import { SettingsService, SonarrService } from "../../../../../services";
 
 @Component({
+        standalone: false,
   templateUrl: "./tv-advanced-options.component.html",
   selector: "tv-advanced-options",
 })

@@ -7,6 +7,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { firstValueFrom } from "rxjs";
 
 @Component({
+        standalone: false,
     selector: "new-issue",
     templateUrl: "./new-issue.component.html",
 })

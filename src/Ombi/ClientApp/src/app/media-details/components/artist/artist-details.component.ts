@@ -11,6 +11,7 @@ import { IArtistSearchResult, IReleaseGroups } from "../../../interfaces/IMusicS
 import { TranslateService } from "@ngx-translate/core";
 
 @Component({
+        standalone: false,
     templateUrl: "./artist-details.component.html",
     styleUrls: ["../../media-details.component.scss"],
 })

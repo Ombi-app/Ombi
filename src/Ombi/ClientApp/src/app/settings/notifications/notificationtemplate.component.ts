@@ -3,6 +3,7 @@
 import { INotificationTemplates, NotificationType } from "../../interfaces";
 
 @Component({
+        standalone: false,
     selector:"notification-templates",
     templateUrl: "./notificationtemplate.component.html",
     styleUrls: ["./notificationtemplate.component.scss"],

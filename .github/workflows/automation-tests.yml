@@ -22,7 +22,7 @@ jobs:
         dotnet-version: 6.0.x
     - uses: actions/setup-node@v2
       with:
-        node-version: '18'
+        node-version: '20'
 
     - uses: actions/cache@v4
       with:

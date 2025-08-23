@@ -11,6 +11,7 @@ import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { StorageService } from "../../../shared/storage/storage-service";
 
 @Component({
+        standalone: false,
     templateUrl: "./albums-grid.component.html",
     selector: "albums-grid",
     styleUrls: ["./albums-grid.component.scss"]

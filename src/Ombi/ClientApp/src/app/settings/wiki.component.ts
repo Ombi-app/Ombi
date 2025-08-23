@@ -3,6 +3,7 @@
 import { Router } from "@angular/router";
 
 @Component({
+        standalone: false,
     selector:"wiki",
     templateUrl: "./wiki.component.html",
 })

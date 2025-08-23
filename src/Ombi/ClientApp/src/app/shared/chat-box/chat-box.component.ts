@@ -15,6 +15,7 @@ export interface ChatMessages {
   }
 
 @Component({
+        standalone: false,
     selector: "ombi-chat-box",
     templateUrl: "chat-box.component.html",
     styleUrls: ["chat-box.component.scss"],

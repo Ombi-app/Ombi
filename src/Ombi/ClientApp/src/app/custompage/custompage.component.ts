@@ -5,6 +5,7 @@ import { AuthService } from "../auth/auth.service";
 import { CustomPageService, NotificationService } from "../services";
 
 @Component({
+        standalone: false,
     templateUrl: "./custompage.component.html",
 }) 
 export class CustomPageComponent implements OnInit {

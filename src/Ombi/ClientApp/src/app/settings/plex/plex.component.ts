@@ -11,6 +11,7 @@ import { PlexServerDialogComponent } from "./components/plex-server-dialog/plex-
 import { PlexServerDialogData, PlexSyncType } from "./components/models";
 
 @Component({
+        standalone: false,
     templateUrl: "./plex.component.html",
     styleUrls: ["./plex.component.scss"]
 })

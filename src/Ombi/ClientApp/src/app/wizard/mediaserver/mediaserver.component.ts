@@ -2,6 +2,7 @@
 import { Component, OnInit } from "@angular/core";
 
 @Component({
+        standalone: false,
     templateUrl: "./mediaserver.component.html",
     styleUrls: ["./mediaserver.component.scss"],
     selector: "wizard-media-server",

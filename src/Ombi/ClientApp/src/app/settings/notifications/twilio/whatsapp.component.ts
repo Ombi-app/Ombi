@@ -6,6 +6,7 @@ import { INotificationTemplates, NotificationType } from "../../../interfaces";
 
 
 @Component({
+        standalone: false,
     templateUrl: "./whatsapp.component.html",
     selector: "app-whatsapp"
 })

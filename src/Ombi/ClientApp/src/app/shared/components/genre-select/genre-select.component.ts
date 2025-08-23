@@ -8,6 +8,7 @@ import { Observable } from "rxjs";
 import { SearchV2Service } from "../../../services";
 
 @Component({
+        standalone: false,
   selector: "genre-select",
   templateUrl: "genre-select.component.html"
 })

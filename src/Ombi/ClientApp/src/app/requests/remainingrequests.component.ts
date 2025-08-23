@@ -5,6 +5,7 @@
 // import { Observable } from "rxjs";
 
 // @Component({
+        standalone: false,
 //     selector: "remaining-requests",
 //     templateUrl: "./remainingrequests.component.html",
 // })

@@ -8,6 +8,7 @@ import { MatTableDataSource } from "@angular/material/table";
 import { SelectionModel } from "@angular/cdk/collections";
 
 @Component({
+        standalone: false,
     templateUrl: "./usermanagement.component.html",
     styleUrls: ["./usermanagement.component.scss"],
 })

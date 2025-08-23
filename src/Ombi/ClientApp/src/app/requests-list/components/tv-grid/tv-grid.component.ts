@@ -12,6 +12,7 @@ import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { StorageService } from "../../../shared/storage/storage-service";
 
 @Component({
+        standalone: false,
     templateUrl: "./tv-grid.component.html",
     selector: "tv-grid",
     styleUrls: ["../requests-list.component.scss", "tv-grid.component.scss"]

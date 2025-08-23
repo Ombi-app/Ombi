@@ -23,6 +23,7 @@ export interface IAdminRequestDialogData {
 }
 
 @Component({
+        standalone: false,
 	selector: 'admin-request-dialog',
 	templateUrl: 'admin-request-dialog.component.html',
 	styleUrls: ['admin-request-dialog.component.scss'],

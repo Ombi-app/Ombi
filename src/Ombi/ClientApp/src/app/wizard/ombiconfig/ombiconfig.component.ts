@@ -3,6 +3,7 @@ import { IOmbiConfigModel } from "../models/OmbiConfigModel";
 import { WizardService } from "../services/wizard.service";
 
 @Component({
+        standalone: false,
     selector: "wizard-ombi",
     templateUrl: "./ombiconfig.component.html",
     styleUrls: ["../welcome/welcome.component.scss"]

@@ -9,6 +9,7 @@ import { RequestServiceV2 } from "../../../../../services/requestV2.service";
 import { TranslateService } from "@ngx-translate/core";
 
 @Component({
+        standalone: false,
     templateUrl: "./tv-requests-panel.component.html",
     styleUrls: ["./tv-requests-panel.component.scss"],
     selector: "tv-requests-panel"

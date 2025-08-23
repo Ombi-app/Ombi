@@ -7,6 +7,7 @@ import { LidarrService } from "app/services";
 import { take } from "rxjs";
 
 @Component({
+        standalone: false,
     templateUrl: "./requests-list.component.html",
     styleUrls: ["./requests-list.component.scss"]
 })

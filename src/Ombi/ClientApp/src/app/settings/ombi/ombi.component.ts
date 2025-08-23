@@ -8,6 +8,7 @@ import { SettingsService } from "../../services";
 import languageData from "./../../../other/iso-lang.json";
 
 @Component({
+        standalone: false,
     templateUrl: "./ombi.component.html",
     styleUrls: ["./ombi.component.scss"],
 })

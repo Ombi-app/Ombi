@@ -17,6 +17,7 @@ export enum DiscoverType {
 }
 
 @Component({
+        standalone: false,
     selector: "carousel-list",
     templateUrl: "./carousel-list.component.html",
     styleUrls: ["./carousel-list.component.scss"],

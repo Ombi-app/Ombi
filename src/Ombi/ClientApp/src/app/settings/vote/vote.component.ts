@@ -4,6 +4,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms
 import { NotificationService, SettingsService } from "../../services";
 
 @Component({
+        standalone: false,
     templateUrl: "./vote.component.html",
     styleUrls: ["vote.component.scss"]
 })

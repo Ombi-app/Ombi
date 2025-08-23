@@ -7,6 +7,7 @@ import { IStreamingData } from "../../../../../interfaces/IStreams";
 import { SearchV2Service } from "../../../../../services";
 
 @Component({
+        standalone: false,
     templateUrl: "./tv-information-panel.component.html",
     styleUrls: ["../../../../media-details.component.scss"],
     selector: "tv-information-panel",

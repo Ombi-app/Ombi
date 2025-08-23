@@ -8,6 +8,7 @@ import { IdentityService, NotificationService, SettingsService } from "../servic
 import { CustomizationFacade } from "../state/customization";
 
 @Component({
+        standalone: false,
     templateUrl: "./resetpassword.component.html",
     styleUrls: ["./login.component.scss"],
 })

@@ -5,6 +5,7 @@ import { JobService, NotificationService, SettingsService } from "../../services
 import { TesterService } from "../../services/applications/tester.service";
 
 @Component({
+        standalone: false,
     templateUrl: "./newsletter.component.html",
     styleUrls: ["./notificationtemplate.component.scss"]
 })
