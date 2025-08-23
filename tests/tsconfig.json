@@ -1,16 +1,38 @@
 {
     "compilerOptions": {
-        "target": "es6",
+        "target": "ES2022",
+        "lib": ["ES2022", "DOM"],
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "strict": true,
         "esModuleInterop": true,
-        "lib": ["es2018", "dom"],
-        "types": ["cypress", "cypress-wait-until", "cypress-image-snapshot", "cypress-real-events", "@bahmutov/cy-api", "node"],
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmit": true,
+        "types": [
+            "cypress", 
+            "cypress-wait-until", 
+            "cypress-image-snapshot", 
+            "cypress-real-events", 
+            "@bahmutov/cy-api", 
+            "node"
+        ],
         "baseUrl": "./cypress",
         "paths": {
-            "@/*": ["./*"]
+            "@/*": ["./*"],
+            "@fixtures/*": ["./fixtures/*"],
+            "@page-objects/*": ["./integration/page-objects/*"],
+            "@support/*": ["./support/*"]
         }
     },
     "include": [
         "**/*.ts",
         "support/*.ts"
+    ],
+    "exclude": [
+        "node_modules"
     ]
 }
