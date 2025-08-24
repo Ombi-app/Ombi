@@ -35,6 +35,8 @@ export default defineConfig({
   // Project configuration
   projectId: 'o5451s',
   
+
+  
   e2e: {
     // Setup node events
     async setupNodeEvents(

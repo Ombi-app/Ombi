@@ -21,5 +21,8 @@ import './mock-data.commands';
 import "cypress-real-events/support";
 import '@bahmutov/cy-api/support';
 
+// Import our setup utilities
+import './setup';
+
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
