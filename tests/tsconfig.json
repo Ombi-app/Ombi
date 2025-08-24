@@ -15,9 +15,7 @@
         "types": [
             "cypress", 
             "cypress-wait-until", 
-            "cypress-image-snapshot", 
             "cypress-real-events", 
-            "@bahmutov/cy-api", 
             "node"
         ],
         "baseUrl": "./cypress",

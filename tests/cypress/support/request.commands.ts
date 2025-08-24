@@ -1,3 +1,14 @@
+// Type definitions for request commands
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      requestGenericMovie(): Chainable<void>;
+      requestMovie(movieId: number): Chainable<void>;
+      requestAllTv(tvId: number): Chainable<any>;
+      removeAllMovieRequests(): Chainable<void>;
+    }
+  }
+}
 
 Cypress.Commands.add('requestGenericMovie', () => {
     cy.request({
@@ -48,3 +59,5 @@ Cypress.Commands.add('removeAllMovieRequests', () => {
         }
     });
 })
+
+export {};
