@@ -34,6 +34,9 @@ jobs:
     - name: Install Frontend Deps
       run: yarn --cwd ./src/Ombi/ClientApp install
 
+    - name: Install Test Dependencies
+      run: yarn --cwd ./tests install
+
     - name: Start Frontend
       run: |
         nohup yarn --cwd ./src/Ombi/ClientApp start &
