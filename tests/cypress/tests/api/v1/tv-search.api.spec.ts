@@ -100,3 +100,5 @@ describe("TV Search V1 API tests", () => {
     });
   });
 });
+
+export {};

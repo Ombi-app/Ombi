@@ -67,7 +67,7 @@ describe("TV Details Buttons", () => {
   });
 
 
-  it.only("Issues Enabled", () => {
+  it("Issues Enabled", () => {
     cy.intercept("GET", "**/Settings/issuesenabled", 'true').as('issuesEnabled');
 
     cy.visit("/details/tv/1399");

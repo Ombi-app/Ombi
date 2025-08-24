@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, Output, EventEmitter, Inject } from "@angular/core";
+import { Component, ViewChild, Inject, input, output, signal, computed, inject, ChangeDetectionStrategy } from "@angular/core";
 import { DiscoverOption, IDiscoverCardResult } from "../../interfaces";
 import { ISearchMovieResult, ISearchTvResult, RequestType } from "../../../interfaces";
 import { SearchV2Service } from "../../../services";
@@ -17,46 +17,55 @@ export enum DiscoverType {
 }
 
 @Component({
-        standalone: false,
+    standalone: false,
     selector: "carousel-list",
     templateUrl: "./carousel-list.component.html",
     styleUrls: ["./carousel-list.component.scss"],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CarouselListComponent implements OnInit {
-
-    @Input() public discoverType: DiscoverType;
-    @Input() public id: string;
-    @Input() public isAdmin: boolean;
-    @Output() public movieCount: EventEmitter<number> = new EventEmitter();
+export class CarouselListComponent {
+    // Inputs using new input() function
+    public discoverType = input.required<DiscoverType>();
+    public id = input.required<string>();
+    public isAdmin = input<boolean>(false);
+    
+    // Output using new output() function  
+    public movieCount = output<number>();
+    
     @ViewChild('carousel', {static: false}) carousel: Carousel;
 
+    // Services using inject() function
+    private searchService = inject(SearchV2Service);
+    private storageService = inject(StorageService);
+    private featureFacade = inject(FeaturesFacade);
+    private baseUrl = inject(APP_BASE_HREF);
+
+    // Public constants
     public DiscoverOption = DiscoverOption;
-    public discoverOptions: DiscoverOption = DiscoverOption.Combined;
-    public discoverResults: IDiscoverCardResult[] = [];
-    public movies: ISearchMovieResult[] = [];
-    public tvShows: ISearchTvResult[] = [];
-    public responsiveOptions: any;
     public RequestType = RequestType;
-    public loadingFlag: boolean;
     public DiscoverType = DiscoverType;
-    public is4kEnabled = false;
+    
+    // State using signals
+    public discoverOptions = signal<DiscoverOption>(DiscoverOption.Combined);
+    public discoverResults = signal<IDiscoverCardResult[]>([]);
+    public movies = signal<ISearchMovieResult[]>([]);
+    public tvShows = signal<ISearchTvResult[]>([]);
+    public loadingFlag = signal<boolean>(false);
+    public is4kEnabled = signal<boolean>(false);
+    
+    // Computed properties
+    public hasResults = computed(() => this.discoverResults().length > 0);
+    public totalResults = computed(() => this.discoverResults().length);
 
     get mediaTypeStorageKey() {
-        return "DiscoverOptions" + this.discoverType.toString();
+        return "DiscoverOptions" + this.discoverType().toString();
     };
+    
     private amountToLoad = 10;
     private currentlyLoaded = 0;
-    private baseUrl: string = "";
+    public responsiveOptions: any;
 
-
-    constructor(private searchService: SearchV2Service,
-        private storageService: StorageService,
-        private featureFacade: FeaturesFacade,
-        @Inject(APP_BASE_HREF) private href: string) {
-
-        if (this.href.length > 1) {
-            this.baseUrl = this.href;
-        }
+    constructor() {
 
         Carousel.prototype.onTouchMove = () => { },
         this.responsiveOptions = [
@@ -149,12 +158,14 @@ export class CarouselListComponent implements OnInit {
     }
 
     public async ngOnInit() {
-        
-        this.is4kEnabled = this.featureFacade.is4kEnabled();
+        // Initialize 4K feature flag
+        this.is4kEnabled.set(this.featureFacade.is4kEnabled());
         this.currentlyLoaded = 0;
+        
+        // Load saved discover options from storage
         const localDiscoverOptions = +this.storageService.get(this.mediaTypeStorageKey);
         if (localDiscoverOptions) {
-            this.discoverOptions = DiscoverOption[DiscoverOption[localDiscoverOptions]];
+            this.discoverOptions.set(DiscoverOption[DiscoverOption[localDiscoverOptions]]);
         }
 
         // Load initial data - just enough to fill the first carousel page
@@ -162,10 +173,9 @@ export class CarouselListComponent implements OnInit {
         await this.loadData(false);
         
         // If we don't have enough results to fill the carousel, load one more batch
-        if (this.discoverResults.length < 10) {
+        if (this.discoverResults().length < 10) {
             await this.loadData(false);
         }
-        
     }
 
     public async toggleChanged(event: MatButtonToggleChange) {
@@ -183,7 +193,7 @@ export class CarouselListComponent implements OnInit {
         if (end) {
             var moviePromise: Promise<void>;
             var tvPromise: Promise<void>;
-            switch (+this.discoverOptions) {
+            switch (+this.discoverOptions()) {
                 case DiscoverOption.Combined:
                     moviePromise = this.loadMovies();
                     tvPromise = this.loadTv();
@@ -205,7 +215,7 @@ export class CarouselListComponent implements OnInit {
     private async loadData(clearExisting: boolean = true) {
         var moviePromise: Promise<void>;
         var tvPromise: Promise<void>;
-        switch (+this.discoverOptions) {
+        switch (+this.discoverOptions()) {
             case DiscoverOption.Combined:
                 moviePromise = this.loadMovies();
                 tvPromise = this.loadTv();
@@ -223,50 +233,50 @@ export class CarouselListComponent implements OnInit {
     }
 
     private async switchDiscoverMode(newMode: DiscoverOption) {
-        if (this.discoverOptions === newMode) {
+        if (this.discoverOptions() === newMode) {
             return;
         }
         this.loading();
         this.currentlyLoaded = 0;
-        this.discoverOptions = +newMode;
+        this.discoverOptions.set(+newMode);
         this.storageService.save(this.mediaTypeStorageKey, newMode.toString());
         await this.loadData();
         this.finishLoading();
     }
 
     private async loadMovies() {
-        switch (this.discoverType) {
+        switch (this.discoverType()) {
             case DiscoverType.Popular:
-                this.movies = await this.searchService.popularMoviesByPage(this.currentlyLoaded, this.amountToLoad);
+                this.movies.set(await this.searchService.popularMoviesByPage(this.currentlyLoaded, this.amountToLoad));
                 break;
             case DiscoverType.Trending:
-                this.movies = await this.searchService.nowPlayingMoviesByPage(this.currentlyLoaded, this.amountToLoad);
+                this.movies.set(await this.searchService.nowPlayingMoviesByPage(this.currentlyLoaded, this.amountToLoad));
                 break;
             case DiscoverType.Upcoming:
-                this.movies = await this.searchService.upcomingMoviesByPage(this.currentlyLoaded, this.amountToLoad);
-                break
+                this.movies.set(await this.searchService.upcomingMoviesByPage(this.currentlyLoaded, this.amountToLoad));
+                break;
             case DiscoverType.RecentlyRequested:
-                this.movies = await this.searchService.recentlyRequestedMoviesByPage(this.currentlyLoaded, this.amountToLoad);
+                this.movies.set(await this.searchService.recentlyRequestedMoviesByPage(this.currentlyLoaded, this.amountToLoad));
                 break;
             case DiscoverType.Seasonal:
-                this.movies = await this.searchService.seasonalMoviesByPage(this.currentlyLoaded, this.amountToLoad);
+                this.movies.set(await this.searchService.seasonalMoviesByPage(this.currentlyLoaded, this.amountToLoad));
                 break;
         }
-        this.movieCount.emit(this.movies.length);
+        this.movieCount.emit(this.movies().length);
         this.currentlyLoaded += this.amountToLoad;
     }
 
     private async loadTv() {
-        switch (this.discoverType) {
+        switch (this.discoverType()) {
             case DiscoverType.Popular:
-                this.tvShows = await this.searchService.popularTvByPage(this.currentlyLoaded, this.amountToLoad);
+                this.tvShows.set(await this.searchService.popularTvByPage(this.currentlyLoaded, this.amountToLoad));
                 break;
             case DiscoverType.Trending:
-                this.tvShows = await this.searchService.trendingTvByPage(this.currentlyLoaded, this.amountToLoad);
+                this.tvShows.set(await this.searchService.trendingTvByPage(this.currentlyLoaded, this.amountToLoad));
                 break;
             case DiscoverType.Upcoming:
-                this.tvShows = await this.searchService.anticipatedTvByPage(this.currentlyLoaded, this.amountToLoad);
-                break
+                this.tvShows.set(await this.searchService.anticipatedTvByPage(this.currentlyLoaded, this.amountToLoad));
+                break;
             case DiscoverType.RecentlyRequested:
                 // this.tvShows = await this.searchService.recentlyRequestedMoviesByPage(this.currentlyLoaded, this.amountToLoad); // TODO need to do some more mapping
                 break;
@@ -284,7 +294,7 @@ export class CarouselListComponent implements OnInit {
     private createModel() {
         const tempResults = <IDiscoverCardResult[]>[];
 
-        switch (+this.discoverOptions) {
+        switch (+this.discoverOptions()) {
             case DiscoverOption.Combined:
                 tempResults.push(...this.mapMovieModel());
                 tempResults.push(...this.mapTvModel());
@@ -298,14 +308,14 @@ export class CarouselListComponent implements OnInit {
                 break;
         }
 
-        this.discoverResults.push(...tempResults);
+        this.discoverResults.update(current => [...current, ...tempResults]);
 
         this.finishLoading();
     }
 
     private mapMovieModel(): IDiscoverCardResult[] {
         const tempResults = <IDiscoverCardResult[]>[];
-        this.movies.forEach(m => {
+        this.movies().forEach(m => {
             tempResults.push({
                 available: m.available,
                 posterPath: m.posterPath ? `https://image.tmdb.org/t/p/w500/${m.posterPath}` : this.baseUrl + "/images/default_movie_poster.png",
@@ -327,7 +337,7 @@ export class CarouselListComponent implements OnInit {
 
     private mapTvModel(): IDiscoverCardResult[] {
         const tempResults = <IDiscoverCardResult[]>[];
-        this.tvShows.forEach(m => {
+        this.tvShows().forEach(m => {
             tempResults.push({
                 available: m.fullyAvailable,
                 posterPath: m.backdropPath ? `https://image.tmdb.org/t/p/w500/${m.backdropPath}` :  this.baseUrl + "/images/default_tv_poster.png",
@@ -348,7 +358,7 @@ export class CarouselListComponent implements OnInit {
     }
 
     private clear() {
-        this.discoverResults = [];
+        this.discoverResults.set([]);
     }
 
     private shuffle(discover: IDiscoverCardResult[]): IDiscoverCardResult[] {
@@ -360,11 +370,11 @@ export class CarouselListComponent implements OnInit {
     }
 
     private loading() {
-        this.loadingFlag = true;
+        this.loadingFlag.set(true);
     }
 
     private finishLoading() {
-        this.loadingFlag = false;
+        this.loadingFlag.set(false);
     }
 
 

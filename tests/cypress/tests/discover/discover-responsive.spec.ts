@@ -27,3 +27,5 @@ describe("Discover Responsive Tests", () => {
 
 
 });
+
+export {};

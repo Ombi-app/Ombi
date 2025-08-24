@@ -1,3 +1,11 @@
+// Type definitions for plex settings commands
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      clearPlexServers(): Chainable<void>;
+    }
+  }
+}
 
 Cypress.Commands.add('clearPlexServers', () => {
     cy.request({
@@ -10,3 +18,5 @@ Cypress.Commands.add('clearPlexServers', () => {
         }
     })
 })
+
+export {};

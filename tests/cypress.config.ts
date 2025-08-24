@@ -4,24 +4,39 @@ import { addCucumberPreprocessorPlugin } from "@badeball/cypress-cucumber-prepro
 import createEsbuildPlugin from "@badeball/cypress-cucumber-preprocessor/esbuild";
 
 export default defineConfig({
-  watchForFileChanges: true,
-  video: true,
+  // Performance optimizations
+  watchForFileChanges: false, // Disable in CI
+  video: false, // Disable video recording for faster runs
+  screenshotOnRunFailure: true,
+  trashAssetsBeforeRuns: true,
+  
+  // Security and viewport
   chromeWebSecurity: false,
-  viewportWidth: 2560,
-  viewportHeight: 1440,
+  viewportWidth: 1920,
+  viewportHeight: 1080,
+  
+  // Retry configuration
   retries: {
     runMode: 2,
     openMode: 0,
   },
+  
+  // Environment variables
   env: {
     username: 'a',
     password: 'a',
-    dockerhost: 'http://172.17.0.1'
+    dockerhost: 'http://172.17.0.1',
+    // Add test environment flags
+    isCI: process.env.CI === 'true',
+    // Add API base URL
+    apiBaseUrl: 'http://localhost:3577/api/v1'
   },
+  
+  // Project configuration
   projectId: 'o5451s',
+  
   e2e: {
-    // We've imported your old cypress plugins here.
-    // You may want to clean this up later by importing these.
+    // Setup node events
     async setupNodeEvents(
       on: Cypress.PluginEvents,
       config: Cypress.PluginConfigOptions
@@ -35,12 +50,53 @@ export default defineConfig({
         })
       );
 
-      // Make sure to return the config object as it might have been modified by the plugin.
+      // Add performance monitoring
+      on('task', {
+        log(message) {
+          console.log(message);
+          return null;
+        },
+        table(message) {
+          console.table(message);
+          return null;
+        }
+      });
+
       return config;
-      // return require('./cypress/plugins/index.js')(on, config)
     },
-    baseUrl: 'http://localhost:5000',
-    specPattern: ['cypress/tests/**/*.spec.ts*', '**/*.feature'],
-    excludeSpecPattern: ['**/snapshots/*'],
+    
+    // Base configuration
+    baseUrl: 'http://localhost:3577',
+    specPattern: [
+      'cypress/tests/**/*.spec.ts*', 
+      'cypress/features/**/*.feature'
+    ],
+    excludeSpecPattern: [
+      '**/snapshots/*',
+      '**/examples/*',
+      '**/*.skip.ts'
+    ],
+    
+    // Test isolation and performance
+    experimentalRunAllSpecs: true,
+    experimentalModifyObstructiveThirdPartyCode: true,
+    
+    // Better error handling
+    defaultCommandTimeout: 10000,
+    requestTimeout: 10000,
+    responseTimeout: 10000,
+    
+    // Screenshot and video settings
+    screenshotsFolder: 'cypress/screenshots',
+    videosFolder: 'cypress/videos',
   },
-})
+  
+  // Component testing (if needed later)
+  component: {
+    devServer: {
+      framework: 'angular',
+      bundler: 'webpack',
+    },
+    specPattern: 'cypress/component/**/*.cy.ts',
+  },
+});

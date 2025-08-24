@@ -19,7 +19,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 8.0.x
     - uses: actions/setup-node@v2
       with:
         node-version: '20'
@@ -34,31 +34,28 @@ jobs:
     - name: Install Frontend Deps
       run: yarn --cwd ./src/Ombi/ClientApp install
 
-    - name: Build Frontend
-      run: yarn --cwd ./src/Ombi/ClientApp build
+    - name: Install Test Dependencies
+      run: yarn --cwd ./tests install
 
-    - name: Build Docker Image
-      run: docker build -t ombi src/
+    - name: Start Frontend
+      run: |
+        nohup yarn --cwd ./src/Ombi/ClientApp start &
 
-    - name: Run Docker Image
-      run: nohup docker run --rm -p 5000:5000 ombi &
+    - name: Restore .NET Dependencies
+      run: dotnet restore ./src/Ombi/Ombi.csproj
+
+    - name: Build .NET Project
+      run: dotnet build ./src/Ombi/Ombi.csproj --no-restore
+
+    - name: Start Backend
+      run: |
+        nohup dotnet run --project ./src/Ombi -- --host http://*:3577 &
 
     - name: Run Wiremock
       run: nohup docker run --rm -p 32400:8080 --name wiremock wiremock/wiremock:2.35.0 &
 
     - name: Sleep for server to start
       run: sleep 20
-
-    # - name: Start Frontend
-    #   run: |
-    #       nohup yarn --cwd ./src/Ombi/ClientApp start &
-
-    # - name: Install Automation Deps
-    #   run: yarn --cwd ./tests install
-
-    # - name: Start Backend
-    #   run: |
-    #       nohup dotnet run --project ./src/Ombi -- --host http://*:3577 &
 
     - name: Cypress Tests
       uses: cypress-io/github-action@v4
@@ -67,15 +64,15 @@ jobs:
         browser: chrome
         headless: true
         working-directory: tests
-        wait-on: http://localhost:5000/
+        wait-on: http://localhost:3577/
         # 10 minutes
         wait-on-timeout: 600
       env:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Stop Docker
+    - name: Stop Services
       if: always()
       run: |
-        docker ps -q | xargs -I {} docker logs {}
-        docker container kill $(docker ps -q)
+        pkill -f "dotnet.*Ombi" || true
+        docker container kill wiremock || true
