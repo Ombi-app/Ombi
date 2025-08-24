@@ -1,3 +1,7 @@
+## [4.49.6](https://github.com/Ombi-app/Ombi/compare/v4.49.5...v4.49.6) (2025-08-24)
+
+
+
 ## [4.49.5](https://github.com/Ombi-app/Ombi/compare/v4.49.4...v4.49.5) (2025-08-23)
 
 
@@ -1315,10 +1319,6 @@
 ### Bug Fixes
 
 * **sonarr:** 🐛 Correctly monitor episodes ([57e7830](https://github.com/Ombi-app/Ombi/commit/57e7830f8e54b65ce3c1f0b122cbcc517d1af926))
-
-
-
-## [4.43.8](https://github.com/Ombi-app/Ombi/compare/v4.43.7...v4.43.8) (2023-11-09)
 
 
 
