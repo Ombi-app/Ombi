@@ -21,6 +21,7 @@ declare global {
       waitForApiResponse(alias: string, timeout?: number): Chainable<void>;
       clearTestData(): Chainable<void>;
       seedTestData(fixture: string): Chainable<void>;
+      api(options: any): Chainable<any>;
     }
   }
 }
