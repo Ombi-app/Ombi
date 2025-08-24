@@ -46,7 +46,7 @@ jobs:
 
     - name: Start Backend
       run: |
-        nohup dotnet run --project ./src/Ombi -- --host http://*:5000 &
+        nohup dotnet run --project ./src/Ombi -- --host http://*:3577 &
 
     - name: Run Wiremock
       run: nohup docker run --rm -p 32400:8080 --name wiremock wiremock/wiremock:2.35.0 &
