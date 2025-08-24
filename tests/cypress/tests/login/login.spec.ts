@@ -76,3 +76,5 @@ cy.wait("@authSettings");
     cy.url().should("include", "/discover");
   });
 });
+
+export {};

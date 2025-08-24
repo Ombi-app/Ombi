@@ -19,7 +19,7 @@ import './request.commands';
 import './plex-settings.commands';
 import './mock-data.commands';
 import "cypress-real-events/support";
-import '@badeball/cypress-cucumber-preprocessor/cypress';
+
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
