@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -208,6 +209,29 @@ namespace Ombi.Api.Plex
             var request = new Request($"library/sections/{sectionId}/recentlyAdded", uri, HttpMethod.Get);
             await AddHeaders(request, authToken);
             AddLimitHeaders(request, 0, 50);
+
+            return await Api.Request<PlexMetadata>(request);
+        }
+
+
+        public async Task<PlexMetadata> GetPlayed(string authToken, string uri, string sectionId, int maxNumberOfItems)
+        {
+            var request = new Request($"library/sections/{sectionId}/all", uri, HttpMethod.Get);
+            await AddHeaders(request, authToken);
+            request.AddQueryString("unwatched", "0");
+            request.AddQueryString("sort", "lastViewedAt:desc");
+            
+            // for some reason, we need to explicitely include episodes for them to be returned by the API (movies are fine)
+            // also the order seems of importance: "4,1" doesn't work but "1,4" does work
+            var types = new List<int> { (int) PlexMediaFilterType.Movie, (int) PlexMediaFilterType.Episode };
+            var typeFilter = string.Join(",", types);
+            request.AddQueryString("type", typeFilter);
+
+            if (maxNumberOfItems != 0)
+            {
+                AddLimitHeaders(request, 0, maxNumberOfItems);
+            }
+
 
             return await Api.Request<PlexMetadata>(request);
         }
