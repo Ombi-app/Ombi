@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Ombi.Api.Plex;
-using Ombi.Api.Plex.Models;
-using Ombi.Api.Plex.Models.OAuth;
+using Ombi.Api.External.MediaServers.Plex;
+using Ombi.Api.External.MediaServers.Plex.Models;
+using Ombi.Api.External.MediaServers.Plex.Models.OAuth;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Ombi.Api.Lidarr;
-using Ombi.Api.Lidarr.Models;
+using Ombi.Api.External.ExternalApis.Lidarr;
+using Ombi.Api.External.ExternalApis.Lidarr.Models;
 using Ombi.Attributes;
 using Ombi.Core.Settings;
 using Ombi.Helpers;

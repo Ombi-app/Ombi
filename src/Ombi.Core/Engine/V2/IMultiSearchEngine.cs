@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Ombi.Api.TheMovieDb.Models;
+using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
 using Ombi.Core.Models.Search.V2;
 using Ombi.TheMovieDbApi.Models;
 
 // Due to conflicting Genre models in
-// Ombi.TheMovieDbApi.Models and Ombi.Api.TheMovieDb.Models   
+// Ombi.TheMovieDbApi.Models and Ombi.Api.External.ExternalApis.TheMovieDb.Models   
 using Genre = Ombi.TheMovieDbApi.Models.Genre;
 
 namespace Ombi.Core.Engine.V2

@@ -1,4 +1,4 @@
-﻿using Ombi.Api.Sonarr.Models;
+﻿using Ombi.Api.External.ExternalApis.Sonarr.Models;
 using System.Collections.Generic;
 
 namespace Ombi.Core.Senders

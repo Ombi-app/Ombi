@@ -9,7 +9,7 @@ using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
-using Ombi.Api.Telegram;
+using Ombi.Api.External.NotificationServices.Telegram;
 using Microsoft.AspNetCore.Identity;
 
 namespace Ombi.Notifications.Agents

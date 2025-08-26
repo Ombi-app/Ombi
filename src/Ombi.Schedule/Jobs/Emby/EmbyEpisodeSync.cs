@@ -30,7 +30,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Ombi.Api.Emby;
+using Ombi.Api.External.MediaServers.Emby;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Hubs;
@@ -39,8 +39,8 @@ using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Quartz;
 using Ombi.Schedule.Jobs.Ombi;
-using Ombi.Api.Emby.Models;
-using Ombi.Api.Emby.Models.Media.Tv;
+using Ombi.Api.External.MediaServers.Emby.Models;
+using Ombi.Api.External.MediaServers.Emby.Models.Media.Tv;
 
 namespace Ombi.Schedule.Jobs.Emby
 {

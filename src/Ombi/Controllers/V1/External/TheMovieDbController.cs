@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Ombi.Api.TheMovieDb;
-using Ombi.Api.TheMovieDb.Models;
+using Ombi.Api.External.ExternalApis.TheMovieDb;
+using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 // Due to conflicting Genre models in
-// Ombi.TheMovieDbApi.Models and Ombi.Api.TheMovieDb.Models   
+// Ombi.TheMovieDbApi.Models and Ombi.Api.External.ExternalApis.TheMovieDb.Models   
 using Genre = Ombi.TheMovieDbApi.Models.Genre;
 
 namespace Ombi.Controllers.External

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Moq;
 using NUnit.Framework;
-using Ombi.Api.Plex;
-using Ombi.Api.Plex.Models;
+using Ombi.Api.External.MediaServers.Plex;
+using Ombi.Api.External.MediaServers.Plex.Models;
 using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models;

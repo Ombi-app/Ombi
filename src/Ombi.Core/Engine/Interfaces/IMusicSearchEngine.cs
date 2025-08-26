@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Ombi.Api.Lidarr.Models;
+using Ombi.Api.External.ExternalApis.Lidarr.Models;
 using Ombi.Core.Models.Search;
 
 namespace Ombi.Core.Engine

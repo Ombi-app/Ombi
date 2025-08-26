@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Ombi.Api.Plex.Models;
+using Ombi.Api.External.MediaServers.Plex.Models;
 
 namespace Ombi.Core.Authentication
 {

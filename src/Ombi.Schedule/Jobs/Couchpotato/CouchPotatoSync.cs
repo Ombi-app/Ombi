@@ -30,7 +30,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Ombi.Api.CouchPotato;
+using Ombi.Api.External.ExternalApis.CouchPotato;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Hubs;

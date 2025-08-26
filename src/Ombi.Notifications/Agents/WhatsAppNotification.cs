@@ -9,7 +9,7 @@ using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
-using Ombi.Api.Twilio;
+using Ombi.Api.External.NotificationServices.Twilio;
 using Microsoft.AspNetCore.Identity;
 
 namespace Ombi.Notifications.Agents

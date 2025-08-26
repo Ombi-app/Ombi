@@ -18,7 +18,7 @@ using Ombi.Settings.Settings.Models;
 using System.IO;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging;
-using Ombi.Api.TheMovieDb.Models;
+using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 
@@ -135,7 +135,7 @@ namespace Ombi
             await SortOutBaseUrl(baseUrl, settingsDb, ombiSettingsContent);
             var httpClient = new HttpClient();
                 var api = new Ombi.Api.Api(new Logger<Api.Api>(NullLoggerFactory.Instance), httpClient);
-            await MigrateOldTvDbIds(ombiDb, ombiSettingsContent, settingsDb, new Ombi.Api.TheMovieDb.TheMovieDbApi(null, (Api.IApi)api, null));
+            await MigrateOldTvDbIds(ombiDb, ombiSettingsContent, settingsDb, new Ombi.Api.External.ExternalApis.TheMovieDb.TheMovieDbApi(null, (Api.IApi)api, null));
 
             Console.WriteLine($"We are running on {urlValue}");
 
@@ -292,7 +292,7 @@ namespace Ombi
             }
         }
 
-        private static async Task MigrateOldTvDbIds(OmbiContext ctx, GlobalSettings ombiSettingsContent, SettingsContext settingsContext, Api.TheMovieDb.TheMovieDbApi api)
+        private static async Task MigrateOldTvDbIds(OmbiContext ctx, GlobalSettings ombiSettingsContent, SettingsContext settingsContext, Ombi.Api.External.ExternalApis.TheMovieDb.TheMovieDbApi api)
         {
             if (ombiSettingsContent == null)
             {

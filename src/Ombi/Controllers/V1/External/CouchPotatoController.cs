@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Ombi.Api.CouchPotato;
-using Ombi.Api.CouchPotato.Models;
+using Ombi.Api.External.ExternalApis.CouchPotato;
+using Ombi.Api.External.ExternalApis.CouchPotato.Models;
 using Ombi.Attributes;
 using Ombi.Settings.Settings.Models.External;
 

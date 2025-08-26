@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using AutoMapper;
-using Ombi.Api.TheMovieDb.Models;
-using Ombi.Api.TvMaze.Models;
+using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
+using Ombi.Api.External.ExternalApis.TvMaze.Models;
 using Ombi.Core.Models.Search;
 using Ombi.Helpers;
 using TraktSharp.Entities;

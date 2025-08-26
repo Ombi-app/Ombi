@@ -3,20 +3,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Ombi.Api.CouchPotato;
-using Ombi.Api.DogNzb.Models;
-using Ombi.Api.Radarr;
+using Ombi.Api.External.ExternalApis.CouchPotato;
+using Ombi.Api.External.ExternalApis.DogNzb.Models;
+using Ombi.Api.External.ExternalApis.Radarr;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities.Requests;
-using Ombi.Api.DogNzb;
+using Ombi.Api.External.ExternalApis.DogNzb;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using System.Collections.Generic;
-using Ombi.Api.Radarr.Models;
+using Ombi.Api.External.ExternalApis.Radarr.Models;
 using Microsoft.Extensions.Options;
-using Ombi.Api.Sonarr;
+using Ombi.Api.External.ExternalApis.Sonarr;
 
 namespace Ombi.Core.Senders
 {
