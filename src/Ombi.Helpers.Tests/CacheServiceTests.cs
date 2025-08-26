@@ -1,6 +1,4 @@
 using Microsoft.Extensions.Caching.Memory;
-using Moq;
-using Moq.AutoMock;
 using NUnit.Framework;
 using Ombi.Helpers;
 using System;
@@ -11,16 +9,20 @@ namespace Ombi.Helpers.Tests
     [TestFixture]
     public class CacheServiceTests
     {
-        private AutoMocker _mocker;
+        private MemoryCache _memoryCache;
         private CacheService _subject;
-        private Mock<IMemoryCache> _memoryCacheMock;
 
         [SetUp]
         public void Setup()
         {
-            _mocker = new AutoMocker();
-            _memoryCacheMock = _mocker.GetMock<IMemoryCache>();
-            _subject = _mocker.CreateInstance<CacheService>();
+            _memoryCache = new MemoryCache(new MemoryCacheOptions());
+            _subject = new CacheService(_memoryCache);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _memoryCache?.Dispose();
         }
 
         [Test]
@@ -31,11 +33,6 @@ namespace Ombi.Helpers.Tests
             var expectedValue = "test-value";
             var factoryCalled = false;
 
-            _memoryCacheMock.Setup(x => x.GetOrCreateAsync(
-                cacheKey,
-                It.IsAny<Func<ICacheEntry, Task<string>>>()))
-                .ReturnsAsync(expectedValue);
-
             // Act
             var result = await _subject.GetOrAddAsync(cacheKey, () =>
             {
@@ -45,7 +42,18 @@ namespace Ombi.Helpers.Tests
 
             // Assert
             Assert.That(result, Is.EqualTo(expectedValue));
-            Assert.That(factoryCalled, Is.False); // Factory should not be called if value is cached
+            Assert.That(factoryCalled, Is.True); // Factory should be called for first call
+
+            // Second call should return cached value without calling factory
+            factoryCalled = false;
+            var cachedResult = await _subject.GetOrAddAsync(cacheKey, () =>
+            {
+                factoryCalled = true;
+                return Task.FromResult("different-value");
+            });
+
+            Assert.That(cachedResult, Is.EqualTo(expectedValue)); // Should return cached value
+            Assert.That(factoryCalled, Is.False); // Factory should not be called
         }
 
         [Test]
@@ -56,16 +64,15 @@ namespace Ombi.Helpers.Tests
             var expectedValue = "test-value";
             var customExpiration = DateTimeOffset.Now.AddHours(2);
 
-            _memoryCacheMock.Setup(x => x.GetOrCreateAsync(
-                cacheKey,
-                It.IsAny<Func<ICacheEntry, Task<string>>>()))
-                .ReturnsAsync(expectedValue);
-
             // Act
             var result = await _subject.GetOrAddAsync(cacheKey, () => Task.FromResult(expectedValue), customExpiration);
 
             // Assert
             Assert.That(result, Is.EqualTo(expectedValue));
+            
+            // Verify the value is cached with the custom expiration
+            var cachedValue = _memoryCache.Get(cacheKey);
+            Assert.That(cachedValue, Is.EqualTo(expectedValue));
         }
 
         [Test]
@@ -75,16 +82,15 @@ namespace Ombi.Helpers.Tests
             var cacheKey = "test-key";
             var expectedValue = "test-value";
 
-            _memoryCacheMock.Setup(x => x.GetOrCreateAsync(
-                cacheKey,
-                It.IsAny<Func<ICacheEntry, Task<string>>>()))
-                .ReturnsAsync(expectedValue);
-
             // Act
             var result = await _subject.GetOrAddAsync(cacheKey, () => Task.FromResult(expectedValue));
 
             // Assert
             Assert.That(result, Is.EqualTo(expectedValue));
+            
+            // Verify the value is cached
+            var cachedValue = _memoryCache.Get(cacheKey);
+            Assert.That(cachedValue, Is.EqualTo(expectedValue));
         }
 
         [Test]
@@ -94,54 +100,43 @@ namespace Ombi.Helpers.Tests
             var cacheKey = "test-key";
             var expectedException = new InvalidOperationException("Test exception");
 
-            _memoryCacheMock.Setup(x => x.GetOrCreateAsync(
-                cacheKey,
-                It.IsAny<Func<ICacheEntry, Task<string>>>()))
-                .ThrowsAsync(expectedException);
-
             // Act & Assert
             var exception = Assert.ThrowsAsync<InvalidOperationException>(async () =>
-                await _subject.GetOrAddAsync(cacheKey, () => Task.FromResult("value")));
+                await _subject.GetOrAddAsync<string>(cacheKey, () => throw expectedException));
 
             Assert.That(exception, Is.EqualTo(expectedException));
         }
 
         [Test]
-        public async Task GetOrAddAsync_WithNullCacheKey_HandlesGracefully()
+        public async Task GetOrAddAsync_WithNullCacheKey_ThrowsArgumentNullException()
         {
             // Arrange
             string cacheKey = null;
             var expectedValue = "test-value";
 
-            _memoryCacheMock.Setup(x => x.GetOrCreateAsync(
-                It.IsAny<string>(),
-                It.IsAny<Func<ICacheEntry, Task<string>>>()))
-                .ReturnsAsync(expectedValue);
+            // Act & Assert
+            var exception = Assert.ThrowsAsync<ArgumentNullException>(async () =>
+                await _subject.GetOrAddAsync(cacheKey, () => Task.FromResult(expectedValue)));
 
-            // Act
-            var result = await _subject.GetOrAddAsync(cacheKey, () => Task.FromResult(expectedValue));
-
-            // Assert
-            Assert.That(result, Is.EqualTo(expectedValue));
+            Assert.That(exception.ParamName, Is.EqualTo("key"));
         }
 
         [Test]
-        public async Task GetOrAddAsync_WithEmptyCacheKey_HandlesGracefully()
+        public async Task GetOrAddAsync_WithEmptyCacheKey_WorksCorrectly()
         {
             // Arrange
             var cacheKey = "";
             var expectedValue = "test-value";
 
-            _memoryCacheMock.Setup(x => x.GetOrCreateAsync(
-                It.IsAny<string>(),
-                It.IsAny<Func<ICacheEntry, Task<string>>>()))
-                .ReturnsAsync(expectedValue);
-
             // Act
             var result = await _subject.GetOrAddAsync(cacheKey, () => Task.FromResult(expectedValue));
 
             // Assert
             Assert.That(result, Is.EqualTo(expectedValue));
+            
+            // Verify the value is cached
+            var cachedValue = _memoryCache.Get(cacheKey);
+            Assert.That(cachedValue, Is.EqualTo(expectedValue));
         }
 
         [Test]
@@ -152,11 +147,6 @@ namespace Ombi.Helpers.Tests
             var expectedValue = "test-value";
             var factoryCalled = false;
 
-            _memoryCacheMock.Setup(x => x.GetOrCreate(
-                cacheKey,
-                It.IsAny<Func<ICacheEntry, string>>()))
-                .Returns(expectedValue);
-
             // Act
             var result = _subject.GetOrAdd(cacheKey, () =>
             {
@@ -166,7 +156,18 @@ namespace Ombi.Helpers.Tests
 
             // Assert
             Assert.That(result, Is.EqualTo(expectedValue));
-            Assert.That(factoryCalled, Is.False); // Factory should not be called if value is cached
+            Assert.That(factoryCalled, Is.True); // Factory should be called for first call
+
+            // Second call should return cached value without calling factory
+            factoryCalled = false;
+            var cachedResult = _subject.GetOrAdd(cacheKey, () =>
+            {
+                factoryCalled = true;
+                return "different-value";
+            }, DateTimeOffset.Now.AddHours(1));
+
+            Assert.That(cachedResult, Is.EqualTo(expectedValue)); // Should return cached value
+            Assert.That(factoryCalled, Is.False); // Factory should not be called
         }
 
         [Test]
@@ -177,16 +178,15 @@ namespace Ombi.Helpers.Tests
             var expectedValue = "test-value";
             var customExpiration = DateTimeOffset.Now.AddHours(3);
 
-            _memoryCacheMock.Setup(x => x.GetOrCreate(
-                cacheKey,
-                It.IsAny<Func<ICacheEntry, string>>()))
-                .Returns(expectedValue);
-
             // Act
             var result = _subject.GetOrAdd(cacheKey, () => expectedValue, customExpiration);
 
             // Assert
             Assert.That(result, Is.EqualTo(expectedValue));
+            
+            // Verify the value is cached
+            var cachedValue = _memoryCache.Get(cacheKey);
+            Assert.That(cachedValue, Is.EqualTo(expectedValue));
         }
 
         [Test]
@@ -196,14 +196,9 @@ namespace Ombi.Helpers.Tests
             var cacheKey = "test-key";
             var expectedException = new InvalidOperationException("Test exception");
 
-            _memoryCacheMock.Setup(x => x.GetOrCreate(
-                cacheKey,
-                It.IsAny<Func<ICacheEntry, string>>()))
-                .Throws(expectedException);
-
             // Act & Assert
             var exception = Assert.Throws<InvalidOperationException>(() =>
-                _subject.GetOrAdd(cacheKey, () => "value", DateTimeOffset.Now.AddHours(1)));
+                _subject.GetOrAdd<string>(cacheKey, () => throw expectedException, DateTimeOffset.Now.AddHours(1)));
 
             Assert.That(exception, Is.EqualTo(expectedException));
         }
@@ -213,38 +208,46 @@ namespace Ombi.Helpers.Tests
         {
             // Arrange
             var cacheKey = "test-key";
+            var value = "test-value";
+            _memoryCache.Set(cacheKey, value);
+
+            // Verify value is in cache
+            Assert.That(_memoryCache.Get(cacheKey), Is.EqualTo(value));
 
             // Act
             _subject.Remove(cacheKey);
 
             // Assert
-            _memoryCacheMock.Verify(x => x.Remove(cacheKey), Times.Once);
+            Assert.That(_memoryCache.Get(cacheKey), Is.Null);
         }
 
         [Test]
-        public void Remove_WithNullKey_HandlesGracefully()
+        public void Remove_WithNullKey_ThrowsArgumentNullException()
         {
             // Arrange
             string cacheKey = null;
 
-            // Act
-            _subject.Remove(cacheKey);
-
-            // Assert
-            _memoryCacheMock.Verify(x => x.Remove(It.IsAny<string>()), Times.Once);
+            // Act & Assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _subject.Remove(cacheKey));
+            Assert.That(exception.ParamName, Is.EqualTo("key"));
         }
 
         [Test]
-        public void Remove_WithEmptyKey_HandlesGracefully()
+        public void Remove_WithEmptyKey_WorksCorrectly()
         {
             // Arrange
             var cacheKey = "";
+            var value = "test-value";
+            _memoryCache.Set(cacheKey, value);
+
+            // Verify value is in cache
+            Assert.That(_memoryCache.Get(cacheKey), Is.EqualTo(value));
 
             // Act
             _subject.Remove(cacheKey);
 
             // Assert
-            _memoryCacheMock.Verify(x => x.Remove(It.IsAny<string>()), Times.Once);
+            Assert.That(_memoryCache.Get(cacheKey), Is.Null);
         }
 
         [Test]
@@ -254,11 +257,6 @@ namespace Ombi.Helpers.Tests
             var cacheKey = "complex-object-key";
             var expectedValue = new TestObject { Id = 1, Name = "Test" };
 
-            _memoryCacheMock.Setup(x => x.GetOrCreateAsync(
-                cacheKey,
-                It.IsAny<Func<ICacheEntry, Task<TestObject>>>()))
-                .ReturnsAsync(expectedValue);
-
             // Act
             var result = await _subject.GetOrAddAsync(cacheKey, () => Task.FromResult(expectedValue));
 
@@ -266,6 +264,12 @@ namespace Ombi.Helpers.Tests
             Assert.That(result, Is.EqualTo(expectedValue));
             Assert.That(result.Id, Is.EqualTo(1));
             Assert.That(result.Name, Is.EqualTo("Test"));
+            
+            // Verify the value is cached
+            var cachedValue = _memoryCache.Get(cacheKey) as TestObject;
+            Assert.That(cachedValue, Is.Not.Null);
+            Assert.That(cachedValue.Id, Is.EqualTo(1));
+            Assert.That(cachedValue.Name, Is.EqualTo("Test"));
         }
 
         [Test]
@@ -275,11 +279,6 @@ namespace Ombi.Helpers.Tests
             var cacheKey = "complex-object-key";
             var expectedValue = new TestObject { Id = 2, Name = "Another Test" };
 
-            _memoryCacheMock.Setup(x => x.GetOrCreate(
-                cacheKey,
-                It.IsAny<Func<ICacheEntry, TestObject>>()))
-                .Returns(expectedValue);
-
             // Act
             var result = _subject.GetOrAdd(cacheKey, () => expectedValue, DateTimeOffset.Now.AddHours(1));
 
@@ -287,6 +286,12 @@ namespace Ombi.Helpers.Tests
             Assert.That(result, Is.EqualTo(expectedValue));
             Assert.That(result.Id, Is.EqualTo(2));
             Assert.That(result.Name, Is.EqualTo("Another Test"));
+            
+            // Verify the value is cached
+            var cachedValue = _memoryCache.Get(cacheKey) as TestObject;
+            Assert.That(cachedValue, Is.Not.Null);
+            Assert.That(cachedValue.Id, Is.EqualTo(2));
+            Assert.That(cachedValue.Name, Is.EqualTo("Another Test"));
         }
 
         [Test]
@@ -296,11 +301,6 @@ namespace Ombi.Helpers.Tests
             var cacheKey = "test-key";
             var expectedValue = "test-value";
             var zeroExpiration = DateTimeOffset.MinValue;
-
-            _memoryCacheMock.Setup(x => x.GetOrCreateAsync(
-                cacheKey,
-                It.IsAny<Func<ICacheEntry, Task<string>>>()))
-                .ReturnsAsync(expectedValue);
 
             // Act
             var result = await _subject.GetOrAddAsync(cacheKey, () => Task.FromResult(expectedValue), zeroExpiration);
@@ -316,11 +316,6 @@ namespace Ombi.Helpers.Tests
             var cacheKey = "test-key";
             var expectedValue = "test-value";
             var pastExpiration = DateTimeOffset.Now.AddHours(-1);
-
-            _memoryCacheMock.Setup(x => x.GetOrCreateAsync(
-                cacheKey,
-                It.IsAny<Func<ICacheEntry, Task<string>>>()))
-                .ReturnsAsync(expectedValue);
 
             // Act
             var result = await _subject.GetOrAddAsync(cacheKey, () => Task.FromResult(expectedValue), pastExpiration);
