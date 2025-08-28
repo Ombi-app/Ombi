@@ -34,10 +34,18 @@ namespace Ombi.Notifications
         {
             try
             {
-                var email = new EmailBasicTemplate();
-
                 var customization = await CustomizationSettings.GetSettingsAsync();
-                var html = email.LoadTemplate(model.Subject, model.Message, null, customization.Logo);
+                string html;
+
+                if (settings.UseBasicWrapper)
+                {
+                    var email = new EmailBasicTemplate();
+                    html = email.LoadTemplate(model.Subject, model.Message, null, customization.Logo, null, settings.IncludeWrapperLogo, settings.IncludeWrapperPoster);
+                }
+                else
+                {
+                    html = model.Message;
+                }
                 
                 var messageId = MimeUtils.GenerateMessageId();
                 if (customization.ApplicationUrl.HasValue())

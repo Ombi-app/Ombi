@@ -19,6 +19,7 @@ namespace Ombi.Notifications
         {
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s.ApplicationName;
             ApplicationUrl = s?.ApplicationUrl.HasValue() ?? false ? s.ApplicationUrl : string.Empty;
+            ItemUrl = string.Empty;
         }
 
         public void Setup(OmbiUser user, CustomizationSettings s)
@@ -28,6 +29,7 @@ namespace Ombi.Notifications
             RequestedUser = user.UserName;
             Alias = user.UserAlias;
             UserName = user.UserName;
+            ItemUrl = string.Empty;
         }
 
         public void Setup(NotificationOptions opts, MovieRequests req, CustomizationSettings s,
@@ -106,6 +108,7 @@ namespace Ombi.Notifications
             if (seasonSb.Length > 0) seasonSb.Remove(seasonSb.Length - 1, 1);
             SeasonsList = seasonSb.ToString();
             CalculateRequestStatus(req);
+            ItemUrl = GetDetailsUrl(s, req);
         }
 
         public void Setup(NotificationOptions opts, AlbumRequest req, CustomizationSettings s,
@@ -119,6 +122,7 @@ namespace Ombi.Notifications
             AdditionalInformation = opts?.AdditionalInformation ?? string.Empty;
             PosterImage = req?.Cover.HasValue() ?? false ? req.Cover : req?.Disk ?? string.Empty;
             CalculateRequestStatus(req);
+            ItemUrl = GetDetailsUrl(s, req);
         }
 
         private void LoadIssues(NotificationOptions opts)
@@ -141,6 +145,9 @@ namespace Ombi.Notifications
             {
                 PosterImage = string.Empty;
             }
+
+            // For issues without a specific request context, these URLs will be empty
+            ItemUrl = string.Empty;
         }
 
         private void LoadCommon(BaseRequest req, CustomizationSettings s, UserNotificationPreferences pref, NotificationOptions opts)
@@ -154,6 +161,7 @@ namespace Ombi.Notifications
             RequestedDate = req?.RequestedDate.ToString("D");
             DetailsUrl = GetDetailsUrl(s, req);
             RequestedByAlias = req?.RequestedByAlias;
+            ItemUrl = GetDetailsUrl(s, req);
 
             if (Type.IsNullOrEmpty())
             {
@@ -229,7 +237,7 @@ namespace Ombi.Notifications
 
         private string GetDetailsUrl(CustomizationSettings s, BaseRequest req)
         {
-            if (string.IsNullOrEmpty(s.ApplicationUrl))
+            if (string.IsNullOrEmpty(s?.ApplicationUrl))
             {
                 return string.Empty;
             }
@@ -307,6 +315,7 @@ namespace Ombi.Notifications
         public string PartiallyAvailableSeasonNumber { get; set; }
         public string PartiallyAvailableEpisodeCount { get; set; }
         public string PartiallyAvailableEpisodesList { get; set; }
+        public string ItemUrl { get; set; }
 
         // System Defined
         private string LongDate => DateTime.Now.ToString("D");
@@ -351,6 +360,7 @@ namespace Ombi.Notifications
             { nameof(PartiallyAvailableSeasonNumber), PartiallyAvailableSeasonNumber },
             { nameof(PartiallyAvailableEpisodesList), PartiallyAvailableEpisodesList },
             { nameof(PartiallyAvailableEpisodeCount), PartiallyAvailableEpisodeCount },
+            { nameof(ItemUrl), ItemUrl },
         };
     }
 }

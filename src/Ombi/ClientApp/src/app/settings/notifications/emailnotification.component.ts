@@ -62,6 +62,9 @@ export class EmailNotificationComponent implements OnInit {
                 username: [x.username],
                 disableTLS: [x.disableTLS],
                 disableCertificateChecking: [x.disableCertificateChecking],
+                useBasicWrapper: [x.useBasicWrapper ?? true],
+                includeWrapperLogo: [x.includeWrapperLogo ?? true],
+                includeWrapperPoster: [x.includeWrapperPoster ?? true],
             });
 
             if (x.authentication) {

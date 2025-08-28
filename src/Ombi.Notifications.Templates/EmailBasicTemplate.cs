@@ -30,12 +30,17 @@ namespace Ombi.Notifications.Templates
 
         public string LoadTemplate(string subject, string body, string imgsrc = default(string), string logo = default(string), string url = default(string))
         {
+            return LoadTemplate(subject, body, imgsrc, logo, url, true, true);
+        }
+
+        public string LoadTemplate(string subject, string body, string imgsrc = default(string), string logo = default(string), string url = default(string), bool includeLogo = true, bool includePoster = true)
+        {
             var sb = new StringBuilder(File.ReadAllText(TemplateLocation));
             sb.Replace(SubjectKey, subject);
             sb.Replace(BodyKey, body);
             sb.Replace(DateKey, DateTime.Now.ToString("f"));
-            sb.Replace(Poster, GetPosterContent(imgsrc, url));
-            sb.Replace(Logo, string.IsNullOrEmpty(logo) ? OmbiLogo : logo);
+            sb.Replace(Poster, includePoster ? GetPosterContent(imgsrc, url) : string.Empty);
+            sb.Replace(Logo, includeLogo ? (string.IsNullOrEmpty(logo) ? OmbiLogo : logo) : string.Empty);
 
             return sb.ToString();
         }

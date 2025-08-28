@@ -23,7 +23,7 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row" style="margin-top: 1rem;">
                         <div class="md-form-field">
                             <mat-form-field appearance="outline">
                                 <mat-label>SMTP Host</mat-label>
@@ -74,6 +74,30 @@
                             </mat-form-field>
                         </div>
 
+                    <!-- Advanced Template Customizations Section -->
+                    <div class="row" style="margin-top: 2rem; margin-left: 1rem;">
+                        <div style="width: 100%;">
+                            <h4 style="color: #fff; border-bottom: 2px solid #6c757d; padding-bottom: 0.5rem; margin-bottom: 1rem;">
+                                Advanced Template Customizations
+                            </h4>
+                            <div class="md-form-field">
+                                <mat-slide-toggle formControlName="useBasicWrapper">Use Basic Email Wrapper
+                                </mat-slide-toggle>
+                                <small class="form-text text-muted">When enabled, wraps your message in Ombi's email template with header and footer. When disabled, sends only your message content.</small>
+                            </div>
+                            <div class="md-form-field" *ngIf="emailForm.get('useBasicWrapper')?.value">
+                                <mat-slide-toggle formControlName="includeWrapperLogo">Include Header Logo
+                                </mat-slide-toggle>
+                                <small class="form-text text-muted">Include the logo in the email header when using the basic wrapper.</small>
+                            </div>
+                            <div class="md-form-field" *ngIf="emailForm.get('useBasicWrapper')?.value">
+                                <mat-slide-toggle formControlName="includeWrapperPoster">Include Movie/TV Poster
+                                </mat-slide-toggle>
+                                <small class="form-text text-muted">Include the movie/TV poster at the bottom of the email when using the basic wrapper.</small>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="row top-space">
                     <div class="form-group">
@@ -97,7 +121,7 @@
         <div class="col-md-4">
             <notification-templates [templates]="templates"></notification-templates>
         </div>
-        
+
     </div>
     </fieldset>
 </div>

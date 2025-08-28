@@ -12,5 +12,9 @@
         public bool Authentication { get; set; }
         public bool DisableTLS { get; set; }
         public bool DisableCertificateChecking { get; set; }
+        
+        public bool UseBasicWrapper { get; set; } = true;
+        public bool IncludeWrapperLogo { get; set; } = true;
+        public bool IncludeWrapperPoster { get; set; } = true;
     }
 }
