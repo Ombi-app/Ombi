@@ -20,6 +20,7 @@
     <ProjectReference Include="..\Ombi.Notifications\Ombi.Notifications.csproj" />
     <ProjectReference Include="..\Ombi.Api.External\Ombi.Api.External.csproj" />
     <ProjectReference Include="..\Ombi.Api\Ombi.Api.csproj" />
+    <ProjectReference Include="..\Ombi.Notifications.Templates\Ombi.Notifications.Templates.csproj" />
   </ItemGroup>
 
 
