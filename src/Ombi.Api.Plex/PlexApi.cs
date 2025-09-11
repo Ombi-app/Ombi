@@ -109,7 +109,7 @@ namespace Ombi.Api.Plex
             return await Api.Request<PlexAccount>(request);
         }
 
-       public async Task<PlexServer> GetServer(string authToken)
+        public async Task<PlexServer> GetServer(string authToken)
         {
             var request = new Request(ServerUri, string.Empty, HttpMethod.Get, ContentType.Xml);
             await AddHeaders(request, authToken);
@@ -117,28 +117,28 @@ namespace Ombi.Api.Plex
             // XML /api/resources
             var rawXml = await Api.RequestContent(request);
 
-            // Récupère InstallId pour "identifier"
+            // Get InstallId for "identifier"
             var s = await GetSettings();
             await CheckInstallId(s);
             var clientId = s.InstallId.ToString("N");
 
-            // Transforme en "servers.xml" compatible avec PlexServer
+            // Transform into "servers.xml" compatible with PlexServer
             var serversXml = BuildServersXmlFromResources(rawXml, clientId);
 
-            // Désérialise vers le modèle existant
+            // Deserialize into the existing model
             var plexServer = Api.DeserializeXml<PlexServer>(serversXml);
             return plexServer;
         }
 
         /// <summary>
-        /// Transforme /api/resources (Device/Connection) → MediaContainer/Server (format servers.xml),
-        /// en alimentant aussi friendlyName, identifier, machineIdentifier, size au niveau du MediaContainer.
-        /// - Filtre: provides contient "server" ET owned="1"
-        /// - Un <Server> par <Connection>
-        /// - friendlyName: name du premier Device serveur
-        /// - identifier: X-Plex-Client-Identifier d’Ombi (InstallId)
-        /// - machineIdentifier: clientIdentifier du premier Device serveur
-        /// - size: nombre total de <Server> émis
+        /// Transform /api/resources (Device/Connection) → MediaContainer/Server (servers.xml format),
+        /// also populating friendlyName, identifier, machineIdentifier, size at the MediaContainer level.
+        /// - Filter: provides contains "server" AND owned="1"
+        /// - One <Server> per <Connection>
+        /// - friendlyName: name of the first server Device
+        /// - identifier: Ombi’s X-Plex-Client-Identifier (InstallId)
+        /// - machineIdentifier: clientIdentifier of the first server Device
+        /// - size: total number of <Server> emitted
         /// </summary>
         private static string BuildServersXmlFromResources(string resourcesXml, string clientIdentifierForOmbi)
         {
