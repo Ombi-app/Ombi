@@ -1,3 +1,12 @@
+## [4.49.7](https://github.com/Ombi-app/Ombi/compare/v4.49.6...v4.49.7) (2025-09-11)
+
+
+### Bug Fixes
+
+* Use new server discovery url [#5260](https://github.com/Ombi-app/Ombi/issues/5260) ([56a91d6](https://github.com/Ombi-app/Ombi/commit/56a91d6240f53a4306fcd0648575976f9d459048))
+
+
+
 ## [4.49.6](https://github.com/Ombi-app/Ombi/compare/v4.49.5...v4.49.6) (2025-08-24)
 
 
@@ -1310,15 +1319,6 @@
 ### Bug Fixes
 
 * **radarr-4k:** 🐛 Fixed an issue when using Radarr 4k with user set quality profiles. There are now user quality profiles for 4k profile [#5025](https://github.com/Ombi-app/Ombi/issues/5025) ([62b9a1f](https://github.com/Ombi-app/Ombi/commit/62b9a1f65fc4ee5f1eaf9dfabf37742a9007433e))
-
-
-
-## [4.43.9](https://github.com/Ombi-app/Ombi/compare/v4.43.8...v4.43.9) (2023-11-18)
-
-
-### Bug Fixes
-
-* **sonarr:** 🐛 Correctly monitor episodes ([57e7830](https://github.com/Ombi-app/Ombi/commit/57e7830f8e54b65ce3c1f0b122cbcc517d1af926))
 
 
 
