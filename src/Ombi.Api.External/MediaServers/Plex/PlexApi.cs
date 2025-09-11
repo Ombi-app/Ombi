@@ -13,6 +13,7 @@ using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
+using System.Linq;
 
 namespace Ombi.Api.External.MediaServers.Plex
 {
@@ -110,10 +111,32 @@ namespace Ombi.Api.External.MediaServers.Plex
         public async Task<PlexServer> GetServer(string authToken)
         {
             var request = new Request(ServerUri, string.Empty, HttpMethod.Get, ContentType.Xml);
-
             await AddHeaders(request, authToken);
 
-            return await Api.Request<PlexServer>(request);
+            var servers = await Api.Request<PlexServer>(request);
+
+            if (servers?.Devices != null)
+            {
+                servers.Devices = servers.Devices
+                    .Where(d =>
+                    {
+                        var isOwned = ((d.Owned ?? "").Trim() == "1") ||
+                                    ((d.Owned ?? "").Equals("true", StringComparison.OrdinalIgnoreCase));
+
+                        var hasServerProvide = (d.Provides ?? "")
+                            .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                            .Any(p => p.Trim().Equals("server", StringComparison.OrdinalIgnoreCase));
+
+                        var hasConn = d.Connections != null && d.Connections.Any();
+
+                        return isOwned && hasServerProvide && hasConn;
+                    })
+                    .ToList();
+
+                servers.Size = servers.Devices.Count.ToString();
+            }
+
+            return servers;
         }
 
         public async Task<PlexContainer> GetLibrarySections(string authToken, string plexFullHost)
