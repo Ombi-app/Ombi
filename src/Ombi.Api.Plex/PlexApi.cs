@@ -147,53 +147,54 @@ namespace Ombi.Api.Plex
             var serverDevices = doc.Descendants("Device")
                 .Where(d =>
                 {
-                    var provides = (string?)d.Attribute("provides") ?? string.Empty;
-                    var owned = (string?)d.Attribute("owned") ?? "0";
+                    var provides = (string)d.Attribute("provides") ?? string.Empty;
+                    var owned = (string)d.Attribute("owned") ?? "0";
                     return owned == "1" && provides.Split(',').Any(p => p.Trim().Equals("server", StringComparison.OrdinalIgnoreCase));
                 })
                 .ToList();
 
             var mediaContainer = new XElement("MediaContainer");
 
-            // Attributs racine
             var firstDevice = serverDevices.FirstOrDefault();
-            var friendlyName = (string?)firstDevice?.Attribute("name") ?? string.Empty;
-            var firstMachineId = (string?)firstDevice?.Attribute("clientIdentifier") ?? string.Empty;
+            var friendlyName = firstDevice?.Attribute("name")?.Value ?? string.Empty;
+            var firstMachineId = firstDevice?.Attribute("clientIdentifier")?.Value ?? string.Empty;
 
             int totalServers = 0;
 
             foreach (var device in serverDevices)
             {
-                var name = (string?)device.Attribute("name") ?? "";
-                var productVersion = (string?)device.Attribute("productVersion") ?? "";
-                var clientIdentifier = (string?)device.Attribute("clientIdentifier") ?? "";
-                var accessToken = (string?)device.Attribute("accessToken") ?? "";
-                var publicAddress = (string?)device.Attribute("publicAddress") ?? "";
+                var name = (string)device.Attribute("name") ?? string.Empty;
+                var productVersion = (string)device.Attribute("productVersion") ?? string.Empty;
+                var clientIdentifier = (string)device.Attribute("clientIdentifier") ?? string.Empty;
+                var accessToken = (string)device.Attribute("accessToken") ?? string.Empty;
+                var publicAddress = (string)device.Attribute("publicAddress") ?? string.Empty;
 
                 foreach (var conn in device.Elements("Connection"))
                 {
-                    var protocol = (string?)conn.Attribute("protocol") ?? "";
-                    var address = (string?)conn.Attribute("address") ?? "";
-                    var port = (string?)conn.Attribute("port") ?? "";
-                    var uri = (string?)conn.Attribute("uri") ?? "";
-                    var local = (string?)conn.Attribute("local") ?? "0";
+                    var protocol = (string)conn.Attribute("protocol") ?? string.Empty;
+                    var address = (string)conn.Attribute("address") ?? string.Empty;
+                    var port = (string)conn.Attribute("port") ?? string.Empty;
+                    var uri = (string)conn.Attribute("uri") ?? string.Empty;
+                    var local = (string)conn.Attribute("local") ?? "0";
 
-                    // Compléter depuis l'URI si besoin
-                    if ((!string.IsNullOrWhiteSpace(uri)) && Uri.TryCreate(uri, UriKind.Absolute, out var parsed))
+                    if (!string.IsNullOrWhiteSpace(uri))
                     {
-                        if (string.IsNullOrWhiteSpace(protocol)) protocol = parsed.Scheme;
-                        if (string.IsNullOrWhiteSpace(address)) address = parsed.Host;
-                        if (string.IsNullOrWhiteSpace(port))
+                        Uri parsed;
+                        if (Uri.TryCreate(uri, UriKind.Absolute, out parsed))
                         {
-                            port = parsed.IsDefaultPort
-                                ? (parsed.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase) ? "443" : "80")
-                                : parsed.Port.ToString();
+                            if (string.IsNullOrWhiteSpace(protocol)) protocol = parsed.Scheme;
+                            if (string.IsNullOrWhiteSpace(address)) address = parsed.Host;
+                            if (string.IsNullOrWhiteSpace(port))
+                            {
+                                port = parsed.IsDefaultPort
+                                    ? (parsed.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase) ? "443" : "80")
+                                    : parsed.Port.ToString();
+                            }
                         }
                     }
 
-                    var host = (!string.IsNullOrWhiteSpace(address) && !string.IsNullOrWhiteSpace(port)) ? $"{address}:{port}" : "";
-
-                    var displayName = !string.IsNullOrEmpty(address) ? $"{name} ({address})" : name;
+                    var host = (!string.IsNullOrWhiteSpace(address) && !string.IsNullOrWhiteSpace(port)) ? address + ":" + port : string.Empty;
+                    var displayName = !string.IsNullOrEmpty(address) ? name + " (" + address + ")" : name;
 
                     var server = new XElement("Server",
                         new XAttribute("name", displayName),
@@ -206,8 +207,7 @@ namespace Ombi.Api.Plex
                         new XAttribute("accessToken", accessToken),
                         new XAttribute("local", local),
                         new XAttribute("publicAddress", publicAddress),
-                        // Toujours présent pour éviter null côté Angular
-                        new XAttribute("localAddresses", string.IsNullOrWhiteSpace(address) ? "" : address)
+                        new XAttribute("localAddresses", string.IsNullOrWhiteSpace(address) ? string.Empty : address)
                     );
 
                     if (!string.IsNullOrWhiteSpace(uri))
@@ -217,7 +217,7 @@ namespace Ombi.Api.Plex
                     else if (!string.IsNullOrWhiteSpace(host))
                     {
                         var proto = string.IsNullOrWhiteSpace(protocol) ? "http" : protocol;
-                        server.SetAttributeValue("uri", $"{proto}://{host}");
+                        server.SetAttributeValue("uri", proto + "://" + host);
                     }
 
                     mediaContainer.Add(server);
