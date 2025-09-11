@@ -1,7 +1,7 @@
-﻿#region Copyright
+#region Copyright
 // /************************************************************************
 //    Copyright (c) 2017 Jamie Rees
-//    File: PlexServer.cs
+//    File: Connection.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,23 +25,26 @@
 //  ************************************************************************/
 #endregion
 
-using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace Ombi.Api.External.MediaServers.Plex.Models.Server
 {
-    [XmlRoot(ElementName = "MediaContainer")]
-    public class PlexServer
+    [XmlRoot(ElementName = "Connection")]
+    public class Connection
     {
-        [XmlElement(ElementName = "Device")]
-        public List<Device> Devices { get; set; }
-        [XmlAttribute(AttributeName = "friendlyName")]
-        public string FriendlyName { get; set; }
-        [XmlAttribute(AttributeName = "identifier")]
-        public string Identifier { get; set; }
-        [XmlAttribute(AttributeName = "machineIdentifier")]
-        public string MachineIdentifier { get; set; }
-        [XmlAttribute(AttributeName = "size")]
-        public string Size { get; set; }
+        [XmlAttribute(AttributeName = "protocol")]
+        public string Protocol { get; set; }
+        
+        [XmlAttribute(AttributeName = "address")]
+        public string Address { get; set; }
+        
+        [XmlAttribute(AttributeName = "port")]
+        public string Port { get; set; }
+        
+        [XmlAttribute(AttributeName = "uri")]
+        public string Uri { get; set; }
+        
+        [XmlAttribute(AttributeName = "local")]
+        public string Local { get; set; }
     }
 }

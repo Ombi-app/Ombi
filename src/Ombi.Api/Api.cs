@@ -91,7 +91,7 @@ namespace Ombi.Api
 
         public T DeserializeXml<T>(string receivedString)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
+                XmlSerializer serializer = new XmlSerializer(typeof(T));
             StringReader reader = new StringReader(receivedString);
             var value = (T) serializer.Deserialize(reader);
             return value;
