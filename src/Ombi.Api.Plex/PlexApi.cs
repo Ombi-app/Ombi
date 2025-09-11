@@ -13,6 +13,8 @@ using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace Ombi.Api.Plex
 {
@@ -67,7 +69,7 @@ namespace Ombi.Api.Plex
         private const string SignInUri = "https://plex.tv/users/sign_in.json";
         private const string FriendsUri = "https://plex.tv/api/users"; 
         private const string GetAccountUri = "https://plex.tv/users/account.json";
-        private const string ServerUri = "https://plex.tv/pms/servers.xml";
+        private const string ServerUri = "https://plex.tv/api/resources";
         private const string WatchlistUri = "https://discover.provider.plex.tv/";
 
         /// <summary>
@@ -107,14 +109,132 @@ namespace Ombi.Api.Plex
             return await Api.Request<PlexAccount>(request);
         }
 
-        public async Task<PlexServer> GetServer(string authToken)
+       public async Task<PlexServer> GetServer(string authToken)
         {
             var request = new Request(ServerUri, string.Empty, HttpMethod.Get, ContentType.Xml);
-
             await AddHeaders(request, authToken);
 
-            return await Api.Request<PlexServer>(request);
+            // XML /api/resources
+            var rawXml = await Api.RequestContent(request);
+
+            // Récupère InstallId pour "identifier"
+            var s = await GetSettings();
+            await CheckInstallId(s);
+            var clientId = s.InstallId.ToString("N");
+
+            // Transforme en "servers.xml" compatible avec PlexServer
+            var serversXml = BuildServersXmlFromResources(rawXml, clientId);
+
+            // Désérialise vers le modèle existant
+            var plexServer = Api.DeserializeXml<PlexServer>(serversXml);
+            return plexServer;
         }
+
+        /// <summary>
+        /// Transforme /api/resources (Device/Connection) → MediaContainer/Server (format servers.xml),
+        /// en alimentant aussi friendlyName, identifier, machineIdentifier, size au niveau du MediaContainer.
+        /// - Filtre: provides contient "server" ET owned="1"
+        /// - Un <Server> par <Connection>
+        /// - friendlyName: name du premier Device serveur
+        /// - identifier: X-Plex-Client-Identifier d’Ombi (InstallId)
+        /// - machineIdentifier: clientIdentifier du premier Device serveur
+        /// - size: nombre total de <Server> émis
+        /// </summary>
+        private static string BuildServersXmlFromResources(string resourcesXml, string clientIdentifierForOmbi)
+        {
+            var doc = XDocument.Parse(resourcesXml);
+
+            var serverDevices = doc.Descendants("Device")
+                .Where(d =>
+                {
+                    var provides = (string?)d.Attribute("provides") ?? string.Empty;
+                    var owned = (string?)d.Attribute("owned") ?? "0";
+                    return owned == "1" && provides.Split(',').Any(p => p.Trim().Equals("server", StringComparison.OrdinalIgnoreCase));
+                })
+                .ToList();
+
+            var mediaContainer = new XElement("MediaContainer");
+
+            // Attributs racine
+            var firstDevice = serverDevices.FirstOrDefault();
+            var friendlyName = (string?)firstDevice?.Attribute("name") ?? string.Empty;
+            var firstMachineId = (string?)firstDevice?.Attribute("clientIdentifier") ?? string.Empty;
+
+            int totalServers = 0;
+
+            foreach (var device in serverDevices)
+            {
+                var name = (string?)device.Attribute("name") ?? "";
+                var productVersion = (string?)device.Attribute("productVersion") ?? "";
+                var clientIdentifier = (string?)device.Attribute("clientIdentifier") ?? "";
+                var accessToken = (string?)device.Attribute("accessToken") ?? "";
+                var publicAddress = (string?)device.Attribute("publicAddress") ?? "";
+
+                foreach (var conn in device.Elements("Connection"))
+                {
+                    var protocol = (string?)conn.Attribute("protocol") ?? "";
+                    var address = (string?)conn.Attribute("address") ?? "";
+                    var port = (string?)conn.Attribute("port") ?? "";
+                    var uri = (string?)conn.Attribute("uri") ?? "";
+                    var local = (string?)conn.Attribute("local") ?? "0";
+
+                    // Compléter depuis l'URI si besoin
+                    if ((!string.IsNullOrWhiteSpace(uri)) && Uri.TryCreate(uri, UriKind.Absolute, out var parsed))
+                    {
+                        if (string.IsNullOrWhiteSpace(protocol)) protocol = parsed.Scheme;
+                        if (string.IsNullOrWhiteSpace(address)) address = parsed.Host;
+                        if (string.IsNullOrWhiteSpace(port))
+                        {
+                            port = parsed.IsDefaultPort
+                                ? (parsed.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase) ? "443" : "80")
+                                : parsed.Port.ToString();
+                        }
+                    }
+
+                    var host = (!string.IsNullOrWhiteSpace(address) && !string.IsNullOrWhiteSpace(port)) ? $"{address}:{port}" : "";
+
+                    var displayName = !string.IsNullOrEmpty(address) ? $"{name} ({address})" : name;
+
+                    var server = new XElement("Server",
+                        new XAttribute("name", displayName),
+                        new XAttribute("address", address),
+                        new XAttribute("port", port),
+                        new XAttribute("scheme", string.IsNullOrWhiteSpace(protocol) ? "http" : protocol),
+                        new XAttribute("host", host),
+                        new XAttribute("version", productVersion),
+                        new XAttribute("machineIdentifier", clientIdentifier),
+                        new XAttribute("accessToken", accessToken),
+                        new XAttribute("local", local),
+                        new XAttribute("publicAddress", publicAddress),
+                        // Toujours présent pour éviter null côté Angular
+                        new XAttribute("localAddresses", string.IsNullOrWhiteSpace(address) ? "" : address)
+                    );
+
+                    if (!string.IsNullOrWhiteSpace(uri))
+                    {
+                        server.SetAttributeValue("uri", uri);
+                    }
+                    else if (!string.IsNullOrWhiteSpace(host))
+                    {
+                        var proto = string.IsNullOrWhiteSpace(protocol) ? "http" : protocol;
+                        server.SetAttributeValue("uri", $"{proto}://{host}");
+                    }
+
+                    mediaContainer.Add(server);
+                    totalServers++;
+                }
+            }
+
+            mediaContainer.SetAttributeValue("friendlyName", friendlyName);
+            mediaContainer.SetAttributeValue("identifier", clientIdentifierForOmbi);
+            mediaContainer.SetAttributeValue("machineIdentifier", string.IsNullOrEmpty(firstMachineId) ? clientIdentifierForOmbi : firstMachineId);
+            mediaContainer.SetAttributeValue("size", totalServers.ToString());
+
+            var outDoc = new XDocument(mediaContainer);
+            return outDoc.ToString(SaveOptions.DisableFormatting);
+        }
+
+
 
         public async Task<PlexContainer> GetLibrarySections(string authToken, string plexFullHost)
         {
