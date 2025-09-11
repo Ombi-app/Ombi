@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { IPlexServer, IPlexServerResponse, IPlexServerViewModel } from "app/interfaces";
+import { IPlexServer, IPlexDeviceResponse, IPlexServerViewModel } from "app/interfaces";
 import { PlexCreds, PlexSyncType } from "../models";
 
 @Component({
@@ -16,7 +16,7 @@ export class PlexFormComponent {
 
     @Output() public loadLibraries = new EventEmitter();
     @Output() public loadServers = new EventEmitter<PlexCreds>();
-    @Output() public selectServer = new EventEmitter<IPlexServerResponse>();
+    @Output() public selectServer = new EventEmitter<IPlexDeviceResponse>();
     @Output() public test = new EventEmitter();
     @Output() public runSync = new EventEmitter<PlexSyncType>();
 

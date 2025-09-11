@@ -90,9 +90,51 @@ export interface IPlexServerResult {
     friendlyName: string;
     machineIdentifier: string;
     identifier: string;
-    server: IPlexServerResponse[];
+    devices: IPlexDeviceResponse[];
 }
 
+export interface IPlexDeviceResponse {
+    accessToken: string;
+    name: string;
+    product: string;
+    productVersion: string;
+    platform: string;
+    platformVersion: string;
+    device: string;
+    clientIdentifier: string;
+    createdAt: string;
+    lastSeenAt: string;
+    provides: string;
+    owned: string;
+    searchEnabled: string;
+    publicAddress: string;
+    httpsRequired: string;
+    synced: string;
+    relay: string;
+    dnsRebindingProtection: string;
+    natLoopbackSupported: string;
+    publicAddressMatches: string;
+    presence: string;
+    ownerId: string;
+    home: string;
+    sourceTitle: string;
+    connections: IPlexConnection[];
+    // Backward compatibility properties
+    localAddresses: string;
+    machineIdentifier: string;
+    port: string;
+    scheme: string;
+}
+
+export interface IPlexConnection {
+    protocol: string;
+    address: string;
+    port: string;
+    uri: string;
+    local: string;
+}
+
+// Keep the old interface for backward compatibility
 export interface IPlexServerResponse {
     accessToken: string;
     address: string;

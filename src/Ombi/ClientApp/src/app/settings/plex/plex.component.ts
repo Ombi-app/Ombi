@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { EMPTY, Subject } from "rxjs";
 import { catchError, takeUntil } from "rxjs/operators";
 
-import { IPlexServer, IPlexServerResponse, IPlexServerViewModel, IPlexSettings } from "../../interfaces";
+import { IPlexServer, IPlexDeviceResponse, IPlexServerViewModel, IPlexSettings } from "../../interfaces";
 import { JobService, NotificationService, PlexService, SettingsService } from "../../services";
 import {UntypedFormControl} from '@angular/forms';
 import { MatDialog } from "@angular/material/dialog";
@@ -62,20 +62,20 @@ export class PlexComponent implements OnInit, OnDestroy {
         });
     }
 
-    public selectServer(selectedServer: IPlexServerResponse) {
+    public selectServer(selectedDevice: IPlexDeviceResponse) {
         const server = <IPlexServer> { name: "New" + this.settings.servers.length + "*", id: Math.floor(Math.random() * (99999 - 0 + 1) + 1) };
 
-        var splitServers = selectedServer.localAddresses.split(",");
+        var splitServers = selectedDevice.localAddresses.split(",");
         if (splitServers.length > 1) {
             server.ip = splitServers[splitServers.length - 1];
         } else {
-            server.ip = selectedServer.localAddresses;
+            server.ip = selectedDevice.localAddresses;
         }
-        server.name = selectedServer.name;
-        server.machineIdentifier = selectedServer.machineIdentifier;
-        server.plexAuthToken = selectedServer.accessToken;
-        server.port = parseInt(selectedServer.port);
-        server.ssl = selectedServer.scheme === "http" ? false : true;
+        server.name = selectedDevice.name;
+        server.machineIdentifier = selectedDevice.machineIdentifier;
+        server.plexAuthToken = selectedDevice.accessToken;
+        server.port = parseInt(selectedDevice.port);
+        server.ssl = selectedDevice.scheme === "http" ? false : true;
         server.serverHostname = "";
 
         this.notificationService.success(`Selected ${server.name}!`);

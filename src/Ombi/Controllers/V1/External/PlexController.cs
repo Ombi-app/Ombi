@@ -66,7 +66,7 @@ namespace Ombi.Controllers.V1.External
                     _log.LogDebug("Sign in successful");
                     _log.LogDebug("Getting servers");
                     var server = await PlexApi.GetServer(result.user.authentication_token);
-                    var servers = server.Server.FirstOrDefault();
+                    var servers = server.Devices?.FirstOrDefault();
                     if (servers == null)
                     {
                         _log.LogWarning("Looks like we can't find any Plex Servers");

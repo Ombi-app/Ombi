@@ -156,7 +156,7 @@
                                 <mat-form-field appearance="outline" class="full-width mt-3">
                                     <mat-label>Select Server</mat-label>
                                     <mat-select [id]="'servers'" *ngIf="loadedServers">
-                                        <mat-option (click)="selectServer(s)" *ngFor="let s of loadedServers.servers.server" [value]="s.server">
+                                        <mat-option (click)="selectServer(s)" *ngFor="let s of loadedServers.servers.devices" [value]="s.device">
                                             {{s.name}}
                                         </mat-option>
                                     </mat-select>
