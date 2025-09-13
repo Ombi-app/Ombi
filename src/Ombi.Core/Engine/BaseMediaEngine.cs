@@ -15,7 +15,7 @@ using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
-using Ombi.Api.TheMovieDb.Models;
+using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
 using Ombi.Core.Helpers;
 
 namespace Ombi.Core.Engine

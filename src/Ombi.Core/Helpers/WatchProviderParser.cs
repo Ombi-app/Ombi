@@ -1,4 +1,4 @@
-﻿using Ombi.Api.TheMovieDb.Models;
+﻿using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
 using Ombi.Store.Entities;
 using System;
 using System.Collections.Generic;

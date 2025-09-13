@@ -1,4 +1,4 @@
-﻿using Ombi.Api.Lidarr.Models;
+﻿using Ombi.Api.External.ExternalApis.Lidarr.Models;
 
 namespace Ombi.Core.Models.Search
 {

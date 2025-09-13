@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Ombi.Api.Lidarr;
+using Ombi.Api.External.ExternalApis.Lidarr;
 using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models.External;
 using System;

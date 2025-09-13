@@ -30,7 +30,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Ombi.Api.Jellyfin;
+using Ombi.Api.External.MediaServers.Jellyfin;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Hubs;

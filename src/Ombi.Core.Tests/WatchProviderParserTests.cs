@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using Ombi.Api.TheMovieDb.Models;
+using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
 using Ombi.Core.Helpers;
 using Ombi.Store.Entities;
 using System.Collections.Generic;

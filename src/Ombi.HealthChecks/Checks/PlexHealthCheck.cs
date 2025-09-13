@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Ombi.Api.Plex;
-using Ombi.Api.Plex.Models.Status;
+using Ombi.Api.External.MediaServers.Plex;
+using Ombi.Api.External.MediaServers.Plex.Models.Status;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using System;

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
-using Ombi.Api.MusicBrainz;
-using Ombi.Api.TheMovieDb;
-using Ombi.Api.TheMovieDb.Models;
+using Ombi.Api.External.ExternalApis.MusicBrainz;
+using Ombi.Api.External.ExternalApis.TheMovieDb;
+using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
 using Ombi.Core.Authentication;
 using Ombi.Core.Helpers;
 using Ombi.Core.Models.Requests;
@@ -20,7 +20,7 @@ using Ombi.Store.Repository;
 using Ombi.TheMovieDbApi.Models;
 
 // Due to conflicting Genre models in
-// Ombi.TheMovieDbApi.Models and Ombi.Api.TheMovieDb.Models   
+// Ombi.TheMovieDbApi.Models and Ombi.Api.External.ExternalApis.TheMovieDb.Models   
 using Genre = Ombi.TheMovieDbApi.Models.Genre;
 
 namespace Ombi.Core.Engine.V2

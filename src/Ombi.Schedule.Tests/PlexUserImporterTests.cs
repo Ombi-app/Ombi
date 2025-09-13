@@ -2,9 +2,9 @@
 using Moq;
 using Moq.AutoMock;
 using NUnit.Framework;
-using Ombi.Api.Plex;
-using Ombi.Api.Plex.Models;
-using Ombi.Api.Plex.Models.Friends;
+using Ombi.Api.External.MediaServers.Plex;
+using Ombi.Api.External.MediaServers.Plex.Models;
+using Ombi.Api.External.MediaServers.Plex.Models.Friends;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine;
 using Ombi.Core.Settings;

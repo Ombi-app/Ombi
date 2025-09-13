@@ -88,12 +88,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Ombi.Api.Emby\Ombi.Api.Emby.csproj" />
-    <ProjectReference Include="..\Ombi.Api.Jellyfin\Ombi.Api.Jellyfin.csproj" />
-    <ProjectReference Include="..\Ombi.Api.Github\Ombi.Api.Github.csproj" />
-    <ProjectReference Include="..\Ombi.Api.Lidarr\Ombi.Api.Lidarr.csproj" />
-    <ProjectReference Include="..\Ombi.Api.SickRage\Ombi.Api.SickRage.csproj" />
-    <ProjectReference Include="..\Ombi.Api.Twilio\Ombi.Api.Twilio.csproj" />
+    <ProjectReference Include="..\Ombi.Api.External\Ombi.Api.External.csproj" />
     <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
     <ProjectReference Include="..\Ombi.DependencyInjection\Ombi.DependencyInjection.csproj" />
     <ProjectReference Include="..\Ombi.HealthChecks\Ombi.HealthChecks.csproj" />
@@ -102,7 +97,6 @@
     <ProjectReference Include="..\Ombi.Mapping\Ombi.Mapping.csproj" />
     <ProjectReference Include="..\Ombi.Schedule\Ombi.Schedule.csproj" />
     <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
-    <ProjectReference Include="..\Ombi.TheMovieDbApi\Ombi.Api.TheMovieDb.csproj" />
   </ItemGroup>
 
   

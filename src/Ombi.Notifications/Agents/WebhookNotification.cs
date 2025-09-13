@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using Ombi.Api.Webhook;
+using Ombi.Api.External.NotificationServices.Webhook;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;

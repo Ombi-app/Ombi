@@ -2,10 +2,10 @@
 using Moq;
 using Moq.AutoMock;
 using NUnit.Framework;
-using Ombi.Api.Plex;
-using Ombi.Api.Plex.Models;
-using Ombi.Api.TheMovieDb;
-using Ombi.Api.TheMovieDb.Models;
+using Ombi.Api.External.MediaServers.Plex;
+using Ombi.Api.External.MediaServers.Plex.Models;
+using Ombi.Api.External.ExternalApis.TheMovieDb;
+using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
 using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Requests;

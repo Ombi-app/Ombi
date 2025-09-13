@@ -1,4 +1,4 @@
-﻿using Ombi.Api.TheMovieDb;
+﻿using Ombi.Api.External.ExternalApis.TheMovieDb;
 using Ombi.Core.Models.Requests;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
@@ -11,7 +11,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Ombi.Api.TheMovieDb.Models;
+using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.UI;

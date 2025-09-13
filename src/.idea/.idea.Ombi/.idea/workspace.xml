@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="57001998-efde-494a-80b3-d7acfc91f770" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/settings/plex/plex.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/settings/plex/plex.component.html" afterDir="false" />
-    </list>
+    <list default="true" id="57001998-efde-494a-80b3-d7acfc91f770" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -329,7 +327,7 @@
     <option name="height" value="1000" />
   </component>
   <component name="ProjectId" id="2wGwbN5gDqLwyiO1WJdlwJzZ5M9" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+  <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectView">
@@ -402,7 +400,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "fb34c741-04ca-4b4f-8ea1-651a011b42c8.executor": "Debug",
-    "git-widget-placeholder": "watchlist-expired-notification",
+    "git-widget-placeholder": "backend-refactor",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -553,10 +551,6 @@
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <breakpoint enabled="true" suspend="NONE" type="DotNet Exception Breakpoints">
-          <properties exception="System.Threading.ThreadAbortException" displayValue="System.Threading.ThreadAbortException" />
-          <option name="timeStamp" value="1" />
-        </breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Ombi/Controllers/V1/TokenController.cs</url>
           <line>48</line>
@@ -575,10 +569,10 @@
           <line>59</line>
           <properties documentPath="$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs" containingFunctionPresentation="Method 'MultiSearch'">
             <startOffsets>
-              <option value="2369" />
+              <option value="2457" />
             </startOffsets>
             <endOffsets>
-              <option value="2576" />
+              <option value="2664" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="4" />
@@ -588,36 +582,23 @@
           <line>49</line>
           <properties documentPath="$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs" containingFunctionPresentation="Method 'MultiSearch'">
             <startOffsets>
-              <option value="1903" />
+              <option value="1991" />
             </startOffsets>
             <endOffsets>
-              <option value="1945" />
+              <option value="2033" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Ombi.Api.MusicBrainz/MusicBrainzApi.cs</url>
-          <line>30</line>
-          <properties documentPath="$PROJECT_DIR$/Ombi.Api.MusicBrainz/MusicBrainzApi.cs" containingFunctionPresentation="Method 'SearchArtist'">
-            <startOffsets>
-              <option value="833" />
-            </startOffsets>
-            <endOffsets>
-              <option value="834" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Ombi.Schedule/Jobs/Plex/PlexWatchlistImport.cs</url>
           <line>110</line>
           <properties documentPath="$PROJECT_DIR$/Ombi.Schedule/Jobs/Plex/PlexWatchlistImport.cs" containingFunctionPresentation="Method 'Execute'">
             <startOffsets>
-              <option value="5123" />
+              <option value="5211" />
             </startOffsets>
             <endOffsets>
-              <option value="5206" />
+              <option value="5294" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="10" />
@@ -627,10 +608,10 @@
           <line>77</line>
           <properties documentPath="$PROJECT_DIR$/Ombi.Schedule/Jobs/Plex/PlexWatchlistImport.cs" containingFunctionPresentation="Method 'Execute'">
             <startOffsets>
-              <option value="3324" />
+              <option value="3412" />
             </startOffsets>
             <endOffsets>
-              <option value="3365" />
+              <option value="3453" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="11" />
@@ -640,10 +621,10 @@
           <line>100</line>
           <properties documentPath="$PROJECT_DIR$/Ombi.Schedule/Jobs/Plex/PlexWatchlistImport.cs" containingFunctionPresentation="Method 'Execute'">
             <startOffsets>
-              <option value="4602" />
+              <option value="4690" />
             </startOffsets>
             <endOffsets>
-              <option value="4636" />
+              <option value="4724" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="12" />

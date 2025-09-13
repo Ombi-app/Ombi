@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Ombi.Api.Radarr;
-using Ombi.Api.Radarr.Models;
-using Ombi.Api.Radarr.Models.V3;
+using Ombi.Api.External.ExternalApis.Radarr;
+using Ombi.Api.External.ExternalApis.Radarr.Models;
+using Ombi.Api.External.ExternalApis.Radarr.Models.V3;
 using Ombi.Attributes;
 using Ombi.Core.Settings;
 using Ombi.Helpers;

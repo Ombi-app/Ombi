@@ -1,4 +1,4 @@
-﻿using Ombi.Api.Plex.Models.Server;
+﻿using Ombi.Api.External.MediaServers.Plex.Models.Server;
 
 namespace Ombi.Models.External
 {

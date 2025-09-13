@@ -17,32 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Ombi.Api.CloudService\Ombi.Api.CloudService.csproj" />
-    <ProjectReference Include="..\Ombi.Api.CouchPotato\Ombi.Api.CouchPotato.csproj" />
-    <ProjectReference Include="..\Ombi.Api.Discord\Ombi.Api.Discord.csproj" />
-    <ProjectReference Include="..\Ombi.Api.DogNzb\Ombi.Api.DogNzb.csproj" />
-    <ProjectReference Include="..\Ombi.Api.Emby\Ombi.Api.Emby.csproj" />
-    <ProjectReference Include="..\Ombi.Api.FanartTv\Ombi.Api.FanartTv.csproj" />
-    <ProjectReference Include="..\Ombi.Api.Github\Ombi.Api.Github.csproj" />
-    <ProjectReference Include="..\Ombi.Api.GroupMe\Ombi.Api.GroupMe.csproj" />
-    <ProjectReference Include="..\Ombi.Api.Lidarr\Ombi.Api.Lidarr.csproj" />
-    <ProjectReference Include="..\Ombi.Api.Mattermost\Ombi.Api.Mattermost.csproj" />
-    <ProjectReference Include="..\Ombi.Api.MusicBrainz\Ombi.Api.MusicBrainz.csproj" />
-    <ProjectReference Include="..\Ombi.Api.Notifications\Ombi.Api.Notifications.csproj" />
-    <ProjectReference Include="..\Ombi.Api.Plex\Ombi.Api.Plex.csproj" />
-    <ProjectReference Include="..\Ombi.Api.Pushbullet\Ombi.Api.Pushbullet.csproj" />
-    <ProjectReference Include="..\Ombi.Api.Pushover\Ombi.Api.Pushover.csproj" />
-    <ProjectReference Include="..\Ombi.Api.Radarr\Ombi.Api.Radarr.csproj" />
-    <ProjectReference Include="..\Ombi.Api.RottenTomatoes\Ombi.Api.RottenTomatoes.csproj" />
-    <ProjectReference Include="..\Ombi.Api.Service\Ombi.Api.Service.csproj" />
-    <ProjectReference Include="..\Ombi.Api.SickRage\Ombi.Api.SickRage.csproj" />
-    <ProjectReference Include="..\Ombi.Api.Slack\Ombi.Api.Slack.csproj" />
-    <ProjectReference Include="..\Ombi.Api.Sonarr\Ombi.Api.Sonarr.csproj" />
-    <ProjectReference Include="..\Ombi.Api.Telegram\Ombi.Api.Telegram.csproj" />
-    <ProjectReference Include="..\Ombi.Api.Trakt\Ombi.Api.Trakt.csproj" />
-    <ProjectReference Include="..\Ombi.Api.TvMaze\Ombi.Api.TvMaze.csproj" />
-    <ProjectReference Include="..\Ombi.Api.Twilio\Ombi.Api.Twilio.csproj" />
-    <ProjectReference Include="..\Ombi.Api.Webhook\Ombi.Api.Webhook.csproj" />
+    <ProjectReference Include="..\Ombi.Api.External\Ombi.Api.External.csproj" />
     <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
     <ProjectReference Include="..\Ombi.Notifications\Ombi.Notifications.csproj" />
     <ProjectReference Include="..\Ombi.Schedule\Ombi.Schedule.csproj" />

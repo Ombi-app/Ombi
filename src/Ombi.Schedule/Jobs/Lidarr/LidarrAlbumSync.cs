@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Ombi.Api.Lidarr;
+using Ombi.Api.External.ExternalApis.Lidarr;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Hubs;
