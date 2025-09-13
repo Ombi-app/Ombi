@@ -1,12 +1,17 @@
 import { Component, ViewChild, Inject, input, output, signal, computed, inject, ChangeDetectionStrategy } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { MatButtonToggleModule, MatButtonToggleChange } from '@angular/material/button-toggle';
+import { TranslateModule } from "@ngx-translate/core";
+import { CarouselModule, Carousel } from 'primeng/carousel';
+import { SkeletonModule } from 'primeng/skeleton';
+
 import { DiscoverOption, IDiscoverCardResult } from "../../interfaces";
 import { ISearchMovieResult, ISearchTvResult, RequestType } from "../../../interfaces";
 import { SearchV2Service } from "../../../services";
 import { StorageService } from "../../../shared/storage/storage-service";
-import { MatButtonToggleChange } from '@angular/material/button-toggle';
-import { Carousel } from 'primeng/carousel';
 import { FeaturesFacade } from "../../../state/features/features.facade";
 import { APP_BASE_HREF } from "@angular/common";
+import { DiscoverCardComponent } from "../card/discover-card.component";
 
 export enum DiscoverType {
     Upcoming,
@@ -17,11 +22,19 @@ export enum DiscoverType {
 }
 
 @Component({
-    standalone: false,
+    standalone: true,
     selector: "carousel-list",
     templateUrl: "./carousel-list.component.html",
     styleUrls: ["./carousel-list.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        MatButtonToggleModule,
+        TranslateModule,
+        CarouselModule,
+        SkeletonModule,
+        DiscoverCardComponent
+    ]
 })
 export class CarouselListComponent {
     // Inputs using new input() function

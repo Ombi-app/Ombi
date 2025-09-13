@@ -1,6 +1,10 @@
 import { Component, OnInit, computed, signal } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { MatButtonToggleModule, MatButtonToggleChange } from "@angular/material/button-toggle";
+import { TranslateModule } from "@ngx-translate/core";
+import { SkeletonModule } from "primeng/skeleton";
+
 import { SearchV2Service } from "../../../services";
-import { MatButtonToggleChange } from "@angular/material/button-toggle";
 import { RequestType } from "../../../interfaces";
 import { AdvancedSearchDialogDataService } from "app/shared/advanced-search-dialog/advanced-search-dialog-data.service";
 import { Router } from "@angular/router";
@@ -13,10 +17,16 @@ interface IGenreSelect {
     type: "movie"|"tv";
 }
 @Component({
-        standalone: false,
+    standalone: true,
     selector: "genre-button-select",
     templateUrl: "./genre-button-select.component.html",
     styleUrls: ["./genre-button-select.component.scss"],
+    imports: [
+        CommonModule,
+        MatButtonToggleModule,
+        TranslateModule,
+        SkeletonModule
+    ]
 })
 export class GenreButtonSelectComponent implements OnInit {
 

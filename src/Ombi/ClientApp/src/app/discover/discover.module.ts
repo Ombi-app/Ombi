@@ -10,6 +10,16 @@ import { SharedModule } from "../shared/shared.module";
 import { SkeletonModule } from 'primeng/skeleton';
 import { ImageComponent } from 'app/components';
 
+// Import standalone components
+import { DiscoverComponent } from './components/discover/discover.component';
+import { DiscoverCardComponent } from './components/card/discover-card.component';
+import { DiscoverCollectionsComponent } from './components/collections/discover-collections.component';
+import { DiscoverActorComponent } from './components/actor/discover-actor.component';
+import { DiscoverSearchResultsComponent } from './components/search-results/search-results.component';
+import { CarouselListComponent } from './components/carousel-list/carousel-list.component';
+import { RecentlyRequestedListComponent } from './components/recently-requested-list/recently-requested-list.component';
+import { GenreButtonSelectComponent } from './components/genre/genre-button-select.component';
+
 @NgModule({
     imports: [
         RouterModule.forChild(fromComponents.routes),
@@ -20,9 +30,18 @@ import { ImageComponent } from 'app/components';
         InfiniteScrollModule,
         SkeletonModule,
         ImageComponent,
+        // Import standalone components
+        DiscoverComponent,
+        DiscoverCardComponent,
+        DiscoverCollectionsComponent,
+        DiscoverActorComponent,
+        DiscoverSearchResultsComponent,
+        CarouselListComponent,
+        RecentlyRequestedListComponent,
+        GenreButtonSelectComponent,
     ],
     declarations: [
-        ...fromComponents.components
+        // All components are now standalone - no declarations needed
     ],
     exports: [
         RouterModule,

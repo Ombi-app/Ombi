@@ -6,16 +6,32 @@ import {
   OnInit,
   Output,
 } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
 import { IRecentlyRequested, RequestType } from "../../interfaces";
 import { ImageService } from "app/services";
 import { Subject, takeUntil } from "rxjs";
 import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
+import { ImageComponent } from "../image/image.component";
+import { OmbiDatePipe } from "../../pipes/OmbiDatePipe";
 
 @Component({
-  standalone: false,
+  standalone: true,
   selector: "ombi-detailed-card",
   templateUrl: "./detailed-card.component.html",
   styleUrls: ["./detailed-card.component.scss"],
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    TranslateModule,
+    ImageComponent,
+    OmbiDatePipe
+  ]
 })
 export class DetailedCardComponent implements OnInit, OnDestroy {
   @Input() public request: IRecentlyRequested;

@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from "@angular/core";
-import { FormatPipe } from 'ngx-date-fns';
 import { parseISO, format } from 'date-fns';
 
 @Pipe({
@@ -7,10 +6,6 @@ import { parseISO, format } from 'date-fns';
     name: "ombiDate",
 })
 export class OmbiDatePipe implements PipeTransform  {
-
-    constructor(
-        private FormatPipe: FormatPipe,
-      ) {}
 
     public transform(value: string, formatStr: string ) {
         if (!value) {

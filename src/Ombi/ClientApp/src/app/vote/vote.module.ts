@@ -15,8 +15,16 @@ import { VoteComponent } from './vote.component';
 const routes: Routes = [{ path: '', component: VoteComponent, canActivate: [AuthGuard] }];
 
 @NgModule({
-	imports: [RouterModule.forChild(routes), OmbiShared, TabViewModule, OverlayPanelModule],
-	declarations: [VoteComponent],
+	imports: [
+		RouterModule.forChild(routes), 
+		OmbiShared, 
+		TabViewModule, 
+		OverlayPanelModule,
+		VoteComponent // Import standalone component
+	],
+	declarations: [
+		// All components are now standalone - no declarations needed
+	],
 	exports: [RouterModule],
 	providers: [VoteService],
 })
