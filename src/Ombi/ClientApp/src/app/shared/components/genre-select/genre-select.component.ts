@@ -1,16 +1,32 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
-import { UntypedFormControl, UntypedFormGroup } from "@angular/forms";
+import { CommonModule } from "@angular/common";
+import { ReactiveFormsModule, UntypedFormControl, UntypedFormGroup } from "@angular/forms";
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
+import { MatChipsModule } from "@angular/material/chips";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from "@angular/material/input";
+import { TranslateModule } from "@ngx-translate/core";
 import { debounceTime, distinctUntilChanged, map, startWith, switchMap } from "rxjs/operators";
 
 import { IMovieDbKeyword } from "../../../interfaces";
-import { MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
 import { Observable } from "rxjs";
 import { SearchV2Service } from "../../../services";
 
 @Component({
-        standalone: false,
+    standalone: true,
   selector: "genre-select",
-  templateUrl: "genre-select.component.html"
+  templateUrl: "genre-select.component.html",
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    MatChipsModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    TranslateModule
+  ]
 })
 export class GenreSelectComponent {
   constructor(

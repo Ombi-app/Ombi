@@ -3,7 +3,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdminRequestDialogComponent } from './admin-request-dialog/admin-request-dialog.component';
 import { AdvancedSearchDialogComponent } from './advanced-search-dialog/advanced-search-dialog.component';
 import { CommonModule } from '@angular/common';
-import { DetailsGroupComponent } from '../issues/components/details-group/details-group.component';
+// DetailsGroupComponent is in the issues module, not shared
 import { EpisodeRequestComponent } from './episode-request/episode-request.component';
 import { GenreSelectComponent } from './components/genre-select/genre-select.component';
 import { InputSwitchModule } from 'primeng/inputswitch';
@@ -47,16 +47,18 @@ import { DateFnsModule } from 'ngx-date-fns';
 
 @NgModule({
 	declarations: [
+		// All components are now standalone - no declarations needed
+	],
+	imports: [
+		// Import standalone components
 		IssuesReportComponent,
 		EpisodeRequestComponent,
-		DetailsGroupComponent,
 		AdminRequestDialogComponent,
 		AdvancedSearchDialogComponent,
 		KeywordSearchComponent,
 		GenreSelectComponent,
 		WatchProvidersSelectComponent,
-	],
-	imports: [
+		// Import other modules
 		RoleModule,
 		SidebarModule,
 		ReactiveFormsModule,
@@ -108,7 +110,6 @@ import { DateFnsModule } from 'ngx-date-fns';
 		GenreSelectComponent,
 		KeywordSearchComponent,
 		WatchProvidersSelectComponent,
-		DetailsGroupComponent,
 		TruncateModule,
 		InputSwitchModule,
 		MatTreeModule,
