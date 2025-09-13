@@ -1,3 +1,7 @@
+## [4.49.8](https://github.com/Ombi-app/Ombi/compare/v4.49.7...v4.49.8) (2025-09-13)
+
+
+
 ## [4.49.7](https://github.com/Ombi-app/Ombi/compare/v4.49.6...v4.49.7) (2025-09-11)
 
 
@@ -1310,15 +1314,6 @@
 ### Bug Fixes
 
 * **emby:** Add more logging on the PlaySync to check for Tv Shows without a valid TMDB ([08eb13b](https://github.com/Ombi-app/Ombi/commit/08eb13b788582d576a0e1befdb8e84ef7ff0d2f3))
-
-
-
-## [4.43.10](https://github.com/Ombi-app/Ombi/compare/v4.43.9...v4.43.10) (2023-11-20)
-
-
-### Bug Fixes
-
-* **radarr-4k:** 🐛 Fixed an issue when using Radarr 4k with user set quality profiles. There are now user quality profiles for 4k profile [#5025](https://github.com/Ombi-app/Ombi/issues/5025) ([62b9a1f](https://github.com/Ombi-app/Ombi/commit/62b9a1f65fc4ee5f1eaf9dfabf37742a9007433e))
 
 
 
