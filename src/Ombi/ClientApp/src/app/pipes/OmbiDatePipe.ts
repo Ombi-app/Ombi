@@ -3,7 +3,7 @@ import { FormatPipe } from 'ngx-date-fns';
 import { parseISO, format } from 'date-fns';
 
 @Pipe({
-        standalone: false,
+    standalone: true,
     name: "ombiDate",
 })
 export class OmbiDatePipe implements PipeTransform  {

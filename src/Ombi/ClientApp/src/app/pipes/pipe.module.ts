@@ -9,9 +9,30 @@ import { OmbiDatePipe } from './OmbiDatePipe';
 import { FormatPipeModule, FormatPipe } from 'ngx-date-fns';
 
 @NgModule({
-	imports: [FormatPipeModule],
-	declarations: [HumanizePipe, ThousandShortPipe, SafePipe, QualityPipe, TranslateStatusPipe, OrderPipe, OmbiDatePipe],
-	exports: [HumanizePipe, ThousandShortPipe, SafePipe, QualityPipe, TranslateStatusPipe, OrderPipe, OmbiDatePipe],
+	imports: [
+		FormatPipeModule,
+		// Import standalone pipes
+		HumanizePipe,
+		ThousandShortPipe,
+		SafePipe,
+		QualityPipe,
+		TranslateStatusPipe,
+		OrderPipe,
+		OmbiDatePipe,
+	],
+	declarations: [
+		// No declarations needed - all pipes are now standalone
+	],
+	exports: [
+		// Export standalone pipes
+		HumanizePipe,
+		ThousandShortPipe,
+		SafePipe,
+		QualityPipe,
+		TranslateStatusPipe,
+		OrderPipe,
+		OmbiDatePipe,
+	],
 	providers: [FormatPipe],
 })
 export class PipeModule {
