@@ -63,7 +63,7 @@ namespace Ombi.Core.Authentication
                 }
                 else
                 {
-                    _logger.LogDebug($"Plex OAuth sanity check: Client identifier matches ({installId}).");
+                    _logger.LogDebug("Plex OAuth sanity check: Client identifier matches.");
                 }
             }
             catch (Exception ex)
