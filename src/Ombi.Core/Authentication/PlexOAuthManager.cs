@@ -59,7 +59,7 @@ namespace Ombi.Core.Authentication
                 }
                 else if (!string.Equals(installId, pinClientId, StringComparison.OrdinalIgnoreCase))
                 {
-                    _logger.LogWarning($"Plex OAuth sanity check: Mismatch between server InstallId '{installId}' and PIN.clientIdentifier '{pinClientId}'. This can cause Plex PIN polling failures (code 1020).");
+                    _logger.LogWarning($"Plex OAuth sanity check: Mismatch between server InstallId '{(installId?.Length >= 6 ? installId.Substring(0, 6) : installId)}' and PIN.clientIdentifier '{(pinClientId?.Length >= 6 ? pinClientId.Substring(0, 6) : pinClientId)}'. This can cause Plex PIN polling failures (code 1020).");
                 }
                 else
                 {
