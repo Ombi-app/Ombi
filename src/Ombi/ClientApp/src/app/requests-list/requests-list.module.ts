@@ -2,8 +2,6 @@ import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
 
-import { SharedModule } from "../shared/shared.module";
-import { PipeModule } from "../pipes/pipe.module";
 
 import { AuthGuard } from "../auth/auth.guard";
 
@@ -17,8 +15,6 @@ const routes: Routes = [
 @NgModule({
     imports: [
         RouterModule.forChild(routes),
-        SharedModule,
-        PipeModule,
         MatBottomSheetModule
     ],
     declarations: [

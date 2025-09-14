@@ -3,7 +3,6 @@ import { RouterModule, Routes } from "@angular/router";
 
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-import { SharedModule } from "../shared/shared.module";
 import { UnsubscribeConfirmComponent } from "./components/confirm-component/unsubscribe-confirm.component";
 
 const routes: Routes = [
@@ -14,7 +13,6 @@ const routes: Routes = [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        SharedModule,
         RouterModule.forChild(routes),
     ],
     declarations: [

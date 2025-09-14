@@ -7,8 +7,6 @@ import { CommonModule } from '@angular/common';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { NgModule } from '@angular/core';
-import { PipeModule } from '../pipes/pipe.module';
-import { SharedModule } from '../shared/shared.module';
 import { SidebarModule } from 'primeng/sidebar';
 import { TooltipModule } from 'primeng/tooltip';
 import { UserManagementComponent } from './usermanagement.component';
@@ -27,11 +25,9 @@ const routes: Routes = [
 		ReactiveFormsModule,
 		RouterModule.forChild(routes),
 		MultiSelectModule,
-		PipeModule,
 		ConfirmDialogModule,
 		TooltipModule,
 		SidebarModule,
-		SharedModule,
 	],
 	declarations: [UserManagementComponent, UserManagementUserComponent],
 	exports: [RouterModule],

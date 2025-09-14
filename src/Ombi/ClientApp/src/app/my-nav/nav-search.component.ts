@@ -1,4 +1,11 @@
 import { Component, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder } from "@angular/forms";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatIconModule } from "@angular/material/icon";
+import { Router } from "@angular/router";
+import { TranslateModule } from "@ngx-translate/core";
 import {
   debounceTime,
   switchMap,
@@ -7,14 +14,21 @@ import {
 } from "rxjs/operators";
 
 import { empty} from "rxjs";
-import { Router } from "@angular/router";
-import { UntypedFormGroup, UntypedFormBuilder } from "@angular/forms";
 
 @Component({
-        standalone: false,
-  selector: "app-nav-search",
-  templateUrl: "./nav-search.component.html",
-  styleUrls: ["./nav-search.component.scss"],
+    standalone: true,
+    selector: "app-nav-search",
+    templateUrl: "./nav-search.component.html",
+    styleUrls: ["./nav-search.component.scss"],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        TranslateModule
+    ]
 })
 export class NavSearchComponent implements OnInit {
 

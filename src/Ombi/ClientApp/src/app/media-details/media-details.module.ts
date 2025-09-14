@@ -3,10 +3,8 @@ import { RouterModule, Routes } from "@angular/router";
 
 import {CarouselModule} from 'primeng/carousel';
 
-import { SharedModule } from "../shared/shared.module";
 import { MovieDetailsComponent } from "./components/movie/movie-details.component";
 import { TvDetailsComponent } from "./components/tv/tv-details.component";
-import { PipeModule } from "../pipes/pipe.module";
 
 import * as fromComponents from './components';
 import { AuthGuard } from "../auth/auth.guard";
@@ -25,9 +23,7 @@ const routes: Routes = [
 @NgModule({
     imports: [
         RouterModule.forChild(routes),
-        SharedModule,
         ReactiveFormsModule,
-        PipeModule,
         CarouselModule,
         ImageComponent,
         SkeletonModule,

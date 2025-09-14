@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="57001998-efde-494a-80b3-d7acfc91f770" name="Default Changelist" comment="" />
+    <list default="true" id="57001998-efde-494a-80b3-d7acfc91f770" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../STANDALONE_MIGRATION_PROGRESS.md" beforeDir="false" afterPath="$PROJECT_DIR$/../STANDALONE_MIGRATION_PROGRESS.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/app.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/app.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/app.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/errors/not-found.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/errors/not-found.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/my-nav/my-nav.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/my-nav/my-nav.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/my-nav/nav-search.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/my-nav/nav-search.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/shared/remaining-requests/remaining-requests.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/shared/remaining-requests/remaining-requests.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/main.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -400,7 +409,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "fb34c741-04ca-4b4f-8ea1-651a011b42c8.executor": "Debug",
-    "git-widget-placeholder": "backend-refactor",
+    "git-widget-placeholder": "angular-migration-standalone",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",

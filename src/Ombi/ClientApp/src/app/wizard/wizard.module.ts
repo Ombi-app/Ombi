@@ -21,7 +21,6 @@ import { IdentityService } from "../services";
 import { PlexOAuthService } from "../services";
 import { WizardService } from "./services/wizard.service";
 
-import { SharedModule } from "../shared/shared.module";
 
 const routes: Routes = [
     { path: "", component: WelcomeComponent},
@@ -37,7 +36,6 @@ const routes: Routes = [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        SharedModule,
         MatStepperModule,
         RouterModule.forChild(routes),
     ],

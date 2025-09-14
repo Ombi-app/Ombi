@@ -59,7 +59,6 @@ import { NewsletterComponent } from "./notifications/newsletter.component";
 import { NgModule } from "@angular/core";
 import { NotificationTemplate } from "./notifications/notificationtemplate.component";
 import { OmbiComponent } from "./ombi/ombi.component";
-import { PipeModule } from "../pipes/pipe.module";
 import { PlexComponent } from "./plex/plex.component";
 import { PushbulletComponent } from "./notifications/pushbullet.component";
 import { PushoverComponent } from "./notifications/pushover.component";
@@ -67,7 +66,6 @@ import { RadarrComponent } from "./radarr/radarr.component";
 import { RadarrFormComponent } from "./radarr/components/radarr-form.component";
 import {RadioButtonModule} from "primeng/radiobutton";
 import { SettingsMenuComponent } from "./settingsmenu.component";
-import { SharedModule } from "../shared/shared.module";
 import { SickRageComponent } from "./sickrage/sickrage.component";
 import { SlackComponent } from "./notifications/slack.component";
 import { SonarrComponent } from "./sonarr/sonarr.component";
@@ -142,10 +140,8 @@ const routes: Routes = [
         CalendarModule,
         // TagInputModule,
         ClipboardModule,
-        PipeModule,
         RadioButtonModule,
         DialogModule,
-        SharedModule,
         MatMenuModule,
         MatDialogModule,
     ],

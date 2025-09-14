@@ -13,3 +13,16 @@ export const hmrBootstrap = (module: any, bootstrap: () => Promise<NgModuleRef<a
     makeVisible();
   });
 };
+
+// HMR for standalone applications using bootstrapApplication
+export const hmrBootstrapStandalone = (module: any, bootstrap: () => Promise<ApplicationRef>) => {
+  let appRef: ApplicationRef;
+  module.hot.accept();
+  bootstrap().then(app => appRef = app);
+  module.hot.dispose(() => {
+    const elements = appRef.components.map(c => c.location.nativeElement);
+    const makeVisible = createNewHosts(elements);
+    appRef.destroy();
+    makeVisible();
+  });
+};
