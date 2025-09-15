@@ -1,13 +1,43 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
+import { ReactiveFormsModule, FormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 
 import { INotificationTemplates, ITelegramNotifcationSettings, NotificationType } from "../../interfaces";
 import { TesterService } from "../../services";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
+import { CommonModule } from "@angular/common";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
+import { RadioButtonModule } from "primeng/radiobutton";
+import { NotificationTemplate } from "./notificationtemplate.component";
+import { SettingsMenuComponent } from "../settingsmenu.component";
+import { WikiComponent } from "../wiki.component";
 
 @Component({
-        standalone: false,
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatSlideToggleModule,
+        MatTooltipModule,
+        TranslateModule,
+        RadioButtonModule,
+        NotificationTemplate,
+        SettingsMenuComponent,
+        WikiComponent
+    ],
     templateUrl: "./telegram.component.html",
     styleUrls: ["./notificationtemplate.component.scss"]
 })

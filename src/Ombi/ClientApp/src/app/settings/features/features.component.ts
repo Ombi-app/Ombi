@@ -11,6 +11,8 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslateModule } from "@ngx-translate/core";
 
 import { FeaturesFacade } from "../../state/features";
+import { SettingsMenuComponent } from "../settingsmenu.component";
+import { WikiComponent } from "../wiki.component";
 import { IFeatureEnablement } from "../../interfaces";
 import { MatSlideToggleChange } from "@angular/material/slide-toggle";
 import { firstValueFrom } from "rxjs";

@@ -15,7 +15,7 @@ import { TesterService } from "../../services";
 import { ValidationService } from "../../services";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
-import { NotificationTemplate } from "./notificationtemplate.component";
+    import { NotificationTemplate } from "./notificationtemplate.component";
 
 @Component({
     standalone: true,

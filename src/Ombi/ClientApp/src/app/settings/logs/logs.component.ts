@@ -12,6 +12,9 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslateModule } from "@ngx-translate/core";
 import { SystemService } from "../../services";
 
+import { SettingsMenuComponent } from "../settingsmenu.component";
+import { WikiComponent } from "../wiki.component";
+import { MatTabsModule } from "@angular/material/tabs";
 @Component({
     standalone: true,
     imports: [
@@ -24,7 +27,8 @@ import { SystemService } from "../../services";
         MatSelectModule,
         MatSlideToggleModule,
         MatTooltipModule,
-        TranslateModule
+        TranslateModule,
+        MatTabsModule,
     ],
     templateUrl: "./logs.component.html",
     styleUrls:["./logs.component.scss"]

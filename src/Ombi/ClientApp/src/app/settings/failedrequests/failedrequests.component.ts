@@ -10,7 +10,10 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslateModule } from "@ngx-translate/core";
 import { IFailedRequestsViewModel, RequestType } from "../../interfaces";
+import { SettingsMenuComponent } from "../settingsmenu.component";
+import { WikiComponent } from "../wiki.component";
 import { RequestRetryService } from "../../services";
+import { MatTableModule } from "@angular/material/table";
 
 @Component({
     standalone: true,
@@ -24,7 +27,11 @@ import { RequestRetryService } from "../../services";
         MatSelectModule,
         MatSlideToggleModule,
         MatTooltipModule,
-        TranslateModule
+        TranslateModule,
+        MatTableModule
+    ],
+    providers: [
+        RequestRetryService
     ],
     templateUrl: "./failedrequests.component.html",
     styleUrls: ["./failedrequests.component.scss"],

@@ -23,9 +23,7 @@ import { LandingPageComponent as SettingsLandingPageComponent } from "./settings
 import { CustomizationComponent } from "./settings/customization/customization.component";
 import { EmailNotificationComponent } from "./settings/notifications/emailnotification.component";
 import { UserManagementComponent as SettingsUserManagementComponent } from "./settings/usermanagement/usermanagement.component";
-import { UpdateComponent } from "./settings/update/update.component";
-import { CouchPotatoComponent } from "./settings/couchpotato/couchpotato.component";
-import { DogNzbComponent } from "./settings/dognzb/dognzb.component";
+    import { CouchPotatoComponent } from "./settings/couchpotato/couchpotato.component";
 import { JobsComponent } from "./settings/jobs/jobs.component";
 import { SickRageComponent } from "./settings/sickrage/sickrage.component";
 import { IssuesComponent as SettingsIssuesComponent } from "./settings/issues/issues.component";
@@ -39,6 +37,16 @@ import { LogsComponent } from "./settings/logs/logs.component";
 import { CloudMobileComponent } from "./settings/notifications/cloudmobile.coponent";
 import { FeaturesComponent } from "./settings/features/features.component";
 import { AuthGuard } from "./auth/auth.guard";
+import { NewsletterComponent } from "./settings/notifications/newsletter.component";
+import { DiscordComponent } from "./settings/notifications/discord.component";
+import { SlackComponent } from "./settings/notifications/slack.component";
+import { PushbulletComponent } from "./settings/notifications/pushbullet.component";
+import { PushoverComponent } from "./settings/notifications/pushover.component";
+import { MattermostComponent } from "./settings/notifications/mattermost.component";
+import { TelegramComponent } from "./settings/notifications/telegram.component";
+import { GotifyComponent } from "./settings/notifications/gotify.component";
+import { TwilioComponent } from "./settings/notifications/twilio/twilio.component";
+import { WebhookComponent } from "./settings/notifications/webhook.component";
 
 export const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
@@ -61,6 +69,16 @@ export const routes: Routes = [
         children: [
             { path: "Ombi", component: OmbiComponent },
             { path: "About", component: AboutComponent },
+            { path: "Discord", component: DiscordComponent },
+            { path: "Newsletter", component: NewsletterComponent },
+            { path: "Slack", component: SlackComponent },
+            { path: "Pushbullet", component: PushbulletComponent },
+            { path: "Pushover", component: PushoverComponent },
+            { path: "Mattermost", component: MattermostComponent },
+            { path: "Telegram", component: TelegramComponent },
+            { path: "Gotify", component: GotifyComponent },
+            { path: "Twilio", component: TwilioComponent },
+            { path: "Webhook", component: WebhookComponent },
             { path: "Plex", component: PlexComponent },
             { path: "Emby", component: EmbyComponent },
             { path: "Jellyfin", component: JellyfinComponent },
@@ -70,9 +88,7 @@ export const routes: Routes = [
             { path: "Customization", component: CustomizationComponent },
             { path: "Email", component: EmailNotificationComponent },
             { path: "UserManagement", component: SettingsUserManagementComponent },
-            { path: "Update", component: UpdateComponent },
             { path: "CouchPotato", component: CouchPotatoComponent },
-            { path: "DogNzb", component: DogNzbComponent },
             { path: "Jobs", component: JobsComponent },
             { path: "SickRage", component: SickRageComponent },
             { path: "Issues", component: SettingsIssuesComponent },

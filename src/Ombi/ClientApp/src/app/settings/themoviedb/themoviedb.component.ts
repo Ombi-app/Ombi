@@ -12,6 +12,8 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslateModule } from "@ngx-translate/core";
 import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { ILanguage, IMovieDbKeyword, ITheMovieDbSettings } from "../../interfaces";
+import { SettingsMenuComponent } from "../settingsmenu.component";
+import { WikiComponent } from "../wiki.component";
 import { debounceTime, switchMap } from "rxjs/operators";
 
 import { MatAutocomplete } from "@angular/material/autocomplete";

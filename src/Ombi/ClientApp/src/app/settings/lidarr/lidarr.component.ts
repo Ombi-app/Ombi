@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { ReactiveFormsModule } from "@angular/forms";
+import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -12,6 +12,8 @@ import { TranslateModule } from "@ngx-translate/core";
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 
 import { ILidarrSettings, IMinimumAvailability, IProfiles, IRadarrProfile, IRadarrRootFolder } from "../../interfaces";
+import { SettingsMenuComponent } from "../settingsmenu.component";
+import { WikiComponent } from "../wiki.component";
 import { LidarrService, TesterService } from "../../services";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
@@ -20,6 +22,7 @@ import { SettingsService } from "../../services";
     standalone: true,
     imports: [
         CommonModule,
+        FormsModule,
         ReactiveFormsModule,
         MatButtonModule,
         MatCheckboxModule,
@@ -28,7 +31,9 @@ import { SettingsService } from "../../services";
         MatSelectModule,
         MatSlideToggleModule,
         MatTooltipModule,
-        TranslateModule
+        TranslateModule,
+        SettingsMenuComponent,
+        WikiComponent
     ],
     templateUrl: "./lidarr.component.html",
     styleUrls: ["./lidarr.component.scss"]

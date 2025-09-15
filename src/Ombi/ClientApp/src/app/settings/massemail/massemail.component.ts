@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -11,7 +11,10 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslateModule } from "@ngx-translate/core";
 
 import { IMassEmailModel, IMassEmailUserModel } from "../../interfaces";
+import { SettingsMenuComponent } from "../settingsmenu.component";
+import { WikiComponent } from "../wiki.component";
 import { IdentityService, NotificationMessageService, NotificationService, SettingsService } from "../../services";
+import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
     standalone: true,
@@ -25,7 +28,13 @@ import { IdentityService, NotificationMessageService, NotificationService, Setti
         MatSelectModule,
         MatSlideToggleModule,
         MatTooltipModule,
-        TranslateModule
+        TranslateModule,
+        FormsModule,
+        MatDividerModule
+        
+    ],
+    providers: [
+        NotificationMessageService
     ],
     templateUrl: "./massemail.component.html",
     styleUrls: ["./massemail.component.scss"]

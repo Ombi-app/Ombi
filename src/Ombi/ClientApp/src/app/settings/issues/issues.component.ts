@@ -12,6 +12,8 @@ import { TranslateModule } from "@ngx-translate/core";
 import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 
 import { IIssueCategory } from "../../interfaces";
+import { SettingsMenuComponent } from "../settingsmenu.component";
+import { WikiComponent } from "../wiki.component";
 import { IssuesService, NotificationService, SettingsService } from "../../services";
 
 @Component({

@@ -12,6 +12,8 @@ import { TranslateModule } from "@ngx-translate/core";
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 
 import { NotificationService } from "../../services";
+import { SettingsMenuComponent } from "../settingsmenu.component";
+import { WikiComponent } from "../wiki.component";
 import { SettingsService } from "../../services";
 
 @Component({

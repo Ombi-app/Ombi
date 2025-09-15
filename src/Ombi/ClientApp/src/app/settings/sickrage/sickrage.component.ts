@@ -12,6 +12,8 @@ import { TranslateModule } from "@ngx-translate/core";
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 
 import { IDropDownModel, ISickRageSettings } from "../../interfaces";
+import { SettingsMenuComponent } from "../settingsmenu.component";
+import { WikiComponent } from "../wiki.component";
 import { TesterService } from "../../services";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";

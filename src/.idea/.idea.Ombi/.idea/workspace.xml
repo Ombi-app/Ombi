@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="57001998-efde-494a-80b3-d7acfc91f770" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../STANDALONE_MIGRATION_PROGRESS.md" beforeDir="false" afterPath="$PROJECT_DIR$/../STANDALONE_MIGRATION_PROGRESS.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/app.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/app.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/app.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/errors/not-found.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/errors/not-found.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/my-nav/my-nav.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/my-nav/my-nav.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/my-nav/nav-search.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/my-nav/nav-search.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/shared/remaining-requests/remaining-requests.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/shared/remaining-requests/remaining-requests.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/main.ts" afterDir="false" />
-    </list>
+    <list default="true" id="57001998-efde-494a-80b3-d7acfc91f770" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

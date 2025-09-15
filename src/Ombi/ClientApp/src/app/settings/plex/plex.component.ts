@@ -13,6 +13,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatIconModule } from "@angular/material/icon";
 import { TranslateModule } from "@ngx-translate/core";
 import { ButtonModule } from "primeng/button";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
@@ -41,6 +42,7 @@ import { PlexServerDialogData, PlexSyncType } from "./components/models";
         MatSlideToggleModule,
         MatTabsModule,
         MatTooltipModule,
+        MatIconModule,
         TranslateModule,
         ButtonModule,
         ConfirmDialogModule,

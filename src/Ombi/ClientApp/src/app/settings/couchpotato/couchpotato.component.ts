@@ -13,6 +13,8 @@ import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } 
 
 import { CouchPotatoService, NotificationService, SettingsService, TesterService } from "../../services";
 
+import { SettingsMenuComponent } from "../settingsmenu.component";
+import { WikiComponent } from "../wiki.component";
 import { ICouchPotatoProfiles } from "../../interfaces";
 
 @Component({
@@ -28,6 +30,9 @@ import { ICouchPotatoProfiles } from "../../interfaces";
         MatSlideToggleModule,
         MatTooltipModule,
         TranslateModule
+    ],
+    providers: [
+        CouchPotatoService
     ],
     templateUrl: "./couchpotato.component.html",
     styleUrls: ["./couchpotato.component.scss"]

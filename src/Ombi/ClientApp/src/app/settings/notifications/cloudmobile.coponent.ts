@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -17,13 +17,16 @@ import { NotificationService } from "../../services";
 import { MobileService, SettingsService } from "../../services";
 import { CloudMobileService } from "../../services/cloudmobile.service";
 import { SelectionModel } from "@angular/cdk/collections";
-import { MatTableDataSource } from "@angular/material/table";
+import { MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { NotificationTemplate } from "./notificationtemplate.component";
 
 @Component({
     standalone: true,
     imports: [
         CommonModule,
         ReactiveFormsModule,
+        FormsModule,
+        NotificationTemplate,
         MatButtonModule,
         MatCheckboxModule,
         MatFormFieldModule,
@@ -31,7 +34,11 @@ import { MatTableDataSource } from "@angular/material/table";
         MatSelectModule,
         MatSlideToggleModule,
         MatTooltipModule,
-        TranslateModule
+        TranslateModule,
+        MatTableModule
+    ],
+    providers: [
+        CloudMobileService
     ],
     templateUrl: "./cloudmobile.component.html",
     styleUrls: ["./notificationtemplate.component.scss"]

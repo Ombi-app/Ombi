@@ -11,6 +11,8 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslateModule } from "@ngx-translate/core";
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { JobService, NotificationService, SettingsService } from "../../services";
+import { SettingsMenuComponent } from "../settingsmenu.component";
+import { WikiComponent } from "../wiki.component";
 
 @Component({
     standalone: true,
@@ -24,7 +26,9 @@ import { JobService, NotificationService, SettingsService } from "../../services
         MatSelectModule,
         MatSlideToggleModule,
         MatTooltipModule,
-        TranslateModule
+        TranslateModule,
+        SettingsMenuComponent,
+        WikiComponent
     ],
     templateUrl: "./jobs.component.html",
     styleUrls: ["./jobs.component.scss"]
