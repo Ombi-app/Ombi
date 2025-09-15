@@ -1,8 +1,19 @@
-
 h2{
     margin-top:40px;
     margin-left:40px;
     font-size: 24px;
+}
+
+.genre-scroll-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.genre-container {
+    margin-left: 35px;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .discover-filter-buttons-group {
@@ -29,7 +40,20 @@ h2{
     background:#293a4c;
   }
 
-.genre-container {
-    margin-left: 35px;
+@media (max-width: 660px) {
+    .genre-container {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        margin-left: 0;
+        padding-bottom: 10px;
+    }
+    .discover-filter-buttons-group {
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+        margin-right: 8px;
+        margin-bottom: 0;
+    }
 }
   

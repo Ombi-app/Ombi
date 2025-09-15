@@ -5,9 +5,13 @@
 }
 ::ng-deep .p-carousel-indicators {
   display: none !important;
-  }
+}
 
-    
+::ng-deep .p-carousel-item {
+    display: flex;
+    justify-content: center;
+}
+
 .image {
     border-radius: 10px;
     opacity: 1;
@@ -127,10 +131,4 @@
     .loading-container .col-2 {
         width: calc(100% - 0px);
     }
-}
-
-@media (min-width:755px){
-  ::ng-deep .p-carousel-item{
-    flex: 1 0 200px !important;
-  }
 }

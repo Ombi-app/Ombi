@@ -9,7 +9,7 @@
 }
 
 @defer (when hasResults(); prefetch on idle) {
-    <p-carousel #carousel [numVisible]="10" [numScroll]="10" [page]="0" [value]="discoverResults()" [responsiveOptions]="responsiveOptions" (onPage)="newPage()">
+    <p-carousel #carousel [numVisible]="20" [numScroll]="20" [page]="0" [value]="discoverResults()" [responsiveOptions]="responsiveOptions" (onPage)="newPage()">
         <ng-template let-result pTemplate="item">
             <discover-card [discoverType]="discoverType()" [isAdmin]="isAdmin()" [result]="result" [is4kEnabled]="is4kEnabled()"></discover-card>
         </ng-template>

@@ -228,8 +228,12 @@
 .content-container{
     background: $ombi-background-primary;
     color:#FFF;
+    margin-top: 100px;
 
     .top-bar-container{
+        position: fixed;
+        top:0;
+        z-index: 100;
         background: $ombi-background-primary;
         color:$ombi-background-primary-accent;
         padding-top:1em;

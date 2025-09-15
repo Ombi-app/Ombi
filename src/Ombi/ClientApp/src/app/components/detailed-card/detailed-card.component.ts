@@ -88,16 +88,18 @@ export class DetailedCardComponent implements OnInit, OnDestroy {
 
   public getClass(request: IRecentlyRequested) {
     if (request.denied) {
-      return "danger";
+      return "denied";
     }
-    if (request.available || request.tvPartiallyAvailable) {
-      return "success";
+    if (request.available) {
+      return "available";
+    }
+    if (request.tvPartiallyAvailable) {
+      return "partial";
     }
     if (request.approved) {
-      return "primary";
-    } else {
-      return "info";
+      return "approved";
     }
+    return "pending";
   }
 
   public ngOnDestroy() {

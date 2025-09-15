@@ -9,7 +9,7 @@ import { CarouselModule, Carousel } from 'primeng/carousel';
 import { SkeletonModule } from 'primeng/skeleton';
 
 import { IRecentlyRequested, IRequestEngineResult, RequestType } from "../../../interfaces";
-import { ResponsiveOptions } from "../carousel.options";
+import { RecentlyRequestedResponsiveOptions } from "../carousel.options";
 import { RequestServiceV2 } from "app/services/requestV2.service";
 import { finalize, map, Observable, Subject, takeUntil, tap } from "rxjs";
 import { Router } from "@angular/router";
@@ -69,7 +69,7 @@ export class RecentlyRequestedListComponent implements OnInit, OnDestroy {
         private translateService: TranslateService,
         public dialog: MatDialog) {
         Carousel.prototype.onTouchMove = () => {};
-        this.responsiveOptions = ResponsiveOptions;
+        this.responsiveOptions = RecentlyRequestedResponsiveOptions;
     }
 
     ngOnDestroy(): void {

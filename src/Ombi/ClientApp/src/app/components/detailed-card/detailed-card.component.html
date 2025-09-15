@@ -1,52 +1,53 @@
-<div id="detailed-{{request.mediaId}}" class="detailed-container" [style.background-image]="background">
-    <div class="row">
-        <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 posterColumn">
-            <ombi-image (click)="click()" [src]="request.posterPath" [type]="request.type" class="poster" alt="{{request.title}}">
-            </ombi-image>
+<div class="card-container">
+    <div class="poster-container">
+        <div class="card-top-info">
+            <span class="indicator-text">{{getStatus(request) | translate}}</span>
+            <span class="indicator {{ getClass(request) }}"></span>
         </div>
-        <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12">
-            <div class="row">
-                <div class="col-12 title">
-                    <div class="text-right year"><sup>{{request.releaseDate | date:'yyyy'}}</sup></div>
-                    <h3 id="detailed-request-title-{{request.mediaId}}">{{request.title}}</h3>
-                </div>
-                @if (request.username) {
-                    <div class="col-12">
-                        <p id="detailed-request-requestedby-{{request.mediaId}}">{{'MediaDetails.RequestedBy' | translate}} {{request.username}}</p>
-                    </div>
-                }
-                <div class="col-12">
-                    <p id="detailed-request-date-{{request.mediaId}}">{{'MediaDetails.OnDate' | translate}} {{request.requestDate | ombiDate: 'Ppp'}}</p>
-                </div>
-                <div class="col-12">
-                    <p id="detailed-request-status-{{request.mediaId}}">{{'MediaDetails.Status' | translate}} <span class="badge badge-{{getClass(request)}}">{{getStatus(request) | translate}}</span></p>
-                </div>
+        <ombi-image (click)="click()" onkeypress="if(event.key === 'Enter') click();" [src]="request.posterPath" [type]="request.type" class="poster" alt="{{request.title}}"></ombi-image>
+    </div>
+    <div class="details-container">
+        <div class="details">
+            <div class="year">{{ request.releaseDate | date:'yyyy' }}</div>
+            <div class="title" id="detailed-card-title-{{request.mediaId}}">
+                <h3>{{request.title}}</h3>
             </div>
-            <div class="row action-items">
-                @if (isAdmin) {
-                    <div class="col-12">
-                        @if (!request.approved && !request.denied) {
-                            <div>
-                                <button
-                                    id="detailed-request-approve-{{request.mediaId}}"
-                                    color="accent"
-                                    mat-raised-button
-                                    (click)="approve()"
-                                    matTooltip="{{'Common.Approve' | translate}}">
-                                    <mat-icon>check-circle</mat-icon>
-                                </button>
-                                <button
-                                    id="detailed-request-deny-{{request.mediaId}}"
-                                    color="accent"
-                                    mat-raised-button
-                                    (click)="deny()"
-                                    matTooltip="{{'Requests.Deny' | translate}}">
-                                  <mat-icon>cancel</mat-icon></button>
-                            </div>
-                        }
-                    </div>
-                }
+            @if (request.username) {
+                <div class="requested-by">
+                    <p id="detailed-card-requestedby-{{request.mediaId}}">{{'MediaDetails.RequestedBy' | translate}} {{request.username}}</p>
+                </div>
+            }
+            <div class="request-date">
+                <p id="detailed-card-date-{{request.mediaId}}">{{'MediaDetails.OnDate' | translate}} {{request.requestDate | ombiDate: 'Ppp'}}</p>
+            </div>
+            <div class="status">
+                <p id="detailed-card-status-{{request.mediaId}}">{{'MediaDetails.Status' | translate}} 
+                    <span class="badge {{getClass(request)}}">{{getStatus(request) | translate}}</span>
+                </p>
             </div>
         </div>
+        @if (isAdmin) {
+            <div class="action-items" *ngIf="isAdmin">
+                @if (!request.approved && !request.denied) {
+                <div>
+                    <button
+                        id="detailed-card-approve-{{request.mediaId}}"
+                        color="accent"
+                        mat-raised-button
+                        (click)="approve()"
+                        matTooltip="{{'Common.Approve' | translate}}">
+                        <mat-icon>check-circle</mat-icon>
+                    </button>
+                    <button
+                        id="detailed-card-deny-{{request.mediaId}}"
+                        color="accent"
+                        mat-raised-button
+                        (click)="deny()"
+                        matTooltip="{{'Requests.Deny' | translate}}">
+                    <mat-icon>cancel</mat-icon></button>
+                </div>
+            }
+            </div>
+        }
     </div>
 </div>

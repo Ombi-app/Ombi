@@ -1,7 +1,9 @@
 @use "./styles/variables.scss" as *;
 
-.detailed-container {
-    width: 400px;
+.card-container {
+    display: flex;
+    flex-direction: row;
+    min-width: 400px;
     height: 250px;
     margin: 10px;
     padding: 10px;
@@ -11,47 +13,144 @@
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
+}
 
-    @media (max-width:768px) {
-        width: 200px;
+.card-top-info {
+    display: none;
+}
+
+.poster-container {
+    cursor: pointer;
+    border-radius: 10px;
+    height: 100%;
+    aspect-ratio: 2/3;
+    flex-shrink: 0;
+    border: 1px solid #35465c;
+    overflow: hidden;
+}
+
+::ng-deep .poster {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.details-container {
+    width: 100%;
+    padding-left: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.year {
+    font-size: 12px;
+    text-align: right;
+}
+
+.action-items button {
+    margin: 4px;
+}
+
+//Badges
+.badge {
+    padding: 0.3em;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #fff;
+    display: inline-block;
+}
+
+.badge.approved, .badge.partial {
+    background-color: #ceab2d;
+}
+
+.badge.denied {
+    background-color: #660202;
+}
+
+.badge.pending {
+    background-color: #ff5722;
+}
+
+.badge.available {
+    background-color: #1de9b6;
+}
+
+@media (max-width: 959px) {
+    .card-container {
+        min-width: auto;
+        width: auto;
+        height: auto;
+        padding: 0;
+        margin: 0;
+        border: none;
+        background: none;
+    }
+    .details-container,
+    .year,
+    .action-items,
+    .action-items button {
+        display: none;
+    }
+    .poster-container {
+        position: relative;
+        flex-shrink: 1;
+        height: 100%;
+        max-width: 200px;
+        max-height: 295px; 
+        margin: 5px;
+        border: none;
+    }
+    ::ng-deep .poster {
+        width: 100%;
         height: auto;
     }
 
-    .overview {
-        display: -webkit-box;
-        -webkit-line-clamp: 4;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .year {
-        @media (max-width:768px) {
-            padding-top: 3%;
-        }
-    }
-
-    ::ng-deep .poster {
-        cursor: pointer;
-        border-radius: 10px;
-        opacity: 1;
-        display: block;
-        height: 225px;
+    //Status indicator
+    .card-top-info {
+        position: absolute;
+        top: 0px;
         width: 100%;
-        transition: .5s ease;
-        backface-visibility: hidden;
-        border: 1px solid #35465c;
+        background-color: rgba(15,23,31,0.7);
+        display:flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.3em;
+        z-index: 2;
     }
 
-    .action-items {
-        @media (min-width:768px) {
-            bottom: 0;
-            position: absolute;
-        }
+    .indicator-text {
+        color: #fff;
+        text-shadow: 0 1px 1px rgba(0,0,0,.2);
+        font-size: 14px;
+        font-weight: 200;
+        margin: 0;
     }
 
-    .action-items button {
-      margin: 4px;
+    .indicator {
+        width: 10px;
+        height: 10px;
+        -moz-border-radius: 7.5px;
+        -webkit-border-radius: 7.5px;
+        border-radius: 7.5px;
+        margin-right:5px;
+    }
+
+    .indicator.available {
+        background-color: #1de9b6;
+    }
+
+    .indicator.approved, .indicator.partial {
+        background-color: #ceab2d;
+    }
+
+    .indicator.denied {
+        background-color: #660202;
+    }
+
+    .indicator.pending {
+        background-color: #ff5722;
     }
 }
-
