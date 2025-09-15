@@ -1,12 +1,16 @@
 import { Component, Inject, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { IAdvancedData, IRadarrProfile, IRadarrRootFolder, RequestCombination } from "../../../../../interfaces";
 import { RadarrService } from "../../../../../services";
 
 @Component({
-        standalone: false,
+        standalone: true,
     templateUrl: "./movie-advanced-options.component.html",
     selector: "movie-advanced-options",
+    imports: [
+        CommonModule
+    ]
 })
 export class MovieAdvancedOptionsComponent implements OnInit {
 

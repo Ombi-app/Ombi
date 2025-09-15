@@ -1,16 +1,58 @@
 ﻿import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { ICheckbox, ICustomizationSettings, IEmailNotificationSettings, IUser, RequestLimitType } from "../interfaces";
 import { IdentityService, NotificationService, SettingsService } from "../services";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatTableModule } from "@angular/material/table";
+import { MatSortModule, MatSort } from "@angular/material/sort";
+import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatCardModule } from "@angular/material/card";
+import { MatMenuModule } from "@angular/material/menu";
+import { TranslateModule } from "@ngx-translate/core";
+import { MultiSelectModule } from "primeng/multiselect";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { TooltipModule } from "primeng/tooltip";
+import { SidebarModule } from "primeng/sidebar";
 
 import { CustomizationFacade } from "../state/customization";
-import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { SelectionModel } from "@angular/cdk/collections";
 
 @Component({
-        standalone: false,
+    standalone: true,
     templateUrl: "./usermanagement.component.html",
     styleUrls: ["./usermanagement.component.scss"],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatTableModule,
+        MatSortModule,
+        MatPaginatorModule,
+        MatCheckboxModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatSlideToggleModule,
+        MatCardModule,
+        MatMenuModule,
+        TranslateModule,
+        MultiSelectModule,
+        ConfirmDialogModule,
+        TooltipModule,
+        SidebarModule
+    ]
 })
 export class UserManagementComponent implements OnInit {
 

@@ -1,4 +1,5 @@
 import { Component, Inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import { IDenyDialogData } from "../interfaces/interfaces";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { RequestService, MessageService } from "../../../../services";
@@ -7,9 +8,12 @@ import { RequestType, IRequestEngineResult } from "../../../../interfaces";
 import { firstValueFrom } from "rxjs";
 
 @Component({
-        standalone: false,
+        standalone: true,
     selector: "deny-dialog",
     templateUrl: "./deny-dialog.component.html",
+    imports: [
+        CommonModule
+    ]
 })
 export class DenyDialogComponent {
     constructor(

@@ -10,12 +10,17 @@ import { MatSort } from "@angular/material/sort";
 import { RequestFilterType } from "../../models/RequestFilterType";
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { StorageService } from "../../../shared/storage/storage-service";
+import { CommonModule } from "@angular/common";
 
 @Component({
-        standalone: false,
+        standalone: true,
     templateUrl: "./tv-grid.component.html",
     selector: "tv-grid",
     styleUrls: ["../requests-list.component.scss", "tv-grid.component.scss"]
+,
+    imports: [
+        CommonModule
+    ]
 })
 export class TvGridComponent implements OnInit, AfterViewInit {
     public dataSource: IChildRequests[] = [];

@@ -1,4 +1,16 @@
 import { Component, ViewEncapsulation, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { ReactiveFormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatDialogModule } from "@angular/material/dialog";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatCardModule } from "@angular/material/card";
+import { MatExpansionModule } from "@angular/material/expansion";
+import { TranslateModule } from "@ngx-translate/core";
+import { CarouselModule } from "primeng/carousel";
+import { SkeletonModule } from "primeng/skeleton";
 import { SearchV2Service, MessageService, RequestService, SonarrService, SettingsStateService } from "../../../services";
 import { ActivatedRoute } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -13,12 +25,50 @@ import { TvAdvancedOptionsComponent } from "./panels/tv-advanced-options/tv-adva
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { forkJoin } from "rxjs";
 import { SonarrFacade } from "app/state/sonarr";
+import { TopBannerComponent } from "../shared/top-banner/top-banner.component";
+import { SocialIconsComponent } from "../shared/social-icons/social-icons.component";
+import { MediaPosterComponent } from "../shared/media-poster/media-poster.component";
+import { CastCarouselComponent } from "../shared/cast-carousel/cast-carousel.component";
+import { CrewCarouselComponent } from "../shared/crew-carousel/crew-carousel.component";
+import { TvInformationPanelComponent } from "./panels/tv-information-panel/tv-information-panel.component";
+import { TvRequestsPanelComponent } from "./panels/tv-requests/tv-requests-panel.component";
+import { TvRequestGridComponent } from "./panels/tv-request-grid/tv-request-grid.component";
+import { IssuesPanelComponent } from "../shared/issues-panel/issues-panel.component";
+import { ImageComponent } from "../../../components";
 
 @Component({
-        standalone: false,
+    standalone: true,
     templateUrl: "./tv-details.component.html",
     styleUrls: ["../../media-details.component.scss"],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatProgressSpinnerModule,
+        MatTabsModule,
+        MatTooltipModule,
+        MatCardModule,
+        MatExpansionModule,
+        TranslateModule,
+        CarouselModule,
+        SkeletonModule,
+        YoutubeTrailerComponent,
+        EpisodeRequestComponent,
+        NewIssueComponent,
+        TvAdvancedOptionsComponent,
+        TopBannerComponent,
+        SocialIconsComponent,
+        MediaPosterComponent,
+        CastCarouselComponent,
+        CrewCarouselComponent,
+        TvInformationPanelComponent,
+        TvRequestsPanelComponent,
+        TvRequestGridComponent,
+        IssuesPanelComponent,
+        ImageComponent
+    ]
 })
 export class TvDetailsComponent implements OnInit {
 

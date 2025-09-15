@@ -1,10 +1,14 @@
 import { Component, Input } from "@angular/core";
+import { CommonModule } from "@angular/common";
 
 @Component({
-        standalone: false,
+        standalone: true,
     selector: "crew-carousel",
     templateUrl: "./crew-carousel.component.html",
-    styleUrls: ["./crew-carousel.component.scss"]
+    styleUrls: ["./crew-carousel.component.scss"],
+    imports: [
+        CommonModule
+    ]
 })
 export class CrewCarouselComponent {
 

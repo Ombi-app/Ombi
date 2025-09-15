@@ -1,11 +1,26 @@
 import { APP_BASE_HREF } from "@angular/common";
-import { Component, Input, Output, EventEmitter, Inject } from "@angular/core";
+import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { Inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
 import { RequestType } from "../../../../interfaces";
 @Component({
-        standalone: false,
+    standalone: true,
     selector: "social-icons",
     templateUrl: "./social-icons.component.html",
-    styleUrls: ["./social-icons.component.scss"]
+    styleUrls: ["./social-icons.component.scss"],
+    imports: [
+        CommonModule,
+        MatButtonModule,
+        MatIconModule,
+        MatMenuModule,
+        MatTooltipModule,
+        TranslateModule
+    ]
 })
 export class SocialIconsComponent {
     @Input() homepage: string;
@@ -18,6 +33,7 @@ export class SocialIconsComponent {
     @Input() instagram: string|undefined;
     @Input() doNotAppend: boolean;
     @Input() type: RequestType;
+    @Input() available: boolean;
 
     @Input() isAdmin: boolean;
     @Input() canShowAdvanced: boolean;

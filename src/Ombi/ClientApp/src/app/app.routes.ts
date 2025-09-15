@@ -10,6 +10,10 @@ import { CookieComponent } from "./auth/cookie.component";
 import { DiscoverComponent } from "./discover/components/discover/discover.component";
 import { VoteComponent } from "./vote/vote.component";
 import { SettingsComponent } from "./settings/settings.component";
+import { MovieDetailsComponent } from "./media-details/components/movie/movie-details.component";
+import { TvDetailsComponent } from "./media-details/components/tv/tv-details.component";
+import { ArtistDetailsComponent } from "./media-details/components/artist/artist-details.component";
+import { RequestsListComponent } from "./requests-list/components/requests-list.component";
 import { AboutComponent } from "./settings/about/about.component";
 import { OmbiComponent } from "./settings/ombi/ombi.component";
 import { PlexComponent } from "./settings/plex/plex.component";
@@ -47,6 +51,24 @@ import { TelegramComponent } from "./settings/notifications/telegram.component";
 import { GotifyComponent } from "./settings/notifications/gotify.component";
 import { TwilioComponent } from "./settings/notifications/twilio/twilio.component";
 import { WebhookComponent } from "./settings/notifications/webhook.component";
+import { IssuesComponent } from "./issues/issues.component";
+import { IssuesDetailsComponent } from "./issues/components/details/details.component";
+import { WelcomeComponent } from "./wizard/welcome/welcome.component";
+import { MediaServerComponent } from "./wizard/mediaserver/mediaserver.component";
+import { PlexComponent as WizardPlexComponent } from "./wizard/plex/plex.component";
+import { EmbyComponent as WizardEmbyComponent } from "./wizard/emby/emby.component";
+import { JellyfinComponent as WizardJellyfinComponent } from "./wizard/jellyfin/jellyfin.component";
+import { CreateAdminComponent } from "./wizard/createadmin/createadmin.component";
+import { OmbiConfigComponent } from "./wizard/ombiconfig/ombiconfig.component";
+import { DatabaseComponent } from "./wizard/database/database.component";
+import { UserManagementComponent } from "./usermanagement/usermanagement.component";
+import { UserManagementUserComponent } from "./usermanagement/usermanagement-user.component";
+import { UserPreferenceComponent } from "./user-preferences/components/user-preference/user-preference.component";
+import { UnsubscribeConfirmComponent } from "./unsubscribe/components/confirm-component/unsubscribe-confirm.component";
+import { DiscoverCollectionsComponent } from "./discover/components/collections/discover-collections.component";
+import { DiscoverActorComponent } from "./discover/components/actor/discover-actor.component";
+import { DiscoverSearchResultsComponent } from "./discover/components/search-results/search-results.component";
+
 
 export const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
@@ -60,8 +82,18 @@ export const routes: Routes = [
     { path: "landingpage", component: LandingPageComponent },
     { path: "auth/cookie", component: CookieComponent },
     { path: "discover", component: DiscoverComponent },
+    { path: "discover/collection/:collectionId", component:     DiscoverCollectionsComponent },
+    { path: "discover/actor/:actorId", component: DiscoverActorComponent },
+    { path: "discover/:searchTerm", component: DiscoverSearchResultsComponent },
+    { path: "discover/advanced/search", component: DiscoverSearchResultsComponent },
     { path: "vote", component: VoteComponent },
-    { loadChildren: () => import("./issues/issues.module").then(m => m.IssuesModule), path: "issues" },
+    { 
+        path: "issues", 
+        children: [
+            { path: "", component: IssuesComponent, canActivate: [AuthGuard] },
+            { path: ":providerId", component: IssuesDetailsComponent, canActivate: [AuthGuard] }
+        ]
+    },
     {
         path: "Settings",
         component: SettingsComponent,
@@ -104,11 +136,38 @@ export const routes: Routes = [
             { path: "", redirectTo: "About", pathMatch: "full" }
         ]
     },
-    { loadChildren: () => import("./wizard/wizard.module").then(m => m.WizardModule), path: "Wizard" },
-    { loadChildren: () => import("./usermanagement/usermanagement.module").then(m => m.UserManagementModule), path: "usermanagement" },
+    { 
+        path: "Wizard", 
+        children: [
+            { path: "", component: WelcomeComponent },
+            { path: "MediaServer", component: MediaServerComponent },
+            { path: "Plex", component: WizardPlexComponent },
+            { path: "Emby", component: WizardEmbyComponent },
+            { path: "Jellyfin", component: WizardJellyfinComponent },
+            { path: "CreateAdmin", component: CreateAdminComponent },
+            { path: "OmbiConfig", component: OmbiConfigComponent }
+        ]
+    },
+    { 
+        path: "usermanagement", 
+        children: [
+            { path: "", component: UserManagementComponent, canActivate: [AuthGuard] },
+            { path: "user", component: UserManagementUserComponent, canActivate: [AuthGuard] },
+            { path: "user/:id", component: UserManagementUserComponent, canActivate: [AuthGuard] }
+        ]
+    },
     // { loadChildren: () => import("./requests/requests.module").then(m => m.RequestsModule), path: "requestsOld" },
-    { loadChildren: () => import("./requests-list/requests-list.module").then(m => m.RequestsListModule), path: "requests-list" },
-    { loadChildren: () => import("./media-details/media-details.module").then(m => m.MediaDetailsModule), path: "details" },
-    { loadChildren: () => import("./user-preferences/user-preferences.module").then(m => m.UserPreferencesModule), path: "user-preferences" },
-    { loadChildren: () => import("./unsubscribe/unsubscribe.module").then(m => m.UnsubscribeModule), path: "unsubscribe" },
+    { path: "requests-list", component: RequestsListComponent, canActivate: [AuthGuard] },
+    {
+        path: "details",
+        children: [
+            { path: "movie/:movieDbId", component: MovieDetailsComponent, canActivate: [AuthGuard] },
+            { path: "tv/:tvdbId/:search", component: TvDetailsComponent, canActivate: [AuthGuard] },
+            { path: "tv/:tvdbId", component: TvDetailsComponent, canActivate: [AuthGuard] },
+            { path: "artist/:artistId", component: ArtistDetailsComponent, canActivate: [AuthGuard] }
+        
+        ]
+    },
+    { path: "user-preferences", component: UserPreferenceComponent, canActivate: [AuthGuard] },
+    { path: "unsubscribe/:id", component: UnsubscribeConfirmComponent },
 ];

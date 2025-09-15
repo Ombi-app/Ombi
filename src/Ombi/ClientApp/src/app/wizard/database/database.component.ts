@@ -1,15 +1,34 @@
 ﻿import { Component, EventEmitter, OnInit, Output } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from "@angular/forms";
 import { BehaviorSubject } from "rxjs";
+import { CommonModule } from "@angular/common";
+import { MatButtonModule } from "@angular/material/button";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatCardModule } from "@angular/material/card";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTabsModule } from "@angular/material/tabs";
+import { TranslateModule } from "@ngx-translate/core";
 import { WizardService } from "../services/wizard.service";
 import { NotificationService } from "app/services";
 import { MatTabChangeEvent } from "@angular/material/tabs";
 
 @Component({
-        standalone: false,
+    standalone: true,
     templateUrl: "./database.component.html",
     styleUrls: ["../welcome/welcome.component.scss"],
     selector: "wizard-database-selector",
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatCardModule,
+        MatIconModule,
+        MatTabsModule,
+        TranslateModule
+    ]
 })
 export class DatabaseComponent implements OnInit {
     public constructor(private fb: FormBuilder, private service: WizardService, private notification: NotificationService) { }

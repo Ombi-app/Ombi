@@ -1,15 +1,19 @@
 import { Component, Inject, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import { IIssueDialogData } from "../interfaces/interfaces";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MessageService, IssuesService } from "../../../../services";
-import { IIssues, IIssueCategory, IssueStatus, RequestType } from "../../../../interfaces";
+import { IIssues, IIssueCategory, IssueStatus } from "../../../../interfaces";
 import { TranslateService } from "@ngx-translate/core";
 import { firstValueFrom } from "rxjs";
 
 @Component({
-        standalone: false,
+        standalone: true,
     selector: "new-issue",
     templateUrl: "./new-issue.component.html",
+    imports: [
+        CommonModule
+    ]
 })
 export class NewIssueComponent implements OnInit {
 

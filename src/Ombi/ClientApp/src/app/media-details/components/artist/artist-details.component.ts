@@ -1,4 +1,14 @@
 import { Component } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { ReactiveFormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatDialogModule } from "@angular/material/dialog";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
+import { CarouselModule } from "primeng/carousel";
+import { SkeletonModule } from "primeng/skeleton";
 import { ImageService, SearchV2Service, RequestService, MessageService } from "../../../services";
 import { ActivatedRoute } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -9,11 +19,38 @@ import { DenyDialogComponent } from "../shared/deny-dialog/deny-dialog.component
 import { NewIssueComponent } from "../shared/new-issue/new-issue.component";
 import { IArtistSearchResult, IReleaseGroups } from "../../../interfaces/IMusicSearchResultV2";
 import { TranslateService } from "@ngx-translate/core";
+import { TopBannerComponent } from "../shared/top-banner/top-banner.component";
+import { SocialIconsComponent } from "../shared/social-icons/social-icons.component";
+import { MediaPosterComponent } from "../shared/media-poster/media-poster.component";
+import { ArtistInformationPanel } from "./panels/artist-information-panel/artist-information-panel.component";
+import { ArtistReleasePanel } from "./panels/artist-release-panel/artist-release-panel.component";
+import { ImageComponent } from "../../../components";
 
 @Component({
-        standalone: false,
+    standalone: true,
     templateUrl: "./artist-details.component.html",
     styleUrls: ["../../media-details.component.scss"],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatProgressSpinnerModule,
+        MatTabsModule,
+        MatTooltipModule,
+        TranslateModule,
+        CarouselModule,
+        SkeletonModule,
+        YoutubeTrailerComponent,
+        DenyDialogComponent,
+        NewIssueComponent,
+        TopBannerComponent,
+        SocialIconsComponent,
+        MediaPosterComponent,
+        ArtistInformationPanel,
+        ArtistReleasePanel,
+        ImageComponent
+    ]
 })
 export class ArtistDetailsComponent {
     private artistId: string;

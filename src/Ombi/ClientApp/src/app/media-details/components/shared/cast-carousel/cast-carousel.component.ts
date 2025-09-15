@@ -1,10 +1,24 @@
 import { Component, Input } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { CarouselModule } from "primeng/carousel";
+import { MatCardModule } from "@angular/material/card";
+import { TranslateModule } from "@ngx-translate/core";
+import { RouterModule } from "@angular/router";
+import { ImageComponent } from "../../../../components";
 
 @Component({
-        standalone: false,
+        standalone: true,
     selector: "cast-carousel",
     templateUrl: "./cast-carousel.component.html",
-    styleUrls: ["./cast-carousel.component.scss"]
+    styleUrls: ["./cast-carousel.component.scss"],
+    imports: [
+        CommonModule,
+        CarouselModule,
+        MatCardModule,
+        TranslateModule,
+        RouterModule,
+        ImageComponent
+    ]
 })
 export class CastCarouselComponent {
 

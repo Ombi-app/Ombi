@@ -7,11 +7,15 @@ import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Observable } from 'rxjs';
 import { DenyDialogComponent } from '../../../media-details/components/shared/deny-dialog/deny-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
 
 @Component({
-        standalone: false,
+        standalone: true,
   selector: 'request-options',
   templateUrl: './request-options.component.html',
+    imports: [
+        CommonModule
+    ]
 })
 export class RequestOptionsComponent {
 

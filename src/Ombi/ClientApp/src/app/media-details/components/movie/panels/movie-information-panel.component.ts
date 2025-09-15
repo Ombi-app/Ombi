@@ -1,16 +1,37 @@
-import { Component, ViewEncapsulation, Input, OnInit, Inject } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { ViewEncapsulation } from "@angular/core";
+import { RouterModule } from "@angular/router";
+import { TranslateModule } from "@ngx-translate/core";
+import { MatChipsModule } from "@angular/material/chips";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { ISearchMovieResultV2 } from "../../../../interfaces/ISearchMovieResultV2";
 import { IMovieRequests, RequestSource } from "../../../../interfaces";
 import { SearchV2Service } from "../../../../services/searchV2.service";
 import { IMovieRatings } from "../../../../interfaces/IRatings";
 import { APP_BASE_HREF } from "@angular/common";
+import { Inject } from "@angular/core";
 import { IStreamingData } from "../../../../interfaces/IStreams";
+import { TranslateStatusPipe } from "../../../../pipes/TranslateStatus";
+import { OmbiDatePipe } from "../../../../pipes/OmbiDatePipe";
+import { ThousandShortPipe } from "../../../../pipes/ThousandShortPipe";
+
 @Component({
-        standalone: false,
+    standalone: true,
     templateUrl: "./movie-information-panel.component.html",
     styleUrls: ["../../../media-details.component.scss"],
     selector: "movie-information-panel",
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        CommonModule,
+        RouterModule,
+        TranslateModule,
+        MatChipsModule,
+        MatTooltipModule,
+        TranslateStatusPipe,
+        OmbiDatePipe,
+        ThousandShortPipe
+    ]
 })
 export class MovieInformationPanelComponent implements OnInit {
 

@@ -9,12 +9,16 @@ import { MatSort } from "@angular/material/sort";
 import { RequestFilterType } from "../../models/RequestFilterType";
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { StorageService } from "../../../shared/storage/storage-service";
+import { CommonModule } from "@angular/common";
 
 @Component({
-        standalone: false,
+        standalone: true,
     templateUrl: "./albums-grid.component.html",
     selector: "albums-grid",
-    styleUrls: ["./albums-grid.component.scss"]
+    styleUrls: ["./albums-grid.component.scss"],
+    imports: [
+        CommonModule
+    ]
 })
 export class AlbumsGridComponent implements OnInit, AfterViewInit {
     public dataSource: IAlbumRequest[] = [];

@@ -1,4 +1,5 @@
 import { Component, Inject, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import {
   IAdvancedData,
@@ -10,9 +11,12 @@ import {
 import { SettingsService, SonarrService } from "../../../../../services";
 
 @Component({
-        standalone: false,
+        standalone: true,
   templateUrl: "./tv-advanced-options.component.html",
   selector: "tv-advanced-options",
+    imports: [
+        CommonModule
+    ]
 })
 export class TvAdvancedOptionsComponent implements OnInit {
   public sonarrProfiles: ISonarrProfile[];

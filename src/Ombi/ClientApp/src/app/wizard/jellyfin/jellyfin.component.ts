@@ -1,14 +1,33 @@
 ﻿import { Component, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatCardModule } from "@angular/material/card";
+import { MatIconModule } from "@angular/material/icon";
+import { TranslateModule } from "@ngx-translate/core";
 
 import { IJellyfinSettings } from "../../interfaces";
 import { JellyfinService } from "../../services";
 import { NotificationService } from "../../services";
 
 @Component({
-        standalone: false,
+    standalone: true,
     selector: "wizard-jellyfin",
     templateUrl: "./jellyfin.component.html",
-    styleUrls: ["../welcome/welcome.component.scss"]
+    styleUrls: ["../welcome/welcome.component.scss"],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatCardModule,
+        MatIconModule,
+        TranslateModule
+    ]
 })
 export class JellyfinComponent implements OnInit {
 

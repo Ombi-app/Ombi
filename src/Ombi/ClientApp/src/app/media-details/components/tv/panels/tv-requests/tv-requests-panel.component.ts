@@ -1,4 +1,5 @@
 import { Component, Input } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import { IChildRequests, RequestSource, RequestType } from "../../../../../interfaces";
 
 import { DenyDialogComponent } from "../../../shared/deny-dialog/deny-dialog.component";
@@ -9,10 +10,13 @@ import { RequestServiceV2 } from "../../../../../services/requestV2.service";
 import { TranslateService } from "@ngx-translate/core";
 
 @Component({
-        standalone: false,
+        standalone: true,
     templateUrl: "./tv-requests-panel.component.html",
     styleUrls: ["./tv-requests-panel.component.scss"],
-    selector: "tv-requests-panel"
+    selector: "tv-requests-panel",
+    imports: [
+        CommonModule
+    ]
 })
 export class TvRequestsPanelComponent {
     @Input() public tvRequest: IChildRequests[];

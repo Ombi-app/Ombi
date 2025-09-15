@@ -237,7 +237,7 @@
 
 							<button
 								id="denyBtn"
-								*ngIf="!movieRequest.denied && movie.requested"
+								*ngIf="movieRequest && !movieRequest.denied && movie.requested"
 								mat-raised-button
 								class="btn-spacing"
 								color="warn"
@@ -249,7 +249,7 @@
 							<button
 								id="deniedButton"
 								*ngIf="movieRequest && movieRequest.denied"
-								[matTooltip]="movieRequest.deniedReason"
+								[matTooltip]="movieRequest?.deniedReason"
 								mat-raised-button
 								class="btn-spacing"
 								color="warn"

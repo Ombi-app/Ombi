@@ -14,12 +14,16 @@ import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { SelectionModel } from "@angular/cdk/collections";
 import { StorageService } from "../../../shared/storage/storage-service";
 import { TranslateService } from "@ngx-translate/core";
+import { CommonModule } from "@angular/common";
 
 @Component({
-        standalone: false,
+        standalone: true,
     templateUrl: "./movies-grid.component.html",
     selector: "movies-grid",
-    styleUrls: ["./movies-grid.component.scss"]
+    styleUrls: ["./movies-grid.component.scss"],
+    imports: [
+        CommonModule
+    ]
 })
 export class MoviesGridComponent implements OnInit, AfterViewInit {
     public dataSource: MatTableDataSource<IMovieRequests>;
