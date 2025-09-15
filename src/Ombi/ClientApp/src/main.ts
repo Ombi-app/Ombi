@@ -75,7 +75,7 @@ import { CustomPageService } from "./app/services";
 import { CookieService } from "ng2-cookies";
 import { JobService } from "./app/services";
 import { IssuesService } from "./app/services";
-import { PlexTvService } from "./app/services";
+import { PlexTvService, PlexService, TesterService, RadarrService, EmbyService, JellyfinService, ValidationService } from "./app/services";
 import { SearchService } from "./app/services";
 import { SearchV2Service } from "./app/services/searchV2.service";
 import { MessageService } from "./app/services";
@@ -118,7 +118,7 @@ export function JwtTokenGetter() {
 
 if (environment.production) {
     enableProdMode();
-}
+  }
 
 bootstrapApplication(AppComponent, {
     providers: [
@@ -193,6 +193,12 @@ bootstrapApplication(AppComponent, {
         JobService,
         IssuesService,
         PlexTvService,
+        PlexService,
+        TesterService,
+        RadarrService,
+        EmbyService,
+        JellyfinService,
+        ValidationService,
         SearchService,
         SearchV2Service,
         MessageService,

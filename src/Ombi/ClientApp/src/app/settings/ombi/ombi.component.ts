@@ -1,5 +1,16 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, ReactiveFormsModule } from "@angular/forms";
+import { CommonModule } from "@angular/common";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
+import { ClipboardModule } from "@angular/cdk/clipboard";
+import { WikiComponent } from "../wiki.component";
 
 import { Branch, ILanguageRefine, IOmbiSettings } from "../../interfaces";
 import { NotificationService } from "../../services";
@@ -8,7 +19,21 @@ import { SettingsService } from "../../services";
 import languageData from "./../../../other/iso-lang.json";
 
 @Component({
-        standalone: false,
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatSlideToggleModule,
+        MatTooltipModule,
+        TranslateModule,
+        ClipboardModule,
+        WikiComponent,
+    ],
     templateUrl: "./ombi.component.html",
     styleUrls: ["./ombi.component.scss"],
 })

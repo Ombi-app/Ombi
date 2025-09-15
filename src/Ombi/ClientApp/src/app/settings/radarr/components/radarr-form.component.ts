@@ -1,5 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
-import { ControlContainer, UntypedFormGroup, Validators } from "@angular/forms";
+import { CommonModule } from "@angular/common";
+import { ReactiveFormsModule, ControlContainer, UntypedFormGroup, Validators } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
 import { finalize, map } from "rxjs";
 
 import { IMinimumAvailability, IRadarrProfile, IRadarrRootFolder, IRadarrSettings, ITag } from "../../../interfaces";
@@ -7,7 +16,19 @@ import { TesterService, NotificationService, RadarrService } from "../../../serv
 
 
 @Component({
-        standalone: false,
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatSlideToggleModule,
+        MatTooltipModule,
+        TranslateModule
+    ],
     selector: "ombi-settings-radarr-form",
     templateUrl: "./radarr-form.component.html",
     styleUrls: ["./radarr-form.component.scss"],

@@ -7,7 +7,9 @@ import { HttpClient } from "@angular/common/http";
 import { IConnectedUser } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class HubService extends ServiceHelpers {
     constructor(public http: HttpClient, @Inject(APP_BASE_HREF) href:string) {
         super(http, "/api/v2/hub/", href);

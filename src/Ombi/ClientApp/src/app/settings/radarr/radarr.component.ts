@@ -1,5 +1,15 @@
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from "@angular/core";
-import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, ReactiveFormsModule } from "@angular/forms";
+import { CommonModule } from "@angular/common";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
 import { RadarrFacade } from "app/state/radarr";
 
 import { IMinimumAvailability, IRadarrCombined, IRadarrProfile, IRadarrRootFolder } from "../../interfaces";
@@ -9,7 +19,21 @@ import { RadarrFormComponent } from "./components/radarr-form.component";
 import { Observable, ReplaySubject, Subject, combineLatest, map, switchMap, takeUntil, tap } from "rxjs";
 
 @Component({
-        standalone: false,
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatSlideToggleModule,
+        MatTabsModule,
+        MatTooltipModule,
+        TranslateModule,
+        RadarrFormComponent
+    ],
     templateUrl: "./radarr.component.html",
     styleUrls: ["./radarr.component.scss"]
 })

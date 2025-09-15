@@ -7,7 +7,9 @@ import { Observable } from "rxjs";
 
 import { ServiceHelpers } from "./service.helpers";
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class SystemService extends ServiceHelpers {
     constructor(http: HttpClient, @Inject(APP_BASE_HREF) href:string) {
         super(http, "/api/v2/system/", href);

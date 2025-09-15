@@ -3,11 +3,21 @@ import { MatTableDataSource } from "@angular/material/table";
 import { take } from "rxjs";
 import { IPlexWatchlistUsers, WatchlistSyncStatus } from "../../../../interfaces";
 import { PlexService } from "../../../../services";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatCardModule } from "@angular/material/card";
+import { CommonModule } from "@angular/common";
 
 @Component({
-        standalone: false,
+        standalone: true,
     templateUrl: "./plex-watchlist.component.html",
-    styleUrls: ["./plex-watchlist.component.scss"]
+    styleUrls: ["./plex-watchlist.component.scss"],
+    imports: [
+        CommonModule,
+        MatIconModule,
+        MatCardModule,
+        MatButtonModule,
+    ]
 })
 export class PlexWatchlistComponent implements OnInit{
 
