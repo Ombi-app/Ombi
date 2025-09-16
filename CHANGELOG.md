@@ -1,3 +1,7 @@
+## [4.49.9](https://github.com/Ombi-app/Ombi/compare/v4.49.8...v4.49.9) (2025-09-16)
+
+
+
 ## [4.49.8](https://github.com/Ombi-app/Ombi/compare/v4.49.7...v4.49.8) (2025-09-13)
 
 
@@ -1305,15 +1309,6 @@
 * upgrade @types/jquery from 3.5.27 to 3.5.28 ([#5049](https://github.com/Ombi-app/Ombi/issues/5049))  [skip ci] ([2c8fe80](https://github.com/Ombi-app/Ombi/commit/2c8fe8087aea227e7425e82392ad9ccb3f8261b4))
 * upgrade moment from 2.29.4 to 2.30.1 ([#5075](https://github.com/Ombi-app/Ombi/issues/5075)) [skip ci] ([460fa39](https://github.com/Ombi-app/Ombi/commit/460fa39bb95c73bafcd65fcc394fecca04d3ac49))
 * upgrade multiple dependencies with Snyk ([#5073](https://github.com/Ombi-app/Ombi/issues/5073)) [skip ci] ([a27b459](https://github.com/Ombi-app/Ombi/commit/a27b4592471c58fca9ad5193b979171fa7c5e66d))
-
-
-
-## [4.43.11](https://github.com/Ombi-app/Ombi/compare/v4.43.10...v4.43.11) (2024-01-11)
-
-
-### Bug Fixes
-
-* **emby:** Add more logging on the PlaySync to check for Tv Shows without a valid TMDB ([08eb13b](https://github.com/Ombi-app/Ombi/commit/08eb13b788582d576a0e1befdb8e84ef7ff0d2f3))
 
 
 
