@@ -17,6 +17,7 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { MatDividerModule } from "@angular/material/divider";
 import { TranslateModule } from "@ngx-translate/core";
 import { ClipboardModule } from "@angular/cdk/clipboard";
+import { HumanizePipe } from "../pipes/HumanizePipe";
 
 import { Clipboard } from '@angular/cdk/clipboard';
 import { CustomizationFacade } from "../state/customization";
@@ -44,7 +45,8 @@ import { FeaturesFacade } from "../state/features/features.facade";
         MatTabsModule,
         MatDividerModule,
         TranslateModule,
-        ClipboardModule
+        ClipboardModule,
+        HumanizePipe
     ]
 })
 export class UserManagementUserComponent implements OnInit {

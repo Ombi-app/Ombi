@@ -13,6 +13,7 @@ import { AuthService } from "../../../auth/auth.service";
 import { forkJoin } from "rxjs";
 import { FeaturesFacade } from "../../../state/features/features.facade";
 import { DiscoverCardComponent } from "../card/discover-card.component";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 @Component({
     standalone: true,
@@ -23,7 +24,8 @@ import { DiscoverCardComponent } from "../card/discover-card.component";
         TranslateModule,
         CarouselModule,
         SkeletonModule,
-        DiscoverCardComponent
+        DiscoverCardComponent,
+        MatProgressSpinnerModule,
     ]
 })
 export class DiscoverActorComponent implements OnInit {

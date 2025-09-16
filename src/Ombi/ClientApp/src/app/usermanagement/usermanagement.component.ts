@@ -3,6 +3,7 @@ import { ICheckbox, ICustomizationSettings, IEmailNotificationSettings, IUser, R
 import { IdentityService, NotificationService, SettingsService } from "../services";
 import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { RouterModule } from "@angular/router";
 import { MatTableModule } from "@angular/material/table";
 import { MatSortModule, MatSort } from "@angular/material/sort";
 import { MatPaginatorModule } from "@angular/material/paginator";
@@ -21,6 +22,8 @@ import { MultiSelectModule } from "primeng/multiselect";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { TooltipModule } from "primeng/tooltip";
 import { SidebarModule } from "primeng/sidebar";
+import { OmbiDatePipe } from "../pipes/OmbiDatePipe";
+import { HumanizePipe } from "../pipes/HumanizePipe";
 
 import { CustomizationFacade } from "../state/customization";
 import { MatTableDataSource } from "@angular/material/table";
@@ -34,6 +37,7 @@ import { SelectionModel } from "@angular/cdk/collections";
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
+        RouterModule,
         MatTableModule,
         MatSortModule,
         MatPaginatorModule,
@@ -51,7 +55,9 @@ import { SelectionModel } from "@angular/cdk/collections";
         MultiSelectModule,
         ConfirmDialogModule,
         TooltipModule,
-        SidebarModule
+        SidebarModule,
+        OmbiDatePipe,
+        HumanizePipe
     ]
 })
 export class UserManagementComponent implements OnInit {

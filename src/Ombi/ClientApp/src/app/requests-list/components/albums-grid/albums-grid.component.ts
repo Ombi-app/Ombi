@@ -4,12 +4,28 @@ import { Observable, merge, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 import { AuthService } from "../../../auth/auth.service";
-import { MatPaginator } from "@angular/material/paginator";
-import { MatSort } from "@angular/material/sort";
+import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
+import { MatSort, MatSortModule } from "@angular/material/sort";
+import { MatTableModule } from "@angular/material/table";
 import { RequestFilterType } from "../../models/RequestFilterType";
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { StorageService } from "../../../shared/storage/storage-service";
 import { CommonModule } from "@angular/common";
+import { RouterModule } from "@angular/router";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatInputModule } from "@angular/material/input";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatSelectModule } from "@angular/material/select";
+import { MatMenuModule } from "@angular/material/menu";
+import { TranslateModule } from "@ngx-translate/core";
+import { ImageComponent } from "../../../components";
+import { OmbiDatePipe } from "../../../pipes/OmbiDatePipe";
+import { TranslateStatusPipe } from "../../../pipes/TranslateStatus";
+import { DetailedCardComponent } from "../../../components/detailed-card/detailed-card.component";
+import { GridSpinnerComponent } from "../grid-spinner/grid-spinner.component";
 
 @Component({
         standalone: true,
@@ -17,7 +33,25 @@ import { CommonModule } from "@angular/common";
     selector: "albums-grid",
     styleUrls: ["./albums-grid.component.scss"],
     imports: [
-        CommonModule
+        CommonModule,
+        RouterModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatTableModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatCheckboxModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatMenuModule,
+        TranslateModule,
+        ImageComponent,
+        OmbiDatePipe,
+        TranslateStatusPipe,
+        DetailedCardComponent,
+        GridSpinnerComponent
     ]
 })
 export class AlbumsGridComponent implements OnInit, AfterViewInit {

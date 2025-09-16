@@ -25,6 +25,7 @@ import { AdminRequestDialogComponent } from "../../../../../shared/admin-request
 import { ImageComponent } from "../../../../../components";
 import { OmbiDatePipe } from "../../../../../pipes/OmbiDatePipe";
 import { DetailedCardComponent } from "../../../../../components/detailed-card/detailed-card.component";
+import { MatCardModule } from "@angular/material/card";
 
 @Component({
         standalone: true,
@@ -48,7 +49,8 @@ import { DetailedCardComponent } from "../../../../../components/detailed-card/d
         TranslateModule,
         ImageComponent,
         OmbiDatePipe,
-        DetailedCardComponent
+        DetailedCardComponent,
+        MatCardModule,  
     ]
 })
 export class TvRequestGridComponent {

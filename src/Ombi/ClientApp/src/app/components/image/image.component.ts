@@ -18,7 +18,24 @@ import { APP_BASE_HREF } from "@angular/common";
   templateUrl: "./image.component.html",
 })
 export class ImageComponent {
-  @Input() public src: string;
+  private _src: string;
+  
+  @Input() 
+  public get src(): string {
+    return this._src;
+  }
+  
+  public set src(value: string) {
+    if (value === undefined || value === null) {
+      console.warn('ImageComponent: src setter received undefined/null value', {
+        value: value,
+        type: this.type,
+        alt: this.alt
+      });
+    }
+    this._src = value;
+  }
+  
   @Input() public type: RequestType;
 
   // Attributes from the parent
@@ -44,6 +61,12 @@ export class ImageComponent {
 
   ngOnInit() {
     if (!this.src) {
+      console.warn('ImageComponent: src is undefined or null, using placeholder', {
+        src: this.src,
+        type: this.type,
+        alt: this.alt,
+        stack: new Error().stack
+      });
       // Prevent unnecessary error handling when src is not specified.
       this.src = this.getPlaceholderImage();
     }
@@ -64,7 +87,14 @@ export class ImageComponent {
     }, Math.floor(Math.random() * (7000 - 1000 + 1)) + 1000);
   }
 
-  private getPlaceholderImage() {
+  public getImageSrc(): string {
+    if (!this.src) {
+      return this.getPlaceholderImage();
+    }
+    return this.src;
+  }
+
+  public getPlaceholderImage() {
     switch (this.type) {
       case RequestType.movie:
         return this.baseUrl + this.defaultMovie;

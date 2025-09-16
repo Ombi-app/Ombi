@@ -16,6 +16,7 @@ import { StorageService } from "../../../shared/storage/storage-service";
 import { isEqual } from "lodash";
 import { FeaturesFacade } from "../../../state/features/features.facade";
 import { DiscoverCardComponent } from "../card/discover-card.component";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 @Component({
     standalone: true,
@@ -26,7 +27,8 @@ import { DiscoverCardComponent } from "../card/discover-card.component";
         TranslateModule,
         CarouselModule,
         SkeletonModule,
-        DiscoverCardComponent
+        DiscoverCardComponent,
+        MatProgressSpinnerModule
     ]
 })
 export class DiscoverSearchResultsComponent implements OnInit {

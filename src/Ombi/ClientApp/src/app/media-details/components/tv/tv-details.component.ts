@@ -130,7 +130,11 @@ export class TvDetailsComponent implements OnInit {
         }
 
         // const tvBanner = await this.imageService.getTvBanner(this.tvdbId).toPromise();
-        this.tv.background = this.sanitizer.bypassSecurityTrustStyle("url(https://image.tmdb.org/t/p/original" + this.tv.banner + ")");
+        if (this.tv.banner && this.tv.banner !== null && this.tv.banner !== undefined) {
+            this.tv.background = this.sanitizer.bypassSecurityTrustStyle("url(https://image.tmdb.org/t/p/original" + this.tv.banner + ")");
+        } else {
+            this.tv.background = this.sanitizer.bypassSecurityTrustStyle("linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5))");
+        }
     }
 
     public async request(userId: string) {
@@ -186,7 +190,7 @@ export class TvDetailsComponent implements OnInit {
     }
 
     private checkPoster() {
-      if (this.tv.images.original == null) {
+      if (this.tv.images.original == null || this.tv.images.original === undefined) {
         this.tv.images.original = "../../../images/default_movie_poster.png";
       }
       else {

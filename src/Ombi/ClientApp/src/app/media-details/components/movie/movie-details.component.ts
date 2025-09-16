@@ -382,15 +382,19 @@ export class MovieDetailsComponent implements OnInit {
 		this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe((x) => {
 			if (!this.movie.backdropPath) {
 				this.movie.background = this.sanitizer.bypassSecurityTrustStyle('url(' + x + ')');
-			} else {
-				this.movie.background = this.sanitizer.bypassSecurityTrustStyle(
-					'url(https://image.tmdb.org/t/p/original/' + this.movie.backdropPath + ')',
-				);
-			}
+		} else if (this.movie.backdropPath && this.movie.backdropPath !== null && this.movie.backdropPath !== undefined) {
+			this.movie.background = this.sanitizer.bypassSecurityTrustStyle(
+				'url(https://image.tmdb.org/t/p/original/' + this.movie.backdropPath + ')',
+			);
+		} else {
+			this.movie.background = this.sanitizer.bypassSecurityTrustStyle(
+				'linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5))',
+			);
+		}
 		});
 	}
 	private checkPoster() {
-		if (this.movie.posterPath == null) {
+		if (this.movie.posterPath == null || this.movie.posterPath === undefined) {
 			this.movie.posterPath = '../../../images/default_movie_poster.png';
 		} else {
 			this.movie.posterPath = 'https://image.tmdb.org/t/p/w300/' + this.movie.posterPath;

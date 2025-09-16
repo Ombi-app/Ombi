@@ -1,5 +1,5 @@
-@import "@angular/material/theming";
-@import "./styles/variables.scss";
+@use "@angular/material/theming" as *;
+@use "./styles/variables.scss" as *;
  ::ng-deep body .ui-carousel .ui-carousel-content .ui-carousel-prev,
 body .ui-carousel .ui-carousel-content .ui-carousel-next {
     background-color: #ffffff;

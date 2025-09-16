@@ -15,6 +15,7 @@ import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatTabsModule } from "@angular/material/tabs";
 import { TranslateModule } from "@ngx-translate/core";
 import { QRCodeModule } from "angularx-qrcode";
 import { CustomizationFacade } from "../../../state/customization";
@@ -34,6 +35,7 @@ import { CustomizationFacade } from "../../../state/customization";
         MatIconModule,
         MatTooltipModule,
         MatCheckboxModule,
+        MatTabsModule,
         TranslateModule,
         QRCodeModule
     ]

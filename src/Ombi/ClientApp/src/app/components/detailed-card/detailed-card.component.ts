@@ -160,7 +160,7 @@ export class DetailedCardComponent implements OnInit, OnDestroy {
   }
 
   private setBackgroundStyle(backgroundPath: string) {
-    if (backgroundPath) {
+    if (backgroundPath && backgroundPath !== null && backgroundPath !== undefined) {
       this.background = this.sanitizer.bypassSecurityTrustStyle(
         `linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url(${this.getImageUrl(
           backgroundPath
@@ -174,6 +174,8 @@ export class DetailedCardComponent implements OnInit, OnDestroy {
   private getImageUrl(path: string) {
     if (new RegExp("^(http|https)://").test(path)) {
       return path;
+    } else if (path == null || path === undefined) {
+      return "/images/default_movie_poster.png";
     } else {
       return `https://image.tmdb.org/t/p/w300${path}`;
     }

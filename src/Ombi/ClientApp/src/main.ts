@@ -14,7 +14,7 @@ import { AppComponent } from "./app/app.component";
 import { importProvidersFrom } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { BrowserModule } from "@angular/platform-browser";
-import { HttpClientModule } from "@angular/common/http";
+import { withInterceptorsFromDi } from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
@@ -27,7 +27,7 @@ import { MatPaginatorIntl } from "@angular/material/paginator";
 import { MatPaginatorI18n } from "./app/localization/MatPaginatorI18n";
 import { TranslateService } from "@ngx-translate/core";
 import { APP_BASE_HREF, PlatformLocation } from "@angular/common";
-import { HTTP_INTERCEPTORS, HttpClient } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withFetch } from "@angular/common/http";
 import { UnauthorizedInterceptor } from "./app/auth/unauthorized.interceptor";
 
 // Angular Material modules
@@ -128,7 +128,6 @@ bootstrapApplication(AppComponent, {
         importProvidersFrom(
             RouterModule.forRoot(routes),
             BrowserModule,
-            HttpClientModule,
             BrowserAnimationsModule,
             FormsModule,
             ReactiveFormsModule,
@@ -180,6 +179,9 @@ bootstrapApplication(AppComponent, {
             SidebarModule,
             TooltipModule
         ),
+        
+        // HTTP Client with Fetch API support and DI interceptors
+        provideHttpClient(withFetch(), withInterceptorsFromDi()),
         
         // Services
         NotificationService,
