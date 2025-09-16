@@ -248,8 +248,8 @@ namespace Ombi.Api.External.MediaServers.Plex
             request.AddQueryString("context[device][platform]", "Web");
             request.AddQueryString("context[device][device]", "Ombi");
 
-            var s = await GetSettings();
-            await CheckInstallId(s);
+            // Always fetch current settings to ensure we use the same client identifier as the UI
+            var s = await _plexSettings.GetSettingsAsync();
             request.AddQueryString("clientID", s.InstallId.ToString("N"));
 
             if (request.FullUri.Fragment.Equals("#"))
@@ -362,8 +362,8 @@ namespace Ombi.Api.External.MediaServers.Plex
         /// <param name="request"></param>
         private async Task AddHeaders(Request request)
         {
-            var s = await GetSettings();
-            await CheckInstallId(s);
+            // Always fetch current settings to ensure a consistent X-Plex-Client-Identifier
+            var s = await _plexSettings.GetSettingsAsync();
             request.AddHeader("X-Plex-Client-Identifier", s.InstallId.ToString("N"));
             request.AddHeader("X-Plex-Product", ApplicationName);
             request.AddHeader("X-Plex-Version", "3");
@@ -378,19 +378,8 @@ namespace Ombi.Api.External.MediaServers.Plex
             request.AddHeader("X-Plex-Container-Start", from.ToString());
             request.AddHeader("X-Plex-Container-Size", to.ToString());
         }
-        private async Task CheckInstallId(PlexSettings s)
-        {
-            if (s?.InstallId == Guid.Empty || s.InstallId == Guid.Empty)
-            {
-                s.InstallId = Guid.NewGuid();
-                await _plexSettings.SaveSettingsAsync(s);
-            }
-        }
-
-        private PlexSettings _settings;
-        private async Task<PlexSettings> GetSettings()
-        {
-            return _settings ?? (_settings = await _plexSettings.GetSettingsAsync());
-        }
+        // Intentionally removed InstallId generation and settings caching from this layer.
+        // InstallId is generated and persisted via SettingsController.GetClientId so that
+        // both the UI (PIN creation) and server (PIN polling) use the same identifier.
     }
 }
