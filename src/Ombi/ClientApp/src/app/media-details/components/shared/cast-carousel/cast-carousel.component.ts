@@ -5,6 +5,7 @@ import { MatCardModule } from "@angular/material/card";
 import { TranslateModule } from "@ngx-translate/core";
 import { RouterModule } from "@angular/router";
 import { ImageComponent } from "../../../../components";
+import { FormsModule } from "@angular/forms";
 
 @Component({
         standalone: true,
@@ -17,7 +18,8 @@ import { ImageComponent } from "../../../../components";
         MatCardModule,
         TranslateModule,
         RouterModule,
-        ImageComponent
+        ImageComponent,
+        FormsModule,
     ]
 })
 export class CastCarouselComponent {

@@ -1,13 +1,18 @@
 import { Component, Inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
+import { TranslateModule } from "@ngx-translate/core";
+import { SafePipe } from "app/pipes/SafePipe";
 
 @Component({
         standalone: true,
     selector: "youtube-trailer",
     templateUrl: "./youtube-trailer.component.html",
     imports: [
-        CommonModule
+        CommonModule,
+        TranslateModule,
+        MatDialogModule,
+        SafePipe
     ]
 })
 export class YoutubeTrailerComponent {
