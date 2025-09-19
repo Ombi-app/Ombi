@@ -26,7 +26,7 @@ interface IGenreSelect {
         CommonModule,
         MatButtonToggleModule,
         TranslateModule,
-            SkeletonModule,
+        SkeletonModule,
         MatProgressSpinnerModule
     ]
 })
@@ -34,10 +34,7 @@ export class GenreButtonSelectComponent implements OnInit {
 
     public movieGenreList = signal<IGenreSelect[]>(null);
     public tvGenreList = signal<IGenreSelect[]>(null);
-
-
-    isLoading: boolean = false;
-
+    
     constructor(private searchService: SearchV2Service,
         private advancedSearchService: AdvancedSearchDialogDataService,
         private router: Router) { }
@@ -54,7 +51,6 @@ export class GenreButtonSelectComponent implements OnInit {
     }
 
     public async toggleChanged(event: MatButtonToggleChange, type: "movie"|"tv") {
-        this.isLoading = true;
 
         const genres: number[] = [event.value];
         const data = await this.searchService.advancedSearch({

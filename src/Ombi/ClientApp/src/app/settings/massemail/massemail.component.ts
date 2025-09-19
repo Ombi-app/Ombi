@@ -11,8 +11,6 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslateModule } from "@ngx-translate/core";
 
 import { IMassEmailModel, IMassEmailUserModel } from "../../interfaces";
-import { SettingsMenuComponent } from "../settingsmenu.component";
-import { WikiComponent } from "../wiki.component";
 import { IdentityService, NotificationMessageService, NotificationService, SettingsService } from "../../services";
 import { MatDividerModule } from "@angular/material/divider";
 
@@ -31,7 +29,6 @@ import { MatDividerModule } from "@angular/material/divider";
         TranslateModule,
         FormsModule,
         MatDividerModule
-        
     ],
     providers: [
         NotificationMessageService

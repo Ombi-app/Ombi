@@ -13,7 +13,6 @@ import { bootstrapApplication } from "@angular/platform-browser";
 import { AppComponent } from "./app/app.component";
 import { importProvidersFrom } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { BrowserModule } from "@angular/platform-browser";
 import { withInterceptorsFromDi } from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -127,7 +126,6 @@ bootstrapApplication(AppComponent, {
         // Core Angular providers
         importProvidersFrom(
             RouterModule.forRoot(routes),
-            BrowserModule,
             BrowserAnimationsModule,
             FormsModule,
             ReactiveFormsModule,

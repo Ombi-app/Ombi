@@ -25,6 +25,7 @@ import { JellyfinComponent } from "../jellyfin/jellyfin.component";
 import { CreateAdminComponent } from "../createadmin/createadmin.component";
 import { OmbiConfigComponent } from "../ombiconfig/ombiconfig.component";
 import { DatabaseComponent } from "../database/database.component";
+import { MatTabsModule } from "@angular/material/tabs";
 
 @Component({
     standalone: true,
@@ -42,7 +43,7 @@ import { DatabaseComponent } from "../database/database.component";
         MatIconModule,
         MatTooltipModule,
         TranslateModule,
-        MediaServerComponent,
+        MatTabsModule,
         PlexComponent,
         EmbyComponent,
         JellyfinComponent,
