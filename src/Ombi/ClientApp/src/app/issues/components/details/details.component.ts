@@ -15,6 +15,7 @@ import { AuthService } from "../../../auth/auth.service";
 import { IssueChatComponent } from "../issue-chat/issue-chat.component";
 import { IssuesV2Service } from "../../../services/issuesv2.service";
 import { TranslateService } from "@ngx-translate/core";
+import { DetailsGroupComponent } from "../details-group/details-group.component";
 
 export interface IssuesDetailsGroupData {
     issues: IIssues[];
@@ -36,7 +37,8 @@ export interface IssuesDetailsGroupData {
         MatTooltipModule,
         MatDialogModule,
         TranslateModule,
-        IssueChatComponent
+        IssueChatComponent,
+        DetailsGroupComponent,
     ]
 })
 export class IssuesDetailsComponent implements OnInit {

@@ -9,6 +9,7 @@ import { MatPaginatorModule } from "@angular/material/paginator";
 import { TranslateModule } from "@ngx-translate/core";
 
 import { IIssuesSummary, IPagenator, IssueStatus } from "../interfaces";
+import { RouterLink } from "@angular/router";
 
 @Component({
     standalone: true,
@@ -23,7 +24,8 @@ import { IIssuesSummary, IPagenator, IssueStatus } from "../interfaces";
         MatIconModule,
         MatTooltipModule,
         MatPaginatorModule,
-        TranslateModule
+        TranslateModule,
+        RouterLink
     ]
 })
 export class IssuesTableComponent  {

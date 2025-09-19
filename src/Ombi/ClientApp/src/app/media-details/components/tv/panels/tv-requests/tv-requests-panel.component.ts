@@ -7,8 +7,11 @@ import { MatDialog } from "@angular/material/dialog";
 import { MessageService } from "../../../../../services";
 import { RequestService } from "../../../../../services/request.service";
 import { RequestServiceV2 } from "../../../../../services/requestV2.service";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { MatExpansionModule } from "@angular/material/expansion";
+import { OmbiDatePipe } from "../../../../../pipes/OmbiDatePipe";
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatButtonModule } from "@angular/material/button";
 
 @Component({
     templateUrl: "./tv-requests-panel.component.html",
@@ -17,6 +20,10 @@ import { MatExpansionModule } from "@angular/material/expansion";
     imports: [
         CommonModule,
         MatExpansionModule,
+        TranslateModule,
+        OmbiDatePipe,
+        MatTabsModule,
+        MatButtonModule,
     ]
 })
 export class TvRequestsPanelComponent {

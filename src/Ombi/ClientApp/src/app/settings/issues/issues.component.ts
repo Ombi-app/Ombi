@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -12,8 +12,6 @@ import { TranslateModule } from "@ngx-translate/core";
 import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 
 import { IIssueCategory } from "../../interfaces";
-import { SettingsMenuComponent } from "../settingsmenu.component";
-import { WikiComponent } from "../wiki.component";
 import { IssuesService, NotificationService, SettingsService } from "../../services";
 
 @Component({
@@ -28,7 +26,8 @@ import { IssuesService, NotificationService, SettingsService } from "../../servi
         MatSelectModule,
         MatSlideToggleModule,
         MatTooltipModule,
-        TranslateModule
+        TranslateModule,
+        FormsModule
     ],
     templateUrl: "./issues.component.html",
     styleUrls: ["./issues.component.scss"]

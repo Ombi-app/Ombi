@@ -7,6 +7,8 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { IssuesService, NotificationService, SettingsService } from "../../../../services";
 import { RequestType, IIssues, IssueStatus, IIssueSettings } from "../../../../interfaces";
 import { TranslateService } from "@ngx-translate/core";
+import { MatExpansionModule } from "@angular/material/expansion";
+import { DetailsGroupComponent } from "app/issues/components/details-group/details-group.component";
 
 @Component({
     standalone: true,
@@ -18,7 +20,9 @@ import { TranslateService } from "@ngx-translate/core";
         TranslateModule,
         MatButtonModule,
         MatIconModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatExpansionModule,
+        DetailsGroupComponent,
     ]
 })
 export class IssuesPanelComponent implements OnInit {

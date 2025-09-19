@@ -12,6 +12,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslateModule } from "@ngx-translate/core";
 import { IssuesTableComponent } from "./issuestable.component";
+import { FormsModule } from "@angular/forms";
 
 @Component({
     standalone: true,
@@ -26,7 +27,8 @@ import { IssuesTableComponent } from "./issuestable.component";
         MatIconModule,
         MatTooltipModule,
         TranslateModule,
-        IssuesTableComponent
+        IssuesTableComponent,
+        FormsModule
     ]
 })
 export class IssuesComponent {
