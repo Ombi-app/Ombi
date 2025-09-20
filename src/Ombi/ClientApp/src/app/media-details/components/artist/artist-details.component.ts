@@ -24,7 +24,7 @@ import { SocialIconsComponent } from "../shared/social-icons/social-icons.compon
 import { MediaPosterComponent } from "../shared/media-poster/media-poster.component";
 import { ArtistInformationPanel } from "./panels/artist-information-panel/artist-information-panel.component";
 import { ArtistReleasePanel } from "./panels/artist-release-panel/artist-release-panel.component";
-import { ImageComponent } from "../../../components";
+import { MatCardModule } from "@angular/material/card";
 
 @Component({
     standalone: true,
@@ -41,15 +41,12 @@ import { ImageComponent } from "../../../components";
         TranslateModule,
         CarouselModule,
         SkeletonModule,
-        YoutubeTrailerComponent,
-        DenyDialogComponent,
-        NewIssueComponent,
         TopBannerComponent,
         SocialIconsComponent,
         MediaPosterComponent,
         ArtistInformationPanel,
         ArtistReleasePanel,
-        ImageComponent
+        MatCardModule
     ]
 })
 export class ArtistDetailsComponent {

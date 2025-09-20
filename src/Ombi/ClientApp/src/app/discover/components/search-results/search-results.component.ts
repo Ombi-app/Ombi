@@ -17,6 +17,7 @@ import { isEqual } from "lodash";
 import { FeaturesFacade } from "../../../state/features/features.facade";
 import { DiscoverCardComponent } from "../card/discover-card.component";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { InfiniteScrollModule } from "ngx-infinite-scroll";
 
 @Component({
     standalone: true,
@@ -28,7 +29,8 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
         CarouselModule,
         SkeletonModule,
         DiscoverCardComponent,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        InfiniteScrollModule
     ]
 })
 export class DiscoverSearchResultsComponent implements OnInit {

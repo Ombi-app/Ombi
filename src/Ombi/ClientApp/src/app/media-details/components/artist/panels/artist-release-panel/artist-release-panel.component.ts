@@ -3,6 +3,9 @@ import { ViewEncapsulation } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { IReleaseGroups } from "../../../../../interfaces/IMusicSearchResultV2";
 import { SearchV2Service } from "../../../../../services/searchV2.service";
+import { MatCardModule } from "@angular/material/card";
+import { TranslateModule } from "@ngx-translate/core";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 @Component({
         standalone: true,
@@ -11,7 +14,10 @@ import { SearchV2Service } from "../../../../../services/searchV2.service";
     selector: "artist-release-panel",
     encapsulation: ViewEncapsulation.None,
     imports: [
-        CommonModule
+        CommonModule,
+        MatCardModule,
+        TranslateModule,
+        MatTooltipModule,
     ]
 })
 export class ArtistReleasePanel implements OnChanges {

@@ -2,6 +2,7 @@ import { Component, Input } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ISearchArtistResult } from "../../../../../interfaces";
 import { ViewEncapsulation } from "@angular/core";
+import { TranslateModule } from "@ngx-translate/core";
 
 @Component({
         standalone: true,
@@ -10,7 +11,8 @@ import { ViewEncapsulation } from "@angular/core";
     selector: "artist-information-panel",
     encapsulation: ViewEncapsulation.None,
     imports: [
-        CommonModule
+        CommonModule,
+        TranslateModule
     ]
 })
 export class ArtistInformationPanel {

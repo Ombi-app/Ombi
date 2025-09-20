@@ -1,19 +1,37 @@
 ﻿import { ActivatedRoute, Params } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { IdentityService } from "../services";
 
 import { CustomizationFacade } from "../state/customization";
 import { ICustomizationSettings } from "../interfaces";
 import { IResetPasswordToken } from "../interfaces";
 import { NotificationService } from "../services";
-import { PlatformLocation } from "@angular/common";
+import { CommonModule, PlatformLocation } from "@angular/common";
 import { Router } from "@angular/router";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCardModule } from "@angular/material/card";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from "@angular/material/input";
+import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { ImageBackgroundComponent } from "app/components";
 
 @Component({
-        standalone: false,
+        standalone: true,
     templateUrl: "./tokenresetpassword.component.html",
     styleUrls: ["./login.component.scss"],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatCardModule,
+        MatButtonModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatSnackBarModule,
+        ImageBackgroundComponent
+    ]
 })
 export class TokenResetPasswordComponent implements OnInit {
 

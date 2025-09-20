@@ -18,7 +18,6 @@ import { NotificationService, RequestService } from "app/services";
 import { TranslateService } from "@ngx-translate/core";
 import { DenyDialogComponent } from '../../../media-details/components/shared/deny-dialog/deny-dialog.component';
 import { MatDialog } from "@angular/material/dialog";
-import { ImageComponent } from "../../../components";
 import { DetailedCardComponent } from "../../../components";
 
 export enum DiscoverType {
@@ -43,7 +42,6 @@ export enum DiscoverType {
         TranslateModule,
         CarouselModule,
         SkeletonModule,
-        ImageComponent,
         DetailedCardComponent
     ]
 })
