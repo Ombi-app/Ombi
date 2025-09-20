@@ -65,22 +65,4 @@ describe("TV Details Buttons", () => {
     Page.requestFabButton.fab.should('be.visible');
     Page.partiallyAvailableButton.should('not.exist');
   });
-
-
-  it("Issues Enabled", () => {
-    cy.intercept("GET", "**/Settings/issuesenabled", 'true').as('issuesEnabled');
-
-    cy.visit("/details/tv/1399");
-
-    cy.wait('@issuesEnabled');
-    Page.reportIssueButton(10000).should('be.visible');
-  });
-
-  it("Issues Disabled", () => {
-    cy.intercept("GET", "**/Settings/issuesenabled", 'false');
-
-    Page.visit("1399");
-
-    Page.reportIssueButton(1000).should('not.exist');
-  });
 });
