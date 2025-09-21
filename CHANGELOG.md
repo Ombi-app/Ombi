@@ -1,3 +1,12 @@
+# [4.50.0](https://github.com/Ombi-app/Ombi/compare/v4.49.10...v4.50.0) (2025-09-21)
+
+
+### Features
+
+* pipes ([1ac20e8](https://github.com/Ombi-app/Ombi/commit/1ac20e84dbf9b90e6797cb49cf3fd4e863f7352d))
+
+
+
 ## [4.49.10](https://github.com/Ombi-app/Ombi/compare/v4.49.9...v4.49.10) (2025-09-19)
 
 
@@ -1294,10 +1303,6 @@
 ### Performance Improvements
 
 * ⚡ Improve render performance on the discover, movie and tv pages ([#5084](https://github.com/Ombi-app/Ombi/issues/5084)) ([71c86a8](https://github.com/Ombi-app/Ombi/commit/71c86a8db9e63bf0ab779f9a8b5d62a42c246392))
-
-
-
-## [4.43.13](https://github.com/Ombi-app/Ombi/compare/v4.43.12...v4.43.13) (2024-03-05)
 
 
 
