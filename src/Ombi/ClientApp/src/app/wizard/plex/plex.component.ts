@@ -1,5 +1,14 @@
 ﻿import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatCardModule } from "@angular/material/card";
+import { MatIconModule } from "@angular/material/icon";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { TranslateModule } from "@ngx-translate/core";
 
 import { AuthService } from "../../auth/auth.service";
 import { PlexOAuthService, PlexService, PlexTvService, SettingsService } from "../../services";
@@ -7,10 +16,22 @@ import { IdentityService, NotificationService } from "../../services";
 import { StorageService } from "../../shared/storage/storage-service";
 
 @Component({
-        standalone: false,
+    standalone: true,
     selector: "wizard-plex",
     templateUrl: "./plex.component.html",
     styleUrls: ["../welcome/welcome.component.scss"],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatCardModule,
+        MatIconModule,
+        MatProgressSpinnerModule,
+        TranslateModule
+    ]
 })
 export class PlexComponent implements OnInit, OnDestroy {
 

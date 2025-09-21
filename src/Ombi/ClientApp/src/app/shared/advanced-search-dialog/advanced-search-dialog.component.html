@@ -1,4 +1,5 @@
-<form [formGroup]="form"  (ngSubmit)="onSubmit()" *ngIf="form">
+@if (form) {
+  <form [formGroup]="form"  (ngSubmit)="onSubmit()">
   <h1 id="advancedOptionsTitle">
     <i class="fas fa-sliders-h"></i> {{ "Search.AdvancedSearchHeader" | translate }}
   </h1>
@@ -65,4 +66,5 @@
       <i class="fas fa-plus"></i> {{ "Common.Search" | translate }}
     </button>
   </div>
-</form>
+  </form>
+}

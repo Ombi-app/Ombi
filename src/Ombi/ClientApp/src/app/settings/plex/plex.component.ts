@@ -1,17 +1,56 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { EMPTY, Subject } from "rxjs";
 import { catchError, takeUntil } from "rxjs/operators";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import { MatButtonModule } from "@angular/material/button";
+import { MatCardModule } from "@angular/material/card";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatDialog, MatDialogModule } from "@angular/material/dialog";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatIconModule } from "@angular/material/icon";
+import { TranslateModule } from "@ngx-translate/core";
+import { ButtonModule } from "primeng/button";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { DialogModule } from "primeng/dialog";
+import { TableModule } from "primeng/table";
 
 import { IPlexServer, IPlexDeviceResponse, IPlexServerViewModel, IPlexSettings } from "../../interfaces";
 import { JobService, NotificationService, PlexService, SettingsService } from "../../services";
-import {UntypedFormControl} from '@angular/forms';
-import { MatDialog } from "@angular/material/dialog";
 import { PlexWatchlistComponent } from "./components/watchlist/plex-watchlist.component";
 import { PlexServerDialogComponent } from "./components/plex-server-dialog/plex-server-dialog.component";
 import { PlexServerDialogData, PlexSyncType } from "./components/models";
 
 @Component({
-        standalone: false,
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatSlideToggleModule,
+        MatTabsModule,
+        MatTooltipModule,
+        MatIconModule,
+        TranslateModule,
+        ButtonModule,
+        ConfirmDialogModule,
+        DialogModule,
+        TableModule,
+        PlexWatchlistComponent,
+        PlexServerDialogComponent
+    ],
     templateUrl: "./plex.component.html",
     styleUrls: ["./plex.component.scss"]
 })

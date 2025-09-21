@@ -1,14 +1,22 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { TranslateModule } from "@ngx-translate/core";
+import { OverlayPanelModule, OverlayPanel } from "primeng/overlaypanel";
+import { TabViewModule } from "primeng/tabview";
 
-import { OverlayPanel } from "primeng/overlaypanel";
 import { NotificationService, VoteService } from "../services";
-
 import { IVoteEngineResult, IVoteViewModel, RequestTypes, VoteType } from "../interfaces";
 
 @Component({
-        standalone: false,
+    standalone: true,
     templateUrl: "vote.component.html",
     styleUrls: ["vote.component.scss"],
+    imports: [
+        CommonModule,
+        TranslateModule,
+        OverlayPanelModule,
+        TabViewModule
+    ]
 })
 export class VoteComponent implements OnInit {
 

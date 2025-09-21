@@ -2,7 +2,7 @@ import { Directive, Input, OnInit, TemplateRef, ViewContainerRef } from "@angula
 import { AuthService } from "../../auth/auth.service";
 
 @Directive({
-        standalone: false,
+    standalone: true,
 	selector: '[permission]',
 })
 export class RoleDirective implements OnInit {

@@ -1,15 +1,37 @@
 import { Component, Inject, OnInit } from "@angular/core";
-import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { CommonModule } from "@angular/common";
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatRadioModule } from "@angular/material/radio";
+import { TranslateModule } from "@ngx-translate/core";
 import { RequestType } from "../../interfaces";
 import { SearchV2Service } from "../../services";
 import { AdvancedSearchDialogDataService } from "./advanced-search-dialog-data.service";
+import { GenreSelectComponent } from "../components/genre-select/genre-select.component";
+import { KeywordSearchComponent } from "../components/keyword-search/keyword-search.component";
+import { WatchProvidersSelectComponent } from "../components/watch-providers-select/watch-providers-select.component";
 
 @Component({
-        standalone: false,
-  selector: "advanced-search-dialog",
-  templateUrl: "advanced-search-dialog.component.html",
-  styleUrls: [ "advanced-search-dialog.component.scss" ]
+    standalone: true,
+    selector: "advanced-search-dialog",
+    templateUrl: "advanced-search-dialog.component.html",
+    styleUrls: [ "advanced-search-dialog.component.scss" ],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatRadioModule,
+        TranslateModule,
+        GenreSelectComponent,
+        KeywordSearchComponent,
+        WatchProvidersSelectComponent
+    ]
 })
 export class AdvancedSearchDialogComponent implements OnInit {
   constructor(

@@ -1,6 +1,10 @@
 import { Component, OnInit } from "@angular/core";
-import { MessageService, SearchV2Service } from "../../../services";
+import { CommonModule } from "@angular/common";
+import { TranslateModule } from "@ngx-translate/core";
+import { CarouselModule } from 'primeng/carousel';
+import { SkeletonModule } from 'primeng/skeleton';
 
+import { MessageService, SearchV2Service } from "../../../services";
 import { TranslateService } from "@ngx-translate/core";
 import { ActivatedRoute } from "@angular/router";
 import { AuthService } from "../../../auth/auth.service";
@@ -9,11 +13,19 @@ import { IMovieCollectionsViewModel } from "../../../interfaces/ISearchTvResultV
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { RequestType } from "../../../interfaces";
 import { FeaturesFacade } from "../../../state/features/features.facade";
+import { DiscoverCardComponent } from "../card/discover-card.component";
 
 @Component({
-        standalone: false,
+    standalone: true,
     templateUrl: "./discover-collections.component.html",
     styleUrls: ["./discover-collections.component.scss"],
+    imports: [
+        CommonModule,
+        TranslateModule,
+        CarouselModule,
+        SkeletonModule,
+        DiscoverCardComponent
+    ]
 })
 export class DiscoverCollectionsComponent implements OnInit {
 

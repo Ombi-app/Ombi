@@ -8,7 +8,9 @@ import { IOmbiConfigModel } from "../models/OmbiConfigModel";
 import { DatabaseConfigurationResult, DatabaseSettings } from "../models/DatabaseSettings";
 
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class WizardService extends ServiceHelpers {
     constructor(public http: HttpClient, @Inject(APP_BASE_HREF) href:string) {
         super(http, "/api/v2/wizard/", href);

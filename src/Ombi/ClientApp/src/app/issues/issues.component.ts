@@ -5,11 +5,31 @@ import { IssuesV2Service } from "../services/issuesv2.service";
 import { IIssueCount, IIssues, IIssuesSummary, IssueStatus } from "../interfaces";
 import { CommonModule } from "@angular/common";
 import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatCardModule } from "@angular/material/card";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
+import { IssuesTableComponent } from "./issuestable.component";
+import { FormsModule } from "@angular/forms";
 
 @Component({
-    standalone: false,
+    standalone: true,
     templateUrl: "issues.component.html",
-    styleUrls: ['issues.component.scss']
+    styleUrls: ['issues.component.scss'],
+    imports: [
+        CommonModule,
+        MatPaginatorModule,
+        MatTabsModule,
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTooltipModule,
+        TranslateModule,
+        IssuesTableComponent,
+        FormsModule
+    ]
 })
 export class IssuesComponent {
     // Services using inject() function

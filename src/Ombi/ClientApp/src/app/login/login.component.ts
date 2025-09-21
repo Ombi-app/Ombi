@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit, Inject } from "@angular/core";
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
-import { TranslateService } from "@ngx-translate/core";
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
+import { ActivatedRoute, Router, RouterModule } from "@angular/router";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 
-import { APP_BASE_HREF } from "@angular/common";
+import { APP_BASE_HREF, CommonModule } from "@angular/common";
 import { AuthService } from "../auth/auth.service";
 import { IAuthenticationSettings, ICustomizationSettings } from "../interfaces";
 import { PlexTvService, StatusService, SettingsService } from "../services";
@@ -13,11 +13,36 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { CustomizationFacade } from "../state/customization";
 import { SonarrFacade } from "app/state/sonarr";
 import { RadarrFacade } from "app/state/radarr";
+import { MatCardModule } from "@angular/material/card";
+import { MatButtonModule } from "@angular/material/button";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from "@angular/material/input";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatTabsModule } from "@angular/material/tabs";
+import { ImageBackgroundComponent } from "../components";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 
 @Component({
-        standalone: false,
+        standalone: true,
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.scss"],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatCheckboxModule,
+    MatInputModule,
+    MatTabsModule,
+    RouterModule,
+    MatCardModule,
+    MatIconModule,
+    MatTooltipModule,
+    TranslateModule,
+    ImageBackgroundComponent,
+  ]
 })
 export class LoginComponent implements OnDestroy, OnInit {
   public form: UntypedFormGroup;

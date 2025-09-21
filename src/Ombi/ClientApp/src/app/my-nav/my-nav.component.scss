@@ -1,4 +1,4 @@
-@import "./styles/variables.scss";
+@use "./styles/variables.scss" as *;
 .sidenav-container {
     min-height: 100vh;
     -webkit-overflow-scrolling:touch;

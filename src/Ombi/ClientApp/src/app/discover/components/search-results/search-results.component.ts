@@ -1,7 +1,11 @@
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
-import { IMultiSearchResult, ISearchMovieResult, RequestType } from "../../../interfaces";
+import { CommonModule } from "@angular/common";
+import { TranslateModule } from "@ngx-translate/core";
+import { CarouselModule } from 'primeng/carousel';
+import { SkeletonModule } from 'primeng/skeleton';
 
+import { IMultiSearchResult, ISearchMovieResult, RequestType } from "../../../interfaces";
 import { AdvancedSearchDialogDataService } from "../../../shared/advanced-search-dialog/advanced-search-dialog-data.service";
 import { AuthService } from "../../../auth/auth.service";
 import { FilterService } from "../../services/filter-service";
@@ -11,11 +15,23 @@ import { SearchV2Service } from "../../../services";
 import { StorageService } from "../../../shared/storage/storage-service";
 import { isEqual } from "lodash";
 import { FeaturesFacade } from "../../../state/features/features.facade";
+import { DiscoverCardComponent } from "../card/discover-card.component";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { InfiniteScrollModule } from "ngx-infinite-scroll";
 
 @Component({
-        standalone: false,
+    standalone: true,
     templateUrl: "./search-results.component.html",
     styleUrls: ["../discover/discover.component.scss"],
+    imports: [
+        CommonModule,
+        TranslateModule,
+        CarouselModule,
+        SkeletonModule,
+        DiscoverCardComponent,
+        MatProgressSpinnerModule,
+        InfiniteScrollModule
+    ]
 })
 export class DiscoverSearchResultsComponent implements OnInit {
 

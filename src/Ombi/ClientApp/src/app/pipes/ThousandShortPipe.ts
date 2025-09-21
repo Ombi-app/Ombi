@@ -1,7 +1,7 @@
 ﻿import { Pipe, PipeTransform } from "@angular/core";
 
 @Pipe({
-        standalone: false,
+    standalone: true,
     name: "thousandShort",
 })
 export class ThousandShortPipe implements PipeTransform {

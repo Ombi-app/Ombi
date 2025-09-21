@@ -1,15 +1,33 @@
 import { Component, ViewChild } from "@angular/core";
-
+import { CommonModule } from "@angular/common";
+import { MatBottomSheetModule } from "@angular/material/bottom-sheet";
+import { MatTabsModule } from "@angular/material/tabs";
+import { TranslateModule } from "@ngx-translate/core";
 import { MatBottomSheet } from "@angular/material/bottom-sheet";
 import { RequestOptionsComponent } from "./options/request-options.component";
 import { UpdateType } from "../models/UpdateType";
 import { LidarrService } from "app/services";
 import { take } from "rxjs";
+import { MoviesGridComponent } from "./movies-grid/movies-grid.component";
+import { TvGridComponent } from "./tv-grid/tv-grid.component";
+import { AlbumsGridComponent } from "./albums-grid/albums-grid.component";
+import { GridSpinnerComponent } from "./grid-spinner/grid-spinner.component";
 
 @Component({
-        standalone: false,
+    standalone: true,
     templateUrl: "./requests-list.component.html",
-    styleUrls: ["./requests-list.component.scss"]
+    styleUrls: ["./requests-list.component.scss"],
+    imports: [
+        CommonModule,
+        MatBottomSheetModule,
+        MatTabsModule,
+        TranslateModule,
+        RequestOptionsComponent,
+        MoviesGridComponent,
+        TvGridComponent,
+        AlbumsGridComponent,
+        GridSpinnerComponent
+    ]
 })
 export class RequestsListComponent {
 

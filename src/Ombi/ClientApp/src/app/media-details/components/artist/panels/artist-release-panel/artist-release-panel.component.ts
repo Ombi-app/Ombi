@@ -1,13 +1,24 @@
-import { Component, Input, ViewEncapsulation, OnChanges, SimpleChanges, EventEmitter, Output } from "@angular/core";
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from "@angular/core";
+import { ViewEncapsulation } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import { IReleaseGroups } from "../../../../../interfaces/IMusicSearchResultV2";
 import { SearchV2Service } from "../../../../../services/searchV2.service";
+import { MatCardModule } from "@angular/material/card";
+import { TranslateModule } from "@ngx-translate/core";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 @Component({
-        standalone: false,
+        standalone: true,
     templateUrl: "./artist-release-panel.component.html",
     styleUrls: ["../../../../media-details.component.scss", "./artist-release-panel.component.scss"],
     selector: "artist-release-panel",
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        CommonModule,
+        MatCardModule,
+        TranslateModule,
+        MatTooltipModule,
+    ]
 })
 export class ArtistReleasePanel implements OnChanges {
     @Input() public releases: IReleaseGroups[];

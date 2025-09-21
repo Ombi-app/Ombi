@@ -1,12 +1,19 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { SidebarModule } from "primeng/sidebar";
 import { IIssueCategory, IIssues, IssueStatus, RequestType } from "../interfaces";
 import { IssuesService, NotificationService } from "../services";
 
 @Component({
-        standalone: false,
+    standalone: true,
     selector: "issue-report",
     templateUrl: "issues-report.component.html",
-
+    imports: [
+        CommonModule,
+        FormsModule,
+        SidebarModule
+    ]
 })
 export class IssuesReportComponent {
     @Input() public visible: boolean;

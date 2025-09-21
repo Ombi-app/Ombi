@@ -1,20 +1,57 @@
 import { Component, Input } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatSelectModule } from "@angular/material/select";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatSortModule } from "@angular/material/sort";
+import { MatTableModule } from "@angular/material/table";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatMenuModule } from "@angular/material/menu";
+import { TranslateModule } from "@ngx-translate/core";
 import { IChildRequests, IEpisodesRequests, INewSeasonRequests, IRequestEngineResult, ISeasonsViewModel, ITvRequestViewModelV2, RequestType } from "../../../../../interfaces";
 import { RequestService } from "../../../../../services/request.service";
 import { MessageService } from "../../../../../services";
-import { DenyDialogComponent } from "../../../shared/deny-dialog/deny-dialog.component";
 import { ISearchTvResultV2 } from "../../../../../interfaces/ISearchTvResultV2";
 import { TranslateService } from "@ngx-translate/core";
 import { MatDialog } from "@angular/material/dialog";
 import { SelectionModel } from "@angular/cdk/collections";
 import { RequestServiceV2 } from "../../../../../services/requestV2.service";
 import { AdminRequestDialogComponent } from "../../../../../shared/admin-request-dialog/admin-request-dialog.component";
+import { ImageComponent } from "../../../../../components";
+import { OmbiDatePipe } from "../../../../../pipes/OmbiDatePipe";
+import { DetailedCardComponent } from "../../../../../components/detailed-card/detailed-card.component";
+import { MatCardModule } from "@angular/material/card";
 
 @Component({
-        standalone: false,
+        standalone: true,
     templateUrl: "./tv-request-grid.component.html",
     styleUrls: ["./tv-request-grid.component.scss"],
-    selector: "tv-request-grid"
+    selector: "tv-request-grid",
+    imports: [
+        CommonModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatSelectModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatTableModule,
+        MatCheckboxModule,
+        MatTabsModule,
+        MatMenuModule,
+        TranslateModule,
+        ImageComponent,
+        OmbiDatePipe,
+        DetailedCardComponent,
+        MatCardModule,  
+    ]
 })
 export class TvRequestGridComponent {
     @Input() public tv: ISearchTvResultV2;

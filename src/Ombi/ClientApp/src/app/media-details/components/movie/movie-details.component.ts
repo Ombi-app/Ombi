@@ -1,4 +1,15 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
+import { CarouselModule } from 'primeng/carousel';
+import { SkeletonModule } from 'primeng/skeleton';
 import { ImageService, SearchV2Service, RequestService, MessageService, RadarrService, SettingsStateService } from '../../../services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -15,12 +26,54 @@ import { RequestServiceV2 } from '../../../services/requestV2.service';
 import { firstValueFrom, forkJoin } from 'rxjs';
 import { AdminRequestDialogComponent } from '../../../shared/admin-request-dialog/admin-request-dialog.component';
 import { FeaturesFacade } from '../../../state/features/features.facade';
+import { TopBannerComponent } from '../shared/top-banner/top-banner.component';
+import { SocialIconsComponent } from '../shared/social-icons/social-icons.component';
+import { MediaPosterComponent } from '../shared/media-poster/media-poster.component';
+import { CastCarouselComponent } from '../shared/cast-carousel/cast-carousel.component';
+import { CrewCarouselComponent } from '../shared/crew-carousel/crew-carousel.component';
+import { MovieInformationPanelComponent } from './panels/movie-information-panel.component';
+import { ImageComponent } from '../../../components';
+import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { IssuesPanelComponent } from '../shared/issues-panel/issues-panel.component';
+import { SafePipe } from '../../../pipes/SafePipe';
 
 @Component({
-        standalone: false,
-	templateUrl: './movie-details.component.html',
-	styleUrls: ['../../media-details.component.scss'],
-	encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    templateUrl: './movie-details.component.html',
+    styleUrls: ['../../media-details.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        RouterModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatProgressSpinnerModule,
+        MatTabsModule,
+        MatTooltipModule,
+        TranslateModule,
+        CarouselModule,
+        SkeletonModule,
+        MatCardModule,
+        MatMenuModule,
+        MatExpansionModule,
+        YoutubeTrailerComponent,
+        DenyDialogComponent,
+        NewIssueComponent,
+        MovieAdvancedOptionsComponent,
+        AdminRequestDialogComponent,
+        TopBannerComponent,
+        SocialIconsComponent,
+        MediaPosterComponent,
+        CastCarouselComponent,
+        CrewCarouselComponent,
+        MovieInformationPanelComponent,
+        IssuesPanelComponent,
+        ImageComponent,
+        SafePipe
+    ]
 })
 export class MovieDetailsComponent implements OnInit {
 	public movie: ISearchMovieResultV2;
@@ -186,14 +239,18 @@ export class MovieDetailsComponent implements OnInit {
 	}
 
 	public async deny() {
+		if (!this.movieRequest) return;
+		
 		const dialogRef = this.dialog.open(DenyDialogComponent, {
 			width: '250px',
 			data: { requestId: this.movieRequest.id, requestType: RequestType.movie },
 		});
 
 		dialogRef.afterClosed().subscribe((result) => {
-			this.movieRequest.denied = result.denied;
-			this.movieRequest.deniedReason = result.reason;
+			if (result && this.movieRequest) {
+				this.movieRequest.denied = result.denied;
+				this.movieRequest.deniedReason = result.reason;
+			}
 		});
 	}
 
@@ -325,15 +382,19 @@ export class MovieDetailsComponent implements OnInit {
 		this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe((x) => {
 			if (!this.movie.backdropPath) {
 				this.movie.background = this.sanitizer.bypassSecurityTrustStyle('url(' + x + ')');
-			} else {
-				this.movie.background = this.sanitizer.bypassSecurityTrustStyle(
-					'url(https://image.tmdb.org/t/p/original/' + this.movie.backdropPath + ')',
-				);
-			}
+		} else if (this.movie.backdropPath && this.movie.backdropPath !== null && this.movie.backdropPath !== undefined) {
+			this.movie.background = this.sanitizer.bypassSecurityTrustStyle(
+				'url(https://image.tmdb.org/t/p/original/' + this.movie.backdropPath + ')',
+			);
+		} else {
+			this.movie.background = this.sanitizer.bypassSecurityTrustStyle(
+				'linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5))',
+			);
+		}
 		});
 	}
 	private checkPoster() {
-		if (this.movie.posterPath == null) {
+		if (this.movie.posterPath == null || this.movie.posterPath === undefined) {
 			this.movie.posterPath = '../../../images/default_movie_poster.png';
 		} else {
 			this.movie.posterPath = 'https://image.tmdb.org/t/p/w300/' + this.movie.posterPath;

@@ -1,4 +1,8 @@
 import { Component, Input, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
 
 import { IRemainingRequests } from "../../interfaces/IRemainingRequests";
 import { RequestService } from "../../services";
@@ -6,12 +10,18 @@ import { RequestType } from "../../interfaces";
 import { TranslateService } from "@ngx-translate/core";
 
 @Component({
-        standalone: false,
+    standalone: true,
     selector: "app-remaining-requests",
     templateUrl: "remaining-requests.component.html",
     styles: [`.mat-icon {
         vertical-align: middle;
      }`],
+    imports: [
+        CommonModule,
+        MatIconModule,
+        MatTooltipModule,
+        TranslateModule
+    ]
 })
 export class RemainingRequestsComponent implements OnInit {
 

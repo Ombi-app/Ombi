@@ -1,15 +1,30 @@
 import { Component, Inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import { IDenyDialogData } from "../interfaces/interfaces";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
 import { RequestService, MessageService } from "../../../../services";
 import { TranslateService } from "@ngx-translate/core";
 import { RequestType, IRequestEngineResult } from "../../../../interfaces";
 import { firstValueFrom } from "rxjs";
+import { TranslateModule } from "@ngx-translate/core";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { FormsModule } from "@angular/forms";
+import { MatInputModule } from "@angular/material/input";
+import { MatButtonModule } from "@angular/material/button";
 
 @Component({
-        standalone: false,
+        standalone: true,
     selector: "deny-dialog",
     templateUrl: "./deny-dialog.component.html",
+    imports: [
+        CommonModule,
+        TranslateModule,
+        FormsModule,
+        MatFormFieldModule,
+        MatDialogModule,
+        MatInputModule,
+        MatButtonModule
+    ]
 })
 export class DenyDialogComponent {
     constructor(

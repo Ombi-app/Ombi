@@ -1,11 +1,38 @@
 ﻿import { Component, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
 import { EmbyService, IdentityService, JellyfinService, JobService, NotificationService, PlexService, SettingsService } from "../../services";
 import { ICheckbox, IUserManagementSettings, RequestLimitType } from "../../interfaces";
 
 import { IUsersModel } from "../../interfaces";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { HumanizePipe } from "app/pipes/HumanizePipe";
 
 @Component({
-        standalone: false,
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatTooltipModule,
+        TranslateModule,
+        MatDividerModule,
+        FormsModule,
+        MatSlideToggleModule,
+        HumanizePipe,
+    ],
     templateUrl: "./usermanagement.component.html",
     styleUrls: ["./usermanagement.component.scss"]
 })

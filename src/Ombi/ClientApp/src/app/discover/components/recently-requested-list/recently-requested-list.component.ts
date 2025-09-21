@@ -1,6 +1,14 @@
 import { Component, OnInit, Input, ViewChild, OnDestroy, signal } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterModule } from "@angular/router";
+import { MatButtonModule } from "@angular/material/button";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { TranslateModule } from "@ngx-translate/core";
+import { CarouselModule, Carousel } from 'primeng/carousel';
+import { SkeletonModule } from 'primeng/skeleton';
+
 import { IRecentlyRequested, IRequestEngineResult, RequestType } from "../../../interfaces";
-import { Carousel } from 'primeng/carousel';
 import { ResponsiveOptions } from "../carousel.options";
 import { RequestServiceV2 } from "app/services/requestV2.service";
 import { finalize, map, Observable, Subject, takeUntil, tap } from "rxjs";
@@ -10,6 +18,7 @@ import { NotificationService, RequestService } from "app/services";
 import { TranslateService } from "@ngx-translate/core";
 import { DenyDialogComponent } from '../../../media-details/components/shared/deny-dialog/deny-dialog.component';
 import { MatDialog } from "@angular/material/dialog";
+import { DetailedCardComponent } from "../../../components";
 
 export enum DiscoverType {
     Upcoming,
@@ -20,10 +29,21 @@ export enum DiscoverType {
 }
 
 @Component({
-        standalone: false,
+    standalone: true,
     selector: "ombi-recently-list",
     templateUrl: "./recently-requested-list.component.html",
     styleUrls: ["./recently-requested-list.component.scss"],
+    imports: [
+        CommonModule,
+        RouterModule,
+        MatButtonModule,
+        MatMenuModule,
+        MatProgressSpinnerModule,
+        TranslateModule,
+        CarouselModule,
+        SkeletonModule,
+        DetailedCardComponent
+    ]
 })
 export class RecentlyRequestedListComponent implements OnInit, OnDestroy {
 

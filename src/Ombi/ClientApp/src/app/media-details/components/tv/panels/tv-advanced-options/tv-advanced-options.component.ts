@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from "@angular/core";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { CommonModule } from "@angular/common";
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
 import {
   IAdvancedData,
   ILanguageProfiles,
@@ -8,11 +9,26 @@ import {
   ISonarrSettings,
 } from "../../../../../interfaces";
 import { SettingsService, SonarrService } from "../../../../../services";
+import { TranslateModule } from "@ngx-translate/core";
+import { MatOptionModule } from "@angular/material/core";
+import { MatSelectModule } from "@angular/material/select";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatButtonModule } from "@angular/material/button";
 
 @Component({
-        standalone: false,
+        standalone: true,
   templateUrl: "./tv-advanced-options.component.html",
   selector: "tv-advanced-options",
+    imports: [
+        CommonModule,
+        TranslateModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatOptionModule,
+        MatDialogModule,
+        MatButtonModule
+        
+    ]
 })
 export class TvAdvancedOptionsComponent implements OnInit {
   public sonarrProfiles: ISonarrProfile[];

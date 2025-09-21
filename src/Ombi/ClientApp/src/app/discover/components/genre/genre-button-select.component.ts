@@ -1,11 +1,16 @@
 import { Component, OnInit, computed, signal } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { MatButtonToggleModule, MatButtonToggleChange } from "@angular/material/button-toggle";
+import { TranslateModule } from "@ngx-translate/core";
+import { SkeletonModule } from "primeng/skeleton";
+
 import { SearchV2Service } from "../../../services";
-import { MatButtonToggleChange } from "@angular/material/button-toggle";
 import { RequestType } from "../../../interfaces";
 import { AdvancedSearchDialogDataService } from "app/shared/advanced-search-dialog/advanced-search-dialog-data.service";
 import { Router } from "@angular/router";
 import { map, Observable } from "rxjs";
 import { toSignal } from '@angular/core/rxjs-interop';
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 interface IGenreSelect {
     name: string;
@@ -13,19 +18,23 @@ interface IGenreSelect {
     type: "movie"|"tv";
 }
 @Component({
-        standalone: false,
+    standalone: true,
     selector: "genre-button-select",
     templateUrl: "./genre-button-select.component.html",
     styleUrls: ["./genre-button-select.component.scss"],
+    imports: [
+        CommonModule,
+        MatButtonToggleModule,
+        TranslateModule,
+        SkeletonModule,
+        MatProgressSpinnerModule
+    ]
 })
 export class GenreButtonSelectComponent implements OnInit {
 
     public movieGenreList = signal<IGenreSelect[]>(null);
     public tvGenreList = signal<IGenreSelect[]>(null);
-
-
-    isLoading: boolean = false;
-
+    
     constructor(private searchService: SearchV2Service,
         private advancedSearchService: AdvancedSearchDialogDataService,
         private router: Router) { }
@@ -42,7 +51,6 @@ export class GenreButtonSelectComponent implements OnInit {
     }
 
     public async toggleChanged(event: MatButtonToggleChange, type: "movie"|"tv") {
-        this.isLoading = true;
 
         const genres: number[] = [event.value];
         const data = await this.searchService.advancedSearch({

@@ -1,5 +1,15 @@
 ﻿import { Component, OnInit, ViewChild } from "@angular/core";
 import { IdentityService, NotificationService, SettingsService, StatusService } from "../../services";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatStepperModule } from "@angular/material/stepper";
+import { MatButtonModule } from "@angular/material/button";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatCardModule } from "@angular/material/card";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
 
 import { CustomizationFacade } from "../../state/customization/customization.facade";
 import { ICreateWizardUser } from "../../interfaces";
@@ -8,11 +18,39 @@ import { MatStepper } from'@angular/material/stepper';
 import { Router } from "@angular/router";
 import { WizardService } from "../services/wizard.service";
 import { Observable, take } from "rxjs";
+import { MediaServerComponent } from "../mediaserver/mediaserver.component";
+import { PlexComponent } from "../plex/plex.component";
+import { EmbyComponent } from "../emby/emby.component";
+import { JellyfinComponent } from "../jellyfin/jellyfin.component";
+import { CreateAdminComponent } from "../createadmin/createadmin.component";
+import { OmbiConfigComponent } from "../ombiconfig/ombiconfig.component";
+import { DatabaseComponent } from "../database/database.component";
+import { MatTabsModule } from "@angular/material/tabs";
 
 @Component({
-        standalone: false,
+    standalone: true,
     templateUrl: "./welcome.component.html",
     styleUrls: ["./welcome.component.scss"],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatStepperModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatCardModule,
+        MatIconModule,
+        MatTooltipModule,
+        TranslateModule,
+        MatTabsModule,
+        PlexComponent,
+        EmbyComponent,
+        JellyfinComponent,
+        CreateAdminComponent,
+        OmbiConfigComponent,
+        DatabaseComponent
+    ]
 })
 export class WelcomeComponent implements OnInit {
 

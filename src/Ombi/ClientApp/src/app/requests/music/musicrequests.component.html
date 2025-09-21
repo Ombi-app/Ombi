@@ -44,7 +44,7 @@
 			<div class="album-tint" style="background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.6) 100%)"></div>
 
 			<div class="col-sm-12 small-padding">
-				<img *ngIf="request.disk" class="img-responsive poster album-cover" src="{{ request.disk }}" alt="poster" />
+				<img *ngIf="request.disk" class="img-responsive poster album-cover" [src]="request.disk" alt="poster" />
 			</div>
 
 			<div class="col-sm-12 small-padding">

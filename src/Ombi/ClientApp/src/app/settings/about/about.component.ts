@@ -1,4 +1,14 @@
 ﻿import { Component, Inject, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { ReactiveFormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
 import { HubService, SettingsService, SystemService } from "../../services";
 import { IAbout, IUpdateModel } from "../../interfaces/ISettings";
 
@@ -7,9 +17,22 @@ import { MatDialog } from "@angular/material/dialog";
 import { UpdateDialogComponent } from "./update-dialog.component";
 import { UpdateService } from "../../services/update.service";
 import { APP_BASE_HREF } from "@angular/common";
+import { SettingsMenuComponent } from "../settingsmenu.component";
 
 @Component({
-        standalone: false,
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatSlideToggleModule,
+        MatTooltipModule,
+        TranslateModule
+    ],
     templateUrl: "./about.component.html",
     styleUrls: ["./about.component.scss"]
 })

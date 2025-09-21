@@ -1,14 +1,29 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, OnInit, Input } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { TranslateModule } from "@ngx-translate/core";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { IssuesService, NotificationService, SettingsService } from "../../../../services";
 import { RequestType, IIssues, IssueStatus, IIssueSettings } from "../../../../interfaces";
 import { TranslateService } from "@ngx-translate/core";
+import { MatExpansionModule } from "@angular/material/expansion";
+import { DetailsGroupComponent } from "app/issues/components/details-group/details-group.component";
 
 @Component({
-        standalone: false,
+    standalone: true,
     selector: "issues-panel",
     templateUrl: "./issues-panel.component.html",
     styleUrls: ["./issues-panel.component.scss"],
-    
+    imports: [
+        CommonModule,
+        TranslateModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatExpansionModule,
+        DetailsGroupComponent,
+    ]
 })
 export class IssuesPanelComponent implements OnInit {
 

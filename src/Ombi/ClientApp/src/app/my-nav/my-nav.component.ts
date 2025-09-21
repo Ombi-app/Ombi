@@ -1,5 +1,18 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatRippleModule } from '@angular/material/core';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule, MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterModule, Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { ICustomizationSettings, IUser, RequestType, UserType } from '../interfaces';
 import { LidarrService, SettingsService, SettingsStateService } from '../services';
 
@@ -8,14 +21,13 @@ import { CustomizationFacade } from '../state/customization';
 import { FilterService } from '../discover/services/filter-service';
 import { ILocalUser } from '../auth/IUserLogin';
 import { INavBar } from '../interfaces/ICommon';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Md5 } from 'ts-md5/dist/md5';
 import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
 import { SearchFilter } from './SearchFilter';
 import { StorageService } from '../shared/storage/storage-service';
 import { map, take } from 'rxjs/operators';
+import { RemainingRequestsComponent } from '../shared/remaining-requests/remaining-requests.component';
+import { NavSearchComponent } from './nav-search.component';
 
 export enum SearchFilterType {
   Movie = 1,
@@ -25,10 +37,27 @@ export enum SearchFilterType {
 }
 
 @Component({
-        standalone: false,
-  selector: 'app-my-nav',
-  templateUrl: './my-nav.component.html',
-  styleUrls: ['./my-nav.component.scss'],
+    standalone: true,
+    selector: 'app-my-nav',
+    templateUrl: './my-nav.component.html',
+    styleUrls: ['./my-nav.component.scss'],
+    imports: [
+        CommonModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatIconModule,
+        MatListModule,
+        MatMenuModule,
+        MatRippleModule,
+        MatSidenavModule,
+        MatSlideToggleModule,
+        MatToolbarModule,
+        MatTooltipModule,
+        RouterModule,
+        TranslateModule,
+        RemainingRequestsComponent,
+        NavSearchComponent
+    ]
 })
 export class MyNavComponent implements OnInit {
 

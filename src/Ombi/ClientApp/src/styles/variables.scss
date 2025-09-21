@@ -1,6 +1,6 @@
-﻿// @import "./mat-palette.scss";
-@import '@angular/material/theming';
-@import "./new-mat-palette.scss";
+﻿// @use "./mat-palette.scss" as *;
+@use "@angular/material/theming" as *;
+@use "./new-mat-palette.scss" as *;
 // BASE
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker

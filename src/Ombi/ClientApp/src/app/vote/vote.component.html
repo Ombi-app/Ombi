@@ -40,7 +40,7 @@
                                 <td style="width: 10%"> <img *ngIf="vm.image" class="img-responsive poster" style="max-width: 100%;
                                     height: auto;
                                     width: 100%;"
-                                        (click)="toggle($event, vm.image)" src="{{vm.image}}" alt="poster"></td>
+                                        (click)="toggle($event, vm.image)" [src]="vm.image" alt="poster"></td>
                                 <td class="vcenter" [attr.data-test]='vm.requestId'>{{vm.title}}</td>
                                 <td class="vcenter" [innerHTML]="vm.description"></td>
                             </tr>
@@ -75,7 +75,7 @@
                         <td style="width: 10%"> <img *ngIf="vm.image" class="img-responsive poster" style="max-width: 100%;
                             height: auto;
                             width: 100%;"
-                                (click)="toggle($event, vm.image)" src="{{vm.image}}" alt="poster"></td>
+                                (click)="toggle($event, vm.image)" [src]="vm.image" alt="poster"></td>
                         <td class="vcenter" [attr.data-test]='vm.requestId'>{{vm.title}}</td>
                         <td class="vcenter" [innerHTML]="vm.description"></td>
                     </tr>
@@ -88,5 +88,5 @@
 
 
 <p-overlayPanel #op [dismissable]="true" [styleClass]="'hideBackground'">
-        <img class="img-responsive poster" width="70%" src="{{panelImage}}" alt="poster">
+        <img class="img-responsive poster" width="70%" [src]="panelImage" alt="poster">
     </p-overlayPanel>

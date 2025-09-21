@@ -1,4 +1,14 @@
 ﻿import { Component, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
 import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 
 import { IMobileNotifcationSettings, IMobileUsersViewModel, INotificationTemplates, NotificationType, ICloudMobileDevices, ICloudMobileModel } from "../../interfaces";
@@ -7,10 +17,29 @@ import { NotificationService } from "../../services";
 import { MobileService, SettingsService } from "../../services";
 import { CloudMobileService } from "../../services/cloudmobile.service";
 import { SelectionModel } from "@angular/cdk/collections";
-import { MatTableDataSource } from "@angular/material/table";
+import { MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { NotificationTemplate } from "./notificationtemplate.component";
 
 @Component({
-        standalone: false,
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FormsModule,
+        NotificationTemplate,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatSlideToggleModule,
+        MatTooltipModule,
+        TranslateModule,
+        MatTableModule
+    ],
+    providers: [
+        CloudMobileService
+    ],
     templateUrl: "./cloudmobile.component.html",
     styleUrls: ["./notificationtemplate.component.scss"]
 })

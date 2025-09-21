@@ -1,15 +1,27 @@
 import { Component, Input } from "@angular/core";
-import { MatDialog } from '@angular/material/dialog';
-import { TranslateService } from "@ngx-translate/core";
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { IIssues, IIssueSettings, IssueStatus } from "../../../interfaces";
 import { IssuesService, NotificationService } from "../../../services";
 import { IssueChatComponent } from "../issue-chat/issue-chat.component";
+import { CommonModule } from "@angular/common";
+import { MatCardMdImage, MatCardModule } from "@angular/material/card";
+import { OmbiDatePipe } from "app/pipes/OmbiDatePipe";
+import { MatButtonModule } from "@angular/material/button";
 
 @Component({
-        standalone: false,
+        standalone: true,
     selector: "issues-details-group",
     templateUrl: "details-group.component.html",
     styleUrls: ["details-group.component.scss"],
+    imports: [
+        CommonModule,
+        MatDialogModule,
+        TranslateModule,
+    MatCardModule,
+    OmbiDatePipe,
+    MatButtonModule,
+]
 })
 export class DetailsGroupComponent {
 

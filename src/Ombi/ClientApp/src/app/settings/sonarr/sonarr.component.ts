@@ -1,5 +1,14 @@
 import { Component, OnInit } from "@angular/core";
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators, ReactiveFormsModule, FormsModule } from "@angular/forms";
+import { CommonModule } from "@angular/common";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
 import { SonarrFacade } from "app/state/sonarr/sonarr.facade";
 import { catchError, finalize, map, of } from "rxjs";
 
@@ -11,7 +20,20 @@ import { TesterService } from "../../services";
 import { NotificationService } from "../../services";
 
 @Component({
-        standalone: false,
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatSlideToggleModule,
+        MatTooltipModule,
+        TranslateModule
+    ],
     templateUrl: "./sonarr.component.html",
     styleUrls: ["./sonarr.component.scss"]
 })

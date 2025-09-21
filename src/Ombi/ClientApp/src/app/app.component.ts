@@ -1,8 +1,8 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, HostBinding, Inject } from "@angular/core";
-import { NavigationStart, Router } from "@angular/router";
-import { TranslateService } from "@ngx-translate/core";
+import { NavigationStart, Router, RouterModule } from "@angular/router";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { AuthService } from "./auth/auth.service";
 import { ILocalUser } from "./auth/IUserLogin";
 import { NotificationService, CustomPageService, IdentityService } from "./services";
@@ -14,13 +14,19 @@ import { ICustomizationSettings, ICustomPage } from "./interfaces";
 import { SignalRNotificationService } from './services/signlarnotification.service';
 import { DOCUMENT } from '@angular/common';
 import { CustomizationFacade } from './state/customization';
-
+import { MyNavComponent } from './my-nav/my-nav.component';
 
 @Component({
-        standalone: false,
+    standalone: true,
     selector: "app-ombi",
     templateUrl: "./app.component.html",
     styleUrls: ["./app.component.scss"],
+    imports: [
+        CommonModule,
+        RouterModule,
+        TranslateModule,
+        MyNavComponent
+    ]
 })
 export class AppComponent implements OnInit {
 

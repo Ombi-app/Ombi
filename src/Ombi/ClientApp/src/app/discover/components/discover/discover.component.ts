@@ -1,13 +1,27 @@
 import { Component, computed, inject, signal, ChangeDetectionStrategy } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { TranslateModule } from "@ngx-translate/core";
+import { SkeletonModule } from "primeng/skeleton";
 
 import { AuthService } from "../../../auth/auth.service";
 import { DiscoverType } from "../carousel-list/carousel-list.component";
+import { GenreButtonSelectComponent } from "../genre/genre-button-select.component";
+import { RecentlyRequestedListComponent } from "../recently-requested-list/recently-requested-list.component";
+import { CarouselListComponent } from "../carousel-list/carousel-list.component";
 
 @Component({
-    standalone: false,
+    standalone: true,
     templateUrl: "./discover.component.html",
     styleUrls: ["./discover.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        TranslateModule,
+        SkeletonModule,
+        GenreButtonSelectComponent,
+        RecentlyRequestedListComponent,
+        CarouselListComponent
+    ]
 })
 export class DiscoverComponent {
     // Services using inject() function
