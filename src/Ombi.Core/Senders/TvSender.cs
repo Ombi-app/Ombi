@@ -272,6 +272,11 @@ namespace Ombi.Core.Senders
                 }
                 else
                 {
+                    if (existingSeries is { monitored: false })
+                    {
+                        existingSeries.monitored = true;
+                        await SonarrApi.UpdateSeries(existingSeries,  s.ApiKey, s.FullUri);
+                    }
                     await SendToSonarr(model, existingSeries, s, options);
                 }
 
