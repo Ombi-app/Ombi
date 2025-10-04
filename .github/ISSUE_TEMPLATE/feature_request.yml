@@ -1,0 +1,55 @@
+name: "✨ Feature Request"
+description: 'Suggest a new feature for Ombi'
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Note:** Feature requests are primarily handled on [Feature Upvote](https://features.ombi.io). 
+        Please check if your feature has already been requested there before creating a GitHub issue.
+        
+        If you're proposing a significant feature or architectural change, please use this template to discuss it with the maintainers first.
+
+  - type: textarea
+    attributes:
+      label: Feature Summary
+      description: A clear and concise description of the feature you'd like to see implemented.
+      placeholder: "I would like Ombi to..."
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Problem Description
+      description: What problem does this feature solve? What is the current limitation?
+      placeholder: "Currently, users have to..."
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Proposed Solution
+      description: Describe your proposed solution in detail.
+      placeholder: "I propose that Ombi should..."
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Alternative Solutions
+      description: Describe any alternative solutions or workarounds you've considered.
+      placeholder: "Alternative approaches could include..."
+
+  - type: checkboxes
+    attributes:
+      label: Additional Context
+      options:
+        - label: I have searched existing issues and this hasn't been requested before
+        - label: I have checked Feature Upvote and this hasn't been requested there
+        - label: I am willing to contribute to the implementation of this feature
+        - label: This feature would benefit a significant number of users
+
+  - type: textarea
+    attributes:
+      label: Additional Context
+      description: Add any other context, mockups, or screenshots about the feature request here.
+      render: markdown
