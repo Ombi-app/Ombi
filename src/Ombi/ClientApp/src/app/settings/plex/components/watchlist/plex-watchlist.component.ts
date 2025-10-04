@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { MatTableDataSource } from "@angular/material/table";
+import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { take } from "rxjs";
 import { IPlexWatchlistUsers, WatchlistSyncStatus } from "../../../../interfaces";
 import { PlexService } from "../../../../services";
@@ -7,6 +7,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatCardModule } from "@angular/material/card";
 import { CommonModule } from "@angular/common";
+import { MatDialogModule } from "@angular/material/dialog";
 
 @Component({
         standalone: true,
@@ -17,6 +18,8 @@ import { CommonModule } from "@angular/common";
         MatIconModule,
         MatCardModule,
         MatButtonModule,
+        MatDialogModule,
+        MatTableModule
     ]
 })
 export class PlexWatchlistComponent implements OnInit{

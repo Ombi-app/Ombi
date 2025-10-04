@@ -321,7 +321,10 @@ namespace Ombi.Api.External.MediaServers.Plex
 
             var result = await Api.Request(request, cancellationToken);
 
-            if (result.StatusCode.Equals(HttpStatusCode.Unauthorized))
+            // Check for all possible authentication errors
+            if (result.StatusCode == HttpStatusCode.Unauthorized || 
+                result.StatusCode == HttpStatusCode.Forbidden ||
+                result.StatusCode == HttpStatusCode.PaymentRequired)
             {
                 return new PlexWatchlistContainer
                 {
@@ -345,6 +348,7 @@ namespace Ombi.Api.External.MediaServers.Plex
 
         /// <summary>
         /// Pings the Plex API to validate if a token is still valid
+        /// Uses the same endpoint as watchlist to ensure consistent validation
         /// </summary>
         /// <param name="authToken">The authentication token to validate</param>
         /// <param name="cancellationToken">Cancellation token</param>
@@ -353,16 +357,23 @@ namespace Ombi.Api.External.MediaServers.Plex
         {
             try
             {
-                var request = new Request("api/v2/ping", "https://plex.tv/", HttpMethod.Get);
+                // Use the same endpoint as watchlist to ensure consistent token validation
+                var request = new Request("library/sections/watchlist/all", WatchlistUri, HttpMethod.Get);
                 await AddHeaders(request, authToken);
                 
-                // We don't need to parse the response, just check if the request succeeds
-                await Api.Request(request, cancellationToken);
+                var result = await Api.Request(request, cancellationToken);
+                
+                // Check for authentication errors (401, 403, etc.)
+                if (result.StatusCode == HttpStatusCode.Unauthorized || result.StatusCode == HttpStatusCode.Forbidden)
+                {
+                    return false;
+                }
+                
                 return true;
             }
             catch
             {
-                // If the request fails (401, 403, etc.), the token is invalid
+                // If the request fails, the token is invalid
                 return false;
             }
         }
