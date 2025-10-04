@@ -1,3 +1,7 @@
+## [4.50.2](https://github.com/Ombi-app/Ombi/compare/v4.50.1...v4.50.2) (2025-10-04)
+
+
+
 ## [4.50.1](https://github.com/Ombi-app/Ombi/compare/v4.50.0...v4.50.1) (2025-09-26)
 
 
@@ -1294,15 +1298,6 @@
 
 
 ## [4.43.16](https://github.com/Ombi-app/Ombi/compare/v4.43.15...v4.43.16) (2024-04-01)
-
-
-
-## [4.43.15](https://github.com/Ombi-app/Ombi/compare/v4.43.14...v4.43.15) (2024-03-30)
-
-
-### Bug Fixes
-
-* fixed emails not being able to load the template ([6b49d9b](https://github.com/Ombi-app/Ombi/commit/6b49d9bc7108a0b663ca05de19dbf4841c9c43c1))
 
 
 
