@@ -1,0 +1,73 @@
+name: First Time Contributor Welcome
+
+on:
+  pull_request:
+    types: [opened]
+    branches: [develop]
+
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR'
+    steps:
+      - name: Welcome first-time contributor
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            // Check if welcome comment already exists
+            const hasWelcomeComment = comments.some(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('🎉 Welcome to Ombi!')
+            );
+            
+            if (!hasWelcomeComment) {
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `🎉 **Welcome to Ombi!** 
+                
+Thank you for your first contribution! We're excited to have you join our community.
+
+## 📚 Helpful Resources
+- [Contributing Guide](CONTRIBUTING.md) - Everything you need to know about contributing
+- [Discord Community](https://discord.gg/Sa7wNWb) - Get help and chat with other contributors
+- [Documentation](https://docs.ombi.app/) - Comprehensive project documentation
+
+## 🚀 What Happens Next
+1. Our automated checks will run to validate your changes
+2. A maintainer will review your PR
+3. We'll provide feedback and guidance if needed
+4. Once approved, your contribution will be merged!
+
+## 💡 Tips for Success
+- Keep your PR focused and small
+- Include tests for new functionality
+- Update documentation if needed
+- Be patient - we'll review as soon as possible
+
+Thanks again for contributing to Ombi! 🙏`
+              });
+            }
+
+  # Add helpful labels for first-time contributors
+  add-labels:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR'
+    steps:
+      - name: Add first-time contributor label
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ['first-time-contributor', 'needs-review']
+            });

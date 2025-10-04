@@ -1,0 +1,66 @@
+name: "🤝 Contribution Help"
+description: 'Get help with contributing to Ombi'
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This template is for contributors who need help with the contribution process, development setup, or have questions about the codebase.
+
+  - type: dropdown
+    attributes:
+      label: Type of Help Needed
+      options:
+        - Development setup issues
+        - Understanding the codebase
+        - Testing guidance
+        - Code review feedback
+        - Git/GitHub workflow help
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Question or Issue
+      description: Describe what you need help with in detail.
+      placeholder: "I'm trying to..."
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: What I've Tried
+      description: Describe what you've already tried or researched.
+      placeholder: "I've already tried..."
+
+  - type: textarea
+    attributes:
+      label: Error Messages
+      description: If you're encountering errors, please paste them here.
+      render: shell
+
+  - type: input
+    attributes:
+      label: Ombi Version
+      description: What version of Ombi are you working with?
+      placeholder: "e.g., develop branch, v4.40.0"
+
+  - type: dropdown
+    attributes:
+      label: Development Environment
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - Docker
+    validations:
+      required: true
+
+  - type: checkboxes
+    attributes:
+      label: Checklist
+      options:
+        - label: I have read the [Contributing Guide](CONTRIBUTING.md)
+        - label: I have searched existing issues for similar questions
+        - label: I have checked the [Discord community](https://discord.gg/Sa7wNWb) for help
+        - label: I have reviewed the [documentation](https://docs.ombi.app/)
