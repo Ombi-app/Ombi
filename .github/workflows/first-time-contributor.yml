@@ -33,26 +33,26 @@ jobs:
                 repo: context.repo.repo,
                 body: `🎉 **Welcome to Ombi!** 
                 
-Thank you for your first contribution! We're excited to have you join our community.
+                Thank you for your first contribution! We're excited to have you join our community.
 
-## 📚 Helpful Resources
-- [Contributing Guide](CONTRIBUTING.md) - Everything you need to know about contributing
-- [Discord Community](https://discord.gg/Sa7wNWb) - Get help and chat with other contributors
-- [Documentation](https://docs.ombi.app/) - Comprehensive project documentation
+                ## 📚 Helpful Resources
+                - [Contributing Guide](CONTRIBUTING.md) - Everything you need to know about contributing
+                - [Discord Community](https://discord.gg/Sa7wNWb) - Get help and chat with other contributors
+                - [Documentation](https://docs.ombi.app/) - Comprehensive project documentation
 
-## 🚀 What Happens Next
-1. Our automated checks will run to validate your changes
-2. A maintainer will review your PR
-3. We'll provide feedback and guidance if needed
-4. Once approved, your contribution will be merged!
+                ## 🚀 What Happens Next
+                1. Our automated checks will run to validate your changes
+                2. A maintainer will review your PR
+                3. We'll provide feedback and guidance if needed
+                4. Once approved, your contribution will be merged!
 
-## 💡 Tips for Success
-- Keep your PR focused and small
-- Include tests for new functionality
-- Update documentation if needed
-- Be patient - we'll review as soon as possible
+                ## 💡 Tips for Success
+                - Keep your PR focused and small
+                - Include tests for new functionality
+                - Update documentation if needed
+                - Be patient - we'll review as soon as possible
 
-Thanks again for contributing to Ombi! 🙏`
+                Thanks again for contributing to Ombi! 🙏`
               });
             }
 
