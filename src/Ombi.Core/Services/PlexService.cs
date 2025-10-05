@@ -43,6 +43,15 @@ namespace Ombi.Core.Services
             return model;
         }
 
+        public async Task ForceRevalidateWatchlistUsers(CancellationToken cancellationToken)
+        {
+            var existingErrors = await _watchlistUserErrors.GetAll().ToListAsync(cancellationToken);
+            if (existingErrors.Any())
+            {
+                await _watchlistUserErrors.DeleteRange(existingErrors);
+            }
+        }
+
         private static WatchlistSyncStatus GetWatchlistSyncStatus(OmbiUser user, List<PlexWatchlistUserError> userErrors)
         {
             if (string.IsNullOrWhiteSpace(user.MediaServerToken))

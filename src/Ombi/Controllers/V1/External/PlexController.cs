@@ -16,6 +16,7 @@ using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Models;
 using Ombi.Models.External;
+using Ombi.Schedule.Jobs.Plex;
 
 namespace Ombi.Controllers.V1.External
 {
@@ -308,5 +309,14 @@ namespace Ombi.Controllers.V1.External
         [Admin]
         [HttpGet("WatchlistUsers")]
         public async Task<List<PlexUserWatchlistModel>> GetPlexWatchlistUsers() => await _plexService.GetWatchlistUsers(HttpContext.RequestAborted);
+
+        [Admin]
+        [HttpPost("WatchlistUsers/revalidate")]
+        public async Task<IActionResult> RevalidatePlexWatchlistUsers()
+        {
+            await _plexService.ForceRevalidateWatchlistUsers(HttpContext.RequestAborted);
+            await OmbiQuartz.TriggerJob(nameof(IPlexWatchlistImport), "Plex");
+            return Accepted();
+        }
     }
 }
