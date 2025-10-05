@@ -335,6 +335,11 @@ namespace Ombi.Core.Senders
                     existingSeason = result.seasons.FirstOrDefault(x => x.seasonNumber == season.SeasonNumber);
                     await Task.Delay(500);
                 }
+
+                if (existingSeason == null)
+                {
+                    Logger.LogWarning("Unable to locate season number {SeasonNumber} in Sonarr for title {Title} after {Attempts} attempts. Skipping monitoring updates for this season.", season.SeasonNumber, model.ParentRequest.Title, attempt);
+                }
             }
 
             // Does the show have the correct tags we are expecting
@@ -381,6 +386,12 @@ namespace Ombi.Core.Senders
                 }
 
                 existingSeason = result.seasons.FirstOrDefault(x => x.seasonNumber == season.SeasonNumber);
+
+                if (existingSeason == null)
+                {
+                    Logger.LogWarning("Season {SeasonNumber} still missing in Sonarr for title {Title}; skipping monitoring changes for this season.", season.SeasonNumber, model.ParentRequest.Title);
+                    continue;
+                }
 
 
                 // Make sure this season is set to monitored 
