@@ -144,7 +144,7 @@ namespace Ombi.Controllers.V1
                     .Where(x => x.UserId == user.Id)
                     .ToListAsync();
 
-                if (existingErrors.Count > 0)
+                if (existingErrors.Any())
                 {
                     await _watchlistUserErrors.DeleteRange(existingErrors);
                 }
