@@ -5,6 +5,11 @@ on:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 jobs:
   build-ui:
     runs-on: ubuntu-latest
