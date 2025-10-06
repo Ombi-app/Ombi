@@ -110,7 +110,7 @@ export class PlexWatchlistComponent implements OnInit, OnDestroy{
     private createSnapshot(users: IPlexWatchlistUsers[]): string[] {
         return users
             .map(user => `${user.userId}:${user.syncStatus}`)
-            .sort((a, b) => a.localeCompare(b));
+            .sort();
     }
 
     private hasStateChanged(previous: string[], current: string[]): boolean {
