@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
-import { Subscription, interval, startWith, switchMap, take } from "rxjs";
+import { take } from "rxjs";
 import { IPlexWatchlistUsers, WatchlistSyncStatus } from "../../../../interfaces";
 import { PlexService } from "../../../../services";
 import { MatButtonModule } from "@angular/material/button";
@@ -24,7 +24,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
         MatProgressBarModule
     ]
 })
-export class PlexWatchlistComponent implements OnInit, OnDestroy{
+export class PlexWatchlistComponent implements OnInit{
 
     public dataSource: MatTableDataSource<IPlexWatchlistUsers> = new MatTableDataSource();
     public displayedColumns: string[] = ['userName','syncStatus'];
@@ -32,19 +32,10 @@ export class PlexWatchlistComponent implements OnInit, OnDestroy{
 
     public WatchlistSyncStatus = WatchlistSyncStatus;
 
-    private readonly pollIntervalMs = 1000;
-    private readonly maxPollAttempts = 15;
-    private pollSubscription?: Subscription;
-    private lastSnapshot: string[] = [];
-
     constructor(private plexService: PlexService) { }
 
     public ngOnInit() {
         this.loadWatchlistUsers();
-    }
-
-    public ngOnDestroy(): void {
-        this.stopPolling();
     }
 
     public forceRecheck(): void {
@@ -53,13 +44,15 @@ export class PlexWatchlistComponent implements OnInit, OnDestroy{
         }
 
         this.isReloading = true;
-        this.lastSnapshot = this.createSnapshot(this.dataSource.data);
         this.plexService.revalidateWatchlistUsers().pipe(take(1)).subscribe({
             next: () => {
-                this.beginPollingForUpdates();
+                setTimeout(() => {
+                    this.loadWatchlistUsers();
+                    this.isReloading = false;
+                }, 3000);
             },
             error: () => {
-                this.finishReload();
+                this.isReloading = false;
             }
         });
     }
@@ -67,57 +60,6 @@ export class PlexWatchlistComponent implements OnInit, OnDestroy{
     private loadWatchlistUsers(): void {
         this.plexService.getWatchlistUsers().pipe(take(1)).subscribe((x: IPlexWatchlistUsers[]) => {
             this.dataSource = new MatTableDataSource(x);
-            this.lastSnapshot = this.createSnapshot(x);
         });
-    }
-
-    private beginPollingForUpdates(): void {
-        this.stopPolling();
-
-        let attempts = 0;
-        this.pollSubscription = interval(this.pollIntervalMs)
-            .pipe(
-                startWith(0),
-                switchMap(() => this.plexService.getWatchlistUsers().pipe(take(1)))
-            )
-            .subscribe({
-                next: (users: IPlexWatchlistUsers[]) => {
-                    this.dataSource = new MatTableDataSource(users);
-                    const currentSnapshot = this.createSnapshot(users);
-                    attempts += 1;
-
-                    if (this.hasStateChanged(this.lastSnapshot, currentSnapshot) || attempts >= this.maxPollAttempts) {
-                        this.lastSnapshot = currentSnapshot;
-                        this.finishReload();
-                    }
-                },
-                error: () => {
-                    this.finishReload();
-                }
-            });
-    }
-
-    private finishReload(): void {
-        this.stopPolling();
-        this.isReloading = false;
-    }
-
-    private stopPolling(): void {
-        this.pollSubscription?.unsubscribe();
-        this.pollSubscription = undefined;
-    }
-
-    private createSnapshot(users: IPlexWatchlistUsers[]): string[] {
-        return users
-            .map(user => `${user.userId}:${user.syncStatus}`)
-            .sort();
-    }
-
-    private hasStateChanged(previous: string[], current: string[]): boolean {
-        if (previous.length !== current.length) {
-            return true;
-        }
-
-        return previous.some((value, index) => value !== current[index]);
     }
 }
