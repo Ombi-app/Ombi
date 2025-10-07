@@ -28,6 +28,6 @@
     "demo:open": "cypress open --config-file cypress/config/demo.json"
   },
   "dependencies": {
-    "cypress-real-events": "^1.13.0"
+    "cypress-real-events": "^1.15.0"
   }
 }
