@@ -3117,12 +3117,12 @@
   dependencies:
     tslib "^2.2.0"
 
-"@ngxs/store@3.8.2":
-  version "3.8.2"
-  resolved "https://registry.yarnpkg.com/@ngxs/store/-/store-3.8.2.tgz#f6c8553e03db95baea7684f0f227c0e9a8095983"
-  integrity sha512-IovxuGQDEpB9VefmbTaV1k4hms4iZ4aS9gPVZOC+qzyfvpi7zrUEsjo+yT6FfVBmBg/RLUmPCtqArzbKU5XrLQ==
+"@ngxs/store@20.1.0":
+  version "20.1.0"
+  resolved "https://registry.yarnpkg.com/@ngxs/store/-/store-20.1.0.tgz#bfb48134761a11dd2a287b9c819d92ef054f63a0"
+  integrity sha512-Ypceg/FS8NBFxQqiKCa1PzLVLevklHSC2marvwcLwv+ZWpSn43qFSRCeDdcpdxmrZuqdilCLpD45IY3+/1METQ==
   dependencies:
-    tslib "^2.2.0"
+    tslib "^2.3.0"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
