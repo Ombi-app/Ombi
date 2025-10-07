@@ -3110,12 +3110,12 @@
   resolved "https://registry.yarnpkg.com/@ngx-translate/http-loader/-/http-loader-8.0.0.tgz#e02c25dbe33c6b1edee73e3654ab8a161572cdfb"
   integrity sha512-SFMsdUcmHF5OdZkL1CHEoSAwbP5EbAOPTLLboOCRRoOg21P4GJx+51jxGdJeGve6LSKLf4Pay7BkTwmE6vxYlg==
 
-"@ngxs/devtools-plugin@3.8.2":
-  version "3.8.2"
-  resolved "https://registry.yarnpkg.com/@ngxs/devtools-plugin/-/devtools-plugin-3.8.2.tgz#0deb8aac228483ede44c20ed3a6488e824c4f3fc"
-  integrity sha512-4FWZWJTtgrlTUsiprIBGHaQqvvFKiTesYK9+dg03NGv7z74Z5pNtPVbO1hMeuMmqaJ8r18fDZ3wIfXlXC6noNA==
+"@ngxs/devtools-plugin@20.1.0":
+  version "20.1.0"
+  resolved "https://registry.yarnpkg.com/@ngxs/devtools-plugin/-/devtools-plugin-20.1.0.tgz#872eba1804774c2226ec39108d3ef8f7ac67d2fc"
+  integrity sha512-230f6MEhH4lowjsVSlhGf6fGIA+Y/2dM8K5kjQqeE0uvnmQ9HnXBFaLFyPaLJNjfi7mXMFilXnkeKd1G2chKeQ==
   dependencies:
-    tslib "^2.2.0"
+    tslib "^2.3.0"
 
 "@ngxs/store@3.8.2":
   version "3.8.2"
