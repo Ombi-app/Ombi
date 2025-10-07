@@ -3321,6 +3321,25 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
+"@primeuix/styled@^0.7.3":
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/@primeuix/styled/-/styled-0.7.4.tgz#d2108a7fad297dea60d549b2c10ed744dc0cbc0e"
+  integrity sha512-QSO/NpOQg8e9BONWRBx9y8VGMCMYz0J/uKfNJEya/RGEu7ARx0oYW0ugI1N3/KB1AAvyGxzKBzGImbwg0KUiOQ==
+  dependencies:
+    "@primeuix/utils" "^0.6.1"
+
+"@primeuix/styles@^1.2.4":
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/@primeuix/styles/-/styles-1.2.5.tgz#97fe5b53d141f0dbd35c4f417f6a76db3eb1e244"
+  integrity sha512-nypFRct/oaaBZqP4jinT0puW8ZIfs4u+l/vqUFmJEPU332fl5ePj6DoOpQgTLzo3OfmvSmz5a5/5b4OJJmmi7Q==
+  dependencies:
+    "@primeuix/styled" "^0.7.3"
+
+"@primeuix/utils@^0.6.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@primeuix/utils/-/utils-0.6.1.tgz#34af8e05aa9a142bf3c290381b5e104dc15e52b5"
+  integrity sha512-tQL/ZOPgCdD+NTimlUmhyD0ey8J1XmpZE4hDHM+/fnuBicVVmlKOd5HpS748LcOVRUKbWjmEPdHX4hi5XZoC1Q==
+
 "@rollup/rollup-android-arm-eabi@4.44.1":
   version "4.44.1"
   resolved "https://registry.yarnpkg.com/@rollup/rollup-android-arm-eabi/-/rollup-android-arm-eabi-4.44.1.tgz#f768e3b2b0e6b55c595d7a053652c06413713983"
@@ -10645,11 +10664,14 @@ primeicons@^6.0.1:
   resolved "https://registry.yarnpkg.com/primeicons/-/primeicons-6.0.1.tgz#431fa7c79825934eefd62087d8e1faa6a9e376ad"
   integrity sha512-KDeO94CbWI4pKsPnYpA1FPjo79EsY9I+M8ywoPBSf9XMXoe/0crjbUK7jcQEDHuc0ZMRIZsxH3TYLv4TUtHmAA==
 
-primeng@^17.11.0:
-  version "17.18.7"
-  resolved "https://registry.yarnpkg.com/primeng/-/primeng-17.18.7.tgz#1c3caec48a9cfb013928da603e376dd573d4378b"
-  integrity sha512-RKbUL69uTzDrVLOKxC8Qn7tyzoAUXetBsMOnNJJaomXTirC001vNTw/wzcuLxkTQpNXAOztxcKMpMTmZQMhe5Q==
+primeng@^20.1.2:
+  version "20.2.0"
+  resolved "https://registry.yarnpkg.com/primeng/-/primeng-20.2.0.tgz#51f212b64e061b5a95c7d811dab6a141d052aaef"
+  integrity sha512-SXdL5dY+YWaCt1jRFqf4EUVhyVlhYV0MjLeke/UeLx/Od0+06Ru33MLQe2Ul7o/vAmItbh+OvRTu7jEk5LMjqQ==
   dependencies:
+    "@primeuix/styled" "^0.7.3"
+    "@primeuix/styles" "^1.2.4"
+    "@primeuix/utils" "^0.6.1"
     tslib "^2.3.0"
 
 prismjs@^1.29.0:
