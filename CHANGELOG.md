@@ -1,3 +1,12 @@
+## [4.51.1](https://github.com/Ombi-app/Ombi/compare/v4.51.0...v4.51.1) (2025-10-09)
+
+
+### Bug Fixes
+
+* **user-management:** Put back the user filter ([cb63060](https://github.com/Ombi-app/Ombi/commit/cb63060c778011927dc280f47f8b1836b6739150))
+
+
+
 # [4.51.0](https://github.com/Ombi-app/Ombi/compare/v4.50.2...v4.51.0) (2025-10-06)
 
 
@@ -1305,15 +1314,6 @@
 
 
 ## [4.43.21](https://github.com/Ombi-app/Ombi/compare/v4.43.20...v4.43.21) (2024-06-26)
-
-
-
-## [4.43.20](https://github.com/Ombi-app/Ombi/compare/v4.43.16...v4.43.20) (2024-05-14)
-
-
-### Bug Fixes
-
-* upgrade multiple dependencies with Snyk ([#5104](https://github.com/Ombi-app/Ombi/issues/5104)) [skip ci] ([a1083f6](https://github.com/Ombi-app/Ombi/commit/a1083f67c73c968b9ff0a0feebe5a9aac6a7c7c9))
 
 
 
