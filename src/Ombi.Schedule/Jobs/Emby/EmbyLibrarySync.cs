@@ -28,7 +28,7 @@ namespace Ombi.Schedule.Jobs.Emby
         protected bool recentlyAdded;
         protected readonly INotificationHubService _notification;
 
-        protected const int AmountToTake = 100;
+        protected const int AmountToTake = 300;
 
         protected IEmbyApi Api { get; set; }
 
