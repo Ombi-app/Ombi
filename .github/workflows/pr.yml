@@ -6,9 +6,11 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  statuses: write
+  checks: write
+  contents: write
   pull-requests: write
-  issues: write
+  actions: write
 
 jobs:
   build-ui:

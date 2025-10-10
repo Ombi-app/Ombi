@@ -62,7 +62,7 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly IEmbyContentRepository _repo;
         private readonly INotificationHubService _notification;
 
-        private const int AmountToTake = 100;
+        private const int AmountToTake = 300;
 
         private IEmbyApi Api { get; set; }
 
@@ -84,7 +84,7 @@ namespace Ombi.Schedule.Jobs.Emby
             {
                 if (server.EmbySelectedLibraries.Any() && server.EmbySelectedLibraries.Any(x => x.Enabled))
                 {
-                    var tvLibsToFilter = server.EmbySelectedLibraries.Where(x => x.Enabled && x.CollectionType == "tvshows");
+                    var tvLibsToFilter = server.EmbySelectedLibraries.Where(x => x.Enabled && x.CollectionType is "tvshows" or "mixed");
                     foreach (var tvParentIdFilter in tvLibsToFilter)
                     {
                         _logger.LogInformation($"Scanning Lib for episodes '{tvParentIdFilter.Title}'");
