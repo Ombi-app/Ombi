@@ -62,7 +62,8 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly IEmbyContentRepository _repo;
         private readonly INotificationHubService _notification;
 
-        private const int AmountToTake = 300;
+        private const int AmountToTake = 500;
+        private const int DatabaseBatchSize = 1000;
 
         private IEmbyApi Api { get; set; }
 
@@ -122,12 +123,17 @@ namespace Ombi.Schedule.Jobs.Emby
             {
                 allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, 0, AmountToTake, server.AdministratorId, server.FullUri);
             }
+            
             var total = allEpisodes.TotalRecordCount;
             var processed = 0;
             var epToAdd = new HashSet<EmbyEpisode>();
             var episodesInCurrentBatch = new HashSet<string>(); // Track episodes in current batch to avoid duplicates
+            
+            _logger.LogInformation($"Processing {total} episodes in chunks of {AmountToTake}");
+            
             while (processed < total)
             {
+                // Process episodes in current chunk
                 foreach (var ep in allEpisodes.Items)
                 {
                     processed++;
@@ -195,18 +201,30 @@ namespace Ombi.Schedule.Jobs.Emby
                     }
                 }
 
-                await _repo.AddRange(epToAdd);
-                epToAdd.Clear();
-                episodesInCurrentBatch.Clear();
-                if (!recentlyAdded)
+                // Only commit to database when we reach the batch size or finish processing
+                if (epToAdd.Count >= DatabaseBatchSize || processed >= total)
+                {
+                    if (epToAdd.Any())
+                    {
+                        await _repo.AddRange(epToAdd);
+                        _logger.LogInformation($"Committed {epToAdd.Count} episodes to database. Progress: {processed}/{total}");
+                    }
+                    epToAdd.Clear();
+                    episodesInCurrentBatch.Clear();
+                }
+
+                // Get next chunk of episodes for processing
+                if (!recentlyAdded && processed < total)
                 {
                     allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, processed, AmountToTake, server.AdministratorId, server.FullUri);
                 }
             }
 
+            // Final commit for any remaining episodes
             if (epToAdd.Any())
             {
                 await _repo.AddRange(epToAdd);
+                _logger.LogInformation($"Final commit: {epToAdd.Count} episodes");
             }
         }
 

@@ -114,18 +114,20 @@ namespace Ombi.Store.Repository
         // Performance optimization methods
         public async Task<HashSet<string>> GetAllSeriesEmbyIds()
         {
-            return await Db.EmbyContent
+            var ids = await Db.EmbyContent
                 .Where(x => !string.IsNullOrEmpty(x.EmbyId))
                 .Select(x => x.EmbyId)
-                .ToHashSetAsync();
+                .ToListAsync();
+            return new HashSet<string>(ids);
         }
 
         public async Task<HashSet<string>> GetAllEpisodeEmbyIds()
         {
-            return await Db.EmbyEpisode
+            var ids = await Db.EmbyEpisode
                 .Where(x => !string.IsNullOrEmpty(x.EmbyId))
                 .Select(x => x.EmbyId)
-                .ToHashSetAsync();
+                .ToListAsync();
+            return new HashSet<string>(ids);
         }
     }
 }
