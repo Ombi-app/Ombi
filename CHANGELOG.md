@@ -1,3 +1,7 @@
+## [4.51.3](https://github.com/Ombi-app/Ombi/compare/v4.51.2...v4.51.3) (2025-10-14)
+
+
+
 ## [4.51.2](https://github.com/Ombi-app/Ombi/compare/v4.51.1...v4.51.2) (2025-10-10)
 
 
@@ -1315,10 +1319,6 @@
 ### Features
 
 * Adding postgres support to ombi (beta) ([#5050](https://github.com/Ombi-app/Ombi/issues/5050)) ([f8c6102](https://github.com/Ombi-app/Ombi/commit/f8c61027bf53d657d7955a98b69d7ab90b66a75a))
-
-
-
-## [4.43.22](https://github.com/Ombi-app/Ombi/compare/v4.43.21...v4.43.22) (2024-07-08)
 
 
 
