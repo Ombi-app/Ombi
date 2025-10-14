@@ -223,6 +223,12 @@ namespace Ombi.Schedule.Jobs.Emby
                     {
                         await _repo.AddRange(epToAdd);
                         _logger.LogInformation($"Committed {epToAdd.Count} episodes to database. Progress: {processed}/{total}");
+                        
+                        // Update the episode lookup with newly added episodes to prevent duplicates in subsequent batches
+                        foreach (var episode in epToAdd)
+                        {
+                            episodeLookup.Add(episode.EmbyId);
+                        }
                     }
                     epToAdd.Clear();
                     episodesInCurrentBatch.Clear();
@@ -240,9 +246,14 @@ namespace Ombi.Schedule.Jobs.Emby
             {
                 await _repo.AddRange(epToAdd);
                 _logger.LogInformation($"Final commit: {epToAdd.Count} episodes");
+                
+                // Update the episode lookup with newly added episodes
+                foreach (var episode in epToAdd)
+                {
+                    episodeLookup.Add(episode.EmbyId);
+                }
             }
         }
-
         private bool _disposed;
         protected virtual void Dispose(bool disposing)
         {
