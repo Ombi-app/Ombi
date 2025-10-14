@@ -110,5 +110,22 @@ namespace Ombi.Store.Repository
         }
 
         public override RecentlyAddedType RecentlyAddedType => RecentlyAddedType.Emby;
+
+        // Performance optimization methods
+        public async Task<HashSet<string>> GetAllSeriesEmbyIds()
+        {
+            return await Db.EmbyContent
+                .Where(x => !string.IsNullOrEmpty(x.EmbyId))
+                .Select(x => x.EmbyId)
+                .ToHashSetAsync();
+        }
+
+        public async Task<HashSet<string>> GetAllEpisodeEmbyIds()
+        {
+            return await Db.EmbyEpisode
+                .Where(x => !string.IsNullOrEmpty(x.EmbyId))
+                .Select(x => x.EmbyId)
+                .ToHashSetAsync();
+        }
     }
 }

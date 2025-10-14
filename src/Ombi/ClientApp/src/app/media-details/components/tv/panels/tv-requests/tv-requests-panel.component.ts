@@ -12,6 +12,7 @@ import { MatExpansionModule } from "@angular/material/expansion";
 import { OmbiDatePipe } from "../../../../../pipes/OmbiDatePipe";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatButtonModule } from "@angular/material/button";
+import { MatTableModule } from "@angular/material/table";
 
 @Component({
     templateUrl: "./tv-requests-panel.component.html",
@@ -24,6 +25,7 @@ import { MatButtonModule } from "@angular/material/button";
         OmbiDatePipe,
         MatTabsModule,
         MatButtonModule,
+        MatTableModule,
     ]
 })
 export class TvRequestsPanelComponent {
