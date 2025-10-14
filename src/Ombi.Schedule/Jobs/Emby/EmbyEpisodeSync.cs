@@ -62,7 +62,8 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly IEmbyContentRepository _repo;
         private readonly INotificationHubService _notification;
 
-        private const int AmountToTake = 300;
+        private const int AmountToTake = 500;
+        private const int DatabaseBatchSize = 1000;
 
         private IEmbyApi Api { get; set; }
 
@@ -104,6 +105,10 @@ namespace Ombi.Schedule.Jobs.Emby
 
         private async Task CacheEpisodes(EmbyServers server, bool recentlyAdded, string parentIdFilter)
         {
+            // Preload existing data to eliminate N+1 queries
+            var seriesLookup = await _repo.GetAllSeriesEmbyIds();
+            var episodeLookup = await _repo.GetAllEpisodeEmbyIds();
+
             EmbyItemContainer<EmbyEpisodes> allEpisodes;
             if (recentlyAdded)
             {
@@ -118,30 +123,34 @@ namespace Ombi.Schedule.Jobs.Emby
             {
                 allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, 0, AmountToTake, server.AdministratorId, server.FullUri);
             }
+            
             var total = allEpisodes.TotalRecordCount;
             var processed = 0;
             var epToAdd = new HashSet<EmbyEpisode>();
+            var episodesInCurrentBatch = new HashSet<string>(); // Track episodes in current batch to avoid duplicates
+            
+            _logger.LogInformation($"Processing {total} episodes in chunks of {AmountToTake}");
+            
             while (processed < total)
             {
+                // Process episodes in current chunk
                 foreach (var ep in allEpisodes.Items)
                 {
                     processed++;
 
-                    // Let's make sure we have the parent request, stop those pesky forign key errors,
-                    // Damn me having data integrity
-                    var parent = await _repo.GetByEmbyId(ep.SeriesId);
-                    if (parent == null)
+                    // Check if parent series exists using preloaded HashSet (O(1) lookup)
+                    if (!seriesLookup.Contains(ep.SeriesId))
                     {
                         _logger.LogInformation("The episode {0} does not relate to a series, so we cannot save this",
                             ep.Name);
                         continue;
                     }
 
-                    var existingEpisode = await _repo.GetEpisodeByEmbyId(ep.Id);
-                    // Make sure it's not in the hashset too
-                    var existingInList = epToAdd.Any(x => x.EmbyId == ep.Id);
+                    // Check if episode already exists using preloaded HashSet (O(1) lookup)
+                    var existingInDatabase = episodeLookup.Contains(ep.Id);
+                    var existingInCurrentBatch = episodesInCurrentBatch.Contains(ep.Id);
 
-                    if (existingEpisode == null && !existingInList)
+                    if (!existingInDatabase && !existingInCurrentBatch)
                     {
                         // Sanity checks
                         if (ep.IndexNumber == 0)
@@ -164,6 +173,7 @@ namespace Ombi.Schedule.Jobs.Emby
                             Title = ep.Name,
                             AddedAt = DateTime.UtcNow
                         });
+                        episodesInCurrentBatch.Add(ep.Id);
 
                         if (ep.IndexNumberEnd.HasValue && ep.IndexNumberEnd.Value != ep.IndexNumber)
                         {
@@ -191,17 +201,30 @@ namespace Ombi.Schedule.Jobs.Emby
                     }
                 }
 
-                await _repo.AddRange(epToAdd);
-                epToAdd.Clear();
-                if (!recentlyAdded)
+                // Only commit to database when we reach the batch size or finish processing
+                if (epToAdd.Count >= DatabaseBatchSize || processed >= total)
+                {
+                    if (epToAdd.Any())
+                    {
+                        await _repo.AddRange(epToAdd);
+                        _logger.LogInformation($"Committed {epToAdd.Count} episodes to database. Progress: {processed}/{total}");
+                    }
+                    epToAdd.Clear();
+                    episodesInCurrentBatch.Clear();
+                }
+
+                // Get next chunk of episodes for processing
+                if (!recentlyAdded && processed < total)
                 {
                     allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, processed, AmountToTake, server.AdministratorId, server.FullUri);
                 }
             }
 
+            // Final commit for any remaining episodes
             if (epToAdd.Any())
             {
                 await _repo.AddRange(epToAdd);
+                _logger.LogInformation($"Final commit: {epToAdd.Count} episodes");
             }
         }
 

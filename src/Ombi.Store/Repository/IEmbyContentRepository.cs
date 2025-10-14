@@ -17,5 +17,9 @@ namespace Ombi.Store.Repository
         Task<EmbyContent> GetByTvDbId(string tv);
         Task<EmbyContent> GetByImdbId(string imdbid);
 
+        // Performance optimization methods
+        Task<HashSet<string>> GetAllSeriesEmbyIds();
+        Task<HashSet<string>> GetAllEpisodeEmbyIds();
+
     }
 }
