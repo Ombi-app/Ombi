@@ -1,3 +1,12 @@
+## [4.51.4](https://github.com/Ombi-app/Ombi/compare/v4.51.3...v4.51.4) (2025-10-14)
+
+
+### Bug Fixes
+
+* **emby:** fixed duplicate episodes ([a1d3755](https://github.com/Ombi-app/Ombi/commit/a1d37554bdb9167dc82df121caa194e7641142df))
+
+
+
 ## [4.51.3](https://github.com/Ombi-app/Ombi/compare/v4.51.2...v4.51.3) (2025-10-14)
 
 
@@ -1310,15 +1319,6 @@
 
 
 ## [4.43.5](https://github.com/Ombi-app/Ombi/compare/v4.43.4...v4.43.5) (2023-08-24)
-
-
-
-# [4.44.0](https://github.com/Ombi-app/Ombi/compare/v4.43.22...v4.44.0) (2024-07-11)
-
-
-### Features
-
-* Adding postgres support to ombi (beta) ([#5050](https://github.com/Ombi-app/Ombi/issues/5050)) ([f8c6102](https://github.com/Ombi-app/Ombi/commit/f8c61027bf53d657d7955a98b69d7ab90b66a75a))
 
 
 
