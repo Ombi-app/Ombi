@@ -1,3 +1,12 @@
+## [4.51.5](https://github.com/Ombi-app/Ombi/compare/v4.51.4...v4.51.5) (2025-10-14)
+
+
+### Bug Fixes
+
+* **emby:** actually fix the dupes ([4167942](https://github.com/Ombi-app/Ombi/commit/41679427f65cfa6756ab8bb1d89eb37cf8a40b42))
+
+
+
 ## [4.51.4](https://github.com/Ombi-app/Ombi/compare/v4.51.3...v4.51.4) (2025-10-14)
 
 
@@ -1311,14 +1320,6 @@
 
 
 ## [4.16.13](https://github.com/Ombi-app/Ombi/compare/v4.16.12...v4.16.13) (2022-04-19)
-
-
-
-## [4.44.1](https://github.com/Ombi-app/Ombi/compare/v4.44.0...v4.44.1) (2024-07-22)
-
-
-
-## [4.43.5](https://github.com/Ombi-app/Ombi/compare/v4.43.4...v4.43.5) (2023-08-24)
 
 
 
