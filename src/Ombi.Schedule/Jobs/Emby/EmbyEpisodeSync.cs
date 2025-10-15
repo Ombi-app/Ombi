@@ -133,6 +133,7 @@ namespace Ombi.Schedule.Jobs.Emby
             
             while (processed < total)
             {
+                _logger.LogInformation($"Processing chunk {processed}/{total}");
                 // Process episodes in current chunk
                 foreach (var ep in allEpisodes.Items)
                 {
@@ -177,6 +178,14 @@ namespace Ombi.Schedule.Jobs.Emby
 
                         if (ep.IndexNumberEnd.HasValue && ep.IndexNumberEnd.Value != ep.IndexNumber)
                         {
+                            var episodeFillCount = ep.IndexNumberEnd.Value - ep.IndexNumber;
+
+                            if (episodeFillCount > 50)
+                            {
+                                _logger.LogWarning($"Episode {ep.Name} has {episodeFillCount} episodes! Skipping.");
+                                continue;
+                            }
+
                             int episodeNumber = ep.IndexNumber;
                             do
                             {
