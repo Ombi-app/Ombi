@@ -62,7 +62,8 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly IEmbyContentRepository _repo;
         private readonly INotificationHubService _notification;
 
-        private const int AmountToTake = 100;
+        private const int AmountToTake = 500;
+        private const int DatabaseBatchSize = 1000;
 
         private IEmbyApi Api { get; set; }
 
@@ -84,7 +85,7 @@ namespace Ombi.Schedule.Jobs.Emby
             {
                 if (server.EmbySelectedLibraries.Any() && server.EmbySelectedLibraries.Any(x => x.Enabled))
                 {
-                    var tvLibsToFilter = server.EmbySelectedLibraries.Where(x => x.Enabled && x.CollectionType == "tvshows");
+                    var tvLibsToFilter = server.EmbySelectedLibraries.Where(x => x.Enabled && x.CollectionType is "tvshows" or "mixed");
                     foreach (var tvParentIdFilter in tvLibsToFilter)
                     {
                         _logger.LogInformation($"Scanning Lib for episodes '{tvParentIdFilter.Title}'");
@@ -104,44 +105,61 @@ namespace Ombi.Schedule.Jobs.Emby
 
         private async Task CacheEpisodes(EmbyServers server, bool recentlyAdded, string parentIdFilter)
         {
+            // Preload existing data to eliminate N+1 queries
+            var seriesLookup = await _repo.GetAllSeriesEmbyIds();
+            var episodeLookup = await _repo.GetAllEpisodeEmbyIds();
+
+            var total = 0;
+            var processed = 0;
+            var epToAdd = new HashSet<EmbyEpisode>();
+            var episodesInCurrentBatch = new HashSet<string>(); // Track episodes in current batch to avoid duplicates
+            
+            _logger.LogInformation($"Starting episode sync for server {server.Name}");
+            
+            // Get initial episode count
             EmbyItemContainer<EmbyEpisodes> allEpisodes;
             if (recentlyAdded)
             {
                 var recentlyAddedAmountToTake = AmountToTake;
                 allEpisodes = await Api.RecentlyAddedEpisodes(server.ApiKey, parentIdFilter, 0, recentlyAddedAmountToTake, server.AdministratorId, server.FullUri);
-                if (allEpisodes.TotalRecordCount > recentlyAddedAmountToTake)
+                total = allEpisodes.TotalRecordCount;
+                if (total > recentlyAddedAmountToTake)
                 {
-                    allEpisodes.TotalRecordCount = recentlyAddedAmountToTake;
+                    total = recentlyAddedAmountToTake;
                 }
             }
             else
             {
                 allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, 0, AmountToTake, server.AdministratorId, server.FullUri);
+                total = allEpisodes.TotalRecordCount;
             }
-            var total = allEpisodes.TotalRecordCount;
-            var processed = 0;
-            var epToAdd = new HashSet<EmbyEpisode>();
+            
+            _logger.LogInformation($"Processing {total} episodes in chunks of {AmountToTake}");
+            
             while (processed < total)
             {
+                _logger.LogInformation($"Processing chunk {processed}/{total}");
+                // Process episodes in current chunk
                 foreach (var ep in allEpisodes.Items)
                 {
                     processed++;
 
-                    // Let's make sure we have the parent request, stop those pesky forign key errors,
-                    // Damn me having data integrity
-                    var parent = await _repo.GetByEmbyId(ep.SeriesId);
-                    if (parent == null)
+                    // Check if parent series exists using preloaded HashSet (O(1) lookup)
+                    if (!seriesLookup.Contains(ep.SeriesId))
                     {
                         _logger.LogInformation("The episode {0} does not relate to a series, so we cannot save this",
                             ep.Name);
                         continue;
                     }
 
-                    var existingEpisode = await _repo.GetEpisodeByEmbyId(ep.Id);
-                    // Make sure it's not in the hashset too
-                    var existingInList = epToAdd.Any(x => x.EmbyId == ep.Id);
+                    // Create unique key for multi-episode files to prevent duplicates
+                    var episodeKey = $"{ep.Id}_{ep.IndexNumber}_{ep.ParentIndexNumber}";
+                    
+                    // Check if episode already exists using preloaded HashSet (O(1) lookup)
+                    var existingInDatabase = episodeLookup.Contains(ep.Id);
+                    var existingInCurrentBatch = episodesInCurrentBatch.Contains(episodeKey);
 
-                    if (existingEpisode == null && !existingInList)
+                    if (!existingInDatabase && !existingInCurrentBatch)
                     {
                         // Sanity checks
                         if (ep.IndexNumber == 0)
@@ -151,6 +169,7 @@ namespace Ombi.Schedule.Jobs.Emby
                         }
 
                         _logger.LogDebug("Adding new episode {0} to parent {1}", ep.Name, ep.SeriesName);
+                        
                         // add it
                         epToAdd.Add(new EmbyEpisode
                         {
@@ -164,47 +183,86 @@ namespace Ombi.Schedule.Jobs.Emby
                             Title = ep.Name,
                             AddedAt = DateTime.UtcNow
                         });
+                        episodesInCurrentBatch.Add(episodeKey);
 
                         if (ep.IndexNumberEnd.HasValue && ep.IndexNumberEnd.Value != ep.IndexNumber)
                         {
+                            var episodeFillCount = ep.IndexNumberEnd.Value - ep.IndexNumber;
+
+                            if (episodeFillCount > 50)
+                            {
+                                _logger.LogWarning($"Episode {ep.Name} has {episodeFillCount} episodes! Skipping.");
+                                continue;
+                            }
+
                             int episodeNumber = ep.IndexNumber;
                             do
                             {
-                                _logger.LogDebug($"Multiple-episode file detected. Adding episode ${episodeNumber}");
                                 episodeNumber++;
-                                epToAdd.Add(new EmbyEpisode
+                                var multiEpisodeKey = $"{ep.Id}_{episodeNumber}_{ep.ParentIndexNumber}";
+                                
+                                // Check if this multi-episode entry already exists
+                                if (!episodesInCurrentBatch.Contains(multiEpisodeKey))
                                 {
-                                    EmbyId = ep.Id,
-                                    EpisodeNumber = episodeNumber,
-                                    SeasonNumber = ep.ParentIndexNumber,
-                                    ParentId = ep.SeriesId,
-                                    TvDbId = ep.ProviderIds.Tvdb,
-                                    TheMovieDbId = ep.ProviderIds.Tmdb,
-                                    ImdbId = ep.ProviderIds.Imdb,
-                                    Title = ep.Name,
-                                    AddedAt = DateTime.UtcNow
-                                });
+                                    _logger.LogDebug($"Multiple-episode file detected. Adding episode {episodeNumber}");
+                                    epToAdd.Add(new EmbyEpisode
+                                    {
+                                        EmbyId = ep.Id,
+                                        EpisodeNumber = episodeNumber,
+                                        SeasonNumber = ep.ParentIndexNumber,
+                                        ParentId = ep.SeriesId,
+                                        TvDbId = ep.ProviderIds.Tvdb,
+                                        TheMovieDbId = ep.ProviderIds.Tmdb,
+                                        ImdbId = ep.ProviderIds.Imdb,
+                                        Title = ep.Name,
+                                        AddedAt = DateTime.UtcNow
+                                    });
+                                    episodesInCurrentBatch.Add(multiEpisodeKey);
+                                }
 
                             } while (episodeNumber < ep.IndexNumberEnd.Value);
-                        
                         }
                     }
                 }
 
-                await _repo.AddRange(epToAdd);
-                epToAdd.Clear();
-                if (!recentlyAdded)
+                // Only commit to database when we reach the batch size or finish processing
+                if (epToAdd.Count >= DatabaseBatchSize || processed >= total)
+                {
+                    if (epToAdd.Any())
+                    {
+                        await _repo.AddRange(epToAdd);
+                        _logger.LogInformation($"Committed {epToAdd.Count} episodes to database. Progress: {processed}/{total}");
+                        
+                        // Update the episode lookup with newly added episodes to prevent duplicates in subsequent batches
+                        foreach (var episode in epToAdd)
+                        {
+                            episodeLookup.Add(episode.EmbyId);
+                        }
+                    }
+                    epToAdd.Clear();
+                    episodesInCurrentBatch.Clear();
+                }
+
+                // Get next chunk of episodes for processing
+                if (!recentlyAdded && processed < total)
                 {
                     allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, processed, AmountToTake, server.AdministratorId, server.FullUri);
                 }
             }
 
+            // Final commit for any remaining episodes
             if (epToAdd.Any())
             {
                 await _repo.AddRange(epToAdd);
+                _logger.LogInformation($"Final commit: {epToAdd.Count} episodes");
+                
+                // Update the episode lookup with newly added episodes
+                foreach (var episode in epToAdd)
+                {
+                    episodeLookup.Add(episode.EmbyId);
+                }
             }
         }
-
         private bool _disposed;
         protected virtual void Dispose(bool disposing)
         {

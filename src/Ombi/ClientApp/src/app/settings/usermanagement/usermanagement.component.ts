@@ -15,6 +15,7 @@ import { IUsersModel } from "../../interfaces";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { HumanizePipe } from "app/pipes/HumanizePipe";
+import { AutoCompleteModule } from "primeng/autocomplete";
 
 @Component({
     standalone: true,
@@ -27,11 +28,13 @@ import { HumanizePipe } from "app/pipes/HumanizePipe";
         MatInputModule,
         MatSelectModule,
         MatTooltipModule,
+        MatSlideToggleModule,
         TranslateModule,
         MatDividerModule,
         FormsModule,
         MatSlideToggleModule,
         HumanizePipe,
+        AutoCompleteModule
     ],
     templateUrl: "./usermanagement.component.html",
     styleUrls: ["./usermanagement.component.scss"]
@@ -177,7 +180,7 @@ export class UserManagementComponent implements OnInit {
 
     private filter(query: string, users: IUsersModel[]): IUsersModel[] {
         return users.filter((val) => {
-            return val.username.toLowerCase().indexOf(query.toLowerCase()) === 0;
+            return val.username?.toLowerCase().indexOf(query.toLowerCase()) === 0;
         });
     }
 }
