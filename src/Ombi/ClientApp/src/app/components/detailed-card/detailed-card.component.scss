@@ -1,8 +1,8 @@
 @use "./styles/variables.scss" as *;
 
 .detailed-container {
-    width: 400px;
-    height: 250px;
+    width: 200px;
+    height: auto;
     margin: 10px;
     padding: 10px;
     border-radius: 10px;
@@ -12,9 +12,9 @@
     background-repeat: no-repeat;
     background-position: center center;
 
-    @media (max-width:768px) {
-        width: 200px;
-        height: auto;
+    @media (min-width: 768px) {
+        width: 400px;
+        height: 250px;
     }
 
     .overview {
@@ -26,8 +26,10 @@
     }
 
     .year {
-        @media (max-width:768px) {
-            padding-top: 3%;
+        padding-top: 3%;
+        
+        @media (min-width: 768px) {
+            padding-top: 0;
         }
     }
 
@@ -36,11 +38,15 @@
         border-radius: 10px;
         opacity: 1;
         display: block;
-        height: 225px;
+        height: auto;
         width: 100%;
         transition: .5s ease;
         backface-visibility: hidden;
         border: 1px solid #35465c;
+
+        @media (min-width: 768px) {
+            height: 225px;
+        }
     }
 
     .action-items {
