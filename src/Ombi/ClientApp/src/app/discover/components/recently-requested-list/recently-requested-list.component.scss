@@ -128,9 +128,3 @@
         width: calc(100% - 0px);
     }
 }
-
-@media (min-width:755px){
-  ::ng-deep .p-carousel-item{
-    flex: 1 0 200px !important;
-  }
-}
