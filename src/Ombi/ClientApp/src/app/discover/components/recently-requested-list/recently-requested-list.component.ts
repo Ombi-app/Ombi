@@ -203,9 +203,7 @@ export class RecentlyRequestedListComponent implements OnInit, OnDestroy, AfterV
         // Fallback heuristic if items not yet rendered
         if (!targetCardWidth || targetCardWidth === 0) {
             // Get viewport width for responsive heuristics
-            const viewportWidth = (typeof globalThis.window !== 'undefined')
-                ? (globalThis.window.innerWidth || globalThis.document.documentElement.clientWidth)
-                : width; // fallback to component width if window unavailable
+            const viewportWidth = globalThis.window?.innerWidth || globalThis.document?.documentElement?.clientWidth || width;
             targetCardWidth = viewportWidth <= 768 ? 220 : 420;
         }
         // Guard against pathological values
