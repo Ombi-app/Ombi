@@ -128,3 +128,8 @@
         width: calc(100% - 0px);
     }
 }
+
+:host ::ng-deep .p-carousel-item {
+    display: flex;
+    justify-content: center;
+}
