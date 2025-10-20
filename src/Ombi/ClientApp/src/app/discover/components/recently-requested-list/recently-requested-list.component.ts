@@ -221,9 +221,8 @@ export class RecentlyRequestedListComponent implements OnInit, OnDestroy, AfterV
 
         const maxScroll = 3;
         // Adaptive scroll size: keep small, avoid overshooting the end
-        if (total <= this.numVisible) {
-            this.numScroll = 1;
-        } else {
+        this.numScroll = 1;
+        if (total > this.numVisible) {
             const remainingAfterFirstPage = total - this.numVisible;
             if (remainingAfterFirstPage <= this.numVisible) {
                 // Next scroll lands on last page precisely
