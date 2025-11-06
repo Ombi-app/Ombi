@@ -1,3 +1,18 @@
+# [4.52.0](https://github.com/Ombi-app/Ombi/compare/v4.51.6...v4.52.0) (2025-11-06)
+
+
+### Features
+
+* allow admins to force Plex watchlist revalidation ([4fa17a8](https://github.com/Ombi-app/Ombi/commit/4fa17a8f8155a6eeb40840444eca01a96f0134e0))
+
+
+### Reverts
+
+* Revert "deterministic refresh (rather than 3 second wait)" ([a8bd017](https://github.com/Ombi-app/Ombi/commit/a8bd01793f67d86f6da345d7a3fe3adbaee920ca))
+* Revert "address sonarqube feedback" ([10992c7](https://github.com/Ombi-app/Ombi/commit/10992c78b6c9c33fa5b31407b02fc8eee9be59f2))
+
+
+
 ## [4.51.6](https://github.com/Ombi-app/Ombi/compare/v4.51.5...v4.51.6) (2025-10-15)
 
 
@@ -316,15 +331,6 @@
 
 * upgrade @ngx-translate/core from 14.0.0 to 15.0.0 ([#5158](https://github.com/Ombi-app/Ombi/issues/5158)) ([48d3dec](https://github.com/Ombi-app/Ombi/commit/48d3dec26d36002a9d613432fb7f9232d8801cba))
 * upgrade @ngx-translate/http-loader from 7.0.0 to 8.0.0 ([#5159](https://github.com/Ombi-app/Ombi/issues/5159)) ([3bd98c1](https://github.com/Ombi-app/Ombi/commit/3bd98c1d711786bff66f1528dcdddcafe256abd2))
-
-
-
-## [4.45.1](https://github.com/Ombi-app/Ombi/compare/v4.45.0...v4.45.1) (2024-08-20)
-
-
-### Bug Fixes
-
-* **plex:** Fixed some errors around the scanner that was causing the scan to fail ([d9787dc](https://github.com/Ombi-app/Ombi/commit/d9787dc32aace808d196f6f87456ef45de3d7bbf))
 
 
 
