@@ -21,6 +21,7 @@ using Microsoft.Extensions.Logging;
 using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using Ombi.Core.Models;
 
 namespace Ombi
 {
@@ -73,6 +74,9 @@ namespace Ombi
 #pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
             var settingsDb = provider.GetRequiredService<SettingsContext>();
             var ombiDb = provider.GetRequiredService<OmbiContext>();
+
+            // Migrate existing SQLite databases to WAL mode for better concurrency
+            await MigrateDatabaseToWalMode(provider);
 
             if (migrate)
             {
@@ -289,6 +293,69 @@ namespace Ombi
                 }
 
                 Console.WriteLine($"Wrote new baseurl at {indexPath}");
+            }
+        }
+
+        private static async Task MigrateDatabaseToWalMode(IServiceProvider provider)
+        {
+            try
+            {
+                var dbConfig = DatabaseExtensions.GetDatabaseConfiguration();
+
+                // Only migrate SQLite databases
+                if (!dbConfig.OmbiDatabase.Type.Equals(DatabaseConfiguration.SqliteDatabase, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return;
+                }
+
+                Console.WriteLine("Checking SQLite databases for WAL mode migration...");
+
+                var databases = new List<(DbContext context, string name)>
+                {
+                    (provider.GetRequiredService<OmbiContext>(), "Ombi"),
+                    (provider.GetRequiredService<SettingsContext>(), "Settings"),
+                    (provider.GetRequiredService<ExternalContext>(), "External")
+                };
+
+                foreach (var (context, name) in databases)
+                {
+                    try
+                    {
+                        var connection = context.Database.GetDbConnection();
+                        await connection.OpenAsync();
+
+                        using var checkCommand = connection.CreateCommand();
+                        checkCommand.CommandText = "PRAGMA journal_mode;";
+                        var currentMode = await checkCommand.ExecuteScalarAsync();
+
+                        if (currentMode?.ToString()?.Equals("wal", StringComparison.InvariantCultureIgnoreCase) != true)
+                        {
+                            Console.WriteLine($"Migrating {name} database to WAL mode (current mode: {currentMode})...");
+
+                            using var walCommand = connection.CreateCommand();
+                            walCommand.CommandText = "PRAGMA journal_mode=WAL;";
+                            var result = await walCommand.ExecuteScalarAsync();
+
+                            Console.WriteLine($"{name} database migrated to WAL mode successfully. Result: {result}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"{name} database already using WAL mode.");
+                        }
+
+                        await connection.CloseAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Warning: Failed to migrate {name} database to WAL mode: {ex.Message}");
+                        // Don't throw - allow the application to continue
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Warning: Failed to check/migrate databases to WAL mode: {ex.Message}");
+                // Don't throw - allow the application to continue
             }
         }
 

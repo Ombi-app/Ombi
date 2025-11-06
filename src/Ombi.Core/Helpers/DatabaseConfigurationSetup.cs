@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal;
@@ -32,7 +33,20 @@ public static class DatabaseConfigurationSetup
             b.EnableRetryOnFailure();
         });
     }
-    
+
+    public static void ConfigureSqlite(DbContextOptionsBuilder options, PerDatabaseConfiguration config)
+    {
+        if (string.IsNullOrEmpty(config.ConnectionString))
+        {
+            throw new ArgumentNullException("ConnectionString for the SQLite database is empty");
+        }
+
+        options.UseSqlite(config.ConnectionString, b =>
+        {
+            b.ExecutionStrategy(dependencies => new SqliteRetryExecutionStrategy(dependencies));
+        });
+    }
+
     private static ServerVersion GetServerVersion(string connectionString)
     {
         // Workaround Windows bug, that can lead to the following exception:
@@ -63,5 +77,51 @@ public static class DatabaseConfigurationSetup
             base.DelimitIdentifier(identifier == EFMigrationsHisory ? identifier : identifier.ToLower());
         public override void DelimitIdentifier(StringBuilder builder, string identifier)
             => base.DelimitIdentifier(builder, identifier == EFMigrationsHisory ? identifier : identifier.ToLower());
+    }
+
+    public class SqliteRetryExecutionStrategy : ExecutionStrategy
+    {
+        private new const int MaxRetryCount = 10;
+        private static new readonly TimeSpan MaxRetryDelay = TimeSpan.FromSeconds(30);
+
+        public SqliteRetryExecutionStrategy(ExecutionStrategyDependencies dependencies)
+            : base(dependencies, MaxRetryCount, MaxRetryDelay)
+        {
+        }
+
+        protected override bool ShouldRetryOn(Exception exception)
+        {
+            // Retry on SQLite "database is locked" errors (error code 5)
+            // Also retry on "database is busy" errors (error code 6)
+            if (exception is SqliteException sqliteException)
+            {
+                return sqliteException.SqliteErrorCode == 5 || // SQLITE_BUSY
+                       sqliteException.SqliteErrorCode == 6;   // SQLITE_LOCKED
+            }
+
+            // Also check for DbUpdateException wrapping SqliteException
+            if (exception is Microsoft.EntityFrameworkCore.DbUpdateException dbUpdateException &&
+                dbUpdateException.InnerException is SqliteException innerSqliteException)
+            {
+                return innerSqliteException.SqliteErrorCode == 5 ||
+                       innerSqliteException.SqliteErrorCode == 6;
+            }
+
+            return false;
+        }
+
+        protected override TimeSpan? GetNextDelay(Exception lastException)
+        {
+            // Use exponential backoff with jitter
+            var baseDelay = base.GetNextDelay(lastException);
+            if (baseDelay == null)
+            {
+                return null;
+            }
+
+            // Add some randomness to prevent thundering herd
+            var jitter = TimeSpan.FromMilliseconds(Random.Shared.Next(0, 100));
+            return baseDelay.Value + jitter;
+        }
     }
 }

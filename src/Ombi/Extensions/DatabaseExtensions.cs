@@ -149,8 +149,10 @@ namespace Ombi.Extensions
         public static void ConfigureSqlite(DbContextOptionsBuilder options, PerDatabaseConfiguration config)
         {
             SQLitePCL.Batteries.Init();
-            SQLitePCL.raw.sqlite3_config(raw.SQLITE_CONFIG_MULTITHREAD);
-            options.UseSqlite(config.ConnectionString);
+            // Use SERIALIZED mode for better thread safety with concurrent access
+            SQLitePCL.raw.sqlite3_config(raw.SQLITE_CONFIG_SERIALIZED);
+            // Use the retry execution strategy from DatabaseConfigurationSetup
+            DatabaseConfigurationSetup.ConfigureSqlite(options, config);
         }
     }
 }
