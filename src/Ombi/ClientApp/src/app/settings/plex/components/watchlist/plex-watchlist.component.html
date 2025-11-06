@@ -11,6 +11,7 @@
           If this happens the user needs to re-login to Ombi.
         </span>
       </div>
+      <mat-progress-bar *ngIf="isReloading" mode="indeterminate"></mat-progress-bar>
       <div class="watchlist-legend">
         <span><mat-icon color="primary">check_circle</mat-icon> Successfully syncing the watchlist</span>
         <span><mat-icon color="warn">cancel</mat-icon> Authentication error syncing the watchlist</span>
@@ -34,6 +35,10 @@
       </table>
     </mat-card-content>
     <mat-card-actions align="end">
+      <button mat-flat-button color="primary" (click)="forceRecheck()" [disabled]="isReloading">
+        <mat-icon>cached</mat-icon>
+        Force recheck
+      </button>
       <button mat-stroked-button mat-dialog-close color="accent">Close</button>
     </mat-card-actions>
   </mat-card>

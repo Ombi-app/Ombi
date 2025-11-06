@@ -249,6 +249,45 @@ namespace Ombi.Core.Tests.Services
             Assert.That(result.First().SyncStatus, Is.EqualTo(WatchlistSyncStatus.NotEnabled));
         }
 
+        [Test]
+        public async Task ForceRevalidateWatchlistUsers_WithExistingErrors_DeletesAllErrors()
+        {
+            // Arrange
+            var users = CreateUsers(2, UserType.PlexUser);
+            var userErrors = CreateUserErrors(users.Select(u => u.Id).ToList());
+
+            SetupUserManager(users);
+            SetupWatchlistUserErrors(userErrors);
+            _watchlistUserErrorsRepositoryMock
+                .Setup(x => x.DeleteRange(It.IsAny<IEnumerable<PlexWatchlistUserError>>()))
+                .Returns(Task.CompletedTask);
+
+            // Act
+            await _subject.ForceRevalidateWatchlistUsers(CancellationToken.None);
+
+            // Assert
+            _watchlistUserErrorsRepositoryMock.Verify(
+                x => x.DeleteRange(It.Is<IEnumerable<PlexWatchlistUserError>>(errors =>
+                    errors.Select(e => e.UserId).OrderBy(id => id).SequenceEqual(userErrors.Select(e => e.UserId).OrderBy(id => id)))),
+                Times.Once);
+        }
+
+        [Test]
+        public async Task ForceRevalidateWatchlistUsers_NoErrors_DoesNotCallDeleteRange()
+        {
+            // Arrange
+            SetupUserManager(CreateUsers(1, UserType.PlexUser));
+            SetupWatchlistUserErrors(new List<PlexWatchlistUserError>());
+
+            // Act
+            await _subject.ForceRevalidateWatchlistUsers(CancellationToken.None);
+
+            // Assert
+            _watchlistUserErrorsRepositoryMock.Verify(
+                x => x.DeleteRange(It.IsAny<IEnumerable<PlexWatchlistUserError>>()),
+                Times.Never);
+        }
+
         private void SetupUserManager(List<OmbiUser> users)
         {
             var userQueryable = users.AsQueryable().BuildMock();
