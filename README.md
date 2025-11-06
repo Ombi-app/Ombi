@@ -172,6 +172,13 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/mike10010100">
+            <img src="https://avatars.githubusercontent.com/u/3506604?v=4" width="50;" alt="mike10010100"/>
+            <br />
+            <sub><b>Michael Paulauski</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/goldenpipes">
             <img src="https://avatars.githubusercontent.com/u/6140137?v=4" width="50;" alt="goldenpipes"/>
             <br />
@@ -190,13 +197,6 @@ Here are some of the features Ombi has:
             <img src="https://avatars.githubusercontent.com/u/1490293?v=4" width="50;" alt="ProtoJazz"/>
             <br />
             <sub><b>Jim MacKenize</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/mike10010100">
-            <img src="https://avatars.githubusercontent.com/u/3506604?v=4" width="50;" alt="mike10010100"/>
-            <br />
-            <sub><b>Michael Paulauski</b></sub>
         </a>
     </td></tr>
 <tr>
