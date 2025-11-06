@@ -1,3 +1,12 @@
+# [4.53.0](https://github.com/Ombi-app/Ombi/compare/v4.52.0...v4.53.0) (2025-11-06)
+
+
+### Features
+
+* **availability:** :sparkles: Add the option for the *arr to take media availability priority ([d43a2e4](https://github.com/Ombi-app/Ombi/commit/d43a2e4efcbf9ea55e25305a52657dc107acaee3)), closes [#5286](https://github.com/Ombi-app/Ombi/issues/5286)
+
+
+
 # [4.52.0](https://github.com/Ombi-app/Ombi/compare/v4.51.6...v4.52.0) (2025-11-06)
 
 
@@ -315,22 +324,6 @@
 ### Bug Fixes
 
 * src/Ombi.Notifications/Ombi.Notifications.csproj to reduce vulnerabilities ([#5167](https://github.com/Ombi-app/Ombi/issues/5167)) ([e1f2a84](https://github.com/Ombi-app/Ombi/commit/e1f2a848065d79c8bba9eafff4f1f5db4a994b53))
-
-
-
-# [4.46.0](https://github.com/Ombi-app/Ombi/compare/v4.45.1...v4.46.0) (2024-08-20)
-
-
-### Bug Fixes
-
-* **discover:** Improved rendering on the discover page ([ea00d6c](https://github.com/Ombi-app/Ombi/commit/ea00d6c12f4441da243287d0fbc706d66c0afd82))
-* src/Ombi.Store/Ombi.Store.csproj to reduce vulnerabilities ([#5160](https://github.com/Ombi-app/Ombi/issues/5160)) ([9c21074](https://github.com/Ombi-app/Ombi/commit/9c2107418939ee92e50c59765481f30efac12eff))
-
-
-### Features
-
-* upgrade @ngx-translate/core from 14.0.0 to 15.0.0 ([#5158](https://github.com/Ombi-app/Ombi/issues/5158)) ([48d3dec](https://github.com/Ombi-app/Ombi/commit/48d3dec26d36002a9d613432fb7f9232d8801cba))
-* upgrade @ngx-translate/http-loader from 7.0.0 to 8.0.0 ([#5159](https://github.com/Ombi-app/Ombi/issues/5159)) ([3bd98c1](https://github.com/Ombi-app/Ombi/commit/3bd98c1d711786bff66f1528dcdddcafe256abd2))
 
 
 
