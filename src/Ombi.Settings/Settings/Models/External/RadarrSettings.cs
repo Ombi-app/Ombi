@@ -9,6 +9,7 @@
         public bool AddOnly { get; set; }
         public string MinimumAvailability { get; set; }
         public bool ScanForAvailability { get; set; }
+        public bool PrioritizeArrAvailability { get; set; }
         public int? Tag { get; set; }
         public bool SendUserTags { get; set; }
     }

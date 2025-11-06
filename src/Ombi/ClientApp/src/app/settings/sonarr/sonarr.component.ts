@@ -107,6 +107,7 @@ export class SonarrComponent implements OnInit {
                     languageProfile: [settings.languageProfile],
                     languageProfileAnime: [settings.languageProfileAnime],
                     scanForAvailability: [settings.scanForAvailability],
+                    prioritizeArrAvailability: [settings.prioritizeArrAvailability],
                     sendUserTags: [settings.sendUserTags],
                     tag: [settings.tag],
                     animeTag: [settings.animeTag]

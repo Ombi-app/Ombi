@@ -78,7 +78,8 @@ export class RadarrComponent implements OnInit, OnDestroy {
                         port: [x.settings.radarr.port],
                         addOnly: [x.settings.radarr.addOnly],
                         minimumAvailability: [x.settings.radarr.minimumAvailability],
-                        scanForAvailability: [x.settings.radarr.scanForAvailability]
+                        scanForAvailability: [x.settings.radarr.scanForAvailability],
+                        prioritizeArrAvailability: [x.settings.radarr.prioritizeArrAvailability]
                     }),
                     radarr4K: fb.group({
                         enabled: [x.settings.radarr4K.enabled],
@@ -93,7 +94,8 @@ export class RadarrComponent implements OnInit, OnDestroy {
                         port: [x.settings.radarr4K.port],
                         addOnly: [x.settings.radarr4K.addOnly],
                         minimumAvailability: [x.settings.radarr4K.minimumAvailability],
-                        scanForAvailability: [x.settings.radarr4K.scanForAvailability]
+                        scanForAvailability: [x.settings.radarr4K.scanForAvailability],
+                        prioritizeArrAvailability: [x.settings.radarr4K.prioritizeArrAvailability]
                     }),
                 }))
             )

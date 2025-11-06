@@ -24,6 +24,7 @@
         public int LanguageProfile { get; set; }
         public int LanguageProfileAnime { get; set; }
         public bool ScanForAvailability { get; set; }
+        public bool PrioritizeArrAvailability { get; set; }
 
     }
 }

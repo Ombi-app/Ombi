@@ -32,10 +32,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core;
 using Ombi.Core.Services;
+using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Hubs;
 using Ombi.Notifications.Models;
 using Ombi.Settings.Settings.Models;
+using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
@@ -46,8 +48,10 @@ namespace Ombi.Schedule.Jobs.Jellyfin
     public class JellyfinAvaliabilityChecker : AvailabilityChecker, IJellyfinAvaliabilityChecker
     {
         public JellyfinAvaliabilityChecker(IJellyfinContentRepository repo, ITvRequestRepository t, IMovieRequestRepository m,
-            INotificationHelper n, ILogger<JellyfinAvaliabilityChecker> log, INotificationHubService notification, IFeatureService featureService)
-             : base(t, n, log, notification)
+            INotificationHelper n, ILogger<JellyfinAvaliabilityChecker> log, INotificationHubService notification, IFeatureService featureService,
+            ISettingsService<RadarrSettings> radarrSettings, ISettingsService<SonarrSettings> sonarrSettings,
+            IExternalRepository<RadarrCache> radarrCache, IExternalRepository<SonarrEpisodeCache> sonarrEpisodeCache)
+             : base(t, n, log, notification, radarrSettings, sonarrSettings, radarrCache, sonarrEpisodeCache)
         {
             _repo = repo;
             _movieRepo = m;
@@ -93,11 +97,22 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                     continue;
                 }
 
+                // Check if we should defer to Radarr for 4K availability
+                var shouldDeferRadarr4K = has4kRequest && await ShouldDeferToRadarr(movie.TheMovieDbId, true);
+                // Check if we should defer to Radarr for regular availability
+                var shouldDeferRadarrRegular = await ShouldDeferToRadarr(movie.TheMovieDbId, false);
+
+                if (shouldDeferRadarr4K && shouldDeferRadarrRegular)
+                {
+                    _log.LogInformation("Movie request {0} - {1} found in Jellyfin but deferring to Radarr availability", movie?.Title ?? string.Empty, movie.Id);
+                    continue;
+                }
+
                 _log.LogInformation("We have found the request {0} on Jellyfin, sending the notification", movie?.Title ?? string.Empty);
 
                 var notify = false;
 
-                if (has4kRequest && jellyfinContent.Has4K && !movie.Available4K)
+                if (has4kRequest && jellyfinContent.Has4K && !movie.Available4K && !shouldDeferRadarr4K)
                 {
                     movie.Available4K = true;
                     movie.MarkedAsAvailable4K = DateTime.Now;
@@ -105,7 +120,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                 }
 
                 // If we have a non-4k version or we don't care about versions, then mark as available
-                if (!movie.Available && ( !feature4kEnabled || jellyfinContent.Quality != null ))
+                if (!movie.Available && ( !feature4kEnabled || jellyfinContent.Quality != null ) && !shouldDeferRadarrRegular)
                 {
                     movie.Available = true;
                     movie.MarkedAsAvailable = DateTime.Now;
@@ -180,6 +195,13 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                     // Let's try and match the series by name
                     seriesEpisodes = jellyfinEpisodes.Where(x =>
                         x.Series.Title == child.Title);
+                }
+
+                // Check if we should defer to Sonarr for this TV show
+                if (await ShouldDeferToSonarr(tvDbId))
+                {
+                    _log.LogInformation("TV request {0} - {1} found in Jellyfin but deferring to Sonarr availability", child.Title, child.Id);
+                    continue;
                 }
 
                 await ProcessTvShow(seriesEpisodes, child);

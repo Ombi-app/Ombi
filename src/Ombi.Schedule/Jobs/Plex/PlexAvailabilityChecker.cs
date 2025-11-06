@@ -6,10 +6,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core;
 using Ombi.Core.Services;
+using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Hubs;
 using Ombi.Notifications.Models;
 using Ombi.Settings.Settings.Models;
+using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
@@ -21,8 +23,10 @@ namespace Ombi.Schedule.Jobs.Plex
     public class PlexAvailabilityChecker : AvailabilityChecker, IPlexAvailabilityChecker
     {
         public PlexAvailabilityChecker(IPlexContentRepository repo, ITvRequestRepository tvRequest, IMovieRequestRepository movies,
-            INotificationHelper notification, ILogger<PlexAvailabilityChecker> log, INotificationHubService notificationHubService, IFeatureService featureService)
-            : base(tvRequest, notification, log, notificationHubService)
+            INotificationHelper notification, ILogger<PlexAvailabilityChecker> log, INotificationHubService notificationHubService, IFeatureService featureService,
+            ISettingsService<RadarrSettings> radarrSettings, ISettingsService<SonarrSettings> sonarrSettings,
+            IExternalRepository<RadarrCache> radarrCache, IExternalRepository<SonarrEpisodeCache> sonarrEpisodeCache)
+            : base(tvRequest, notification, log, notificationHubService, radarrSettings, sonarrSettings, radarrCache, sonarrEpisodeCache)
         {
             _repo = repo;
             _movieRepo = movies;
@@ -104,6 +108,13 @@ namespace Ombi.Schedule.Jobs.Plex
                         x.Series.Title == child.Title);
                 }
 
+                // Check if we should defer to Sonarr for this TV show
+                if (await ShouldDeferToSonarr(tvDbId))
+                {
+                    _log.LogInformation($"[PAC] - TV request {child.Title} - {child.Id} found in Plex but deferring to Sonarr availability");
+                    continue;
+                }
+
                 await ProcessTvShow(seriesEpisodes, child);
             }
 
@@ -138,11 +149,22 @@ namespace Ombi.Schedule.Jobs.Plex
                     continue;
                 }
 
+                // Check if we should defer to Radarr for 4K availability
+                var shouldDeferRadarr4K = has4kRequest && await ShouldDeferToRadarr(movie.TheMovieDbId, true);
+                // Check if we should defer to Radarr for regular availability
+                var shouldDeferRadarrRegular = await ShouldDeferToRadarr(movie.TheMovieDbId, false);
+
+                if (shouldDeferRadarr4K && shouldDeferRadarrRegular)
+                {
+                    _log.LogInformation($"[PAC] - Movie request {movie.Title} - {movie.Id} found in Plex but deferring to Radarr availability");
+                    continue;
+                }
+
                 _log.LogInformation($"[PAC] - Movie request {movie.Title} - {movie.Id} is now available, sending notification");
 
                 var notify = false;
 
-                if (has4kRequest && item.Has4K && !movie.Available4K && feature4kEnabled)
+                if (has4kRequest && item.Has4K && !movie.Available4K && feature4kEnabled && !shouldDeferRadarr4K)
                 {
                     movie.Available4K = true;
                     movie.Approved4K = true;
@@ -151,7 +173,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     notify = true;
                 }
 
-                if (!feature4kEnabled && !movie.Available)
+                if (!feature4kEnabled && !movie.Available && !shouldDeferRadarrRegular)
                 {
                     movie.Available = true;
                     movie.MarkedAsAvailable = DateTime.Now;
@@ -160,7 +182,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 }
 
                 // If we have a non-4k versison then mark as available
-                if (item.Quality != null && !movie.Available)
+                if (item.Quality != null && !movie.Available && !shouldDeferRadarrRegular)
                 {
                     movie.Available = true;
                     movie.Approved = true;
