@@ -17,6 +17,8 @@ using Ombi.Core.Services;
 using Ombi.Tests;
 using Moq.AutoMock;
 using Ombi.Settings.Settings.Models;
+using Ombi.Settings.Settings.Models.External;
+using Ombi.Core.Settings;
 using Ombi.Notifications.Models;
 
 namespace Ombi.Schedule.Tests
@@ -239,6 +241,126 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<ITvRequestRepository>(x => x.Save(), Times.AtLeastOnce);
 
             Assert.True(request.SeasonRequests[0].Episodes[0].Available);
+        }
+
+        [Test]
+        public async Task ProcessMovies_ShouldNotMarkAvailable_WhenRadarrPriorityEnabled_AndInRadarrCache()
+        {
+            // Setup Radarr priority
+            _mocker.Setup<ISettingsService<RadarrSettings>, Task<RadarrSettings>>(x => x.GetSettingsAsync())
+                .ReturnsAsync(new RadarrSettings { Enabled = true, ScanForAvailability = true, PrioritizeArrAvailability = true });
+            _mocker.Setup<IExternalRepository<RadarrCache>, IQueryable<RadarrCache>>(x => x.GetAll())
+                .Returns(new List<RadarrCache> { new RadarrCache { TheMovieDbId = 123, HasFile = true, HasRegular = true } }.AsQueryable().BuildMock());
+
+            var request = new MovieRequests
+            {
+                ImdbId = "test",
+                TheMovieDbId = 123
+            };
+            _mocker.Setup<IMovieRequestRepository, IQueryable<MovieRequests>>(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
+            _mocker.Setup<IPlexContentRepository, Task<PlexServerContent>>(x => x.Get("test", ProviderType.ImdbId)).ReturnsAsync(new PlexServerContent());
+
+            await _subject.Execute(null);
+
+            // Should NOT mark as available because Radarr has priority
+            Assert.Multiple(() =>
+            {
+                Assert.That(request.Available, Is.False);
+                Assert.That(request.MarkedAsAvailable, Is.Null);
+            });
+
+            _mocker.Verify<IMovieRequestRepository>(x => x.SaveChangesAsync(), Times.Never);
+            _mocker.Verify<INotificationHelper>(x => x.Notify(It.IsAny<NotificationOptions>()), Times.Never);
+        }
+
+        [Test]
+        public async Task ProcessMovies_ShouldMarkAvailable_WhenRadarrPriorityDisabled_AndInPlex()
+        {
+            // Setup Radarr priority disabled
+            _mocker.Setup<ISettingsService<RadarrSettings>, Task<RadarrSettings>>(x => x.GetSettingsAsync())
+                .ReturnsAsync(new RadarrSettings { Enabled = true, ScanForAvailability = true, PrioritizeArrAvailability = false });
+
+            var request = new MovieRequests
+            {
+                ImdbId = "test"
+            };
+            _mocker.Setup<IMovieRequestRepository, IQueryable<MovieRequests>>(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
+            _mocker.Setup<IPlexContentRepository, Task<PlexServerContent>>(x => x.Get("test", ProviderType.ImdbId)).ReturnsAsync(new PlexServerContent());
+
+            await _subject.Execute(null);
+
+            // Should mark as available because priority is disabled
+            Assert.Multiple(() =>
+            {
+                Assert.That(request.Available, Is.True);
+                Assert.That(request.MarkedAsAvailable, Is.Not.Null);
+            });
+
+            _mocker.Verify<IMovieRequestRepository>(x => x.SaveChangesAsync(), Times.Once);
+            _mocker.Verify<INotificationHelper>(x => x.Notify(It.IsAny<NotificationOptions>()), Times.Once);
+        }
+
+        [Test]
+        public async Task ProcessMovies_ShouldMarkAvailable_WhenRadarrPriorityEnabled_ButNotInRadarrCache()
+        {
+            // Setup Radarr priority enabled but content not in cache
+            _mocker.Setup<ISettingsService<RadarrSettings>, Task<RadarrSettings>>(x => x.GetSettingsAsync())
+                .ReturnsAsync(new RadarrSettings { Enabled = true, ScanForAvailability = true, PrioritizeArrAvailability = true });
+            _mocker.Setup<IExternalRepository<RadarrCache>, IQueryable<RadarrCache>>(x => x.GetAll())
+                .Returns(new List<RadarrCache>().AsQueryable().BuildMock());
+
+            var request = new MovieRequests
+            {
+                ImdbId = "test",
+                TheMovieDbId = 123
+            };
+            _mocker.Setup<IMovieRequestRepository, IQueryable<MovieRequests>>(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
+            _mocker.Setup<IPlexContentRepository, Task<PlexServerContent>>(x => x.Get("test", ProviderType.ImdbId)).ReturnsAsync(new PlexServerContent());
+
+            await _subject.Execute(null);
+
+            // Should mark as available because content is not in Radarr cache
+            Assert.Multiple(() =>
+            {
+                Assert.That(request.Available, Is.True);
+                Assert.That(request.MarkedAsAvailable, Is.Not.Null);
+            });
+
+            _mocker.Verify<IMovieRequestRepository>(x => x.SaveChangesAsync(), Times.Once);
+            _mocker.Verify<INotificationHelper>(x => x.Notify(It.IsAny<NotificationOptions>()), Times.Once);
+        }
+
+        [Test]
+        public async Task ProcessTv_ShouldNotMarkAvailable_WhenSonarrPriorityEnabled_AndInSonarrCache()
+        {
+            // Setup Sonarr priority
+            _mocker.Setup<ISettingsService<SonarrSettings>, Task<SonarrSettings>>(x => x.GetSettingsAsync())
+                .ReturnsAsync(new SonarrSettings { Enabled = true, ScanForAvailability = true, PrioritizeArrAvailability = true });
+            _mocker.Setup<IExternalRepository<SonarrEpisodeCache>, IQueryable<SonarrEpisodeCache>>(x => x.GetAll())
+                .Returns(new List<SonarrEpisodeCache> { new SonarrEpisodeCache { TvDbId = 99, HasFile = true } }.AsQueryable().BuildMock());
+
+            var request = CreateChildRequest(null, 33, 99);
+            _mocker.Setup<ITvRequestRepository, IQueryable<ChildRequests>>(x => x.GetChild()).Returns(new List<ChildRequests> { request }.AsQueryable().BuildMock());
+            _mocker.Setup<IPlexContentRepository, IQueryable<IMediaServerEpisode>>(x => x.GetAllEpisodes()).Returns(new List<PlexEpisode>
+            {
+                new PlexEpisode
+                {
+                    Series = new PlexServerContent
+                    {
+                        TheMovieDbId = 33.ToString(),
+                        Title = "abc"
+                    },
+                    EpisodeNumber = 1,
+                    SeasonNumber = 2,
+                }
+            }.AsQueryable().BuildMock());
+
+            await _subject.Execute(null);
+
+            // Should NOT mark as available because Sonarr has priority
+            Assert.That(request.SeasonRequests[0].Episodes[0].Available, Is.False);
+            // Save is called at the end of ProcessTv, but episodes should not be marked available
+            _mocker.Verify<ITvRequestRepository>(x => x.Save(), Times.Once);
         }
 
         private ChildRequests CreateChildRequest(string imdbId, int theMovieDbId, int tvdbId)

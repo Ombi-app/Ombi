@@ -16,6 +16,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { ImageBackgroundComponent } from "app/components";
+import { TranslateModule } from "@ngx-translate/core";
 
 @Component({
         standalone: true,
@@ -30,7 +31,8 @@ import { ImageBackgroundComponent } from "app/components";
         MatFormFieldModule,
         MatIconModule,
         MatSnackBarModule,
-        ImageBackgroundComponent
+        ImageBackgroundComponent,
+        TranslateModule
     ]
 })
 export class TokenResetPasswordComponent implements OnInit {
