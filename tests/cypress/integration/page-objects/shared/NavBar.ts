@@ -20,9 +20,19 @@ class SearchFilter {
     return cy.get('#filterMusic');
   }
 
-  applyFilter(tv: boolean, movies: boolean, music: boolean): void {
-    window.localStorage.removeItem('searchFilter');
-    window.localStorage.setItem('searchFilter', JSON.stringify({ movies: movies, music: music, tvShows: tv}));
+  get searchFilterBadge(): Cypress.Chainable<any> {
+    return this.filterButton.find('.badge');
+  }
+
+  get searchFilterBadgeCount(): Cypress.Chainable<string> {
+    return this.searchFilterBadge.invoke('text');
+  }
+
+  applyFilter(tv: boolean, movies: boolean, music: boolean, people: boolean = false): void {
+    cy.window().then((win) => {
+      win.localStorage.removeItem('searchFilter');
+      win.localStorage.setItem('searchFilter', JSON.stringify({ movies: movies, music: music, tvShows: tv, people: people}));
+    });
   }
 }
 

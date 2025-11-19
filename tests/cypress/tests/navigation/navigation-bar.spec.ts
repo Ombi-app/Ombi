@@ -41,3 +41,69 @@ describe("Navigation Bar Tests", () => {
     });
   });
 });
+
+describe("Search Filter Badge Tests", () => {
+  beforeEach(() => {
+    cy.login();
+  });
+
+  it("Search filter badge should not be visible with default filters", () => {
+    Page.navbar.searchFilter.applyFilter(true, true, false, false);
+    Page.visit();
+
+    Page.navbar.searchFilter.searchFilterBadge.should('not.exist');
+  });
+
+  it("Search filter badge should appear when a default-enabled filter is disabled", () => {
+    Page.navbar.searchFilter.applyFilter(true, false, false, false);
+    Page.visit();
+
+    Page.navbar.searchFilter.searchFilterBadge.should('be.visible');
+    Page.navbar.searchFilter.searchFilterBadgeCount.should('eq', '1');
+  });
+
+  it("Search filter badge should appear when music is enabled", () => {
+    Page.navbar.searchFilter.applyFilter(true, true, true, false);
+    Page.visit();
+
+    Page.navbar.searchFilter.searchFilterBadge.should('be.visible');
+    Page.navbar.searchFilter.searchFilterBadgeCount.should('eq', '3');
+  });
+
+  it("Search filter badge should appear when people is enabled", () => {
+    Page.navbar.searchFilter.applyFilter(true, true, false, true);
+    Page.visit();
+
+    Page.navbar.searchFilter.searchFilterBadge.should('be.visible');
+    Page.navbar.searchFilter.searchFilterBadgeCount.should('eq', '3');
+  });
+
+  it("Search filter badge count should accurately reflect the number of active filters", () => {
+    Page.navbar.searchFilter.applyFilter(false, true, false, false);
+    Page.visit();
+
+    Page.navbar.searchFilter.searchFilterBadgeCount.should('eq', '1');
+
+    Page.navbar.searchFilter.applyFilter(true, true, true, true);
+    cy.reload();
+
+    Page.navbar.searchFilter.searchFilterBadgeCount.should('eq', '4');
+  });
+
+  it("Search filter badge count should update when toggling filters in the UI", () => {
+    Page.navbar.searchFilter.applyFilter(true, false, false, false);
+    Page.visit();
+
+    Page.navbar.searchFilter.searchFilterBadge.should('be.visible');
+    Page.navbar.searchFilter.searchFilterBadgeCount.should('eq', '1');
+
+    Page.navbar.searchFilter.filterButton.click();
+    Page.navbar.searchFilter.tvToggle.click();
+
+    Page.navbar.searchFilter.searchFilterBadgeCount.should('eq', '0');
+
+    Page.navbar.searchFilter.moviesToggle.click();
+
+    Page.navbar.searchFilter.searchFilterBadgeCount.should('eq', '1');
+  });
+});
