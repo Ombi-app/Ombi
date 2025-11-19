@@ -1,6 +1,6 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, signal, computed } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,7 +23,7 @@ import { ILocalUser } from '../auth/IUserLogin';
 import { INavBar } from '../interfaces/ICommon';
 import { Md5 } from 'ts-md5/dist/md5';
 import { Observable } from 'rxjs';
-import { SearchFilter } from './SearchFilter';
+import { SearchFilter, DEFAULT_SEARCH_FILTER } from './SearchFilter';
 import { StorageService } from '../shared/storage/storage-service';
 import { map, take } from 'rxjs/operators';
 import { RemainingRequestsComponent } from '../shared/remaining-requests/remaining-requests.component';
@@ -78,7 +78,7 @@ export class MyNavComponent implements OnInit {
   public theme: string;
   public issuesEnabled: boolean = false;
   public navItems: INavBar[];
-  public searchFilter: SearchFilter;
+  public searchFilter = signal<SearchFilter>({ ...DEFAULT_SEARCH_FILTER });
   public SearchFilterType = SearchFilterType;
   public userProfileImageUrl: string;
   public welcomeText: string;
@@ -100,12 +100,7 @@ export class MyNavComponent implements OnInit {
   }
 
   public async ngOnInit() {
-    this.searchFilter = {
-      movies: true,
-      music: false,
-      people: false,
-      tvShows: true
-    }
+    this.searchFilter.set({ ...DEFAULT_SEARCH_FILTER });
 
     this.setProfileImageUrl(this.userEmail)
     this.issuesEnabled = await this.settingsService.issueEnabled().toPromise();
@@ -121,8 +116,8 @@ export class MyNavComponent implements OnInit {
     }
     var filter = this.store.get("searchFilter");
     if (filter) {
-      this.searchFilter = Object.assign(new SearchFilter(), JSON.parse(filter));
-      this.filterService.changeFilter(this.searchFilter);
+      this.searchFilter.set(Object.assign(new SearchFilter(), JSON.parse(filter)));
+      this.filterService.changeFilter(this.searchFilter());
     }
     this.navItems = [
       { id: "nav-discover", name: "NavigationBar.Discover", icon: "fas fa-bolt", style:"z-index:-1;", link: "/discover", requiresAdmin: false, enabled: true },
@@ -148,23 +143,41 @@ export class MyNavComponent implements OnInit {
   }
 
   public changeFilter(event: MatSlideToggleChange, searchFilterType: SearchFilterType) {
+    const updated = { ...this.searchFilter() };
+
     switch (searchFilterType) {
       case SearchFilterType.Movie:
-        this.searchFilter.movies = event.checked;
+        updated.movies = event.checked;
         break;
       case SearchFilterType.TvShow:
-        this.searchFilter.tvShows = event.checked;
+        updated.tvShows = event.checked;
         break;
       case SearchFilterType.Music:
-        this.searchFilter.music = event.checked;
+        updated.music = event.checked;
         break;
       case SearchFilterType.People:
-        this.searchFilter.people = event.checked;
+        updated.people = event.checked;
         break;
     }
-    this.filterService.changeFilter(this.searchFilter);
-    this.store.save("searchFilter", JSON.stringify(this.searchFilter));
+
+    this.searchFilter.set(updated);
+    this.filterService.changeFilter(this.searchFilter());
+    this.store.save("searchFilter", JSON.stringify(this.searchFilter()));
   }
+
+  public activeFilterCount = computed(() => {
+    return Object.values(this.searchFilter()).filter(value => value).length;
+  });
+
+  public hasNonDefaultFilters = computed(() => {
+    const current = this.searchFilter();
+    for (const key in current) {
+      if (current[key] !== DEFAULT_SEARCH_FILTER[key]) {
+        return true;
+      }
+    }
+    return false;
+  });
 
   public openAdvancedSearch() {
     const dialogRef = this.dialogService.open(AdvancedSearchDialogComponent, { panelClass: 'dialog-responsive' });

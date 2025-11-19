@@ -76,15 +76,16 @@
                     </div>
                     <button id="search-filter" mat-icon-button [matMenuTriggerFor]="filterMenu">
                         <i class="fa-lg fas fa-filter"></i>
+                        <span *ngIf="hasNonDefaultFilters()" class="badge badge-danger">{{activeFilterCount()}}</span>
                     </button>
                     <mat-menu #filterMenu="matMenu" yPosition="below" class="smaller-panel">
-                        <mat-slide-toggle id="filterMovies" class="mat-menu-item slide-menu" [checked]="searchFilter.movies"
+                        <mat-slide-toggle id="filterMovies" class="mat-menu-item slide-menu" [checked]="searchFilter().movies"
                             (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Movie)">
                             {{ 'NavigationBar.Filter.Movies' | translate}}</mat-slide-toggle>
-                        <mat-slide-toggle id="filterTv" class="mat-menu-item slide-menu" [checked]="searchFilter.tvShows"
+                        <mat-slide-toggle id="filterTv" class="mat-menu-item slide-menu" [checked]="searchFilter().tvShows"
                             (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.TvShow)">
                             {{ 'NavigationBar.Filter.TvShows' | translate}}</mat-slide-toggle>
-                        <mat-slide-toggle *ngIf="musicEnabled$ | async" id="filterMusic" class="mat-menu-item slide-menu" [checked]="searchFilter.music"
+                        <mat-slide-toggle *ngIf="musicEnabled$ | async" id="filterMusic" class="mat-menu-item slide-menu" [checked]="searchFilter().music"
                             (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Music)">
                             {{ 'NavigationBar.Filter.Music' | translate}}</mat-slide-toggle>
                         <!-- <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.people"

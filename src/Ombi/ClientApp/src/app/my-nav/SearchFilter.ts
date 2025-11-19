@@ -1,4 +1,3 @@
-
 export class SearchFilter {
   movies: boolean;
   tvShows: boolean;
@@ -8,3 +7,10 @@ export class SearchFilter {
     Object.assign(this, init);
 }
 }
+
+export const DEFAULT_SEARCH_FILTER: SearchFilter = {
+  movies: true,
+  music: false,
+  people: false,
+  tvShows: true
+};
