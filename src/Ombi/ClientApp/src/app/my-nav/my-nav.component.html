@@ -80,13 +80,16 @@
                     </button>
                     <mat-menu #filterMenu="matMenu" yPosition="below" class="smaller-panel">
                         <mat-slide-toggle id="filterMovies" class="mat-menu-item slide-menu" [checked]="searchFilter().movies"
-                            (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Movie)">
+                            (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Movie)"
+                            (keydown.enter)="$event.stopPropagation()" (keydown.space)="$event.stopPropagation()">
                             {{ 'NavigationBar.Filter.Movies' | translate}}</mat-slide-toggle>
                         <mat-slide-toggle id="filterTv" class="mat-menu-item slide-menu" [checked]="searchFilter().tvShows"
-                            (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.TvShow)">
+                            (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.TvShow)"
+                            (keydown.enter)="$event.stopPropagation()" (keydown.space)="$event.stopPropagation()">
                             {{ 'NavigationBar.Filter.TvShows' | translate}}</mat-slide-toggle>
                         <mat-slide-toggle *ngIf="musicEnabled$ | async" id="filterMusic" class="mat-menu-item slide-menu" [checked]="searchFilter().music"
-                            (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Music)">
+                            (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Music)"
+                            (keydown.enter)="$event.stopPropagation()" (keydown.space)="$event.stopPropagation()">
                             {{ 'NavigationBar.Filter.Music' | translate}}</mat-slide-toggle>
                         <!-- <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.people"
                             (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.People)">

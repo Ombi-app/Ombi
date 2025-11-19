@@ -166,7 +166,7 @@ export class MyNavComponent implements OnInit {
   }
 
   public activeFilterCount = computed(() => {
-    return Object.values(this.searchFilter()).filter(value => value).length;
+    return Object.values(this.searchFilter()).filter(Boolean).length;
   });
 
   public hasNonDefaultFilters = computed(() => {
