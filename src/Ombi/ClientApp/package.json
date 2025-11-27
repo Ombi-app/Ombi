@@ -21,7 +21,7 @@
 		"@angular/common": "^20.0.0",
 		"@angular/compiler": "^20.0.0",
 		"@angular/core": "^20.0.0",
-		"@angular/forms": "^20.0.0",
+		"@angular/forms": "^20.3.10",
 		"@angular/material": "^14.2.7",
 		"@angular/platform-browser": "^20.0.0",
 		"@angular/platform-browser-dynamic": "^20.0.0",
