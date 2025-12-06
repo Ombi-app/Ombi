@@ -5,6 +5,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
 import { MatRadioModule } from "@angular/material/radio";
 import { TranslateModule } from "@ngx-translate/core";
 import { RequestType } from "../../interfaces";
@@ -26,6 +27,7 @@ import { WatchProvidersSelectComponent } from "../components/watch-providers-sel
         MatDialogModule,
         MatFormFieldModule,
         MatInputModule,
+        MatSelectModule,
         MatRadioModule,
         TranslateModule,
         GenreSelectComponent,
@@ -42,13 +44,20 @@ export class AdvancedSearchDialogComponent implements OnInit {
   ) {}
 
   public form: UntypedFormGroup;
+  public decades: number[] = [];
 
   public async ngOnInit() {
+    const currentYear = new Date().getFullYear();
+    const startDecade = Math.floor(currentYear / 10) * 10;
+    for (let i = startDecade; i >= 1900; i -= 10) {
+        this.decades.push(i);
+    }
 
     this.form = this.fb.group({
         keywordIds: [[]],
         genreIds: [[]],
         releaseYear: [],
+        decade: [],
         type: ['movie'],
         watchProviders: [[]],
     })
@@ -69,6 +78,7 @@ export class AdvancedSearchDialogComponent implements OnInit {
       genreIds: genres,
       keywordIds: keywords,
       releaseYear: formData.releaseYear,
+      decade: formData.decade,
       type: formData.type,
     }, 0, 30);
 
