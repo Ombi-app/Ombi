@@ -1,7 +1,7 @@
 import { APP_BASE_HREF } from "@angular/common";
 import { Injectable, Inject } from "@angular/core";
 
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, httpResource } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 import { IDiscoverModel, ILanguage, IMovieDbKeyword, IMultiSearchResult, ISearchMovieResult, ISearchTvResult } from "../interfaces";

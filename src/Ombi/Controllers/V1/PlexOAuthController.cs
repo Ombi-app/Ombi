@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Ombi.Api.Plex;
+using Ombi.Api.External.MediaServers.Plex;
+using Ombi.Api.External.MediaServers.Plex.Models.Server;
 using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
@@ -47,7 +48,7 @@ namespace Ombi.Controllers.V1
             }
             var settings = await _plexSettings.GetSettingsAsync();
             var server = await _plexApi.GetServer(accessToken);
-            var servers = server.Server.FirstOrDefault();
+            var servers = server.Devices?.FirstOrDefault();
             if (servers == null)
             {
                 _log.LogWarning("Looks like we can't find any Plex Servers");

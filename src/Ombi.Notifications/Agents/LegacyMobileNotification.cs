@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Ombi.Api.Notifications;
+using Ombi.Api.External.NotificationServices.Notifications;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;

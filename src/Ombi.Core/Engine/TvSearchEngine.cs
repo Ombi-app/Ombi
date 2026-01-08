@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 
-using Ombi.Api.Trakt;
-using Ombi.Api.TvMaze;
+using Ombi.Api.External.ExternalApis.Trakt;
+using Ombi.Api.External.ExternalApis.TvMaze;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
@@ -19,8 +19,8 @@ using Ombi.Core.Authentication;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
-using Ombi.Api.TheMovieDb;
-using Ombi.Api.TheMovieDb.Models;
+using Ombi.Api.External.ExternalApis.TheMovieDb;
+using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
 using System.Threading;
 using TraktSharp.Entities;
 using Ombi.Core.Helpers;

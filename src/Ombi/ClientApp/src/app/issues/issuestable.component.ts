@@ -1,12 +1,32 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { MatDialog } from "@angular/material/dialog";
+import { MatDialog, MatDialogModule } from "@angular/material/dialog";
+import { CommonModule } from "@angular/common";
+import { MatTableModule } from "@angular/material/table";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatPaginatorModule } from "@angular/material/paginator";
+import { TranslateModule } from "@ngx-translate/core";
 
 import { IIssuesSummary, IPagenator, IssueStatus } from "../interfaces";
+import { RouterLink } from "@angular/router";
 
 @Component({
+    standalone: true,
     selector: "issues-table",
     templateUrl: "issuestable.component.html",
-    styleUrls: ['issuestable.component.scss']
+    styleUrls: ['issuestable.component.scss'],
+    imports: [
+        CommonModule,
+        MatDialogModule,
+        MatTableModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatPaginatorModule,
+        TranslateModule,
+        RouterLink
+    ]
 })
 export class IssuesTableComponent  {
 

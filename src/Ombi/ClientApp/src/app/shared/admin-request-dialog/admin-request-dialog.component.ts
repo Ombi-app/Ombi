@@ -1,6 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { TranslateModule } from '@ngx-translate/core';
 import { RadarrFacade } from 'app/state/radarr';
 import { SonarrFacade } from 'app/state/sonarr';
 import { firstValueFrom, Observable } from 'rxjs';
@@ -23,9 +30,21 @@ export interface IAdminRequestDialogData {
 }
 
 @Component({
+    standalone: true,
 	selector: 'admin-request-dialog',
 	templateUrl: 'admin-request-dialog.component.html',
 	styleUrls: ['admin-request-dialog.component.scss'],
+	imports: [
+		CommonModule,
+		ReactiveFormsModule,
+		MatAutocompleteModule,
+		MatButtonModule,
+		MatDialogModule,
+		MatFormFieldModule,
+		MatInputModule,
+		MatSelectModule,
+		TranslateModule
+	]
 })
 export class AdminRequestDialogComponent implements OnInit {
 	constructor(

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Ombi.Api.TheMovieDb;
-using Ombi.Api.TheMovieDb.Models;
+using Ombi.Api.External.ExternalApis.TheMovieDb;
+using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
 using Ombi.Core.Models.Requests;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;

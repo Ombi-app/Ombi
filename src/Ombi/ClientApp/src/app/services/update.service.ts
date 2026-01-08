@@ -7,7 +7,9 @@ import { Observable } from "rxjs";
 import { ServiceHelpers } from "./service.helpers";
 import { IUpdateModel } from "../interfaces";
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class UpdateService extends ServiceHelpers {
     constructor(http: HttpClient, @Inject(APP_BASE_HREF) href:string) {
         super(http, "/api/v1/Update/", href);

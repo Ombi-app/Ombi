@@ -1,4 +1,4 @@
-@import "./styles/variables.scss";
+@use "./styles/variables.scss" as *;
 
 .ombi-card {
     padding: 5px;
@@ -103,6 +103,30 @@
 
 .card-skeleton {
    padding: 5px;
+}
+
+.loading-container {
+    display: flex;
+    gap: 10px;
+    padding: 0 20px;
+    margin-top: 20px;
+}
+
+.loading-container .col-2 {
+    flex: 0 0 auto;
+    width: calc(10% - 9px);
+}
+
+@media (max-width: 768px) {
+    .loading-container .col-2 {
+        width: calc(50% - 5px);
+    }
+}
+
+@media (max-width: 480px) {
+    .loading-container .col-2 {
+        width: calc(100% - 0px);
+    }
 }
 
 @media (min-width:755px){

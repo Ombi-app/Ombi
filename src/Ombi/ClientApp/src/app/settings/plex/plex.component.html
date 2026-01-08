@@ -1,137 +1,177 @@
-﻿<settings-menu></settings-menu>
-<div class="small-middle-container" *ngIf="settings">
-    <fieldset style="width:100%;">
-        <legend>Plex Configuration</legend>
-        <div class="col-12">
-            <div class="md-form-field align-right">
-                <button (click)="openWatchlistUserLog()" type="button" class="mat-focus-indicator mat-flat-button mat-button-base mat-accent">Watchlist User Errors</button>
+﻿<div class="plex-settings-container" *ngIf="settings">
+    <mat-card class="settings-card">
+        <mat-card-header>
+            <mat-card-title>Plex Configuration</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+            <!-- Watchlist Settings Section -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <h2>Watchlist Settings</h2>
+                </div>
+
+                <div class="settings-grid">
+                    <mat-card class="setting-card">
+                        <mat-card-content>
+                            <div class="setting-header">
+                                <h3>Enable Plex</h3>
+                                <mat-slide-toggle [id]="'enable'" [(ngModel)]="settings.enable"></mat-slide-toggle>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="setting-card">
+                        <mat-card-content>
+                            <div class="setting-header">
+                                <h3>Enable User Watchlist Requests</h3>
+                                <mat-slide-toggle [id]="'enableWatchlistImport'" [(ngModel)]="settings.enableWatchlistImport"></mat-slide-toggle>
+                            </div>
+                            <p class="setting-description">
+                                When a Plex User adds something to their watchlist in Plex, it will turn up in Ombi as a Request if enabled. 
+                                This <strong>only</strong> applies to users that are logging in with their Plex Account.
+                                <br>Request limits if set are all still applied
+                            </p>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="setting-card" [class.disabled]="!settings.enableWatchlistImport">
+                        <mat-card-content>
+                            <div class="setting-header">
+                                <h3>Request Whole Show</h3>
+                                <mat-slide-toggle [id]="'monitorAll'" [(ngModel)]="settings.monitorAll" [disabled]="!settings.enableWatchlistImport"></mat-slide-toggle>
+                            </div>
+                            <p class="setting-description">
+                                If enabled then watchlist requests for TV Shows will request the <strong>whole</strong> show. 
+                                If not enabled it will only request the latest season.
+                            </p>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="setting-card" [class.disabled]="!settings.enableWatchlistImport">
+                        <mat-card-content>
+                            <div class="setting-header">
+                                <h3>Notify on Token Expiration</h3>
+                                <mat-slide-toggle [id]="'notifyOnWatchlistTokenExpiration'" [(ngModel)]="settings.notifyOnWatchlistTokenExpiration" [disabled]="!settings.enableWatchlistImport"></mat-slide-toggle>
+                            </div>
+                            <p class="setting-description">
+                                When enabled, users will receive a notification if their Plex watchlist token expires and they need to log into Ombi again to continue using the watchlist feature.
+                                <br><strong>Note:</strong> This requires email notifications to be configured in the notification settings, and users must have an email address set on their account to receive these notifications.
+                            </p>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <mat-card class="info-banner">
+                    <mat-icon color="primary" style="margin-right: 12px;">info</mat-icon>
+                    <span style="flex:1;">
+                        Some users may need to re-log in to use the watchlist feature.
+                    </span>
+                    <button mat-button color="accent" (click)="openWatchlistUserLog()">
+                        View Users
+                    </button>
+                </mat-card>
             </div>
 
-        </div>
-        <settings-plex-form-field [label]="'Enable'" [type]="'checkbox'" [id]="'enable'" [(value)]="settings.enable"></settings-plex-form-field>
+            <!-- Main Content Area -->
+            <div class="main-content">
+                <!-- Left Column - Servers and Actions -->
+                <div class="content-column">
+                    <!-- Servers Section -->
+                    <div class="settings-section">
+                        <h2>Plex Servers</h2>
+                        <div class="servers-grid">
+                            <mat-card class="server-card" *ngFor="let server of settings.servers">
+                                <mat-card-content>
+                                    <button mat-button (click)="edit(server)" [id]="server.name + '-button'">
+                                        <mat-icon>dns</mat-icon>
+                                        <span>{{server.name}}</span>
+                                    </button>
+                                </mat-card-content>
+                            </mat-card>
 
-        <settings-plex-form-field [label]="'Enable User Watchlist Requests'" [type]="'checkbox'" [id]="'enableWatchlistImport'" [(value)]="settings.enableWatchlistImport">
-            <small bottom>When a Plex User adds something to their watchlist in Plex, it will turn up in Ombi as a Request if enabled. This <b>only</b> applies to users that are logging in with their Plex Account
-                <br>Request limits if set are all still applied
-            </small>
-        </settings-plex-form-field>
+                            <mat-card class="server-card new-server">
+                                <mat-card-content>
+                                    <button mat-button (click)="newServer()" id="newServer">
+                                        <mat-icon>add_circle</mat-icon>
+                                        <span>Add Server</span>
+                                    </button>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                    </div>
 
-        <settings-plex-form-field [disabled]="!settings.enableWatchlistImport" [label]="'Watchlist - Request Whole Show'" disabled [type]="'checkbox'" [id]="'monitorAll'" [(value)]="settings.monitorAll">
-            <small bottom>If enabled then watchlist requests for TV Shows will request the <strong><em>whole</em></strong> show. If not enabled it will only request the latest season.
-            </small>
-        </settings-plex-form-field>
+                    <!-- Sync Actions Section -->
+                    <div class="settings-section">
+                        <h2>Sync Actions</h2>
+                        <div class="sync-actions-grid">
+                            <button mat-stroked-button (click)="runSync(PlexSyncType.Full)" id="fullSync">
+                                <mat-icon>sync</mat-icon>
+                                Full Sync
+                            </button>
+                            <button mat-stroked-button (click)="runSync(PlexSyncType.RecentlyAdded)" id="recentlyAddedSync">
+                                <mat-icon>update</mat-icon>
+                                Partial Sync
+                            </button>
+                            <button mat-stroked-button (click)="runSync(PlexSyncType.ClearAndReSync)" id="clearData">
+                                <mat-icon>cleaning_services</mat-icon>
+                                Clear & Resync
+                            </button>
+                            <button mat-stroked-button (click)="runSync(PlexSyncType.WatchlistImport)" id="watchlistImport">
+                                <mat-icon>playlist_add</mat-icon>
+                                Run Watchlist Import
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- Right Column - Plex Credentials -->
+                <div class="content-column">
+                    <div class="settings-section">
+                        <h2>Plex Credentials</h2>
+                        <mat-card class="credentials-card">
+                            <mat-card-content>
+                                <p class="credentials-description">
+                                    These fields are optional to automatically fill in your Plex server settings.
+                                    <br>This will pass your username and password to the Plex.tv API to grab the servers associated with this user.
+                                    <br>If you have 2FA enabled on your account, you need to append the 2FA code to the end of your password.
+                                </p>
 
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>Username</mat-label>
+                                    <input matInput [id]="'username'" [(ngModel)]="username">
+                                </mat-form-field>
 
-        <hr>
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>Password</mat-label>
+                                    <input matInput [id]="'password'" type="password" [(ngModel)]="password">
+                                </mat-form-field>
 
-<div class="row">
-<div class="col-md-7">
-        <h2 style="margin: 1em 0 0 0;">Servers</h2>
-        <mat-list style="display:flex; flex-flow: wrap;">
-            <mat-card class="server-card" *ngFor="let server of settings.servers">
-                <button mat-button (click)="edit(server)" id="{{server.name}}-button">
-                    <h3>{{server.name}}</h3>
-                </button>
-            </mat-card>
+                                <button mat-raised-button color="primary" id="loadServers" (click)="requestServers()" class="full-width">
+                                    <mat-icon>key</mat-icon>
+                                    Load Servers
+                                </button>
 
-            <mat-card class="server-card new-server-card">
-                <button mat-button (click)="newServer()" id="newServer">
-                    <i class="fas fa-plus fa-xl"></i>
-                    <h3>Manually Add Server</h3>
-                </button>
-            </mat-card>
-        </mat-list>
-
-
-<div class="row">
-
-    <br />
-        <div class="form-group col-2">
-            <button mat-raised-button (click)="runSync(PlexSyncType.Full)" type="button" id="fullSync"
-                class="mat-focus-indicator mat-stroked-button mat-button-base">Full
-                Sync</button><br />
-        </div>
-        <div class="form-group col-2">
-            <button mat-raised-button (click)="runSync(PlexSyncType.RecentlyAdded)" type="button" id="recentlyAddedSync"
-                class="mat-focus-indicator mat-stroked-button mat-button-base">Partial Sync</button>
-        </div>
-        <div class="form-group col-2">
-            <button mat-raised-button (click)="runSync(PlexSyncType.ClearAndReSync)" type="button" id="clearData"
-                class="mat-focus-indicator mat-stroked-button mat-button-base">
-                Clear Data And Resync
-            </button>
-        </div>
-        <div class="form-group col-12">
-            <button mat-raised-button (click)="runSync(PlexSyncType.WatchlistImport)" type="button" id="watchlistImport"
-                class="mat-focus-indicator mat-stroked-button mat-button-base">
-                Run Watchlist Import
-            </button>
-        </div>
-</div>
-
-        <div class="row">
-
-            <div class="col-md-2">
-                <div class="form-group">
-                    <div>
-                        <button mat-raised-button (click)="save()" type="submit" id="save"
-                            class="mat-focus-indicator mat-raised-button mat-button-base mat-accent">Submit</button>
+                                <mat-form-field appearance="outline" class="full-width mt-3">
+                                    <mat-label>Select Server</mat-label>
+                                    <mat-select [id]="'servers'" *ngIf="loadedServers">
+                                        <mat-option (click)="selectServer(s)" *ngFor="let s of loadedServers.servers.devices" [value]="s.device">
+                                            {{s.name}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <input matInput disabled placeholder="No Servers Loaded" *ngIf="!loadedServers">
+                                </mat-form-field>
+                            </mat-card-content>
+                        </mat-card>
                     </div>
                 </div>
             </div>
-        </div>
-        
-    </div>
+        </mat-card-content>
 
-    <div class="col-md-5">
-        <div class="md-form-field">
-            <label for="username" class="control-label">
-                <h3>Plex Credentials</h3>
-                <small>These fields are optional to automatically fill in your Plex server settings. <br>
-                This will pass your username and password to the Plex.tv API to grab the servers associated with this user.
-            <br>
-            If you have 2FA enabled on your account, you need to append the 2FA code to the end of your password.</small>
-            </label>
-        </div>
-    
-        <settings-plex-form-field [label]="'Username'" [id]="'username'" [(value)]="username"></settings-plex-form-field>
-        <settings-plex-form-field [label]="'Password'" [id]="'password'" [type]="'password'" [(value)]="password"></settings-plex-form-field>
-    
-        <div class="md-form-field">
-            <div class="right">
-                <button mat-raised-button id="loadServers" (click)="requestServers()"
-                    class="mat-stroked-button">Load Servers
-                    <i class="fas fa-key"></i>
-                </button>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-2 align-self-center">
-                Please select the server:
-            </div>
-            <div class="md-form-field col-10">
-                <div *ngIf="!loadedServers">
-                    <mat-form-field appearance="outline" floatLabel=auto>
-                        <input disabled  matInput placeholder="No Servers Loaded" id="servers">
-                    </mat-form-field>
-                </div>
-    
-                <div *ngIf="loadedServers">
-                    <mat-form-field appearance="outline">
-                        <mat-select placeholder="Servers Loaded! Please Select" id="servers">
-                            <mat-option (click)="selectServer(s)"
-                                *ngFor="let s of loadedServers.servers.server" [value]="s.server">
-                                {{s.name}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </div>
-        </div>
-    </div>
+        <mat-card-actions align="end">
+            <button mat-raised-button color="accent" (click)="save()" id="save">
+                <mat-icon>save</mat-icon>
+                Save Changes
+            </button>
+        </mat-card-actions>
+    </mat-card>
 </div>
-
-    </fieldset>
-</div>
-<!--(){{settings|json}}-->

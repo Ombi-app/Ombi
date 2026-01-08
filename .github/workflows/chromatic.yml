@@ -17,7 +17,7 @@
 #           fetch-depth: 0
 
 #       - name: NodeModules Cache
-#         uses: actions/cache@v2
+#         uses: actions/cache@v4
 #         with:
 #           path: '**/node_modules'
 #           key: node_modules-${{ hashFiles('**/yarn.lock') }}

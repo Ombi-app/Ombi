@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using Ombi.Api.Pushbullet;
+using Ombi.Api.External.NotificationServices.Pushbullet;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;

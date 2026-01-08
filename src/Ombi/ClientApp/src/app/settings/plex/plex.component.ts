@@ -1,16 +1,56 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { EMPTY, Subject } from "rxjs";
 import { catchError, takeUntil } from "rxjs/operators";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import { MatButtonModule } from "@angular/material/button";
+import { MatCardModule } from "@angular/material/card";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatDialog, MatDialogModule } from "@angular/material/dialog";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatIconModule } from "@angular/material/icon";
+import { TranslateModule } from "@ngx-translate/core";
+import { ButtonModule } from "primeng/button";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { DialogModule } from "primeng/dialog";
+import { TableModule } from "primeng/table";
 
-import { IPlexServer, IPlexServerResponse, IPlexServerViewModel, IPlexSettings } from "../../interfaces";
+import { IPlexServer, IPlexDeviceResponse, IPlexServerViewModel, IPlexSettings } from "../../interfaces";
 import { JobService, NotificationService, PlexService, SettingsService } from "../../services";
-import {UntypedFormControl} from '@angular/forms';
-import { MatDialog } from "@angular/material/dialog";
 import { PlexWatchlistComponent } from "./components/watchlist/plex-watchlist.component";
 import { PlexServerDialogComponent } from "./components/plex-server-dialog/plex-server-dialog.component";
 import { PlexServerDialogData, PlexSyncType } from "./components/models";
 
 @Component({
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatSlideToggleModule,
+        MatTabsModule,
+        MatTooltipModule,
+        MatIconModule,
+        TranslateModule,
+        ButtonModule,
+        ConfirmDialogModule,
+        DialogModule,
+        TableModule,
+        PlexWatchlistComponent,
+        PlexServerDialogComponent
+    ],
     templateUrl: "./plex.component.html",
     styleUrls: ["./plex.component.scss"]
 })
@@ -61,20 +101,20 @@ export class PlexComponent implements OnInit, OnDestroy {
         });
     }
 
-    public selectServer(selectedServer: IPlexServerResponse) {
+    public selectServer(selectedDevice: IPlexDeviceResponse) {
         const server = <IPlexServer> { name: "New" + this.settings.servers.length + "*", id: Math.floor(Math.random() * (99999 - 0 + 1) + 1) };
 
-        var splitServers = selectedServer.localAddresses.split(",");
+        var splitServers = selectedDevice.localAddresses.split(",");
         if (splitServers.length > 1) {
             server.ip = splitServers[splitServers.length - 1];
         } else {
-            server.ip = selectedServer.localAddresses;
+            server.ip = selectedDevice.localAddresses;
         }
-        server.name = selectedServer.name;
-        server.machineIdentifier = selectedServer.machineIdentifier;
-        server.plexAuthToken = selectedServer.accessToken;
-        server.port = parseInt(selectedServer.port);
-        server.ssl = selectedServer.scheme === "http" ? false : true;
+        server.name = selectedDevice.name;
+        server.machineIdentifier = selectedDevice.machineIdentifier;
+        server.plexAuthToken = selectedDevice.accessToken;
+        server.port = parseInt(selectedDevice.port);
+        server.ssl = selectedDevice.scheme === "http" ? false : true;
         server.serverHostname = "";
 
         this.notificationService.success(`Selected ${server.name}!`);

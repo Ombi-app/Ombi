@@ -1,4 +1,4 @@
-@defer (when requests()) {
+@defer (when requests(); prefetch on idle) {
     <div *ngIf="requests().length > 0">
         <p-carousel #carousel [value]="requests()" [numVisible]="3" [numScroll]="1"
             [responsiveOptions]="responsiveOptions" [page]="0">
@@ -13,21 +13,9 @@
             </ng-template>
         </p-carousel>
     </div>
-}@placeholder(minimum 500) {
+}@placeholder(minimum 300) {
     <div class="row loading-container">
-        <div class="col-2">
-            <p-skeleton width="100%" height="270px"></p-skeleton>
-        </div>
-        <div class="col-2">
-            <p-skeleton width="100%" height="270px"></p-skeleton>
-        </div>
-        <div class="col-2">
-            <p-skeleton width="100%" height="270px"></p-skeleton>
-        </div>
-        <div class="col-2">
-            <p-skeleton width="100%" height="270px"></p-skeleton>
-        </div>
-        <div class="col-2">
+        <div class="col-2" *ngFor="let item of [1,2,3,4,5]">
             <p-skeleton width="100%" height="270px"></p-skeleton>
         </div>
     </div>

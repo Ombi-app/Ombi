@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Ombi.Api.FanartTv;
-using Ombi.Api.TheMovieDb;
+using Ombi.Api.External.ExternalApis.FanartTv;
+using Ombi.Api.External.ExternalApis.TheMovieDb;
 using Ombi.Core.Helpers;
 using Ombi.Core.Settings;
 using Ombi.Helpers;

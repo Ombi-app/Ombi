@@ -3,20 +3,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Ombi.Api.CouchPotato;
-using Ombi.Api.DogNzb.Models;
-using Ombi.Api.Radarr;
+using Ombi.Api.External.ExternalApis.CouchPotato;
+using Ombi.Api.External.ExternalApis.DogNzb.Models;
+using Ombi.Api.External.ExternalApis.Radarr;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities.Requests;
-using Ombi.Api.DogNzb;
+using Ombi.Api.External.ExternalApis.DogNzb;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using System.Collections.Generic;
-using Ombi.Api.Radarr.Models;
+using Ombi.Api.External.ExternalApis.Radarr.Models;
 using Microsoft.Extensions.Options;
-using Ombi.Api.Sonarr;
+using Ombi.Api.External.ExternalApis.Sonarr;
 
 namespace Ombi.Core.Senders
 {
@@ -182,7 +182,10 @@ namespace Ombi.Core.Senders
             if (settings.SendUserTags)
             {
                 var userTag = await GetOrCreateTag(model, settings);
-                tags.Add(userTag.id);
+                if (userTag != null)
+                {
+                    tags.Add(userTag.id);
+                }
             }
 
             // Overrides on the request take priority
@@ -198,7 +201,9 @@ namespace Ombi.Core.Senders
             List<MovieResponse> movies;
             // Check if the movie already exists? Since it could be unmonitored
 
-            movies = await _radarrV3Api.GetMovies(settings.ApiKey, settings.FullUri);
+            // Get the appropriate Radarr instance settings for existence check
+            var existenceCheckSettings = is4k ? await _radarr4KSettings.GetSettingsAsync() : settings;
+            movies = await _radarrV3Api.GetMovies(existenceCheckSettings.ApiKey, existenceCheckSettings.FullUri);
 
             var existingMovie = movies.FirstOrDefault(x => x.tmdbId == model.TheMovieDbId);
             if (existingMovie == null)
@@ -246,9 +251,22 @@ namespace Ombi.Core.Senders
 
         private async Task<Tag> GetOrCreateTag(MovieRequests model, RadarrSettings s)
         {
-            var tagName = model.RequestedUser.UserName;
-            // Does tag exist?
+            if (model.RequestedUser == null)
+            {
+                _log.LogWarning("Cannot create tag - RequestedUser is null for movie request {MovieTitle}", model.Title);
+                return null;
+            }
 
+            // Sanitize username to comply with Radarr tag requirements (a-z, 0-9, and - only)
+            var tagName = StringHelper.SanitizeTagLabel(model.RequestedUser.UserName);
+
+            if (string.IsNullOrEmpty(tagName))
+            {
+                _log.LogWarning("Cannot create tag - sanitized username is empty for user {Username}", model.RequestedUser.UserName);
+                return null;
+            }
+
+            // Does tag exist?
             var allTags = await _radarrV3Api.GetTags(s.ApiKey, s.FullUri);
             var existingTag = allTags.FirstOrDefault(x => x.label.Equals(tagName, StringComparison.InvariantCultureIgnoreCase));
             existingTag ??= await _radarrV3Api.CreateTag(s.ApiKey, s.FullUri, tagName);

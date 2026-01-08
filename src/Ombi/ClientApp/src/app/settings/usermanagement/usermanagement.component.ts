@@ -1,10 +1,41 @@
 ﻿import { Component, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
 import { EmbyService, IdentityService, JellyfinService, JobService, NotificationService, PlexService, SettingsService } from "../../services";
 import { ICheckbox, IUserManagementSettings, RequestLimitType } from "../../interfaces";
 
 import { IUsersModel } from "../../interfaces";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { HumanizePipe } from "app/pipes/HumanizePipe";
+import { AutoCompleteModule } from "primeng/autocomplete";
 
 @Component({
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatTooltipModule,
+        MatSlideToggleModule,
+        TranslateModule,
+        MatDividerModule,
+        FormsModule,
+        MatSlideToggleModule,
+        HumanizePipe,
+        AutoCompleteModule
+    ],
     templateUrl: "./usermanagement.component.html",
     styleUrls: ["./usermanagement.component.scss"]
 })
@@ -149,7 +180,7 @@ export class UserManagementComponent implements OnInit {
 
     private filter(query: string, users: IUsersModel[]): IUsersModel[] {
         return users.filter((val) => {
-            return val.username.toLowerCase().indexOf(query.toLowerCase()) === 0;
+            return val.username?.toLowerCase().indexOf(query.toLowerCase()) === 0;
         });
     }
 }

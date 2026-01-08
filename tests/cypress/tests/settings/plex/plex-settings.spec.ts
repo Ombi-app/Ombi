@@ -14,24 +14,45 @@ describe("Plex Settings Tests", () => {
     "success": true,
     "message": null,
     "servers": {
-      "server": [
+      "devices": [
         {
           "accessToken": "myaccessToken",
           "name": "AutomationServer",
-          "address": "1.1.1.1",
-          "port": "32400",
-          "version": "1.30.0.6442-5070ad484",
-          "scheme": "http",
-          "host": "2.2.2.2",
+          "product": "Plex Media Server",
+          "productVersion": "1.30.0.6442-5070ad484",
+          "platform": "Linux",
+          "platformVersion": "6.6.68-Unraid",
+          "device": "Docker Container",
+          "clientIdentifier": "9999999999999999",
+          "createdAt": "5555555555",
+          "lastSeenAt": "6666666666",
+          "provides": "server",
+          "owned": "1",
+          "searchEnabled": "true",
+          "publicAddress": "1.1.1.1",
+          "httpsRequired": "0",
+          "synced": "0",
+          "relay": "1",
+          "dnsRebindingProtection": "0",
+          "natLoopbackSupported": "0",
+          "publicAddressMatches": "1",
+          "presence": "1",
+          "ownerId": null,
+          "home": null,
+          "sourceTitle": null,
+          "connections": [
+            {
+              "protocol": "http",
+              "address": "${Cypress.env("dockerhost")}",
+              "port": "32400",
+              "uri": "http://${Cypress.env("dockerhost")}:32400",
+              "local": "1"
+            }
+          ],
           "localAddresses": "${Cypress.env("dockerhost")}",
           "machineIdentifier": "9999999999999999",
-          "createdAt": "5555555555",
-          "updatedAt": "6666666666",
-          "owned": "1",
-          "synced": "0",
-          "sourceTitle": null,
-          "ownerId": null,
-          "home": null
+          "port": "32400",
+          "scheme": "http"
         }
       ],
       "friendlyName": "myPlex",
@@ -171,10 +192,10 @@ describe("Plex Settings Tests", () => {
     const server = JSON.parse(plexTvApiResponse);
     modal.serverName.clear();
     modal.serverName.type("ManualServer");
-    modal.hostName.type(server.servers.server[0].localAddresses);
-    modal.port.type(server.servers.server[0].port);
-    modal.authToken.type(server.servers.server[0].accessToken);
-    modal.machineIdentifier.type(server.servers.server[0].machineIdentifier);
+    modal.hostName.type(server.servers.devices[0].localAddresses);
+    modal.port.type(server.servers.devices[0].port);
+    modal.authToken.type(server.servers.devices[0].accessToken);
+    modal.machineIdentifier.type(server.servers.devices[0].machineIdentifier);
   }
 
 });

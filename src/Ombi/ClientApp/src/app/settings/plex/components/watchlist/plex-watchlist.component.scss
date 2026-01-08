@@ -1,4 +1,4 @@
-@import "./styles/shared.scss";
+@use "./styles/shared.scss" as *;
 .small-middle-container {
     margin: auto;
     width: 95%;
@@ -10,4 +10,96 @@
 
 .key {
     width: 40px;
+}
+
+.watchlist-dialog-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 0 auto;
+}
+
+.watchlist-dialog-card {
+  background: #23272f;
+  color: #f1f3f6;
+  border-radius: 12px;
+  border: 1px solid #353a45;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.25);
+  min-width: 420px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+}
+
+mat-card-content {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+mat-card-header {
+  border-bottom: 1px solid #353a45;
+  margin-bottom: 12px;
+  flex: 0 0 auto;
+}
+
+mat-card-title {
+  color: #fff !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px;
+}
+
+.watchlist-info-section {
+  display: flex;
+  align-items: center;
+  background: #23272f;
+  color: #e0e3ea;
+  padding: 12px 0 8px 0;
+  font-size: 15px;
+  gap: 12px;
+}
+
+.info-icon {
+  font-size: 28px;
+  color: #ffb300;
+}
+
+.watchlist-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 18px;
+  margin-top: 8px;
+  font-size: 14px;
+  color: #b0b6c3;
+}
+
+.watchlist-legend mat-icon {
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+.modern-table {
+  background: transparent;
+  color: #f1f3f6;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.modern-table th, .modern-table td {
+  color: #f1f3f6;
+  font-size: 15px;
+}
+
+mat-card-actions {
+  padding-top: 16px;
+  flex: 0 0 auto;
+  background: #23272f;
+}
+
+button[mat-stroked-button] {
+  font-weight: 600;
+  border-radius: 6px;
 }

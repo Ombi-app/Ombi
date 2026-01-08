@@ -1,16 +1,35 @@
 import { APP_BASE_HREF } from "@angular/common";
-import { Component, ViewEncapsulation, Input, OnInit, Inject } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { Inject } from "@angular/core";
+import { ViewEncapsulation } from "@angular/core";
 import { ITvRequests } from "../../../../../interfaces";
 import { ITvRatings } from "../../../../../interfaces/IRatings";
 import { ISearchTvResultV2 } from "../../../../../interfaces/ISearchTvResultV2"; 
 import { IStreamingData } from "../../../../../interfaces/IStreams";
 import { SearchV2Service } from "../../../../../services";
+import { TranslateModule } from "@ngx-translate/core";
+import { MatChipsModule } from "@angular/material/chips";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateStatusPipe } from "../../../../../pipes/TranslateStatus";
+import { OmbiDatePipe } from "../../../../../pipes/OmbiDatePipe";
+import { ThousandShortPipe } from "../../../../../pipes/ThousandShortPipe";
 
 @Component({
+        standalone: true,
     templateUrl: "./tv-information-panel.component.html",
     styleUrls: ["../../../../media-details.component.scss"],
     selector: "tv-information-panel",
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        CommonModule,
+        TranslateModule,
+        MatChipsModule,
+        MatTooltipModule,
+        TranslateStatusPipe,
+        OmbiDatePipe,
+        ThousandShortPipe
+    ]
 })
 export class TvInformationPanelComponent implements OnInit {
 

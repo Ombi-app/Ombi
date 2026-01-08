@@ -159,7 +159,7 @@
         "RequestedBy": "Sol·licitat per",
         "Status": "Estat",
         "RequestStatus": "Estat de la sol·licitud",
-        "Watched": "Watched",
+        "Watched": "Vist",
         "WatchedTooltip": "The user who made the request has watched it",
         "WatchedProgressTooltip": "Shows how much the user who made the request has watched it",
         "WatchedByUsersCount": "{{count}} users have watched this.",
@@ -408,7 +408,7 @@
         "Movies": "Pel·lícules",
         "Combined": "Combinat",
         "Tv": "TV",
-        "Genres": "Genres",
+        "Genres": "Gèneres",
         "CardDetails": {
             "Availability": "Disponibilitat",
             "Studio": "Estudi",

@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild } from "@angular/core";
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, signal, Signal, ViewChild } from "@angular/core";
 import { IMovieRequests, IRequestEngineResult, IRequestsViewModel } from "../../../interfaces";
 import { NotificationService, RequestService } from "../../../services";
 import { Observable, combineLatest, forkJoin, merge, of as observableOf } from 'rxjs';
@@ -6,19 +6,59 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 import { AuthService } from "../../../auth/auth.service";
 import { FeaturesFacade } from "../../../state/features/features.facade";
-import { MatPaginator } from "@angular/material/paginator";
-import { MatSort } from "@angular/material/sort";
-import { MatTableDataSource } from "@angular/material/table";
+import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
+import { MatSort, MatSortModule } from "@angular/material/sort";
+import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { RequestFilterType } from "../../models/RequestFilterType";
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { SelectionModel } from "@angular/cdk/collections";
 import { StorageService } from "../../../shared/storage/storage-service";
 import { TranslateService } from "@ngx-translate/core";
+import { CommonModule } from "@angular/common";
+import { RouterModule } from "@angular/router";
+import { GridSpinnerComponent } from "../grid-spinner/grid-spinner.component";
+import { TranslateModule } from "@ngx-translate/core";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatOptionModule } from "@angular/material/core";
+import { MatSelectModule } from "@angular/material/select";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatInputModule } from "@angular/material/input";
+import { ImageComponent } from "../../../components";
+import { OmbiDatePipe } from "../../../pipes/OmbiDatePipe";
+import { TranslateStatusPipe } from "../../../pipes/TranslateStatus";
+import { DetailedCardComponent } from "../../../components/detailed-card/detailed-card.component";
 
 @Component({
+    standalone: true,
     templateUrl: "./movies-grid.component.html",
     selector: "movies-grid",
-    styleUrls: ["./movies-grid.component.scss"]
+    styleUrls: ["./movies-grid.component.scss"],
+    imports: [
+        CommonModule,
+        RouterModule,
+        GridSpinnerComponent,
+        TranslateModule,
+        MatFormFieldModule,
+        MatOptionModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatTableModule,
+        MatSelectModule,
+        MatMenuModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatCheckboxModule,
+        MatInputModule,
+        ImageComponent,
+        OmbiDatePipe,
+        TranslateStatusPipe,
+        DetailedCardComponent
+    ]
 })
 export class MoviesGridComponent implements OnInit, AfterViewInit {
     public dataSource: MatTableDataSource<IMovieRequests>;

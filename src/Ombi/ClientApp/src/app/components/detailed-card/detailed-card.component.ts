@@ -6,16 +6,32 @@ import {
   OnInit,
   Output,
 } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
 import { IRecentlyRequested, RequestType } from "../../interfaces";
 import { ImageService } from "app/services";
 import { Subject, takeUntil } from "rxjs";
 import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
+import { ImageComponent } from "../image/image.component";
+import { OmbiDatePipe } from "../../pipes/OmbiDatePipe";
 
 @Component({
-  standalone: false,
+  standalone: true,
   selector: "ombi-detailed-card",
   templateUrl: "./detailed-card.component.html",
   styleUrls: ["./detailed-card.component.scss"],
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    TranslateModule,
+    ImageComponent,
+    OmbiDatePipe
+  ]
 })
 export class DetailedCardComponent implements OnInit, OnDestroy {
   @Input() public request: IRecentlyRequested;
@@ -144,7 +160,7 @@ export class DetailedCardComponent implements OnInit, OnDestroy {
   }
 
   private setBackgroundStyle(backgroundPath: string) {
-    if (backgroundPath) {
+    if (backgroundPath && backgroundPath !== null && backgroundPath !== undefined) {
       this.background = this.sanitizer.bypassSecurityTrustStyle(
         `linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url(${this.getImageUrl(
           backgroundPath
@@ -158,6 +174,8 @@ export class DetailedCardComponent implements OnInit, OnDestroy {
   private getImageUrl(path: string) {
     if (new RegExp("^(http|https)://").test(path)) {
       return path;
+    } else if (path == null || path === undefined) {
+      return "/images/default_movie_poster.png";
     } else {
       return `https://image.tmdb.org/t/p/w300${path}`;
     }

@@ -1,3 +1,12 @@
+// Type definitions for mock data commands
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      addMock(mapping: any): Chainable<void>;
+      clearMocks(): Chainable<void>;
+    }
+  }
+}
 
 Cypress.Commands.add('addMock', (mapping) => {
     cy.request({
@@ -13,3 +22,5 @@ Cypress.Commands.add('clearMocks', () => {
         url: 'http://localhost:32400/__admin/mappings'
     })
 })
+
+export {};

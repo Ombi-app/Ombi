@@ -161,3 +161,5 @@ describe('User Management Page', () => {
       cy.get('#rolePowerUser').should('have.class', 'mat-checked');
     });
   });
+
+export {};

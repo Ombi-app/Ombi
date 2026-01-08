@@ -1,0 +1,66 @@
+name: "🚀 Contributor Onboarding"
+description: 'Checklist for new contributors to get started'
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Welcome to the Ombi contributor community! This checklist will help you get started with contributing to the project.
+
+  - type: checkboxes
+    attributes:
+      label: "📋 Pre-Contribution Checklist"
+      options:
+        - label: I have read and understood the [Code of Conduct](CODE_OF_CONDUCT.md)
+        - label: I have read the [Contributing Guide](CONTRIBUTING.md)
+        - label: I have set up my development environment
+        - label: I have successfully built and run Ombi locally
+        - label: I have run the test suite and all tests pass
+        - label: I have joined the [Discord community](https://discord.gg/Sa7wNWb)
+        - label: I have reviewed the [project documentation](https://docs.ombi.app/)
+
+  - type: checkboxes
+    attributes:
+      label: "🎯 Contribution Goals"
+      options:
+        - label: I want to fix bugs
+        - label: I want to add new features
+        - label: I want to improve documentation
+        - label: I want to help with testing
+        - label: I want to help with code review
+        - label: I want to help with community support
+
+  - type: dropdown
+    attributes:
+      label: Experience Level
+      options:
+        - Complete beginner
+        - Some programming experience
+        - Experienced developer
+        - Expert in .NET/Angular
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Areas of Interest
+      description: What parts of Ombi are you most interested in working on?
+      placeholder: "e.g., UI/UX, backend APIs, database, integrations, etc."
+
+  - type: textarea
+    attributes:
+      label: Questions or Concerns
+      description: Any questions about the contribution process or concerns you'd like to address?
+      placeholder: "I'm not sure about..."
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 🎉 Next Steps
+        
+        Once you've completed this checklist:
+        1. Look for issues labeled "good first issue" or "help wanted"
+        2. Start with small contributions to get familiar with the codebase
+        3. Don't hesitate to ask questions in Discord or create a "Contribution Help" issue
+        4. Remember: every contribution, no matter how small, is valuable!
+        
+        **Welcome to the team! 🎉**

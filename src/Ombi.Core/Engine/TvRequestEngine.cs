@@ -1,7 +1,7 @@
 ﻿using System;
 using AutoMapper;
-using Ombi.Api.TvMaze;
-using Ombi.Api.TheMovieDb;
+using Ombi.Api.External.ExternalApis.TvMaze;
+using Ombi.Api.External.ExternalApis.TheMovieDb;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Helpers;
@@ -696,6 +696,8 @@ namespace Ombi.Core.Engine
                     ErrorMessage = "Child Request does not exist"
                 };
             }
+
+            request.MarkedAsApproved = DateTime.Now;
             request.Approved = true;
             request.Denied = false;
 

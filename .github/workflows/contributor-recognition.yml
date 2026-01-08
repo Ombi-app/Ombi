@@ -1,0 +1,102 @@
+name: Contributor Recognition
+
+on:
+  pull_request:
+    types: [closed]
+  workflow_dispatch:
+
+jobs:
+  recognize-contributors:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Get contributor info
+        id: contributor
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const author = pr.user.login;
+            const isFirstTime = pr.author_association === 'FIRST_TIME_CONTRIBUTOR';
+            
+            return {
+              author,
+              isFirstTime,
+              prNumber: pr.number,
+              prTitle: pr.title,
+              prUrl: pr.html_url
+            };
+
+      - name: Comment on merged PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const contributor = ${{ toJson(steps.contributor.outputs) }};
+            const isFirstTime = contributor.isFirstTime === 'true';
+            
+            let message = `🎉 **Thank you for your contribution!**\n\n`;
+            
+            if (isFirstTime) {
+              message += `🎊 **Congratulations on your first merged PR!** Welcome to the Ombi contributor community!\n\n`;
+            }
+            
+            message += `Your changes have been successfully merged and will be included in the next release.\n\n`;
+            message += `**What you contributed:**\n`;
+            message += `- ${contributor.prTitle}\n`;
+            message += `- [PR #${contributor.prNumber}](${contributor.prUrl})\n\n`;
+            
+            if (isFirstTime) {
+              message += `**Next steps:**\n`;
+              message += `- Join our [Discord community](https://discord.gg/Sa7wNWb) to connect with other contributors\n`;
+              message += `- Check out more [good first issues](https://github.com/ombi-app/Ombi/labels/good%20first%20issue) if you'd like to contribute more\n`;
+              message += `- Your contribution will be automatically added to our contributors list in the README\n\n`;
+            }
+            
+            message += `Thank you for helping make Ombi better! 🙏`;
+            
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: message
+            });
+
+      - name: Add contributor badge
+        if: steps.contributor.outputs.isFirstTime == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ['first-contribution']
+            });
+
+  # Weekly contributor summary
+  weekly-summary:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Get recent contributors
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'closed',
+              sort: 'updated',
+              direction: 'desc',
+              per_page: 50
+            });
+            
+            const recentMergedPRs = prs.filter(pr => 
+              pr.merged_at && 
+              new Date(pr.merged_at) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+            );
+            
+            const contributors = [...new Set(recentMergedPRs.map(pr => pr.user.login))];
+            
+            console.log(`Recent contributors (last 7 days): ${contributors.join(', ')}`);
+            console.log(`Total merged PRs: ${recentMergedPRs.length}`);

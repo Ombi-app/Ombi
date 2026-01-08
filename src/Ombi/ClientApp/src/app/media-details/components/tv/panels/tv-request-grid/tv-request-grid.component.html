@@ -76,7 +76,6 @@
     <button *ngIf="!request.denied" mat-raised-button color="danger" (click)="deny(request);">{{ 'Requests.Deny' | translate }}</button>
 </div>
  -->
-
 <button *ngIf="!tv.fullyAvailable && requestable" mat-fab color="accent" id="addFabBtn" class="floating-fab" [matMenuTriggerFor]="aboveMenu">
 	<i class="fas fa-plus fa-lg"></i>
 	<mat-menu #aboveMenu="matMenu" yPosition="above">
@@ -89,3 +88,4 @@
 		<button id="requestSelected" mat-menu-item (click)="submitRequests()">{{ 'Common.Request' | translate }}</button>
 	</mat-menu>
 </button>
+

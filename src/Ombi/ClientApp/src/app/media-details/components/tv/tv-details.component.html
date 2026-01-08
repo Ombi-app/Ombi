@@ -192,11 +192,13 @@
 						</div>
 
 						<div class="col-12 col-md-10">
-							@defer (on viewport; prefetch on idle) {
-							<tv-request-grid id="requests-grid" [tvRequest]="tvRequest" [isAdmin]="isAdmin" [tv]="tv"></tv-request-grid>
-							} @placeholder {
-								<p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
-							}
+							<tv-request-grid 
+								id="requests-grid" 
+								[tvRequest]="tvRequest" 
+								[isAdmin]="isAdmin" 
+								[tv]="tv">
+							</tv-request-grid>
+							
 						</div>
 
 						<div class="col-12 col-md-2">

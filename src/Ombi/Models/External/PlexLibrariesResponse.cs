@@ -26,7 +26,7 @@
 #endregion
 
 using System.Collections.Generic;
-using Ombi.Api.Plex.Models;
+using Ombi.Api.External.MediaServers.Plex.Models;
 
 namespace Ombi.Models.External
 {

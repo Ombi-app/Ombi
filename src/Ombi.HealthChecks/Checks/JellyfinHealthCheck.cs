@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Ombi.Api.Jellyfin;
-using Ombi.Api.Jellyfin.Models;
+using Ombi.Api.External.MediaServers.Jellyfin;
+using Ombi.Api.External.MediaServers.Jellyfin.Models;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using System;

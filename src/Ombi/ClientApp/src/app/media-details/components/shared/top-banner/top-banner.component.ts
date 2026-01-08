@@ -1,10 +1,15 @@
 import { Component, Input } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
 
 @Component({
+        standalone: true,
     selector: "top-banner",
     templateUrl: "./top-banner.component.html",
-    styleUrls: ["top-banner.component.scss"]
+    styleUrls: ["top-banner.component.scss"],
+    imports: [
+        CommonModule
+    ]
 })
 export class TopBannerComponent {
     @Input() title: string;

@@ -1,4 +1,5 @@
-<form [formGroup]="form"  (ngSubmit)="onSubmit()" *ngIf="form">
+@if (form) {
+  <form [formGroup]="form"  (ngSubmit)="onSubmit()">
   <h1 id="advancedOptionsTitle">
     <i class="fas fa-sliders-h"></i> {{ "Search.AdvancedSearchHeader" | translate }}
   </h1>
@@ -28,6 +29,15 @@
       <mat-form-field appearance="outline" floatLabel=auto>
         <mat-label>{{ "Search.YearOfRelease" | translate }}</mat-label>
         <input matInput id="releaseYear" name="releaseYear" formControlName="releaseYear">
+    </mat-form-field>
+    <mat-form-field appearance="outline" floatLabel=auto>
+      <mat-label>{{ "NavigationBar.Filter.Decade" | translate }}</mat-label>
+      <mat-select formControlName="decade">
+        <mat-option [value]="null">{{ "NavigationBar.Filter.None" | translate }}</mat-option>
+        <mat-option *ngFor="let d of decades" [value]="d">
+          {{d}}s
+        </mat-option>
+      </mat-select>
     </mat-form-field>
   </div>
 
@@ -65,4 +75,5 @@
       <i class="fas fa-plus"></i> {{ "Common.Search" | translate }}
     </button>
   </div>
-</form>
+  </form>
+}

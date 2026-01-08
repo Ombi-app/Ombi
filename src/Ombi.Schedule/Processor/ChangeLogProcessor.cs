@@ -8,7 +8,7 @@ using HtmlAgilityPack;
 using Markdig;
 using Octokit;
 using Ombi.Api;
-using Ombi.Api.Service;
+using Ombi.Api.External.ExternalApis.Service;
 using Ombi.Core.Processor;
 using Ombi.Core.Settings;
 using Ombi.Helpers;

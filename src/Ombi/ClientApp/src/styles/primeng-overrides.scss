@@ -1,4 +1,4 @@
-@import "./Styles.scss";
+@use "./Styles.scss" as *;
 // PrimeNG Carosel overrides
 .ui-carousel-dropdown {
     display:none;

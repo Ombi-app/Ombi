@@ -1,7 +1,19 @@
 ﻿import {COMMA, ENTER} from "@angular/cdk/keycodes";
-import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { ReactiveFormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
 import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { ILanguage, IMovieDbKeyword, ITheMovieDbSettings } from "../../interfaces";
+import { SettingsMenuComponent } from "../settingsmenu.component";
+import { WikiComponent } from "../wiki.component";
 import { debounceTime, switchMap } from "rxjs/operators";
 
 import { MatAutocomplete } from "@angular/material/autocomplete";
@@ -16,6 +28,19 @@ interface IKeywordTag {
 }
 
 @Component({
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatSlideToggleModule,
+        MatTooltipModule,
+        TranslateModule
+    ],
     templateUrl: "./themoviedb.component.html",
     styleUrls: ["./themoviedb.component.scss"]
 })

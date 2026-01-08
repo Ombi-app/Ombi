@@ -1,5 +1,5 @@
 
-@import "./styles/variables.scss";
+@use "./styles/variables.scss" as *;
 
 .alert-info {
   background: $accent;

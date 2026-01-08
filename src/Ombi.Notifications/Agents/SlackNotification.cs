@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using Ombi.Api.Slack;
-using Ombi.Api.Slack.Models;
+using Ombi.Api.External.NotificationServices.Slack;
+using Ombi.Api.External.NotificationServices.Slack.Models;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
