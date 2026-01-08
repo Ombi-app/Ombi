@@ -1,3 +1,12 @@
+## [4.53.3](https://github.com/Ombi-app/Ombi/compare/v4.53.2...v4.53.3) (2026-01-08)
+
+
+### Bug Fixes
+
+* small fix to search by decade ([7da1721](https://github.com/Ombi-app/Ombi/commit/7da1721a557e7aa2e92e760a7672b2dd2c88b060))
+
+
+
 ## [4.53.2](https://github.com/Ombi-app/Ombi/compare/v4.53.1...v4.53.2) (2026-01-08)
 
 
@@ -315,15 +324,6 @@
 
 
 ## [4.46.4](https://github.com/Ombi-app/Ombi/compare/v4.46.3...v4.46.4) (2024-09-09)
-
-
-
-## [4.46.3](https://github.com/Ombi-app/Ombi/compare/v4.46.2...v4.46.3) (2024-09-07)
-
-
-### Bug Fixes
-
-* **radarr-4k:** :bug: Fixed an issue where the overrides wouldn't work for 4k Requests ([0fb29a0](https://github.com/Ombi-app/Ombi/commit/0fb29a0b16b1fc87f71df1a589f6141324cf2f1b))
 
 
 
