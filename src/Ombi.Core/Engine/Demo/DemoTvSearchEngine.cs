@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Options;
-using Ombi.Api.Trakt;
-using Ombi.Api.TvMaze;
+using Ombi.Api.External.ExternalApis.Trakt;
+using Ombi.Api.External.ExternalApis.TvMaze;
 using Ombi.Config;
 using Ombi.Core.Authentication;
 using Ombi.Core.Helpers;

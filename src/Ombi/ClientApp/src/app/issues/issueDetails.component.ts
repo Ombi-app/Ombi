@@ -1,6 +1,15 @@
 import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
 import { Component, OnInit, Inject } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, RouterModule } from "@angular/router";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCardModule } from "@angular/material/card";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
 
 import { AuthService } from "../auth/auth.service";
 import { ImageService, IssuesService, NotificationService, SettingsService } from "../services";
@@ -9,8 +18,22 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { IIssues, IIssuesChat, IIssueSettings, INewIssueComments, IssueStatus } from "../interfaces";
 
 @Component({
+    standalone: true,
     templateUrl: "issueDetails.component.html",
     styleUrls: ["./issueDetails.component.scss"],
+    imports: [
+        CommonModule,
+        RouterModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        MatTooltipModule,
+        TranslateModule
+    ]
 })
 export class IssueDetailsComponent implements OnInit {
 

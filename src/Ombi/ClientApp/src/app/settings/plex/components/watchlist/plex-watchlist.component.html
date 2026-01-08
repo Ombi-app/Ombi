@@ -1,38 +1,45 @@
-﻿<div class="small-middle-container">
-    <fieldset style="fieldset">
-        <legend mat-dialog-title>Watchlist User Errors</legend>
-<div mat-dialog-content>
-        <p>
-            If there is an authentication error, this is because of an authentication issue with Plex (Token has expired). 
-            If this happens the user needs to re-login to Ombi.
-        </p>
-        <p>
-            <em class="fa-solid fa-check key"></em> Successfully syncing the watchlist
-            <br>
-            <em class="fa-solid fa-times key"></em> Authentication error syncing the watchlist
-            <br>
-            <em class="fas fa-user-alt-slash key"></em> Not enabled for user (They need to log into Ombi via Plex)
-        </p>
-        <table mat-table *ngIf="dataSource" [dataSource]="dataSource" matSort class="mat-elevation-z8">
-            <ng-container matColumnDef="userName">
-                <th mat-header-cell *matHeaderCellDef> Username </th>
-                <td mat-cell *matCellDef="let element"> {{element.userName}} </td>
-            </ng-container>
-            <ng-container matColumnDef="syncStatus">
-                <th mat-header-cell *matHeaderCellDef> Watchlist Sync Result </th>
-                <td mat-cell *matCellDef="let element">
-                    <em *ngIf="element.syncStatus === WatchlistSyncStatus.Successful" class="fa-solid fa-check"></em>
-                    <em *ngIf="element.syncStatus === WatchlistSyncStatus.Failed" class="fa-solid fa-times"></em>
-                    <em *ngIf="element.syncStatus === WatchlistSyncStatus.NotEnabled" class="fas fa-user-alt-slash"></em>
-                 </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-    </div>
-    <mat-dialog-actions align="end">
-        <button mat-button mat-dialog-close>Close</button>
-      </mat-dialog-actions>
-    </fieldset>
+﻿<div class="watchlist-dialog-container">
+  <mat-card class="watchlist-dialog-card">
+    <mat-card-header>
+      <mat-card-title>Watchlist User Errors</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="watchlist-info-section">
+        <mat-icon color="warn" class="info-icon">error_outline</mat-icon>
+        <span>
+          If there is an authentication error, this is because of an authentication issue with Plex (Token has expired). 
+          If this happens the user needs to re-login to Ombi.
+        </span>
+      </div>
+      <mat-progress-bar *ngIf="isReloading" mode="indeterminate"></mat-progress-bar>
+      <div class="watchlist-legend">
+        <span><mat-icon color="primary">check_circle</mat-icon> Successfully syncing the watchlist</span>
+        <span><mat-icon color="warn">cancel</mat-icon> Authentication error syncing the watchlist</span>
+        <span><mat-icon color="accent">person_off</mat-icon> Not enabled for user (They need to log into Ombi via Plex)</span>
+      </div>
+      <table mat-table *ngIf="dataSource" [dataSource]="dataSource" matSort class="mat-elevation-z8 modern-table">
+        <ng-container matColumnDef="userName">
+          <th mat-header-cell *matHeaderCellDef> Username </th>
+          <td mat-cell *matCellDef="let element"> {{element.userName}} </td>
+        </ng-container>
+        <ng-container matColumnDef="syncStatus">
+          <th mat-header-cell *matHeaderCellDef> Watchlist Sync Result </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-icon *ngIf="element.syncStatus === WatchlistSyncStatus.Successful" color="primary">check_circle</mat-icon>
+            <mat-icon *ngIf="element.syncStatus === WatchlistSyncStatus.Failed" color="warn">cancel</mat-icon>
+            <mat-icon *ngIf="element.syncStatus === WatchlistSyncStatus.NotEnabled" color="accent">person_off</mat-icon>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-flat-button color="primary" (click)="forceRecheck()" [disabled]="isReloading">
+        <mat-icon>cached</mat-icon>
+        Force recheck
+      </button>
+      <button mat-stroked-button mat-dialog-close color="accent">Close</button>
+    </mat-card-actions>
+  </mat-card>
 </div>

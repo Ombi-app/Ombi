@@ -1,4 +1,4 @@
-@import "./styles/variables.scss";
+@use "./styles/variables.scss" as *;
 
 .detailed-container {
     width: 400px;
@@ -7,16 +7,15 @@
     padding: 10px;
     border-radius: 10px;
     border: 1px solid $ombi-background-primary-accent;
+    background-color: $ombi-background-accent;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
 
     @media (max-width:768px) {
         width: 200px;
         height: auto;
     }
-
-    background-color: $ombi-background-accent;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
 
     .overview {
         display: -webkit-box;

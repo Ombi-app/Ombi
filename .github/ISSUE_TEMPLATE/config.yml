@@ -1,11 +1,14 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Docs
+  - name: 📚 Documentation
     url: https://docs.ombi.app/
     about: The Ombi documentation should help guide you through installation and setup as well as help resolve common problems and answer frequently asked questions
-  - name: Discord support
+  - name: 💬 Discord Community
     url: https://discord.gg/Sa7wNWb
-    about: Ask questions about Ombi
-  - name: Feature suggestions
+    about: Ask questions about Ombi, get help with contributions, or chat with other users
+  - name: ✨ Feature Suggestions
     url: https://ombifeatures.featureupvote.com
     about: Share your suggestions or ideas to make Ombi better!
+  - name: 🤝 Contributing Guide
+    url: https://github.com/ombi-app/Ombi/blob/develop/CONTRIBUTING.md
+    about: Learn how to contribute to Ombi development

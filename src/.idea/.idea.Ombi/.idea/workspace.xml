@@ -6,8 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="57001998-efde-494a-80b3-d7acfc91f770" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Ombi/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Ombi/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/wizard/welcome/welcome.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/wizard/welcome/welcome.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ombi/Controllers/V2/WizardController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/Controllers/V2/WizardController.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -234,6 +232,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;tidusjar&quot;
+  }
+}</component>
   <component name="GitToolBoxStore">
     <option name="recentBranches">
       <RecentBranches>
@@ -267,16 +271,13 @@
       </list>
     </option>
   </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/tidusjar/ombi&quot;,
+    &quot;accountId&quot;: &quot;22715a9f-5998-4231-b224-cb858185e803&quot;
+  }
+}</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/990126b794024fe2bd16aebdd37eba1d7b600/93/25662f04/ServerVersion.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3bd4df5aff92cabbc4d630be64227073db1b8539b3a1e47786b4b189d7cdb7/DbContext.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/449b441523c469ed34ff5a5e14f0bafcd8f097aa463655303dc19048fa44ac3/EntityFrameworkServiceCollectionExtensions.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7d81b2d4f22bee75e5438c707251ae43cb0974c207db91ffc159118c84b4eb9/ServiceProvider.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/a424e6912048b4cd25715f158e789aae24db5c2911d9e622d39bc6ac3246c6/MySqlConnectionStringBuilder.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/bd1d5c50194fea68ff3559c160230b0ab50f5acf4ce3061bffd6d62958e2182/ExceptionDispatchInfo.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e9881a453a581134c1a18331ac1f8f1201a5382a685bf2a40777fa22619/DbContextOptions`.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Ombi.Api.MusicBrainz/IMusicBrainzApi.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Ombi.Api.MusicBrainz/MusicBrainzApi.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/Interfaces/IMusicSearchEngineV2.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/MusicSearchEngine.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/RecentlyAddedEngine.cs" root0="FORCE_HIGHLIGHTING" />
@@ -291,6 +292,9 @@
     <setting file="file://$PROJECT_DIR$/Ombi/Controllers/V1/TokenController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Ombi/Controllers/V2/SearchController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Ombi/Program.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/8056cd3f452fefb9834f05cdb275b762dd41f27b7766cd71174e78592dc495b/Monitor.CoreCLR.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/af2fe87b3bf8e8e709592be2e23743353a2ea141226bb57faaf989ad823baa/HashSet.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/db7395f4add94e6d10e515b3e55373f2821f8323de7dc8e314d78feefacf5584/ActionMethodExecutor.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -305,16 +309,26 @@
       </list>
     </option>
   </component>
+  <component name="JsbtTreeLayoutManager">
+    <layout place="tools.popupGrunt">
+      <scroll-view-position x="0" y="0" />
+    </layout>
+  </component>
   <component name="PackageJsonUpdateNotifier">
     <dismissed value="$PROJECT_DIR$/Ombi/ClientApp/package.json" />
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="1087" />
     <option name="y" value="-1113" />
     <option name="width" value="1400" />
     <option name="height" value="1000" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+  <component name="ProjectId" id="2wGwbN5gDqLwyiO1WJdlwJzZ5M9" />
+  <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectView">
@@ -376,13 +390,27 @@
       <pane id="FileSystemExplorer" />
     </panes>
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.Ombi.executor": "Run",
-    "git-widget-placeholder": "#5208 on wizard-database",
-    "node.js.selected.package.tslint": "(autodetect)"
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.Ombi.Schedule.Tests.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Launch Settings Profile.Ombi.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;fb34c741-04ca-4b4f-8ea1-651a011b42c8.executor&quot;: &quot;Debug&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;emby-episode-fix&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;SpellingScopeSettingsId&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/tidusjar/Developer/ombi/src/Ombi/ClientApp/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.Ombi">
     <configuration name="Ombi" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/Ombi/Ombi.csproj" />
@@ -460,6 +488,7 @@
       </method>
     </configuration>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="57001998-efde-494a-80b3-d7acfc91f770" name="Default Changelist" comment="" />
@@ -468,6 +497,14 @@
       <option name="presentableId" value="Default" />
       <updated>1563957157468</updated>
       <workItem from="1563957162999" duration="5401000" />
+      <workItem from="1745681294313" duration="1814000" />
+      <workItem from="1747080279165" duration="838000" />
+      <workItem from="1747082180432" duration="1994000" />
+      <workItem from="1758915804840" duration="171000" />
+      <workItem from="1758916150497" duration="1079000" />
+      <workItem from="1759605037837" duration="2197000" />
+      <workItem from="1760127238421" duration="3727000" />
+      <workItem from="1760467558058" duration="1479000" />
     </task>
     <servers />
   </component>
@@ -512,17 +549,19 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="4" weight="0.25" />
     </layout>
   </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <breakpoint enabled="true" suspend="NONE" type="DotNet Exception Breakpoints">
-          <properties exception="System.Threading.ThreadAbortException" displayValue="System.Threading.ThreadAbortException" />
-          <option name="timeStamp" value="1" />
-        </breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Ombi/Controllers/V1/TokenController.cs</url>
-          <line>48</line>
+          <line>50</line>
           <properties documentPath="$PROJECT_DIR$/Ombi/Controllers/V1/TokenController.cs">
             <startOffsets>
               <option value="1518" />
@@ -534,44 +573,122 @@
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs</url>
-          <line>59</line>
-          <properties documentPath="$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs">
+          <url>file://$PROJECT_DIR$/Ombi.Core/Senders/TvSender.cs</url>
+          <line>123</line>
+          <properties documentPath="$PROJECT_DIR$/Ombi.Core/Senders/TvSender.cs" containingFunctionPresentation="Method 'SendToSonarr'">
             <startOffsets>
-              <option value="2276" />
+              <option value="4687" />
             </startOffsets>
             <endOffsets>
-              <option value="2316" />
+              <option value="4722" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="4" />
+          <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs</url>
-          <line>49</line>
-          <properties documentPath="$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs">
+          <url>file://$PROJECT_DIR$/Ombi.Schedule/Jobs/Emby/EmbyEpisodeSync.cs</url>
+          <line>71</line>
+          <properties documentPath="$PROJECT_DIR$/Ombi.Schedule/Jobs/Emby/EmbyEpisodeSync.cs" containingFunctionPresentation="Method 'Execute'">
             <startOffsets>
-              <option value="2001" />
+              <option value="2848" />
             </startOffsets>
             <endOffsets>
-              <option value="2002" />
+              <option value="2894" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="5" />
+          <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Ombi.Api.MusicBrainz/MusicBrainzApi.cs</url>
-          <line>30</line>
-          <properties documentPath="$PROJECT_DIR$/Ombi.Api.MusicBrainz/MusicBrainzApi.cs">
+          <url>file://$PROJECT_DIR$/Ombi.Schedule/Jobs/Emby/EmbyLibrarySync.cs</url>
+          <line>37</line>
+          <properties documentPath="$PROJECT_DIR$/Ombi.Schedule/Jobs/Emby/EmbyLibrarySync.cs" containingFunctionPresentation="Method 'Execute'">
             <startOffsets>
-              <option value="917" />
+              <option value="1173" />
             </startOffsets>
             <endOffsets>
-              <option value="1016" />
+              <option value="1219" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="7" />
+          <option name="timeStamp" value="21" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Ombi.Schedule/Jobs/Emby/EmbyLibrarySync.cs</url>
+          <line>87</line>
+          <properties documentPath="$PROJECT_DIR$/Ombi.Schedule/Jobs/Emby/EmbyLibrarySync.cs" containingFunctionPresentation="Method 'StartServerCache'">
+            <startOffsets>
+              <option value="3007" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3112" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Ombi.Schedule/Jobs/Emby/EmbyLibrarySync.cs</url>
+          <line>97</line>
+          <properties documentPath="$PROJECT_DIR$/Ombi.Schedule/Jobs/Emby/EmbyLibrarySync.cs" containingFunctionPresentation="Method 'StartServerCache'">
+            <startOffsets>
+              <option value="3547" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3548" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <condition expression="tvShow.Name.Contains(&quot;Dexter&quot;)" language="C#" />
+          <url>file://$PROJECT_DIR$/Ombi.Schedule/Jobs/Emby/EmbyContentSync.cs</url>
+          <line>82</line>
+          <properties documentPath="$PROJECT_DIR$/Ombi.Schedule/Jobs/Emby/EmbyContentSync.cs" containingFunctionPresentation="Method 'ProcessTv'">
+            <startOffsets>
+              <option value="3133" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3134" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="29" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Ombi.Schedule/Jobs/Emby/EmbyContentSync.cs</url>
+          <line>45</line>
+          <properties documentPath="$PROJECT_DIR$/Ombi.Schedule/Jobs/Emby/EmbyContentSync.cs" containingFunctionPresentation="Method 'Execute'">
+            <startOffsets>
+              <option value="1401" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1429" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="42" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Ombi/Controllers/V2/SearchController.cs</url>
+          <line>130</line>
+          <properties documentPath="$PROJECT_DIR$/Ombi/Controllers/V2/SearchController.cs" containingFunctionPresentation="Method 'GetTvInfo'">
+            <startOffsets>
+              <option value="5636" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5843" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="46" />
+        </line-breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.OperationCanceledException" breakIfHandledByOtherCode="false" displayValue="System.OperationCanceledException" />
+          <option name="timeStamp" value="13" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.Tasks.TaskCanceledException" breakIfHandledByOtherCode="false" displayValue="System.Threading.Tasks.TaskCanceledException" />
+          <option name="timeStamp" value="14" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
+          <option name="timeStamp" value="15" />
+        </breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
@@ -581,6 +698,10 @@
         <watch expression="artist.id" language="C#" custom="RiderImportsList:" />
       </configuration>
     </watches-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">

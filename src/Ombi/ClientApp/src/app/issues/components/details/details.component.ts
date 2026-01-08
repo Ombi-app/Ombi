@@ -1,5 +1,12 @@
-import { ActivatedRoute, ActivatedRouteSnapshot, Router } from "@angular/router";
+import { ActivatedRoute, ActivatedRouteSnapshot, Router, RouterModule } from "@angular/router";
 import { Component, Inject, OnInit, ViewEncapsulation } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCardModule } from "@angular/material/card";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatDialogModule } from "@angular/material/dialog";
+import { TranslateModule } from "@ngx-translate/core";
 import { IIssueSettings, IIssues, IIssuesSummary, IssueStatus, RequestType } from "../../../interfaces";
 import { IssuesService, NotificationService, SettingsService } from "../../../services";
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -8,6 +15,7 @@ import { AuthService } from "../../../auth/auth.service";
 import { IssueChatComponent } from "../issue-chat/issue-chat.component";
 import { IssuesV2Service } from "../../../services/issuesv2.service";
 import { TranslateService } from "@ngx-translate/core";
+import { DetailsGroupComponent } from "../details-group/details-group.component";
 
 export interface IssuesDetailsGroupData {
     issues: IIssues[];
@@ -15,10 +23,23 @@ export interface IssuesDetailsGroupData {
 }
 
 @Component({
+    standalone: true,
     selector: "issues-details",
     templateUrl: "details.component.html",
     styleUrls: ["details.component.scss"],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        CommonModule,
+        RouterModule,
+        MatButtonModule,
+        MatCardModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatDialogModule,
+        TranslateModule,
+        IssueChatComponent,
+        DetailsGroupComponent,
+    ]
 })
 export class IssuesDetailsComponent implements OnInit {
 

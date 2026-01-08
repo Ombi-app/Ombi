@@ -5,6 +5,7 @@
 // import { IssuesService, SettingsService } from "../services";
 
 // @Component({
+        standalone: false,
 //     templateUrl: "./request.component.html",
 // })
 // export class RequestComponent implements OnInit  {

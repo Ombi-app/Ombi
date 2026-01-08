@@ -1,12 +1,36 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 
 import { INotificationTemplates, IPushbulletNotificationSettings, NotificationType } from "../../interfaces";
 import { TesterService } from "../../services";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
+import { CommonModule } from "@angular/common";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
+import { NotificationTemplate } from "./notificationtemplate.component";
 
 @Component({
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatSlideToggleModule,
+        MatTooltipModule,
+        TranslateModule,
+        NotificationTemplate
+    ],
     templateUrl: "./pushbullet.component.html",
     styleUrls: ["./notificationtemplate.component.scss"]
 })

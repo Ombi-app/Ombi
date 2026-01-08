@@ -1,13 +1,14 @@
 <mat-form-field class="example-chip-list"  appearance="outline" floatLabel=auto>
     <mat-label>{{ 'Filter.WatchProviders' | translate }}</mat-label>
   <mat-chip-list #chipList aria-label="Fruit selection">
-    <mat-chip
-      *ngFor="let word of form.controls.watchProviders.value"
-      [removable]="true"
-      (removed)="remove(word)">
-      {{word.provider_name}}
-      <mat-icon matChipRemove>cancel</mat-icon>
-    </mat-chip>
+    @for (word of form.controls.watchProviders.value; track word.provider_id) {
+      <mat-chip
+        [removable]="true"
+        (removed)="remove(word)">
+        {{word.provider_name}}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+    }
     <input
       [placeholder]="'Search.SearchProvider' | translate"
       #keywordInput
@@ -16,9 +17,11 @@
       [matChipInputFor]="chipList"/>
   </mat-chip-list>
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-    <mat-option *ngFor="let word of filteredList | async" [value]="word">
-      {{word.provider_name}}
-    </mat-option>
+    @for (word of filteredList | async; track word.provider_id) {
+      <mat-option [value]="word">
+        {{word.provider_name}}
+      </mat-option>
+    }
   </mat-autocomplete>
 </mat-form-field>
 

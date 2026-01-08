@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+    <Version></Version>
+    <PackageVersion></PackageVersion>
+    <LangVersion>latest</LangVersion>
+    <Configurations>Debug;Release;NonUiBuild</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ombi.Api\Ombi.Api.csproj" />
+    <ProjectReference Include="..\Ombi.Helpers\Ombi.Helpers.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.0" />
+    <PackageReference Include="TraktSharp.NetStandard2" Version="0.3.0" />
+    <PackageReference Include="MusicBrainzAPI" Version="2.5.0" />
+    <PackageReference Include="Twilio" Version="5.80.1" />
+  </ItemGroup>
+
+</Project>

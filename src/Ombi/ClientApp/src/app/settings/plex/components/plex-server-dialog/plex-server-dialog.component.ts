@@ -1,5 +1,11 @@
 import { Component, Inject } from "@angular/core";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatButtonModule } from "@angular/material/button";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 import {
   PlexService,
@@ -11,6 +17,16 @@ import { IPlexLibrariesSettings } from "../../../../interfaces";
 import { PlexServerDialogData } from "../models";
 
 @Component({
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSlideToggleModule
+  ],
   selector: "plex-server-dialog-component",
   templateUrl: "plex-server-dialog.component.html",
   styleUrls: ["plex-server-dialog.component.scss"],

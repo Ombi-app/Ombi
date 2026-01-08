@@ -19,7 +19,8 @@ import './request.commands';
 import './plex-settings.commands';
 import './mock-data.commands';
 import "cypress-real-events/support";
-import '@bahmutov/cy-api/support';
+import "@bahmutov/cy-api/support";
+
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

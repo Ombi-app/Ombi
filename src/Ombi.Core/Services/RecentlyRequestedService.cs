@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Ombi.Api.TheMovieDb;
+using Ombi.Api.External.ExternalApis.TheMovieDb;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Helpers;

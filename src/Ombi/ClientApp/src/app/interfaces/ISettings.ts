@@ -114,6 +114,7 @@ export interface IPlexSettings extends ISettings {
   enable: boolean;
   enableWatchlistImport: boolean;
   monitorAll: boolean;
+  notifyOnWatchlistTokenExpiration: boolean;
   servers: IPlexServer[];
 }
 
@@ -146,6 +147,7 @@ export interface ISonarrSettings extends IExternalSettings {
   languageProfile: number;
   languageProfileAnime: number;
   scanForAvailability: boolean;
+  prioritizeArrAvailability: boolean;
   sendUserTags: boolean;
   tag: number | null;
   animeTag: number | null;
@@ -160,6 +162,7 @@ export interface IRadarrSettings extends IExternalSettings {
   addOnly: boolean;
   minimumAvailability: string;
   scanForAvailability: boolean;
+  prioritizeArrAvailability: boolean;
   tag: number | null;
   sendUserTags: boolean;
 }

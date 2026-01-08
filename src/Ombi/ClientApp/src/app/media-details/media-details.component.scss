@@ -1,5 +1,5 @@
-@import "@angular/material/theming";
-@import "./styles/variables.scss";
+@use "@angular/material/theming" as *;
+@use "./styles/variables.scss" as *;
 //MINE
 @media (max-width: 570px) {
     h1 {
@@ -97,6 +97,14 @@
 
 #info-wrapper {
     min-height: 600px;
+}
+
+// FAB Button styling moved from tv-request-grid component
+.floating-fab {
+    position: fixed;
+    right: 3%;
+    bottom: 6%;
+    z-index: 10;
 }
 
 #info-wrapper .sidebar.affixable.affix-top {

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Ombi.Api.TheMovieDb;
+using Ombi.Api.External.ExternalApis.TheMovieDb;
 using Ombi.Core.Engine;
 using Ombi.Core.Helpers;
 using Ombi.Core.Models.Requests;

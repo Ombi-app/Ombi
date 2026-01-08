@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Ombi.Api.Emby;
+using Ombi.Api.External.MediaServers.Emby;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
@@ -28,7 +28,7 @@ namespace Ombi.Schedule.Jobs.Emby
         protected bool recentlyAdded;
         protected readonly INotificationHubService _notification;
 
-        protected const int AmountToTake = 100;
+        protected const int AmountToTake = 300;
 
         protected IEmbyApi Api { get; set; }
 

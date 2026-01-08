@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Ombi.Api.Service;
+using Ombi.Api.External.ExternalApis.Service;
 using Ombi.Schedule.Processor;
 
 namespace Ombi.Core.Processor

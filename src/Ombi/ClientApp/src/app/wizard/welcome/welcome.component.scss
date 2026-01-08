@@ -1,4 +1,4 @@
-@import "./styles/variables.scss";
+@use "./styles/variables.scss" as *;
 .welcome-container{
     display:flex;
     height:100%;

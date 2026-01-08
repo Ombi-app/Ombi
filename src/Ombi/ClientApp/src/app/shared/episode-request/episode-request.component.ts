@@ -1,12 +1,19 @@
 import { Component, Inject } from "@angular/core";
-import { MatCheckboxChange } from "@angular/material/checkbox";
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCheckboxChange, MatCheckboxModule } from "@angular/material/checkbox";
+import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MatExpansionModule } from "@angular/material/expansion";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
 import { ISearchTvResultV2 } from "../../interfaces/ISearchTvResultV2";
 import { MessageService } from "../../services";
 import { TranslateService } from "@ngx-translate/core";
 import { ISeasonsViewModel, IEpisodesRequests, INewSeasonRequests, ITvRequestViewModelV2, IRequestEngineResult, RequestType } from "../../interfaces";
 import { RequestServiceV2 } from "../../services/requestV2.service";
 import { AdminRequestDialogComponent } from "../admin-request-dialog/admin-request-dialog.component";
+import { OmbiDatePipe } from "../../pipes/OmbiDatePipe";
 
 export interface EpisodeRequestData {
     series: ISearchTvResultV2;
@@ -14,8 +21,20 @@ export interface EpisodeRequestData {
     requestOnBehalf: string | undefined;
 }
 @Component({
+    standalone: true,
     selector: "episode-request",
     templateUrl: "episode-request.component.html",
+    imports: [
+        CommonModule,
+        FormsModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        MatExpansionModule,
+        MatTooltipModule,
+        TranslateModule,
+        OmbiDatePipe
+    ]
 })
 export class EpisodeRequestComponent {
 

@@ -1,4 +1,15 @@
 ﻿import { Component, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { ReactiveFormsModule, FormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
 import { EmbyService, JobService, NotificationService, SettingsService, TesterService } from "../../services";
 import { IEmbyLibrariesSettings, IEmbyServer, IEmbySettings } from "../../interfaces";
 
@@ -6,6 +17,21 @@ import {UntypedFormControl} from '@angular/forms';
 import { MatTabChangeEvent } from "@angular/material/tabs";
 
 @Component({
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatSlideToggleModule,
+        MatTabsModule,
+        MatTooltipModule,
+        TranslateModule
+    ],
     templateUrl: "./emby.component.html",
     styleUrls: ["./emby.component.scss"]
 })

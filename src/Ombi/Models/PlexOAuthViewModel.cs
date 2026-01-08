@@ -1,4 +1,4 @@
-﻿using Ombi.Api.Plex.Models.OAuth;
+﻿using Ombi.Api.External.MediaServers.Plex.Models.OAuth;
 
 namespace Ombi.Models
 {

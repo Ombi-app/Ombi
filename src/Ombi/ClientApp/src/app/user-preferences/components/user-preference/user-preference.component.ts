@@ -5,13 +5,40 @@ import { AvailableLanguages } from "./user-preference.constants";
 import { IdentityService, NotificationService, ValidationService } from "../../../services";
 import { IUser, UserType } from "../../../interfaces";
 import { Md5 } from "ts-md5";
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
-import { APP_BASE_HREF } from "@angular/common";
+import { UntypedFormBuilder, UntypedFormGroup, Validators, ReactiveFormsModule } from "@angular/forms";
+import { APP_BASE_HREF, CommonModule } from "@angular/common";
+import { MatButtonModule } from "@angular/material/button";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { MatCardModule } from "@angular/material/card";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatTabsModule } from "@angular/material/tabs";
+import { TranslateModule } from "@ngx-translate/core";
+import { QRCodeModule } from "angularx-qrcode";
 import { CustomizationFacade } from "../../../state/customization";
 
 @Component({
+    standalone: true,
     templateUrl: "./user-preference.component.html",
     styleUrls: ["./user-preference.component.scss"],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatCardModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatCheckboxModule,
+        MatTabsModule,
+        TranslateModule,
+        QRCodeModule
+    ]
 })
 export class UserPreferenceComponent implements OnInit {
 

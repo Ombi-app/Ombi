@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Ombi.Api.Emby;
-using Ombi.Api.Emby.Models;
+using Ombi.Api.External.MediaServers.Emby;
+using Ombi.Api.External.MediaServers.Emby.Models;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using System;

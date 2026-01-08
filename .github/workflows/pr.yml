@@ -6,26 +6,32 @@ on:
   workflow_dispatch:
 
 permissions:
+  statuses: write
+  checks: write
+  contents: write
   pull-requests: write
-  issues: write
-  repository-projects: write
+  actions: write
 
 jobs:
   build-ui:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '18'
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: NodeModules Cache
-        uses: actions/cache@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+
+      - name: Cache node modules
+        uses: actions/cache@v4
         with:
           path: '**/node_modules'
           key: node_modules-${{ hashFiles('**/yarn.lock') }}
 
-      - name: UI Install
+      - name: Install UI dependencies
         run: yarn --cwd ./src/Ombi/ClientApp install
 
       - name: Build UI
@@ -40,77 +46,109 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Nuget Cache
-        uses: actions/cache@v2
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget
 
-      - name: Run Unit Tests
+      - name: Run unit tests
         run: |
           cd src
-          dotnet test --configuration "Release" --logger "trx;LogFileName=test-results.trx"
+          dotnet test --configuration "Release" --logger "trx;LogFileName=test-results.trx" --results-directory "TestResults"
 
-  analysis:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        # Disabling shallow clone is recommended for improving relevancy of reporting
-        fetch-depth: 0
-    - name: SonarCloud Scan
-      uses: sonarsource/sonarcloud-github-action@master
-      with:
-        args: >
-          -Dsonar.organization=ombi-app
-          -Dsonar.projectKey=Ombi-app_Ombi
-      env:
-        GITHUB_TOKEN:  ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Publish test results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Unit Test Results
+          path: '**/test-results.trx'
+          reporter: dotnet-trx
 
-  publish:
+  # Build and test backend for multiple platforms
+  build-backend:
     runs-on: ubuntu-latest
-    needs: [ unit-test ]
+    needs: [unit-test]
     strategy:
       matrix:
         include:
           - os: win-x64
             format: zip
-            compression: zip
           - os: win-x86
             format: zip
-            compression: zip
           - os: linux-x64
             format: tar.gz
-            compression: tar
           - os: linux-arm
             format: tar.gz
-            compression: tar
           - os: linux-arm64
-            compression: tar
             format: tar.gz
           - os: osx-x64
-            compression: tar
             format: tar.gz
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-dotnet@v1
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
-      - name: Nuget Cache
-        uses: actions/cache@v2
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget
 
-      - name: Publish Backend ${{ matrix.os }}
+      - name: Build backend for ${{ matrix.os }}
         run: dotnet publish -c Release -r ${{ matrix.os }} -o "${{ matrix.os }}" --self-contained true -p:PublishSingleFile=true
         working-directory: src/Ombi
 
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-${{ matrix.os }}-${{ github.sha }}
+          path: ./${{ matrix.os }}
+          retention-days: 1
 
+  # PR status check
+  pr-status:
+    runs-on: ubuntu-latest
+    needs: [build-ui, unit-test, build-backend]
+    if: always()
+    steps:
+      - name: Check all jobs status
+        run: |
+          if [[ "${{ needs.build-ui.result }}" == "failure" || "${{ needs.unit-test.result }}" == "failure" || "${{ needs.build-backend.result }}" == "failure" ]]; then
+            echo "❌ Some checks failed"
+            exit 1
+          else
+            echo "✅ All checks passed"
+          fi
+
+  # Comment on PR with build status
+  pr-comment:
+    runs-on: ubuntu-latest
+    needs: [pr-status]
+    if: always() && github.event_name == 'pull_request'
+    steps:
+      - name: Comment PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const status = '${{ needs.pr-status.result }}';
+            const emoji = status === 'success' ? '✅' : '❌';
+            const message = status === 'success' 
+              ? 'All checks passed! Your PR is ready for review.' 
+              : 'Some checks failed. Please review the logs and fix any issues.';
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `${emoji} **PR Build Status**\n\n${message}\n\n[View workflow run](${context.payload.pull_request.html_url}/checks)`
+            });

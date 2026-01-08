@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Ombi.Api.Plex;
-using Ombi.Api.Plex.Models;
+using Ombi.Api.External.MediaServers.Plex;
+using Ombi.Api.External.MediaServers.Plex.Models;
 using Ombi.Attributes;
 using Ombi.Core.Authentication;
 using Ombi.Core.Models;
@@ -16,6 +16,7 @@ using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Models;
 using Ombi.Models.External;
+using Ombi.Schedule.Jobs.Plex;
 
 namespace Ombi.Controllers.V1.External
 {
@@ -66,7 +67,7 @@ namespace Ombi.Controllers.V1.External
                     _log.LogDebug("Sign in successful");
                     _log.LogDebug("Getting servers");
                     var server = await PlexApi.GetServer(result.user.authentication_token);
-                    var servers = server.Server.FirstOrDefault();
+                    var servers = server.Devices?.FirstOrDefault();
                     if (servers == null)
                     {
                         _log.LogWarning("Looks like we can't find any Plex Servers");
@@ -308,5 +309,14 @@ namespace Ombi.Controllers.V1.External
         [Admin]
         [HttpGet("WatchlistUsers")]
         public async Task<List<PlexUserWatchlistModel>> GetPlexWatchlistUsers() => await _plexService.GetWatchlistUsers(HttpContext.RequestAborted);
+
+        [Admin]
+        [HttpPost("WatchlistUsers/revalidate")]
+        public async Task<IActionResult> RevalidatePlexWatchlistUsers()
+        {
+            await _plexService.ForceRevalidateWatchlistUsers(HttpContext.RequestAborted);
+            await OmbiQuartz.TriggerJob(nameof(IPlexWatchlistImport), "Plex");
+            return Accepted();
+        }
     }
 }

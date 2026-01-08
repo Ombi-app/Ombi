@@ -6,7 +6,59 @@
 		"status": 200,
 		"jsonBody": {
 			"mediaContainer": {
-                "version": "99"
+                "version": "99",
+                "devices": [
+                    {
+                        "name": "Plexius Maximus",
+                        "product": "Plex Media Server",
+                        "productVersion": "1.42.1.10060-4e8b05daf",
+                        "platform": "Linux",
+                        "platformVersion": "6.6.68-Unraid",
+                        "device": "Docker Container (LinuxServer.io)",
+                        "clientIdentifier": "df5cf1b677a599000530ea3c2dc989c44495cc15",
+                        "createdAt": "1548371919",
+                        "lastSeenAt": "1757604088",
+                        "provides": "server",
+                        "owned": "1",
+                        "accessToken": "jMaQUZw3NixyMxRNyqk_",
+                        "searchEnabled": "true",
+                        "publicAddress": "212.132.164.126",
+                        "httpsRequired": "0",
+                        "synced": "0",
+                        "relay": "1",
+                        "dnsRebindingProtection": "0",
+                        "natLoopbackSupported": "0",
+                        "publicAddressMatches": "1",
+                        "presence": "1",
+                        "connections": [
+                            {
+                                "protocol": "http",
+                                "address": "192.168.1.159",
+                                "port": "32400",
+                                "uri": "http://192.168.1.159:32400",
+                                "local": "1"
+                            },
+                            {
+                                "protocol": "http",
+                                "address": "172.31.200.1",
+                                "port": "32400",
+                                "uri": "http://172.31.200.1:32400",
+                                "local": "1"
+                            },
+                            {
+                                "protocol": "http",
+                                "address": "212.132.164.126",
+                                "port": "32400",
+                                "uri": "http://212.132.164.126:32400",
+                                "local": "0"
+                            }
+                        ],
+                        "localAddresses": "192.168.1.159,172.31.200.1",
+                        "machineIdentifier": "df5cf1b677a599000530ea3c2dc989c44495cc15",
+                        "port": "32400",
+                        "scheme": "http"
+                    }
+                ]
             }
 		},
 		"headers": {

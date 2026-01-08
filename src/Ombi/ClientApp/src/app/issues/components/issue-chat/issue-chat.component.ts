@@ -1,10 +1,18 @@
 import { Component, Inject, OnInit } from "@angular/core";
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
 import { AuthService } from "../../../auth/auth.service";
 import { ILocalUser } from "../../../auth/IUserLogin";
 import { IIssuesChat, IIssueSettings, IssueStatus } from "../../../interfaces";
 import { IssuesService, SettingsService } from "../../../services";
-import { ChatMessages, ChatType } from "../../../shared/chat-box/chat-box.component";
+import { ChatMessages, ChatType, ChatBoxComponent } from "../../../shared/chat-box/chat-box.component";
 
 
 export interface ChatData {
@@ -13,9 +21,23 @@ export interface ChatData {
   }
 
 @Component({
+    standalone: true,
     selector: "issue-chat",
     templateUrl: "issue-chat.component.html",
     styleUrls: ["issue-chat.component.scss"],
+    imports: [
+        CommonModule,
+        MatDialogModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        MatTooltipModule,
+        TranslateModule,
+        ChatBoxComponent
+    ]
 })
 export class IssueChatComponent implements OnInit {
 

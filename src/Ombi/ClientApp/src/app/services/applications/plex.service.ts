@@ -49,4 +49,8 @@ export class PlexService extends ServiceHelpers {
     public getWatchlistUsers(): Observable<IPlexWatchlistUsers[]> {
         return this.http.get<IPlexWatchlistUsers[]>(`${this.url}WatchlistUsers`,  {headers: this.headers});
     }
+
+    public revalidateWatchlistUsers(): Observable<void> {
+        return this.http.post<void>(`${this.url}WatchlistUsers/revalidate`, {}, {headers: this.headers});
+    }
 }

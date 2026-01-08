@@ -1,6 +1,12 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { MessageService, RequestService, SearchV2Service } from "../../../services";
+import { CommonModule } from "@angular/common";
+import { RouterModule } from "@angular/router";
+import { MatButtonModule } from "@angular/material/button";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { TranslateModule } from "@ngx-translate/core";
 
+import { MessageService, RequestService, SearchV2Service } from "../../../services";
 import { AdminRequestDialogComponent } from "../../../shared/admin-request-dialog/admin-request-dialog.component";
 import { DiscoverType } from "../carousel-list/carousel-list.component";
 import { EpisodeRequestComponent } from "../../../shared/episode-request/episode-request.component";
@@ -10,11 +16,22 @@ import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
 import { MatDialog } from "@angular/material/dialog";
 import { IMovieRequestModel, RequestType } from "../../../interfaces";
 import { TranslateService } from "@ngx-translate/core";
+import { ImageComponent } from "../../../components";
 
 @Component({
+    standalone: true,
     selector: "discover-card",
     templateUrl: "./discover-card.component.html",
     styleUrls: ["./discover-card.component.scss"],
+    imports: [
+        CommonModule,
+        RouterModule,
+        MatButtonModule,
+        MatMenuModule,
+        MatProgressSpinnerModule,
+        TranslateModule,
+        ImageComponent
+    ]
 })
 export class DiscoverCardComponent implements OnInit {
 

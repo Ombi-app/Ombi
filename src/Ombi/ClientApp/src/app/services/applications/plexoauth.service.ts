@@ -8,7 +8,9 @@ import { ServiceHelpers } from "../service.helpers";
 
 import { IPlexOAuthAccessToken } from "../../interfaces";
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class PlexOAuthService extends ServiceHelpers {
     constructor(http: HttpClient, @Inject(APP_BASE_HREF) href:string) {
         super(http, "/api/v1/PlexOAuth/", href);

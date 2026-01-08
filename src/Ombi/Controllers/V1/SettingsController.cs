@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Ombi.Api.Emby;
-using Ombi.Api.Jellyfin;
-using Ombi.Api.Github;
+using Ombi.Api.External.MediaServers.Emby;
+using Ombi.Api.External.MediaServers.Jellyfin;
+using Ombi.Api.External.ExternalApis.Github;
 using Ombi.Attributes;
 using Ombi.Core.Engine;
 using Ombi.Core.Models.UI;
@@ -40,7 +40,6 @@ namespace Ombi.Controllers.V1
     /// <summary>
     /// The Settings Controller
     /// </summary>
-    [Admin]
     [ApiV1]
     [Produces("application/json")]
     [ApiController]
@@ -78,6 +77,7 @@ namespace Ombi.Controllers.V1
         /// Gets the Ombi settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("ombi")]
         public async Task<OmbiSettings> OmbiSettings()
         {
@@ -110,6 +110,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="ombi">The ombi.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("ombi")]
         public async Task<bool> OmbiSettings([FromBody]OmbiSettings ombi)
         {
@@ -145,6 +146,7 @@ namespace Ombi.Controllers.V1
             return model;
         }
 
+        [Admin]
         [HttpPost("ombi/resetApi")]
         public async Task<string> ResetApiKey()
         {
@@ -159,6 +161,7 @@ namespace Ombi.Controllers.V1
         /// Gets the Plex Settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("plex")]
         public async Task<PlexSettings> PlexSettings()
         {
@@ -185,6 +188,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="plex">The plex.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("plex")]
         public async Task<bool> PlexSettings([FromBody]PlexSettings plex)
         {
@@ -207,6 +211,7 @@ namespace Ombi.Controllers.V1
         /// Gets the Emby Settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("emby")]
         public async Task<EmbySettings> EmbySettings()
         {
@@ -218,6 +223,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="emby">The emby.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("emby")]
         public async Task<bool> EmbySettings([FromBody]EmbySettings emby)
         {
@@ -243,6 +249,7 @@ namespace Ombi.Controllers.V1
         /// Gets the Jellyfin Settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("jellyfin")]
         public async Task<JellyfinSettings> JellyfinSettings()
         {
@@ -254,6 +261,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="jellyfin">The jellyfin.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("jellyfin")]
         public async Task<bool> JellyfinSettings([FromBody]JellyfinSettings jellyfin)
         {
@@ -291,6 +299,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("landingpage")]
         public async Task<bool> LandingPageSettings([FromBody]LandingPageSettings settings)
         {
@@ -326,6 +335,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("customization")]
         public async Task<bool> CustomizationSettings([FromBody]CustomizationSettings settings)
         {
@@ -344,6 +354,7 @@ namespace Ombi.Controllers.V1
         /// Get's the preset themes available
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("themes")]
         public async Task<IEnumerable<PresetThemeViewModel>> GetThemes()
         {
@@ -377,6 +388,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <returns></returns>
         [HttpGet("sonarr")]
+        [PowerUser]
         public async Task<SonarrSettings> SonarrSettings()
         {
             return await Get<SonarrSettings>();
@@ -388,6 +400,7 @@ namespace Ombi.Controllers.V1
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("sonarr")]
+        [Admin]
         public async Task<bool> SonarrSettings([FromBody]SonarrSettings settings)
         {
             var result = await Save(settings);
@@ -403,6 +416,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <returns></returns>
         [HttpGet("radarr")]
+        [PowerUser]
         public async Task<RadarrCombinedModel> RadarrSettings()
         {
             return new RadarrCombinedModel
@@ -416,6 +430,7 @@ namespace Ombi.Controllers.V1
         /// Gets the Lidarr Settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("lidarr")]
         public async Task<LidarrSettings> LidarrSettings()
         {
@@ -439,6 +454,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("lidarr")]
         public async Task<bool> LidarrSettings([FromBody]LidarrSettings settings)
         {
@@ -455,6 +471,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("authentication")]
         public async Task<bool> AuthenticationsSettings([FromBody]AuthenticationSettings settings)
         {
@@ -477,6 +494,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("radarr")]
         public async Task<bool> RadarrSettings([FromBody]RadarrCombinedModel settings)
         {
@@ -498,6 +516,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("Update")]
         public async Task<bool> UpdateSettings([FromBody]UpdateSettings settings)
         {
@@ -508,6 +527,7 @@ namespace Ombi.Controllers.V1
         /// Gets the UserManagement Settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("UserManagement")]
         public async Task<UserManagementSettings> UserManagementSettings()
         {
@@ -519,6 +539,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("UserManagement")]
         public async Task<bool> UserManagementSettings([FromBody]UserManagementSettings settings)
         {
@@ -529,6 +550,7 @@ namespace Ombi.Controllers.V1
         /// Gets the Update Settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("Update")]
         public async Task<UpdateSettings> UpdateSettings()
         {
@@ -541,6 +563,7 @@ namespace Ombi.Controllers.V1
         /// Gets the CouchPotatoSettings Settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("CouchPotato")]
         public async Task<CouchPotatoSettings> CouchPotatoSettings()
         {
@@ -552,6 +575,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("CouchPotato")]
         public async Task<bool> CouchPotatoSettings([FromBody]CouchPotatoSettings settings)
         {
@@ -562,6 +586,7 @@ namespace Ombi.Controllers.V1
         /// Gets the DogNzbSettings Settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("DogNzb")]
         public async Task<DogNzbSettings> DogNzbSettings()
         {
@@ -573,6 +598,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("DogNzb")]
         public async Task<bool> DogNzbSettings([FromBody]DogNzbSettings settings)
         {
@@ -584,6 +610,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("SickRage")]
         public async Task<bool> SickRageSettings([FromBody]SickRageSettings settings)
         {
@@ -594,6 +621,7 @@ namespace Ombi.Controllers.V1
         /// Gets the SickRage Settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("SickRage")]
         public async Task<SickRageSettings> SickRageSettings()
         {
@@ -604,6 +632,7 @@ namespace Ombi.Controllers.V1
         /// Gets the JobSettings Settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("jobs")]
         public async Task<JobSettings> JobSettings()
         {
@@ -636,6 +665,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("jobs")]
         public async Task<JobSettingsViewModel> JobSettings([FromBody]JobSettings settings)
         {
@@ -679,6 +709,7 @@ namespace Ombi.Controllers.V1
         }
 
         [HttpPost("testcron")]
+        [Admin]
         public CronTestModel TestCron([FromBody] CronViewModelBody body)
         {
             var model = new CronTestModel();
@@ -712,6 +743,7 @@ namespace Ombi.Controllers.V1
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("Issues")]
+        [Admin]
         public async Task<bool> IssueSettings([FromBody]IssueSettings settings)
         {
             return await Save(settings);
@@ -742,6 +774,7 @@ namespace Ombi.Controllers.V1
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("vote")]
+        [Admin]
         public async Task<bool> VoteSettings([FromBody]VoteSettings settings)
         {
             return await Save(settings);
@@ -752,6 +785,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <returns></returns>
         [HttpGet("vote")]
+        [Admin]
         public async Task<VoteSettings> VoteSettings()
         {
             return await Get<VoteSettings>();
@@ -770,6 +804,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="settings">The settings.</param>
         [HttpPost("themoviedb")]
+        [Admin]
         public async Task<bool> TheMovieDbSettings([FromBody]TheMovieDbSettings settings)
         {
             return await Save(settings);
@@ -778,6 +813,7 @@ namespace Ombi.Controllers.V1
         /// <summary>
         /// Get The Movie DB settings.
         /// </summary>
+        [Admin]
         [HttpGet("themoviedb")]
         public async Task<TheMovieDbSettings> TheMovieDbSettings()
         {
@@ -789,6 +825,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("notifications/email")]
         public async Task<bool> EmailNotificationSettings([FromBody] EmailNotificationsViewModel model)
         {
@@ -806,6 +843,7 @@ namespace Ombi.Controllers.V1
         /// Gets the Email Notification Settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("notifications/email")]
         public async Task<EmailNotificationsViewModel> EmailNotificationSettings()
         {
@@ -836,6 +874,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("notifications/discord")]
         public async Task<bool> DiscordNotificationSettings([FromBody] DiscordNotificationsViewModel model)
         {
@@ -853,6 +892,7 @@ namespace Ombi.Controllers.V1
         /// Gets the discord Notification Settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("notifications/discord")]
         public async Task<DiscordNotificationsViewModel> DiscordNotificationSettings()
         {
@@ -871,6 +911,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("notifications/telegram")]
         public async Task<bool> TelegramNotificationSettings([FromBody] TelegramNotificationsViewModel model)
         {
@@ -888,6 +929,7 @@ namespace Ombi.Controllers.V1
         /// Gets the telegram Notification Settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("notifications/telegram")]
         public async Task<TelegramNotificationsViewModel> TelegramNotificationSettings()
         {
@@ -905,6 +947,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("notifications/pushbullet")]
         public async Task<bool> PushbulletNotificationSettings([FromBody] PushbulletNotificationViewModel model)
         {
@@ -922,6 +965,7 @@ namespace Ombi.Controllers.V1
         /// Gets the pushbullet Notification Settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("notifications/pushbullet")]
         public async Task<PushbulletNotificationViewModel> PushbulletNotificationSettings()
         {
@@ -939,6 +983,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("notifications/pushover")]
         public async Task<bool> PushoverNotificationSettings([FromBody] PushoverNotificationViewModel model)
         {
@@ -956,6 +1001,7 @@ namespace Ombi.Controllers.V1
         /// Gets the pushover Notification Settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("notifications/pushover")]
         public async Task<PushoverNotificationViewModel> PushoverNotificationSettings()
         {
@@ -974,6 +1020,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("notifications/slack")]
         public async Task<bool> SlacktNotificationSettings([FromBody] SlackNotificationsViewModel model)
         {
@@ -991,6 +1038,7 @@ namespace Ombi.Controllers.V1
         /// Gets the slack Notification Settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("notifications/slack")]
         public async Task<SlackNotificationsViewModel> SlackNotificationSettings()
         {
@@ -1008,6 +1056,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("notifications/mattermost")]
         public async Task<bool> MattermostNotificationSettings([FromBody] MattermostNotificationsViewModel model)
         {
@@ -1025,6 +1074,7 @@ namespace Ombi.Controllers.V1
         /// Gets the Mattermost Notification Settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("notifications/mattermost")]
         public async Task<MattermostNotificationsViewModel> MattermostNotificationSettings()
         {
@@ -1041,6 +1091,7 @@ namespace Ombi.Controllers.V1
         /// Gets the Twilio Notification Settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("notifications/twilio")]
         public async Task<TwilioSettingsViewModel> TwilioNotificationSettings()
         {
@@ -1062,6 +1113,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("notifications/twilio")]
         public async Task<bool> TwilioNotificationSettings([FromBody] TwilioSettingsViewModel model)
         {
@@ -1080,6 +1132,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("notifications/mobile")]
         public async Task<bool> MobileNotificationSettings([FromBody] MobileNotificationsViewModel model)
         {
@@ -1097,6 +1150,7 @@ namespace Ombi.Controllers.V1
         /// Gets the Mobile Notification Settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("notifications/mobile")]
         public async Task<MobileNotificationsViewModel> MobileNotificationSettings()
         {
@@ -1114,6 +1168,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("notifications/gotify")]
         public async Task<bool> GotifyNotificationSettings([FromBody] GotifyNotificationViewModel model)
         {
@@ -1131,6 +1186,7 @@ namespace Ombi.Controllers.V1
         /// Gets the gotify Notification Settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("notifications/gotify")]
         public async Task<GotifyNotificationViewModel> GotifyNotificationSettings()
         {
@@ -1148,6 +1204,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("notifications/webhook")]
         public async Task<bool> WebhookNotificationSettings([FromBody] WebhookNotificationViewModel model)
         {
@@ -1161,6 +1218,7 @@ namespace Ombi.Controllers.V1
         /// Gets the webhook notification settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("notifications/webhook")]
         public async Task<WebhookNotificationViewModel> WebhookNotificationSettings()
         {
@@ -1175,6 +1233,7 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
+        [Admin]
         [HttpPost("notifications/newsletter")]
         public async Task<bool> NewsletterSettings([FromBody] NewsletterNotificationViewModel model)
         {
@@ -1189,6 +1248,7 @@ namespace Ombi.Controllers.V1
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
+        [Admin]
         [HttpPost("notifications/newsletterdatabase")]
         public async Task<bool> UpdateNewsletterDatabase()
         {
@@ -1199,6 +1259,7 @@ namespace Ombi.Controllers.V1
         /// Gets the Newsletter Notification Settings.
         /// </summary>
         /// <returns></returns>
+        [Admin]
         [HttpGet("notifications/newsletter")]
         public async Task<NewsletterNotificationViewModel> NewsletterSettings()
         {

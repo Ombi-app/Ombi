@@ -4,6 +4,7 @@
 // import { NotificationService, RequestService } from "../services";
 
 // @Component({
+        standalone: false,
 //     selector: "tvrequests-children",
 //     templateUrl: "./tvrequest-children.component.html",
 // })

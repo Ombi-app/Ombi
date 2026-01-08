@@ -1,5 +1,4 @@
-﻿﻿<settings-menu></settings-menu>
-<div *ngIf="form" class="small-middle-container">
+﻿﻿<div *ngIf="form" class="small-middle-container">
     <fieldset>
         <legend>Sonarr Settings</legend>
         <div class="md-form-field" style="margin-top:1em;"></div>
@@ -15,6 +14,10 @@
                         </div>
                         <div class="md-form-field">
                             <mat-slide-toggle formControlName="scanForAvailability">Scan for Availability</mat-slide-toggle>
+                        </div>
+                        <div class="md-form-field">
+                            <mat-slide-toggle formControlName="prioritizeArrAvailability">Prioritize Sonarr Availability</mat-slide-toggle>
+                            <small><br>When enabled, Sonarr availability takes priority over media server availability</small>
                         </div>
                         <div class="md-form-field">
                             <mat-slide-toggle formControlName="sendUserTags" id="sendUserTags">Add the user as a tag</mat-slide-toggle>

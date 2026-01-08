@@ -7,7 +7,9 @@ import { ServiceHelpers } from "./service.helpers";
 import { IRequestsViewModel, IMovieRequests, IChildRequests, IMovieAdvancedOptions as IMediaAdvancedOptions, IRequestEngineResult, IAlbumRequest, ITvRequestViewModelV2, RequestType, IRecentlyRequested } from "../interfaces";
 
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class RequestServiceV2 extends ServiceHelpers {
     constructor(http: HttpClient, @Inject(APP_BASE_HREF) href:string) {
         super(http, "/api/v2/Requests/", href);

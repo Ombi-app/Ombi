@@ -5,19 +5,19 @@ using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Ombi.Core;
-using Ombi.Api.TheMovieDb.Models;
+using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
 using Ombi.Core.Engine.V2;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Models.Search.V2;
 using Ombi.Core.Models.Search.V2.Music;
 using Ombi.Models;
-using Ombi.Api.RottenTomatoes.Models;
-using Ombi.Api.RottenTomatoes;
+using Ombi.Api.External.ExternalApis.RottenTomatoes.Models;
+using Ombi.Api.External.ExternalApis.RottenTomatoes;
 using Ombi.Helpers;
 
 // Due to conflicting Genre models in
-// Ombi.TheMovieDbApi.Models and Ombi.Api.TheMovieDb.Models   
+// Ombi.TheMovieDbApi.Models and Ombi.Api.External.ExternalApis.TheMovieDb.Models   
 using Genre = Ombi.TheMovieDbApi.Models.Genre;
 using Ombi.TheMovieDbApi.Models;
 

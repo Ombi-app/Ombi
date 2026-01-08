@@ -1,7 +1,23 @@
-﻿import { ActivatedRoute, Router } from "@angular/router";
+﻿import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
 import { ICheckbox, ICustomizationSettings, INotificationAgent, INotificationPreferences, IRadarrProfile, IRadarrRootFolder, ISonarrProfile, ISonarrRootFolder, IUser, RequestLimitType, UserType } from "../interfaces";
 import { IdentityService, MessageService, RadarrService, SettingsService, SonarrService } from "../services";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatCardModule } from "@angular/material/card";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatDividerModule } from "@angular/material/divider";
+import { TranslateModule } from "@ngx-translate/core";
+import { ClipboardModule } from "@angular/cdk/clipboard";
+import { HumanizePipe } from "../pipes/HumanizePipe";
 
 import { Clipboard } from '@angular/cdk/clipboard';
 import { CustomizationFacade } from "../state/customization";
@@ -9,8 +25,29 @@ import { Location } from "@angular/common";
 import { FeaturesFacade } from "../state/features/features.facade";
 
 @Component({
+    standalone: true,
     templateUrl: "./usermanagement-user.component.html",
     styleUrls: ["./usermanagement-user.component.scss"],
+    imports: [
+        CommonModule,
+        RouterModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatCheckboxModule,
+        MatSlideToggleModule,
+        MatCardModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatTabsModule,
+        MatDividerModule,
+        TranslateModule,
+        ClipboardModule,
+        HumanizePipe
+    ]
 })
 export class UserManagementUserComponent implements OnInit {
 
@@ -36,6 +73,13 @@ export class UserManagementUserComponent implements OnInit {
 
     private appUrl: string = this.customizationFacade.appUrl();
     private accessToken: string;
+
+    // List of excluded notification agents that should not be shown in user preferences
+    private readonly excludedAgents = [
+        INotificationAgent.Email,
+        INotificationAgent.Mobile,
+        INotificationAgent.Webhook
+    ];
 
     constructor(private identityService: IdentityService,
                 private notificationService: MessageService,
@@ -74,9 +118,15 @@ export class UserManagementUserComponent implements OnInit {
             }
         });
         if(this.edit) {
-            this.identityService.getNotificationPreferencesForUser(this.userId).subscribe(x => this.notificationPreferences = x);
+            this.identityService.getNotificationPreferencesForUser(this.userId).subscribe(x => {
+                // Filter out excluded notification agents
+                this.notificationPreferences = x.filter(pref => !this.excludedAgents.includes(pref.agent));
+            });
         } else {
-            this.identityService.getNotificationPreferences().subscribe(x => this.notificationPreferences = x);
+            this.identityService.getNotificationPreferences().subscribe(x => {
+                // Filter out excluded notification agents
+                this.notificationPreferences = x.filter(pref => !this.excludedAgents.includes(pref.agent));
+            });
         }
         this.sonarrService.getQualityProfilesWithoutSettings().subscribe(x => {
             this.sonarrQualities = x;

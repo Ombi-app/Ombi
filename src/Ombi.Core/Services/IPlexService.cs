@@ -8,5 +8,6 @@ namespace Ombi.Core.Services
     public interface IPlexService
     {
         Task<List<PlexUserWatchlistModel>> GetWatchlistUsers(CancellationToken cancellationToken);
+        Task ForceRevalidateWatchlistUsers(CancellationToken cancellationToken);
     }
 }

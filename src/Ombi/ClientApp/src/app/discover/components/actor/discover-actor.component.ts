@@ -1,4 +1,9 @@
 import { Component, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { TranslateModule } from "@ngx-translate/core";
+import { CarouselModule } from 'primeng/carousel';
+import { SkeletonModule } from 'primeng/skeleton';
+
 import { ActivatedRoute } from "@angular/router";
 import { SearchV2Service } from "../../../services";
 import { IActorCredits, IActorCast, IActorCrew } from "../../../interfaces/ISearchTvResultV2";
@@ -7,10 +12,21 @@ import { RequestType } from "../../../interfaces";
 import { AuthService } from "../../../auth/auth.service";
 import { forkJoin } from "rxjs";
 import { FeaturesFacade } from "../../../state/features/features.facade";
+import { DiscoverCardComponent } from "../card/discover-card.component";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 @Component({
+    standalone: true,
     templateUrl: "./discover-actor.component.html",
     styleUrls: ["./discover-actor.component.scss"],
+    imports: [
+        CommonModule,
+        TranslateModule,
+        CarouselModule,
+        SkeletonModule,
+        DiscoverCardComponent,
+        MatProgressSpinnerModule,
+    ]
 })
 export class DiscoverActorComponent implements OnInit {
     public actorId: number;

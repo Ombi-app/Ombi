@@ -14,6 +14,7 @@
         IssueResolved = 9,
         IssueComment = 10,
         Newsletter = 11,
-        PartiallyAvailable = 12
+        PartiallyAvailable = 12,
+        PlexWatchlistTokenExpired = 13
     }
 }

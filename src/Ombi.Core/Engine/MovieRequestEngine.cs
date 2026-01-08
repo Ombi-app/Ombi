@@ -1,4 +1,4 @@
-﻿using Ombi.Api.TheMovieDb;
+﻿using Ombi.Api.External.ExternalApis.TheMovieDb;
 using Ombi.Core.Models.Requests;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
@@ -11,7 +11,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Ombi.Api.TheMovieDb.Models;
+using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.UI;
@@ -598,13 +598,13 @@ namespace Ombi.Core.Engine
 
         public async Task<RequestEngineResult> ApproveMovieById(int requestId, bool is4K)
         {
-            var request = await MovieRepository.Find(requestId);
+            var request = await MovieRepository.GetWithUser().FirstOrDefaultAsync(x => x.Id == requestId);
             return await ApproveMovie(request, is4K);
         }
 
         public async Task<RequestEngineResult> DenyMovieById(int modelId, string denyReason, bool is4K)
         {
-            var request = await MovieRepository.Find(modelId);
+            var request = await MovieRepository.GetWithUser().FirstOrDefaultAsync(x => x.Id == modelId);
             if (request == null)
             {
                 return new RequestEngineResult
@@ -790,7 +790,7 @@ namespace Ombi.Core.Engine
 
         public async Task<RequestEngineResult> ReProcessRequest(int requestId, bool is4K, CancellationToken cancellationToken)
         {
-            var request = await MovieRepository.Find(requestId);
+            var request = await MovieRepository.GetWithUser().FirstOrDefaultAsync(x => x.Id == requestId);
             if (request == null)
             {
                 return new RequestEngineResult
@@ -805,7 +805,7 @@ namespace Ombi.Core.Engine
 
         public async Task<RequestEngineResult> MarkUnavailable(int modelId, bool is4K)
         {
-            var request = await MovieRepository.Find(modelId);
+            var request = await MovieRepository.GetWithUser().FirstOrDefaultAsync(x => x.Id == modelId);
             if (request == null)
             {
                 return new RequestEngineResult
@@ -834,7 +834,7 @@ namespace Ombi.Core.Engine
 
         public async Task<RequestEngineResult> MarkAvailable(int modelId, bool is4K)
         {
-            var request = await MovieRepository.Find(modelId);
+            var request = await MovieRepository.GetWithUser().FirstOrDefaultAsync(x => x.Id == modelId);
             if (request == null)
             {
                 return new RequestEngineResult

@@ -1,15 +1,33 @@
-﻿import { APP_BASE_HREF } from "@angular/common";
+﻿import { APP_BASE_HREF, CommonModule } from "@angular/common";
 import { Component, OnInit, Inject } from "@angular/core";
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { fadeInOutAnimation } from "../animations/fadeinout";
 
 import { ICustomizationSettings } from "../interfaces";
 import { IdentityService, NotificationService, SettingsService } from "../services";
 import { CustomizationFacade } from "../state/customization";
+import { MatButtonModule } from "@angular/material/button";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { ImageBackgroundComponent } from "../components";
+import { MatCardModule } from "@angular/material/card";
+import { TranslateModule } from "@ngx-translate/core";
 
 @Component({
+        standalone: true,
     templateUrl: "./resetpassword.component.html",
     styleUrls: ["./login.component.scss"],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatCardModule,
+        TranslateModule,
+        ImageBackgroundComponent
+    ]
 })
 export class ResetPasswordComponent implements OnInit {
 

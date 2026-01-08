@@ -2,8 +2,8 @@
 using System.Globalization;
 using System.Linq;
 using AutoMapper;
-using Ombi.Api.TheMovieDb.Models;
-using Ombi.Api.TvMaze.Models.V2;
+using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
+using Ombi.Api.External.ExternalApis.TvMaze.Models.V2;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Models.Search.V2;
 using Ombi.Helpers;
@@ -41,25 +41,25 @@ namespace Ombi.Mapping.Profiles
                 .ForMember(dest => dest.Runtime, opts => opts.MapFrom(src => src.episode_run_time.FirstOrDefault()))
                 .ForMember(dest => dest.Status, opts => opts.MapFrom(src => src.status));
 
-            CreateMap<Ombi.Api.TheMovieDb.Models.ExternalIds, Ombi.Core.Models.Search.V2.ExternalIds>().ReverseMap();
-            CreateMap<Ombi.Api.TheMovieDb.Models.Images, Ombi.Core.Models.Search.V2.Images>()
+            CreateMap<Ombi.Api.External.ExternalApis.TheMovieDb.Models.ExternalIds, Ombi.Core.Models.Search.V2.ExternalIds>().ReverseMap();
+            CreateMap<Ombi.Api.External.ExternalApis.TheMovieDb.Models.Images, Ombi.Core.Models.Search.V2.Images>()
                 .ForMember(dest => dest.Original, opts => opts.MapFrom(src => src.Posters.OrderBy(x => x.VoteCount).ThenBy(x => x.VoteAverage).FirstOrDefault().FilePath));
 
 
-            CreateMap<Api.TheMovieDb.Models.Keywords, Ombi.Core.Models.Search.V2.Keywords>().ReverseMap();
-            CreateMap<Ombi.Api.TheMovieDb.Models.KeywordsValue, Ombi.Core.Models.Search.V2.KeywordsValue>().ReverseMap();
+            CreateMap<Ombi.Api.External.ExternalApis.TheMovieDb.Models.Keywords, Ombi.Core.Models.Search.V2.Keywords>().ReverseMap();
+            CreateMap<Ombi.Api.External.ExternalApis.TheMovieDb.Models.KeywordsValue, Ombi.Core.Models.Search.V2.KeywordsValue>().ReverseMap();
 
 
             CreateMap<GenreViewModel, Genre>()
                 .ForMember(dest => dest.id, opts => opts.MapFrom(src => src.id))
                 .ForMember(dest => dest.name, opts => opts.MapFrom(src => src.name));
 
-            CreateMap<Api.TheMovieDb.Models.Network, NetworkViewModel>()
+            CreateMap<Ombi.Api.External.ExternalApis.TheMovieDb.Models.Network, NetworkViewModel>()
     .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.id))
     .ForMember(dest => dest.Country, opts => opts.MapFrom(src => src.origin_country))
     .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.name));
 
-            CreateMap<Api.TvMaze.Models.V2.Country, Core.Models.Search.V2.Country>()
+            CreateMap<Ombi.Api.External.ExternalApis.TvMaze.Models.V2.Country, Core.Models.Search.V2.Country>()
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.name))
                 .ForMember(dest => dest.Code, opts => opts.MapFrom(src => src.code))
                 .ForMember(dest => dest.Timezone, opts => opts.MapFrom(src => src.timezone));
@@ -78,7 +78,7 @@ namespace Ombi.Mapping.Profiles
             CreateMap<SearchTvShowViewModel, SearchFullInfoTvShowViewModel>().ReverseMap();
         }
 
-        private string GetBanner(Api.TheMovieDb.Models.Images images, string backdropPath)
+        private string GetBanner(Ombi.Api.External.ExternalApis.TheMovieDb.Models.Images images, string backdropPath)
         {
             var hasBackdrop = images?.Backdrops?.Any();
             if (hasBackdrop ?? false)
@@ -95,7 +95,7 @@ namespace Ombi.Mapping.Profiles
             }
         }
 
-        private string GetTrailer(Api.TheMovieDb.Models.Videos trailer)
+        private string GetTrailer(Ombi.Api.External.ExternalApis.TheMovieDb.Models.Videos trailer)
         {
             return trailer?.results?.FirstOrDefault(x => x.type.Equals("trailer", StringComparison.InvariantCultureIgnoreCase))?.key ?? null;
         }

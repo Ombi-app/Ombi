@@ -1,14 +1,34 @@
 import { Component, Inject, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import { IIssueDialogData } from "../interfaces/interfaces";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
 import { MessageService, IssuesService } from "../../../../services";
-import { IIssues, IIssueCategory, IssueStatus, RequestType } from "../../../../interfaces";
+import { IIssues, IIssueCategory, IssueStatus } from "../../../../interfaces";
 import { TranslateService } from "@ngx-translate/core";
 import { firstValueFrom } from "rxjs";
+import { MatButtonModule } from "@angular/material/button";
+import { MatOptionModule } from "@angular/material/core";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { TranslateModule } from "@ngx-translate/core";
+import { FormsModule } from "@angular/forms";
 
 @Component({
+        standalone: true,
     selector: "new-issue",
     templateUrl: "./new-issue.component.html",
+    imports: [
+        CommonModule,
+        MatDialogModule,
+        TranslateModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatOptionModule,    
+        FormsModule
+    ]
 })
 export class NewIssueComponent implements OnInit {
 

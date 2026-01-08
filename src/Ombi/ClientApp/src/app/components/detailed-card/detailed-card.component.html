@@ -10,9 +10,11 @@
                     <div class="text-right year"><sup>{{request.releaseDate | date:'yyyy'}}</sup></div>
                     <h3 id="detailed-request-title-{{request.mediaId}}">{{request.title}}</h3>
                 </div>
-                <div class="col-12" *ngIf="request.username">
-                    <p id="detailed-request-requestedby-{{request.mediaId}}">{{'MediaDetails.RequestedBy' | translate}} {{request.username}}</p>
-                </div>
+                @if (request.username) {
+                    <div class="col-12">
+                        <p id="detailed-request-requestedby-{{request.mediaId}}">{{'MediaDetails.RequestedBy' | translate}} {{request.username}}</p>
+                    </div>
+                }
                 <div class="col-12">
                     <p id="detailed-request-date-{{request.mediaId}}">{{'MediaDetails.OnDate' | translate}} {{request.requestDate | ombiDate: 'Ppp'}}</p>
                 </div>
@@ -21,25 +23,29 @@
                 </div>
             </div>
             <div class="row action-items">
-                <div class="col-12" *ngIf="isAdmin">
-                    <div *ngIf="!request.approved && !request.denied">
-                        <button
-                            id="detailed-request-approve-{{request.mediaId}}"
-                            color="accent"
-                            mat-raised-button
-                            (click)="approve()"
-                            matTooltip="{{'Common.Approve' | translate}}">
-                            <mat-icon>check-circle</mat-icon>
-                        </button>
-                        <button
-                            id="detailed-request-deny-{{request.mediaId}}"
-                            color="accent"
-                            mat-raised-button
-                            (click)="deny()"
-                            matTooltip="{{'Requests.Deny' | translate}}">
-                          <mat-icon>cancel</mat-icon></button>
+                @if (isAdmin) {
+                    <div class="col-12">
+                        @if (!request.approved && !request.denied) {
+                            <div>
+                                <button
+                                    id="detailed-request-approve-{{request.mediaId}}"
+                                    color="accent"
+                                    mat-raised-button
+                                    (click)="approve()"
+                                    matTooltip="{{'Common.Approve' | translate}}">
+                                    <mat-icon>check-circle</mat-icon>
+                                </button>
+                                <button
+                                    id="detailed-request-deny-{{request.mediaId}}"
+                                    color="accent"
+                                    mat-raised-button
+                                    (click)="deny()"
+                                    matTooltip="{{'Requests.Deny' | translate}}">
+                                  <mat-icon>cancel</mat-icon></button>
+                            </div>
+                        }
                     </div>
-                </div>
+                }
             </div>
         </div>
     </div>

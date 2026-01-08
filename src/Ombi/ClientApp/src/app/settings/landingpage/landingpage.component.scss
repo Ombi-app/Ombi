@@ -1,4 +1,4 @@
-@import "./styles/shared.scss";
+@use "./styles/shared.scss" as *;
 .small-middle-container{
 	margin: auto;
 	width: 95%;

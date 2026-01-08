@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Ombi.Api.Plex;
-using Ombi.Api.Plex.Models;
-using Ombi.Api.TheMovieDb;
-using Ombi.Api.TheMovieDb.Models;
+using Ombi.Api.External.MediaServers.Plex;
+using Ombi.Api.External.MediaServers.Plex.Models;
+using Ombi.Api.External.ExternalApis.TheMovieDb;
+using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
@@ -22,6 +22,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Ombi.Notifications.Models;
+using Ombi.Core.Notifications;
+using Microsoft.AspNetCore.Identity;
+using Ombi.Store.Repository.Requests;
+using Ombi.Core;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
@@ -37,11 +42,13 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly IExternalRepository<PlexWatchlistHistory> _watchlistRepo;
         private readonly IRepository<PlexWatchlistUserError> _userError;
         private readonly IMovieDbApi _movieDbApi;
+        private readonly INotificationHelper _notificationHelper;
+        private readonly IPlexTokenKeepAliveService _tokenKeepAliveService;
 
         public PlexWatchlistImport(IPlexApi plexApi, ISettingsService<PlexSettings> settings, OmbiUserManager ombiUserManager,
             IMovieRequestEngine movieRequestEngine, ITvRequestEngine tvRequestEngine, INotificationHubService notificationHubService,
             ILogger<PlexWatchlistImport> logger, IExternalRepository<PlexWatchlistHistory> watchlistRepo, IRepository<PlexWatchlistUserError> userError,
-            IMovieDbApi movieDbApi)
+            IMovieDbApi movieDbApi, INotificationHelper notificationHelper, IPlexTokenKeepAliveService tokenKeepAliveService)
         {
             _plexApi = plexApi;
             _settings = settings;
@@ -53,6 +60,8 @@ namespace Ombi.Schedule.Jobs.Plex
             _watchlistRepo = watchlistRepo;
             _userError = userError;
             _movieDbApi = movieDbApi;
+            _notificationHelper = notificationHelper;
+            _tokenKeepAliveService = tokenKeepAliveService;
         }
 
         public async Task Execute(IJobExecutionContext context)
@@ -89,16 +98,80 @@ namespace Ombi.Schedule.Jobs.Plex
                         }
                     }
 
-                    _logger.LogDebug($"Starting Watchlist Import for {user.UserName} with token {user.MediaServerToken}");
+                    _logger.LogDebug($"Starting Watchlist Import for {user.UserName} with token {user.MediaServerToken?.Substring(0, Math.Min(8, user.MediaServerToken?.Length ?? 0))}...");
+                    
+                    // Keep the token alive before attempting watchlist import
+                    _logger.LogDebug($"Validating token for user '{user.UserName}' before watchlist import");
+                    var keepAliveSuccess = await _tokenKeepAliveService.KeepTokenAliveAsync(user.MediaServerToken, context?.CancellationToken ?? CancellationToken.None);
+                    if (!keepAliveSuccess)
+                    {
+                        _logger.LogWarning($"Token validation failed for user '{user.UserName}' - attempting to refresh token");
+                        
+                        // Try to refresh the token before giving up
+                        var refreshSuccess = await _tokenKeepAliveService.TryRefreshTokenAsync(user, context?.CancellationToken ?? CancellationToken.None);
+                        if (refreshSuccess)
+                        {
+                            _logger.LogInformation($"Successfully refreshed token for user '{user.UserName}', retrying watchlist import");
+                            // Re-validate the refreshed token
+                            keepAliveSuccess = await _tokenKeepAliveService.KeepTokenAliveAsync(user.MediaServerToken, context?.CancellationToken ?? CancellationToken.None);
+                        }
+                        
+                        if (!keepAliveSuccess)
+                        {
+                            _logger.LogWarning($"Token validation and refresh failed for user '{user.UserName}' - token may be expired, invalid, or lacks watchlist permissions. Recording error and skipping user.");
+                            await _userError.Add(new PlexWatchlistUserError
+                            {
+                                UserId = user.Id,
+                                MediaServerToken = user.MediaServerToken,
+                            });
+
+                            // Send notification to user about token expiration
+                            if (settings.NotifyOnWatchlistTokenExpiration && !string.IsNullOrEmpty(user.Email))
+                            {
+                                _logger.LogInformation($"Sending token expiration notification to user '{user.UserName}' at {user.Email}");
+                                var notificationModel = new NotificationOptions
+                                {
+                                    NotificationType = NotificationType.PlexWatchlistTokenExpired,
+                                    Recipient = user.Email,
+                                    DateTime = DateTime.Now,
+                                    Substitutes = new Dictionary<string, string>
+                                    {
+                                        { "UserName", user.UserName }
+                                    }
+                                };
+                                await _notificationHelper.Notify(notificationModel);
+                            }
+                            continue;
+                        }
+                    }
+                    
+                    _logger.LogDebug($"Token validation successful for user '{user.UserName}', proceeding with watchlist import");
                     var watchlist = await _plexApi.GetWatchlist(user.MediaServerToken, context?.CancellationToken ?? CancellationToken.None);
                     if (watchlist?.AuthError ?? false)
                     {
-                        _logger.LogError($"Auth failed for user '{user.UserName}'. Need to re-authenticate with Ombi.");
+                        _logger.LogError($"Authentication error occurred during watchlist API call for user '{user.UserName}' - this should not happen after successful token validation. User needs to re-authenticate.");
                         await _userError.Add(new PlexWatchlistUserError
                         {
                             UserId = user.Id,
                             MediaServerToken = user.MediaServerToken,
                         });
+
+                        // Send notification to user about token expiration
+                        if (settings.NotifyOnWatchlistTokenExpiration && !string.IsNullOrEmpty(user.Email))
+                        {
+                            _logger.LogInformation($"Sending token expiration notification to user '{user.UserName}' at {user.Email}");
+                            var notificationModel = new NotificationOptions
+                            {
+                                NotificationType = NotificationType.PlexWatchlistTokenExpired,
+                                Recipient = user.Email,
+                                DateTime = DateTime.Now,
+                                Substitutes = new Dictionary<string, string>
+                                {
+                                    { "UserName", user.UserName }
+                                }
+                            };
+                            await _notificationHelper.Notify(notificationModel);
+                        }
                         continue;
                     }
                     if (watchlist == null || !(watchlist.MediaContainer?.Metadata?.Any() ?? false))

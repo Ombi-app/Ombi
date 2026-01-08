@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Ombi.Api.CloudService;
+using Ombi.Api.External.NotificationServices.CloudService;
 using Ombi.Attributes;
 using Ombi.Core.Authentication;
 using Ombi.Helpers;
