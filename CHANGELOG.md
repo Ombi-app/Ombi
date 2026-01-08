@@ -1,3 +1,12 @@
+## [4.53.1](https://github.com/Ombi-app/Ombi/compare/v4.53.0...v4.53.1) (2026-01-08)
+
+
+### Bug Fixes
+
+* **radarr/sonarr:** :bug: Sanitize usernames when adding them as tags to Radarr/Sonarr [#5307](https://github.com/Ombi-app/Ombi/issues/5307) ([d3d1d38](https://github.com/Ombi-app/Ombi/commit/d3d1d380d5695fcd6d55239966bbf18a0082d961))
+
+
+
 # [4.53.0](https://github.com/Ombi-app/Ombi/compare/v4.52.0...v4.53.0) (2025-11-06)
 
 
@@ -315,15 +324,6 @@
 ### Bug Fixes
 
 * **radarr:** :bug: Enable validation on the radarr settings page ([0af3511](https://github.com/Ombi-app/Ombi/commit/0af3511e819d24e0f4edf6f33931e61bba743224))
-
-
-
-## [4.46.1](https://github.com/Ombi-app/Ombi/compare/v4.46.0...v4.46.1) (2024-08-27)
-
-
-### Bug Fixes
-
-* src/Ombi.Notifications/Ombi.Notifications.csproj to reduce vulnerabilities ([#5167](https://github.com/Ombi-app/Ombi/issues/5167)) ([e1f2a84](https://github.com/Ombi-app/Ombi/commit/e1f2a848065d79c8bba9eafff4f1f5db4a994b53))
 
 
 
