@@ -129,8 +129,7 @@
     }
 }
 
-@media (min-width:755px){
-  ::ng-deep .p-carousel-item{
-    flex: 1 0 200px !important;
-  }
+:host ::ng-deep .p-carousel-item {
+    display: flex;
+    justify-content: center;
 }

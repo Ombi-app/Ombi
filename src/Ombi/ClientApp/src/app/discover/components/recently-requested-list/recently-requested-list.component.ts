@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, OnDestroy, signal } from "@angular/core";
+import { Component, OnInit, Input, ViewChild, OnDestroy, AfterViewInit, ElementRef, signal } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { MatButtonModule } from "@angular/material/button";
@@ -9,7 +9,6 @@ import { CarouselModule, Carousel } from 'primeng/carousel';
 import { SkeletonModule } from 'primeng/skeleton';
 
 import { IRecentlyRequested, IRequestEngineResult, RequestType } from "../../../interfaces";
-import { ResponsiveOptions } from "../carousel.options";
 import { RequestServiceV2 } from "app/services/requestV2.service";
 import { finalize, map, Observable, Subject, takeUntil, tap } from "rxjs";
 import { Router } from "@angular/router";
@@ -45,21 +44,26 @@ export enum DiscoverType {
         DetailedCardComponent
     ]
 })
-export class RecentlyRequestedListComponent implements OnInit, OnDestroy {
+export class RecentlyRequestedListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @Input() public id: string;
     @Input() public isAdmin: boolean;
     @ViewChild('carousel', {static: false}) carousel: Carousel;
 
     public requests$: Observable<IRecentlyRequested[]>;
-    public requests = signal<IRecentlyRequested[]>(null);
+    public requests = signal<IRecentlyRequested[]>([]);
 
-    public responsiveOptions: any;
+    // Dynamic carousel sizing
+    public numVisible = 3; // default starting value
+    public numScroll = 1;  // default starting value
+    private resizeObserver: ResizeObserver;
     public RequestType = RequestType;
     public loadingFlag: boolean;
     public DiscoverType = DiscoverType;
 
     private $loadSub = new Subject<void>();
+
+    @ViewChild('carouselRoot', { static: false }) carouselRoot: ElementRef;
 
     constructor(private requestServiceV2: RequestServiceV2,
         private requestService: RequestService,
@@ -68,18 +72,18 @@ export class RecentlyRequestedListComponent implements OnInit, OnDestroy {
         private notificationService: NotificationService,
         private translateService: TranslateService,
         public dialog: MatDialog) {
+        // Disable default touch move override causing awkward scroll loops
         Carousel.prototype.onTouchMove = () => {};
-        this.responsiveOptions = ResponsiveOptions;
-    }
-
-    ngOnDestroy(): void {
-        this.$loadSub.next();
-        this.$loadSub.complete();
     }
 
     public ngOnInit() {
         this.loadData();
         this.isAdmin = this.authService.isAdmin();
+    }
+
+    public ngAfterViewInit(): void {
+        // Initialize observer after view is ready
+        this.initResizeObserver();
     }
 
     public navigate(request: IRecentlyRequested) {
@@ -146,7 +150,16 @@ export class RecentlyRequestedListComponent implements OnInit, OnDestroy {
             takeUntil(this.$loadSub),
             finalize(() => this.finishLoading())
         ).subscribe(x => {
-            this.requests.set(x);
+            this.requests.set(x || []);
+            // Recalculate on data arrival to prevent blank space when fewer items than numVisible
+            // Use setTimeout to allow the @defer block to render after signal update
+            setTimeout(() => {
+                // Initialize ResizeObserver now that the element should exist
+                if (!this.resizeObserver) {
+                    this.initResizeObserver();
+                }
+                this.recalculateCarouselDimensions();
+            }, 0);
         });
     }
 
@@ -156,5 +169,73 @@ export class RecentlyRequestedListComponent implements OnInit, OnDestroy {
 
     private finishLoading() {
         this.loadingFlag = false;
+    }
+
+    // --- Dynamic sizing logic ---
+    private initResizeObserver() {
+        // Don't initialize observer if carouselRoot doesn't exist yet
+        // It will be initialized after data loads
+        if (!this.carouselRoot?.nativeElement) { return; }
+        
+        console.log('ResizeObserver: initializing');
+        this.resizeObserver = new ResizeObserver(() => {
+            this.recalculateCarouselDimensions();
+        });
+        this.resizeObserver.observe(this.carouselRoot.nativeElement);
+    }
+
+    private recalculateCarouselDimensions() {
+        const containerEl: HTMLElement = this.carouselRoot?.nativeElement;
+        if (!containerEl) { return; }
+        // Prefer the actual visible content region for width calculations
+        const itemsContent: HTMLElement | null = containerEl.querySelector('.p-carousel-items-content');
+        const widthSource = itemsContent || containerEl;
+        const width = widthSource.clientWidth;
+        if (!width) { return; }
+
+        // Try to measure an actual rendered item width for accurate calculation.
+        let targetCardWidth: number;
+        const firstItem: HTMLElement | null = containerEl.querySelector('.p-carousel-item ombi-detailed-card');
+        if (firstItem) {
+            const itemRect = firstItem.getBoundingClientRect();
+            targetCardWidth = Math.ceil(itemRect.width) + 20; // Add padding
+        }
+        // Fallback heuristic if items not yet rendered
+        if (!targetCardWidth || targetCardWidth === 0) {
+            // Get viewport width for responsive heuristics
+            const viewportWidth = globalThis.window?.innerWidth || globalThis.document?.documentElement?.clientWidth || width;
+            targetCardWidth = viewportWidth <= 768 ? 220 : 420;
+        }
+        // Guard against pathological values
+        if (targetCardWidth < 120) { targetCardWidth = 120; }
+
+        const maxVisible = 8;
+        let calculatedVisible = Math.max(1, Math.min(maxVisible, Math.floor(width / targetCardWidth)));
+        const total = this.requests()?.length ?? 0;
+        if (total && calculatedVisible > total) {
+            calculatedVisible = total; // Avoid blank trailing space
+        }
+        this.numVisible = calculatedVisible || 1;
+
+        const maxScroll = 3;
+        // Adaptive scroll size: keep small, avoid overshooting the end
+        this.numScroll = 1;
+        if (total > this.numVisible) {
+            const remainingAfterFirstPage = total - this.numVisible;
+            if (remainingAfterFirstPage <= this.numVisible) {
+                // Next scroll lands on last page precisely
+                this.numScroll = Math.max(1, remainingAfterFirstPage);
+            } else {
+                // General case - scroll a portion, not full visible set
+                this.numScroll = Math.min(maxScroll, this.numVisible);
+            }
+        }
+    }
+
+    // Ensure observer cleanup
+    ngOnDestroy(): void {
+        this.$loadSub.next();
+        this.$loadSub.complete();
+        this.resizeObserver?.disconnect();
     }
 }
