@@ -10,6 +10,7 @@ namespace Ombi.Api.External.ExternalApis.TheMovieDb.Models
     {
         public string Type { get; set; }
         public int? ReleaseYear { get; set; }
+        public int? Decade { get; set; }
         public List<int> GenreIds { get; set; } = new List<int>();
         public List<int> KeywordIds { get; set; } = new List<int>();
         public List<int> WatchProviders { get; set; } = new List<int>();

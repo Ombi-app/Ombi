@@ -74,7 +74,24 @@ namespace Ombi.Api.External.ExternalApis.TheMovieDb
         {
             var request = new Request($"discover/{model.Type}", BaseUri, HttpMethod.Get);
             request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
-            if (model.ReleaseYear.HasValue && model.ReleaseYear.Value > 1900)
+            if (model.Decade.HasValue)
+            {
+                var decade = model.Decade.Value;
+                var startDate = new DateTime(decade, 1, 1).ToString("yyyy-MM-dd");
+                var endDate = new DateTime(decade + 9, 12, 31).ToString("yyyy-MM-dd");
+
+                if (model.Type == "movie")
+                {
+                    request.FullUri = request.FullUri.AddQueryParameter("primary_release_date.gte", startDate);
+                    request.FullUri = request.FullUri.AddQueryParameter("primary_release_date.lte", endDate);
+                }
+                else if (model.Type == "tv")
+                {
+                    request.FullUri = request.FullUri.AddQueryParameter("first_air_date.gte", startDate);
+                    request.FullUri = request.FullUri.AddQueryParameter("first_air_date.lte", endDate);
+                }
+            }
+            else if (model.ReleaseYear.HasValue && model.ReleaseYear.Value > 1900)
             {
                 request.FullUri = request.FullUri.AddQueryParameter("year", model.ReleaseYear.Value.ToString());
             }

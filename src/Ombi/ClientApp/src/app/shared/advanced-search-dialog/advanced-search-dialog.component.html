@@ -30,6 +30,15 @@
         <mat-label>{{ "Search.YearOfRelease" | translate }}</mat-label>
         <input matInput id="releaseYear" name="releaseYear" formControlName="releaseYear">
     </mat-form-field>
+    <mat-form-field appearance="outline" floatLabel=auto style="padding-left: 15px">
+      <mat-label>Decade</mat-label>
+      <mat-select formControlName="decade">
+        <mat-option [value]="null">None</mat-option>
+        <mat-option *ngFor="let d of decades" [value]="d">
+          {{d}}s
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
 
 

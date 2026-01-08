@@ -12,6 +12,7 @@ export interface IWatchProvidersResults {
 export interface IDiscoverModel {
     type: string;
     releaseYear?: number|undefined;
+    decade?: number|undefined;
     genreIds?: number[];
     keywordIds?: number[];
     watchProviders?: number[];
