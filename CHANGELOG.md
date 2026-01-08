@@ -1,3 +1,12 @@
+## [4.53.2](https://github.com/Ombi-app/Ombi/compare/v4.53.1...v4.53.2) (2026-01-08)
+
+
+### Bug Fixes
+
+* **availability:** Ensure that when Radarr/Sonarr has priority, stick to it [#5286](https://github.com/Ombi-app/Ombi/issues/5286) ([8f3f87a](https://github.com/Ombi-app/Ombi/commit/8f3f87a1896b5bc2b251fc9ed819933620a3bcfa))
+
+
+
 ## [4.53.1](https://github.com/Ombi-app/Ombi/compare/v4.53.0...v4.53.1) (2026-01-08)
 
 
@@ -315,15 +324,6 @@
 ### Bug Fixes
 
 * **radarr-4k:** :bug: Fixed an issue where the overrides wouldn't work for 4k Requests ([0fb29a0](https://github.com/Ombi-app/Ombi/commit/0fb29a0b16b1fc87f71df1a589f6141324cf2f1b))
-
-
-
-## [4.46.2](https://github.com/Ombi-app/Ombi/compare/v4.46.1...v4.46.2) (2024-09-03)
-
-
-### Bug Fixes
-
-* **radarr:** :bug: Enable validation on the radarr settings page ([0af3511](https://github.com/Ombi-app/Ombi/commit/0af3511e819d24e0f4edf6f33931e61bba743224))
 
 
 
