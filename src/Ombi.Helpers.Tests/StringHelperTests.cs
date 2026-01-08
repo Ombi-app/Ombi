@@ -49,5 +49,21 @@ namespace Ombi.Helpers.Tests
 
             Assert.AreEqual(expectedUrl, sourceUrl.ToHttpsUrl(), "Should return null for null URL");
         }
+
+        [TestCase("john@example.com", "john-example-com", TestName = "SanitizeTagLabel_EmailAddress")]
+        [TestCase("user_name_123", "user-name-123", TestName = "SanitizeTagLabel_Underscores")]
+        [TestCase("UserName123", "username123", TestName = "SanitizeTagLabel_Uppercase")]
+        [TestCase("John Smith", "john-smith", TestName = "SanitizeTagLabel_Spaces")]
+        [TestCase("user--name___test", "user-name-test", TestName = "SanitizeTagLabel_ConsecutiveHyphens")]
+        [TestCase("__username__", "username", TestName = "SanitizeTagLabel_LeadingTrailingHyphens")]
+        [TestCase("user!@#$%name&*()123", "user-name-123", TestName = "SanitizeTagLabel_SpecialCharacters")]
+        [TestCase(null, "", TestName = "SanitizeTagLabel_NullInput")]
+        [TestCase("", "", TestName = "SanitizeTagLabel_EmptyInput")]
+        [TestCase("validtag123", "validtag123", TestName = "SanitizeTagLabel_AlreadyValid")]
+        [TestCase("User.Name+Tag@Example-Domain.com", "user-name-tag-example-domain-com", TestName = "SanitizeTagLabel_ComplexEmail")]
+        public void SanitizeTagLabel_ShouldSanitizeCorrectly(string input, string expected)
+        {
+            Assert.AreEqual(expected, StringHelper.SanitizeTagLabel(input));
+        }
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Ombi.Helpers
 {
@@ -132,6 +133,34 @@ namespace Ombi.Helpers
         public static string ToHttpsUrl(this string currentUrl)
         {
             return currentUrl?.Replace("http://", "https://");
+        }
+
+        /// <summary>
+        /// Sanitizes a string to be used as a Radarr/Sonarr tag label.
+        /// Radarr/Sonarr only allow lowercase letters (a-z), numbers (0-9), and hyphens (-) in tag labels.
+        /// </summary>
+        /// <param name="input">The input string to sanitize (typically a username)</param>
+        /// <returns>A sanitized string containing only a-z, 0-9, and - characters</returns>
+        public static string SanitizeTagLabel(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return string.Empty;
+            }
+
+            // Convert to lowercase
+            var sanitized = input.ToLowerInvariant();
+
+            // Replace any character that is not a-z, 0-9 with a hyphen
+            sanitized = Regex.Replace(sanitized, @"[^a-z0-9]+", "-");
+
+            // Remove consecutive hyphens
+            sanitized = Regex.Replace(sanitized, @"-+", "-");
+
+            // Trim leading and trailing hyphens
+            sanitized = sanitized.Trim('-');
+
+            return sanitized;
         }
     }
 }

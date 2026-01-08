@@ -256,10 +256,17 @@ namespace Ombi.Core.Senders
                 _log.LogWarning("Cannot create tag - RequestedUser is null for movie request {MovieTitle}", model.Title);
                 return null;
             }
-            
-            var tagName = model.RequestedUser.UserName;
-            // Does tag exist?
 
+            // Sanitize username to comply with Radarr tag requirements (a-z, 0-9, and - only)
+            var tagName = StringHelper.SanitizeTagLabel(model.RequestedUser.UserName);
+
+            if (string.IsNullOrEmpty(tagName))
+            {
+                _log.LogWarning("Cannot create tag - sanitized username is empty for user {Username}", model.RequestedUser.UserName);
+                return null;
+            }
+
+            // Does tag exist?
             var allTags = await _radarrV3Api.GetTags(s.ApiKey, s.FullUri);
             var existingTag = allTags.FirstOrDefault(x => x.label.Equals(tagName, StringComparison.InvariantCultureIgnoreCase));
             existingTag ??= await _radarrV3Api.CreateTag(s.ApiKey, s.FullUri, tagName);

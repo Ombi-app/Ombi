@@ -225,7 +225,10 @@ namespace Ombi.Core.Senders
                 if (s.SendUserTags)
                 {
                     var userTag = await GetOrCreateTag(model, s);
-                    options.Tags.Add(userTag.id);
+                    if (userTag != null)
+                    {
+                        options.Tags.Add(userTag.id);
+                    }
                 }
 
                 // Does the series actually exist?
@@ -298,9 +301,16 @@ namespace Ombi.Core.Senders
 
         private async Task<Tag> GetOrCreateTag(ChildRequests model, SonarrSettings s)
         {
-            var tagName = model.RequestedUser.UserName;
-            // Does tag exist?
+            // Sanitize username to comply with Sonarr tag requirements (a-z, 0-9, and - only)
+            var tagName = StringHelper.SanitizeTagLabel(model.RequestedUser.UserName);
 
+            if (string.IsNullOrEmpty(tagName))
+            {
+                Logger.LogWarning("Cannot create tag - sanitized username is empty for user {Username}", model.RequestedUser.UserName);
+                return null;
+            }
+
+            // Does tag exist?
             var allTags = await SonarrApi.GetTags(s.ApiKey, s.FullUri);
             var existingTag = allTags.FirstOrDefault(x => x.label.Equals(tagName, StringComparison.InvariantCultureIgnoreCase));
             existingTag ??= await SonarrApi.CreateTag(s.ApiKey, s.FullUri, tagName);
