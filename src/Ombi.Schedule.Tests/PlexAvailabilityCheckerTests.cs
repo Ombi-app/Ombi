@@ -392,5 +392,36 @@ namespace Ombi.Schedule.Tests
                 }
             };
         }
+
+        [Test]
+        public async Task ProcessMovies_ShouldNotMarkAvailable_WhenRadarrPriorityEnabled_AndInRadarrCache_ButMissingFile()
+        {
+            // Setup Radarr priority enabled but movie is missing file (the reported bug scenario)
+            _mocker.Setup<ISettingsService<RadarrSettings>, Task<RadarrSettings>>(x => x.GetSettingsAsync())
+                .ReturnsAsync(new RadarrSettings { Enabled = true, ScanForAvailability = true, PrioritizeArrAvailability = true });
+            _mocker.Setup<IExternalRepository<RadarrCache>, IQueryable<RadarrCache>>(x => x.GetAll())
+                .Returns(new List<RadarrCache> { new RadarrCache { TheMovieDbId = 123, HasFile = false, HasRegular = false } }.AsQueryable().BuildMock());
+
+            var request = new MovieRequests
+            {
+                ImdbId = "test",
+                TheMovieDbId = 123
+            };
+            _mocker.Setup<IMovieRequestRepository, IQueryable<MovieRequests>>(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
+            _mocker.Setup<IPlexContentRepository, Task<PlexServerContent>>(x => x.Get("test", ProviderType.ImdbId)).ReturnsAsync(new PlexServerContent());
+
+            await _subject.Execute(null);
+
+            // Should NOT mark as available because Radarr has priority and movie is monitored in Radarr
+            // Even though the file is missing in Radarr, Radarr is the source of truth
+            Assert.Multiple(() =>
+            {
+                Assert.That(request.Available, Is.False, "Movie should not be marked as available when Radarr priority is enabled and movie is in Radarr (even without file)");
+                Assert.That(request.MarkedAsAvailable, Is.Null);
+            });
+
+            _mocker.Verify<IMovieRequestRepository>(x => x.SaveChangesAsync(), Times.Never);
+            _mocker.Verify<INotificationHelper>(x => x.Notify(It.IsAny<NotificationOptions>()), Times.Never);
+        }
     }
 }

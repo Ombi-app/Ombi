@@ -143,15 +143,10 @@ namespace Ombi.Schedule.Jobs
                 return false;
             }
 
-            // If is4K, check Has4K property; otherwise check HasRegular or HasFile
-            if (is4K)
-            {
-                return cachedMovie.Has4K;
-            }
-            else
-            {
-                return cachedMovie.HasRegular || cachedMovie.HasFile;
-            }
+            // If movie is in Radarr cache, always defer to Radarr (Radarr is the source of truth)
+            // The Radarr availability checker will mark as available when Radarr actually has the file
+            // This ensures that even placeholder files in Plex don't mark requests as available
+            return true;
         }
 
         protected async Task<bool> ShouldDeferToSonarr(int tvDbId)
@@ -170,9 +165,11 @@ namespace Ombi.Schedule.Jobs
                 return false;
             }
 
-            // Check if any episodes exist in Sonarr cache with HasFile = true
+            // Check if any episodes exist in Sonarr cache (regardless of HasFile status)
+            // If show is monitored in Sonarr, always defer to Sonarr (Sonarr is the source of truth)
+            // The Sonarr availability checker will mark as available when Sonarr actually has the files
             var hasAnyEpisodes = await _sonarrEpisodeCache.GetAll()
-                .Where(x => x.TvDbId == tvDbId && x.HasFile)
+                .Where(x => x.TvDbId == tvDbId)
                 .AnyAsync();
 
             return hasAnyEpisodes;

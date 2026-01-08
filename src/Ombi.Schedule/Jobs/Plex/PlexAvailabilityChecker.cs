@@ -150,11 +150,12 @@ namespace Ombi.Schedule.Jobs.Plex
                 }
 
                 // Check if we should defer to Radarr for 4K availability
-                var shouldDeferRadarr4K = has4kRequest && await ShouldDeferToRadarr(movie.TheMovieDbId, true);
+                var shouldDeferRadarr4K = await ShouldDeferToRadarr(movie.TheMovieDbId, true);
                 // Check if we should defer to Radarr for regular availability
                 var shouldDeferRadarrRegular = await ShouldDeferToRadarr(movie.TheMovieDbId, false);
 
-                if (shouldDeferRadarr4K && shouldDeferRadarrRegular)
+                // Skip if we should defer for any type of availability (not just both)
+                if (shouldDeferRadarr4K || shouldDeferRadarrRegular)
                 {
                     _log.LogInformation($"[PAC] - Movie request {movie.Title} - {movie.Id} found in Plex but deferring to Radarr availability");
                     continue;
