@@ -1,3 +1,13 @@
+## [4.54.1](https://github.com/Ombi-app/Ombi/compare/v4.54.0...v4.54.1) (2026-01-10)
+
+
+### Bug Fixes
+
+* **availability:** Make sure we check radarr/sonarr in the availability rules for it's prioritization [#5286](https://github.com/Ombi-app/Ombi/issues/5286) ([8af1d67](https://github.com/Ombi-app/Ombi/commit/8af1d678ac5e91b927ddabfad0f2194d8b763ebb))
+* resolve inconsistencies in view at 768px screen width ([7cd4225](https://github.com/Ombi-app/Ombi/commit/7cd42257a333ec6e62ffd603fcd3dac77c9fe4b8))
+
+
+
 # [4.54.0](https://github.com/Ombi-app/Ombi/compare/v4.53.3...v4.54.0) (2026-01-08)
 
 
@@ -329,15 +339,6 @@
 
 
 ## [4.46.6](https://github.com/Ombi-app/Ombi/compare/v4.46.5...v4.46.6) (2024-11-24)
-
-
-
-## [4.46.5](https://github.com/Ombi-app/Ombi/compare/v4.46.4...v4.46.5) (2024-11-23)
-
-
-### Bug Fixes
-
-* **Fixed the UI not applying the correct timezone settings:** :bug: ([029ea79](https://github.com/Ombi-app/Ombi/commit/029ea7919220fbc506898733caeb4370053051a7))
 
 
 
