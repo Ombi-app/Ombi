@@ -40,15 +40,19 @@ namespace Ombi.Schedule.Jobs.Radarr
         {
             try
             {
+                _logger.LogInformation("[RadarrSync] Starting Radarr cache sync - clearing existing cache");
                 // Let's remove the old cached data
                 using var tran = await _ctx.Database.BeginTransactionAsync();
                 await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM RadarrCache");
                 await tran.CommitAsync();
+                _logger.LogInformation("[RadarrSync] RadarrCache cleared");
 
                 var radarrSettings = _radarrSettings.GetSettingsAsync();
                 await Process(await radarrSettings);
                 var radarr4kSettings = _radarr4kSettings.GetSettingsAsync();
                 await Process(await radarr4kSettings);
+
+                _logger.LogInformation("[RadarrSync] Radarr cache sync completed");
             }
             catch (Exception)
             {
@@ -66,11 +70,17 @@ namespace Ombi.Schedule.Jobs.Radarr
                     var existingMovies = _radarrRepo.GetAll();
                     if (movies != null)
                     {
+                        _logger.LogInformation($"[RadarrSync] Retrieved {movies.Count} movies from Radarr");
                         var movieIds = new List<RadarrCache>();
+                        var monitoredCount = 0;
+                        var withFilesCount = 0;
                         foreach (var m in movies)
                         {
                             if (m.monitored || m.hasFile)
                             {
+                                if (m.monitored) monitoredCount++;
+                                if (m.hasFile) withFilesCount++;
+
                                 if (m.tmdbId > 0)
                                 {
                                     var is4k = m.movieFile?.quality?.quality?.resolution >= 2160;
@@ -81,6 +91,7 @@ namespace Ombi.Schedule.Jobs.Radarr
                                     {
                                         existing.Has4K = is4k;
                                         existing.HasFile = m.hasFile;
+                                        _logger.LogDebug($"[RadarrSync] Updating cache for TMDB:{m.tmdbId} ({m.title}) - HasFile:{m.hasFile}, Is4K:{is4k}");
                                     }
                                     else
                                     {
@@ -91,6 +102,7 @@ namespace Ombi.Schedule.Jobs.Radarr
                                             Has4K = is4k,
                                             HasRegular = !is4k
                                         });
+                                        _logger.LogDebug($"[RadarrSync] Adding to cache TMDB:{m.tmdbId} ({m.title}) - HasFile:{m.hasFile}, Is4K:{is4k}, Monitored:{m.monitored}");
                                     }
                                 }
                                 else
@@ -99,11 +111,13 @@ namespace Ombi.Schedule.Jobs.Radarr
                                 }
                             }
                         }
+                        _logger.LogInformation($"[RadarrSync] Caching {movieIds.Count} new movies (Total monitored: {monitoredCount}, with files: {withFilesCount})");
                         // Save from the updates made to the existing movies (they are in the EF Change Tracker)
                         await _radarrRepo.SaveChangesAsync();
                         await _radarrRepo.AddRange(movieIds);
                     }
 
+                    _logger.LogInformation("[RadarrSync] Triggering ArrAvailabilityChecker");
                     await OmbiQuartz.TriggerJob(nameof(IArrAvailabilityChecker), "DVR");
                 }
                 catch (System.Exception ex)

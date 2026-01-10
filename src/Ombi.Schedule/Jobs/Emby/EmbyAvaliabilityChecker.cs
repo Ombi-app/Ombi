@@ -48,6 +48,12 @@ namespace Ombi.Schedule.Jobs.Emby
 
         private async Task ProcessMovies()
         {
+            // If Radarr is configured to scan with priority, skip Emby checking entirely
+            if (await ShouldSkipMovieAvailabilityCheck())
+            {
+                return;
+            }
+
             var feature4kEnabled = await _featureService.FeatureEnabled(FeatureNames.Movie4KRequests);
             var movies = _movieRepo.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available || (!x.Available4K && x.Has4KRequest));
 
@@ -70,23 +76,11 @@ namespace Ombi.Schedule.Jobs.Emby
                     continue;
                 }
 
-                // Check if we should defer to Radarr for 4K availability
-                var shouldDeferRadarr4K = await ShouldDeferToRadarr(movie.TheMovieDbId, true);
-                // Check if we should defer to Radarr for regular availability
-                var shouldDeferRadarrRegular = await ShouldDeferToRadarr(movie.TheMovieDbId, false);
-
-                // Skip if we should defer for any type of availability (not just both)
-                if (shouldDeferRadarr4K || shouldDeferRadarrRegular)
-                {
-                    _log.LogInformation("Movie request {0} - {1} found in Emby but deferring to Radarr availability", movie?.Title ?? string.Empty, movie.Id);
-                    continue;
-                }
-
                 _log.LogInformation("We have found the request {0} on Emby, sending the notification", movie?.Title ?? string.Empty);
 
                 var notify = false;
 
-                if (has4kRequest && embyContent.Has4K && !movie.Available4K && !shouldDeferRadarr4K)
+                if (has4kRequest && embyContent.Has4K && !movie.Available4K)
                 {
                     movie.Available4K = true;
                     movie.MarkedAsAvailable4K = DateTime.Now;
@@ -94,7 +88,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 }
 
                 // If we have a non-4k version or we don't care about versions, then mark as available
-                if (!movie.Available && ( !feature4kEnabled || embyContent.Quality != null ) && !shouldDeferRadarrRegular)
+                if (!movie.Available && ( !feature4kEnabled || embyContent.Quality != null ))
                 {
                     movie.Available = true;
                     movie.MarkedAsAvailable = DateTime.Now;
@@ -127,6 +121,12 @@ namespace Ombi.Schedule.Jobs.Emby
         /// <returns></returns>
         private async Task ProcessTv()
         {
+            // If Sonarr is configured to scan with priority, skip Emby checking entirely
+            if (await ShouldSkipTvAvailabilityCheck())
+            {
+                return;
+            }
+
             var tv = _tvRepo.GetChild().Where(x => !x.Available);
             var embyEpisodes = _repo.GetAllEpisodes().Include(x => x.Series);
 
@@ -168,13 +168,6 @@ namespace Ombi.Schedule.Jobs.Emby
                     // Let's try and match the series by name
                     seriesEpisodes = embyEpisodes.Where(x =>
                         x.Series.Title == child.Title);
-                }
-
-                // Check if we should defer to Sonarr for this TV show
-                if (await ShouldDeferToSonarr(tvDbId))
-                {
-                    _log.LogInformation("TV request {0} - {1} found in Emby but deferring to Sonarr availability", child.Title, child.Id);
-                    continue;
                 }
 
                 await ProcessTvShow(seriesEpisodes, child);

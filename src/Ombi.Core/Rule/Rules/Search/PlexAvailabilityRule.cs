@@ -8,6 +8,7 @@ using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
+using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 
@@ -17,14 +18,18 @@ namespace Ombi.Core.Rule.Rules.Search
     {
         private readonly ISettingsService<PlexSettings> _plexSettings;
         private readonly IFeatureService _featureService;
+        private readonly ISettingsService<RadarrSettings> _radarrSettings;
+        private readonly ISettingsService<SonarrSettings> _sonarrSettings;
 
         public PlexAvailabilityRule(IPlexContentRepository repo, ILogger<PlexAvailabilityRule> log, ISettingsService<PlexSettings> plexSettings,
-            IFeatureService featureService)
+            IFeatureService featureService, ISettingsService<RadarrSettings> radarrSettings = null, ISettingsService<SonarrSettings> sonarrSettings = null)
         {
             PlexContentRepository = repo;
             Log = log;
             _plexSettings = plexSettings;
             _featureService = featureService;
+            _radarrSettings = radarrSettings;
+            _sonarrSettings = sonarrSettings;
         }
 
         private IPlexContentRepository PlexContentRepository { get; }
@@ -97,27 +102,37 @@ namespace Ombi.Core.Rule.Rules.Search
 
                 if (obj is SearchMovieViewModel movie)
                 {
-                    var is4kEnabled = await _featureService.FeatureEnabled(FeatureNames.Movie4KRequests);
+                    // Check if Radarr has priority - if so, don't mark as available from Plex
+                    var radarrHasPriority = await ShouldDeferToRadarr();
+                    if (!radarrHasPriority)
+                    {
+                        var is4kEnabled = await _featureService.FeatureEnabled(FeatureNames.Movie4KRequests);
 
-                    if (item.Has4K && is4kEnabled)
-                    {
-                        movie.Available4K = true;
-                    }
-                    else
-                    {
-                        obj.Available = true;
-                        obj.Quality = item.Quality;
-                    }
+                        if (item.Has4K && is4kEnabled)
+                        {
+                            movie.Available4K = true;
+                        }
+                        else
+                        {
+                            obj.Available = true;
+                            obj.Quality = item.Quality;
+                        }
 
-                    if (item.Quality.HasValue())
-                    {
-                        obj.Available = true;
-                        obj.Quality = item.Quality;
+                        if (item.Quality.HasValue())
+                        {
+                            obj.Available = true;
+                            obj.Quality = item.Quality;
+                        }
                     }
                 }
                 else
                 {
-                    obj.Available = true;
+                    // Check if Sonarr has priority for TV shows
+                    var sonarrHasPriority = await ShouldDeferToSonarr();
+                    if (!sonarrHasPriority)
+                    {
+                        obj.Available = true;
+                    }
                 }
 
                 if (item.Url.StartsWith("http"))
@@ -158,5 +173,29 @@ namespace Ombi.Core.Rule.Rules.Search
                 RequestType.TvShow => MediaType.Series,
                 _ => MediaType.Movie,
             };
+
+        private async Task<bool> ShouldDeferToRadarr()
+        {
+            if (_radarrSettings == null)
+            {
+                return false;
+            }
+
+            var radarrSettings = await _radarrSettings.GetSettingsAsync();
+            return radarrSettings != null && radarrSettings.Enabled &&
+                   radarrSettings.ScanForAvailability && radarrSettings.PrioritizeArrAvailability;
+        }
+
+        private async Task<bool> ShouldDeferToSonarr()
+        {
+            if (_sonarrSettings == null)
+            {
+                return false;
+            }
+
+            var sonarrSettings = await _sonarrSettings.GetSettingsAsync();
+            return sonarrSettings != null && sonarrSettings.Enabled &&
+                   sonarrSettings.ScanForAvailability && sonarrSettings.PrioritizeArrAvailability;
+        }
     }
 }

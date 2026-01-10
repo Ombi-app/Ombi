@@ -116,63 +116,47 @@ namespace Ombi.Schedule.Jobs
             }
         }
 
-        protected async Task<bool> ShouldDeferToRadarr(int theMovieDbId, bool is4K)
+        /// <summary>
+        /// Determines if movie availability checking should be skipped entirely because Radarr is the source of truth
+        /// </summary>
+        protected async Task<bool> ShouldSkipMovieAvailabilityCheck()
         {
-            // If no Radarr settings service injected, don't defer
-            if (_radarrSettings == null || _radarrCache == null)
+            if (_radarrSettings == null)
             {
                 return false;
             }
 
+            // Check regular Radarr settings
             var radarrSettings = await _radarrSettings.GetSettingsAsync();
-
-            // Check if Radarr is enabled, scanning for availability, and prioritizing *Arr availability
-            if (radarrSettings == null || !radarrSettings.Enabled || !radarrSettings.ScanForAvailability || !radarrSettings.PrioritizeArrAvailability)
+            if (radarrSettings != null && radarrSettings.Enabled &&
+                radarrSettings.ScanForAvailability && radarrSettings.PrioritizeArrAvailability)
             {
-                return false;
+                _log.LogInformation("[AvailabilityChecker] Radarr is configured to scan for availability with priority - skipping media server movie availability checks");
+                return true;
             }
 
-            // Check if content exists in Radarr cache with HasFile = true
-            var cachedMovie = await _radarrCache.GetAll()
-                .Where(x => x.TheMovieDbId == theMovieDbId)
-                .FirstOrDefaultAsync();
-
-            if (cachedMovie == null)
-            {
-                // Content not in Radarr cache at all, allow media server to mark as available
-                return false;
-            }
-
-            // If movie is in Radarr cache, always defer to Radarr (Radarr is the source of truth)
-            // The Radarr availability checker will mark as available when Radarr actually has the file
-            // This ensures that even placeholder files in Plex don't mark requests as available
-            return true;
+            return false;
         }
 
-        protected async Task<bool> ShouldDeferToSonarr(int tvDbId)
+        /// <summary>
+        /// Determines if TV availability checking should be skipped entirely because Sonarr is the source of truth
+        /// </summary>
+        protected async Task<bool> ShouldSkipTvAvailabilityCheck()
         {
-            // If no Sonarr settings service injected, don't defer
-            if (_sonarrSettings == null || _sonarrEpisodeCache == null)
+            if (_sonarrSettings == null)
             {
                 return false;
             }
 
             var sonarrSettings = await _sonarrSettings.GetSettingsAsync();
-
-            // Check if Sonarr is enabled, scanning for availability, and prioritizing *Arr availability
-            if (sonarrSettings == null || !sonarrSettings.Enabled || !sonarrSettings.ScanForAvailability || !sonarrSettings.PrioritizeArrAvailability)
+            if (sonarrSettings != null && sonarrSettings.Enabled &&
+                sonarrSettings.ScanForAvailability && sonarrSettings.PrioritizeArrAvailability)
             {
-                return false;
+                _log.LogInformation("[AvailabilityChecker] Sonarr is configured to scan for availability with priority - skipping media server TV availability checks");
+                return true;
             }
 
-            // Check if any episodes exist in Sonarr cache (regardless of HasFile status)
-            // If show is monitored in Sonarr, always defer to Sonarr (Sonarr is the source of truth)
-            // The Sonarr availability checker will mark as available when Sonarr actually has the files
-            var hasAnyEpisodes = await _sonarrEpisodeCache.GetAll()
-                .Where(x => x.TvDbId == tvDbId)
-                .AnyAsync();
-
-            return hasAnyEpisodes;
+            return false;
         }
     }
 }
