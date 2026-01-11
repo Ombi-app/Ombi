@@ -94,8 +94,8 @@
             "TvShows": "Serie TV",
             "Music": "Musica",
             "People": "Persone",
-            "Decade": "Decade",
-            "None": "None"
+            "Decade": "Decennio",
+            "None": "Nessuno"
         },
         "MorningWelcome": "Buongiorno!",
         "AfternoonWelcome": "Buon pomeriggio!",
