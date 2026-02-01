@@ -24,6 +24,7 @@ namespace Ombi.Helpers.Tests
                 yield return new TestCaseData(mediaId.ToString(), "http://google.com/", "1").Returns($"http://google.com/web/index.html#!/item?id={mediaId}&serverId=1").SetName("EmbyHelper_GetMediaUrl_WithCustomDomain");
                 yield return new TestCaseData(mediaId.ToString(), "https://google.com/", "1").Returns($"https://google.com/web/index.html#!/item?id={mediaId}&serverId=1").SetName("EmbyHelper_GetMediaUrl_WithCustomDomain_Https");
                 yield return new TestCaseData(mediaId.ToString(), string.Empty, "1").Returns($"https://app.emby.media/web/index.html#!/item?id={mediaId}&serverId=1").SetName("EmbyHelper_GetMediaUrl_WithOutCustomDomain");
+                yield return new TestCaseData(mediaId.ToString(), "https://app.emby.media/", "1").Returns($"https://app.emby.media/#!/item?id={mediaId}&serverId=1").SetName("EmbyHelper_GetMediaUrl_AppEmbyMedia_UsesCorrectHashFormat");
             }
         }
     }
