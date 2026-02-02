@@ -9,11 +9,9 @@ namespace Ombi.Helpers
             // app.emby.media only supports #!/item format, not #!/details or #!/itemdetails
             string path = "item";
             
-            // Check if targeting app.emby.media and use correct format
-            if (string.IsNullOrEmpty(customerServerUrl) || customerServerUrl.Contains("app.emby.media", StringComparison.OrdinalIgnoreCase))
-            {
-                path = "item";  // app.emby.media uses #!/item
-            }
+            // Check if targeting app.emby.media specifically
+            bool isAppEmbyMedia = !string.IsNullOrEmpty(customerServerUrl) &&
+                                  customerServerUrl.Contains("app.emby.media", StringComparison.OrdinalIgnoreCase);
             
             if (customerServerUrl.HasValue())
             {
