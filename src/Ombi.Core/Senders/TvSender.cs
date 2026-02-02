@@ -163,8 +163,18 @@ namespace Ombi.Core.Senders
                 {
                     if (profiles.SonarrRootPathAnime > 0)
                     {
-                        Logger.LogInformation("Using user's anime root path override: {RootPath}", profiles.SonarrRootPathAnime);
-                        rootFolderPath = await GetSonarrRootPath(profiles.SonarrRootPathAnime, s);
+                        Logger.LogInformation("Checking user's anime root path override: {RootPath}", profiles.SonarrRootPathAnime);
+                        var userAnimeRootPath = await GetSonarrRootPath(profiles.SonarrRootPathAnime, s);
+                        // Only use the user's root path if it's valid (exists in Sonarr)
+                        if (!string.IsNullOrEmpty(userAnimeRootPath))
+                        {
+                            Logger.LogInformation("Using user's anime root path override: {RootPath}", profiles.SonarrRootPathAnime);
+                            rootFolderPath = userAnimeRootPath;
+                        }
+                        else
+                        {
+                            Logger.LogWarning("User's anime root path ID {RootPath} no longer exists in Sonarr, falling back to global default", profiles.SonarrRootPathAnime);
+                        }
                     }
                     if (profiles.SonarrQualityProfileAnime > 0)
                     {
@@ -185,8 +195,18 @@ namespace Ombi.Core.Senders
                 {
                     if (profiles.SonarrRootPath > 0)
                     {
-                        Logger.LogInformation("Using user's standard root path override: {RootPath}", profiles.SonarrRootPath);
-                        rootFolderPath = await GetSonarrRootPath(profiles.SonarrRootPath, s);
+                        Logger.LogInformation("Checking user's standard root path override: {RootPath}", profiles.SonarrRootPath);
+                        var userRootPath = await GetSonarrRootPath(profiles.SonarrRootPath, s);
+                        // Only use the user's root path if it's valid (exists in Sonarr)
+                        if (!string.IsNullOrEmpty(userRootPath))
+                        {
+                            Logger.LogInformation("Using user's standard root path override: {RootPath}", profiles.SonarrRootPath);
+                            rootFolderPath = userRootPath;
+                        }
+                        else
+                        {
+                            Logger.LogWarning("User's standard root path ID {RootPath} no longer exists in Sonarr, falling back to global default", profiles.SonarrRootPath);
+                        }
                     }
                     if (profiles.SonarrQualityProfile > 0)
                     {
