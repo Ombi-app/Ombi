@@ -34,7 +34,7 @@ namespace Ombi.Helpers
             }
             else
             {
-                // Default to app.emby.media without /web/index.html
+                // Default (no custom server) uses app.emby.media WITHOUT /web/index.html (causes 404)
                 return $"https://app.emby.media/#!/{path}?id={mediaId}&serverId={serverId}";
             }
         }
