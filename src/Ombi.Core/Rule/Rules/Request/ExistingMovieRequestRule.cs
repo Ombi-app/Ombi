@@ -62,13 +62,26 @@ namespace Ombi.Core.Rule.Rules.Request
         private async Task<bool> Check4KRequests(MovieRequests movie, MovieRequests existing)
         {
             var featureEnabled = await _featureService.FeatureEnabled(FeatureNames.Movie4KRequests);
-            if (movie.Is4kRequest && existing.Has4KRequest && featureEnabled)
+            
+            // If requesting 4K and 4K feature is enabled, check if 4K request already exists
+            if (movie.Is4kRequest && featureEnabled)
             {
-               return true;
+               return existing.Has4KRequest;
             }
-            if (!movie.Is4kRequest && !existing.Has4KRequest || !featureEnabled)
+            
+            // If requesting non-4K
+            if (!movie.Is4kRequest)
             {
-                return true;
+                // If 4K feature is disabled, any existing request (4K or non-4K) is a duplicate
+                if (!featureEnabled)
+                {
+                    return existing.RequestedDate.HasValue() || existing.Has4KRequest;
+                }
+                // If 4K feature is enabled, only reject if non-4K request exists
+                else
+                {
+                    return existing.RequestedDate.HasValue();
+                }
             }
 
             return false;
