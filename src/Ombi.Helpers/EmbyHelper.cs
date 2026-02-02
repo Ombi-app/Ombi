@@ -8,24 +8,34 @@ namespace Ombi.Helpers
         {
             // app.emby.media only supports #!/item format, not #!/details or #!/itemdetails
             string path = "item";
-            
-            // Check if targeting app.emby.media and use correct format
-            if (!string.IsNullOrEmpty(customerServerUrl) && customerServerUrl.Contains("app.emby.media", StringComparison.OrdinalIgnoreCase))
-            {
-                path = "item";  // app.emby.media uses #!/item
-            }
-            
+
+            // Check if targeting app.emby.media
+            bool isAppEmbyMedia = !string.IsNullOrEmpty(customerServerUrl) &&
+                                  customerServerUrl.Contains("app.emby.media", StringComparison.OrdinalIgnoreCase);
+
             if (customerServerUrl.HasValue())
             {
+                // app.emby.media doesn't use /web/index.html in URLs
+                if (isAppEmbyMedia)
+                {
+                    if (!customerServerUrl.EndsWith("/"))
+                    {
+                        return $"{customerServerUrl}/#!/{path}?id={mediaId}&serverId={serverId}";
+                    }
+                    return $"{customerServerUrl}#!/{path}?id={mediaId}&serverId={serverId}";
+                }
+
+                // Custom Emby servers use /web/index.html
                 if (!customerServerUrl.EndsWith("/"))
                 {
                     return $"{customerServerUrl}/web/index.html#!/{path}?id={mediaId}&serverId={serverId}";
                 }
-                    return $"{customerServerUrl}web/index.html#!/{path}?id={mediaId}&serverId={serverId}";
+                return $"{customerServerUrl}web/index.html#!/{path}?id={mediaId}&serverId={serverId}";
             }
             else
             {
-                return $"https://app.emby.media/web/index.html#!/{path}?id={mediaId}&serverId={serverId}";
+                // Default to app.emby.media without /web/index.html
+                return $"https://app.emby.media/#!/{path}?id={mediaId}&serverId={serverId}";
             }
         }
     }
