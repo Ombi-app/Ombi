@@ -109,18 +109,19 @@ namespace Ombi.Core.Engine
             var movieQuery = MovieRepository.GetAll();
             var tvQuery = TvRepository.Get();
 
-            var pendingMovies = movieQuery.Count(x => !x.Approved && !x.Available);
+            var pendingMovies = movieQuery.Count(x => !x.Approved && !x.Available && !(x.Denied ?? false));
             var approvedMovies = movieQuery.Count(x => x.Approved && !x.Available);
             var availableMovies = movieQuery.Count(x => x.Available);
-
+            var deniedMovies = movieQuery.Count(x => x.Denied ?? false);
             var pendingTv = 0;
             var approvedTv = 0;
             var availableTv = 0;
+            var deniedTv = 0;
             foreach (var tv in tvQuery)
             {
                 foreach (var child in tv.ChildRequests)
                 {
-                    if (!child.Approved && !child.Available)
+                    if (!child.Approved && !child.Available && !(child.Denied ?? false))
                     {
                         pendingTv++;
                     }
@@ -132,6 +133,10 @@ namespace Ombi.Core.Engine
                     {
                         availableTv++;
                     }
+                    if (child.Denied ?? false)
+                    {
+                        deniedTv++;
+                    }
                 }
             }
 
@@ -139,7 +144,43 @@ namespace Ombi.Core.Engine
             {
                 Approved = approvedTv + approvedMovies,
                 Available = availableTv + availableMovies,
-                Pending = pendingMovies + pendingTv
+                Pending = pendingMovies + pendingTv,
+                Denied = deniedMovies + deniedTv
+            };
+        }
+            var pendingTv = 0;
+            var approvedTv = 0;
+            var availableTv = 0;
+            var deniedTv = 0;
+            foreach (var tv in tvQuery)
+            {
+                foreach (var child in tv.ChildRequests)
+                {
+                    if (!child.Approved && !child.Available && !(child.Denied ?? false))
+                    {
+                        pendingTv++;
+                    }
+                    if (child.Approved && !child.Available)
+                    {
+                        approvedTv++;
+                    }
+                    if (child.Available)
+                    {
+                        availableTv++;
+                    }
+                    if (child.Denied ?? false)
+                    {
+                        deniedTv++;
+                    }
+                }
+            }
+
+            return new RequestCountModel
+            {
+                Approved = approvedTv + approvedMovies,
+                Available = availableTv + availableMovies,
+                Pending = pendingMovies + pendingTv,
+                Denied = deniedMovies + deniedTv
             };
         }
 
