@@ -92,13 +92,6 @@ namespace Ombi.Schedule.Jobs.Sonarr
                     await _ctx.SonarrCache.AddRangeAsync(sonarrCacheToSave);
                     await _ctx.SaveChangesAsync();
                     sonarrCacheToSave.Clear();
-                    strat = _ctx.Database.CreateExecutionStrategy();
-                    await strat.ExecuteAsync(async () =>
-                    {
-                        using var tran = await _ctx.Database.BeginTransactionAsync();
-                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrEpisodeCache");
-                        await tran.CommitAsync();
-                    });
 
                     foreach (var s in ids)
                     {
@@ -110,6 +103,15 @@ namespace Ombi.Schedule.Jobs.Sonarr
                         _log.LogDebug($"Syncing series: {s.Title}");
                         var episodes = await _api.GetEpisodes(s.Id, settings.ApiKey, settings.FullUri);
                         var monitoredEpisodes = episodes.Where(x => x.monitored || x.hasFile);
+
+                        // Delete existing episodes for this series before adding new ones
+                        strat = _ctx.Database.CreateExecutionStrategy();
+                        await strat.ExecuteAsync(async () =>
+                        {
+                            using var tran = await _ctx.Database.BeginTransactionAsync();
+                            await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrEpisodeCache WHERE TvDbId = {0}", s.TvDbId);
+                            await tran.CommitAsync();
+                        });
 
                         //var allExistingEpisodes = await _ctx.SonarrEpisodeCache.Where(x => x.TvDbId == s.tvdbId).ToListAsync();
                         // Add to DB
