@@ -1,4 +1,6 @@
-﻿namespace Ombi.Helpers
+﻿using System;
+
+namespace Ombi.Helpers
 {
     public static class EmbyHelper
     {
@@ -7,7 +9,7 @@
             // app.emby.media only supports #!/item format, not #!/details or #!/itemdetails
             string path = "item";
 
-            // Check if targeting app.emby.media
+            // Check if targeting app.emby.media specifically
             bool isAppEmbyMedia = !string.IsNullOrEmpty(customerServerUrl) &&
                                   customerServerUrl.Contains("app.emby.media", StringComparison.OrdinalIgnoreCase);
 
@@ -32,7 +34,7 @@
             }
             else
             {
-                // Default to app.emby.media without /web/index.html
+                // Default (no custom server) uses app.emby.media WITHOUT /web/index.html (causes 404)
                 return $"https://app.emby.media/#!/{path}?id={mediaId}&serverId={serverId}";
             }
         }
