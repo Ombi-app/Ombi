@@ -10,7 +10,7 @@ namespace Ombi.Helpers
             string path = "item";
             
             // Check if targeting app.emby.media and use correct format
-            if (!string.IsNullOrEmpty(customerServerUrl) && customerServerUrl.Contains("app.emby.media", StringComparison.OrdinalIgnoreCase))
+            if (string.IsNullOrEmpty(customerServerUrl) || customerServerUrl.Contains("app.emby.media", StringComparison.OrdinalIgnoreCase))
             {
                 path = "item";  // app.emby.media uses #!/item
             }
