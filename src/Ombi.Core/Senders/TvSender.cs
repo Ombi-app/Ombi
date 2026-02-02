@@ -545,11 +545,10 @@ namespace Ombi.Core.Senders
                 var sonarrEpCount = sonarrSeason.Count();
                 var ourRequestCount = season.Episodes.Count;
 
-                // We have the same amount of requests as all of the episodes in the season,
-                // or Sonarr has more episodes than Ombi (incomplete metadata).
-                // Do a season search in both cases.
-                if (sonarrEpCount >= ourRequestCount)
+                if (sonarrEpCount == ourRequestCount)
                 {
+                    // We have the same amount of requests as all of the episodes in the season.
+                    // Do a season search
                     await SonarrApi.SeasonSearch(existingSeries.id, season.SeasonNumber, s.ApiKey, s.FullUri);
                 }
                 else
