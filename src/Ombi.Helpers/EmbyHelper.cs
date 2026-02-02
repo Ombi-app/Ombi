@@ -1,4 +1,6 @@
-﻿namespace Ombi.Helpers
+﻿using System;
+
+namespace Ombi.Helpers
 {
     public static class EmbyHelper
     {
