@@ -216,14 +216,18 @@ namespace Ombi.Schedule.Jobs.Plex
                     }
 
                     // Second pass: Remove old watchlist history entries that are no longer in current Plex watchlist
-                    var historyEntries = await _watchlistRepo.GetAll().Where(x => x.UserId == user.Id).ToListAsync();
-                    foreach (var historyEntry in historyEntries)
+                    // Only run if we found valid items (otherwise GetAll() is called unnecessarily)
+                    if (currentWatchlistTmdbIds.Count > 0)
                     {
-                        // If this item is not in the current Plex watchlist, remove from history
-                        if (!currentWatchlistTmdbIds.Contains(historyEntry.TmdbId))
+                        var historyEntries = await _watchlistRepo.GetAll().Where(x => x.UserId == user.Id).ToListAsync();
+                        foreach (var historyEntry in historyEntries)
                         {
-                            _logger.LogDebug($"Removing old history entry for TMDB ID {historyEntry.TmdbId} (no longer in Plex watchlist)");
-                            await _watchlistRepo.Delete(historyEntry);
+                            // If this item is not in the current Plex watchlist, remove from history
+                            if (!currentWatchlistTmdbIds.Contains(historyEntry.TmdbId))
+                            {
+                                _logger.LogDebug($"Removing old history entry for TMDB ID {historyEntry.TmdbId} (no longer in Plex watchlist)");
+                                await _watchlistRepo.Delete(historyEntry);
+                            }
                         }
                     }
 
