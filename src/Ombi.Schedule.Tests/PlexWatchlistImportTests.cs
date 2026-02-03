@@ -45,11 +45,12 @@ namespace Ombi.Schedule.Tests
             _context = _mocker.GetMock<IJobExecutionContext>();
             _context.Setup(x => x.CancellationToken).Returns(CancellationToken.None);
             // Mock the keep-alive service to return true by default
-            _mocker.Use<IPlexTokenKeepAliveService>(Mock.Of<IPlexTokenKeepAliveService>(s => 
+            _mocker.Use<IPlexTokenKeepAliveService>(Mock.Of<IPlexTokenKeepAliveService>(s =>
                 s.KeepTokenAliveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()) == Task.FromResult(true) &&
                 s.TryRefreshTokenAsync(It.IsAny<OmbiUser>(), It.IsAny<CancellationToken>()) == Task.FromResult(false)));
             _subject = _mocker.CreateInstance<PlexWatchlistImport>();
             _mocker.Setup<IRepository<PlexWatchlistUserError>, IQueryable<PlexWatchlistUserError>>(x => x.GetAll()).Returns(new List<PlexWatchlistUserError>().AsQueryable().BuildMock());
+            _mocker.Setup<IExternalRepository<PlexWatchlistHistory>, IQueryable<PlexWatchlistHistory>>(x => x.GetAll()).Returns(new List<PlexWatchlistHistory>().AsQueryable().BuildMock());
             _mocker.Setup<INotificationHelper>(x => x.Notify(It.IsAny<NotificationOptions>()));
         }
 
