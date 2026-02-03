@@ -75,12 +75,12 @@ namespace Ombi.Core.Rule.Rules.Request
                 // If 4K feature is disabled, any existing request (4K or non-4K) is a duplicate
                 if (!featureEnabled)
                 {
-                    return existing.RequestedDate.HasValue() || existing.Has4KRequest;
+                    return existing.RequestedDate != DateTime.MinValue || existing.Has4KRequest;
                 }
                 // If 4K feature is enabled, only reject if non-4K request exists
                 else
                 {
-                    return existing.RequestedDate.HasValue();
+                    return existing.RequestedDate != DateTime.MinValue;
                 }
             }
 
