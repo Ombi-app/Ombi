@@ -83,6 +83,12 @@ namespace Ombi.Core.Rule.Rules.Request
                     return existing.RequestedDate != default;
                 }
             }
+            
+            // If requesting 4K and 4K feature is disabled, treat as duplicate (4K should work like non-4K)
+            if (movie.Is4kRequest && !featureEnabled)
+            {
+                return existing.RequestedDate != default || existing.Has4KRequest;
+            }
 
             return false;
         }
