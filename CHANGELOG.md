@@ -1,3 +1,12 @@
+# [4.55.0](https://github.com/Ombi-app/Ombi/compare/v4.54.5...v4.55.0) (2026-02-10)
+
+
+### Features
+
+* Add Ntfy ([dfcea55](https://github.com/Ombi-app/Ombi/commit/dfcea555887efdff4311d2a5734561ab7bbd9380))
+
+
+
 ## [4.54.5](https://github.com/Ombi-app/Ombi/compare/v4.54.4...v4.54.5) (2026-02-10)
 
 
@@ -331,15 +340,6 @@
 ### Bug Fixes
 
 * [#5223](https://github.com/Ombi-app/Ombi/issues/5223) ([cf0c161](https://github.com/Ombi-app/Ombi/commit/cf0c1614a496b4f7cf19d78e885c3e37dae5cf0f))
-
-
-
-## [4.47.2](https://github.com/Ombi-app/Ombi/compare/v4.47.0...v4.47.2) (2025-03-11)
-
-
-### Bug Fixes
-
-* **user-import:** Do not import users that do not have access to the server [#5064](https://github.com/Ombi-app/Ombi/issues/5064) ([a801cfd](https://github.com/Ombi-app/Ombi/commit/a801cfdb0946cbee3c35b7e917a240f69020f221))
 
 
 
