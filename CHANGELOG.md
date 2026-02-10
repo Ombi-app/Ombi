@@ -1,3 +1,13 @@
+## [4.54.4](https://github.com/Ombi-app/Ombi/compare/v4.54.3...v4.54.4) (2026-02-10)
+
+
+### Bug Fixes
+
+* src/Ombi/ClientApp/package.json & src/Ombi/ClientApp/yarn.lock to reduce vulnerabilities ([e55de4e](https://github.com/Ombi-app/Ombi/commit/e55de4e4e5496bd61d3f80d9f2719b8df04b1d4b))
+* src/Ombi/ClientApp/package.json & src/Ombi/ClientApp/yarn.lock to reduce vulnerabilities ([80c96a7](https://github.com/Ombi-app/Ombi/commit/80c96a77c9667fc56b8f8c2d79ce0cc0f75e53f6))
+
+
+
 ## [4.54.3](https://github.com/Ombi-app/Ombi/compare/v4.54.2...v4.54.3) (2026-02-10)
 
 
@@ -335,15 +345,6 @@
 ### Features
 
 * **wizard:** :sparkles: Added the ability to start with a different database ([#5208](https://github.com/Ombi-app/Ombi/issues/5208)) ([cc98fc6](https://github.com/Ombi-app/Ombi/commit/cc98fc6aca27111a8afc3b7b5b8e53207b73fe15))
-
-
-
-## [4.46.8](https://github.com/Ombi-app/Ombi/compare/v4.46.7...v4.46.8) (2025-01-03)
-
-
-### Bug Fixes
-
-* **radarr-settings:** this.normalForm is undefined ([#5207](https://github.com/Ombi-app/Ombi/issues/5207)) ([dc2b958](https://github.com/Ombi-app/Ombi/commit/dc2b958915bf6cb77e093ada843ef6d9f62a3755)), closes [#4994](https://github.com/Ombi-app/Ombi/issues/4994)
 
 
 
