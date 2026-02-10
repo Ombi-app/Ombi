@@ -182,10 +182,17 @@ namespace Ombi.Schedule.Jobs.Plex
 
                     var items = watchlist.MediaContainer.Metadata;
                     _logger.LogDebug($"Items found in watchlist: {watchlist.MediaContainer.totalSize}");
+
+                    // First pass: Build a HashSet of all current Plex watchlist items and cache provider IDs
+                    var currentWatchlistTmdbIds = new HashSet<string>();
+                    var providerIdsCache = new Dictionary<string, ProviderId>(); // Cache by ratingKey
                     foreach (var item in items)
                     {
                         _logger.LogDebug($"Processing {item.title} {item.type}");
                         var providerIds = await GetProviderIds(user.MediaServerToken, item, context?.CancellationToken ?? CancellationToken.None);
+                        // Cache the provider IDs for this item
+                        providerIdsCache[item.ratingKey] = providerIds;
+
                         if (!providerIds.TheMovieDb.HasValue())
                         {
                             // Try and use another Id to figure out TheMovieDB
@@ -198,10 +205,49 @@ namespace Ombi.Schedule.Jobs.Plex
                             }
 
                             providerIds.TheMovieDb = movieDbId;
+                            // Update the cached provider IDs with the found TMDB ID
+                            providerIdsCache[item.ratingKey] = providerIds;
+                            currentWatchlistTmdbIds.Add(movieDbId);
+                        }
+                        else
+                        {
+                            currentWatchlistTmdbIds.Add(providerIds.TheMovieDb);
+                        }
+                    }
+
+                    // Second pass: Remove old watchlist history entries that are no longer in current Plex watchlist
+                    // Only run if we found valid items (otherwise GetAll() is called unnecessarily)
+                    if (currentWatchlistTmdbIds.Count > 0)
+                    {
+                        var historyEntries = await _watchlistRepo.GetAll().Where(x => x.UserId == user.Id).ToListAsync();
+                        foreach (var historyEntry in historyEntries)
+                        {
+                            // If this item is not in the current Plex watchlist, remove from history
+                            if (!currentWatchlistTmdbIds.Contains(historyEntry.TmdbId))
+                            {
+                                _logger.LogDebug($"Removing old history entry for TMDB ID {historyEntry.TmdbId} (no longer in Plex watchlist)");
+                                await _watchlistRepo.Delete(historyEntry);
+                            }
+                        }
+                    }
+
+                    // Third pass: Process items, skipping if already imported and still in current watchlist
+                    foreach (var item in items)
+                    {
+                        // Use cached provider IDs from first pass
+                        if (!providerIdsCache.TryGetValue(item.ratingKey, out var providerIds))
+                        {
+                            _logger.LogWarning($"No cached provider IDs found for {item.title}, skipping");
+                            continue;
                         }
 
-                        // Check to see if we have already imported this item
-                        var alreadyImported = _watchlistRepo.GetAll().Any(x => x.TmdbId == providerIds.TheMovieDb && x.UserId == user.Id);
+                        if (!providerIds.TheMovieDb.HasValue())
+                        {
+                            continue;  // Skip items we couldn't get TMDB ID for
+                        }
+
+                        // Check to see if we have already imported this item (and it's still in watchlist)
+                        var alreadyImported = await _watchlistRepo.GetAll().AnyAsync(x => x.TmdbId == providerIds.TheMovieDb && x.UserId == user.Id);
                         if (alreadyImported)
                         {
                             _logger.LogDebug($"{item.title} already imported via Plex WatchList, skipping");

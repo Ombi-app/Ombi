@@ -45,11 +45,12 @@ namespace Ombi.Schedule.Tests
             _context = _mocker.GetMock<IJobExecutionContext>();
             _context.Setup(x => x.CancellationToken).Returns(CancellationToken.None);
             // Mock the keep-alive service to return true by default
-            _mocker.Use<IPlexTokenKeepAliveService>(Mock.Of<IPlexTokenKeepAliveService>(s => 
+            _mocker.Use<IPlexTokenKeepAliveService>(Mock.Of<IPlexTokenKeepAliveService>(s =>
                 s.KeepTokenAliveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()) == Task.FromResult(true) &&
                 s.TryRefreshTokenAsync(It.IsAny<OmbiUser>(), It.IsAny<CancellationToken>()) == Task.FromResult(false)));
             _subject = _mocker.CreateInstance<PlexWatchlistImport>();
             _mocker.Setup<IRepository<PlexWatchlistUserError>, IQueryable<PlexWatchlistUserError>>(x => x.GetAll()).Returns(new List<PlexWatchlistUserError>().AsQueryable().BuildMock());
+            _mocker.Setup<IExternalRepository<PlexWatchlistHistory>, IQueryable<PlexWatchlistHistory>>(x => x.GetAll()).Returns(new List<PlexWatchlistHistory>().AsQueryable().BuildMock());
             _mocker.Setup<INotificationHelper>(x => x.Notify(It.IsAny<NotificationOptions>()));
         }
 
@@ -249,7 +250,7 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.Is<MovieRequestViewModel>(x => x.TheMovieDbId == 123)), Times.Once);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistMetadata("abc", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
             _mocker.Verify<IMovieRequestEngine>(x => x.SetUser(It.Is<OmbiUser>(x => x.Id == "abc")), Times.Once);
-            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Once);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.AtLeastOnce());
             _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Once);
         }
 
@@ -300,7 +301,7 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<ITvRequestEngine>(x => x.RequestTvShow(It.Is<TvRequestViewModelV2>(x => x.TheMovieDbId == 123 && x.LatestSeason == true)), Times.Once);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistMetadata("abc", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
             _mocker.Verify<ITvRequestEngine>(x => x.SetUser(It.Is<OmbiUser>(x => x.Id == "abc")), Times.Once);
-            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Once);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.AtLeastOnce());
             _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Once);
         }
 
@@ -350,7 +351,7 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.Is<MovieRequestViewModel>(x => x.TheMovieDbId == 123)), Times.Once);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistMetadata("abc", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
             _mocker.Verify<IMovieRequestEngine>(x => x.SetUser(It.Is<OmbiUser>(x => x.Id == "abc")), Times.Once);
-            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Once);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.AtLeastOnce());
             _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Once);
         }
 
@@ -399,7 +400,7 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<ITvRequestEngine>(x => x.RequestTvShow(It.Is<TvRequestViewModelV2>(x => x.TheMovieDbId == 123)), Times.Once);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistMetadata("abc", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
             _mocker.Verify<ITvRequestEngine>(x => x.SetUser(It.Is<OmbiUser>(x => x.Id == "abc")), Times.Once);
-            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Once);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.AtLeastOnce());
             _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Once);
         }
 
@@ -511,7 +512,7 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.Is<MovieRequestViewModel>(x => x.TheMovieDbId == 333)), Times.Once);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistMetadata("abc", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
             _mocker.Verify<IMovieRequestEngine>(x => x.SetUser(It.Is<OmbiUser>(x => x.Id == "abc")), Times.Once);
-            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Once);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.AtLeastOnce());
             _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Once);
             _mocker.Verify<IMovieDbApi>(x => x.Find("123", ExternalSource.imdb_id), Times.Once);
         }
@@ -573,7 +574,7 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<ITvRequestEngine>(x => x.RequestTvShow(It.Is<TvRequestViewModelV2>(x => x.TheMovieDbId == 333 && x.LatestSeason == false && x.RequestAll == true)), Times.Once);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistMetadata("abc", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
             _mocker.Verify<ITvRequestEngine>(x => x.SetUser(It.Is<OmbiUser>(x => x.Id == "abc")), Times.Once);
-            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Once);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.AtLeastOnce());
             _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Once);
             _mocker.Verify<IMovieDbApi>(x => x.Find("123", ExternalSource.imdb_id), Times.Once);
         }
@@ -634,7 +635,7 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<ITvRequestEngine>(x => x.RequestTvShow(It.Is<TvRequestViewModelV2>(x => x.TheMovieDbId == 333 && x.LatestSeason == false && x.RequestAll == true)), Times.Once);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistMetadata("abc", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
             _mocker.Verify<ITvRequestEngine>(x => x.SetUser(It.Is<OmbiUser>(x => x.Id == "abc")), Times.Once);
-            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Once);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.AtLeastOnce());
             _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Once);
             _mocker.Verify<IMovieDbApi>(x => x.Find("123", ExternalSource.tvdb_id), Times.Once);
         }
@@ -734,7 +735,7 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistMetadata("abc", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
             _mocker.Verify<IMovieRequestEngine>(x => x.SetUser(It.Is<OmbiUser>(x => x.Id == "abc")), Times.Never);
             _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Never);
-            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Once);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.AtLeastOnce());
         }
 
 
@@ -784,7 +785,7 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<ITvRequestEngine>(x => x.RequestTvShow(It.Is<TvRequestViewModelV2>(x => x.TheMovieDbId == 123 && x.LatestSeason == false && x.RequestAll == true)), Times.Once);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistMetadata("abc", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
             _mocker.Verify<ITvRequestEngine>(x => x.SetUser(It.Is<OmbiUser>(x => x.Id == "abc")), Times.Once);
-            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.Once);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.GetAll(), Times.AtLeastOnce());
             _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.IsAny<PlexWatchlistHistory>()), Times.Once);
         }
 

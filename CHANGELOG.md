@@ -1,3 +1,17 @@
+## [4.54.2](https://github.com/Ombi-app/Ombi/compare/v4.54.1...v4.54.2) (2026-02-03)
+
+
+### Bug Fixes
+
+* Add missing using System to EmbyHelper ([bb6300f](https://github.com/Ombi-app/Ombi/commit/bb6300fe984dd8b7d5d3f10e64885301e80693d4))
+* Correct EmbyHelper app.emby.media path detection ([9adb2ed](https://github.com/Ombi-app/Ombi/commit/9adb2ed4ef6deae79de1f1f2b5c8d249f9400e24))
+* Correct EmbyHelper app.emby.media path detection ([88b5215](https://github.com/Ombi-app/Ombi/commit/88b52159e7582022b7261b79c24359edc8e70da2)), closes [#689](https://github.com/Ombi-app/Ombi/issues/689)
+* Correct EmbyHelper app.emby.media path detection ([840d740](https://github.com/Ombi-app/Ombi/commit/840d740cd0860b46b185a82ef4855334b3f48301)), closes [#689](https://github.com/Ombi-app/Ombi/issues/689)
+* Correct EmbyHelper app.emby.media path detection ([d16858d](https://github.com/Ombi-app/Ombi/commit/d16858dbbc5e0b1adb2c96fc0e5c6650a7431556))
+* SonarrSync now deletes episodes per-series to prevent incomplete cache ([89b8c52](https://github.com/Ombi-app/Ombi/commit/89b8c5255b5f251d1eafc36df32b05fa6488657a)), closes [#5306](https://github.com/Ombi-app/Ombi/issues/5306)
+
+
+
 ## [4.54.1](https://github.com/Ombi-app/Ombi/compare/v4.54.0...v4.54.1) (2026-01-10)
 
 
@@ -335,10 +349,6 @@
 ### Bug Fixes
 
 * **requests:** :bug: Power users can now set profiles and root folders when requesting ([138df1e](https://github.com/Ombi-app/Ombi/commit/138df1eb25c709c1939d01d4c9f9ece63f8e0fde))
-
-
-
-## [4.46.6](https://github.com/Ombi-app/Ombi/compare/v4.46.5...v4.46.6) (2024-11-24)
 
 
 
