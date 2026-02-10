@@ -244,6 +244,13 @@ Here are some of the features Ombi has:
     </td></tr>
 <tr>
     <td align="center">
+        <a href="https://github.com/snyk-bot">
+            <img src="https://avatars.githubusercontent.com/u/19733683?v=4" width="50;" alt="snyk-bot"/>
+            <br />
+            <sub><b>Snyk Bot</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/fservida">
             <img src="https://avatars.githubusercontent.com/u/501958?v=4" width="50;" alt="fservida"/>
             <br />
@@ -262,13 +269,6 @@ Here are some of the features Ombi has:
             <img src="https://avatars.githubusercontent.com/u/6268446?v=4" width="50;" alt="xweskingx"/>
             <br />
             <sub><b>Wesley King</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/snyk-bot">
-            <img src="https://avatars.githubusercontent.com/u/19733683?v=4" width="50;" alt="snyk-bot"/>
-            <br />
-            <sub><b>Snyk Bot</b></sub>
         </a>
     </td>
     <td align="center">
