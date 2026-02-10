@@ -49,6 +49,7 @@ import { PushoverComponent } from "./settings/notifications/pushover.component";
 import { MattermostComponent } from "./settings/notifications/mattermost.component";
 import { TelegramComponent } from "./settings/notifications/telegram.component";
 import { GotifyComponent } from "./settings/notifications/gotify.component";
+import { NtfyComponent } from "./settings/notifications/ntfy.component";
 import { TwilioComponent } from "./settings/notifications/twilio/twilio.component";
 import { WebhookComponent } from "./settings/notifications/webhook.component";
 import { IssuesComponent } from "./issues/issues.component";
@@ -109,6 +110,7 @@ export const routes: Routes = [
             { path: "Mattermost", component: MattermostComponent },
             { path: "Telegram", component: TelegramComponent },
             { path: "Gotify", component: GotifyComponent },
+            { path: "Ntfy", component: NtfyComponent },
             { path: "Twilio", component: TwilioComponent },
             { path: "Webhook", component: WebhookComponent },
             { path: "Plex", component: PlexComponent },

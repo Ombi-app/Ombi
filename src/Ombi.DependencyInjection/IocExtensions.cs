@@ -32,6 +32,7 @@ using Ombi.Api.External.ExternalApis.DogNzb;
 using Ombi.Api.External.ExternalApis.FanartTv;
 using Ombi.Api.External.ExternalApis.Github;
 using Ombi.Api.External.NotificationServices.Gotify;
+using Ombi.Api.External.NotificationServices.Ntfy;
 using Ombi.Api.External.NotificationServices.GroupMe;
 using Ombi.Api.External.NotificationServices.Webhook;
 using Ombi.Api.External.ExternalApis.Lidarr;
@@ -163,6 +164,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IFanartTvApi, FanartTvApi>();
             services.AddTransient<IPushoverApi, PushoverApi>();
             services.AddTransient<IGotifyApi, GotifyApi>();
+            services.AddTransient<INtfyApi, NtfyApi>();
             services.AddTransient<IWebhookApi, WebhookApi>();
             services.AddTransient<IMattermostApi, MattermostApi>();
             services.AddTransient<ICouchPotatoApi, CouchPotatoApi>();
@@ -230,6 +232,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMattermostNotification, MattermostNotification>();
             services.AddTransient<IPushoverNotification, PushoverNotification>();
             services.AddTransient<IGotifyNotification, GotifyNotification>();
+            services.AddTransient<INtfyNotification, NtfyNotification>();
             services.AddTransient<IWebhookNotification, WebhookNotification>();
             services.AddTransient<ITelegramNotification, TelegramNotification>();
             services.AddTransient<ILegacyMobileNotification, LegacyMobileNotification>();
