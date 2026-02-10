@@ -1,3 +1,7 @@
+## [4.54.5](https://github.com/Ombi-app/Ombi/compare/v4.54.4...v4.54.5) (2026-02-10)
+
+
+
 ## [4.54.4](https://github.com/Ombi-app/Ombi/compare/v4.54.3...v4.54.4) (2026-02-10)
 
 
@@ -336,15 +340,6 @@
 ### Bug Fixes
 
 * **user-import:** Do not import users that do not have access to the server [#5064](https://github.com/Ombi-app/Ombi/issues/5064) ([a801cfd](https://github.com/Ombi-app/Ombi/commit/a801cfdb0946cbee3c35b7e917a240f69020f221))
-
-
-
-# [4.47.0](https://github.com/Ombi-app/Ombi/compare/v4.46.8...v4.47.0) (2025-01-03)
-
-
-### Features
-
-* **wizard:** :sparkles: Added the ability to start with a different database ([#5208](https://github.com/Ombi-app/Ombi/issues/5208)) ([cc98fc6](https://github.com/Ombi-app/Ombi/commit/cc98fc6aca27111a8afc3b7b5b8e53207b73fe15))
 
 
 
