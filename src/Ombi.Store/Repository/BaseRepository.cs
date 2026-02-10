@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Logging;
 using Ombi.Helpers;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
@@ -91,8 +92,55 @@ namespace Ombi.Store.Repository
 
         protected async Task<int> InternalSaveChanges()
         {
-            var r = await _ctx.SaveChangesAsync();
-            return r;
+            try
+            {
+                var r = await _ctx.SaveChangesAsync();
+                return r;
+            }
+            catch (DbUpdateException ex)
+            {
+                // Check if this is a duplicate key constraint violation
+                var isDuplicateKey = ex.InnerException?.Message?.Contains("Duplicate entry") == true ||
+                                    ex.InnerException?.Message?.Contains("UNIQUE constraint") == true ||
+                                    ex.InnerException?.Message?.Contains("duplicate key") == true;
+
+                if (isDuplicateKey)
+                {
+                    // Clear the change tracker to prevent corruption
+                    var duplicateEntries = _ctx.ChangeTracker.Entries()
+                        .Where(e => e.State == EntityState.Added)
+                        .ToList();
+
+                    // Try to extract information about which entities caused the conflict
+                    var duplicateInfo = string.Join(", ", duplicateEntries
+                        .Select(e => {
+                            var entity = e.Entity as dynamic;
+                            try
+                            {
+                                return $"{e.Entity.GetType().Name} (Key: {entity?.Key})";
+                            }
+                            catch
+                            {
+                                return e.Entity.GetType().Name;
+                            }
+                        })
+                        .Take(10));
+
+                    // Clear the change tracker to prevent further corruption
+                    foreach (var entry in duplicateEntries)
+                    {
+                        entry.State = EntityState.Detached;
+                    }
+
+                    throw new InvalidOperationException(
+                        $"Duplicate key constraint violation. Attempted to add entities that already exist in the database. " +
+                        $"Entities: {duplicateInfo}. Original error: {ex.InnerException?.Message ?? ex.Message}",
+                        ex);
+                }
+
+                // Re-throw if not a duplicate key error
+                throw;
+            }
         }
 
 
