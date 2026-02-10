@@ -1,3 +1,7 @@
+## [4.54.3](https://github.com/Ombi-app/Ombi/compare/v4.54.2...v4.54.3) (2026-02-10)
+
+
+
 ## [4.54.2](https://github.com/Ombi-app/Ombi/compare/v4.54.1...v4.54.2) (2026-02-03)
 
 
@@ -340,15 +344,6 @@
 ### Bug Fixes
 
 * **radarr-settings:** this.normalForm is undefined ([#5207](https://github.com/Ombi-app/Ombi/issues/5207)) ([dc2b958](https://github.com/Ombi-app/Ombi/commit/dc2b958915bf6cb77e093ada843ef6d9f62a3755)), closes [#4994](https://github.com/Ombi-app/Ombi/issues/4994)
-
-
-
-## [4.46.7](https://github.com/Ombi-app/Ombi/compare/v4.46.6...v4.46.7) (2024-12-03)
-
-
-### Bug Fixes
-
-* **requests:** :bug: Power users can now set profiles and root folders when requesting ([138df1e](https://github.com/Ombi-app/Ombi/commit/138df1eb25c709c1939d01d4c9f9ece63f8e0fde))
 
 
 
