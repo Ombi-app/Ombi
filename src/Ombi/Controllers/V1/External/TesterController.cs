@@ -49,7 +49,7 @@ namespace Ombi.Controllers.V1.External
             IPushbulletNotification pushbullet, ISlackNotification slack, IPushoverNotification po, IMattermostNotification mm,
             IPlexApi plex, IEmbyApiFactory emby, IRadarrV3Api radarr, ISonarrV3Api sonarr, ILogger<TesterController> log, IEmailProvider provider,
             ICouchPotatoApi cpApi, ITelegramNotification telegram, ISickRageApi srApi, INewsletterJob newsletter, ILegacyMobileNotification mobileNotification,
-            ILidarrApi lidarrApi, IGotifyNotification gotifyNotification, IWhatsAppApi whatsAppApi, OmbiUserManager um, IWebhookNotification webhookNotification,
+            ILidarrApi lidarrApi, IGotifyNotification gotifyNotification, INtfyNotification ntfyNotification, IWhatsAppApi whatsAppApi, OmbiUserManager um, IWebhookNotification webhookNotification,
             IJellyfinApi jellyfinApi, IPrincipal user)
         {
             Service = service;
@@ -72,6 +72,7 @@ namespace Ombi.Controllers.V1.External
             MobileNotification = mobileNotification;
             LidarrApi = lidarrApi;
             GotifyNotification = gotifyNotification;
+            NtfyNotification = ntfyNotification;
             WhatsAppApi = whatsAppApi;
             UserManager = um;
             WebhookNotification = webhookNotification;
@@ -86,6 +87,7 @@ namespace Ombi.Controllers.V1.External
         private ISlackNotification SlackNotification { get; }
         private IPushoverNotification PushoverNotification { get; }
         private IGotifyNotification GotifyNotification { get; }
+        private INtfyNotification NtfyNotification { get; }
         private IWebhookNotification WebhookNotification { get; }
         private IMattermostNotification MattermostNotification { get; }
         private IPlexApi PlexApi { get; }
@@ -195,6 +197,30 @@ namespace Ombi.Controllers.V1.External
             catch (Exception e)
             {
                 Log.LogError(LoggingEvents.Api, e, "Could not test Gotify");
+                return false;
+            }
+
+        }
+
+        /// <summary>
+        /// Sends a test message to Ntfy using the provided settings
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("ntfy")]
+        public async Task<bool> Ntfy([FromBody] NtfySettings settings)
+        {
+            try
+            {
+                settings.Enabled = true;
+                await NtfyNotification.NotifyAsync(
+                    new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.LogError(LoggingEvents.Api, e, "Could not test Ntfy");
                 return false;
             }
 
