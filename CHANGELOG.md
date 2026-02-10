@@ -1,3 +1,7 @@
+## [4.55.2](https://github.com/Ombi-app/Ombi/compare/v4.55.1...v4.55.2) (2026-02-10)
+
+
+
 ## [4.55.1](https://github.com/Ombi-app/Ombi/compare/v4.55.0...v4.55.1) (2026-02-10)
 
 
@@ -331,15 +335,6 @@
 
 
 ## [4.48.1](https://github.com/Ombi-app/Ombi/compare/v4.48.0...v4.48.1) (2025-05-14)
-
-
-
-# [4.48.0](https://github.com/Ombi-app/Ombi/compare/v4.47.3...v4.48.0) (2025-05-14)
-
-
-### Features
-
-* added the watchlist notification ([0dfd453](https://github.com/Ombi-app/Ombi/commit/0dfd4533dba01cb04ea2217c020de8833ddf39c6))
 
 
 
