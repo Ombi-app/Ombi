@@ -38,6 +38,7 @@ namespace Ombi.Api.External.ExternalApis.TheMovieDb
         {
             var request = new Request($"movie/{movieId}", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
+            request.CacheDuration = TimeSpan.FromHours(4); // Movie info rarely changes
             AddRetry(request);
 
             var result = await Api.Request<MovieResponse>(request);
@@ -51,6 +52,7 @@ namespace Ombi.Api.External.ExternalApis.TheMovieDb
             request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
             request.FullUri = request.FullUri.AddQueryParameter("language", langCode);
             request.FullUri = request.FullUri.AddQueryParameter("append_to_response", "videos,credits,similar,recommendations,release_dates,external_ids,keywords");
+            request.CacheDuration = TimeSpan.FromHours(4); // Full movie details rarely change
             AddRetry(request);
 
             return await Api.Request<FullMovieInfo>(request, cancellationToken);
@@ -122,6 +124,7 @@ namespace Ombi.Api.External.ExternalApis.TheMovieDb
             var request = new Request($"collection/{collectionId}", BaseUri, HttpMethod.Get);
             request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
             request.FullUri = request.FullUri.AddQueryParameter("language", langCode);
+            request.CacheDuration = TimeSpan.FromHours(4); // Collection info rarely changes
 
             return await Api.Request<Collections>(request, cancellationToken);
         }
@@ -130,6 +133,7 @@ namespace Ombi.Api.External.ExternalApis.TheMovieDb
         {
             var request = new Request($"find/{externalId}", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
+            request.CacheDuration = TimeSpan.FromHours(6); // External ID mappings rarely change
             AddRetry(request);
 
             request.AddQueryString("external_source", source.ToString());
@@ -179,6 +183,7 @@ namespace Ombi.Api.External.ExternalApis.TheMovieDb
             {
                 request.AddQueryString("first_air_date_year", year);
             }
+            request.CacheDuration = TimeSpan.FromMinutes(30); // Search results can change, shorter TTL
             AddRetry(request);
 
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
@@ -189,6 +194,7 @@ namespace Ombi.Api.External.ExternalApis.TheMovieDb
         {
             var request = new Request($"/tv/{theMovieDbId}/external_ids", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
+            request.CacheDuration = TimeSpan.FromHours(6); // External IDs rarely change
             AddRetry(request);
 
             return await Api.Request<TvExternals>(request);

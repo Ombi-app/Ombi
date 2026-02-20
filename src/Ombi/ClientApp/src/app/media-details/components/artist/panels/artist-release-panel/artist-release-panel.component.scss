@@ -1,4 +1,4 @@
-    @import '../../../../../../styles/buttons.scss';
+    @use '../../../../../../styles/buttons.scss' as *;
 
     // border: solid 3px #fff;
     .monitored {
