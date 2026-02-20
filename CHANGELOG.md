@@ -1,3 +1,12 @@
+## [4.55.4](https://github.com/Ombi-app/Ombi/compare/v4.55.3...v4.55.4) (2026-02-20)
+
+
+### Bug Fixes
+
+* **emby/jellyfin:** fix [#5338](https://github.com/Ombi-app/Ombi/issues/5338) ([6217461](https://github.com/Ombi-app/Ombi/commit/62174617bbef0839527c179909cdbe50e90f5955))
+
+
+
 ## [4.55.3](https://github.com/Ombi-app/Ombi/compare/v4.55.2...v4.55.3) (2026-02-20)
 
 
@@ -331,15 +340,6 @@
 ### Bug Fixes
 
 * Correct 4K movie request existence check ([ba6e708](https://github.com/Ombi-app/Ombi/commit/ba6e708e189f52f2ff4ebc073fa38a4f53f1061c)), closes [#4798](https://github.com/Ombi-app/Ombi/issues/4798)
-
-
-
-## [4.48.2](https://github.com/Ombi-app/Ombi/compare/v4.48.1...v4.48.2) (2025-05-14)
-
-
-### Bug Fixes
-
-* **radarr:** ensure RequestedUser is loaded when creating tags ([f8658fe](https://github.com/Ombi-app/Ombi/commit/f8658fe6d56488aa5caa68093245cbf021a31810)), closes [#5045](https://github.com/Ombi-app/Ombi/issues/5045)
 
 
 
