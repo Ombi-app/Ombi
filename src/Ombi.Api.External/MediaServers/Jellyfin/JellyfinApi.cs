@@ -71,8 +71,17 @@ namespace Ombi.Api.External.MediaServers.Jellyfin
                 $"MediaBrowser Client=\"Ombi\", Device=\"Ombi\", DeviceId=\"v3\", Version=\"v3\"");
             AddHeaders(request, apiKey);
 
-            var obj = await Api.Request<JellyfinUser>(request);
-            return obj;
+            // Use the correct authentication result model from Jellyfin API
+            var authResult = await Api.Request<JellyfinAuthenticationResult>(request);
+
+            // Validate authentication succeeded by checking for AccessToken
+            // If auth failed (400/403), AccessToken will be null/empty
+            if (string.IsNullOrEmpty(authResult?.AccessToken))
+            {
+                return null;  // Authentication failed
+            }
+
+            return authResult.User;  // Authentication succeeded, return the user
         }
 
         public async Task<JellyfinItemContainer<JellyfinMovie>> GetCollection(string mediaId, string apiKey, string userId, string baseUrl)
