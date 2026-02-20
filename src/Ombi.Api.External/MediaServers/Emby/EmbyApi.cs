@@ -76,8 +76,17 @@ namespace Ombi.Api.External.MediaServers.Emby
                 request.AddHeader("X-Forwarded-For", clientIpAddress);
             }
 
-            var obj = await Api.Request<EmbyUser>(request);
-            return obj;
+            // Use the correct authentication result model from Emby API
+            var authResult = await Api.Request<EmbyAuthenticationResult>(request);
+
+            // Validate authentication succeeded by checking for AccessToken
+            // If auth failed (400/403), AccessToken will be null/empty
+            if (string.IsNullOrEmpty(authResult?.AccessToken))
+            {
+                return null;  // Authentication failed
+            }
+
+            return authResult.User;  // Authentication succeeded, return the user
         }
 
         public async Task<EmbyConnectUser> LoginConnectUser(string username, string password)
