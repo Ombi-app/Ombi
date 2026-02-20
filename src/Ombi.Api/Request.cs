@@ -30,6 +30,16 @@ namespace Ombi.Api
         public List<HttpStatusCode> StatusCodeToRetry { get; set; } = new List<HttpStatusCode>();
         public bool IgnoreBaseUrlAppend { get; set; }
 
+        /// <summary>
+        /// Optional cache duration for GET requests. null = no caching (default, backwards compatible)
+        /// </summary>
+        public TimeSpan? CacheDuration { get; set; }
+
+        /// <summary>
+        /// Explicitly bypass cache even if CacheDuration is set
+        /// </summary>
+        public bool BypassCache { get; set; }
+
         public Action<string> OnBeforeDeserialization { get; set; }
 
         private string FullUrl

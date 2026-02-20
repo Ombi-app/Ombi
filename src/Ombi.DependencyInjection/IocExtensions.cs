@@ -2,6 +2,7 @@
 using System.Security.Principal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 using Ombi.Api.External.NotificationServices.Discord;
 using Ombi.Api.External.MediaServers.Emby;
@@ -146,7 +147,11 @@ namespace Ombi.DependencyInjection
 
         public static void RegisterApi(this IServiceCollection services)
         {
-            services.AddScoped<IApi, Api.Api>(s => new Api.Api(s.GetRequiredService<ILogger<Api.Api>>(), s.GetRequiredService<IHttpClientFactory>().CreateClient("OmbiClient")));
+            services.AddScoped<IApi, Api.Api>(s => new Api.Api(
+                s.GetRequiredService<ILogger<Api.Api>>(),
+                s.GetRequiredService<IHttpClientFactory>().CreateClient("OmbiClient"),
+                s.GetRequiredService<ICacheService>(),
+                s.GetRequiredService<IHostEnvironment>()));
             services.AddTransient<IMovieDbApi, Ombi.Api.External.ExternalApis.TheMovieDb.TheMovieDbApi>();
             services.AddTransient<IPlexApi, PlexApi>();
             services.AddTransient<IEmbyApi, EmbyApi>();
