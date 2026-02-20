@@ -47,10 +47,7 @@ import { GridSpinnerComponent } from "../grid-spinner/grid-spinner.component";
         MatSelectModule,
         MatMenuModule,
         TranslateModule,
-        ImageComponent,
         OmbiDatePipe,
-        TranslateStatusPipe,
-        DetailedCardComponent,
         GridSpinnerComponent
     ]
 })

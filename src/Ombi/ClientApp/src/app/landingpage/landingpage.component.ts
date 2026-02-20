@@ -1,4 +1,4 @@
-﻿import { APP_BASE_HREF, CommonModule } from "@angular/common";
+import { APP_BASE_HREF, CommonModule } from "@angular/common";
 import { Component, OnInit, Inject } from "@angular/core";
 
 import { IMediaServerStatus } from "../interfaces";
@@ -16,7 +16,6 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslateModule } from "@ngx-translate/core";
-import { WikiComponent } from "app/settings/wiki.component";
 import { ImageBackgroundComponent } from "../components";
 import { RouterModule } from "@angular/router";
 
@@ -38,7 +37,6 @@ import { RouterModule } from "@angular/router";
         MatSlideToggleModule,
         MatTooltipModule,
         TranslateModule,
-        WikiComponent
     ],
 })
 export class LandingPageComponent implements OnInit {

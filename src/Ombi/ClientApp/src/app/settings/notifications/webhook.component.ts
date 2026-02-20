@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 
 import { INotificationTemplates, IWebhookNotificationSettings, NotificationType } from "../../interfaces";
@@ -28,8 +28,7 @@ import { NotificationTemplate } from "./notificationtemplate.component";
         MatSelectModule,
         MatSlideToggleModule,
         MatTooltipModule,
-        TranslateModule,
-        NotificationTemplate
+        TranslateModule
     ],
     templateUrl: "./webhook.component.html",
     styleUrls: ["./notificationtemplate.component.scss"]

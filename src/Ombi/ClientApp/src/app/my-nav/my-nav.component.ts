@@ -21,7 +21,7 @@ import { CustomizationFacade } from '../state/customization';
 import { FilterService } from '../discover/services/filter-service';
 import { ILocalUser } from '../auth/IUserLogin';
 import { INavBar } from '../interfaces/ICommon';
-import { Md5 } from 'ts-md5/dist/md5';
+import { Md5 } from 'ts-md5';
 import { Observable } from 'rxjs';
 import { SearchFilter } from './SearchFilter';
 import { StorageService } from '../shared/storage/storage-service';

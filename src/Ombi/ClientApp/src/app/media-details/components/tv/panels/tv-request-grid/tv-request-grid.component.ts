@@ -47,9 +47,7 @@ import { MatCardModule } from "@angular/material/card";
         MatTabsModule,
         MatMenuModule,
         TranslateModule,
-        ImageComponent,
         OmbiDatePipe,
-        DetailedCardComponent,
         MatCardModule,  
     ]
 })

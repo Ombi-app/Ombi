@@ -54,20 +54,14 @@ import { ImageComponent } from "../../../components";
         TranslateModule,
         CarouselModule,
         SkeletonModule,
-        YoutubeTrailerComponent,
-        EpisodeRequestComponent,
-        NewIssueComponent,
-        TvAdvancedOptionsComponent,
         TopBannerComponent,
         SocialIconsComponent,
         MediaPosterComponent,
         CastCarouselComponent,
-        CrewCarouselComponent,
         TvInformationPanelComponent,
         TvRequestsPanelComponent,
         TvRequestGridComponent,
-        IssuesPanelComponent,
-        ImageComponent
+        IssuesPanelComponent
     ]
 })
 export class TvDetailsComponent implements OnInit {
