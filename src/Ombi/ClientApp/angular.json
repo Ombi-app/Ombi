@@ -32,8 +32,14 @@
             "subresourceIntegrity": true,
             "allowedCommonJsDependencies": [
               "jquery",
-              "bootstrap"
+              "bootstrap",
+              "qrcode"
             ],
+            "stylePreprocessorOptions": {
+              "sass": {
+                "silenceDeprecations": ["import", "color-functions", "abs-percent", "mixed-decls", "global-builtin"]
+              }
+            },
             "styles": [
               "node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles/_imports.scss",
@@ -62,7 +68,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
+                  "maximumWarning": "4mb",
                   "maximumError": "5mb"
                 },
                 {

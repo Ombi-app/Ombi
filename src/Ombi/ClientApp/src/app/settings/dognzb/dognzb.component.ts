@@ -29,7 +29,6 @@ import { WikiComponent } from "../wiki.component";
         MatTooltipModule,
         TranslateModule,
         SettingsMenuComponent,
-        WikiComponent,
     ],
     templateUrl: "./dognzb.component.html",
     styleUrls: ["./dognzb.component.scss"]
