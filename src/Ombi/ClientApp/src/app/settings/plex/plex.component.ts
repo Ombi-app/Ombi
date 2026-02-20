@@ -47,9 +47,7 @@ import { PlexServerDialogData, PlexSyncType } from "./components/models";
         ButtonModule,
         ConfirmDialogModule,
         DialogModule,
-        TableModule,
-        PlexWatchlistComponent,
-        PlexServerDialogComponent
+        TableModule
     ],
     templateUrl: "./plex.component.html",
     styleUrls: ["./plex.component.scss"]

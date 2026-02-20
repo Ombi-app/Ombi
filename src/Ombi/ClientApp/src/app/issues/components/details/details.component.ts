@@ -37,7 +37,6 @@ export interface IssuesDetailsGroupData {
         MatTooltipModule,
         MatDialogModule,
         TranslateModule,
-        IssueChatComponent,
         DetailsGroupComponent,
     ]
 })

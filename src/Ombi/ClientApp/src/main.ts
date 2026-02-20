@@ -8,7 +8,6 @@ import { environment } from "./environments/environment";
 
 import "./polyfills";
 
-import { enableProdMode } from "@angular/core";
 import { bootstrapApplication } from "@angular/platform-browser";
 import { AppComponent } from "./app/app.component";
 import { importProvidersFrom } from "@angular/core";
@@ -71,7 +70,6 @@ import { StatusService } from "./app/services";
 import { LandingPageService } from "./app/services";
 import { ImageService } from "./app/services";
 import { CustomPageService } from "./app/services";
-import { CookieService } from "ng2-cookies";
 import { JobService } from "./app/services";
 import { IssuesService } from "./app/services";
 import { IssuesV2Service } from "./app/services/issuesv2.service";
@@ -118,7 +116,7 @@ export function JwtTokenGetter() {
 }
 
 if (environment.production) {
-    enableProdMode();
+    // enableProdMode() is a no-op in Angular 15+ — production mode is handled automatically.
   }
 
 bootstrapApplication(AppComponent, {
@@ -191,7 +189,6 @@ bootstrapApplication(AppComponent, {
         LandingPageService,
         ImageService,
         CustomPageService,
-        CookieService,
         JobService,
         IssuesService,
         IssuesV2Service,

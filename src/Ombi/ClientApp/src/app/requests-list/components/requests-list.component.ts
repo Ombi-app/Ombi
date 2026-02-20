@@ -22,11 +22,9 @@ import { GridSpinnerComponent } from "./grid-spinner/grid-spinner.component";
         MatBottomSheetModule,
         MatTabsModule,
         TranslateModule,
-        RequestOptionsComponent,
         MoviesGridComponent,
         TvGridComponent,
-        AlbumsGridComponent,
-        GridSpinnerComponent
+        AlbumsGridComponent
     ]
 })
 export class RequestsListComponent {

@@ -15,28 +15,31 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "dist",
             "index": "src/index.html",
-            "main": "src/main.ts",
+            "browser": "src/main.ts",
             "polyfills": ["zone.js"],
             "tsConfig": "src/tsconfig.json",
             "assets": [
               "src/assets"
             ],
             "optimization": true,
-            "buildOptimizer": true,
-            "aot": true,
-            "vendorChunk": true,
             "extractLicenses": true,
             "sourceMap": false,
             "namedChunks": true,
             "subresourceIntegrity": true,
             "allowedCommonJsDependencies": [
               "jquery",
-              "bootstrap"
+              "bootstrap",
+              "qrcode"
             ],
+            "stylePreprocessorOptions": {
+              "sass": {
+                "silenceDeprecations": ["import", "color-functions", "abs-percent", "mixed-decls", "global-builtin"]
+              }
+            },
             "styles": [
               "node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles/_imports.scss",
@@ -56,9 +59,6 @@
           "configurations": {
             "development": {
               "optimization": false,
-              "buildOptimizer": false,
-              "aot": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true,
@@ -68,7 +68,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
+                  "maximumWarning": "4mb",
                   "maximumError": "5mb"
                 },
                 {
@@ -85,9 +85,6 @@
               ],
               "outputHashing": "all",
               "optimization": true,
-              "buildOptimizer": true,
-              "aot": true,
-              "vendorChunk": true,
               "extractLicenses": true,
               "sourceMap": false,
               "namedChunks": true,
@@ -106,13 +103,10 @@
                   "with": "src/environments/environment.hmr.ts"
                 }
               ],
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
-              "namedChunks": true,
-              "aot": false
+              "namedChunks": true
             }
           }
         },
@@ -129,8 +123,8 @@
               "buildTarget": "ombi:build:production"
             },
             "hmr": {
-              "hmr": true,
-              "buildTarget": "ombi:build:hmr"
+              "buildTarget": "ombi:build:hmr",
+              "hmr": true
             }
           }
         },
@@ -141,13 +135,11 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "src/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
             ]
           }
         }

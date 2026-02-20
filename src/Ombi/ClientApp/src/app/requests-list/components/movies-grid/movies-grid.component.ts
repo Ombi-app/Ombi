@@ -54,10 +54,8 @@ import { DetailedCardComponent } from "../../../components/detailed-card/detaile
         MatTooltipModule,
         MatCheckboxModule,
         MatInputModule,
-        ImageComponent,
         OmbiDatePipe,
-        TranslateStatusPipe,
-        DetailedCardComponent
+        TranslateStatusPipe
     ]
 })
 export class MoviesGridComponent implements OnInit, AfterViewInit {

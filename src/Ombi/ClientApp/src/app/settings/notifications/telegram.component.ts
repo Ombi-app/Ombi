@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ReactiveFormsModule, FormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 
 import { INotificationTemplates, ITelegramNotifcationSettings, NotificationType } from "../../interfaces";
@@ -34,9 +34,7 @@ import { WikiComponent } from "../wiki.component";
         MatTooltipModule,
         TranslateModule,
         RadioButtonModule,
-        NotificationTemplate,
-        SettingsMenuComponent,
-        WikiComponent
+        NotificationTemplate
     ],
     templateUrl: "./telegram.component.html",
     styleUrls: ["./notificationtemplate.component.scss"]

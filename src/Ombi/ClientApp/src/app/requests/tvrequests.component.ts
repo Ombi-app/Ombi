@@ -10,7 +10,7 @@
 // import { ImageService } from "../services/image.service";
 
 // @Component({
-        standalone: false,
+//         standalone: false,
 //     selector: "tv-requests",
 //     templateUrl: "./tvrequests.component.html",
 //     styleUrls: ["./tvrequests.component.scss"],
