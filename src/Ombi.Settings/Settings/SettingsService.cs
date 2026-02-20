@@ -35,7 +35,7 @@ namespace Ombi.Settings.Settings
                 }
                 result.Content = DecryptSettings(result);
                 var obj = string.IsNullOrEmpty(result.Content)
-                    ? null
+                    ? new T()
                     : JsonConvert.DeserializeObject<T>(result.Content, SerializerSettings.Settings);
 
                 var model = obj;
@@ -55,7 +55,7 @@ namespace Ombi.Settings.Settings
                 }
                 result.Content = DecryptSettings(result);
                 var obj = string.IsNullOrEmpty(result.Content)
-                    ? null
+                    ? new T()
                     : JsonConvert.DeserializeObject<T>(result.Content, SerializerSettings.Settings);
 
                 var model = obj;
