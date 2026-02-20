@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
@@ -27,7 +27,9 @@ import { WikiComponent } from "../wiki.component";
         MatSelectModule,
         MatSlideToggleModule,
         MatTooltipModule,
-        TranslateModule
+        TranslateModule,
+        SettingsMenuComponent,
+        WikiComponent,
     ],
     templateUrl: "./dognzb.component.html",
     styleUrls: ["./dognzb.component.scss"]

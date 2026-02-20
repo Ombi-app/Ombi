@@ -8,7 +8,6 @@ import { environment } from "./environments/environment";
 
 import "./polyfills";
 
-import { enableProdMode } from "@angular/core";
 import { bootstrapApplication } from "@angular/platform-browser";
 import { AppComponent } from "./app/app.component";
 import { importProvidersFrom } from "@angular/core";
@@ -118,7 +117,7 @@ export function JwtTokenGetter() {
 }
 
 if (environment.production) {
-    enableProdMode();
+    // enableProdMode() is a no-op in Angular 15+ — production mode is handled automatically.
   }
 
 bootstrapApplication(AppComponent, {

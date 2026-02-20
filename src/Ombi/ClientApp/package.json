@@ -5,9 +5,9 @@
 		"ng": "ng",
 		"start": "ng serve --port 3578 --configuration development",
 		"start:hmr": "ng serve --port 3578 --configuration hmr",
-		"build": "node --max_old_space_size=6144 node_modules/@angular/cli/bin/ng build -c production",
-		"build:dev": "node --max_old_space_size=6144 node_modules/@angular/cli/bin/ng build -c development",
-		"build:prod": "node --max_old_space_size=6144 node_modules/@angular/cli/bin/ng build -c production",
+		"build": "ng build -c production",
+		"build:dev": "ng build -c development",
+		"build:prod": "ng build -c production",
 		"lint": "ng lint",
 		"docs:json": "compodoc -p ./tsconfig.json -e json -d .",
 		"storybook": "start-storybook -p 6006",
@@ -27,7 +27,6 @@
 		"@angular/platform-browser-dynamic": "^20.0.0",
 		"@angular/platform-server": "^20.0.0",
 		"@angular/router": "^20.0.0",
-		"@angularclass/hmr": "^3.0.0",
 		"@auth0/angular-jwt": "^5.0.2",
 		"@fortawesome/fontawesome-free": "^6.6.0",
 		"@microsoft/signalr": "^6.0.23",
@@ -57,18 +56,24 @@
 	},
 	"devDependencies": {
 		"@angular-devkit/build-angular": "^20.0.0",
+		"@angular-eslint/builder": "^20.0.0",
+		"@angular-eslint/eslint-plugin": "^20.0.0",
+		"@angular-eslint/eslint-plugin-template": "^20.0.0",
+		"@angular-eslint/template-parser": "^20.0.0",
 		"@angular/cli": "^20.0.0",
 		"@angular/compiler-cli": "^20.0.0",
 		"@babel/core": "^7.18.9",
 		"@compodoc/compodoc": "^1.1.19",
 		"@storybook/angular": "7.6.14",
 		"@types/node": "^20.11.17",
+		"@typescript-eslint/eslint-plugin": "^8.0.0",
+		"@typescript-eslint/parser": "^8.0.0",
+		"@typescript-eslint/utils": "^8.0.0",
 		"chromatic": "^6.7.1",
+		"eslint": "~9.18.0",
 		"typescript": "5.8.3"
 	},
 	"optionalDependencies": {
-		"protractor": "~5.4.0",
-		"ts-node": "~5.0.1",
-		"tslint": "^5.12.0"
+		"ts-node": "~5.0.1"
 	}
 }

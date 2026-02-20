@@ -2,11 +2,11 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
-    "module": "esnext",
+    "module": "ES2022",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "ES2022",
@@ -22,19 +22,25 @@
       "../../node_modules/@types"
     ],
     "lib": [
-      "es2017",
-      "dom"
+      "ES2022",
+      "dom",
+      "dom.iterable"
     ],
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+    "skipLibCheck": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
+    "noImplicitOverride": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": false
   },
-  "files": [
-    "main.ts",
-    "polyfills.ts"
-  ],
   "include": [
-    "src/**/*.d.ts"
+    "**/*.ts"
   ],
   "exclude": [
-    "**/*.stories.*"
+    "**/*.stories.*",
+    "**/node_modules/**"
   ]
 }
