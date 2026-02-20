@@ -1,3 +1,12 @@
+## [4.55.3](https://github.com/Ombi-app/Ombi/compare/v4.55.2...v4.55.3) (2026-02-20)
+
+
+### Performance Improvements
+
+* Improvements to api calls ([6907604](https://github.com/Ombi-app/Ombi/commit/69076047f5ace434b175fa424acd78d87eeeb1de))
+
+
+
 ## [4.55.2](https://github.com/Ombi-app/Ombi/compare/v4.55.1...v4.55.2) (2026-02-10)
 
 
@@ -331,10 +340,6 @@
 ### Bug Fixes
 
 * **radarr:** ensure RequestedUser is loaded when creating tags ([f8658fe](https://github.com/Ombi-app/Ombi/commit/f8658fe6d56488aa5caa68093245cbf021a31810)), closes [#5045](https://github.com/Ombi-app/Ombi/issues/5045)
-
-
-
-## [4.48.1](https://github.com/Ombi-app/Ombi/compare/v4.48.0...v4.48.1) (2025-05-14)
 
 
 
