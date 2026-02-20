@@ -1,3 +1,13 @@
+## [4.55.5](https://github.com/Ombi-app/Ombi/compare/v4.55.4...v4.55.5) (2026-02-20)
+
+
+### Bug Fixes
+
+* **build:** silence remaining esbuild/sass warnings and remove unused imports ([1915b09](https://github.com/Ombi-app/Ombi/commit/1915b09e557128d43d70cdecb87f38277497bacb))
+* **tmdb:** Fix rendering of the movie db page ([a0b84f7](https://github.com/Ombi-app/Ombi/commit/a0b84f74620f7e0b8c33a03fa3cc5f7d6d42ab93))
+
+
+
 ## [4.55.4](https://github.com/Ombi-app/Ombi/compare/v4.55.3...v4.55.4) (2026-02-20)
 
 
@@ -331,15 +341,6 @@
 * **translations:** 🌐 New translations from Crowdin [skip ci] ([dbbfdd9](https://github.com/Ombi-app/Ombi/commit/dbbfdd926f0808f6d16f0b2cd8b5406e6b610c82))
 * **translations:** 🌐 New translations from Crowdin [skip ci] ([53a6a09](https://github.com/Ombi-app/Ombi/commit/53a6a092b14b8b8bdbff95d066926d3dbe6951f4))
 * **ui:** correct timezone handling in OmbiDatePipe ([f88c5ad](https://github.com/Ombi-app/Ombi/commit/f88c5ad818fadea7064e7dfbe46f07eae855109a)), closes [#5102](https://github.com/Ombi-app/Ombi/issues/5102)
-
-
-
-## [4.48.3](https://github.com/Ombi-app/Ombi/compare/v4.48.2...v4.48.3) (2025-05-14)
-
-
-### Bug Fixes
-
-* Correct 4K movie request existence check ([ba6e708](https://github.com/Ombi-app/Ombi/commit/ba6e708e189f52f2ff4ebc073fa38a4f53f1061c)), closes [#4798](https://github.com/Ombi-app/Ombi/issues/4798)
 
 
 
