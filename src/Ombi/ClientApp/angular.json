@@ -20,7 +20,9 @@
             "outputPath": "dist",
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": ["zone.js"],
+            "polyfills": [
+              "zone.js"
+            ],
             "tsConfig": "src/tsconfig.json",
             "assets": [
               "src/assets"
@@ -37,7 +39,13 @@
             ],
             "stylePreprocessorOptions": {
               "sass": {
-                "silenceDeprecations": ["import", "color-functions", "abs-percent", "mixed-decls", "global-builtin"]
+                "silenceDeprecations": [
+                  "import",
+                  "color-functions",
+                  "abs-percent",
+                  "mixed-decls",
+                  "global-builtin"
+                ]
               }
             },
             "styles": [
