@@ -1,3 +1,12 @@
+## [4.55.6](https://github.com/Ombi-app/Ombi/compare/v4.55.5...v4.55.6) (2026-02-22)
+
+
+### Bug Fixes
+
+* base url issue [#5343](https://github.com/Ombi-app/Ombi/issues/5343) ([fb39386](https://github.com/Ombi-app/Ombi/commit/fb39386e1615cd2eabb882484b64e6a76485e4cb))
+
+
+
 ## [4.55.5](https://github.com/Ombi-app/Ombi/compare/v4.55.4...v4.55.5) (2026-02-20)
 
 
@@ -330,17 +339,6 @@
 ### Bug Fixes
 
 * filter out excluded notification agents from user preferences ([c9ab4f4](https://github.com/Ombi-app/Ombi/commit/c9ab4f4f9faa66dbf263da693db1eefcf68beeec)), closes [#5196](https://github.com/Ombi-app/Ombi/issues/5196)
-
-
-
-## [4.48.4](https://github.com/Ombi-app/Ombi/compare/v4.48.3...v4.48.4) (2025-05-14)
-
-
-### Bug Fixes
-
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([dbbfdd9](https://github.com/Ombi-app/Ombi/commit/dbbfdd926f0808f6d16f0b2cd8b5406e6b610c82))
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([53a6a09](https://github.com/Ombi-app/Ombi/commit/53a6a092b14b8b8bdbff95d066926d3dbe6951f4))
-* **ui:** correct timezone handling in OmbiDatePipe ([f88c5ad](https://github.com/Ombi-app/Ombi/commit/f88c5ad818fadea7064e7dfbe46f07eae855109a)), closes [#5102](https://github.com/Ombi-app/Ombi/issues/5102)
 
 
 
