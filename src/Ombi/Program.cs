@@ -265,7 +265,7 @@ namespace Ombi
                 var trimmedBaseUrl = baseUrl.EndsWith('/') ? baseUrl.TrimEnd('/') : baseUrl;
                 var process = AppContext.BaseDirectory;
                 var ombiInstalledDir = Path.GetDirectoryName(process);
-                var indexPath = Path.Combine(ombiInstalledDir, "ClientApp", "dist", "index.html");
+                var indexPath = Path.Combine(ombiInstalledDir, "ClientApp", "dist", "browser", "index.html");
                 if (!File.Exists(indexPath))
                 {
                     var error = $"Can't set the base URL because we cannot find the file at '{indexPath}', if you are trying to set a base url please report this on Github!";
