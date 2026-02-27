@@ -298,7 +298,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
 
             _log.LogInformation("Movies to send: {0}", moviesToSend.Count());
-            return moviesToSend.DistinctBy(x => x.Id).ToHashSet();
+            return moviesToSend.DistinctBy(GetMovieDeduplicationKey).ToHashSet();
         }
 
         private HashSet<IMediaServerEpisode> GetSeriesContent<T>(IMediaServerContentRepository<T> repository, bool test) where T : class, IMediaServerContent
@@ -418,6 +418,21 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
 
             return itemsToReturn;
+        }
+
+        private static string GetMovieDeduplicationKey(IMediaServerContent content)
+        {
+            if (content.TheMovieDbId.HasValue())
+            {
+                return $"tmdb:{content.TheMovieDbId}";
+            }
+
+            if (content.ImdbId.HasValue())
+            {
+                return $"imdb:{content.ImdbId}";
+            }
+
+            return $"id:{content.Id}";
         }
 
         private NotificationMessageContent ParseTemplate(NotificationTemplates template, CustomizationSettings settings)
