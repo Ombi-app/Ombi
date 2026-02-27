@@ -125,5 +125,20 @@ namespace Ombi.Notifications.Agents
         {
             await Run(model, settings, NotificationType.PartiallyAvailable);
         }
+
+        protected override async Task RequestDeleted(NotificationOptions model, WebhookSettings settings)
+        {
+            await Run(model, settings, NotificationType.RequestDeleted);
+        }
+
+        protected override async Task IssueInProgress(NotificationOptions model, WebhookSettings settings)
+        {
+            await Run(model, settings, NotificationType.IssueInProgress);
+        }
+
+        protected override async Task IssueDeleted(NotificationOptions model, WebhookSettings settings)
+        {
+            await Run(model, settings, NotificationType.IssueDeleted);
+        }
     }
 }

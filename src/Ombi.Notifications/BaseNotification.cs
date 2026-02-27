@@ -121,6 +121,15 @@ namespace Ombi.Notifications
                     case NotificationType.PartiallyAvailable:
                         await PartiallyAvailable(model, notificationSettings);
                         break;
+                    case NotificationType.RequestDeleted:
+                        await RequestDeleted(model, notificationSettings);
+                        break;
+                    case NotificationType.IssueInProgress:
+                        await IssueInProgress(model, notificationSettings);
+                        break;
+                    case NotificationType.IssueDeleted:
+                        await IssueDeleted(model, notificationSettings);
+                        break;
                     case NotificationType.AdminNote:
                     case NotificationType.WelcomeEmail:
                     case NotificationType.Newsletter:
@@ -264,6 +273,9 @@ namespace Ombi.Notifications
         protected abstract Task RequestApproved(NotificationOptions model, T settings);
         protected abstract Task AvailableRequest(NotificationOptions model, T settings);
         protected abstract Task PartiallyAvailable(NotificationOptions model, T settings);
+        protected virtual Task RequestDeleted(NotificationOptions model, T settings) => Task.CompletedTask;
+        protected virtual Task IssueInProgress(NotificationOptions model, T settings) => Task.CompletedTask;
+        protected virtual Task IssueDeleted(NotificationOptions model, T settings) => Task.CompletedTask;
         protected abstract Task Send(NotificationMessage model, T settings);
         protected abstract Task Test(NotificationOptions model, T settings);
     }
