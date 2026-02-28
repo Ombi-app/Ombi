@@ -298,7 +298,11 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
 
             _log.LogInformation("Movies to send: {0}", moviesToSend.Count());
-            return moviesToSend.DistinctBy(GetMovieDeduplicationKey).ToHashSet();
+            return moviesToSend
+                .OrderByDescending(x => x.AddedAt)
+                .ThenBy(x => x.Id)
+                .DistinctBy(GetMovieDeduplicationKey)
+                .ToHashSet();
         }
 
         private HashSet<IMediaServerEpisode> GetSeriesContent<T>(IMediaServerContentRepository<T> repository, bool test) where T : class, IMediaServerContent
