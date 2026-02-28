@@ -74,7 +74,7 @@ namespace Ombi.Schedule.Tests
                 {
                     Id = 2,
                     Type = MediaType.Movie,
-                    TheMovieDbId = null,
+                    TheMovieDbId = " ",
                     ImdbId = "tt123",
                     Title = "Movie A Alternate Release",
                     AddedAt = DateTime.UtcNow.AddMinutes(1),
