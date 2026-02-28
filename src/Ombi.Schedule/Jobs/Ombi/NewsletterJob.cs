@@ -422,14 +422,16 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         private static string GetMovieDeduplicationKey(IMediaServerContent content)
         {
-            if (content.TheMovieDbId.HasValue())
+            var theMovieDbId = content.TheMovieDbId?.Trim();
+            if (theMovieDbId.HasValue())
             {
-                return $"tmdb:{content.TheMovieDbId}";
+                return $"tmdb:{theMovieDbId}";
             }
 
-            if (content.ImdbId.HasValue())
+            var imdbId = content.ImdbId?.Trim().ToLowerInvariant();
+            if (imdbId.HasValue())
             {
-                return $"imdb:{content.ImdbId}";
+                return $"imdb:{imdbId}";
             }
 
             return $"id:{content.Id}";
