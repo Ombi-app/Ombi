@@ -29,8 +29,8 @@ namespace Ombi.Notifications.Tests
 </body>
 </html>";
             
-            // Create a temporary template file for testing
-            _testTemplatePath = Path.Combine(Path.GetTempPath(), "TestBasicTemplate.html");
+            // Create a unique temporary template file for testing
+            _testTemplatePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.html");
             File.WriteAllText(_testTemplatePath, _testTemplateContent);
             
             // Use reflection to set the template location to our test file

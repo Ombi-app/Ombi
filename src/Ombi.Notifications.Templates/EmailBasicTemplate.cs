@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Text;
 
 namespace Ombi.Notifications.Templates
@@ -52,10 +53,12 @@ namespace Ombi.Notifications.Templates
             }
             else
             {
-                posterContent = $"<img src=\"{img}\" alt=\"Poster\" width=\"400px\" text-align=\"center\"/>"; 
+                var encodedImg = WebUtility.HtmlEncode(img);
+                posterContent = $"<img src=\"{encodedImg}\" alt=\"Poster\" width=\"400px\" text-align=\"center\"/>";
                 if (!string.IsNullOrEmpty(url))
                 {
-                    posterContent = $"<a href=\"{url}\">{posterContent}</a>";
+                    var encodedUrl = WebUtility.HtmlEncode(url);
+                    posterContent = $"<a href=\"{encodedUrl}\">{posterContent}</a>";
                 }
                 posterContent = $"<tr><td align=\"center\">{posterContent}</td></tr>";
             }

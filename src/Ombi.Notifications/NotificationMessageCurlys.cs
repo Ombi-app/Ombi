@@ -108,7 +108,6 @@ namespace Ombi.Notifications
             if (seasonSb.Length > 0) seasonSb.Remove(seasonSb.Length - 1, 1);
             SeasonsList = seasonSb.ToString();
             CalculateRequestStatus(req);
-            ItemUrl = GetDetailsUrl(s, req);
         }
 
         public void Setup(NotificationOptions opts, AlbumRequest req, CustomizationSettings s,
@@ -122,7 +121,6 @@ namespace Ombi.Notifications
             AdditionalInformation = opts?.AdditionalInformation ?? string.Empty;
             PosterImage = req?.Cover.HasValue() ?? false ? req.Cover : req?.Disk ?? string.Empty;
             CalculateRequestStatus(req);
-            ItemUrl = GetDetailsUrl(s, req);
         }
 
         private void LoadIssues(NotificationOptions opts)
@@ -246,7 +244,7 @@ namespace Ombi.Notifications
             {
                 case MovieRequests movieRequest:
                     return $"{s.ApplicationUrl}/details/movie/{movieRequest.TheMovieDbId}";
-                case ChildRequests tvRequest:
+                case ChildRequests tvRequest when tvRequest.ParentRequest != null:
                     return $"{s.ApplicationUrl}/details/tv/{tvRequest.ParentRequest.ExternalProviderId}";
                 case AlbumRequest albumRequest:
                     return $"{s.ApplicationUrl}/details/artist/{albumRequest.ForeignArtistId}";
