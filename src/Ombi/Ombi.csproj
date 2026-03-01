@@ -109,4 +109,16 @@
     <Exec WorkingDirectory="$(SpaRoot)" Command="yarn install" />
   </Target>
 
+  <!-- Include pre-built Angular dist files in publish output. Run 'yarn run build' in ClientApp first. -->
+  <Target Name="PublishAngularDist" AfterTargets="ComputeFilesToPublish" Condition="'$(Configuration)' != 'NonUiBuild'">
+    <ItemGroup>
+      <DistFiles Include="$(SpaRoot)dist\browser\**" />
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>%(DistFiles.Identity)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+
 </Project>
