@@ -157,9 +157,10 @@ namespace Ombi.Notifications
             RequestId = req?.Id.ToString();
             RequestedUser = req?.RequestedUser?.UserName;
             RequestedDate = req?.RequestedDate.ToString("D");
-            DetailsUrl = GetDetailsUrl(s, req);
+            var detailsUrl = GetDetailsUrl(s, req);
+            DetailsUrl = detailsUrl;
             RequestedByAlias = req?.RequestedByAlias;
-            ItemUrl = GetDetailsUrl(s, req);
+            ItemUrl = detailsUrl;
 
             if (Type.IsNullOrEmpty())
             {

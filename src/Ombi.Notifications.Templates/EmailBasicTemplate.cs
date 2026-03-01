@@ -72,7 +72,7 @@ namespace Ombi.Notifications.Templates
                 return string.Empty;
             }
             
-            return string.IsNullOrEmpty(logo) ? OmbiLogo : logo;
+            return WebUtility.HtmlEncode(string.IsNullOrEmpty(logo) ? OmbiLogo : logo);
         }
     }
 }
