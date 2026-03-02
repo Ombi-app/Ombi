@@ -151,6 +151,16 @@ namespace Ombi.Store.Context
                                 Enabled = true,
                             };
                             break;
+                        case NotificationType.RequestDeleted:
+                            notificationToAdd = new NotificationTemplates
+                            {
+                                NotificationType = notificationType,
+                                Message = "Hello! Your request for {Title} has been deleted.",
+                                Subject = "{ApplicationName}: your request has been deleted",
+                                Agent = agent,
+                                Enabled = true,
+                            };
+                            break;
                         case NotificationType.ItemAddedToFaultQueue:
                             notificationToAdd = new NotificationTemplates
                             {
@@ -180,6 +190,26 @@ namespace Ombi.Store.Context
                                 NotificationType = notificationType,
                                 Message = "Hello {UserName} Your issue for {Title} has now been resolved.",
                                 Subject = "{ApplicationName}: Issue has been resolved for {Title}!",
+                                Agent = agent,
+                                Enabled = true,
+                            };
+                            break;
+                        case NotificationType.IssueInProgress:
+                            notificationToAdd = new NotificationTemplates
+                            {
+                                NotificationType = notificationType,
+                                Message = "Hello {UserName} Your issue for {Title} is now in progress.",
+                                Subject = "{ApplicationName}: Issue is now in progress for {Title}!",
+                                Agent = agent,
+                                Enabled = true,
+                            };
+                            break;
+                        case NotificationType.IssueDeleted:
+                            notificationToAdd = new NotificationTemplates
+                            {
+                                NotificationType = notificationType,
+                                Message = "Hello {UserName} Your issue for {Title} has been deleted.",
+                                Subject = "{ApplicationName}: Issue deleted for {Title}",
                                 Agent = agent,
                                 Enabled = true,
                             };

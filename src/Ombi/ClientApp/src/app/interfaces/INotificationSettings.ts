@@ -53,7 +53,10 @@ export enum NotificationType {
     IssueComment = 10,
     Newsletter = 11,
     PartiallyAvailable = 12,
-    PlexWatchlistTokenExpired = 13
+    PlexWatchlistTokenExpired = 13,
+    RequestDeleted = 14,
+    IssueInProgress = 15,
+    IssueDeleted = 16
 }
 
 export interface IDiscordNotifcationSettings extends INotificationSettings {

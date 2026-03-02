@@ -279,7 +279,32 @@ namespace Ombi.Controllers.V1
         [PowerUser]
         public async Task<bool> DeleteIssue(int id)
         {
-            var issue = await _issues.GetAll().Include(x => x.Comments).FirstOrDefaultAsync(x => x.Id == id);
+            var issue = await _issues.GetAll().FirstOrDefaultAsync(x => x.Id == id);
+
+            if (issue == null)
+            {
+                return false;
+            }
+
+            var reportedUser = issue.UserReportedId.HasValue()
+                ? await _userManager.Users.FirstOrDefaultAsync(x => x.Id == issue.UserReportedId)
+                : null;
+
+            var notificationModel = new NotificationOptions
+            {
+                RequestId = 0,
+                DateTime = DateTime.Now,
+                NotificationType = NotificationType.IssueDeleted,
+                RequestType = issue.RequestType,
+                Recipient = !string.IsNullOrEmpty(reportedUser?.Email)
+                    ? reportedUser.Email
+                    : string.Empty,
+                AdditionalInformation = $"{issue.Subject} | {issue.Description}",
+                UserId = issue.UserReportedId,
+            };
+            AddIssueNotificationSubstitutes(notificationModel, issue, reportedUser?.UserName ?? string.Empty, reportedUser?.UserAlias ?? string.Empty);
+
+            await _notification.Notify(notificationModel);
 
             await _issues.Delete(issue);
             return true;
@@ -305,22 +330,25 @@ namespace Ombi.Controllers.V1
             }
             await _issues.SaveChangesAsync();
 
-            if (issue.Status == IssueStatus.Resolved)
+            if (issue.Status == IssueStatus.Resolved || issue.Status == IssueStatus.InProgress)
             {
                 var notificationModel = new NotificationOptions
                 {
                     RequestId = 0,
                     DateTime = DateTime.Now,
-                    NotificationType = NotificationType.IssueResolved,
+                    // TODO: Consider emitting explicit transition events for status rollbacks (e.g., Resolved -> Pending) to preserve full audit timelines.
+                    NotificationType = issue.Status == IssueStatus.Resolved
+                        ? NotificationType.IssueResolved
+                        : NotificationType.IssueInProgress,
                     RequestType = issue.RequestType,
                     Recipient = !string.IsNullOrEmpty(issue.UserReported?.Email)
                         ? issue.UserReported.Email
                         : string.Empty,
                     AdditionalInformation = $"{issue.Subject} | {issue.Description}",
-                    UserId = issue.UserReported.Id, // This is a resolved notification, so needs to go to the user who raised it
+                    UserId = issue.UserReportedId, // Status update notifications go to the user who raised the issue
                     
                 };
-                AddIssueNotificationSubstitutes(notificationModel, issue, issue.UserReported?.UserName ?? string.Empty, issue.UserReported.UserAlias);
+                AddIssueNotificationSubstitutes(notificationModel, issue, issue.UserReported?.UserName ?? string.Empty, issue.UserReported?.UserAlias ?? string.Empty);
 
                 await _notification.Notify(notificationModel);
             }

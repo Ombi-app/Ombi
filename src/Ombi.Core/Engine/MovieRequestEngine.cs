@@ -24,6 +24,7 @@ using Ombi.Core.Models;
 using System.Threading;
 using Ombi.Core.Services;
 using Ombi.Core.Helpers;
+using Ombi.Notifications.Models;
 
 namespace Ombi.Core.Engine
 {
@@ -767,6 +768,21 @@ namespace Ombi.Core.Engine
             var result = await CheckCanManageRequest(request);
             if (result.IsError)
                 return result;
+
+            await NotificationHelper.Notify(new NotificationOptions
+            {
+                RequestId = 0,
+                DateTime = DateTime.Now,
+                NotificationType = NotificationType.RequestDeleted,
+                RequestType = request.RequestType,
+                Recipient = request.RequestedUser?.Email ?? string.Empty,
+                UserId = request.RequestedUserId,
+                Substitutes = new Dictionary<string, string>
+                {
+                    { NotificationSubstitues.Title, request.Title },
+                    { NotificationSubstitues.RequestType, request.RequestType.ToString() },
+                }
+            });
 
             await MovieRepository.Delete(request);
             await _mediaCacheService.Purge();
