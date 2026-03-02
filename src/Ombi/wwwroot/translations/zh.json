@@ -93,7 +93,9 @@
             "Movies": "电影",
             "TvShows": "电视节目",
             "Music": "音乐",
-            "People": "人员"
+            "People": "人员",
+            "Decade": "Decade",
+            "None": "None"
         },
         "MorningWelcome": "早上好！",
         "AfternoonWelcome": "下午好!",

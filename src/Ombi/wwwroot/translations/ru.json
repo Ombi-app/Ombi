@@ -93,7 +93,9 @@
             "Movies": "Фильмы",
             "TvShows": "Сериалы",
             "Music": "Музыка",
-            "People": "People"
+            "People": "People",
+            "Decade": "Decade",
+            "None": "None"
         },
         "MorningWelcome": "Good morning!",
         "AfternoonWelcome": "Good afternoon!",

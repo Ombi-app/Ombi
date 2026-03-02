@@ -93,7 +93,9 @@
             "Movies": "Филми",
             "TvShows": "Тв предавания",
             "Music": "Музика",
-            "People": "Хора"
+            "People": "Хора",
+            "Decade": "Decade",
+            "None": "None"
         },
         "MorningWelcome": "Добро утро!",
         "AfternoonWelcome": "Добър ден!",

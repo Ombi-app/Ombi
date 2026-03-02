@@ -93,7 +93,9 @@
             "Movies": "Filmek",
             "TvShows": "Sorozatok",
             "Music": "Zene",
-            "People": "Személyek"
+            "People": "Személyek",
+            "Decade": "Decade",
+            "None": "None"
         },
         "MorningWelcome": "Jó reggelt!",
         "AfternoonWelcome": "Jó napot!",
