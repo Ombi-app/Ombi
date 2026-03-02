@@ -93,7 +93,9 @@
             "Movies": "Filmes",
             "TvShows": "Séries",
             "Music": "Músicas",
-            "People": "Pessoas"
+            "People": "Pessoas",
+            "Decade": "Decade",
+            "None": "None"
         },
         "MorningWelcome": "Bom dia!",
         "AfternoonWelcome": "Boa tarde!",

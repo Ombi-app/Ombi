@@ -93,7 +93,9 @@
             "Movies": "Filmer",
             "TvShows": "TV serier",
             "Music": "Musikk",
-            "People": "Personer"
+            "People": "Personer",
+            "Decade": "Decade",
+            "None": "None"
         },
         "MorningWelcome": "God morgen!",
         "AfternoonWelcome": "God ettermiddag!",

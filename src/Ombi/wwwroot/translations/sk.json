@@ -93,7 +93,9 @@
             "Movies": "Filmy",
             "TvShows": "Seriály",
             "Music": "Hudba",
-            "People": "Ľudia"
+            "People": "Ľudia",
+            "Decade": "Decade",
+            "None": "None"
         },
         "MorningWelcome": "Dobré ráno!",
         "AfternoonWelcome": "Dobrý deň!",
