@@ -6,15 +6,19 @@
 # https://github.com/actions/labeler
 
 name: Labeler
-on: [pull_request]
 
-permissions: write-all
+# pull_request_target runs in the base repo context, so the token has
+# write access even when the PR originates from a fork.
+# Safe here because we never checkout or execute code from the fork.
+on: [pull_request_target]
+
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
   label:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/labeler@v2
       with:
