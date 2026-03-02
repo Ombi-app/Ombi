@@ -1,0 +1,97 @@
+name: PR Report
+
+# Runs after "PR Build" completes. Because this is triggered by workflow_run
+# (not pull_request), it always uses the base repo's token and has write
+# permissions — even when the originating PR came from a fork.
+on:
+  workflow_run:
+    workflows: ["PR Build"]
+    types: [completed]
+
+permissions:
+  checks: write
+  pull-requests: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download test results artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: test-results
+          path: test-results
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish test results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Unit Test Results
+          path: '**/test-results.trx'
+          reporter: dotnet-trx
+          # Pin the check run to the commit from the triggering workflow,
+          # not the merge commit that workflow_run uses.
+          working-directory: test-results
+
+      - name: Find associated PR
+        id: find-pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const runs = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              head: `${context.payload.workflow_run.head_repository.owner.login}:${context.payload.workflow_run.head_branch}`
+            });
+            const pr = runs.data[0];
+            if (pr) {
+              core.setOutput('pr_number', pr.number);
+              core.setOutput('found', 'true');
+            } else {
+              core.setOutput('found', 'false');
+            }
+
+      - name: Comment on PR
+        if: steps.find-pr.outputs.found == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const conclusion = '${{ github.event.workflow_run.conclusion }}';
+            const emoji = conclusion === 'success' ? '✅' : '❌';
+            const message = conclusion === 'success'
+              ? 'All checks passed! Your PR is ready for review.'
+              : 'Some checks failed. Please review the logs and fix any issues.';
+            const runUrl = '${{ github.event.workflow_run.html_url }}';
+
+            const prNumber = parseInt('${{ steps.find-pr.outputs.pr_number }}');
+
+            // Avoid duplicate comments by checking for an existing one
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+            });
+            const bot = comments.data.find(c =>
+              c.user.type === 'Bot' && c.body.includes('**PR Build Status**')
+            );
+
+            const body = `${emoji} **PR Build Status**\n\n${message}\n\n[View workflow run](${runUrl})`;
+
+            if (bot) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: bot.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body,
+              });
+            }

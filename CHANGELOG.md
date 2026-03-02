@@ -1,3 +1,7 @@
+## [4.55.7](https://github.com/Ombi-app/Ombi/compare/v4.55.6...v4.55.7) (2026-03-01)
+
+
+
 ## [4.55.6](https://github.com/Ombi-app/Ombi/compare/v4.55.5...v4.55.6) (2026-02-22)
 
 
@@ -330,15 +334,6 @@
 ### Features
 
 * Added the ability for the Watchlist to automatically refresh the users token. This will reduce the need for the user to log in ([067c029](https://github.com/Ombi-app/Ombi/commit/067c029f42e9fd853d060fdb2093013b15ac14c0))
-
-
-
-## [4.48.5](https://github.com/Ombi-app/Ombi/compare/v4.48.4...v4.48.5) (2025-05-14)
-
-
-### Bug Fixes
-
-* filter out excluded notification agents from user preferences ([c9ab4f4](https://github.com/Ombi-app/Ombi/commit/c9ab4f4f9faa66dbf263da693db1eefcf68beeec)), closes [#5196](https://github.com/Ombi-app/Ombi/issues/5196)
 
 
 
