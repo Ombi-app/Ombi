@@ -1,3 +1,33 @@
+## [4.55.8](https://github.com/Ombi-app/Ombi/compare/v4.55.7...v4.55.8) (2026-03-02)
+
+
+### Bug Fixes
+
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([cb6e7ce](https://github.com/Ombi-app/Ombi/commit/cb6e7ce96cbe25a9ad02a69d710440d0a032b5b1))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([cbeb8a3](https://github.com/Ombi-app/Ombi/commit/cbeb8a325e56634695348b2737cd4796138e8342))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([116775e](https://github.com/Ombi-app/Ombi/commit/116775ecbccafdcb70948f4f464444d370ff2bfb))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([5a561c9](https://github.com/Ombi-app/Ombi/commit/5a561c974c8000cbb361ee35aa0091e1dea91ae2))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([8474267](https://github.com/Ombi-app/Ombi/commit/8474267fbd59e841597f62593db4401792c9f495))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([ff56bce](https://github.com/Ombi-app/Ombi/commit/ff56bce713cc1f3f021cb3de0fd61f4035ec0138))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([3cb52a2](https://github.com/Ombi-app/Ombi/commit/3cb52a27aa39c3972f855ee22307957cfd53609b))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([9446001](https://github.com/Ombi-app/Ombi/commit/94460017111d493e9678a11684d01c239fc97cf9))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([12c6c8a](https://github.com/Ombi-app/Ombi/commit/12c6c8a37d57375dc5520a66bf3cedb9ef5b57c5))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([b16dcef](https://github.com/Ombi-app/Ombi/commit/b16dcef1925ca087cc677873c7abae450f2f1d7f))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([f04cf8d](https://github.com/Ombi-app/Ombi/commit/f04cf8d8ce2d8899fefb2e55c5e5647d1da3ced4))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([f14ea54](https://github.com/Ombi-app/Ombi/commit/f14ea540912bc738d2cacef96a851424867cdb90))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([6ed8ebc](https://github.com/Ombi-app/Ombi/commit/6ed8ebc64bc4418d771f5dde734e9a8048d812a0))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([6aeeafb](https://github.com/Ombi-app/Ombi/commit/6aeeafb02fe8eb9f51de4f69bbda036889f4c226))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([cbf7421](https://github.com/Ombi-app/Ombi/commit/cbf742197286cef05d344112683f0d86c1620f08))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([9c785fb](https://github.com/Ombi-app/Ombi/commit/9c785fb7dcbcb43b26af5aabc8746cccd2c69744))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([32ecec1](https://github.com/Ombi-app/Ombi/commit/32ecec1cdf7b4858c0a37e9588f88cc9e0379bb3))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([7497cf2](https://github.com/Ombi-app/Ombi/commit/7497cf2b6d4c5ca1d8f140d3198b66e9b098030d))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([6d92d48](https://github.com/Ombi-app/Ombi/commit/6d92d4839889417e3fd3b2b95c82133ae4d17f7a))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([3236324](https://github.com/Ombi-app/Ombi/commit/3236324efd0c40c173738fe5fbd68f9f18e638cd))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([2e2aacd](https://github.com/Ombi-app/Ombi/commit/2e2aacd1767f6c6b7571f6d40e6454caa939f4a0))
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([c282583](https://github.com/Ombi-app/Ombi/commit/c2825833c17b64b70ba5166ca2d5e34c2a35b783))
+
+
+
 ## [4.55.7](https://github.com/Ombi-app/Ombi/compare/v4.55.6...v4.55.7) (2026-03-01)
 
 
@@ -325,15 +355,6 @@
 ### Bug Fixes
 
 * **auth:** Fixed an issue where refreshing the page as a power user would stop the application from loading [#5242](https://github.com/Ombi-app/Ombi/issues/5242) ([cee4014](https://github.com/Ombi-app/Ombi/commit/cee40146ee02f7fb79e2019d6fe2f9d5c5dbdfc8))
-
-
-
-# [4.49.0](https://github.com/Ombi-app/Ombi/compare/v4.48.5...v4.49.0) (2025-07-11)
-
-
-### Features
-
-* Added the ability for the Watchlist to automatically refresh the users token. This will reduce the need for the user to log in ([067c029](https://github.com/Ombi-app/Ombi/commit/067c029f42e9fd853d060fdb2093013b15ac14c0))
 
 
 
