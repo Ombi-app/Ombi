@@ -50,9 +50,12 @@ namespace Ombi.Notifications.Tests
         [Test]
         public void TemplateLocation_ReturnsCorrectPath()
         {
-            // Arrange & Act
-            var location = _template.TemplateLocation;
-            
+            // Arrange - use a fresh instance without reflection override
+            var freshTemplate = new EmailBasicTemplate();
+
+            // Act
+            var location = freshTemplate.TemplateLocation;
+
             // Assert
             Assert.That(location, Is.Not.Null);
             Assert.That(location, Does.EndWith("BasicTemplate.html"));
