@@ -237,27 +237,19 @@ namespace Ombi.Notifications.Tests
             Assert.That(result, Does.Contain("<tr><td align=\"center\">"));
         }
 
-        [TestCase("", "", true, Description = "Empty parameters")]
-        [TestCase(null, null, true, Description = "Null parameters")]
-        [TestCase("Subject with special chars: <>&\"'", "Body with special chars: <>&\"'", true, 
+        [TestCase("", "", Description = "Empty parameters")]
+        [TestCase(null, null, Description = "Null parameters")]
+        [TestCase("Subject with special chars: <>&\"'", "Body with special chars: <>&\"'",
             Description = "Special characters")]
-        [TestCase("Very long subject that might cause issues with template processing and email rendering", 
-            "Very long body content that might cause issues with template processing and email rendering and contains multiple sentences with various punctuation marks.", 
-            true, Description = "Long content")]
-        public void LoadTemplate_EdgeCases_HandlesGracefully(string subject, string body, bool shouldSucceed)
+        [TestCase("Very long subject that might cause issues with template processing and email rendering",
+            "Very long body content that might cause issues with template processing and email rendering and contains multiple sentences with various punctuation marks.",
+            Description = "Long content")]
+        public void LoadTemplate_EdgeCases_HandlesGracefully(string subject, string body)
         {
-            // Act & Assert
-            if (shouldSucceed)
-            {
-                Assert.DoesNotThrow(() => _template.LoadTemplate(subject ?? "", body ?? ""));
-                var result = _template.LoadTemplate(subject ?? "", body ?? "");
-                Assert.That(result, Is.Not.Null);
-                Assert.That(result, Is.Not.Empty);
-            }
-            else
-            {
-                Assert.Throws<Exception>(() => _template.LoadTemplate(subject, body));
-            }
+            Assert.DoesNotThrow(() => _template.LoadTemplate(subject, body));
+            var result = _template.LoadTemplate(subject, body);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.Not.Empty);
         }
 
         [Test]
@@ -266,7 +258,8 @@ namespace Ombi.Notifications.Tests
             // Arrange
             var templateWithInvalidPath = new EmailBasicTemplate();
             var field = typeof(EmailBasicTemplate).GetField("_templateLocation", BindingFlags.NonPublic | BindingFlags.Instance);
-            field.SetValue(templateWithInvalidPath, "/invalid/path/template.html");
+            var invalidPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"), "template.html");
+            field.SetValue(templateWithInvalidPath, invalidPath);
 
             // Act & Assert
             Assert.Throws<DirectoryNotFoundException>(() => 
