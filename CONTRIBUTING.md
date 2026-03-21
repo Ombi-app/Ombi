@@ -38,7 +38,7 @@ Thank you for your interest in contributing to Ombi! This document provides guid
 
 4. **Run tests**
    ```bash
-   dotnet test
+   dotnet test src
    ```
 
 ## 📝 How to Contribute
@@ -68,7 +68,7 @@ Thank you for your interest in contributing to Ombi! This document provides guid
 3. **Test your changes**
    ```bash
    # Run all tests
-   dotnet test
+   dotnet test src
    yarn --cwd ./src/Ombi/ClientApp test
 
    # Run linting
