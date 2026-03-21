@@ -238,6 +238,22 @@ jobs:
         spec: "cypress/features/01-wizard/wizard.feature,cypress/features/login/login.feature,cypress/tests/login/login.spec.ts"
         wait-on: http://localhost:3577/
         wait-on-timeout: 600
+        spec: cypress/features/01-wizard/wizard.feature
+      env:
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Cypress Tests - All other tests
+      uses: cypress-io/github-action@v4
+      with:
+        record: true
+        browser: chrome
+        headless: true
+        working-directory: tests
+        wait-on: http://localhost:3577/
+        wait-on-timeout: 600
+        spec: >-
+          cypress/tests/**/*
       env:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY_SQLITE }}
         CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID_SQLITE }}
