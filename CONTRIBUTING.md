@@ -21,8 +21,7 @@ Thank you for your interest in contributing to Ombi! This document provides guid
 2. **Install dependencies**
    ```bash
    # Install backend dependencies
-   cd src
-   dotnet restore
+   dotnet restore src
 
    # Install frontend dependencies
    yarn --cwd ./src/Ombi/ClientApp install
