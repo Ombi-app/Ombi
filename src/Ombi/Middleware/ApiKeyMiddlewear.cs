@@ -108,22 +108,22 @@ namespace Ombi
                     else
                     {
                         username = username.ToUpper();
-                    }
-                    
-                    var um = context.RequestServices.GetService<OmbiUserManager>();
 
-                    var user = await um.Users.FirstOrDefaultAsync(x =>
-                        x.NormalizedUserName == username);
-                    if (user == null)
-                    {
-                        context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                        await context.Response.WriteAsync("Invalid User");
-                        await next.Invoke(context);
+                        var um = context.RequestServices.GetService<OmbiUserManager>();
+
+                        var user = await um.Users.FirstOrDefaultAsync(x =>
+                            x.NormalizedUserName == username);
+                        if (user == null)
+                        {
+                            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                            await context.Response.WriteAsync("Invalid User");
+                            return;
+                        }
+                        var roles = await um.GetRolesAsync(user);
+                        var identity = new GenericIdentity(user.UserName);
+                        var principal = new GenericPrincipal(identity, roles.ToArray());
+                        context.User = principal;
                     }
-                    var roles = await um.GetRolesAsync(user);
-                    var identity = new GenericIdentity(user.UserName);
-                    var principal = new GenericPrincipal(identity, roles.ToArray());
-                    context.User = principal;
                 }
                 else
                 {
