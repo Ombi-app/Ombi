@@ -215,13 +215,6 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/kitzin">
-            <img src="https://avatars.githubusercontent.com/u/3277321?v=4" width="50;" alt="kitzin"/>
-            <br />
-            <sub><b>Emil Kitti</b></sub>
-        </a>
-    </td>
-    <td align="center">
         <a href="https://github.com/grimsan55">
             <img src="https://avatars.githubusercontent.com/u/8499989?v=4" width="50;" alt="grimsan55"/>
             <br />
@@ -229,17 +222,24 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/snyk-bot">
-            <img src="https://avatars.githubusercontent.com/u/19733683?v=4" width="50;" alt="snyk-bot"/>
+        <a href="https://github.com/kitzin">
+            <img src="https://avatars.githubusercontent.com/u/3277321?v=4" width="50;" alt="kitzin"/>
             <br />
-            <sub><b>Snyk Bot</b></sub>
+            <sub><b>Emil Kitti</b></sub>
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/gtbuchanan">
-            <img src="https://avatars.githubusercontent.com/u/715687?v=4" width="50;" alt="gtbuchanan"/>
+        <a href="https://github.com/claude">
+            <img src="https://avatars.githubusercontent.com/u/81847?v=4" width="50;" alt="claude"/>
             <br />
-            <sub><b>Taylor Buchanan</b></sub>
+            <sub><b>Claude</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/EstebanSmits">
+            <img src="https://avatars.githubusercontent.com/u/1588767?v=4" width="50;" alt="EstebanSmits"/>
+            <br />
+            <sub><b>EstebanSmits</b></sub>
         </a>
     </td></tr>
 <tr>
@@ -251,17 +251,17 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/EstebanSmits">
-            <img src="https://avatars.githubusercontent.com/u/1588767?v=4" width="50;" alt="EstebanSmits"/>
+        <a href="https://github.com/gtbuchanan">
+            <img src="https://avatars.githubusercontent.com/u/715687?v=4" width="50;" alt="gtbuchanan"/>
             <br />
-            <sub><b>EstebanSmits</b></sub>
+            <sub><b>Taylor Buchanan</b></sub>
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/claude">
-            <img src="https://avatars.githubusercontent.com/u/81847?v=4" width="50;" alt="claude"/>
+        <a href="https://github.com/snyk-bot">
+            <img src="https://avatars.githubusercontent.com/u/19733683?v=4" width="50;" alt="snyk-bot"/>
             <br />
-            <sub><b>Claude</b></sub>
+            <sub><b>Snyk Bot</b></sub>
         </a>
     </td>
     <td align="center">
