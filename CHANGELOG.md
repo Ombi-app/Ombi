@@ -1,3 +1,12 @@
+## [4.57.3](https://github.com/Ombi-app/Ombi/compare/v4.57.2...v4.57.3) (2026-03-24)
+
+
+### Bug Fixes
+
+* disable font inlining in Angular production build ([e6c7f75](https://github.com/Ombi-app/Ombi/commit/e6c7f7556c10364c587a9d622eb99083896fdfe6))
+
+
+
 ## [4.57.2](https://github.com/Ombi-app/Ombi/compare/v4.57.1...v4.57.2) (2026-03-24)
 
 
@@ -353,15 +362,6 @@
 
 
 ## [4.49.4](https://github.com/Ombi-app/Ombi/compare/v4.49.3...v4.49.4) (2025-08-23)
-
-
-
-## [4.49.3](https://github.com/Ombi-app/Ombi/compare/v4.49.2...v4.49.3) (2025-08-17)
-
-
-### Bug Fixes
-
-* **plex-api:** update Plex Watchlist URL ([11fd7a5](https://github.com/Ombi-app/Ombi/commit/11fd7a5fc853da75974a16bf4fdecd72a836f54b))
 
 
 
