@@ -1,3 +1,12 @@
+## [4.57.2](https://github.com/Ombi-app/Ombi/compare/v4.57.1...v4.57.2) (2026-03-24)
+
+
+### Bug Fixes
+
+* update Dockerfile COPY commands to match current project structure ([713a098](https://github.com/Ombi-app/Ombi/commit/713a098f9c8bef5f06464654a986e9b638a1ad84))
+
+
+
 ## [4.57.1](https://github.com/Ombi-app/Ombi/compare/v4.57.0...v4.57.1) (2026-03-24)
 
 
@@ -353,15 +362,6 @@
 ### Bug Fixes
 
 * **plex-api:** update Plex Watchlist URL ([11fd7a5](https://github.com/Ombi-app/Ombi/commit/11fd7a5fc853da75974a16bf4fdecd72a836f54b))
-
-
-
-## [4.49.2](https://github.com/Ombi-app/Ombi/compare/v4.49.1...v4.49.2) (2025-07-12)
-
-
-### Performance Improvements
-
-* **discover:** :zap: Improve the loading performance on the discover page ([97d5167](https://github.com/Ombi-app/Ombi/commit/97d5167db6c9f915021f32b96b281d7db3741d7f))
 
 
 
