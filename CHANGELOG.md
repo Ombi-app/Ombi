@@ -1,3 +1,12 @@
+## [4.57.1](https://github.com/Ombi-app/Ombi/compare/v4.57.0...v4.57.1) (2026-03-24)
+
+
+### Bug Fixes
+
+* remove unsupported linux/arm/v7 platform from Docker build ([8070723](https://github.com/Ombi-app/Ombi/commit/8070723b45481ce1ecc8299bc45177322fe36dd4))
+
+
+
 # [4.57.0](https://github.com/Ombi-app/Ombi/compare/v4.55.7...v4.57.0) (2026-03-24)
 
 
@@ -353,15 +362,6 @@
 ### Performance Improvements
 
 * **discover:** :zap: Improve the loading performance on the discover page ([97d5167](https://github.com/Ombi-app/Ombi/commit/97d5167db6c9f915021f32b96b281d7db3741d7f))
-
-
-
-## [4.49.1](https://github.com/Ombi-app/Ombi/compare/v4.49.0...v4.49.1) (2025-07-12)
-
-
-### Bug Fixes
-
-* **auth:** Fixed an issue where refreshing the page as a power user would stop the application from loading [#5242](https://github.com/Ombi-app/Ombi/issues/5242) ([cee4014](https://github.com/Ombi-app/Ombi/commit/cee40146ee02f7fb79e2019d6fe2f9d5c5dbdfc8))
 
 
 
