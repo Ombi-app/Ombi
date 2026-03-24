@@ -1,4 +1,12 @@
-# build stage
+# Stage 1: Build Angular frontend
+FROM node:20-bookworm-slim AS ui-build
+WORKDIR /source
+COPY Ombi/ClientApp/package.json Ombi/ClientApp/yarn.lock Ombi/ClientApp/
+RUN yarn --cwd Ombi/ClientApp install --frozen-lockfile
+COPY Ombi/ClientApp Ombi/ClientApp
+RUN yarn --cwd Ombi/ClientApp run build
+
+# Stage 2: Build and publish .NET backend
 FROM mcr.microsoft.com/dotnet/sdk:8.0-jammy AS build
 ARG VERSION=1.0.0
 WORKDIR /source
@@ -50,26 +58,16 @@ COPY ["Ombi.TheMovieDbApi/Ombi.Api.TheMovieDb.csproj", "Ombi.TheMovieDbApi/"]
 COPY ["Ombi.Api.Twilio/Ombi.Api.Twilio.csproj", "Ombi.Api.Twilio/"]
 COPY ["Ombi.Updater/Ombi.Updater.csproj", "Ombi.Updater/"]
 RUN dotnet restore Ombi/Ombi.csproj
+
 COPY . .
+RUN dotnet publish Ombi/Ombi.csproj -c Release --no-restore -o /app/publish
 
-# copy and build app
-WORKDIR /source/Ombi
-COPY ["Ombi/", "."]
-RUN dotnet build "Ombi.csproj" -c release
-
-
-FROM build AS publish
-
-RUN dotnet publish "Ombi.csproj" -c release --no-restore --no-build -o /app/publish
-
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy as base
-WORKDIR /src/Ombi
+# Stage 3: Final runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy
+WORKDIR /opt/ombi
 EXPOSE 5000
 
-FROM base AS final
-WORKDIR /src/Ombi
-COPY --from=publish /app/publish .
-COPY ["Ombi/ClientApp/dist", "/src/Ombi/ClientApp/dist/"]
+COPY --from=build /app/publish .
+COPY --from=ui-build /source/Ombi/ClientApp/dist ./ClientApp/dist/
+
 ENTRYPOINT ["dotnet", "Ombi.dll"]
-
-
