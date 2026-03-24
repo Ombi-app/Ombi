@@ -258,6 +258,13 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/claude">
+            <img src="https://avatars.githubusercontent.com/u/81847?v=4" width="50;" alt="claude"/>
+            <br />
+            <sub><b>Claude</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/fservida">
             <img src="https://avatars.githubusercontent.com/u/501958?v=4" width="50;" alt="fservida"/>
             <br />
@@ -277,15 +284,15 @@ Here are some of the features Ombi has:
             <br />
             <sub><b>Wesley King</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/jrh3k5">
             <img src="https://avatars.githubusercontent.com/u/545587?v=4" width="50;" alt="jrh3k5"/>
             <br />
             <sub><b>Joshua Hyde</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/Fire-Swan">
             <img src="https://avatars.githubusercontent.com/u/60622768?v=4" width="50;" alt="Fire-Swan"/>
@@ -320,27 +327,20 @@ Here are some of the features Ombi has:
             <br />
             <sub><b>Aptalca</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/stpanzer">
             <img src="https://avatars.githubusercontent.com/u/4676271?v=4" width="50;" alt="stpanzer"/>
             <br />
             <sub><b>Stephen Panzer</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/tuxmi">
             <img src="https://avatars.githubusercontent.com/u/12274612?v=4" width="50;" alt="tuxmi"/>
             <br />
             <sub><b>Michael Reber</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/claude">
-            <img src="https://avatars.githubusercontent.com/u/81847?v=4" width="50;" alt="claude"/>
-            <br />
-            <sub><b>Claude</b></sub>
         </a>
     </td>
     <td align="center">
