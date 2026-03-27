@@ -1,10 +1,10 @@
  
-![](http://i.imgur.com/qQsN78U.png)   
+![Ombi logo](https://ombi.io/img/logo-orange-small.png)   
 ____ 
 [![Discord](https://img.shields.io/discord/270828201473736705.svg)](https://discord.gg/Sa7wNWb)
 [![Docker Pulls](https://img.shields.io/docker/pulls/linuxserver/ombi.svg)](https://hub.docker.com/r/linuxserver/ombi/)
 [![Github All Releases](https://img.shields.io/github/downloads/tidusjar/Ombi/total.svg)](https://github.com/ombi-app/Ombi)
-[![firsttimersonly](http://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
+[![firsttimersonly](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/ombi/localized.svg)](https://crowdin.com/project/ombi)
 [![Automation Tests](https://github.com/Ombi-app/Ombi/actions/workflows/automation-tests.yml/badge.svg)](https://github.com/Ombi-app/Ombi/actions/workflows/automation-tests.yml)
 
