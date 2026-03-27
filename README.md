@@ -1,5 +1,5 @@
  
-![](https://ombi.io/img/logo-orange-small.png)   
+![Ombi logo](https://ombi.io/img/logo-orange-small.png)   
 ____ 
 [![Discord](https://img.shields.io/discord/270828201473736705.svg)](https://discord.gg/Sa7wNWb)
 [![Docker Pulls](https://img.shields.io/docker/pulls/linuxserver/ombi.svg)](https://hub.docker.com/r/linuxserver/ombi/)
