@@ -58,7 +58,8 @@ jobs:
       run: sleep 20
 
     - name: Cypress Tests - Setup (Wizard)
-      uses: cypress-io/github-action@v4
+      # v4.2.2 of the action - pinned to a commit to prevent hijacking of /v4 tag
+      uses: cypress-io/github-action@d79d2d530a66e641eb4a5f227e13bc985c60b964
       with:
         record: true
         browser: chrome
@@ -72,7 +73,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Cypress Tests - All other tests
-      uses: cypress-io/github-action@v4
+      # v4.2.2 of the action - pinned to a commit to prevent hijacking of /v4 tag
+      uses: cypress-io/github-action@d79d2d530a66e641eb4a5f227e13bc985c60b964
       with:
         record: true
         browser: chrome
