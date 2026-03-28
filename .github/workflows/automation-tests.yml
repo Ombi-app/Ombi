@@ -81,16 +81,7 @@ jobs:
         wait-on: http://localhost:3577/
         wait-on-timeout: 600
         spec: >-
-          cypress/tests/api/**/*,
-          cypress/tests/discover/**/*,
-          cypress/tests/details/**/*,
-          cypress/tests/login/**/*,
-          cypress/tests/navigation/**/*,
-          cypress/tests/requests/**/*,
-          cypress/tests/search/**/*,
-          cypress/tests/settings/**/*,
-          cypress/tests/user-preferences/**/*,
-          cypress/tests/usermanagement/**/*
+          cypress/tests/**/*
       env:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
