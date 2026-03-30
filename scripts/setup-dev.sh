@@ -126,7 +126,7 @@ print_status "Building the frontend..."
 if yarn --cwd ./src/Ombi/ClientApp run build:dev; then
     print_success "Frontend built successfully"
 else
-    print_success "Failed to build frontend"
+    print_error "Failed to build frontend"
     exit 1
 fi
 
@@ -135,7 +135,7 @@ print_status "Installing end-to-end tests..."
 if yarn --cwd tests; then
     print_success "End-to-end tests installed"
 else
-    print_warning "Failed to install end-to-end tests"
+    print_error "Failed to install end-to-end tests"
     exit 1
 fi
 
