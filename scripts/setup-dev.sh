@@ -47,7 +47,13 @@ if ! command -v dotnet &> /dev/null; then
     exit 1
 else
     DOTNET_VERSION=$(dotnet --version)
+    if [[ $DOTNET_VERSION == 8.* ]]; then
     print_success "Found .NET version: $DOTNET_VERSION"
+    else
+        print_error ".NET 8.0 SDK is required but $DOTNET_VERSION is installed"
+        print_status "Please install from: https://dotnet.microsoft.com/download/dotnet/8.0"
+        exit 1
+    fi
 fi
 
 # Check Node.js
