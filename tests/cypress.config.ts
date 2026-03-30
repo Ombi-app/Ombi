@@ -68,8 +68,8 @@ export default defineConfig({
     // Base configuration
     baseUrl: 'http://localhost:3577',
     specPattern: [
-      'cypress/tests/**/*.spec.ts*', 
-      'cypress/features/**/*.feature'
+      'cypress/features/**/*.feature',
+      'cypress/tests/**/*.spec.ts*'
     ],
     excludeSpecPattern: [
       '**/snapshots/*',
