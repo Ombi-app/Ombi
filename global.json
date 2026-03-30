@@ -1,5 +1,4 @@
 {
-  // Use .NET 8.0 and allow any minor updates
   "sdk": {
     "version": "8.0.419",
     "rollForward": "latestMinor"
