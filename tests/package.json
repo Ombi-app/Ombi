@@ -24,7 +24,6 @@
     "cypress:run": "cypress run",
     "types": "tsc --noEmit",
     "e2e": "cypress run",
-    "test": "cypress run",
     "regression": "cypress run --config-file cypress/config/regression.json",
     "demo:open": "cypress open --config-file cypress/config/demo.json"
   },
