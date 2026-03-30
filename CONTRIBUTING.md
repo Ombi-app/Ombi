@@ -12,7 +12,7 @@ Thank you for your interest in contributing to Ombi! This document provides guid
 
 ### Development Setup
 
-1. **Fork and clone the repository**
+1. **Fork then clone the repository**
    ```bash
    git clone https://github.com/YOUR_USERNAME/Ombi.git
    cd Ombi
@@ -39,6 +39,29 @@ Thank you for your interest in contributing to Ombi! This document provides guid
 4. **Run tests**
    ```bash
    dotnet test src
+   ```
+
+Alternatively, once you have forked and cloned the repository, you can run `./scripts/setup-dev.sh` from the Ombi directory and prerequisites will be tested and, when successful, Ombi backend, frontend and tests will be built/installed.
+
+### Using the makefile
+   ```bash
+   # Run the backend
+   make run-backend
+
+   # Run the frontend
+   make run-frontend
+
+   # Run the backend tests
+   make run-backend-tests
+
+   # Run the frontend tests
+   make run-frontend-tests
+
+   # Install the frontend
+   make install-frontend
+
+   # Install the frontend tests
+   make install-frontend-tests
    ```
 
 ## 📝 How to Contribute
@@ -111,9 +134,11 @@ Thank you for your interest in contributing to Ombi! This document provides guid
 ## 🧪 Testing
 
 ### Running Tests
+Start the backend and frontend, then run the end-to-end tests:
+
 ```bash
 # Backend unit tests
-dotnet test
+dotnet test ./src
 
 # Frontend unit tests
 yarn --cwd ./src/Ombi/ClientApp test
