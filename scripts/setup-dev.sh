@@ -48,7 +48,7 @@ if ! command -v dotnet &> /dev/null; then
 else
     DOTNET_VERSION=$(dotnet --version)
     if [[ $DOTNET_VERSION == 8.* ]]; then
-    print_success "Found .NET version: $DOTNET_VERSION"
+        print_success "Found .NET version: $DOTNET_VERSION"
     else
         print_error ".NET 8.0 SDK is required but $DOTNET_VERSION is installed"
         print_status "Please install from: https://dotnet.microsoft.com/download/dotnet/8.0"
@@ -88,7 +88,7 @@ print_status "All required tools are installed!"
 
 # Restore .NET dependencies
 print_status "Restoring .NET dependencies..."
-if dotnet restore; then
+if dotnet restore ./src; then
     print_success ".NET dependencies restored"
 else
     print_error "Failed to restore .NET dependencies"
@@ -106,7 +106,7 @@ fi
 
 # Build the project
 print_status "Building the project..."
-if dotnet build; then
+if dotnet build ./src; then
     print_success "Project built successfully"
 else
     print_error "Failed to build project"
@@ -115,10 +115,28 @@ fi
 
 # Run tests
 print_status "Running tests..."
-if dotnet test; then
+if dotnet test ./src; then
     print_success "All tests passed"
 else
     print_warning "Some tests failed - this might be expected for a fresh setup"
+fi
+
+# Build the front end
+print_status "Building the frontend..."
+if yarn --cwd ./src/Ombi/ClientApp run build:dev; then
+    print_success "Frontend built successfully"
+else
+    print_success "Failed to build frontend"
+    exit 1
+fi
+
+# Install the Cypress tests
+print_status "Installing end-to-end tests..."
+if yarn --cwd tests; then
+    print_success "End-to-end tests installed"
+else
+    print_warning "Failed to install end-to-end tests"
+    exit 1
 fi
 
 # Create development configuration
