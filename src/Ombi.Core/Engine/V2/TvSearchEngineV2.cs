@@ -245,7 +245,7 @@ namespace Ombi.Core.Engine.V2
                 }
 
                 var result = await ProcessResult(tvMazeSearch);
-                if (result == null || settings.HideAvailableFromDiscover && result.FullyAvailable)
+                if (result == null || settings.HideAvailableFromDiscover && result.Available)
                 {
                     continue;
                 }
