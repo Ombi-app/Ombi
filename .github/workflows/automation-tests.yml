@@ -55,7 +55,7 @@ jobs:
       run: nohup docker run --rm -p 32400:8080 --name wiremock wiremock/wiremock:2.35.0 &
 
     - name: Sleep for server to start
-      run: sleep 20
+      run: sleep 60
 
     - name: Cypress Tests
       uses: cypress-io/github-action@v4
