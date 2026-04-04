@@ -204,12 +204,13 @@ namespace Ombi.Core.Engine.V2
                     return (await Task.WhenAll(tasks)).ToList();
                 }, DateTimeOffset.Now.AddHours(12));
 
-            var mapped = _mapper.Map<List<SearchFullInfoTvShowViewModel>>(movieDBResults);
+            var mapped = _mapper.Map<List<SearchFullInfoTvShowViewModel>>(
+                movieDBResults.Where(show => show != null && !string.IsNullOrEmpty(show.name)).ToList());
 
             // Pre-warm cache to avoid concurrent EF Core DbContext access
             await GetTvRequests();
 
-            var processTasks = mapped.Select(map => ProcessResult(map));
+            var processTasks = mapped.Where(map => map != null).Select(map => ProcessResult(map));
             var processedResults = await Task.WhenAll(processTasks);
             results.AddRange(processedResults);
             return results;
@@ -231,6 +232,11 @@ namespace Ombi.Core.Engine.V2
                 {
                     var show = await Cache.GetOrAddAsync(nameof(GetShowInformation) + tvMazeSearch.Id.ToString(),
                         () => _movieApi.GetTVInfo(tvMazeSearch.Id.ToString()), DateTime.Now.AddHours(12));
+
+                    if (show == null || string.IsNullOrEmpty(show.name) || show.seasons == null)
+                    {
+                        return;
+                    }
 
                     // Fetch all season episodes in parallel for this show
                     var seasons = show.seasons.Where(x => x.season_number != 0).ToList();
