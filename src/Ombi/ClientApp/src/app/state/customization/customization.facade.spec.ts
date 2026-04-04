@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { CustomizationFacade } from './customization.facade';
+import { LoadSettings, UpdateSettings } from './customization.actions';
 import { of } from 'rxjs';
 
 describe('CustomizationFacade', () => {
@@ -16,9 +17,9 @@ describe('CustomizationFacade', () => {
     facade = new CustomizationFacade(mockStore);
   });
 
-  it('should dispatch on loadCustomizationSettings', () => {
+  it('should dispatch LoadSettings on loadCustomizationSettings', () => {
     facade.loadCustomziationSettings();
-    expect(mockStore.dispatch).toHaveBeenCalled();
+    expect(mockStore.dispatch).toHaveBeenCalledWith(expect.any(LoadSettings));
   });
 
   it('should return logo from selectSnapshot', () => {
@@ -36,9 +37,9 @@ describe('CustomizationFacade', () => {
     expect(facade.appUrl()).toBe('https://ombi.example.com');
   });
 
-  it('should dispatch on saveSettings', () => {
+  it('should dispatch UpdateSettings on saveSettings', () => {
     facade.saveSettings({ applicationName: 'Test' } as any);
-    expect(mockStore.dispatch).toHaveBeenCalled();
+    expect(mockStore.dispatch).toHaveBeenCalledWith(expect.any(UpdateSettings));
   });
 
   it('should call store.select for settings$', () => {

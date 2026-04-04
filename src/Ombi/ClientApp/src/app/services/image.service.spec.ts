@@ -74,4 +74,20 @@ describe('ImageService', () => {
     service.getMovieBanner('550');
     expect(mockHttp.get).toHaveBeenCalledWith('/api/v1/Images/banner/movie/550', expect.anything());
   });
+
+  describe('with non-root base href', () => {
+    let nonRootService: ImageService;
+    let nonRootHttp: { get: ReturnType<typeof vi.fn> };
+
+    beforeEach(() => {
+      const mocks = createMockImageService('/ombi');
+      nonRootService = mocks.service;
+      nonRootHttp = mocks.mockHttp;
+    });
+
+    it('should prepend base href to URL', () => {
+      nonRootService.getRandomBackground();
+      expect(nonRootHttp.get).toHaveBeenCalledWith('/ombi/api/v1/Images/background/', expect.anything());
+    });
+  });
 });

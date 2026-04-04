@@ -26,6 +26,7 @@ describe('FilterService', () => {
     const filter = new SearchFilter({ movies: true, tvShows: true, music: false, people: false });
     service.changeFilter(filter);
 
+    expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(filter);
   });
 
