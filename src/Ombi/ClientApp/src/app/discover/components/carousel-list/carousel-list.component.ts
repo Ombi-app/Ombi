@@ -74,7 +74,7 @@ export class CarouselListComponent {
         return "DiscoverOptions" + this.discoverType().toString();
     };
     
-    private amountToLoad = 10;
+    private amountToLoad = 20;
     private currentlyLoaded = 0;
     public responsiveOptions: any;
 
@@ -186,7 +186,7 @@ export class CarouselListComponent {
         await this.loadData(false);
         
         // If we don't have enough results to fill the carousel, load one more batch
-        if (this.discoverResults().length < 10) {
+        if (this.discoverResults().length < 20) {
             await this.loadData(false);
         }
     }
@@ -352,7 +352,7 @@ export class CarouselListComponent {
         const tempResults = <IDiscoverCardResult[]>[];
         this.tvShows().forEach(m => {
             tempResults.push({
-                available: m.fullyAvailable,
+                available: m.fullyAvailable || m.partlyAvailable,
                 posterPath: m.backdropPath ? `https://image.tmdb.org/t/p/w500/${m.backdropPath}` :  this.baseUrl + "/images/default_tv_poster.png",
                 requested: m.requested,
                 title: m.title,

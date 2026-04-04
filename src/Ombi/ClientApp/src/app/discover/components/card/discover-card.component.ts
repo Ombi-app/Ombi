@@ -272,7 +272,7 @@ export class DiscoverCardComponent implements OnInit {
         this.result.url = updated.imdbId;
         this.result.overview = updated.overview;
         this.result.approved = updated.approved;
-        this.result.available = updated.fullyAvailable;
+        this.result.available = updated.fullyAvailable || updated.partlyAvailable;
         this.result.denied = updated.denied;
 
         this.fullyLoaded = true;
