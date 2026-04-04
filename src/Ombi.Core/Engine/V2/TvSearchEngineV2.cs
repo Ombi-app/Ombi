@@ -199,53 +199,94 @@ namespace Ombi.Core.Engine.V2
             var movieDBResults = await Cache.GetOrAddAsync(nameof(RecentlyRequestedShows) + toLoad + langCode,
                 async () =>
                 {
-                    var responses = new List<TvInfo>();
-                    foreach (var movie in requestResult.Collection)
+                    var tasks = requestResult.Collection.Select(async movie =>
                     {
-                        responses.Add(await _movieApi.GetTVInfo(movie.ExternalProviderId.ToString()));
-                    }
-                    return responses;
+                        await ApiThrottle.WaitAsync();
+                        try
+                        {
+                            return await _movieApi.GetTVInfo(movie.ExternalProviderId.ToString());
+                        }
+                        finally
+                        {
+                            ApiThrottle.Release();
+                        }
+                    });
+                    return (await Task.WhenAll(tasks)).ToList();
                 }, DateTimeOffset.Now.AddHours(12));
 
             var mapped = _mapper.Map<List<SearchFullInfoTvShowViewModel>>(movieDBResults);
-  
-            foreach(var map in mapped)
-            {
-                var processed = await ProcessResult(map);
-                results.Add(processed);
-            }
+
+            // Pre-warm cache to avoid concurrent EF Core DbContext access
+            await GetTvRequests();
+
+            var processTasks = mapped.Select(map => ProcessResult(map));
+            var processedResults = await Task.WhenAll(processTasks);
+            results.AddRange(processedResults);
             return results;
         }
 
         private async Task<IEnumerable<SearchTvShowViewModel>> ProcessResults(List<MovieDbSearchResult> items)
         {
-            var retVal = new List<SearchTvShowViewModel>(); 
             var settings = await _customization.GetSettingsAsync();
 
-            foreach (var tvMazeSearch in items)
+            // Pre-warm cache to avoid concurrent EF Core DbContext access
+            await GetTvRequests();
+
+            var nonDemoItems = items.Where(item => !DemoCheck(item.Title)).ToList();
+
+            if (settings.HideAvailableFromDiscover)
             {
-                if (DemoCheck(tvMazeSearch.Title))
+                // Parallelize show info + season episode fetches per show
+                var enrichTasks = nonDemoItems.Select(async tvMazeSearch =>
                 {
-                    continue;
-                }
-                if (settings.HideAvailableFromDiscover)
-                {
-                    // To hide, we need to know if it's fully available, the only way to do this is to lookup it's episodes to check if we have every episode
-                    var show = await Cache.GetOrAddAsync(nameof(GetShowInformation) + tvMazeSearch.Id.ToString(),
-                        async () => await _movieApi.GetTVInfo(tvMazeSearch.Id.ToString()), DateTime.Now.AddHours(12));
-                    foreach (var tvSeason in show.seasons.Where(x => x.season_number != 0)) // skip the first season
+                    await ApiThrottle.WaitAsync();
+                    TvInfo show;
+                    try
                     {
-                        var seasonEpisodes = await Cache.GetOrAddAsync("SeasonEpisodes" + show.id + tvSeason.season_number, async () =>
-                        {
-                            return await _movieApi.GetSeasonEpisodes(show.id, tvSeason.season_number, CancellationToken.None);
-                        }, DateTimeOffset.Now.AddHours(12));
-
-                        MapSeasons(tvMazeSearch.SeasonRequests, tvSeason, seasonEpisodes);
+                        show = await Cache.GetOrAddAsync(nameof(GetShowInformation) + tvMazeSearch.Id.ToString(),
+                            async () => await _movieApi.GetTVInfo(tvMazeSearch.Id.ToString()), DateTime.Now.AddHours(12));
                     }
-                }
+                    finally
+                    {
+                        ApiThrottle.Release();
+                    }
 
-                var result = await ProcessResult(tvMazeSearch);
-                if (result == null || settings.HideAvailableFromDiscover && result.Available)
+                    // Fetch all season episodes in parallel for this show
+                    var seasons = show.seasons.Where(x => x.season_number != 0).ToList();
+                    var episodeTasks = seasons.Select(async tvSeason =>
+                    {
+                        await ApiThrottle.WaitAsync();
+                        try
+                        {
+                            return await Cache.GetOrAddAsync("SeasonEpisodes" + show.id + tvSeason.season_number, async () =>
+                            {
+                                return await _movieApi.GetSeasonEpisodes(show.id, tvSeason.season_number, CancellationToken.None);
+                            }, DateTimeOffset.Now.AddHours(12));
+                        }
+                        finally
+                        {
+                            ApiThrottle.Release();
+                        }
+                    });
+                    var episodeResults = await Task.WhenAll(episodeTasks);
+
+                    // Map seasons sequentially per show (mutates SeasonRequests)
+                    for (int i = 0; i < seasons.Count; i++)
+                    {
+                        MapSeasons(tvMazeSearch.SeasonRequests, seasons[i], episodeResults[i]);
+                    }
+                });
+                await Task.WhenAll(enrichTasks);
+            }
+
+            // Parallelize ProcessResult calls
+            var processTasks = nonDemoItems.Select(item => ProcessResult(item));
+            var processedResults = await Task.WhenAll(processTasks);
+
+            var retVal = new List<SearchTvShowViewModel>();
+            foreach (var result in processedResults)
+            {
+                if (result == null || (settings.HideAvailableFromDiscover && result.Available))
                 {
                     continue;
                 }
