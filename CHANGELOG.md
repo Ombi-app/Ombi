@@ -1,3 +1,7 @@
+## [4.57.6](https://github.com/Ombi-app/Ombi/compare/v4.57.5...v4.57.6) (2026-04-04)
+
+
+
 ## [4.57.5](https://github.com/Ombi-app/Ombi/compare/v4.57.4...v4.57.5) (2026-04-04)
 
 
@@ -353,10 +357,6 @@
 ### Bug Fixes
 
 * Use new server discovery url [#5260](https://github.com/Ombi-app/Ombi/issues/5260) ([56a91d6](https://github.com/Ombi-app/Ombi/commit/56a91d6240f53a4306fcd0648575976f9d459048))
-
-
-
-## [4.49.6](https://github.com/Ombi-app/Ombi/compare/v4.49.5...v4.49.6) (2025-08-24)
 
 
 
