@@ -67,12 +67,12 @@ describe('SettingsService', () => {
       expect(mockHttp.post).toHaveBeenCalledWith('/api/v1/Settings/Plex/', JSON.stringify(settings), expect.anything());
     });
 
-    it('should GET Emby settings', () => {
+    it('should GET Emby settings (no headers)', () => {
       service.getEmby();
       expect(mockHttp.get).toHaveBeenCalledWith('/api/v1/Settings/Emby/');
     });
 
-    it('should GET Jellyfin settings', () => {
+    it('should GET Jellyfin settings (no headers)', () => {
       service.getJellyfin();
       expect(mockHttp.get).toHaveBeenCalledWith('/api/v1/Settings/Jellyfin/');
     });

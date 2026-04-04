@@ -373,7 +373,7 @@ describe('MovieDetailsComponent', () => {
   });
 
   describe('setAdvancedOptions', () => {
-    it('should set advancedOptions and override titles', () => {
+    it('should set advancedOptions and override titles when both IDs provided', () => {
       const { comp } = createComponent();
       comp.movieRequest = {} as any;
 
@@ -389,6 +389,48 @@ describe('MovieDetailsComponent', () => {
       expect(comp.advancedOptions).toBe(data);
       expect(comp.movieRequest.qualityOverrideTitle).toBe('1080p');
       expect(comp.movieRequest.rootPathOverrideTitle).toBe('/movies');
+    });
+
+    it('should skip qualityOverrideTitle when rootFolderId is falsy (condition is inverted in source)', () => {
+      const { comp } = createComponent();
+      comp.movieRequest = {} as any;
+
+      const data = {
+        rootFolderId: 0,
+        profileId: 2,
+        profiles: [{ id: 2, name: '1080p' }],
+        rootFolders: [{ id: 0, path: '/default' }, { id: 1, path: '/movies' }],
+      } as any;
+
+      comp.setAdvancedOptions(data);
+
+      // BUG: qualityOverrideTitle is gated by rootFolderId instead of profileId
+      // When rootFolderId is falsy, the `if (data.rootFolderId)` block is skipped
+      expect(comp.movieRequest.qualityOverrideTitle).toBeUndefined();
+      // But rootPathOverrideTitle IS set because profileId is truthy (inverted gate)
+      // and it filters rootFolders by rootFolderId=0
+      expect(comp.movieRequest.rootPathOverrideTitle).toBe('/default');
+    });
+
+    it('should skip rootPathOverrideTitle when profileId is falsy (condition is inverted in source)', () => {
+      const { comp } = createComponent();
+      comp.movieRequest = {} as any;
+
+      const data = {
+        rootFolderId: 1,
+        profileId: 0,
+        profiles: [{ id: 0, name: 'Any' }, { id: 2, name: '1080p' }],
+        rootFolders: [{ id: 1, path: '/movies' }],
+      } as any;
+
+      comp.setAdvancedOptions(data);
+
+      // BUG: rootPathOverrideTitle is gated by profileId instead of rootFolderId
+      // When profileId is falsy, the `if (data.profileId)` block is skipped
+      expect(comp.movieRequest.rootPathOverrideTitle).toBeUndefined();
+      // But qualityOverrideTitle IS set because rootFolderId is truthy (inverted gate)
+      // and it filters profiles by profileId=0
+      expect(comp.movieRequest.qualityOverrideTitle).toBe('Any');
     });
   });
 });

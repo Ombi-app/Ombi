@@ -279,10 +279,12 @@ describe('LoginComponent', () => {
   describe('ngOnDestroy', () => {
     it('should clear pin timer', () => {
       const { comp } = createComponent();
+      const clearIntervalSpy = vi.spyOn(globalThis, 'clearInterval');
       comp.pinTimer = setInterval(() => {}, 10000);
+      const timerId = comp.pinTimer;
       comp.ngOnDestroy();
-      // No error = timer was cleared
-      expect(comp.pinTimer).toBeDefined();
+      expect(clearIntervalSpy).toHaveBeenCalledWith(timerId);
+      clearIntervalSpy.mockRestore();
     });
   });
 });

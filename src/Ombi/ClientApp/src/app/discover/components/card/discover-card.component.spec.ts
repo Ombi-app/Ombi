@@ -166,7 +166,7 @@ describe('DiscoverCardComponent', () => {
       expect(comp.requestable).toBe(true);
     });
 
-    it('should call getExtraTvInfo for tv type', () => {
+    it('should call getExtraTvInfo for tv type', async () => {
       const { comp, mockSearchService } = createComponent();
       comp.result = makeResult({ type: RequestType.tvShow });
       mockSearchService.getTvInfoWithMovieDbId.mockResolvedValue({
@@ -176,8 +176,10 @@ describe('DiscoverCardComponent', () => {
       });
 
       comp.ngOnInit();
-
-      expect(comp.fullyLoaded).toBe(true);
+      // Wait for the async getTvInfoWithMovieDbId promise to resolve
+      await vi.waitFor(() => {
+        expect(comp.fullyLoaded).toBe(true);
+      });
     });
   });
 

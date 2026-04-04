@@ -117,6 +117,7 @@ describe('MoviesGridComponent', () => {
       expect(comp.defaultSort).toBe('requestedDate');
       expect(comp.defaultOrder).toBe('desc');
       expect(comp.gridCount).toBe('15');
+      expect(comp.currentFilter).toBe(RequestFilterType.All);
     });
   });
 
@@ -262,15 +263,16 @@ describe('MoviesGridComponent', () => {
   });
 
   describe('switchFilter', () => {
-    it('should update currentFilter', () => {
+    it('should update currentFilter via the method', () => {
       const { comp } = createComponent();
-      // Can't fully test ngAfterViewInit without DOM, but we can verify the filter changes
-      comp.paginator = { pageIndex: 0, page: { pipe: vi.fn() } } as any;
-      comp.sort = { sortChange: { subscribe: vi.fn(), pipe: vi.fn() }, active: 'title', direction: 'asc' } as any;
+      // Stub ngAfterViewInit since it requires DOM (paginator/sort ViewChild)
+      vi.spyOn(comp, 'ngAfterViewInit').mockImplementation(() => {});
       comp.currentFilter = RequestFilterType.All;
-      // switchFilter calls ngAfterViewInit which needs DOM, so just test the state change
-      comp.currentFilter = RequestFilterType.Pending;
+
+      comp.switchFilter(RequestFilterType.Pending);
+
       expect(comp.currentFilter).toBe(RequestFilterType.Pending);
+      expect(comp.ngAfterViewInit).toHaveBeenCalled();
     });
   });
 });
