@@ -460,18 +460,21 @@ namespace Ombi.Core.Engine.V2
         {
             if (viewMovie.ImdbId.IsNullOrEmpty())
             {
-                await ApiThrottle.WaitAsync();
-                try
-                {
-                    var showInfo = await Cache.GetOrAddAsync("GetMovieInformationWIthImdbId" + viewMovie.Id,
-                        () => MovieApi.GetMovieInformation(viewMovie.Id), DateTimeOffset.Now.AddHours(12));
-                    viewMovie.Id = showInfo.Id; // TheMovieDbId
-                    viewMovie.ImdbId = showInfo.ImdbId;
-                }
-                finally
-                {
-                    ApiThrottle.Release();
-                }
+                var showInfo = await Cache.GetOrAddAsync("GetMovieInformationWIthImdbId" + viewMovie.Id,
+                    async () =>
+                    {
+                        await ApiThrottle.WaitAsync();
+                        try
+                        {
+                            return await MovieApi.GetMovieInformation(viewMovie.Id);
+                        }
+                        finally
+                        {
+                            ApiThrottle.Release();
+                        }
+                    }, DateTimeOffset.Now.AddHours(12));
+                viewMovie.Id = showInfo.Id; // TheMovieDbId
+                viewMovie.ImdbId = showInfo.ImdbId;
             }
 
             var user = await GetUser();

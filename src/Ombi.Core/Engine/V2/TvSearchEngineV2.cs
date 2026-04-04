@@ -239,34 +239,36 @@ namespace Ombi.Core.Engine.V2
                 // Parallelize show info + season episode fetches per show
                 var enrichTasks = nonDemoItems.Select(async tvMazeSearch =>
                 {
-                    await ApiThrottle.WaitAsync();
-                    TvInfo show;
-                    try
-                    {
-                        show = await Cache.GetOrAddAsync(nameof(GetShowInformation) + tvMazeSearch.Id.ToString(),
-                            async () => await _movieApi.GetTVInfo(tvMazeSearch.Id.ToString()), DateTime.Now.AddHours(12));
-                    }
-                    finally
-                    {
-                        ApiThrottle.Release();
-                    }
+                    var show = await Cache.GetOrAddAsync(nameof(GetShowInformation) + tvMazeSearch.Id.ToString(),
+                        async () =>
+                        {
+                            await ApiThrottle.WaitAsync();
+                            try
+                            {
+                                return await _movieApi.GetTVInfo(tvMazeSearch.Id.ToString());
+                            }
+                            finally
+                            {
+                                ApiThrottle.Release();
+                            }
+                        }, DateTime.Now.AddHours(12));
 
                     // Fetch all season episodes in parallel for this show
                     var seasons = show.seasons.Where(x => x.season_number != 0).ToList();
                     var episodeTasks = seasons.Select(async tvSeason =>
                     {
-                        await ApiThrottle.WaitAsync();
-                        try
+                        return await Cache.GetOrAddAsync("SeasonEpisodes" + show.id + tvSeason.season_number, async () =>
                         {
-                            return await Cache.GetOrAddAsync("SeasonEpisodes" + show.id + tvSeason.season_number, async () =>
+                            await ApiThrottle.WaitAsync();
+                            try
                             {
                                 return await _movieApi.GetSeasonEpisodes(show.id, tvSeason.season_number, CancellationToken.None);
-                            }, DateTimeOffset.Now.AddHours(12));
-                        }
-                        finally
-                        {
-                            ApiThrottle.Release();
-                        }
+                            }
+                            finally
+                            {
+                                ApiThrottle.Release();
+                            }
+                        }, DateTimeOffset.Now.AddHours(12));
                     });
                     var episodeResults = await Task.WhenAll(episodeTasks);
 
