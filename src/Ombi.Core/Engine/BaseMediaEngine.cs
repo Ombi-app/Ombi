@@ -17,6 +17,7 @@ using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
 using Ombi.Core.Helpers;
+using System.Threading;
 
 namespace Ombi.Core.Engine
 {
@@ -25,6 +26,11 @@ namespace Ombi.Core.Engine
         private long _cacheTime;
         private Dictionary<int, MovieRequests> _dbMovies;
         private Dictionary<int, TvRequests> _dbTv;
+
+        /// <summary>
+        /// Shared throttle for external TMDB API calls across all engine instances.
+        /// </summary>
+        protected static readonly SemaphoreSlim ApiThrottle = new SemaphoreSlim(5, 5);
 
         protected BaseMediaEngine(ICurrentUser identity, IRequestServiceMain requestService,
             IRuleEvaluator rules, OmbiUserManager um, ICacheService cache, ISettingsService<OmbiSettings> ombiSettings, IRepository<RequestSubscription> sub) : base(identity, um, rules)
