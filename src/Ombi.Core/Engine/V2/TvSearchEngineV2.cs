@@ -199,18 +199,8 @@ namespace Ombi.Core.Engine.V2
             var movieDBResults = await Cache.GetOrAddAsync(nameof(RecentlyRequestedShows) + toLoad + langCode,
                 async () =>
                 {
-                    var tasks = requestResult.Collection.Select(async movie =>
-                    {
-                        await ApiThrottle.WaitAsync();
-                        try
-                        {
-                            return await _movieApi.GetTVInfo(movie.ExternalProviderId.ToString());
-                        }
-                        finally
-                        {
-                            ApiThrottle.Release();
-                        }
-                    });
+                    var tasks = requestResult.Collection.Select(movie =>
+                        _movieApi.GetTVInfo(movie.ExternalProviderId.ToString()));
                     return (await Task.WhenAll(tasks)).ToList();
                 }, DateTimeOffset.Now.AddHours(12));
 
@@ -240,36 +230,14 @@ namespace Ombi.Core.Engine.V2
                 var enrichTasks = nonDemoItems.Select(async tvMazeSearch =>
                 {
                     var show = await Cache.GetOrAddAsync(nameof(GetShowInformation) + tvMazeSearch.Id.ToString(),
-                        async () =>
-                        {
-                            await ApiThrottle.WaitAsync();
-                            try
-                            {
-                                return await _movieApi.GetTVInfo(tvMazeSearch.Id.ToString());
-                            }
-                            finally
-                            {
-                                ApiThrottle.Release();
-                            }
-                        }, DateTime.Now.AddHours(12));
+                        () => _movieApi.GetTVInfo(tvMazeSearch.Id.ToString()), DateTime.Now.AddHours(12));
 
                     // Fetch all season episodes in parallel for this show
                     var seasons = show.seasons.Where(x => x.season_number != 0).ToList();
-                    var episodeTasks = seasons.Select(async tvSeason =>
-                    {
-                        return await Cache.GetOrAddAsync("SeasonEpisodes" + show.id + tvSeason.season_number, async () =>
-                        {
-                            await ApiThrottle.WaitAsync();
-                            try
-                            {
-                                return await _movieApi.GetSeasonEpisodes(show.id, tvSeason.season_number, CancellationToken.None);
-                            }
-                            finally
-                            {
-                                ApiThrottle.Release();
-                            }
-                        }, DateTimeOffset.Now.AddHours(12));
-                    });
+                    var episodeTasks = seasons.Select(tvSeason =>
+                        Cache.GetOrAddAsync("SeasonEpisodes" + show.id + tvSeason.season_number,
+                            () => _movieApi.GetSeasonEpisodes(show.id, tvSeason.season_number, CancellationToken.None),
+                            DateTimeOffset.Now.AddHours(12)));
                     var episodeResults = await Task.WhenAll(episodeTasks);
 
                     // Map seasons sequentially per show (mutates SeasonRequests)

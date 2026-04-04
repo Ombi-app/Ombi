@@ -259,18 +259,8 @@ namespace Ombi.Core.Engine.V2
             var movieDBResults = await Cache.GetOrAddAsync(nameof(RecentlyRequestedMovies) + toLoad + langCode,
                 async () =>
                 {
-                    var tasks = requestResult.Collection.Select(async movie =>
-                    {
-                        await ApiThrottle.WaitAsync();
-                        try
-                        {
-                            return await MovieApi.GetMovieInformation(movie.TheMovieDbId);
-                        }
-                        finally
-                        {
-                            ApiThrottle.Release();
-                        }
-                    });
+                    var tasks = requestResult.Collection.Select(movie =>
+                        MovieApi.GetMovieInformation(movie.TheMovieDbId));
                     return (await Task.WhenAll(tasks)).ToList();
                 }, DateTimeOffset.Now.AddHours(12));
 
@@ -461,18 +451,7 @@ namespace Ombi.Core.Engine.V2
             if (viewMovie.ImdbId.IsNullOrEmpty())
             {
                 var showInfo = await Cache.GetOrAddAsync("GetMovieInformationWIthImdbId" + viewMovie.Id,
-                    async () =>
-                    {
-                        await ApiThrottle.WaitAsync();
-                        try
-                        {
-                            return await MovieApi.GetMovieInformation(viewMovie.Id);
-                        }
-                        finally
-                        {
-                            ApiThrottle.Release();
-                        }
-                    }, DateTimeOffset.Now.AddHours(12));
+                    () => MovieApi.GetMovieInformation(viewMovie.Id), DateTimeOffset.Now.AddHours(12));
                 viewMovie.Id = showInfo.Id; // TheMovieDbId
                 viewMovie.ImdbId = showInfo.ImdbId;
             }
