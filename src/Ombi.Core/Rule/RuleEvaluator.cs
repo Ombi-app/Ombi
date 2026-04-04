@@ -73,25 +73,40 @@ namespace Ombi.Core.Rule
         }
 
 
+        private static bool InheritsFrom(TypeInfo ti, string baseTypeName)
+        {
+            var current = ti?.BaseType;
+            while (current != null)
+            {
+                if (current.FullName == baseTypeName)
+                {
+                    return true;
+                }
+                current = current.BaseType;
+            }
+            return false;
+        }
+
         private void GetTypes<T>(IServiceProvider provider, Assembly ass, string baseSearchType, List<IRules<T>> ruleList)
         {
             foreach (var ti in ass.DefinedTypes)
             {
-                if (ti?.BaseType?.FullName == baseSearchType)
+                if (ti.IsAbstract || !InheritsFrom(ti, baseSearchType))
                 {
-                    var type = ti?.AsType();
-                    var ctors = type.GetConstructors();
-                    var ctor = ctors.FirstOrDefault();
-
-                    var services = new List<object>();
-                    foreach (var param in ctor.GetParameters())
-                    {
-                        services.Add(provider.GetService(param.ParameterType));
-                    }
-
-                    var item = Activator.CreateInstance(type, services.ToArray());
-                    ruleList.Add((IRules<T>)item);
+                    continue;
                 }
+
+                var type = ti.AsType();
+                var ctor = type.GetConstructors().FirstOrDefault();
+
+                var services = new List<object>();
+                foreach (var param in ctor.GetParameters())
+                {
+                    services.Add(provider.GetService(param.ParameterType));
+                }
+
+                var item = Activator.CreateInstance(type, services.ToArray());
+                ruleList.Add((IRules<T>)item);
             }
         }
 
@@ -99,21 +114,22 @@ namespace Ombi.Core.Rule
         {
             foreach (var ti in ass.DefinedTypes)
             {
-                if (ti?.BaseType?.FullName == baseSearchType)
+                if (ti.IsAbstract || !InheritsFrom(ti, baseSearchType))
                 {
-                    var type = ti?.AsType();
-                    var ctors = type.GetConstructors();
-                    var ctor = ctors.FirstOrDefault();
-
-                    var services = new List<object>();
-                    foreach (var param in ctor.GetParameters())
-                    {
-                        services.Add(provider.GetService(param.ParameterType));
-                    }
-
-                    var item = Activator.CreateInstance(type, services.ToArray());
-                    ruleList.Add((ISpecificRule<T>)item);
+                    continue;
                 }
+
+                var type = ti.AsType();
+                var ctor = type.GetConstructors().FirstOrDefault();
+
+                var services = new List<object>();
+                foreach (var param in ctor.GetParameters())
+                {
+                    services.Add(provider.GetService(param.ParameterType));
+                }
+
+                var item = Activator.CreateInstance(type, services.ToArray());
+                ruleList.Add((ISpecificRule<T>)item);
             }
         }
     }

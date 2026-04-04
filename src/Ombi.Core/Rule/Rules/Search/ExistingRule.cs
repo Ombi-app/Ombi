@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Models.Search.V2.Music;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Entities;
-using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Core.Rule.Rules.Search
@@ -91,27 +89,13 @@ namespace Ombi.Core.Rule.Rules.Search
                     }
                 }
 
-                if (request.SeasonRequests.Any() && request.SeasonRequests.All(x => x.Episodes.All(e => e.Available && e.AirDate > DateTime.MinValue)))
-                {
-                    request.FullyAvailable = true;
-                }
-                if (request.SeasonRequests.Any() && request.SeasonRequests.All(x => x.Episodes.Any(e => e.Available && e.AirDate > DateTime.MinValue  && e.AirDate <= DateTime.UtcNow)))
-                {
-                    request.PartlyAvailable = true;
-                }
-
                 if (request.SeasonRequests.Any() && request.SeasonRequests.All(x => x.Episodes.All(e => e.Denied ?? false)))
                 {
                     request.Denied = true;
                     request.DeniedReason = tvRequests.ChildRequests.FirstOrDefault(x => x.Denied ?? false)?.DeniedReason;
                 }
 
-                var hasUnairedRequests = request.SeasonRequests.Any() && request.SeasonRequests.All(x => x.Episodes.Any(e => e.AirDate >= DateTime.UtcNow));
-
-                if (request.FullyAvailable)
-                {
-                    request.PartlyAvailable = hasUnairedRequests;
-                }
+                AvailabilityRuleHelper.CheckForUnairedEpisodes(request);
 
                 return Success();
             }
