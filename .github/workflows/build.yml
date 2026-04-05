@@ -9,8 +9,8 @@ jobs:
   build-ui:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
 
@@ -39,10 +39,10 @@ jobs:
   unit-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-dotnet@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
 
       - name: Nuget Cache
         uses: actions/cache@v4
@@ -65,7 +65,7 @@ jobs:
       tag: ${{ steps.changelog.outputs.tag }}
       version: ${{ steps.changelog.outputs.version }}
      steps:
-       - uses: actions/checkout@v2
+       - uses: actions/checkout@v4
        - name: Conventional Changelog Action
          id: changelog
          uses: TriPSs/conventional-changelog-action@v3
@@ -106,13 +106,10 @@ jobs:
             compression: tar
             format: tar.gz
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-dotnet@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
-      - uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '5.0.x'
+          dotnet-version: '10.0.x'
 
       - name: Nuget Cache
         uses: actions/cache@v4
@@ -169,7 +166,7 @@ jobs:
     needs: [ publish, unit-test, versioning ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Download Artifacts
         id: download
