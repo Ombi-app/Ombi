@@ -1,9 +1,15 @@
 
 <div id="result{{result.id}}" *ngIf="fullyLoaded" class="card-wrapper" [style.display]="hide ? 'none' : 'block'">
     <div class="card-inner">
-        <!-- Poster image -->
+        <!-- Single link wrapping poster and overlay -->
         <a [routerLink]="generateDetailsLink()" class="card-poster-link" [attr.aria-label]="result.title">
-            <ombi-image [src]="result.posterPath" [type]="result.type" id="cardImage" class="card-poster" alt="{{result.title}}"></ombi-image>
+            <ombi-image [src]="result.posterPath" [type]="result.type" class="card-poster" alt="{{result.title}}"></ombi-image>
+            <div class="card-overlay">
+                <div class="overlay-content">
+                    <div class="overlay-title" id="title{{result.id}}">{{result.title}}</div>
+                    <div class="overlay-overview" id="overview{{result.id}}">{{result.overview}}</div>
+                </div>
+            </div>
         </a>
 
         <!-- Status badge -->
@@ -18,14 +24,6 @@
         <div class="type-badge" id="type{{result.id}}-{{RequestType[result.type]}}">
             {{ 'Common.' + RequestType[result.type] | translate }}
         </div>
-
-        <!-- Hover overlay -->
-        <a class="card-overlay" [routerLink]="generateDetailsLink()">
-            <div class="overlay-content">
-                <div class="overlay-title" id="title{{result.id}}">{{result.title}}</div>
-                <div class="overlay-overview" id="overview{{result.id}}">{{result.overview}}</div>
-            </div>
-        </a>
 
         <!-- Request button -->
         <div class="card-actions" *ngIf="!result.available && !result.approved && !result.requested">

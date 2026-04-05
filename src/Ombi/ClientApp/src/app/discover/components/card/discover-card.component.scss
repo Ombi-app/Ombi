@@ -22,7 +22,8 @@
             0 0 0 1px rgba(255, 255, 255, 0.08);
     }
 
-    &:hover .card-overlay {
+    &:hover .card-overlay,
+    &:focus-within .card-overlay {
         opacity: 1;
     }
 
@@ -33,18 +34,32 @@
         pointer-events: auto;
     }
 
-    &:hover .card-poster {
+    &:hover .card-poster,
+    &:focus-within .card-poster {
         filter: brightness(0.4);
     }
 }
 
-// Poster image
+// Poster link - wraps image + overlay as single focus target
 .card-poster-link {
     display: block;
     text-decoration: none;
+    color: #fff;
     line-height: 0;
+
+    &:hover,
+    &:focus {
+        text-decoration: none;
+        color: #fff;
+    }
+
+    &:focus-visible {
+        outline: 2px solid rgba(255, 255, 255, 0.7);
+        outline-offset: -2px;
+    }
 }
 
+/* stylelint-disable-next-line selector-pseudo-element-no-unknown */
 ::ng-deep .card-poster {
     display: block;
     width: 100%;
@@ -120,7 +135,7 @@
     letter-spacing: 0.3px;
 }
 
-// Hover overlay with title + overview
+// Hover overlay with title + overview (inside the single link)
 .card-overlay {
     position: absolute;
     inset: 0;
@@ -130,27 +145,22 @@
     padding: 16px 12px;
     opacity: 0;
     transition: opacity 0.3s ease;
-    text-decoration: none;
-    color: #fff;
     z-index: 2;
+    pointer-events: none;
     background: linear-gradient(
         to top,
         rgba(0, 0, 0, 0.85) 0%,
         rgba(0, 0, 0, 0.3) 50%,
         transparent 100%
     );
-
-    &:hover {
-        text-decoration: none;
-        color: #fff;
-    }
 }
 
 .overlay-content {
     transform: translateY(8px);
     transition: transform 0.3s ease;
 
-    .card-inner:hover & {
+    .card-inner:hover &,
+    .card-inner:focus-within & {
         transform: translateY(0);
     }
 }

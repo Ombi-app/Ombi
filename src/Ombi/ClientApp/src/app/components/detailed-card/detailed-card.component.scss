@@ -42,6 +42,7 @@
     opacity: 0;
 }
 
+/* stylelint-disable-next-line selector-pseudo-element-no-unknown */
 ::ng-deep .card-poster {
     display: block;
     width: 100%;
@@ -124,6 +125,7 @@
 }
 
 .card-user {
+    min-width: 0;
     font-size: 0.7rem;
     color: rgba(255, 255, 255, 0.4);
     white-space: nowrap;
