@@ -32,14 +32,14 @@
             <button
                 id="detailed-request-approve-{{request.mediaId}}"
                 class="action-btn approve-btn"
-                (click)="approve(); $event.stopPropagation()"
+                (click)="onApproveClick($event)"
                 matTooltip="{{'Common.Approve' | translate}}">
                 <i class="fas fa-check" aria-hidden="true"></i>
             </button>
             <button
                 id="detailed-request-deny-{{request.mediaId}}"
                 class="action-btn deny-btn"
-                (click)="deny(); $event.stopPropagation()"
+                (click)="onDenyClick($event)"
                 matTooltip="{{'Requests.Deny' | translate}}">
                 <i class="fas fa-times" aria-hidden="true"></i>
             </button>

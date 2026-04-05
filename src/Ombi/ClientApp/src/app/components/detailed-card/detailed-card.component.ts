@@ -86,6 +86,16 @@ export class DetailedCardComponent implements OnInit, OnDestroy {
     this.onDeny.emit();
   }
 
+  public onApproveClick(event: MouseEvent) {
+    event.stopPropagation();
+    this.onApprove.emit();
+  }
+
+  public onDenyClick(event: MouseEvent) {
+    event.stopPropagation();
+    this.onDeny.emit();
+  }
+
   public getClass(request: IRecentlyRequested) {
     if (request.denied) {
       return "danger";
