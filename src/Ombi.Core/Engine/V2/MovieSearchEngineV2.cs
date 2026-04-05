@@ -356,26 +356,29 @@ namespace Ombi.Core.Engine.V2
             IEnumerable<T> movies) where T: new()
         {
             var settings = await _customizationSettings.GetSettingsAsync();
-
             var viewMovies = new List<SearchMovieViewModel>();
             foreach (var movie in movies)
             {
-                var viewMovie = await EnrichMovieData(Mapper.Map<SearchMovieViewModel>(movie));
+                var result = await ProcessSingleMovie(movie);
 
-                if (DemoCheck(viewMovie.Title))
+                if (DemoCheck(result.Title))
                 {
                     continue;
                 }
 
-                await RunSearchRules(viewMovie);
-
-                if (settings.HideAvailableFromDiscover && viewMovie.Available)
+                if (settings.HideAvailableFromDiscover && result.Available)
                 {
                     continue;
                 }
-                viewMovies.Add(viewMovie);
+                viewMovies.Add(result);
             }
             return viewMovies;
+        }
+
+        private async Task<SearchMovieViewModel> ProcessSingleMovie<T>(T movie) where T : new()
+        {
+            var viewMovie = Mapper.Map<SearchMovieViewModel>(movie);
+            return await ProcessSingleMovie(viewMovie);
         }
 
         private async Task<MovieFullInfoViewModel> ProcessSingleMovie(FullMovieInfo movie)
@@ -437,15 +440,12 @@ namespace Ombi.Core.Engine.V2
             return viewMovie;
         }
 
-        /// <summary>
-        /// Enriches movie data with TMDB API calls. Safe to call in parallel (no DbContext access).
-        /// </summary>
-        private async Task<SearchMovieViewModel> EnrichMovieData(SearchMovieViewModel viewMovie)
+        private async Task<SearchMovieViewModel> ProcessSingleMovie(SearchMovieViewModel viewMovie)
         {
             if (viewMovie.ImdbId.IsNullOrEmpty())
             {
                 var showInfo = await Cache.GetOrAddAsync("GetMovieInformationWIthImdbId" + viewMovie.Id,
-                    () => MovieApi.GetMovieInformation(viewMovie.Id), DateTimeOffset.Now.AddHours(12));
+                    () =>  MovieApi.GetMovieInformation(viewMovie.Id), DateTimeOffset.Now.AddHours(12));
                 if (showInfo != null)
                 {
                     viewMovie.Id = showInfo.Id; // TheMovieDbId
@@ -461,15 +461,11 @@ namespace Ombi.Core.Engine.V2
             }
             viewMovie.DigitalReleaseDate = digitalReleaseDate?.ReleaseDate?.FirstOrDefault(x => x.Type == ReleaseDateType.Digital)?.ReleaseDate;
 
+
             viewMovie.TheMovieDbId = viewMovie.Id.ToString();
 
-            return viewMovie;
-        }
-
-        private async Task<SearchMovieViewModel> ProcessSingleMovie(SearchMovieViewModel viewMovie)
-        {
-            await EnrichMovieData(viewMovie);
             await RunSearchRules(viewMovie);
+
             return viewMovie;
         }
 
