@@ -86,6 +86,10 @@ export class HeroBannerComponent implements OnInit, OnDestroy {
     }
 
     public selectItem(index: number): void {
+        const length = this.items().length;
+        if (index < 0 || index >= length) {
+            return;
+        }
         this.activeIndex.set(index);
         // Reset the rotation timer
         if (this.rotationInterval) {

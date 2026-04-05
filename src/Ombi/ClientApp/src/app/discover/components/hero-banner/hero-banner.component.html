@@ -22,6 +22,7 @@
             <div class="hero-indicators">
                 @for (item of items(); track item.id; let i = $index) {
                     <button
+                        type="button"
                         class="hero-indicator"
                         [class.active]="i === activeIndex()"
                         (click)="selectItem(i)"

@@ -82,6 +82,8 @@ namespace Ombi.Mapping.Profiles
                 .ForMember(dest => dest.Rating, opts => opts.MapFrom(src => src.VoteAverage.ToString()))
                 .ForMember(dest => dest.PosterPath, opts => opts.MapFrom(src => src.PosterPath))
                 .ForMember(dest => dest.BackdropPath, opts => opts.MapFrom(src => src.BackdropPath))
+                .ForMember(dest => dest.Banner, opts => opts.MapFrom(src =>
+                    !string.IsNullOrEmpty(src.BackdropPath) ? src.BackdropPath : src.PosterPath))
                 //.ForMember(dest => dest.Runtime, opts => opts.MapFrom(src => src.Runtime.ToString()))
                 .ForMember(dest => dest.Title, opts => opts.MapFrom(src => src.Title))
                 .ForMember(dest => dest.SeasonRequests, opts => opts.MapFrom(src => src.SeasonRequests))

@@ -207,6 +207,21 @@ describe('HeroBannerComponent', () => {
       component.selectItem(2);
       expect(component.activeIndex()).toBe(2);
     });
+
+    it('should ignore out-of-range index', async () => {
+      const movies = [
+        makeMovie({ id: 1, backdropPath: '/bg1.jpg' }),
+        makeMovie({ id: 2, backdropPath: '/bg2.jpg' }),
+      ];
+      mockSearchService.nowPlayingMoviesByPage.mockResolvedValue(movies);
+      await component.ngOnInit();
+
+      component.selectItem(5);
+      expect(component.activeIndex()).toBe(0);
+
+      component.selectItem(-1);
+      expect(component.activeIndex()).toBe(0);
+    });
   });
 
   describe('getDetailsLink', () => {

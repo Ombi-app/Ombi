@@ -149,7 +149,7 @@ describe('CarouselListComponent', () => {
 
       const results = component.discoverResults();
       expect(results.length).toBeGreaterThan(0);
-      expect(results[0].posterPath).toBe('https://image.tmdb.org/t/p/w500//correct-poster.jpg');
+      expect(results[0].posterPath).toBe('https://image.tmdb.org/t/p/w500/correct-poster.jpg');
     });
 
     it('should fall back to backdropPath when posterPath is empty', async () => {
@@ -164,7 +164,7 @@ describe('CarouselListComponent', () => {
       await component.ngOnInit();
 
       const results = component.discoverResults();
-      expect(results[0].posterPath).toBe('https://image.tmdb.org/t/p/w500//fallback-backdrop.jpg');
+      expect(results[0].posterPath).toBe('https://image.tmdb.org/t/p/w500/fallback-backdrop.jpg');
     });
 
     it('should use default poster when both posterPath and backdropPath are empty', async () => {
@@ -251,7 +251,7 @@ describe('CarouselListComponent', () => {
       setupInputs(component, DiscoverType.Popular, DiscoverOption.Movie);
       await component.ngOnInit();
 
-      expect(component.discoverResults()[0].posterPath).toBe('https://image.tmdb.org/t/p/w500//movie-poster.jpg');
+      expect(component.discoverResults()[0].posterPath).toBe('https://image.tmdb.org/t/p/w500/movie-poster.jpg');
     });
 
     it('should use default poster when movie posterPath is missing', async () => {

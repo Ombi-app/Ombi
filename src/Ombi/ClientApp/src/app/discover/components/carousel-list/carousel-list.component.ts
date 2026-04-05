@@ -333,7 +333,7 @@ export class CarouselListComponent {
         this.movies().forEach(m => {
             tempResults.push({
                 available: m.available,
-                posterPath: m.posterPath ? `https://image.tmdb.org/t/p/w500/${m.posterPath}` : this.baseUrl + "/images/default_movie_poster.png",
+                posterPath: m.posterPath ? `https://image.tmdb.org/t/p/w500${m.posterPath}` : this.baseUrl + "/images/default_movie_poster.png",
                 requested: m.requested,
                 title: m.title,
                 type: RequestType.movie,
@@ -356,7 +356,7 @@ export class CarouselListComponent {
             const poster = m.posterPath || m.backdropPath;
             tempResults.push({
                 available: m.fullyAvailable || m.partlyAvailable,
-                posterPath: poster ? `https://image.tmdb.org/t/p/w500/${poster}` :  this.baseUrl + "/images/default_tv_poster.png",
+                posterPath: poster ? `https://image.tmdb.org/t/p/w500${poster}` :  this.baseUrl + "/images/default_tv_poster.png",
                 requested: m.requested,
                 title: m.title,
                 type: RequestType.tvShow,

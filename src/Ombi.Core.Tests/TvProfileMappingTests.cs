@@ -213,5 +213,50 @@ namespace Ombi.Core.Tests
 
             Assert.That(result.Banner, Is.EqualTo("/poster.jpg"));
         }
+
+        [Test]
+        public void MovieDbSearchResult_Banner_Uses_BackdropPath_When_Available()
+        {
+            var source = new MovieDbSearchResult
+            {
+                Id = 1,
+                BackdropPath = "/backdrop.jpg",
+                PosterPath = "/poster.jpg",
+            };
+
+            var result = _mapper.Map<SearchTvShowViewModel>(source);
+
+            Assert.That(result.Banner, Is.EqualTo("/backdrop.jpg"));
+        }
+
+        [Test]
+        public void MovieDbSearchResult_Banner_Falls_Back_To_PosterPath()
+        {
+            var source = new MovieDbSearchResult
+            {
+                Id = 1,
+                BackdropPath = null,
+                PosterPath = "/poster.jpg",
+            };
+
+            var result = _mapper.Map<SearchTvShowViewModel>(source);
+
+            Assert.That(result.Banner, Is.EqualTo("/poster.jpg"));
+        }
+
+        [Test]
+        public void MovieDbSearchResult_Banner_Null_When_No_Paths()
+        {
+            var source = new MovieDbSearchResult
+            {
+                Id = 1,
+                BackdropPath = null,
+                PosterPath = null,
+            };
+
+            var result = _mapper.Map<SearchTvShowViewModel>(source);
+
+            Assert.That(result.Banner, Is.Null);
+        }
     }
 }
