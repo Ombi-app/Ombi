@@ -41,7 +41,7 @@ export class DetailedCardComponent implements OnInit, OnDestroy {
   @Output() public onDeny: EventEmitter<void> = new EventEmitter<void>();
 
   public RequestType = RequestType;
-  public loading: false;
+  public loading = false;
 
   private $imageSub = new Subject<void>();
 
