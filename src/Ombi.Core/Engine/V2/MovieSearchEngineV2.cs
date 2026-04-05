@@ -357,17 +357,11 @@ namespace Ombi.Core.Engine.V2
         {
             var settings = await _customizationSettings.GetSettingsAsync();
 
-            // Pre-warm user cache before parallel section (GetUser hits DbContext on first call)
-            await GetUser();
-
-            // Phase 1: Parallel TMDB API calls (safe to parallelize - no DbContext access)
-            var enrichTasks = movies.Select(movie => EnrichMovieData(Mapper.Map<SearchMovieViewModel>(movie)));
-            var enrichedMovies = await Task.WhenAll(enrichTasks);
-
-            // Phase 2: Sequential rule application (RunSearchRules accesses DbContext which is not thread-safe)
             var viewMovies = new List<SearchMovieViewModel>();
-            foreach (var viewMovie in enrichedMovies)
+            foreach (var movie in movies)
             {
+                var viewMovie = await EnrichMovieData(Mapper.Map<SearchMovieViewModel>(movie));
+
                 if (DemoCheck(viewMovie.Title))
                 {
                     continue;
