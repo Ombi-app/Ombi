@@ -4,7 +4,7 @@
     display: block;
 }
 
-::ng-deep .p-carousel-indicators {
+:host ::ng-deep .p-carousel-indicators {
     display: none !important;
 }
 
@@ -29,17 +29,6 @@
 :host ::ng-deep .p-carousel-item {
     display: flex;
     justify-content: center;
-}
-
-// Skeleton loading
-.skeleton-row {
-    display: flex;
-    gap: 12px;
-    overflow: hidden;
-}
-
-.skeleton-card {
-    flex: 0 0 180px;
 }
 
 .loading-container {

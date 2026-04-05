@@ -26,9 +26,11 @@
         opacity: 1;
     }
 
-    &:hover .card-actions {
+    &:hover .card-actions,
+    &:focus-within .card-actions {
         opacity: 1;
         transform: translateY(0);
+        pointer-events: auto;
     }
 
     &:hover .card-poster {
@@ -178,6 +180,7 @@
     z-index: 4;
     opacity: 0;
     transform: translateY(8px);
+    pointer-events: none;
     transition: opacity 0.25s ease, transform 0.25s ease;
 }
 

@@ -4,7 +4,7 @@
         <div class="genre-scroll">
             <mat-button-toggle-group name="movieGenres" (change)="toggleChanged($event, genre.type)" *ngFor="let genre of movieGenreList()"
                 class="genre-chip-group">
-                <mat-button-toggle value="{{genre.id}}" class="genre-chip">{{genre.name}}</mat-button-toggle>
+                <mat-button-toggle [value]="genre.id" class="genre-chip">{{genre.name}}</mat-button-toggle>
             </mat-button-toggle-group>
         </div>
     </div>
@@ -19,7 +19,7 @@
         <div class="genre-scroll">
             <mat-button-toggle-group name="tvGenres" (change)="toggleChanged($event, genre.type)" *ngFor="let genre of tvGenreList()"
                 class="genre-chip-group">
-                <mat-button-toggle value="{{genre.id}}" class="genre-chip">{{genre.name}}</mat-button-toggle>
+                <mat-button-toggle [value]="genre.id" class="genre-chip">{{genre.name}}</mat-button-toggle>
             </mat-button-toggle-group>
         </div>
     </div>

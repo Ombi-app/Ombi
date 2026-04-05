@@ -45,6 +45,11 @@
     ::ng-deep .mat-button-toggle-button:focus {
         outline: none;
     }
+
+    ::ng-deep .mat-button-toggle-button:focus-visible {
+        outline: 2px solid rgba(255, 255, 255, 0.7);
+        outline-offset: -2px;
+    }
 }
 
 // Carousel wrapper
@@ -52,7 +57,7 @@
     margin: 0 -4px;
 }
 
-::ng-deep .p-carousel-indicators {
+:host ::ng-deep .p-carousel-indicators {
     display: none !important;
 }
 

@@ -5,10 +5,12 @@
         <ombi-image [src]="result.posterPath" [type]="result.type" [routerLink]="generateDetailsLink()" id="cardImage" class="card-poster" alt="{{result.title}}"></ombi-image>
 
         <!-- Status badge -->
-        <div class="status-badge {{getStatusClass()}}" *ngIf="getStatusClass()" id="status{{result.id}}">
-            <span class="status-dot"></span>
-            <span class="status-label" id="availabilityStatus{{result.id}}">{{getAvailabilityStatus()}}</span>
-        </div>
+        <ng-container *ngIf="getStatusClass() as statusClass">
+            <div class="status-badge {{statusClass}}" id="status{{result.id}}">
+                <span class="status-dot"></span>
+                <span class="status-label" id="availabilityStatus{{result.id}}">{{getAvailabilityStatus()}}</span>
+            </div>
+        </ng-container>
 
         <!-- Media type badge -->
         <div class="type-badge" id="type{{result.id}}-{{RequestType[result.type]}}">
