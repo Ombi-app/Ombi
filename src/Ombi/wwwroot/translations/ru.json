@@ -411,6 +411,7 @@
         "Combined": "Combined",
         "Tv": "TV",
         "Genres": "Genres",
+        "ViewDetails": "View Details",
         "CardDetails": {
             "Availability": "Доступность",
             "Studio": "Studio",
