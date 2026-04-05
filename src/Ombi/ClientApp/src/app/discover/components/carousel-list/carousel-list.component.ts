@@ -204,44 +204,46 @@ export class CarouselListComponent {
 
         var end = this.carousel.page >= (this.carousel.totalDots() - 2) || this.carousel.totalDots() === 1;
         if (end) {
+            var offset = this.currentlyLoaded;
             var moviePromise: Promise<void>;
             var tvPromise: Promise<void>;
             switch (+this.discoverOptions()) {
                 case DiscoverOption.Combined:
-                    moviePromise = this.loadMovies();
-                    tvPromise = this.loadTv();
+                    moviePromise = this.loadMovies(offset);
+                    tvPromise = this.loadTv(offset);
                     break;
                 case DiscoverOption.Movie:
-                    moviePromise = this.loadMovies();
+                    moviePromise = this.loadMovies(offset);
                     break;
                 case DiscoverOption.Tv:
-                    tvPromise = this.loadTv();
+                    tvPromise = this.loadTv(offset);
                     break;
             }
-            await moviePromise;
-            await tvPromise;
+            await Promise.all([moviePromise, tvPromise].filter(Boolean));
+            this.currentlyLoaded += this.amountToLoad;
 
             this.createModel();
         }
     }
 
     private async loadData(clearExisting: boolean = true) {
+        var offset = this.currentlyLoaded;
         var moviePromise: Promise<void>;
         var tvPromise: Promise<void>;
         switch (+this.discoverOptions()) {
             case DiscoverOption.Combined:
-                moviePromise = this.loadMovies();
-                tvPromise = this.loadTv();
+                moviePromise = this.loadMovies(offset);
+                tvPromise = this.loadTv(offset);
                 break;
             case DiscoverOption.Movie:
-                moviePromise = this.loadMovies();
+                moviePromise = this.loadMovies(offset);
                 break;
             case DiscoverOption.Tv:
-                tvPromise = this.loadTv();
+                tvPromise = this.loadTv(offset);
                 break;
         }
-        await moviePromise;
-        await tvPromise;
+        await Promise.all([moviePromise, tvPromise].filter(Boolean));
+        this.currentlyLoaded += this.amountToLoad;
         this.createInitialModel(clearExisting);
     }
 
@@ -257,44 +259,44 @@ export class CarouselListComponent {
         this.finishLoading();
     }
 
-    private async loadMovies() {
+    private async loadMovies(offset?: number) {
+        var loadOffset = offset ?? this.currentlyLoaded;
         switch (this.discoverType()) {
             case DiscoverType.Popular:
-                this.movies.set(await this.searchService.popularMoviesByPage(this.currentlyLoaded, this.amountToLoad));
+                this.movies.set(await this.searchService.popularMoviesByPage(loadOffset, this.amountToLoad));
                 break;
             case DiscoverType.Trending:
-                this.movies.set(await this.searchService.nowPlayingMoviesByPage(this.currentlyLoaded, this.amountToLoad));
+                this.movies.set(await this.searchService.nowPlayingMoviesByPage(loadOffset, this.amountToLoad));
                 break;
             case DiscoverType.Upcoming:
-                this.movies.set(await this.searchService.upcomingMoviesByPage(this.currentlyLoaded, this.amountToLoad));
+                this.movies.set(await this.searchService.upcomingMoviesByPage(loadOffset, this.amountToLoad));
                 break;
             case DiscoverType.RecentlyRequested:
-                this.movies.set(await this.searchService.recentlyRequestedMoviesByPage(this.currentlyLoaded, this.amountToLoad));
+                this.movies.set(await this.searchService.recentlyRequestedMoviesByPage(loadOffset, this.amountToLoad));
                 break;
             case DiscoverType.Seasonal:
-                this.movies.set(await this.searchService.seasonalMoviesByPage(this.currentlyLoaded, this.amountToLoad));
+                this.movies.set(await this.searchService.seasonalMoviesByPage(loadOffset, this.amountToLoad));
                 break;
         }
         this.movieCount.emit(this.movies().length);
-        this.currentlyLoaded += this.amountToLoad;
     }
 
-    private async loadTv() {
+    private async loadTv(offset?: number) {
+        var loadOffset = offset ?? this.currentlyLoaded;
         switch (this.discoverType()) {
             case DiscoverType.Popular:
-                this.tvShows.set(await this.searchService.popularTvByPage(this.currentlyLoaded, this.amountToLoad));
+                this.tvShows.set(await this.searchService.popularTvByPage(loadOffset, this.amountToLoad));
                 break;
             case DiscoverType.Trending:
-                this.tvShows.set(await this.searchService.trendingTvByPage(this.currentlyLoaded, this.amountToLoad));
+                this.tvShows.set(await this.searchService.trendingTvByPage(loadOffset, this.amountToLoad));
                 break;
             case DiscoverType.Upcoming:
-                this.tvShows.set(await this.searchService.anticipatedTvByPage(this.currentlyLoaded, this.amountToLoad));
+                this.tvShows.set(await this.searchService.anticipatedTvByPage(loadOffset, this.amountToLoad));
                 break;
             case DiscoverType.RecentlyRequested:
-                // this.tvShows = await this.searchService.recentlyRequestedMoviesByPage(this.currentlyLoaded, this.amountToLoad); // TODO need to do some more mapping
+                // this.tvShows = await this.searchService.recentlyRequestedMoviesByPage(loadOffset, this.amountToLoad); // TODO need to do some more mapping
                 break;
         }
-        this.currentlyLoaded += this.amountToLoad;
     }
 
     private createInitialModel(clearExisting: boolean = true) {
