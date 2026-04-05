@@ -41,9 +41,9 @@ export class NavSearchComponent implements OnInit {
       input: null,
     });
 
-    this.searchForm
-      .get("input")!
-      .valueChanges.pipe(
+    const inputControl = this.searchForm.get("input");
+    if (inputControl) {
+      inputControl.valueChanges.pipe(
         debounceTime(600),
         switchMap((value: string) => {
           if (value) {
@@ -54,6 +54,7 @@ export class NavSearchComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
+    }
   }
 
   public toggleSearch(): void {
