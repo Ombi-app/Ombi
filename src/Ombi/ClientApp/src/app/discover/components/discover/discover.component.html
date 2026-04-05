@@ -1,104 +1,116 @@
-<div class="small-middle-container">
-	<div class="section hero-section">
+<div class="discover-page">
+	<div class="hero-section">
 		<discover-hero-banner></discover-hero-banner>
 	</div>
 
-	<div class="section">
-		<h2 id="genreHeading" data-toggle="collapse" href="#genreCollapse" role="button">{{ 'Discovery.Genres' | translate }}</h2>
-		<genre-button-select class="collapse show" id="genreCollapse"></genre-button-select>
-	</div>
+	<div class="discover-content">
+		<section class="discover-section genre-section">
+			<div class="section-header">
+				<h2>{{ 'Discovery.Genres' | translate }}</h2>
+			</div>
+			<genre-button-select></genre-button-select>
+		</section>
 
-	<div class="section">
-		<h2>{{ 'Discovery.RecentlyRequestedTab' | translate }}</h2>
-		<div>
+		<section class="discover-section">
+			<div class="section-header">
+				<h2>{{ 'Discovery.RecentlyRequestedTab' | translate }}</h2>
+			</div>
 			<ombi-recently-list [id]="'recentlyRequested'"></ombi-recently-list>
-		</div>
-	</div>
+		</section>
 
-	@if (showSeasonal()) {
-		@defer (on viewport; prefetch on idle) {
-			<div class="section">
-				<h2>{{ 'Discovery.SeasonalTab' | translate }}</h2>
-				<div>
+		@if (showSeasonal()) {
+			@defer (on viewport; prefetch on idle) {
+				<section class="discover-section">
+					<div class="section-header">
+						<h2>{{ 'Discovery.SeasonalTab' | translate }}</h2>
+					</div>
 					<carousel-list
 						[id]="'seasonal'"
 						[isAdmin]="isAdmin()"
 						[discoverType]="DiscoverType.Seasonal"
 						(movieCount)="setSeasonalMovieCount($event)"
 					></carousel-list>
+				</section>
+			} @placeholder(minimum 300) {
+				<section class="discover-section">
+					<div class="section-header">
+						<h2>{{ 'Discovery.SeasonalTab' | translate }}</h2>
+					</div>
+					<div class="skeleton-row">
+						@for (item of [1,2,3,4,5,6,7]; track item) {
+							<div class="skeleton-card">
+								<p-skeleton width="100%" height="270px" borderRadius="8px"></p-skeleton>
+							</div>
+						}
+					</div>
+				</section>
+			}
+		}
+
+		@defer (on viewport; prefetch on idle) {
+			<section class="discover-section">
+				<div class="section-header">
+					<h2>{{ 'Discovery.PopularTab' | translate }}</h2>
 				</div>
-			</div>
+				<carousel-list [id]="'popular'" [isAdmin]="isAdmin()" [discoverType]="DiscoverType.Popular"></carousel-list>
+			</section>
 		} @placeholder(minimum 300) {
-			<div class="section">
-				<h2>{{ 'Discovery.SeasonalTab' | translate }}</h2>
-				<div class="row loading-container">
-					@for (item of [1,2,3,4,5,6,7,8,9,10]; track item) {
-						<div class="col-2">
-							<p-skeleton width="100%" height="270px"></p-skeleton>
+			<section class="discover-section">
+				<div class="section-header">
+					<h2>{{ 'Discovery.PopularTab' | translate }}</h2>
+				</div>
+				<div class="skeleton-row">
+					@for (item of [1,2,3,4,5,6,7]; track item) {
+						<div class="skeleton-card">
+							<p-skeleton width="100%" height="270px" borderRadius="8px"></p-skeleton>
 						</div>
 					}
 				</div>
-			</div>
+			</section>
 		}
-	}
 
-	@defer (on viewport; prefetch on idle) {
-		<div class="section">
-			<h2>{{ 'Discovery.PopularTab' | translate }}</h2>
-					<div>
-			<carousel-list [id]="'popular'" [isAdmin]="isAdmin()" [discoverType]="DiscoverType.Popular"></carousel-list>
-		</div>
-		</div>
-	} @placeholder(minimum 300) {
-		<div class="section">
-			<h2>{{ 'Discovery.PopularTab' | translate }}</h2>
-			<div class="row loading-container">
-				@for (item of [1,2,3,4,5,6,7,8,9,10]; track item) {
-					<div class="col-2">
-						<p-skeleton width="100%" height="270px"></p-skeleton>
-					</div>
-				}
-			</div>
-		</div>
-	}
+		@defer (on viewport; prefetch on idle) {
+			<section class="discover-section">
+				<div class="section-header">
+					<h2>{{ 'Discovery.TrendingTab' | translate }}</h2>
+				</div>
+				<carousel-list [id]="'trending'" [isAdmin]="isAdmin()" [discoverType]="DiscoverType.Trending"></carousel-list>
+			</section>
+		} @placeholder(minimum 300) {
+			<section class="discover-section">
+				<div class="section-header">
+					<h2>{{ 'Discovery.TrendingTab' | translate }}</h2>
+				</div>
+				<div class="skeleton-row">
+					@for (item of [1,2,3,4,5,6,7]; track item) {
+						<div class="skeleton-card">
+							<p-skeleton width="100%" height="270px" borderRadius="8px"></p-skeleton>
+						</div>
+					}
+				</div>
+			</section>
+		}
 
-	@defer (on viewport; prefetch on idle) {
-		<div class="section">
-			<h2>{{ 'Discovery.TrendingTab' | translate }}</h2>
-					<div>
-			<carousel-list [id]="'trending'" [isAdmin]="isAdmin()" [discoverType]="DiscoverType.Trending"></carousel-list>
-		</div>
-		</div>
-	} @placeholder(minimum 300) {
-		<div class="section">
-			<h2>{{ 'Discovery.TrendingTab' | translate }}</h2>
-			<div class="row loading-container">
-				@for (item of [1,2,3,4,5,6,7,8,9,10]; track item) {
-					<div class="col-2">
-						<p-skeleton width="100%" height="270px"></p-skeleton>
-					</div>
-				}
-			</div>
-		</div>
-	}
-
-	@defer (on viewport; prefetch on idle) {
-		<div class="section">
-			<h2>{{ 'Discovery.UpcomingTab' | translate }}</h2>
-					<div>
-			<carousel-list [id]="'upcoming'" [isAdmin]="isAdmin()" [discoverType]="DiscoverType.Upcoming"></carousel-list>
-		</div>
-		</div>
-	} @placeholder(minimum 300) {
-		<div class="section">
-			<h2>{{ 'Discovery.UpcomingTab' | translate }}</h2>
-			<div class="row loading-container">
-				@for (item of [1,2,3,4,5,6,7,8,9,10]; track item) {
-					<div class="col-2">
-						<p-skeleton width="100%" height="270px"></p-skeleton>
-					</div>
-				}
-			</div>
-		</div>
-	}
+		@defer (on viewport; prefetch on idle) {
+			<section class="discover-section">
+				<div class="section-header">
+					<h2>{{ 'Discovery.UpcomingTab' | translate }}</h2>
+				</div>
+				<carousel-list [id]="'upcoming'" [isAdmin]="isAdmin()" [discoverType]="DiscoverType.Upcoming"></carousel-list>
+			</section>
+		} @placeholder(minimum 300) {
+			<section class="discover-section">
+				<div class="section-header">
+					<h2>{{ 'Discovery.UpcomingTab' | translate }}</h2>
+				</div>
+				<div class="skeleton-row">
+					@for (item of [1,2,3,4,5,6,7]; track item) {
+						<div class="skeleton-card">
+							<p-skeleton width="100%" height="270px" borderRadius="8px"></p-skeleton>
+						</div>
+					}
+				</div>
+			</section>
+		}
+	</div>
 </div>

@@ -1,40 +1,92 @@
-.section {
-    margin: 20px;
+:host {
+    display: block;
+}
+
+.discover-page {
+    width: 100%;
+    overflow: hidden;
 }
 
 .hero-section {
-    margin-top: 0;
+    margin-bottom: -40px; // Overlap content slightly into hero fade
 }
+
+.discover-content {
+    position: relative;
+    z-index: 1;
+    padding: 0 4%;
+}
+
+// Section layout
+.discover-section {
+    margin-bottom: 40px;
+}
+
+.genre-section {
+    margin-bottom: 32px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding: 0 4px;
+
+    h2 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #fff;
+        margin: 0;
+        letter-spacing: -0.2px;
+    }
+}
+
+// Skeleton loading placeholders
+.skeleton-row {
+    display: flex;
+    gap: 12px;
+    overflow: hidden;
+}
+
+.skeleton-card {
+    flex: 0 0 180px;
+}
+
+// Hide PrimeNG carousel indicators globally on this page
 ::ng-deep .p-carousel-indicators {
     display: none !important;
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .discover-content {
+        padding: 0 16px;
     }
 
-h2{
-    margin-top:40px;
-    margin-left:40px;
-    font-size: 24px;
-}
+    .section-header h2 {
+        font-size: 1.2rem;
+    }
 
-.loading-container {
-    display: flex;
-    gap: 10px;
-    padding: 0 20px;
-    margin-top: 20px;
-}
+    .discover-section {
+        margin-bottom: 32px;
+    }
 
-.loading-container .col-2 {
-    flex: 0 0 auto;
-    width: calc(10% - 9px);
-}
-
-@media (max-width: 768px) {
-    .loading-container .col-2 {
-        width: calc(50% - 5px);
+    .skeleton-card {
+        flex: 0 0 140px;
     }
 }
 
 @media (max-width: 480px) {
-    .loading-container .col-2 {
-        width: calc(100% - 0px);
+    .discover-content {
+        padding: 0 12px;
+    }
+
+    .section-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .skeleton-card {
+        flex: 0 0 120px;
     }
 }

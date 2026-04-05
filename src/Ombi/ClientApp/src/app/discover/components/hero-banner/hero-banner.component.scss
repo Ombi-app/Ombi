@@ -1,14 +1,16 @@
+:host {
+    display: block;
+}
+
 .hero-banner {
     position: relative;
     width: 100%;
-    height: 450px;
+    height: 560px;
     background-size: cover;
-    background-position: center top;
+    background-position: center 20%;
     background-repeat: no-repeat;
-    border-radius: 12px;
     overflow: hidden;
-    margin-bottom: 10px;
-    transition: background-image 0.6s ease-in-out;
+    transition: background-image 0.8s ease-in-out;
 }
 
 .hero-overlay {
@@ -16,81 +18,132 @@
     inset: 0;
     background: linear-gradient(
         to right,
-        rgba(0, 0, 0, 0.85) 0%,
-        rgba(0, 0, 0, 0.6) 40%,
-        rgba(0, 0, 0, 0.1) 100%
+        rgba(15, 23, 31, 0.95) 0%,
+        rgba(15, 23, 31, 0.7) 35%,
+        rgba(15, 23, 31, 0.2) 65%,
+        transparent 100%
     );
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    padding: 40px;
+    justify-content: center;
+    padding: 0 5%;
+
+    // Bottom fade for seamless blending into content below
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 120px;
+        background: linear-gradient(to top, #0f171f 0%, transparent 100%);
+        pointer-events: none;
+    }
 }
 
 .hero-content {
-    max-width: 550px;
+    max-width: 520px;
+    z-index: 1;
 }
 
 .hero-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin: 0 0 12px 0;
+    font-size: 3rem;
+    font-weight: 800;
+    margin: 0 0 16px 0;
     color: #fff;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    line-height: 1.1;
+    line-height: 1.05;
+    letter-spacing: -0.5px;
 }
 
 .hero-meta {
     display: flex;
     align-items: center;
-    gap: 16px;
-    margin-bottom: 12px;
+    gap: 12px;
+    margin-bottom: 16px;
 }
 
 .hero-year {
-    font-size: 1rem;
-    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
     font-weight: 500;
+    padding: 2px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
 }
 
 .hero-rating {
-    font-size: 1rem;
+    font-size: 0.9rem;
     color: #ffd740;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 
     i {
-        margin-right: 4px;
+        font-size: 0.8rem;
     }
 }
 
 .hero-overview {
     font-size: 0.95rem;
-    color: rgba(255, 255, 255, 0.85);
-    line-height: 1.5;
-    margin: 0 0 20px 0;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.6;
+    margin: 0 0 28px 0;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
+.hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
 .hero-cta {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 24px;
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 6px;
+    padding: 12px 28px;
+    background: #fff;
+    border: none;
+    border-radius: 4px;
+    color: #0f171f;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s ease, transform 0.15s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.85);
+        color: #0f171f;
+        text-decoration: none;
+        transform: scale(1.02);
+    }
+
+    i {
+        font-size: 0.85rem;
+    }
+}
+
+.hero-cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 4px;
     color: #fff;
     font-size: 0.95rem;
     font-weight: 500;
     text-decoration: none;
-    transition: background 0.2s ease, border-color 0.2s ease;
     backdrop-filter: blur(4px);
+    transition: background 0.2s ease;
 
     &:hover {
-        background: rgba(255, 255, 255, 0.25);
-        border-color: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.2);
         color: #fff;
         text-decoration: none;
     }
@@ -98,18 +151,20 @@
 
 .hero-indicators {
     position: absolute;
-    bottom: 20px;
-    right: 40px;
+    bottom: 32px;
+    right: 5%;
     display: flex;
+    align-items: center;
     gap: 8px;
+    z-index: 2;
 }
 
 .hero-pause-btn {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     border: none;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.15);
     color: #fff;
     cursor: pointer;
     padding: 0;
@@ -118,45 +173,64 @@
     align-items: center;
     justify-content: center;
     transition: background 0.2s ease;
+    backdrop-filter: blur(4px);
 
     &:hover {
-        background: rgba(255, 255, 255, 0.45);
+        background: rgba(255, 255, 255, 0.3);
     }
 }
 
 .hero-indicator {
-    width: 32px;
-    height: 4px;
+    width: 24px;
+    height: 3px;
     border: none;
     border-radius: 2px;
-    background: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.25);
     cursor: pointer;
     padding: 0;
     transition: background 0.3s ease, width 0.3s ease;
 
     &.active {
         background: #fff;
-        width: 48px;
+        width: 40px;
     }
 
     &:hover:not(.active) {
-        background: rgba(255, 255, 255, 0.6);
+        background: rgba(255, 255, 255, 0.5);
     }
 }
 
+// Tablet
+@media (max-width: 1024px) {
+    .hero-banner {
+        height: 450px;
+    }
+
+    .hero-title {
+        font-size: 2.2rem;
+    }
+
+    .hero-content {
+        max-width: 420px;
+    }
+}
+
+// Mobile
 @media (max-width: 768px) {
     .hero-banner {
-        height: 350px;
+        height: 400px;
     }
 
     .hero-overlay {
-        padding: 24px;
+        padding: 0 24px;
         background: linear-gradient(
             to top,
-            rgba(0, 0, 0, 0.9) 0%,
-            rgba(0, 0, 0, 0.5) 50%,
-            rgba(0, 0, 0, 0.1) 100%
+            rgba(15, 23, 31, 0.95) 0%,
+            rgba(15, 23, 31, 0.5) 50%,
+            rgba(15, 23, 31, 0.15) 100%
         );
+        justify-content: flex-end;
+        padding-bottom: 60px;
     }
 
     .hero-title {
@@ -165,22 +239,23 @@
 
     .hero-overview {
         -webkit-line-clamp: 2;
+        font-size: 0.85rem;
     }
 
     .hero-indicators {
         right: 24px;
-        bottom: 16px;
+        bottom: 20px;
     }
 }
 
 @media (max-width: 480px) {
     .hero-banner {
-        height: 280px;
-        border-radius: 8px;
+        height: 320px;
     }
 
     .hero-overlay {
-        padding: 16px;
+        padding: 0 16px;
+        padding-bottom: 48px;
     }
 
     .hero-title {
@@ -189,5 +264,11 @@
 
     .hero-overview {
         display: none;
+    }
+
+    .hero-cta,
+    .hero-cta-secondary {
+        padding: 10px 20px;
+        font-size: 0.85rem;
     }
 }
