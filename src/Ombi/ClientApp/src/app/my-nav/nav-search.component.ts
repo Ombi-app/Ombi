@@ -1,6 +1,7 @@
-import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef, DestroyRef, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder } from "@angular/forms";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Router } from "@angular/router";
 import { TranslateModule } from "@ngx-translate/core";
 import {
@@ -28,6 +29,8 @@ export class NavSearchComponent implements OnInit {
   public searchForm: UntypedFormGroup;
   public isExpanded = false;
 
+  private destroyRef = inject(DestroyRef);
+
   constructor(
     private router: Router,
     private fb: UntypedFormBuilder
@@ -47,13 +50,16 @@ export class NavSearchComponent implements OnInit {
             this.router.navigate([`discover`, value]);
           }
           return EMPTY;
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
   }
 
   public toggleSearch(): void {
-    if (!this.isExpanded) {
+    if (this.isExpanded && !this.searchForm.get('input')?.value) {
+      this.isExpanded = false;
+    } else if (!this.isExpanded) {
       this.isExpanded = true;
       setTimeout(() => this.searchInput?.nativeElement?.focus(), 100);
     }

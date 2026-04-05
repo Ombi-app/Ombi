@@ -73,7 +73,7 @@
     color: rgba(255, 255, 255, 0.55);
     font-size: 12px;
     font-weight: 500;
-    font-family: 'Inter', 'Roboto', sans-serif;
+    font-family: Inter, Roboto, sans-serif;
     letter-spacing: 0.02em;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -130,7 +130,7 @@
 .profile-username {
     font-size: 13px;
     font-weight: 500;
-    font-family: 'Inter', 'Roboto', sans-serif;
+    font-family: Inter, Roboto, sans-serif;
     letter-spacing: 0.01em;
     text-transform: capitalize;
 }
@@ -160,7 +160,7 @@
 .sidenav-container .sidenav {
     background: $ombi-background-accent;
     color: #fff;
-    font-family: 'Inter', 'Roboto', sans-serif;
+    font-family: Inter, Roboto, sans-serif;
     display: flex;
     flex-direction: column;
 }
@@ -170,7 +170,7 @@
     padding: 28px 24px 20px;
 
     .brand-link {
-        font-family: 'Montserrat', sans-serif;
+        font-family: Montserrat, sans-serif;
         font-weight: 800;
         font-size: 22px;
         letter-spacing: 0.04em;
@@ -179,7 +179,7 @@
         text-decoration: none;
         display: block;
         line-height: 1.2;
-        word-break: break-word;
+        overflow-wrap: break-word;
 
         &:hover, &:focus, &:active {
             color: $ombi-active;

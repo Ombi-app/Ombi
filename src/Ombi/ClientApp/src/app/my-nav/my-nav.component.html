@@ -40,15 +40,15 @@
 
             <div class="nav-divider"></div>
 
-            <a class="nav-item" id="nav-openMobile" (click)="openMobileApp($event);">
+            <button type="button" class="nav-item" id="nav-openMobile" (click)="openMobileApp($event);">
                 <i class="nav-icon fas fa-mobile-alt"></i>
                 <span class="nav-label">{{ 'NavigationBar.OpenMobileApp' | translate }}</span>
-            </a>
+            </button>
 
-            <a class="nav-item" id="nav-logout" (click)="logOut();">
+            <button type="button" class="nav-item" id="nav-logout" (click)="logOut();">
                 <i class="nav-icon fas fa-sign-out-alt"></i>
                 <span class="nav-label">{{ 'NavigationBar.Logout' | translate }}</span>
-            </a>
+            </button>
         </nav>
 
         <!-- Bottom quota section -->
