@@ -39,6 +39,12 @@
 }
 
 // Poster image
+.card-poster-link {
+    display: block;
+    text-decoration: none;
+    line-height: 0;
+}
+
 ::ng-deep .card-poster {
     display: block;
     width: 100%;

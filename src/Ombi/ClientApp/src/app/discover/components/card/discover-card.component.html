@@ -2,7 +2,9 @@
 <div id="result{{result.id}}" *ngIf="fullyLoaded" class="card-wrapper" [style.display]="hide ? 'none' : 'block'">
     <div class="card-inner">
         <!-- Poster image -->
-        <ombi-image [src]="result.posterPath" [type]="result.type" [routerLink]="generateDetailsLink()" id="cardImage" class="card-poster" alt="{{result.title}}"></ombi-image>
+        <a [routerLink]="generateDetailsLink()" class="card-poster-link" [attr.aria-label]="result.title">
+            <ombi-image [src]="result.posterPath" [type]="result.type" id="cardImage" class="card-poster" alt="{{result.title}}"></ombi-image>
+        </a>
 
         <!-- Status badge -->
         <ng-container *ngIf="getStatusClass() as statusClass">
