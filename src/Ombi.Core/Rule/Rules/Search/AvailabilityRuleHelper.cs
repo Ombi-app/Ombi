@@ -50,7 +50,7 @@ namespace Ombi.Core.Rule.Rules.Search
                 // If fully available but some episodes have future air dates, also mark as partly available
                 // so the UI can indicate there are upcoming episodes
                 var hasUnairedEpisodes = search.SeasonRequests.Any(x =>
-                    x.Episodes.Any(e => e.AirDate >= DateTime.UtcNow));
+                    x.Episodes.Any(e => e.AirDate != DateTime.MinValue && e.AirDate > DateTime.Now.Date));
                 search.PartlyAvailable = hasUnairedEpisodes;
             }
         }
