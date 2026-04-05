@@ -104,6 +104,26 @@
     gap: 8px;
 }
 
+.hero-pause-btn {
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    color: #fff;
+    cursor: pointer;
+    padding: 0;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.45);
+    }
+}
+
 .hero-indicator {
     width: 32px;
     height: 4px;

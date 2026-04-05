@@ -1,10 +1,10 @@
-import { Component, inject, signal, computed, OnInit, OnDestroy, ChangeDetectionStrategy, Inject } from "@angular/core";
-import { CommonModule, APP_BASE_HREF } from "@angular/common";
+import { Component, inject, signal, computed, OnInit, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { TranslateModule } from "@ngx-translate/core";
 
 import { SearchV2Service } from "../../../services";
-import { ISearchMovieResult, RequestType } from "../../../interfaces";
+import { RequestType } from "../../../interfaces";
 
 export interface IHeroBannerItem {
     id: number;
@@ -29,12 +29,12 @@ export interface IHeroBannerItem {
     ]
 })
 export class HeroBannerComponent implements OnInit, OnDestroy {
-    private searchService = inject(SearchV2Service);
-    private baseUrl = inject(APP_BASE_HREF);
+    private readonly searchService = inject(SearchV2Service);
 
     public items = signal<IHeroBannerItem[]>([]);
     public activeIndex = signal<number>(0);
     public loaded = signal<boolean>(false);
+    public paused = signal<boolean>(false);
 
     public activeItem = computed(() => {
         const list = this.items();
@@ -70,12 +70,15 @@ export class HeroBannerComponent implements OnInit, OnDestroy {
             this.loaded.set(true);
 
             if (bannerItems.length > 1) {
-                this.rotationInterval = setInterval(() => {
-                    this.activeIndex.update(i => (i + 1) % this.items().length);
-                }, 8000);
+                const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+                if (!prefersReducedMotion) {
+                    this.startRotation();
+                } else {
+                    this.paused.set(true);
+                }
             }
-        } catch {
-            // Fail silently - the hero banner is non-critical
+        } catch (err) {
+            console.warn('HeroBanner: failed to load trending movies', err);
         }
     }
 
@@ -91,12 +94,34 @@ export class HeroBannerComponent implements OnInit, OnDestroy {
             return;
         }
         this.activeIndex.set(index);
-        // Reset the rotation timer
+        // Reset the rotation timer if currently running
+        if (this.rotationInterval) {
+            this.stopRotation();
+            this.startRotation();
+        }
+    }
+
+    public togglePause(): void {
+        if (this.paused()) {
+            this.paused.set(false);
+            this.startRotation();
+        } else {
+            this.paused.set(true);
+            this.stopRotation();
+        }
+    }
+
+    private startRotation(): void {
+        this.stopRotation();
+        this.rotationInterval = setInterval(() => {
+            this.activeIndex.update(i => (i + 1) % this.items().length);
+        }, 8000);
+    }
+
+    private stopRotation(): void {
         if (this.rotationInterval) {
             clearInterval(this.rotationInterval);
-            this.rotationInterval = setInterval(() => {
-                this.activeIndex.update(i => (i + 1) % this.items().length);
-            }, 8000);
+            this.rotationInterval = null;
         }
     }
 
