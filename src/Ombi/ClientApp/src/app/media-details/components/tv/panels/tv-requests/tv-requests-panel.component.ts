@@ -73,7 +73,7 @@ export class TvRequestsPanelComponent {
 
     public getEpisodeStatusClass(ep: IEpisodesRequests, request: IChildRequests): string {
         if (ep.available) return "available";
-        if (request.denied) return "denied";
+        if (ep.denied || request.denied) return "denied";
         if (request.approved || ep.approved) return "approved";
         return "requested";
     }
@@ -107,28 +107,31 @@ export class TvRequestsPanelComponent {
     }
 
     public changeAvailability(request: IChildRequests, available: boolean) {
-        request.available = available;
-        request.seasonRequests.forEach((season) => {
-            season.episodes.forEach((ep) => {
-                ep.available = available;
+        const updateAvailability = (value: boolean) => {
+            request.available = value;
+            request.seasonRequests.forEach((season) => {
+                season.episodes.forEach((ep) => {
+                    ep.available = value;
+                });
             });
-        });
+        };
+
         if (available) {
             this.requestService.markTvAvailable({ id: request.id }).subscribe(x => {
                 if (x.result) {
+                    updateAvailability(true);
                     this.messageService.send(this.translateService.instant("Requests.NowAvailable"));
                 } else {
                     this.messageService.sendRequestEngineResultError(x);
-                    request.approved = false;
                 }
             });
         } else {
             this.requestService.markTvUnavailable({ id: request.id }).subscribe(x => {
                 if (x.result) {
+                    updateAvailability(false);
                     this.messageService.send(this.translateService.instant("Requests.NowUnavailable"));
                 } else {
                     this.messageService.sendRequestEngineResultError(x);
-                    request.approved = false;
                 }
             });
         }
