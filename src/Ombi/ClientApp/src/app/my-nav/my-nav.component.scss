@@ -1,81 +1,176 @@
 @use "./styles/variables.scss" as *;
+
+// ─── Layout ──────────────────────────────────────────────
 .sidenav-container {
     min-height: 100vh;
-    -webkit-overflow-scrolling:touch;
-    overflow:auto;
+    -webkit-overflow-scrolling: touch;
+    overflow: auto;
 }
 
 .sidenav .mat-toolbar {
     background: inherit;
 }
 
-.mat-toolbar.mat-primary {
+// ─── Top Bar ─────────────────────────────────────────────
+.top-bar {
     position: sticky;
     top: 0;
-    z-index: 1;
-}
-
-.middle {
+    z-index: 10;
     display: flex;
+    align-items: center;
+    gap: 16px;
+    height: 56px;
+    padding: 0 24px;
+    background: rgba($ombi-background-primary, 0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    transition: background 0.3s ease;
 }
 
+.hamburger-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+    }
+}
+
+.top-bar-search {
+    flex: 0 1 auto;
+    display: flex;
+    align-items: center;
+}
+
+.top-bar-spacer {
+    flex: 1;
+}
+
+// ─── Filter Chips ────────────────────────────────────────
+.filter-chips {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 30px;
+    padding: 0 14px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'Inter', 'Roboto', sans-serif;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    user-select: none;
+
+    i {
+        font-size: 11px;
+    }
+
+    &:hover {
+        border-color: rgba(255, 255, 255, 0.25);
+        color: rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    &.active {
+        background: rgba($ombi-active, 0.15);
+        border-color: rgba($ombi-active, 0.4);
+        color: $ombi-active;
+
+        &:hover {
+            background: rgba($ombi-active, 0.22);
+            border-color: rgba($ombi-active, 0.55);
+        }
+    }
+}
+
+// ─── Profile ─────────────────────────────────────────────
+.profile-block {
+    flex-shrink: 0;
+}
+
+.profile-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.8);
+    padding: 4px 4px 4px 12px;
+    border-radius: 24px;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+
+        .profile-avatar {
+            box-shadow: 0 0 0 2px rgba($ombi-active, 0.4);
+        }
+    }
+}
+
+.profile-username {
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Inter', 'Roboto', sans-serif;
+    letter-spacing: 0.01em;
+    text-transform: capitalize;
+}
+
+.profile-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+// ─── Sidebar ─────────────────────────────────────────────
 .menu-spacing {
     margin-bottom: 5%;
 }
 
 .icon-spacing {
-    width:40px;
+    width: 40px;
     text-align: center;
-}
-
-.example-form {
-    min-width: 150px;
-    max-width: 500px;
-    width: 100%;
-}
-
-.quater-width {
-    width: 25%;
-}
-
-.autocomplete-img {
-    vertical-align: middle;
-    height: 63px;
-}
-
-.mat-option {
-    height: 50px;
-    line-height: 50px;
-    padding: 0px 5px;
 }
 
 .slide-menu {
     width: 100%;
 }
 
-::ng-deep .smaller-panel {
-    max-width: 170px !important;
-}
-
-.top-bar-container{
-    width: 95%;
+.middle {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: auto;
-}
-
-.top-search-block{
-    height:84px;
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    flex:1;
-    margin-right:5%;
-}
-
-.top-search-bar{
-    width:100%;
 }
 
 .mat-drawer-content {
@@ -84,83 +179,38 @@
     z-index: 1;
     display: block;
     height: 100%;
-    /* overflow: auto; */
-}
-
-.profile-block a{
-    color: #FFF;
-    font-size: 0.8em;
-    font-weight: 100;
-    display:flex;
-    justify-content: flex-end;
-    align-items: flex-end;
-    text-transform: capitalize;
-    flex:0 0 250px;
-}
-
-
-.profile-username{
-    justify-content: center;
-    display:flex;
-    height:50px;
-    align-items: center;
-    margin-right:5px;
 }
 
 #nav-openMobile {
     display: none;
 }
 
-@media (max-width: 600px) {
-    .profile-username{
-        display:none;
-    }
-
-}
-
-@media (max-width: 950px) {
-    #nav-openMobile {
-        display: block;
-    }
-}
-
-.profile-img{
-    display: flex;
-    justify-content: center;
-    align-self: center;
-}
-
-.profile-img img {
-    width: 40px;
-}
-
-
 .full {
     width: 100%;
 }
+
 .bottom-nav {
     position: absolute;
     bottom: 0;
     left: 0;
     text-align: center;
 }
-// New CSS for new style //
 
-.sidenav-container .sidenav{
+// ─── Sidebar Themed ──────────────────────────────────────
+.sidenav-container .sidenav {
     background: $ombi-background-accent;
-    color:#FFF;
+    color: #FFF;
     font-family: 'Montserrat', sans-serif;
 
-
-    .application-name{
+    .application-name {
         font-family: 'Montserrat', sans-serif;
         text-transform: uppercase;
         color: $ombi-active;
-        align-items:center;
+        align-items: center;
         font-weight: 700;
-        font-size:36px;
-        padding:40px 20px;
-        height:auto;
+        font-size: 36px;
+        padding: 40px 20px;
+        height: auto;
         max-width: 300px;
         display: flex;
         white-space: normal;
@@ -169,7 +219,6 @@
         .application-name-link {
             text-decoration: none;
             color: inherit;
-
             &:active, &:hover, &:focus {
                 color: inherit;
             }
@@ -178,42 +227,25 @@
 
     .outer-profile {
         background: inherit;
-        box-shadow:none;
+        box-shadow: none;
     }
 
-    .mat-list-item{
-        color:#FFF;
-        font-family:Roboto, sans-serif;
+    .mat-list-item {
+        color: #FFF;
+        font-family: Roboto, sans-serif;
         font-size: 16px;
         font-weight: 400;
-        padding:10px 20px;
-        height:auto;
-        margin-bottom:0.5rem;
+        padding: 10px 20px;
+        height: auto;
+        margin-bottom: 0.5rem;
     }
-    
-    .active-list-item{
-        color:$ombi-background-accent;
-        background: $ombi-active;
-        border-radius:0px 30px 30px 0px;
-        padding:10px 20px;
-        height:auto;
-    }
-}
 
-@media (max-width: 600px) {
-    .sidenav-container .sidenav{
-        .application-name{
-            font-size:2em;
-            max-width:200px;
-        }
-        .mat-list-item{
-            width:14rem;
-            padding:10px 0px;
-        }
-        .active-list-item{
-            width:14rem;
-            padding:10px 0px;
-        }
+    .active-list-item {
+        color: $ombi-background-accent;
+        background: $ombi-active;
+        border-radius: 0px 30px 30px 0px;
+        padding: 10px 20px;
+        height: auto;
     }
 }
 
@@ -225,36 +257,32 @@
     background: inherit;
 }
 
-.content-container{
+.content-container {
     background: $ombi-background-primary;
-    color:#FFF;
-
-    .top-bar-container{
-        background: $ombi-background-primary;
-        color:$ombi-background-primary-accent;
-        padding-top:1em;
-    }
-
-}
-
-::ng-deep .mat-toolbar-row, .mat-toolbar-single-row{
-    height:auto;
-}
-
-::ng-deep .mat-sidenav-fixed .mat-list-base .mat-list-item .mat-list-item-content, .mat-list-base .mat-list-option .mat-list-item-content{
-    padding:0;
-    margin: 0 4em 0 0.5em;
+    color: #FFF;
 }
 
 .advanced-search {
-    float:right;
+    float: right;
     margin-top: 6%;
     margin-right: 10%;
     cursor: pointer;
 }
+
 .active-advanced {
-    color:$ombi-background-accent;
-        background: $ombi-active;
+    color: $ombi-background-accent;
+    background: $ombi-active;
+}
+
+// ─── Overrides ───────────────────────────────────────────
+::ng-deep .mat-toolbar-row, .mat-toolbar-single-row {
+    height: auto;
+}
+
+::ng-deep .mat-sidenav-fixed .mat-list-base .mat-list-item .mat-list-item-content,
+.mat-list-base .mat-list-option .mat-list-item-content {
+    padding: 0;
+    margin: 0 4em 0 0.5em;
 }
 
 ::ng-deep .dialog-responsive {
@@ -266,9 +294,56 @@
         width: 100%;
     }
 }
-@media only screen and (min-width: 1025px) {
 
-    .content-container{
+// ─── Responsive ──────────────────────────────────────────
+@media (max-width: 600px) {
+    .profile-username {
+        display: none;
+    }
+
+    .top-bar {
+        padding: 0 12px;
+        gap: 8px;
+    }
+
+    .chip .chip-label {
+        display: none;
+    }
+
+    .chip {
+        padding: 0 10px;
+        min-width: 30px;
+        justify-content: center;
+    }
+
+    .sidenav-container .sidenav {
+        .application-name {
+            font-size: 2em;
+            max-width: 200px;
+        }
+        .mat-list-item {
+            width: 14rem;
+            padding: 10px 0px;
+        }
+        .active-list-item {
+            width: 14rem;
+            padding: 10px 0px;
+        }
+    }
+}
+
+@media (max-width: 950px) {
+    #nav-openMobile {
+        display: block;
+    }
+
+    .filter-chips {
+        gap: 6px;
+    }
+}
+
+@media only screen and (min-width: 1025px) {
+    .content-container {
         margin-left: 223px !important;
     }
 }

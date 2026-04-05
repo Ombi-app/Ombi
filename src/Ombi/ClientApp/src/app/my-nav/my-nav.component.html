@@ -63,51 +63,48 @@
     </mat-sidenav>
 
     <mat-sidenav-content autosize class="content-container">
-        <mat-toolbar color="primary" class="top-bar-container">
-            <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
+        <div class="top-bar">
+            <button type="button" aria-label="Toggle sidenav" class="hamburger-btn" (click)="drawer.toggle()"
                 *ngIf="isHandset$ | async">
-                <i class="fa-lg fas fa-bars"></i>
+                <i class="fas fa-bars"></i>
             </button>
 
-            <div class="top-search-block">
-                    <!-- Search Bar -->
-                    <div class="top-search-bar">
-                        <app-nav-search></app-nav-search>
-                    </div>
-                    <button id="search-filter" mat-icon-button [matMenuTriggerFor]="filterMenu">
-                        <i class="fa-lg fas fa-filter"></i>
-                    </button>
-                    <mat-menu #filterMenu="matMenu" yPosition="below" class="smaller-panel">
-                        <mat-slide-toggle id="filterMovies" class="mat-menu-item slide-menu" [checked]="searchFilter.movies"
-                            (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Movie)">
-                            {{ 'NavigationBar.Filter.Movies' | translate}}</mat-slide-toggle>
-                        <mat-slide-toggle id="filterTv" class="mat-menu-item slide-menu" [checked]="searchFilter.tvShows"
-                            (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.TvShow)">
-                            {{ 'NavigationBar.Filter.TvShows' | translate}}</mat-slide-toggle>
-                        <mat-slide-toggle *ngIf="musicEnabled$ | async" id="filterMusic" class="mat-menu-item slide-menu" [checked]="searchFilter.music"
-                            (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Music)">
-                            {{ 'NavigationBar.Filter.Music' | translate}}</mat-slide-toggle>
-                        <!-- <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.people"
-                            (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.People)">
-                            {{ 'NavigationBar.Filter.People' | translate}}</mat-slide-toggle> -->
-                    </mat-menu>
+            <div class="top-bar-search">
+                <app-nav-search></app-nav-search>
             </div>
+
+            <div class="filter-chips">
+                <button class="chip" [class.active]="searchFilter.movies"
+                    (click)="toggleFilterChip(SearchFilterType.Movie)">
+                    <i class="fas fa-film"></i>
+                    <span class="chip-label">{{ 'NavigationBar.Filter.Movies' | translate}}</span>
+                </button>
+                <button class="chip" [class.active]="searchFilter.tvShows"
+                    (click)="toggleFilterChip(SearchFilterType.TvShow)">
+                    <i class="fas fa-tv"></i>
+                    <span class="chip-label">{{ 'NavigationBar.Filter.TvShows' | translate}}</span>
+                </button>
+                <button *ngIf="musicEnabled$ | async" class="chip" [class.active]="searchFilter.music"
+                    (click)="toggleFilterChip(SearchFilterType.Music)">
+                    <i class="fas fa-music"></i>
+                    <span class="chip-label">{{ 'NavigationBar.Filter.Music' | translate}}</span>
+                </button>
+            </div>
+
+            <div class="top-bar-spacer"></div>
+
             <div class="profile-block">
-                <a routerLink="/user-preferences">
-                <div class="profile-username" data-test="profile-username">{{userName}}</div>
-                <div class="profile-img" data-test="profile-image">
-                    <img [src]="userProfileImageUrl" (error)="onProfileImageError()" >
-                </div>
-            </a>
+                <a routerLink="/user-preferences" class="profile-link">
+                    <span class="profile-username" data-test="profile-username">{{userName}}</span>
+                    <div class="profile-avatar" data-test="profile-image">
+                        <img [src]="userProfileImageUrl" (error)="onProfileImageError()" alt="Profile">
+                    </div>
+                </a>
             </div>
-
-        </mat-toolbar>
-
-
+        </div>
 
         <!-- Page -->
         <ng-container *ngTemplateOutlet="template"></ng-container>
-
 
     </mat-sidenav-content>
 </mat-sidenav-container>
