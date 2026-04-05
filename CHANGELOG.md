@@ -1,3 +1,7 @@
+## [4.57.9](https://github.com/Ombi-app/Ombi/compare/v4.57.8...v4.57.9) (2026-04-05)
+
+
+
 ## [4.57.8](https://github.com/Ombi-app/Ombi/compare/v4.57.7...v4.57.8) (2026-04-05)
 
 
@@ -348,10 +352,6 @@
 
 
 ## [4.49.10](https://github.com/Ombi-app/Ombi/compare/v4.49.9...v4.49.10) (2025-09-19)
-
-
-
-## [4.49.9](https://github.com/Ombi-app/Ombi/compare/v4.49.8...v4.49.9) (2025-09-16)
 
 
 
