@@ -357,34 +357,31 @@ namespace Ombi.Core.Engine.V2
         {
             var settings = await _customizationSettings.GetSettingsAsync();
 
-            // Pre-warm caches to avoid concurrent EF Core DbContext access
-            await GetMovieRequests();
+            // Pre-warm user cache before parallel section (GetUser hits DbContext on first call)
             await GetUser();
 
-            var tasks = movies.Select(movie => ProcessSingleMovie(movie));
-            var results = await Task.WhenAll(tasks);
+            // Phase 1: Parallel TMDB API calls (safe to parallelize - no DbContext access)
+            var enrichTasks = movies.Select(movie => EnrichMovieData(Mapper.Map<SearchMovieViewModel>(movie)));
+            var enrichedMovies = await Task.WhenAll(enrichTasks);
 
+            // Phase 2: Sequential rule application (RunSearchRules accesses DbContext which is not thread-safe)
             var viewMovies = new List<SearchMovieViewModel>();
-            foreach (var result in results)
+            foreach (var viewMovie in enrichedMovies)
             {
-                if (DemoCheck(result.Title))
+                if (DemoCheck(viewMovie.Title))
                 {
                     continue;
                 }
 
-                if (settings.HideAvailableFromDiscover && result.Available)
+                await RunSearchRules(viewMovie);
+
+                if (settings.HideAvailableFromDiscover && viewMovie.Available)
                 {
                     continue;
                 }
-                viewMovies.Add(result);
+                viewMovies.Add(viewMovie);
             }
             return viewMovies;
-        }
-
-        private async Task<SearchMovieViewModel> ProcessSingleMovie<T>(T movie) where T : new()
-        {
-            var viewMovie = Mapper.Map<SearchMovieViewModel>(movie);
-            return await ProcessSingleMovie(viewMovie);
         }
 
         private async Task<MovieFullInfoViewModel> ProcessSingleMovie(FullMovieInfo movie)
@@ -446,14 +443,20 @@ namespace Ombi.Core.Engine.V2
             return viewMovie;
         }
 
-        private async Task<SearchMovieViewModel> ProcessSingleMovie(SearchMovieViewModel viewMovie)
+        /// <summary>
+        /// Enriches movie data with TMDB API calls. Safe to call in parallel (no DbContext access).
+        /// </summary>
+        private async Task<SearchMovieViewModel> EnrichMovieData(SearchMovieViewModel viewMovie)
         {
             if (viewMovie.ImdbId.IsNullOrEmpty())
             {
                 var showInfo = await Cache.GetOrAddAsync("GetMovieInformationWIthImdbId" + viewMovie.Id,
                     () => MovieApi.GetMovieInformation(viewMovie.Id), DateTimeOffset.Now.AddHours(12));
-                viewMovie.Id = showInfo.Id; // TheMovieDbId
-                viewMovie.ImdbId = showInfo.ImdbId;
+                if (showInfo != null)
+                {
+                    viewMovie.Id = showInfo.Id; // TheMovieDbId
+                    viewMovie.ImdbId = showInfo.ImdbId;
+                }
             }
 
             var user = await GetUser();
@@ -464,11 +467,15 @@ namespace Ombi.Core.Engine.V2
             }
             viewMovie.DigitalReleaseDate = digitalReleaseDate?.ReleaseDate?.FirstOrDefault(x => x.Type == ReleaseDateType.Digital)?.ReleaseDate;
 
-
             viewMovie.TheMovieDbId = viewMovie.Id.ToString();
 
-            await RunSearchRules(viewMovie);
+            return viewMovie;
+        }
 
+        private async Task<SearchMovieViewModel> ProcessSingleMovie(SearchMovieViewModel viewMovie)
+        {
+            await EnrichMovieData(viewMovie);
+            await RunSearchRules(viewMovie);
             return viewMovie;
         }
 
