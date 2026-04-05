@@ -34,6 +34,8 @@ import { TvRequestsPanelComponent } from "./panels/tv-requests/tv-requests-panel
 import { TvRequestGridComponent } from "./panels/tv-request-grid/tv-request-grid.component";
 import { IssuesPanelComponent } from "../shared/issues-panel/issues-panel.component";
 import { ImageComponent } from "../../../components";
+import { OmbiDatePipe } from "../../../pipes/OmbiDatePipe";
+import { TranslateStatusPipe } from "../../../pipes/TranslateStatus";
 
 @Component({
     standalone: true,
@@ -60,7 +62,9 @@ import { ImageComponent } from "../../../components";
         TvInformationPanelComponent,
         TvRequestsPanelComponent,
         TvRequestGridComponent,
-        IssuesPanelComponent
+        IssuesPanelComponent,
+        OmbiDatePipe,
+        TranslateStatusPipe
     ]
 })
 export class TvDetailsComponent implements OnInit {

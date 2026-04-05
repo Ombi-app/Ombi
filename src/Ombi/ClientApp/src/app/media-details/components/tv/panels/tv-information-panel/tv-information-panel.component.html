@@ -1,85 +1,81 @@
-<div class="left-panel-details">
-	<div>
-		<div class="rating medium-font">
-			<span *ngIf="tv.rating">
-				<img class="rating-small" src="{{ baseUrl }}/images/tmdb-logo.svg" /> {{ tv.rating * 10 | number: '1.2-2' }}%
-			</span>
-			<span *ngIf="ratings?.score && ratings?.class">
-				<img class="rating-small" src="{{ baseUrl }}/images/{{ ratings.class === 'rotten' ? 'rotten-rotten.svg' : 'rotten-fresh.svg' }}" />
-				{{ ratings.score }}%
-			</span>
-		</div>
-		<div *ngIf="streams?.length > 0" id="streamingContainer" class="streaming-on-container">
-			<hr />
-			<div class="streaming-on-content">
-				<span class="label">{{ 'MediaDetails.StreamingOn' | translate }}</span>
-				<div>
-					<span *ngFor="let stream of sortBy('order')">
-						<img
-							class="stream-small"
-							id="stream{{ stream.streamingProvider }}"
-							[matTooltip]="stream.streamingProvider"
-							src="https://image.tmdb.org/t/p/original{{ stream.logo }}"
-						/>
-					</span>
-				</div>
+<div class="info-panel-modern">
+	<!-- Streaming Providers -->
+	<div *ngIf="streams?.length > 0" id="streamingContainer" class="streaming-row">
+		<span class="streaming-label">{{ 'MediaDetails.StreamingOn' | translate }}</span>
+		<span *ngFor="let stream of sortBy('order')">
+			<img
+				class="streaming-logo"
+				id="stream{{ stream.streamingProvider }}"
+				[matTooltip]="stream.streamingProvider"
+				src="https://image.tmdb.org/t/p/original{{ stream.logo }}"
+			/>
+		</span>
+	</div>
+
+	<!-- Info Grid -->
+	<div class="info-grid">
+		<div class="info-item" *ngIf="tv.rating">
+			<div class="info-label">TMDB Rating</div>
+			<div class="info-value">
+				<img class="rating-small" src="{{ baseUrl }}/images/tmdb-logo.svg" />
+				{{ tv.rating * 10 | number: '1.0-0' }}%
 			</div>
 		</div>
-		<hr />
-		<div *ngIf="tv.status">
-			<span class="label">{{ 'MediaDetails.Status' | translate }}</span>
-			<span id="status"> {{ tv.status | translateStatus }}</span>
+
+		<div class="info-item" *ngIf="ratings?.score && ratings?.class">
+			<div class="info-label">Critics</div>
+			<div class="info-value">
+				<img class="rating-small" src="{{ baseUrl }}/images/{{ ratings.class === 'rotten' ? 'rotten-rotten.svg' : 'rotten-fresh.svg' }}" />
+				{{ ratings.score }}%
+			</div>
 		</div>
-		<span class="label">{{ 'MediaDetails.FirstAired' | translate }}</span>
-		{{ tv.firstAired | ombiDate: 'PP' }}
-	</div>
 
-	<div *ngIf="seasonCount">
-		<span class="label">{{ 'MediaDetails.Seasons' | translate }}</span>
-		{{ seasonCount }}
-	</div>
-	<div *ngIf="totalEpisodes">
-		<span class="label">{{ 'MediaDetails.Episodes' | translate }}</span>
-		{{ totalEpisodes }}
-	</div>
+		<div class="info-item" *ngIf="tv.status">
+			<div class="info-label">{{ 'MediaDetails.Status' | translate }}</div>
+			<div class="info-value" id="status">{{ tv.status | translateStatus }}</div>
+		</div>
 
-	<div *ngIf="advancedOptions && request?.rootPathOverrideTitle">
-		<span class="label">{{ 'MediaDetails.RootFolderOverride' | translate }}</span>
-		<div>{{ request.rootPathOverrideTitle }}</div>
-	</div>
-	<div *ngIf="advancedOptions && request?.qualityOverrideTitle">
-		<span class="label">{{ 'MediaDetails.QualityOverride' | translate }}</span>
-		<div>{{ request.qualityOverrideTitle }}</div>
-	</div>
+		<div class="info-item" *ngIf="tv.firstAired">
+			<div class="info-label">{{ 'MediaDetails.FirstAired' | translate }}</div>
+			<div class="info-value">{{ tv.firstAired | ombiDate: 'PP' }}</div>
+		</div>
 
-	<div>
-		<span class="label">{{ 'MediaDetails.Runtime' | translate }}</span>
-		{{ 'MediaDetails.Minutes' | translate: { runtime: tv.runtime } }}
-	</div>
+		<div class="info-item" *ngIf="seasonCount">
+			<div class="info-label">{{ 'MediaDetails.Seasons' | translate }}</div>
+			<div class="info-value">{{ seasonCount }}</div>
+		</div>
 
-	<div *ngIf="tv.network">
-		<span class="label">{{ 'MediaDetails.Network' | translate }}</span>
-		{{ tv.network.name }}
-	</div>
+		<div class="info-item" *ngIf="totalEpisodes">
+			<div class="info-label">{{ 'MediaDetails.Episodes' | translate }}</div>
+			<div class="info-value">{{ totalEpisodes }}</div>
+		</div>
 
-	<div class="genre-button-container" *ngIf="tv.genres">
-		<span class="label">{{ 'MediaDetails.GenresLabel' | translate }}</span>
-		<div>
-			<mat-chip-list>
-				<mat-chip selected *ngFor="let genre of tv.genres">
-					{{ genre.name }}
-				</mat-chip>
-			</mat-chip-list>
+		<div class="info-item" *ngIf="tv.runtime">
+			<div class="info-label">{{ 'MediaDetails.Runtime' | translate }}</div>
+			<div class="info-value">{{ 'MediaDetails.Minutes' | translate: { runtime: tv.runtime } }}</div>
+		</div>
+
+		<div class="info-item" *ngIf="tv.network">
+			<div class="info-label">{{ 'MediaDetails.Network' | translate }}</div>
+			<div class="info-value">{{ tv.network.name }}</div>
+		</div>
+
+		<div class="info-item" *ngIf="advancedOptions && request?.rootPathOverrideTitle">
+			<div class="info-label">{{ 'MediaDetails.RootFolderOverride' | translate }}</div>
+			<div class="info-value">{{ request.rootPathOverrideTitle }}</div>
+		</div>
+
+		<div class="info-item" *ngIf="advancedOptions && request?.qualityOverrideTitle">
+			<div class="info-label">{{ 'MediaDetails.QualityOverride' | translate }}</div>
+			<div class="info-value">{{ request.qualityOverrideTitle }}</div>
 		</div>
 	</div>
 
-	<hr />
-	<div class="keyword-button-container" *ngIf="tv?.keywords?.keywordsValue?.length > 0">
-		<span class="label">{{ 'MediaDetails.Keywords' | translate }}</span>
-		<mat-chip-list>
-			<mat-chip selected *ngFor="let keyword of tv.keywords.keywordsValue">
-				{{ keyword.name }}
-			</mat-chip>
-		</mat-chip-list>
+	<!-- Keywords -->
+	<div class="keyword-section" *ngIf="tv?.keywords?.keywordsValue?.length > 0">
+		<span class="info-label" style="display:block; margin-bottom:8px;">{{ 'MediaDetails.Keywords' | translate }}</span>
+		<div class="hero-genres">
+			<span class="genre-tag" *ngFor="let keyword of tv.keywords.keywordsValue">{{ keyword.name }}</span>
+		</div>
 	</div>
 </div>

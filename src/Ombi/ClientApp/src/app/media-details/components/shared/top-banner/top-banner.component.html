@@ -1,19 +1,5 @@
-<section id="summary-wrapper">
-	<div class="full-screenshot enabled" [style.background-image]="background"></div>
-	<div class="full-screenshot enabled overlay"></div>
-
-	<div class="container summary">
-		<div class="container title-top-banner">
-			<div class="row">
-				<div class="mobile-top-text">
-					<h1 id="mediaTitle" class="large-text">
-						{{ title }}
-						<span *ngIf="releaseDateFormat" class="grey-text"> ({{ releaseDate | ombiDate: 'P' }})</span>
-					</h1>
-
-					<h2 class="tagline">{{ tagline }}</h2>
-				</div>
-			</div>
-		</div>
-	</div>
+<section class="details-hero">
+	<div class="hero-backdrop" [style.background-image]="background"></div>
+	<div class="hero-backdrop-overlay"></div>
+	<ng-content></ng-content>
 </section>

@@ -1,22 +1,60 @@
 @use "./styles/variables.scss" as *;
 
-a.media-icons:hover{
-    color:$ombi-active;
+:host {
+    display: block;
 }
 
-a.media-icons:hover img{
-    filter: sepia(100%) hue-rotate(190deg) saturate(500%) brightness(190%);
+.social-links-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
 }
 
-a.media-icons img{
-    filter: contrast(0) brightness(3);
-    height: 2em;
-    padding: 0;
+.social-link {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.2rem;
+    transition: all 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    line-height: 1;
+
+    &:hover {
+        color: $ombi-active;
+        transform: translateY(-2px);
+    }
+
+    img {
+        height: 1.3em;
+        filter: contrast(0) brightness(2);
+        transition: filter 0.2s;
+        vertical-align: middle;
+    }
+
+    &:hover img {
+        filter: sepia(100%) hue-rotate(190deg) saturate(500%) brightness(190%);
+    }
 }
 
+.social-divider {
+    width: 1px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.15);
+}
 
+.admin-cog-btn {
+    color: $ombi-active;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    font-size: 1.2rem;
+    transition: transform 0.2s;
+    width: auto;
+    height: auto;
+    line-height: 1;
 
-button.admin-cog{
-    margin-left:40px;
-    color:$ombi-active;
+    &:hover {
+        transform: rotate(45deg);
+    }
 }

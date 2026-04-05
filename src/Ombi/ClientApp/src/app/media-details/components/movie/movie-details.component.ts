@@ -38,6 +38,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { IssuesPanelComponent } from '../shared/issues-panel/issues-panel.component';
 import { SafePipe } from '../../../pipes/SafePipe';
+import { OmbiDatePipe } from '../../../pipes/OmbiDatePipe';
+import { ThousandShortPipe } from '../../../pipes/ThousandShortPipe';
+import { TranslateStatusPipe } from '../../../pipes/TranslateStatus';
 
 @Component({
     standalone: true,
@@ -66,7 +69,10 @@ import { SafePipe } from '../../../pipes/SafePipe';
         MovieInformationPanelComponent,
         IssuesPanelComponent,
         ImageComponent,
-        SafePipe
+        SafePipe,
+        OmbiDatePipe,
+        ThousandShortPipe,
+        TranslateStatusPipe
     ]
 })
 export class MovieDetailsComponent implements OnInit {
