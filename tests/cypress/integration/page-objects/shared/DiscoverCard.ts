@@ -16,7 +16,7 @@ export class DiscoverCard {
     constructor(id: string, movie: boolean, type?: DiscoverType) {
       this.id = id;
       this.movie = movie;
-      this.type = type;
+      this.type = type!;
     }
 
     get topLevelCard(): Cypress.Chainable<any> {
