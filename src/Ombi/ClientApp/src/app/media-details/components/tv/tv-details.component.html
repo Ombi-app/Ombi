@@ -197,27 +197,22 @@
 							<div class="issuesPanel">
 								<issues-panel [providerId]="tv.id" [isAdmin]="isAdmin"></issues-panel>
 							</div>
-							<mat-accordion id="requests-panel">
-								<mat-expansion-panel>
-									<mat-expansion-panel-header>
-										<mat-panel-title>
-											{{ 'Requests.Title' | translate }}
-										</mat-panel-title>
-									</mat-expansion-panel-header>
-
-									@defer (on viewport; prefetch on idle) {
-									<tv-requests-panel
-										[tvRequest]="tvRequest"
-										[isAdmin]="isAdmin"
-										[manageOwnRequests]="manageOwnRequests"
-									></tv-requests-panel>
-									} @placeholder {
-										<div class="loading-spinner" style="left: 50%;position: absolute;">
-										<mat-spinner [color]="'accent'"></mat-spinner>
-									</div>
-									}
-								</mat-expansion-panel>
-							</mat-accordion>
+							<div id="requests-panel" *ngIf="tvRequest?.length > 0" style="margin-top: 16px;">
+								<h3 style="margin-bottom: 12px; font-weight: 500; font-size: 16px; color: rgba(255,255,255,0.7);">
+									{{ 'Requests.Title' | translate }}
+								</h3>
+								@defer (on viewport; prefetch on idle) {
+								<tv-requests-panel
+									[tvRequest]="tvRequest"
+									[isAdmin]="isAdmin"
+									[manageOwnRequests]="manageOwnRequests"
+								></tv-requests-panel>
+								} @placeholder {
+									<div class="loading-spinner" style="left: 50%;position: absolute;">
+									<mat-spinner [color]="'accent'"></mat-spinner>
+								</div>
+								}
+							</div>
 						</div>
 					</div>
 				</div>

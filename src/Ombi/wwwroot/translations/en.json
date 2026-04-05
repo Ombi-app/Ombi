@@ -235,6 +235,7 @@
         "DeniedRequest": "Denied Request",
         "RequestCollection": "Request Collection",
         "CollectionSuccesfullyAdded": "The collection {{name}} has been successfully added!",
+        "NoRequests": "No requests yet",
         "NeedToSelectEpisodes": "You need to select some episodes!",
         "RequestAddedSuccessfully": "Request for {{title}} has been added successfully",
         "ErrorCodes": {
