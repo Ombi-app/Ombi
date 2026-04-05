@@ -1,52 +1,48 @@
-<div id="detailed-{{request.mediaId}}" class="detailed-container" [style.background-image]="background">
-    <div class="row">
-        <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 posterColumn">
-            <ombi-image (click)="click()" [src]="request.posterPath" [type]="request.type" class="poster" alt="{{request.title}}">
-            </ombi-image>
+<div id="detailed-{{request.mediaId}}" class="detailed-card" (click)="click()">
+    <div class="card-image-wrapper">
+        <ombi-image [src]="request.posterPath" [type]="request.type" class="card-poster" alt="{{request.title}}">
+        </ombi-image>
+        <div class="card-backdrop" [style.background-image]="background"></div>
+    </div>
+
+    <div class="card-status-badge badge-{{getClass(request)}}" id="detailed-request-status-{{request.mediaId}}">
+        <span class="status-dot"></span>
+        {{getStatus(request) | translate}}
+    </div>
+
+    <div class="card-info">
+        <h4 class="card-title" id="detailed-request-title-{{request.mediaId}}">{{request.title}}</h4>
+        <div class="card-meta">
+            @if (request.releaseDate) {
+                <span class="card-year">{{request.releaseDate | date:'yyyy'}}</span>
+            }
+            @if (request.username) {
+                <span class="card-user" id="detailed-request-requestedby-{{request.mediaId}}">
+                    <i class="fas fa-user" aria-hidden="true"></i> {{request.username}}
+                </span>
+            }
         </div>
-        <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12">
-            <div class="row">
-                <div class="col-12 title">
-                    <div class="text-right year"><sup>{{request.releaseDate | date:'yyyy'}}</sup></div>
-                    <h3 id="detailed-request-title-{{request.mediaId}}">{{request.title}}</h3>
-                </div>
-                @if (request.username) {
-                    <div class="col-12">
-                        <p id="detailed-request-requestedby-{{request.mediaId}}">{{'MediaDetails.RequestedBy' | translate}} {{request.username}}</p>
-                    </div>
-                }
-                <div class="col-12">
-                    <p id="detailed-request-date-{{request.mediaId}}">{{'MediaDetails.OnDate' | translate}} {{request.requestDate | ombiDate: 'Ppp'}}</p>
-                </div>
-                <div class="col-12">
-                    <p id="detailed-request-status-{{request.mediaId}}">{{'MediaDetails.Status' | translate}} <span class="badge badge-{{getClass(request)}}">{{getStatus(request) | translate}}</span></p>
-                </div>
-            </div>
-            <div class="row action-items">
-                @if (isAdmin) {
-                    <div class="col-12">
-                        @if (!request.approved && !request.denied) {
-                            <div>
-                                <button
-                                    id="detailed-request-approve-{{request.mediaId}}"
-                                    color="accent"
-                                    mat-raised-button
-                                    (click)="approve()"
-                                    matTooltip="{{'Common.Approve' | translate}}">
-                                    <mat-icon>check-circle</mat-icon>
-                                </button>
-                                <button
-                                    id="detailed-request-deny-{{request.mediaId}}"
-                                    color="accent"
-                                    mat-raised-button
-                                    (click)="deny()"
-                                    matTooltip="{{'Requests.Deny' | translate}}">
-                                  <mat-icon>cancel</mat-icon></button>
-                            </div>
-                        }
-                    </div>
-                }
-            </div>
+        <div class="card-date" id="detailed-request-date-{{request.mediaId}}">
+            {{request.requestDate | ombiDate: 'Ppp'}}
         </div>
     </div>
+
+    @if (isAdmin && !request.approved && !request.denied) {
+        <div class="card-actions">
+            <button
+                id="detailed-request-approve-{{request.mediaId}}"
+                class="action-btn approve-btn"
+                (click)="approve(); $event.stopPropagation()"
+                matTooltip="{{'Common.Approve' | translate}}">
+                <i class="fas fa-check" aria-hidden="true"></i>
+            </button>
+            <button
+                id="detailed-request-deny-{{request.mediaId}}"
+                class="action-btn deny-btn"
+                (click)="deny(); $event.stopPropagation()"
+                matTooltip="{{'Requests.Deny' | translate}}">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+    }
 </div>
