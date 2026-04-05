@@ -40,9 +40,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-dotnet@v1
+      - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
 
       - name: Nuget Cache
         uses: actions/cache@v4
@@ -107,12 +107,9 @@ jobs:
             format: tar.gz
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-dotnet@v1
+      - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
-      - uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '5.0.x'
+          dotnet-version: '10.0.x'
 
       - name: Nuget Cache
         uses: actions/cache@v4
