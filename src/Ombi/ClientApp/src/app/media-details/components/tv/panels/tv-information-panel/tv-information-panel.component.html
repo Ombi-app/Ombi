@@ -4,7 +4,7 @@
 		<span class="streaming-label">{{ 'MediaDetails.StreamingOn' | translate }}</span>
 		<span *ngFor="let stream of sortBy('order')">
 			<img
-				class="streaming-logo"
+				class="streaming-logo stream-small"
 				id="stream{{ stream.streamingProvider }}"
 				[matTooltip]="stream.streamingProvider"
 				src="https://image.tmdb.org/t/p/original{{ stream.logo }}"
