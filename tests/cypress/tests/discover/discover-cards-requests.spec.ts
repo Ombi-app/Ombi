@@ -73,6 +73,12 @@ describe("Discover Cards Requests Tests", () => {
           });
         }).as("cardsResponse");
 
+        cy.intercept("POST", "**/Request/Movie", {
+          result: true,
+          isError: false,
+          errorMessage: null,
+        }).as("movieRequest");
+
         cy.then(() => {
           window.localStorage.setItem("DiscoverOptions2", "2");
         });
@@ -94,6 +100,8 @@ describe("Discover Cards Requests Tests", () => {
 
           card.requestButton.should("be.visible");
           card.requestButton.click();
+
+          cy.wait("@movieRequest");
 
           cy.verifyNotification("has been added successfully");
 
