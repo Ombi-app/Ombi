@@ -50,10 +50,12 @@ namespace Ombi.Core.Engine
 
         private bool _demo = DemoSingleton.Instance.Demo;
 
+        private const long CacheExpiryTicks = 30 * TimeSpan.TicksPerSecond; // 30 seconds
+
         protected async Task<Dictionary<int, MovieRequests>> GetMovieRequests()
         {
             var now = DateTime.Now.Ticks;
-            if (_dbMovies == null || now - _cacheTime > 10000)
+            if (_dbMovies == null || now - _cacheTime > CacheExpiryTicks)
             {
                 var allResults = await MovieRepository.GetAll().ToListAsync();
 
@@ -67,7 +69,7 @@ namespace Ombi.Core.Engine
         protected async Task<Dictionary<int, TvRequests>> GetTvRequests()
         {
             var now = DateTime.Now.Ticks;
-            if (_dbTv == null || now - _cacheTime > 10000)
+            if (_dbTv == null || now - _cacheTime > CacheExpiryTicks)
             {
                 var allResults = await TvRepository.Get().ToListAsync();
 

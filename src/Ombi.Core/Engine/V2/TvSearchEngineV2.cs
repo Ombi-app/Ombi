@@ -199,53 +199,63 @@ namespace Ombi.Core.Engine.V2
             var movieDBResults = await Cache.GetOrAddAsync(nameof(RecentlyRequestedShows) + toLoad + langCode,
                 async () =>
                 {
-                    var responses = new List<TvInfo>();
-                    foreach (var movie in requestResult.Collection)
-                    {
-                        responses.Add(await _movieApi.GetTVInfo(movie.ExternalProviderId.ToString()));
-                    }
-                    return responses;
+                    var tasks = requestResult.Collection.Select(movie =>
+                        _movieApi.GetTVInfo(movie.ExternalProviderId.ToString()));
+                    return (await Task.WhenAll(tasks)).ToList();
                 }, DateTimeOffset.Now.AddHours(12));
 
-            var mapped = _mapper.Map<List<SearchFullInfoTvShowViewModel>>(movieDBResults);
-  
-            foreach(var map in mapped)
+            var mapped = _mapper.Map<List<SearchFullInfoTvShowViewModel>>(
+                movieDBResults.Where(show => show != null && !string.IsNullOrEmpty(show.name)).ToList());
+
+            // Pre-warm cache to avoid concurrent EF Core DbContext access
+            await GetTvRequests();
+
+            // Run ProcessResult sequentially (RunSearchRules accesses DbContext which is not thread-safe)
+            foreach (var map in mapped.Where(map => map != null))
             {
-                var processed = await ProcessResult(map);
-                results.Add(processed);
+                results.Add(await ProcessResult(map));
             }
             return results;
         }
 
         private async Task<IEnumerable<SearchTvShowViewModel>> ProcessResults(List<MovieDbSearchResult> items)
         {
-            var retVal = new List<SearchTvShowViewModel>(); 
             var settings = await _customization.GetSettingsAsync();
 
-            foreach (var tvMazeSearch in items)
-            {
-                if (DemoCheck(tvMazeSearch.Title))
-                {
-                    continue;
-                }
-                if (settings.HideAvailableFromDiscover)
-                {
-                    // To hide, we need to know if it's fully available, the only way to do this is to lookup it's episodes to check if we have every episode
-                    var show = await Cache.GetOrAddAsync(nameof(GetShowInformation) + tvMazeSearch.Id.ToString(),
-                        async () => await _movieApi.GetTVInfo(tvMazeSearch.Id.ToString()), DateTime.Now.AddHours(12));
-                    foreach (var tvSeason in show.seasons.Where(x => x.season_number != 0)) // skip the first season
-                    {
-                        var seasonEpisodes = await Cache.GetOrAddAsync("SeasonEpisodes" + show.id + tvSeason.season_number, async () =>
-                        {
-                            return await _movieApi.GetSeasonEpisodes(show.id, tvSeason.season_number, CancellationToken.None);
-                        }, DateTimeOffset.Now.AddHours(12));
+            // Pre-warm cache to avoid concurrent EF Core DbContext access
+            await GetTvRequests();
 
+            var nonDemoItems = items.Where(item => !DemoCheck(item.Title)).ToList();
+
+            if (settings.HideAvailableFromDiscover)
+            {
+                foreach (var tvMazeSearch in nonDemoItems)
+                {
+                    var show = await Cache.GetOrAddAsync(nameof(GetShowInformation) + tvMazeSearch.Id.ToString(),
+                        () => _movieApi.GetTVInfo(tvMazeSearch.Id.ToString()), DateTime.Now.AddHours(12));
+
+                    if (show == null || string.IsNullOrEmpty(show.name) || show.seasons == null)
+                    {
+                        continue;
+                    }
+
+                    var seasons = show.seasons.Where(x => x.season_number != 0).ToList();
+                    foreach (var tvSeason in seasons)
+                    {
+                        var seasonEpisodes = await Cache.GetOrAddAsync("SeasonEpisodes" + show.id + tvSeason.season_number,
+                            () => _movieApi.GetSeasonEpisodes(show.id, tvSeason.season_number, CancellationToken.None),
+                            DateTimeOffset.Now.AddHours(12));
                         MapSeasons(tvMazeSearch.SeasonRequests, tvSeason, seasonEpisodes);
                     }
                 }
+            }
 
-                var result = await ProcessResult(tvMazeSearch);
-                if (result == null || settings.HideAvailableFromDiscover && result.Available)
+            // Run ProcessResult sequentially (RunSearchRules accesses DbContext which is not thread-safe)
+            var retVal = new List<SearchTvShowViewModel>();
+            foreach (var item in nonDemoItems)
+            {
+                var result = await ProcessResult(item);
+                if (result == null || (settings.HideAvailableFromDiscover && result.Available))
                 {
                     continue;
                 }
