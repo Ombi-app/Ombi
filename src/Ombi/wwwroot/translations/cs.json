@@ -235,6 +235,7 @@
         "DeniedRequest": "Odmítnutý požadavek",
         "RequestCollection": "Požádat o kolekci",
         "CollectionSuccesfullyAdded": "Kolekce {{name}} byla úspěšně přidána!",
+        "NoRequests": "No requests yet",
         "NeedToSelectEpisodes": "Musíte vybrat nějaké epizody!",
         "RequestAddedSuccessfully": "Žádost o {{title}} byla úspěšně přidána",
         "ErrorCodes": {
@@ -379,7 +380,12 @@
             "FirstSeasonTooltip": "Toto vyžádá jen první sérii pro tento pořad",
             "LatestSeasonTooltip": "Toto vyžádá jen poslední sérii pro tento pořad",
             "NoEpisodes": "There unfortunately is no episode data for this show yet!",
-            "SeasonNumber": "Série {{number}}"
+            "SeasonNumber": "Série {{number}}",
+            "OrSelectEpisodes": "or select specific episodes",
+            "Episodes": "episodes",
+            "SelectAll": "Select All",
+            "EpisodeSelected": "episode selected",
+            "EpisodesSelected": "episodes selected"
         },
         "SonarrConfiguration": "Sonarr Configuration",
         "RadarrConfiguration": "Radarr Configuration",
