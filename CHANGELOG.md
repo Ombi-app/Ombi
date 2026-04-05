@@ -1,3 +1,14 @@
+## [4.57.11](https://github.com/Ombi-app/Ombi/compare/v4.57.10...v4.57.11) (2026-04-05)
+
+
+### Bug Fixes
+
+* restore missing SearchViewModel using in Emby and Jellyfin rules ([8ddb604](https://github.com/Ombi-app/Ombi/commit/8ddb60417aa9eccd5da13dfce3e2a844393379af))
+* set PartlyAvailable when fully available with unaired episodes ([d02cc57](https://github.com/Ombi-app/Ombi/commit/d02cc57d31a0a7ca37126eca0363b30a04807a89))
+* use DateTime.Now.Date consistently in AvailabilityRuleHelper ([7aa83d6](https://github.com/Ombi-app/Ombi/commit/7aa83d635f432cddb6698300f2d21066a74f35ad))
+
+
+
 ## [4.57.10](https://github.com/Ombi-app/Ombi/compare/v4.57.9...v4.57.10) (2026-04-05)
 
 
@@ -354,15 +365,6 @@
 ### Bug Fixes
 
 * **sonarr:** :bug: Ensure we are monitoring shows that already exist in Sonarr [#5257](https://github.com/Ombi-app/Ombi/issues/5257) ([bf83c95](https://github.com/Ombi-app/Ombi/commit/bf83c95da05feefa956ea73a3959304af94483dd))
-
-
-
-# [4.50.0](https://github.com/Ombi-app/Ombi/compare/v4.49.10...v4.50.0) (2025-09-21)
-
-
-### Features
-
-* pipes ([1ac20e8](https://github.com/Ombi-app/Ombi/commit/1ac20e84dbf9b90e6797cb49cf3fd4e863f7352d))
 
 
 
