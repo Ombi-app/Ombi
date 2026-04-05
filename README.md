@@ -7,6 +7,7 @@ ____
 [![firsttimersonly](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/ombi/localized.svg)](https://crowdin.com/project/ombi)
 [![Automation Tests](https://github.com/Ombi-app/Ombi/actions/workflows/automation-tests.yml/badge.svg)](https://github.com/Ombi-app/Ombi/actions/workflows/automation-tests.yml)
+[![RepoShark Health](https://reposhark.com/api/badge/Ombi-app/Ombi)](https://reposhark.com/repo/Ombi-app/Ombi)
 
 [![Patreon](https://img.shields.io/badge/patreon-donate-yellow.svg)](https://patreon.com/tidusjar/Ombi)
 [![Paypal](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://paypal.me/PlexRequestsNet)
