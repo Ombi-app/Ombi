@@ -13,6 +13,8 @@ namespace Ombi.Store.Entities
         public MediaType Type { get; set; }
         public RecentlyAddedType RecentlyAddedType{ get; }
 
+        public string Quality { get; set; }
+        public bool Has4K { get; set; }
         public string Url { get; set; }
         
         public ICollection<IMediaServerEpisode> Episodes { get; set; }

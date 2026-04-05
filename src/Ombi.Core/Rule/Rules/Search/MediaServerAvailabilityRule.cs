@@ -46,7 +46,7 @@ namespace Ombi.Core.Rule.Rules.Search
         /// <summary>
         /// Sets the media server URL on the search view model (PlexUrl, EmbyUrl, or JellyfinUrl).
         /// </summary>
-        protected abstract void SetMediaServerUrl(SearchViewModel obj, string url);
+        protected abstract Task SetMediaServerUrl(SearchViewModel obj, string url);
 
         public async Task<RuleResult> Execute(SearchViewModel obj)
         {
@@ -58,7 +58,7 @@ namespace Ombi.Core.Rule.Rules.Search
 
             var item = lookup.Content;
 
-            SetMediaServerUrl(obj, item.Url);
+            await SetMediaServerUrl(obj, item.Url);
 
             if (obj is SearchMovieViewModel movie)
             {
