@@ -81,9 +81,10 @@ namespace Ombi.Core.Rule.Rules.Search
             return _repo.GetAllEpisodes().Include(x => x.Series);
         }
 
-        protected override void SetMediaServerUrl(SearchViewModel obj, string url)
+        protected override Task SetMediaServerUrl(SearchViewModel obj, string url)
         {
             obj.JellyfinUrl = url;
+            return Task.CompletedTask;
         }
     }
 }

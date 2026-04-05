@@ -90,7 +90,7 @@ namespace Ombi.Core.Rule.Rules.Search
             return _repo.GetAllEpisodes();
         }
 
-        protected override void SetMediaServerUrl(SearchViewModel obj, string url)
+        protected override async Task SetMediaServerUrl(SearchViewModel obj, string url)
         {
             if (url.StartsWith("http"))
             {
@@ -98,7 +98,7 @@ namespace Ombi.Core.Rule.Rules.Search
             }
             else
             {
-                var settings = _plexSettings.GetSettingsAsync().Result;
+                var settings = await _plexSettings.GetSettingsAsync();
                 var host = settings?.Servers?.FirstOrDefault()?.ServerHostname ?? string.Empty;
                 obj.PlexUrl = PlexHelper.BuildPlexMediaUrl(url, host);
             }

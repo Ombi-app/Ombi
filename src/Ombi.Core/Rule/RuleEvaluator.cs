@@ -98,6 +98,10 @@ namespace Ombi.Core.Rule
 
                 var type = ti.AsType();
                 var ctor = type.GetConstructors().FirstOrDefault();
+                if (ctor == null)
+                {
+                    continue;
+                }
 
                 var services = new List<object>();
                 foreach (var param in ctor.GetParameters())
@@ -121,6 +125,10 @@ namespace Ombi.Core.Rule
 
                 var type = ti.AsType();
                 var ctor = type.GetConstructors().FirstOrDefault();
+                if (ctor == null)
+                {
+                    continue;
+                }
 
                 var services = new List<object>();
                 foreach (var param in ctor.GetParameters())
