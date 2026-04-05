@@ -265,7 +265,7 @@ describe("Discover Cards Requests Tests", () => {
   });
 
   it("Available TV (From Details Call) does not allow us to request", () => {
-    cy.intercept("GET", "**/search/Tv/popular/**", { fixture: '/discover/popularTv'}).as("cardsResponse");
+    cy.intercept("GET", "**/search/Tv/popular/**", { fixture: "discover/popularTv" }).as("cardsResponse");
     cy.intercept("GET", "**/search/Tv/moviedb/88396", (req) => {
       req.reply((res2) => {
         const body = res2.body;
