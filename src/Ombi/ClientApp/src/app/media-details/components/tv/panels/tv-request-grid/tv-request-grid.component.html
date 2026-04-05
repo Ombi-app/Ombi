@@ -111,6 +111,12 @@
 				[class.disabled]="isEpisodeDisabled(ep)"
 				[class.selected]="selection.isSelected(ep)"
 				(click)="!isEpisodeDisabled(ep) ? selection.toggle(ep) : null"
+				(keydown.enter)="!isEpisodeDisabled(ep) ? selection.toggle(ep) : null"
+				(keydown.space)="!isEpisodeDisabled(ep) ? selection.toggle(ep) : null; $event.preventDefault()"
+				[attr.tabindex]="isEpisodeDisabled(ep) ? null : 0"
+				role="checkbox"
+				[attr.aria-checked]="selection.isSelected(ep)"
+				[attr.aria-disabled]="isEpisodeDisabled(ep)"
 				attr.data-test="episodeRow{{ selectedSeason.seasonNumber }}{{ ep.episodeNumber }}"
 			>
 				<span class="ep-col-select">

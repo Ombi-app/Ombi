@@ -32,11 +32,11 @@ export class TvRequestsPanelComponent {
     public selectedSeasons: Record<number, number> = {};
 
     constructor(
-        private requestService: RequestService,
-        private requestService2: RequestServiceV2,
-        private messageService: MessageService,
+        private readonly requestService: RequestService,
+        private readonly requestService2: RequestServiceV2,
+        private readonly messageService: MessageService,
         public dialog: MatDialog,
-        private translateService: TranslateService
+        private readonly translateService: TranslateService
     ) {}
 
     public isExpanded(request: IChildRequests): boolean {
@@ -75,7 +75,6 @@ export class TvRequestsPanelComponent {
         if (ep.available) return "available";
         if (request.denied) return "denied";
         if (request.approved || ep.approved) return "approved";
-        if (ep.requested) return "requested";
         return "requested";
     }
 
@@ -142,12 +141,14 @@ export class TvRequestsPanelComponent {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            request.denied = true;
-            request.seasonRequests.forEach((season) => {
-                season.episodes.forEach((ep) => {
-                    ep.approved = false;
+            if (result) {
+                request.denied = true;
+                request.seasonRequests.forEach((season) => {
+                    season.episodes.forEach((ep) => {
+                        ep.approved = false;
+                    });
                 });
-            });
+            }
         });
     }
 
