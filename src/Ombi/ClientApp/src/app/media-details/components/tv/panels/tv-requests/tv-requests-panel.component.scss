@@ -122,10 +122,10 @@
 .request-body {
     border-top: 1px solid rgba(255, 255, 255, 0.06);
     padding: 16px 20px;
-    animation: fadeIn 0.2s ease;
+    animation: fade-in 0.2s ease;
 }
 
-@keyframes fadeIn {
+@keyframes fade-in {
     from {
         opacity: 0;
         transform: translateY(-4px);

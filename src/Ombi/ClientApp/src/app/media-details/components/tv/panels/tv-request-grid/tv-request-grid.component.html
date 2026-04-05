@@ -72,7 +72,7 @@
 		</div>
 
 		<!-- Season Progress Bar -->
-		<div class="season-progress-container">
+		<div class="season-progress-container" *ngIf="getSeasonProgress(selectedSeason).total > 0">
 			<div class="season-progress-bar">
 				<div
 					class="progress-segment available"
