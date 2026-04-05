@@ -3,62 +3,59 @@
         [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
         [opened]="!(isHandset$ | async)">
 
-        <mat-toolbar class="application-name" id="nav-applicationName">
-            <a *ngIf="applicationUrl; else noApplicationUrlLogo" class="application-name-link" [href]="applicationUrl">{{applicationName}}</a>
-        </mat-toolbar>
-        <ng-template #noApplicationUrlLogo>
-            {{applicationName}}
-        </ng-template>
+        <!-- Brand -->
+        <div class="sidebar-brand" id="nav-applicationName">
+            <a *ngIf="applicationUrl; else noApplicationUrlLogo" class="brand-link" [href]="applicationUrl">{{applicationName}}</a>
+            <ng-template #noApplicationUrlLogo>
+                <span class="brand-link">{{applicationName}}</span>
+            </ng-template>
+        </div>
 
-        <mat-nav-list>
-            <span  mat-list-item  *ngFor="let nav of navItems">
+        <!-- Navigation -->
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">{{ 'NavigationBar.Discover' | translate | uppercase }}</div>
 
-                <div class="menu-spacing mat-ripple" mat-ripple *ngIf="(nav.requiresAdmin && isAdmin || !nav.requiresAdmin) && nav.enabled">
-                    <!-- External -->
-                    <a [disableRipple]="true" mat-list-item  id="{{nav.id}}" *ngIf="nav.externalLink" [href]="nav.link" target="_blank"
-                        matTooltip="{{nav.toolTipMessage | translate}}" matTooltipPosition="right"
-                        [routerLinkActive]="'active-list-item'">
-
-                        <i *ngIf="nav.icon" class="fa-lg {{nav.icon}} icon-spacing"
-                            style="padding-left: 5px; padding-right: 5px;" aria-hidden="true"></i>
-                        &nbsp;{{nav.name | translate}}
+            <ng-container *ngFor="let nav of navItems">
+                <ng-container *ngIf="(nav.requiresAdmin && isAdmin || !nav.requiresAdmin) && nav.enabled">
+                    <!-- External link -->
+                    <a *ngIf="nav.externalLink" class="nav-item" id="{{nav.id}}"
+                        [href]="nav.link" target="_blank"
+                        matTooltip="{{nav.toolTipMessage | translate}}" matTooltipPosition="right">
+                        <i class="nav-icon {{nav.icon}}" aria-hidden="true"></i>
+                        <span class="nav-label">{{nav.name | translate}}</span>
+                        <i class="fas fa-external-link-alt nav-external-icon" aria-hidden="true"></i>
                     </a>
 
-                    <!-- Internal -->
-                    <ng-container *ngIf="nav.id === 'nav-discover'">
-                        <em class="advanced-search fa-lg fas fa-filter " (click)="openAdvancedSearch()" [routerLinkActive]="'active-advanced'" [routerLink]="nav.link"></em>
-                    </ng-container>
-                    <a [disableRipple]="true" mat-list-item id="{{nav.id}}" *ngIf="!nav.externalLink" [routerLink]="nav.link" [style]="nav.style"
-                        [routerLinkActive]="'active-list-item'">
-
-                        <i class="fa-lg {{nav.icon}} icon-spacing"></i>
-                        &nbsp;{{nav.name | translate}}
+                    <!-- Internal link -->
+                    <a *ngIf="!nav.externalLink" class="nav-item" id="{{nav.id}}"
+                        [routerLink]="nav.link" [routerLinkActive]="'nav-item--active'">
+                        <span class="nav-indicator"></span>
+                        <i class="nav-icon {{nav.icon}}"></i>
+                        <span class="nav-label">{{nav.name | translate}}</span>
+                        <em *ngIf="nav.id === 'nav-discover'" class="nav-action fas fa-filter"
+                            (click)="openAdvancedSearch(); $event.preventDefault(); $event.stopPropagation()"></em>
                     </a>
-                </div>
-            </span>
+                </ng-container>
+            </ng-container>
 
-            <span mat-list-item >
-            <a mat-list-item [disableRipple]="true" id="nav-openMobile" [routerLinkActive]="'active-list-item'"
-                aria-label="Toggle sidenav" (click)="openMobileApp($event);">
-                <i class="fa-lg fas fa-mobile-alt  icon-spacing"></i>
-                &nbsp;{{ 'NavigationBar.OpenMobileApp' | translate }}
-            </a></span>
+            <div class="nav-divider"></div>
 
-            <a mat-list-item [disableRipple]="true"   class="menu-spacing" id="nav-logout" [routerLinkActive]="'active-list-item'"
-                aria-label="Toggle sidenav" (click)="logOut();">
-                <i class="fa-lg fas fa-sign-out-alt  icon-spacing"></i>
-                &nbsp;{{ 'NavigationBar.Logout' | translate }}
+            <a class="nav-item" id="nav-openMobile" (click)="openMobileApp($event);">
+                <i class="nav-icon fas fa-mobile-alt"></i>
+                <span class="nav-label">{{ 'NavigationBar.OpenMobileApp' | translate }}</span>
             </a>
 
+            <a class="nav-item" id="nav-logout" (click)="logOut();">
+                <i class="nav-icon fas fa-sign-out-alt"></i>
+                <span class="nav-label">{{ 'NavigationBar.Logout' | translate }}</span>
+            </a>
+        </nav>
 
-        </mat-nav-list>
-
-        <div class="bottom-nav full">
-            <div class="outer-profile">
-                <app-remaining-requests [type]="RequestType.movie"></app-remaining-requests>
-                <app-remaining-requests [type]="RequestType.tvShow"></app-remaining-requests>
-                <app-remaining-requests [type]="RequestType.album"></app-remaining-requests>
-        </div>
+        <!-- Bottom quota section -->
+        <div class="sidebar-footer">
+            <app-remaining-requests [type]="RequestType.movie"></app-remaining-requests>
+            <app-remaining-requests [type]="RequestType.tvShow"></app-remaining-requests>
+            <app-remaining-requests [type]="RequestType.album"></app-remaining-requests>
         </div>
     </mat-sidenav>
 

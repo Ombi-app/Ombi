@@ -7,10 +7,6 @@
     overflow: auto;
 }
 
-.sidenav .mat-toolbar {
-    background: inherit;
-}
-
 // ─── Top Bar ─────────────────────────────────────────────
 .top-bar {
     position: sticky;
@@ -106,7 +102,7 @@
     }
 }
 
-// ─── Profile ─────────────────────────────────────────────
+// ─── Profile (Top Bar) ──────────────────────────────────
 .profile-block {
     flex-shrink: 0;
 }
@@ -156,21 +152,162 @@
 }
 
 // ─── Sidebar ─────────────────────────────────────────────
-.menu-spacing {
-    margin-bottom: 5%;
+.sidenav {
+    width: 240px;
+    border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
 }
 
-.icon-spacing {
-    width: 40px;
-    text-align: center;
-}
-
-.slide-menu {
-    width: 100%;
-}
-
-.middle {
+.sidenav-container .sidenav {
+    background: $ombi-background-accent;
+    color: #fff;
+    font-family: 'Inter', 'Roboto', sans-serif;
     display: flex;
+    flex-direction: column;
+}
+
+// ─── Sidebar Brand ───────────────────────────────────────
+.sidebar-brand {
+    padding: 28px 24px 20px;
+
+    .brand-link {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 22px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: $ombi-active;
+        text-decoration: none;
+        display: block;
+        line-height: 1.2;
+        word-break: break-word;
+
+        &:hover, &:focus, &:active {
+            color: $ombi-active;
+        }
+    }
+}
+
+// ─── Sidebar Navigation ─────────────────────────────────
+.sidebar-nav {
+    flex: 1;
+    padding: 0 12px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.nav-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.35);
+    padding: 16px 12px 8px;
+    text-transform: uppercase;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    padding: 10px 12px;
+    margin-bottom: 2px;
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.65);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 450;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.95);
+    }
+
+    .nav-indicator {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3px;
+        height: 0;
+        border-radius: 0 3px 3px 0;
+        background: $ombi-active;
+        transition: height 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &--active {
+        background: rgba($ombi-active, 0.12);
+        color: #fff;
+
+        .nav-indicator {
+            height: 20px;
+        }
+
+        .nav-icon {
+            color: $ombi-active;
+        }
+    }
+}
+
+.nav-icon {
+    width: 20px;
+    text-align: center;
+    font-size: 14px;
+    flex-shrink: 0;
+    transition: color 0.15s ease;
+}
+
+.nav-label {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nav-external-icon {
+    font-size: 10px;
+    opacity: 0.4;
+    margin-left: auto;
+}
+
+.nav-action {
+    font-size: 12px;
+    opacity: 0;
+    padding: 4px 6px;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+    cursor: pointer;
+
+    .nav-item:hover & {
+        opacity: 0.5;
+    }
+
+    &:hover {
+        opacity: 1 !important;
+        background: rgba(255, 255, 255, 0.1);
+    }
+}
+
+.nav-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 12px 12px;
+}
+
+// ─── Sidebar Footer ─────────────────────────────────────
+.sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+// ─── Content ─────────────────────────────────────────────
+.content-container {
+    background: $ombi-background-primary;
+    color: #FFF;
 }
 
 .mat-drawer-content {
@@ -181,108 +318,9 @@
     height: 100%;
 }
 
-#nav-openMobile {
-    display: none;
-}
-
-.full {
-    width: 100%;
-}
-
-.bottom-nav {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    text-align: center;
-}
-
-// ─── Sidebar Themed ──────────────────────────────────────
-.sidenav-container .sidenav {
-    background: $ombi-background-accent;
-    color: #FFF;
-    font-family: 'Montserrat', sans-serif;
-
-    .application-name {
-        font-family: 'Montserrat', sans-serif;
-        text-transform: uppercase;
-        color: $ombi-active;
-        align-items: center;
-        font-weight: 700;
-        font-size: 36px;
-        padding: 40px 20px;
-        height: auto;
-        max-width: 300px;
-        display: flex;
-        white-space: normal;
-        word-break: break-word;
-
-        .application-name-link {
-            text-decoration: none;
-            color: inherit;
-            &:active, &:hover, &:focus {
-                color: inherit;
-            }
-        }
-    }
-
-    .outer-profile {
-        background: inherit;
-        box-shadow: none;
-    }
-
-    .mat-list-item {
-        color: #FFF;
-        font-family: Roboto, sans-serif;
-        font-size: 16px;
-        font-weight: 400;
-        padding: 10px 20px;
-        height: auto;
-        margin-bottom: 0.5rem;
-    }
-
-    .active-list-item {
-        color: $ombi-background-accent;
-        background: $ombi-active;
-        border-radius: 0px 30px 30px 0px;
-        padding: 10px 20px;
-        height: auto;
-    }
-}
-
-.sidenav {
-    width: 230px;
-}
-
-.outer-profile .profile-img-container {
-    background: inherit;
-}
-
-.content-container {
-    background: $ombi-background-primary;
-    color: #FFF;
-}
-
-.advanced-search {
-    float: right;
-    margin-top: 6%;
-    margin-right: 10%;
-    cursor: pointer;
-}
-
-.active-advanced {
-    color: $ombi-background-accent;
-    background: $ombi-active;
-}
-
 // ─── Overrides ───────────────────────────────────────────
 ::ng-deep .mat-toolbar-row, .mat-toolbar-single-row {
     height: auto;
-}
-
-::ng-deep .mat-sidenav-fixed .mat-list-base .mat-list-item .mat-list-item-content,
-.mat-list-base .mat-list-option .mat-list-item-content {
-    padding: 0;
-    margin: 0 4em 0 0.5em;
 }
 
 ::ng-deep .dialog-responsive {
@@ -296,6 +334,10 @@
 }
 
 // ─── Responsive ──────────────────────────────────────────
+#nav-openMobile {
+    display: none;
+}
+
 @media (max-width: 600px) {
     .profile-username {
         display: none;
@@ -316,25 +358,14 @@
         justify-content: center;
     }
 
-    .sidenav-container .sidenav {
-        .application-name {
-            font-size: 2em;
-            max-width: 200px;
-        }
-        .mat-list-item {
-            width: 14rem;
-            padding: 10px 0px;
-        }
-        .active-list-item {
-            width: 14rem;
-            padding: 10px 0px;
-        }
+    .sidenav {
+        width: 260px;
     }
 }
 
 @media (max-width: 950px) {
     #nav-openMobile {
-        display: block;
+        display: flex;
     }
 
     .filter-chips {
@@ -344,6 +375,6 @@
 
 @media only screen and (min-width: 1025px) {
     .content-container {
-        margin-left: 223px !important;
+        margin-left: 233px !important;
     }
 }
