@@ -7,7 +7,6 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { TranslateModule } from "@ngx-translate/core";
 import { IChildRequests, IEpisodesRequests, INewSeasonRequests, IRequestEngineResult, ISeasonsViewModel, ITvRequestViewModelV2, RequestType } from "../../../../../interfaces";
-import { RequestService } from "../../../../../services/request.service";
 import { MessageService } from "../../../../../services";
 import { ISearchTvResultV2 } from "../../../../../interfaces/ISearchTvResultV2";
 import { TranslateService } from "@ngx-translate/core";
@@ -56,11 +55,10 @@ export class TvRequestGridComponent {
     }
 
     constructor(
-        private requestService: RequestService,
-        private requestServiceV2: RequestServiceV2,
-        private notificationService: MessageService,
-        private dialog: MatDialog,
-        private translate: TranslateService
+        private readonly requestServiceV2: RequestServiceV2,
+        private readonly notificationService: MessageService,
+        private readonly dialog: MatDialog,
+        private readonly translate: TranslateService
     ) {}
 
     public selectSeason(index: number) {

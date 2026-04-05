@@ -5,7 +5,15 @@
 <div class="requests-list" *ngIf="tvRequest?.length > 0">
 	<div *ngFor="let request of tvRequest" class="request-card">
 		<!-- Request Header -->
-		<div class="request-header" (click)="toggleExpanded(request)">
+		<div
+			class="request-header"
+			(click)="toggleExpanded(request)"
+			(keydown.enter)="toggleExpanded(request)"
+			(keydown.space)="toggleExpanded(request); $event.preventDefault()"
+			tabindex="0"
+			role="button"
+			[attr.aria-expanded]="isExpanded(request)"
+		>
 			<div class="request-header-left">
 				<span class="request-status-indicator {{ getRequestStatusClass(request) }}"></span>
 				<div class="request-meta">
@@ -58,7 +66,7 @@
 					<span class="req-ep-date">{{ ep.airDate | ombiDate: 'P' }}</span>
 					<span class="req-ep-status">
 						<span class="status-chip {{ getEpisodeStatusClass(ep, request) }}">
-							{{ request.requestStatus | translate }}
+							{{ ep.requestStatus | translate }}
 						</span>
 					</span>
 				</div>
