@@ -29,7 +29,7 @@ export class NavSearchComponent implements OnInit {
   public searchForm: UntypedFormGroup;
   public isExpanded = false;
 
-  private destroyRef = inject(DestroyRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   constructor(
     private router: Router,
