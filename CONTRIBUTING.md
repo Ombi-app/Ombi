@@ -5,7 +5,7 @@ Thank you for your interest in contributing to Ombi! This document provides guid
 ## 🚀 Getting Started
 
 ### Prerequisites
-- [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 - [Node.js 20+](https://nodejs.org/)
 - [Yarn](https://yarnpkg.com/)
 - [Git](https://git-scm.com/)

@@ -1,8 +1,8 @@
 import { Given, When, Then } from "@badeball/cypress-cucumber-preprocessor";
 import { wizardPage as Page } from "@/integration/page-objects";
 
-Given("I set the Landing Page to {string}", (bool) => {
-  cy.landingSettings(bool);
+Given("I set the Landing Page to {string}", (bool: string) => {
+  cy.landingSettings(bool === "true");
 });
 
 When("I visit Ombi", () => {
@@ -40,11 +40,11 @@ When("I click through all of the pages", () => {
   Page.ombiConfigTab.next.click();
  });
 
-Then("I should be on the {string}", (string) => {
+Then("I should be on the {string}", (string: string) => {
   cy.location("pathname").should("eq", `/${string}`);
 });
 
-Then("I should get a notification {string}", (string) => {
+Then("I should get a notification {string}", (string: string) => {
   cy.verifyNotification(string);
 });
 
