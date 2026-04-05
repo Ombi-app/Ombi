@@ -46,7 +46,7 @@
 			attr.data-test="seasonChip{{ season.seasonNumber }}"
 		>
 			<span class="season-status-dot"></span>
-			<span class="season-chip-label">{{ 'Requests.Season' | translate }} {{ season.seasonNumber }}</span>
+			<span class="season-chip-label">{{ 'MediaDetails.EpisodeSelector.SeasonNumber' | translate:{ number: season.seasonNumber } }}</span>
 			<span class="season-chip-count">{{ season.episodes.length }}</span>
 		</button>
 	</div>
@@ -56,7 +56,7 @@
 		<!-- Season Header -->
 		<div class="season-header">
 			<div class="season-header-left">
-				<h3 class="season-title">{{ 'Requests.Season' | translate }} {{ selectedSeason.seasonNumber }}</h3>
+				<h3 class="season-title">{{ 'MediaDetails.EpisodeSelector.SeasonNumber' | translate:{ number: selectedSeason.seasonNumber } }}</h3>
 				<span class="episode-count-badge">{{ selectedSeason.episodes.length }} {{ 'MediaDetails.EpisodeSelector.Episodes' | translate }}</span>
 			</div>
 			<div class="season-header-right" *ngIf="isSeasonCheckable(selectedSeason)">
@@ -123,10 +123,9 @@
 					<mat-checkbox
 						*ngIf="!isEpisodeDisabled(ep)"
 						[checked]="selection.isSelected(ep)"
-						(click)="$event.stopPropagation()"
-						(keydown.space)="$event.stopPropagation()"
-						(keydown.enter)="$event.stopPropagation()"
-						(change)="$event ? selection.toggle(ep) : null"
+						(click)="$event.stopPropagation(); selection.toggle(ep)"
+						[tabIndex]="-1"
+						aria-hidden="true"
 						color="accent"
 						attr.data-test="episodeCheckbox{{ selectedSeason.seasonNumber }}{{ ep.episodeNumber }}"
 					></mat-checkbox>
