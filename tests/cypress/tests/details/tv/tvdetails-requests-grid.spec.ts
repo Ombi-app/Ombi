@@ -8,12 +8,12 @@ describe("TV Requests Grid", function () {
   it("Season not available", () => {
     Page.visit('1399');
 
-    Page.requestPanel.seasonTab(1)
+    Page.requestPanel.seasonChip(1)
       .should("not.have.class", "available")
-      .should("not.have.class", "requested")
-      .should("not.have.class", "approved");
+      .should("not.have.class", "partial")
+      .should("not.have.class", "denied");
 
-    Page.requestPanel.getSeasonMasterCheckbox(1).should("be.visible");
+    Page.requestPanel.getSelectAllToggle(1).should("be.visible");
     Page.requestPanel.getEpisodeCheckbox(1).each((element) => {
       expect(element.length).to.be.greaterThan(0);
     });
@@ -38,13 +38,10 @@ describe("TV Requests Grid", function () {
 
     cy.wait("@detailsResponse");
 
-    Page.requestPanel.seasonTab(1)
-      .should("not.have.class", "available")
-      .should("have.class", "requested")
-      .should("not.have.class", "approved");
+    Page.requestPanel.seasonChip(1)
+      .should("have.class", "partial");
 
-    // checkboxes
-    Page.requestPanel.getSeasonMasterCheckbox(1).should("not.exist");
+    // checkboxes should not exist for requested episodes
     Page.requestPanel.getEpisodeCheckbox(1).should("not.exist");
 
     Page.requestPanel.getEpisodeStatus(1).each((element) => {
@@ -72,13 +69,10 @@ describe("TV Requests Grid", function () {
 
     cy.wait("@detailsResponse");
 
-    Page.requestPanel.seasonTab(1)
-      .should("not.have.class", "available")
-      .should("not.have.class", "requested")
-      .should("have.class", "approved");
+    Page.requestPanel.seasonChip(1)
+      .should("have.class", "partial");
 
-    // checkboxes
-    Page.requestPanel.getSeasonMasterCheckbox(1).should("not.exist");
+    // checkboxes should not exist for approved episodes
     Page.requestPanel.getEpisodeCheckbox(1).should("not.exist");
 
     Page.requestPanel.getEpisodeStatus(1).each((element) => {
@@ -105,13 +99,10 @@ describe("TV Requests Grid", function () {
 
     cy.wait("@detailsResponse");
 
-    Page.requestPanel.seasonTab(1)
-      .should("have.class", "available")
-      .should("not.have.class", "requested")
-      .should("not.have.class", "approved");
+    Page.requestPanel.seasonChip(1)
+      .should("have.class", "available");
 
-    // checkboxes
-    Page.requestPanel.getSeasonMasterCheckbox(1).should("not.exist");
+    // checkboxes should not exist for available episodes
     Page.requestPanel.getEpisodeCheckbox(1).should("not.exist");
 
     Page.requestPanel.getEpisodeStatus(1).each((element) => {
@@ -123,19 +114,16 @@ describe("TV Requests Grid", function () {
   it("Request no episodes", () => {
     Page.visit('1399');
 
-    Page.requestFabButton.fab.click();
-    Page.requestFabButton.requestSelected.click();
-
-    cy.verifyNotification('You need to select some episodes!');
+    // The request selected button should not be visible when no episodes are selected
+    Page.requestButtons.requestSelected.should('not.exist');
   });
 
   it("Request single episodes", () => {
     Page.visit('1399');
 
-    Page.requestPanel.seasonTab(2).click();
+    Page.requestPanel.seasonChip(2).click();
     Page.requestPanel.getEpisodeSeasonCheckbox(2,1).click();
-    Page.requestFabButton.fab.click();
-    Page.requestFabButton.requestSelected.click();
+    Page.requestButtons.requestSelected.click();
 
     Page.adminOptionsDialog.isOpen();
     Page.adminOptionsDialog.requestButton.click();
@@ -157,8 +145,7 @@ describe("TV Requests Grid", function () {
   it("Request First Season", () => {
     Page.visit('1399');
 
-    Page.requestFabButton.fab.click();
-    Page.requestFabButton.requestFirst.click();
+    Page.requestButtons.requestFirst.click();
 
     Page.adminOptionsDialog.isOpen();
     Page.adminOptionsDialog.requestButton.click();
@@ -173,17 +160,16 @@ describe("TV Requests Grid", function () {
   it("Request Latest Season", () => {
     Page.visit('1399');
 
-    Page.requestFabButton.fab.click();
-    Page.requestFabButton.requestLatest.click();
+    Page.requestButtons.requestLatest.click();
 
     Page.adminOptionsDialog.isOpen();
     Page.adminOptionsDialog.requestButton.click();
 
     cy.verifyNotification('Request for Game of Thrones has been added successfully');
 
-    Page.requestPanel.seasonTab(8)
+    Page.requestPanel.seasonChip(8)
     .click()
-    .should("have.class", "requested");
+    .should("have.class", "partial");
 
     Page.requestPanel.getEpisodeStatus(8)
       .should('contain.text', 'Pending Approval')
