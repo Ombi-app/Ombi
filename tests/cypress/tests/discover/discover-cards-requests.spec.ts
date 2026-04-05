@@ -7,7 +7,6 @@ describe("Discover Cards Requests Tests", () => {
   });
 
   it("Not requested movie allows admin to request", () => {
-    window.localStorage.setItem("DiscoverOptions2", "2");
     cy.intercept("GET", "**/search/Movie/Popular/**", (req) => {
       req.reply((res) => {
         const body = res.body;
@@ -17,15 +16,24 @@ describe("Discover Cards Requests Tests", () => {
         movie.requested = false;
 
         body[0] = movie;
-        console.log('sending res')
         res.send(body);
       });
     }).as("cardsResponse");
 
+    cy.intercept("POST", "**/Request/Movie", {
+      result: true,
+      isError: false,
+      errorMessage: null,
+    }).as("movieRequest");
+
+    cy.then(() => {
+      window.localStorage.setItem("DiscoverOptions2", "2");
+    });
+
     Page.visit();
 
     cy.wait("@cardsResponse").then((res) => {
-      const body = res.response.body;
+      const body = res.response!.body;
       var expectedId = body[0].id;
       var title = body[0].title;
 
@@ -42,6 +50,8 @@ describe("Discover Cards Requests Tests", () => {
 
       Page.adminOptionsDialog.isOpen();
       Page.adminOptionsDialog.requestButton.click();
+
+      cy.wait("@movieRequest");
 
       cy.verifyNotification("has been added successfully");
 
@@ -60,7 +70,6 @@ describe("Discover Cards Requests Tests", () => {
         cy.removeLogin();
         cy.loginWithCreds(id, "a");
 
-        window.localStorage.setItem("DiscoverOptions2", "2");
         cy.intercept("GET", "**/search/Movie/Popular/**", (req) => {
           req.reply((res) => {
             const body = res.body;
@@ -74,10 +83,20 @@ describe("Discover Cards Requests Tests", () => {
           });
         }).as("cardsResponse");
 
+        cy.intercept("POST", "**/Request/Movie", {
+          result: true,
+          isError: false,
+          errorMessage: null,
+        }).as("movieRequest");
+
+        cy.then(() => {
+          window.localStorage.setItem("DiscoverOptions2", "2");
+        });
+
         Page.visit();
 
         cy.wait("@cardsResponse").then((res) => {
-          const body = res.response.body
+          const body = res.response!.body
           var expectedId = body[6].id;
           var title = body[6].title;
 
@@ -92,6 +111,8 @@ describe("Discover Cards Requests Tests", () => {
           card.requestButton.should("be.visible");
           card.requestButton.click();
 
+          cy.wait("@movieRequest");
+
           cy.verifyNotification("has been added successfully");
 
           card.requestButton.should("not.exist");
@@ -103,7 +124,9 @@ describe("Discover Cards Requests Tests", () => {
   });
 
   it("Available movie does not allow us to request", () => {
-    window.localStorage.setItem("DiscoverOptions2", "2");
+    cy.then(() => {
+      window.localStorage.setItem("DiscoverOptions2", "2");
+    });
     cy.intercept("GET", "**/search/Movie/Popular/**", (req) => {
       req.reply((res) => {
         const body = res.body;
@@ -120,7 +143,7 @@ describe("Discover Cards Requests Tests", () => {
     Page.visit();
 
     cy.wait("@cardsResponse").then((res) => {
-      const body = res.response.body
+      const body = res.response!.body
       var expectedId = body[1].id;
       var title = body[1].title;
 
@@ -135,7 +158,9 @@ describe("Discover Cards Requests Tests", () => {
   });
 
   it("Requested movie does not allow us to request", () => {
-    window.localStorage.setItem("DiscoverOptions2", "2");
+    cy.then(() => {
+      window.localStorage.setItem("DiscoverOptions2", "2");
+    });
     cy.intercept("GET", "**/search/Movie/Popular/**", (req) => {
       req.reply((res) => {
         const body = res.body;
@@ -152,7 +177,7 @@ describe("Discover Cards Requests Tests", () => {
     Page.visit();
 
     cy.wait("@cardsResponse").then((res) => {
-      const body = res.response.body
+      const body = res.response!.body
       var expectedId = body[1].id;
       var title = body[1].title;
 
@@ -167,7 +192,9 @@ describe("Discover Cards Requests Tests", () => {
   });
 
   it("Approved movie does not allow us to request", () => {
-    window.localStorage.setItem("DiscoverOptions2", "2");
+    cy.then(() => {
+      window.localStorage.setItem("DiscoverOptions2", "2");
+    });
     cy.intercept("GET", "**/search/Movie/Popular/**", (req) => {
       req.reply((res) => {
         const body = res.body;
@@ -184,7 +211,7 @@ describe("Discover Cards Requests Tests", () => {
     Page.visit();
 
     cy.wait("@cardsResponse").then((res) => {
-      const body = res.response.body
+      const body = res.response!.body
       var expectedId = body[1].id;
       var title = body[1].title;
 
@@ -216,12 +243,14 @@ describe("Discover Cards Requests Tests", () => {
         res2.send(body);
       });
     }).as("movieDbResponse");
-    window.localStorage.setItem("DiscoverOptions2", "3");
+    cy.then(() => {
+      window.localStorage.setItem("DiscoverOptions2", "3");
+    });
 
     Page.visit();
 
     cy.wait("@cardsResponse").then((res) => {
-      const body = res.response.body
+      const body = res.response!.body
       var expectedId = body[1].id;
       var title = body[1].title;
 
@@ -236,7 +265,7 @@ describe("Discover Cards Requests Tests", () => {
   });
 
   it("Available TV (From Details Call) does not allow us to request", () => {
-    cy.intercept("GET", "**/search/Tv/popular/**", { fixture: '/discover/popularTv'}).as("cardsResponse");      
+    cy.intercept("GET", "**/search/Tv/popular/**", { fixture: "discover/popularTv" }).as("cardsResponse");
     cy.intercept("GET", "**/search/Tv/moviedb/88396", (req) => {
       req.reply((res2) => {
         const body = res2.body;
@@ -244,12 +273,14 @@ describe("Discover Cards Requests Tests", () => {
         res2.send(body);
       });
     }).as("movieDbResponse");
-    window.localStorage.setItem("DiscoverOptions2", "3");
+    cy.then(() => {
+      window.localStorage.setItem("DiscoverOptions2", "3");
+    });
 
     Page.visit();
 
     cy.wait("@cardsResponse").then((res) => {
-      const body = res.response.body;
+      const body = res.response!.body;
       var expectedId = "88396";
 
       var title = body[0].title;
@@ -279,13 +310,20 @@ describe("Discover Cards Requests Tests", () => {
       });
     }).as("cardsResponse");
     cy.intercept("GET", "**/search/Tv/**").as("otherResponses");
-    window.localStorage.setItem("DiscoverOptions2", "3");
+    cy.intercept("POST", "**/Requests/TV/", {
+      result: true,
+      isError: false,
+      errorMessage: null,
+    }).as("tvRequest");
+    cy.then(() => {
+      window.localStorage.setItem("DiscoverOptions2", "3");
+    });
 
     Page.visit();
 
     cy.wait("@otherResponses");
     cy.wait("@cardsResponse").then((res) => {
-      const body = res.response.body
+      const body = res.response!.body
       var expectedId = body[3].id;
       var title = body[3].title;
 
@@ -307,6 +345,8 @@ describe("Discover Cards Requests Tests", () => {
 
       Page.adminOptionsDialog.isOpen();
       Page.adminOptionsDialog.requestButton.click();
+
+      cy.wait("@tvRequest");
 
       cy.verifyNotification("has been added successfully");
     });
@@ -332,13 +372,20 @@ describe("Discover Cards Requests Tests", () => {
           });
         }).as("cardsResponse");
         cy.intercept("GET", "**/search/Tv/**").as("otherResponses");
-        window.localStorage.setItem("DiscoverOptions2", "3");
+        cy.intercept("POST", "**/Requests/TV/", {
+          result: true,
+          isError: false,
+          errorMessage: null,
+        }).as("tvRequest");
+        cy.then(() => {
+          window.localStorage.setItem("DiscoverOptions2", "3");
+        });
 
         Page.visit();
 
         cy.wait("@otherResponses");
         cy.wait("@cardsResponse").then((res) => {
-          const body = res.response.body
+          const body = res.response!.body
           var expectedId = body[5].id;
           var title = body[5].title;
 
@@ -357,6 +404,8 @@ describe("Discover Cards Requests Tests", () => {
           const modal = card.episodeRequestModal;
 
           modal.latestSeasonButton.click();
+
+          cy.wait("@tvRequest");
 
           cy.verifyNotification("has been added successfully");
         });

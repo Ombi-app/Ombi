@@ -24,10 +24,10 @@ describe("TV Requests Grid", function () {
       req.reply((res) => {
         const body = res.body;
         const requests = body.seasonRequests[0].episodes;
-        requests.forEach((req) => {
-          req.requested = true;
-          req.approved = false;
-          req.requestStatus = "Common.PendingApproval";
+        requests.forEach((episode: any) => {
+          episode.requested = true;
+          episode.approved = false;
+          episode.requestStatus = "Common.PendingApproval";
         });
         body.seasonRequests[0].episodes = requests;
         res.send(body);
@@ -58,10 +58,10 @@ describe("TV Requests Grid", function () {
       req.reply((res) => {
         const body = res.body;
         const requests = body.seasonRequests[0].episodes;
-        requests.forEach((req) => {
-          req.approved = true;
-          req.requested = true;
-          req.requestStatus = "Common.Approved";
+        requests.forEach((episode: any) => {
+          episode.approved = true;
+          episode.requested = true;
+          episode.requestStatus = "Common.Approved";
         });
         body.seasonRequests[0].episodes = requests;
         res.send(body);
@@ -92,9 +92,9 @@ describe("TV Requests Grid", function () {
       req.reply((res) => {
         const body = res.body;
         const requests = body.seasonRequests[0].episodes;
-        requests.forEach((req) => {
-          req.available = true;
-          req.requestStatus = "Common.Available";
+        requests.forEach((episode: any) => {
+          episode.available = true;
+          episode.requestStatus = "Common.Available";
         });
         body.seasonRequests[0].episodes = requests;
         res.send(body);
