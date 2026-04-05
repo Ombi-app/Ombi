@@ -159,6 +159,8 @@ describe("Search Tests", () => {
     Page.navbar.searchBar.searchButton.click();
     Page.navbar.searchBar.searchInput.type('007');
 
+    cy.wait('@searchResponse');
+
     Page.searchResultsContainer.invoke('attr', 'search-count').then((x: string) => {
       expect(+x).to.be.greaterThan(0);
     });

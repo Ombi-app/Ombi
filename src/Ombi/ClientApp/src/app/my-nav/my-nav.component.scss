@@ -272,21 +272,41 @@
     margin-left: auto;
 }
 
+.nav-item-wrapper {
+    position: relative;
+
+    &:hover .nav-action {
+        opacity: 0.5;
+    }
+}
+
 .nav-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
     font-size: 12px;
     opacity: 0;
     padding: 4px 6px;
+    border: none;
+    background: none;
+    color: inherit;
     border-radius: 6px;
     transition: all 0.15s ease;
     cursor: pointer;
 
-    .nav-item:hover & {
-        opacity: 0.5;
-    }
-
     &:hover {
         opacity: 1 !important;
         background: rgba(255, 255, 255, 0.1);
+    }
+
+    &:focus-visible {
+        opacity: 1;
+        outline: 2px solid $ombi-active;
+        outline-offset: 2px;
     }
 }
 

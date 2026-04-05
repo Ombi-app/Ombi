@@ -27,14 +27,19 @@
                     </a>
 
                     <!-- Internal link -->
-                    <a *ngIf="!nav.externalLink" class="nav-item" id="{{nav.id}}"
-                        [routerLink]="nav.link" [routerLinkActive]="'nav-item--active'">
-                        <span class="nav-indicator"></span>
-                        <i class="nav-icon {{nav.icon}}"></i>
-                        <span class="nav-label">{{nav.name | translate}}</span>
-                        <em *ngIf="nav.id === 'nav-discover'" class="nav-action fas fa-filter"
-                            (click)="openAdvancedSearch(); $event.preventDefault(); $event.stopPropagation()"></em>
-                    </a>
+                    <div *ngIf="!nav.externalLink" class="nav-item-wrapper">
+                        <a class="nav-item" id="{{nav.id}}"
+                            [routerLink]="nav.link" [routerLinkActive]="'nav-item--active'">
+                            <span class="nav-indicator"></span>
+                            <i class="nav-icon {{nav.icon}}"></i>
+                            <span class="nav-label">{{nav.name | translate}}</span>
+                        </a>
+                        <button type="button" *ngIf="nav.id === 'nav-discover'" class="nav-action"
+                            aria-label="Advanced search"
+                            (click)="openAdvancedSearch()">
+                            <i class="fas fa-filter"></i>
+                        </button>
+                    </div>
                 </ng-container>
             </ng-container>
 
@@ -71,17 +76,23 @@
             </div>
 
             <div class="filter-chips">
-                <button id="filterMovies" class="chip" [class.active]="searchFilter.movies"
+                <button type="button" id="filterMovies" class="chip" [class.active]="searchFilter.movies"
+                    [attr.aria-label]="'NavigationBar.Filter.Movies' | translate"
+                    [attr.aria-pressed]="searchFilter.movies"
                     (click)="toggleFilterChip(SearchFilterType.Movie)">
                     <i class="fas fa-film"></i>
                     <span class="chip-label">{{ 'NavigationBar.Filter.Movies' | translate}}</span>
                 </button>
-                <button id="filterTv" class="chip" [class.active]="searchFilter.tvShows"
+                <button type="button" id="filterTv" class="chip" [class.active]="searchFilter.tvShows"
+                    [attr.aria-label]="'NavigationBar.Filter.TvShows' | translate"
+                    [attr.aria-pressed]="searchFilter.tvShows"
                     (click)="toggleFilterChip(SearchFilterType.TvShow)">
                     <i class="fas fa-tv"></i>
                     <span class="chip-label">{{ 'NavigationBar.Filter.TvShows' | translate}}</span>
                 </button>
-                <button *ngIf="musicEnabled$ | async" id="filterMusic" class="chip" [class.active]="searchFilter.music"
+                <button type="button" *ngIf="musicEnabled$ | async" id="filterMusic" class="chip" [class.active]="searchFilter.music"
+                    [attr.aria-label]="'NavigationBar.Filter.Music' | translate"
+                    [attr.aria-pressed]="searchFilter.music"
                     (click)="toggleFilterChip(SearchFilterType.Music)">
                     <i class="fas fa-music"></i>
                     <span class="chip-label">{{ 'NavigationBar.Filter.Music' | translate}}</span>

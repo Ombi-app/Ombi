@@ -1,4 +1,5 @@
-<form [formGroup]='searchForm' class="search-wrapper" [class.expanded]="isExpanded">
+<form [formGroup]='searchForm' class="search-wrapper" [class.expanded]="isExpanded"
+    (submit)="$event.preventDefault()">
     <button type="button" id="nav-search-btn" class="search-icon-btn" (click)="toggleSearch()" aria-label="Search">
         <i class="fas fa-search"></i>
     </button>
@@ -6,6 +7,7 @@
         #searchInput
         id="nav-search"
         class="search-input"
+        [attr.tabindex]="isExpanded ? null : -1"
         [placeholder]="isExpanded ? ('NavigationBar.Search' | translate) : ''"
         formControlName="input"
         (blur)="onBlur()"
