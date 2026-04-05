@@ -124,6 +124,8 @@
 						*ngIf="!isEpisodeDisabled(ep)"
 						[checked]="selection.isSelected(ep)"
 						(click)="$event.stopPropagation()"
+						(keydown.space)="$event.stopPropagation()"
+						(keydown.enter)="$event.stopPropagation()"
 						(change)="$event ? selection.toggle(ep) : null"
 						color="accent"
 						attr.data-test="episodeCheckbox{{ selectedSeason.seasonNumber }}{{ ep.episodeNumber }}"

@@ -120,16 +120,25 @@ export class TvRequestGridComponent {
         return this.getCheckableEpisodes(season).length > 0;
     }
 
+    private pendingFirstSeason = false;
+    private pendingLatestSeason = false;
+    private pendingRequestAll = false;
+
     public async submitRequests() {
         const selected = this.selection.hasValue();
-        if (!selected && !this.tv.requestAll && !this.tv.firstSeason && !this.tv.latestSeason) {
+        if (!selected && !this.pendingRequestAll && !this.pendingFirstSeason && !this.pendingLatestSeason) {
             this.notificationService.send(this.translate.instant("Requests.NeedToSelectEpisodes"));
             return;
         }
 
-        const firstSeason = this.tv.firstSeason;
-        const latestSeason = this.tv.latestSeason;
-        const requestAll = this.tv.requestAll;
+        const firstSeason = this.pendingFirstSeason;
+        const latestSeason = this.pendingLatestSeason;
+        const requestAll = this.pendingRequestAll;
+
+        // Clear pending flags immediately so they don't leak into future submissions
+        this.pendingFirstSeason = false;
+        this.pendingLatestSeason = false;
+        this.pendingRequestAll = false;
 
         const viewModel = <ITvRequestViewModelV2>{
             firstSeason,
@@ -170,34 +179,38 @@ export class TvRequestGridComponent {
 
                     const requestResult = await this.requestServiceV2.requestTv(viewModel).toPromise();
                     if (requestResult) {
-                        this.postRequest(requestResult, selectedEpisodes);
+                        this.postRequest(requestResult, selectedEpisodes, { firstSeason, latestSeason, requestAll });
                     }
                 }
             });
         } else {
             const requestResult = await this.requestServiceV2.requestTv(viewModel).toPromise();
             if (requestResult) {
-                this.postRequest(requestResult, selectedEpisodes);
+                this.postRequest(requestResult, selectedEpisodes, { firstSeason, latestSeason, requestAll });
             }
         }
     }
 
     public async requestAllSeasons() {
-        this.tv.requestAll = true;
+        this.pendingRequestAll = true;
         await this.submitRequests();
     }
 
     public async requestFirstSeason() {
-        this.tv.firstSeason = true;
+        this.pendingFirstSeason = true;
         await this.submitRequests();
     }
 
     public async requestLatestSeason() {
-        this.tv.latestSeason = true;
+        this.pendingLatestSeason = true;
         await this.submitRequests();
     }
 
-    private postRequest(requestResult: IRequestEngineResult, selectedEpisodes: IEpisodesRequests[]) {
+    private postRequest(
+        requestResult: IRequestEngineResult,
+        selectedEpisodes: IEpisodesRequests[],
+        flags: { firstSeason: boolean; latestSeason: boolean; requestAll: boolean }
+    ) {
         if (requestResult.result) {
             this.notificationService.send(
                 this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.tv.title })
@@ -213,13 +226,13 @@ export class TvRequestGridComponent {
                 });
             };
 
-            if (this.tv.firstSeason) {
+            if (flags.firstSeason) {
                 markPending(this.tv.seasonRequests[0]);
             }
-            if (this.tv.requestAll) {
+            if (flags.requestAll) {
                 this.tv.seasonRequests.forEach(markPending);
             }
-            if (this.tv.latestSeason) {
+            if (flags.latestSeason) {
                 markPending(this.tv.seasonRequests[this.tv.seasonRequests.length - 1]);
             }
 
