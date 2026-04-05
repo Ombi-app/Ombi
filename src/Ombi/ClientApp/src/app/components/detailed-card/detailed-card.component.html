@@ -1,4 +1,4 @@
-<div id="detailed-{{request.mediaId}}" class="detailed-card" (click)="click()">
+<div id="detailed-{{request.mediaId}}" class="detailed-card" (click)="click()" (keydown.enter)="click()" (keydown.space)="onSpaceKey($event)" tabindex="0" role="button" [attr.aria-label]="request.title">
     <div class="card-image-wrapper">
         <ombi-image [src]="request.posterPath" [type]="request.type" class="card-poster" alt="{{request.title}}">
         </ombi-image>

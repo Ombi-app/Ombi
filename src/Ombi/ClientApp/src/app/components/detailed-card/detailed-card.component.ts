@@ -96,6 +96,11 @@ export class DetailedCardComponent implements OnInit, OnDestroy {
     this.onDeny.emit();
   }
 
+  public onSpaceKey(event: KeyboardEvent) {
+    event.preventDefault();
+    this.click();
+  }
+
   public getClass(request: IRecentlyRequested) {
     if (request.denied) {
       return "danger";

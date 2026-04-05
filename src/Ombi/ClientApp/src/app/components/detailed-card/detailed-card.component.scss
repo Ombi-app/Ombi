@@ -19,9 +19,11 @@
             0 0 0 1px rgba(255, 255, 255, 0.08);
     }
 
-    &:hover .card-actions {
+    &:hover .card-actions,
+    &:focus-within .card-actions {
         opacity: 1;
         transform: translateY(0);
+        pointer-events: auto;
     }
 }
 
@@ -151,8 +153,17 @@
     background: linear-gradient(to top, rgba(15, 23, 31, 0.95), transparent);
     opacity: 0;
     transform: translateY(4px);
+    pointer-events: none;
     transition: opacity 0.25s ease, transform 0.25s ease;
     z-index: 4;
+}
+
+@media (hover: none), (pointer: coarse) {
+    .card-actions {
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+    }
 }
 
 .action-btn {
@@ -178,11 +189,11 @@
 }
 
 .deny-btn {
-    background: rgba(239, 83, 80, 0.9);
+    background: rgba(211, 47, 47, 0.95);
     color: #fff;
 
     &:hover {
-        background: #ef5350;
+        background: #c62828;
     }
 }
 

@@ -122,6 +122,11 @@
         transform: scale(1.02);
     }
 
+    &:focus-visible {
+        outline: 2px solid #0f171f;
+        outline-offset: 2px;
+    }
+
     i {
         font-size: 0.85rem;
     }
@@ -140,12 +145,18 @@
     font-weight: 500;
     text-decoration: none;
     backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     transition: background 0.2s ease;
 
     &:hover {
         background: rgba(255, 255, 255, 0.2);
         color: #fff;
         text-decoration: none;
+    }
+
+    &:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
     }
 }
 
@@ -174,9 +185,15 @@
     justify-content: center;
     transition: background 0.2s ease;
     backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 
     &:hover {
         background: rgba(255, 255, 255, 0.3);
+    }
+
+    &:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
     }
 }
 
@@ -197,6 +214,11 @@
 
     &:hover:not(.active) {
         background: rgba(255, 255, 255, 0.5);
+    }
+
+    &:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
     }
 }
 
