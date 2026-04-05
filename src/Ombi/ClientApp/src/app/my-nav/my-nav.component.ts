@@ -4,10 +4,7 @@ import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
-import { MatRippleModule } from '@angular/material/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -43,10 +40,7 @@ export enum SearchFilterType {
         MatButtonModule,
         MatDialogModule,
         MatIconModule,
-        MatListModule,
-        MatRippleModule,
         MatSidenavModule,
-        MatToolbarModule,
         MatTooltipModule,
         RouterModule,
         TranslateModule,
@@ -124,7 +118,6 @@ export class MyNavComponent implements OnInit {
       { id: "nav-requests", name: "NavigationBar.Requests", icon: "fas fa-stream", link: "/requests-list", requiresAdmin: false, enabled: true },
       { id: "nav-issues", name: "NavigationBar.Issues", icon: "fas fa-exclamation-triangle", link: "/issues", requiresAdmin: false, enabled: this.issuesEnabled },
       { id: "nav-userManagement", name: "NavigationBar.UserManagement", icon: "fas fa-users", link: "/usermanagement", requiresAdmin: true, enabled: true },
-      //id: "",  { name: "NavigationBar.Calendar", icon: "calendar_today", link: "/calendar", requiresAdmin: false, enabled: true },
       { id: "nav-adminDonate", name: "NavigationBar.Donate", icon: "fas fa-dollar-sign", link: "https://www.paypal.me/PlexRequestsNet", externalLink: true, requiresAdmin: true, enabled: true, toolTip: true, style: "color:red;", toolTipMessage: 'NavigationBar.DonateTooltip' },
       { id: "nav-userDonate", name: "NavigationBar.Donate", icon: "fas fa-dollar-sign", link: this.customizationSettings.customDonationUrl, externalLink: true, requiresAdmin: false, enabled: this.customizationSettings.enableCustomDonations, toolTip: true, toolTipMessage: this.customizationSettings.customDonationMessage },
       { id: "nav-featureSuggestion", name: "NavigationBar.FeatureSuggestion", icon: "far fa-lightbulb", link: "https://features.ombi.io/", externalLink: true, requiresAdmin: true, enabled: true, toolTip: true, toolTipMessage: 'NavigationBar.FeatureSuggestionTooltip'},
@@ -177,7 +170,7 @@ export class MyNavComponent implements OnInit {
     if (email) {
         const md5 = new Md5();
         const emailHash = md5.appendStr(email).end();
-        this.userProfileImageUrl = `https://www.gravatar.com/avatar/${emailHash}?d=404`;;
+        this.userProfileImageUrl = `https://www.gravatar.com/avatar/${emailHash}?d=404`;
     }
     else {
         this.userProfileImageUrl = this.getFallbackProfileImageUrl();

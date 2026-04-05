@@ -108,20 +108,3 @@
         background: rgba(255, 255, 255, 0.1);
     }
 }
-
-// Override Material form-field styles (no longer needed but keep as safety)
-::ng-deep .top-search-bar .mat-form-field-underline {
-    display: none;
-}
-
-::ng-deep .top-search-bar .mat-form-field-flex {
-    border: none;
-    border-radius: 0;
-    height: auto;
-}
-
-::ng-deep .top-search-bar .mat-form-field-infix {
-    margin-left: 0;
-    border-top: 0;
-    margin-top: 0;
-}

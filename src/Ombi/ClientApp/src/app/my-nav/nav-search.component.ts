@@ -1,9 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder } from "@angular/forms";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatInputModule } from "@angular/material/input";
-import { MatIconModule } from "@angular/material/icon";
+import { ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder } from "@angular/forms";
 import { Router } from "@angular/router";
 import { TranslateModule } from "@ngx-translate/core";
 import {
@@ -11,7 +8,7 @@ import {
   switchMap,
 } from "rxjs/operators";
 
-import { empty } from "rxjs";
+import { EMPTY } from "rxjs";
 
 @Component({
     standalone: true,
@@ -20,11 +17,7 @@ import { empty } from "rxjs";
     styleUrls: ["./nav-search.component.scss"],
     imports: [
         CommonModule,
-        FormsModule,
         ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatIconModule,
         TranslateModule
     ]
 })
@@ -53,7 +46,7 @@ export class NavSearchComponent implements OnInit {
           if (value) {
             this.router.navigate([`discover`, value]);
           }
-          return empty();
+          return EMPTY;
         })
       )
       .subscribe();
