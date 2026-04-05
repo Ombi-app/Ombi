@@ -1,3 +1,7 @@
+## [4.57.12](https://github.com/Ombi-app/Ombi/compare/v4.57.11...v4.57.12) (2026-04-05)
+
+
+
 ## [4.57.11](https://github.com/Ombi-app/Ombi/compare/v4.57.10...v4.57.11) (2026-04-05)
 
 
@@ -356,15 +360,6 @@
 
 
 ## [4.50.2](https://github.com/Ombi-app/Ombi/compare/v4.50.1...v4.50.2) (2025-10-04)
-
-
-
-## [4.50.1](https://github.com/Ombi-app/Ombi/compare/v4.50.0...v4.50.1) (2025-09-26)
-
-
-### Bug Fixes
-
-* **sonarr:** :bug: Ensure we are monitoring shows that already exist in Sonarr [#5257](https://github.com/Ombi-app/Ombi/issues/5257) ([bf83c95](https://github.com/Ombi-app/Ombi/commit/bf83c95da05feefa956ea73a3959304af94483dd))
 
 
 
