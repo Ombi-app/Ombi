@@ -42,7 +42,7 @@ export class NavSearchComponent implements OnInit {
     });
 
     this.searchForm
-      .get("input")
+      .get("input")!
       .valueChanges.pipe(
         debounceTime(600),
         switchMap((value: string) => {
