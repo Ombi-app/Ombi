@@ -310,7 +310,7 @@ describe("Discover Cards Requests Tests", () => {
       });
     }).as("cardsResponse");
     cy.intercept("GET", "**/search/Tv/**").as("otherResponses");
-    cy.intercept("POST", "**/Requests/TV", {
+    cy.intercept("POST", "**/Requests/TV/", {
       result: true,
       isError: false,
       errorMessage: null,
@@ -372,7 +372,7 @@ describe("Discover Cards Requests Tests", () => {
           });
         }).as("cardsResponse");
         cy.intercept("GET", "**/search/Tv/**").as("otherResponses");
-        cy.intercept("POST", "**/Requests/TV", {
+        cy.intercept("POST", "**/Requests/TV/", {
           result: true,
           isError: false,
           errorMessage: null,
