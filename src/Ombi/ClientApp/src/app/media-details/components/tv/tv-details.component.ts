@@ -17,7 +17,6 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
 import { MatDialog } from "@angular/material/dialog";
 import { YoutubeTrailerComponent } from "../shared/youtube-trailer.component";
-import { EpisodeRequestComponent, EpisodeRequestData } from "../../../shared/episode-request/episode-request.component";
 import { IAdvancedData, IChildRequests, ITvRequests, RequestType } from "../../../interfaces";
 import { AuthService } from "../../../auth/auth.service";
 import { NewIssueComponent } from "../shared/new-issue/new-issue.component";
@@ -129,10 +128,6 @@ export class TvDetailsComponent implements OnInit {
         } else {
             this.tv.background = this.sanitizer.bypassSecurityTrustStyle("linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5))");
         }
-    }
-
-    public async request(userId: string) {
-        this.dialog.open(EpisodeRequestComponent, { width: "800px", data: <EpisodeRequestData> { series: this.tv, requestOnBehalf: userId, isAdmin: this.isAdmin }, panelClass: 'modal-panel' })
     }
 
     public async issue() {
