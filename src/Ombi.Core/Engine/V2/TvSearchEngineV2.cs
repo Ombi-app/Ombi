@@ -210,9 +210,11 @@ namespace Ombi.Core.Engine.V2
             // Pre-warm cache to avoid concurrent EF Core DbContext access
             await GetTvRequests();
 
-            var processTasks = mapped.Where(map => map != null).Select(map => ProcessResult(map));
-            var processedResults = await Task.WhenAll(processTasks);
-            results.AddRange(processedResults);
+            // Run ProcessResult sequentially (RunSearchRules accesses DbContext which is not thread-safe)
+            foreach (var map in mapped.Where(map => map != null))
+            {
+                results.Add(await ProcessResult(map));
+            }
             return results;
         }
 
@@ -255,13 +257,11 @@ namespace Ombi.Core.Engine.V2
                 await Task.WhenAll(enrichTasks);
             }
 
-            // Parallelize ProcessResult calls
-            var processTasks = nonDemoItems.Select(item => ProcessResult(item));
-            var processedResults = await Task.WhenAll(processTasks);
-
+            // Run ProcessResult sequentially (RunSearchRules accesses DbContext which is not thread-safe)
             var retVal = new List<SearchTvShowViewModel>();
-            foreach (var result in processedResults)
+            foreach (var item in nonDemoItems)
             {
+                var result = await ProcessResult(item);
                 if (result == null || (settings.HideAvailableFromDiscover && result.Available))
                 {
                     continue;
