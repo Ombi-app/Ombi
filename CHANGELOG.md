@@ -1,3 +1,18 @@
+## [4.57.10](https://github.com/Ombi-app/Ombi/compare/v4.57.9...v4.57.10) (2026-04-05)
+
+
+### Bug Fixes
+
+* extend request cache TTL and add null guards for TV results ([2e91d32](https://github.com/Ombi-app/Ombi/commit/2e91d329808bc86bfc8e4ad2a7f5a3edca94836a))
+* make discover page processing sequential to fix test failures ([e38a784](https://github.com/Ombi-app/Ombi/commit/e38a7849d01e137cc8b047be407d70c4732d719d))
+* move API throttle inside cache factory to avoid contention on cache hits ([c1e708c](https://github.com/Ombi-app/Ombi/commit/c1e708cc94e842070d1552b13294f492789d73e2))
+* parallelize discover page API calls and processing for faster load times ([aa8e0fc](https://github.com/Ombi-app/Ombi/commit/aa8e0fc3a37fbc79fd161020e0a1fe9dbfa7c86f))
+* remove SemaphoreSlim throttle - unnecessary given TMDB rate limits ([1936742](https://github.com/Ombi-app/Ombi/commit/193674256d8af32f3b3fbf4c29d9902810785ed1))
+* restore TransformMovieResultsToResponse to match original code ([92dff6c](https://github.com/Ombi-app/Ombi/commit/92dff6c58d6e5fbbbf21d05406cdbc94d11d2268))
+* run search rules sequentially to avoid DbContext thread-safety issues ([0c32745](https://github.com/Ombi-app/Ombi/commit/0c3274548580262a96497cb705fa3a38e8f4dcc7))
+
+
+
 ## [4.57.9](https://github.com/Ombi-app/Ombi/compare/v4.57.8...v4.57.9) (2026-04-05)
 
 
@@ -348,10 +363,6 @@
 ### Features
 
 * pipes ([1ac20e8](https://github.com/Ombi-app/Ombi/commit/1ac20e84dbf9b90e6797cb49cf3fd4e863f7352d))
-
-
-
-## [4.49.10](https://github.com/Ombi-app/Ombi/compare/v4.49.9...v4.49.10) (2025-09-19)
 
 
 
