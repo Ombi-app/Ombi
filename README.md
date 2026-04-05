@@ -340,7 +340,7 @@ Here are some of the features Ombi has:
         <a href="https://github.com/itsecbern">
             <img src="https://avatars.githubusercontent.com/u/12274612?v=4" width="50;" alt="itsecbern"/>
             <br />
-            <sub><b>itsecbern</b></sub>
+            <sub><b>Itsecbern</b></sub>
         </a>
     </td>
     <td align="center">
