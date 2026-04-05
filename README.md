@@ -337,10 +337,10 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/tuxmi">
-            <img src="https://avatars.githubusercontent.com/u/12274612?v=4" width="50;" alt="tuxmi"/>
+        <a href="https://github.com/itsecbern">
+            <img src="https://avatars.githubusercontent.com/u/12274612?v=4" width="50;" alt="itsecbern"/>
             <br />
-            <sub><b>Michael Reber</b></sub>
+            <sub><b>Itsecbern</b></sub>
         </a>
     </td>
     <td align="center">
