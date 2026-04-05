@@ -21,8 +21,7 @@ describe("TV Details Buttons", () => {
     cy.wait('@detailsResponse');
 
     Page.availableButton.should('be.visible');
-    Page.requestButton.should('not.exist');
-    Page.requestFabButton.fab.should('not.exist');
+    Page.requestButtons.requestAll.should('not.exist');
   });
 
   it("Partially Available Request", () => {
@@ -41,8 +40,9 @@ describe("TV Details Buttons", () => {
     cy.wait('@detailsResponse');
 
     Page.availableButton.should('not.exist');
-    Page.requestButton.should('be.visible');
-    Page.requestFabButton.fab.should('be.visible');
+    Page.requestButtons.requestAll.should('be.visible');
+    Page.requestButtons.requestLatest.should('be.visible');
+    Page.requestButtons.requestFirst.should('be.visible');
     Page.partiallyAvailableButton.should('be.visible');
   });
 
@@ -61,8 +61,9 @@ describe("TV Details Buttons", () => {
     cy.wait('@detailsResponse');
 
     Page.availableButton.should('not.exist');
-    Page.requestButton.should('be.visible');
-    Page.requestFabButton.fab.should('be.visible');
+    Page.requestButtons.requestAll.should('be.visible');
+    Page.requestButtons.requestLatest.should('be.visible');
+    Page.requestButtons.requestFirst.should('be.visible');
     Page.partiallyAvailableButton.should('not.exist');
   });
 });

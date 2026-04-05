@@ -1,91 +1,167 @@
-<mat-tab-group>
-	<mat-tab *ngFor="let season of tv.seasonRequests">
-		<ng-template mat-tab-label>
-			<div attr.data-test="classStatus{{ season.seasonNumber }}" class="{{ getStatusClass(season) }} top-right">
-				<span>{{ 'Requests.Season' | translate }} {{ season.seasonNumber }}</span>
+<div class="request-section" *ngIf="requestable">
+
+	<!-- Quick Action Buttons -->
+	<div class="quick-actions" *ngIf="!tv.fullyAvailable">
+		<button
+			mat-raised-button
+			color="accent"
+			class="quick-action-btn primary-action"
+			(click)="requestAllSeasons()"
+			id="requestAll"
+		>
+			<i class="fas fa-layer-group"></i>
+			{{ 'Search.TvShows.AllSeasons' | translate }}
+		</button>
+		<button
+			mat-stroked-button
+			class="quick-action-btn"
+			(click)="requestLatestSeason()"
+			id="requestLatest"
+		>
+			<i class="fas fa-forward"></i>
+			{{ 'Search.TvShows.LatestSeason' | translate }}
+		</button>
+		<button
+			mat-stroked-button
+			class="quick-action-btn"
+			(click)="requestFirstSeason()"
+			id="requestFirst"
+		>
+			<i class="fas fa-backward"></i>
+			{{ 'Search.TvShows.FirstSeason' | translate }}
+		</button>
+	</div>
+
+	<div class="section-divider" *ngIf="!tv.fullyAvailable">
+		<span class="divider-text">{{ 'MediaDetails.EpisodeSelector.OrSelectEpisodes' | translate }}</span>
+	</div>
+
+	<!-- Season Selector Pills -->
+	<div class="season-selector">
+		<button
+			*ngFor="let season of tv.seasonRequests; let i = index"
+			class="season-chip {{ getSeasonStatusClass(season) }}"
+			[class.active]="selectedSeasonIndex === i"
+			(click)="selectSeason(i)"
+			attr.data-test="seasonChip{{ season.seasonNumber }}"
+		>
+			<span class="season-status-dot"></span>
+			<span class="season-chip-label">{{ 'MediaDetails.EpisodeSelector.SeasonNumber' | translate:{ number: season.seasonNumber } }}</span>
+			<span class="season-chip-count">{{ season.episodes.length }}</span>
+		</button>
+	</div>
+
+	<!-- Selected Season Panel -->
+	<mat-card class="season-panel mat-elevation-z8" *ngIf="selectedSeason">
+		<!-- Season Header -->
+		<div class="season-header">
+			<div class="season-header-left">
+				<h3 class="season-title">{{ 'MediaDetails.EpisodeSelector.SeasonNumber' | translate:{ number: selectedSeason.seasonNumber } }}</h3>
+				<span class="episode-count-badge">{{ selectedSeason.episodes.length }} {{ 'MediaDetails.EpisodeSelector.Episodes' | translate }}</span>
 			</div>
-		</ng-template>
+			<div class="season-header-right" *ngIf="isSeasonCheckable(selectedSeason)">
+				<mat-slide-toggle
+					[checked]="isAllSeasonSelected(selectedSeason)"
+					(change)="toggleSelectAll(selectedSeason)"
+					color="accent"
+					attr.data-test="selectAll{{ selectedSeason.seasonNumber }}"
+				>
+					{{ 'MediaDetails.EpisodeSelector.SelectAll' | translate }}
+				</mat-slide-toggle>
+			</div>
+		</div>
 
-		<mat-card *ngIf="season.overview" class="mat-elevation-z8">
-			<mat-card-content>
-				<p>{{ season.overview }}</p>
-			</mat-card-content>
-		</mat-card>
+		<!-- Season Progress Bar -->
+		<div class="season-progress-container" *ngIf="getSeasonProgress(selectedSeason).total > 0">
+			<div class="season-progress-bar">
+				<div
+					class="progress-segment available"
+					[style.width.%]="(getSeasonProgress(selectedSeason).available / getSeasonProgress(selectedSeason).total) * 100"
+				></div>
+				<div
+					class="progress-segment requested"
+					[style.width.%]="(getSeasonProgress(selectedSeason).requested / getSeasonProgress(selectedSeason).total) * 100"
+				></div>
+			</div>
+			<div class="progress-legend">
+				<span class="legend-item" *ngIf="getSeasonProgress(selectedSeason).available > 0">
+					<span class="legend-dot available"></span> {{ getSeasonProgress(selectedSeason).available }} {{ 'Common.Available' | translate }}
+				</span>
+				<span class="legend-item" *ngIf="getSeasonProgress(selectedSeason).requested > 0">
+					<span class="legend-dot requested"></span> {{ getSeasonProgress(selectedSeason).requested }} {{ 'Common.Requested' | translate }}
+				</span>
+			</div>
+		</div>
 
-		<table mat-table [dataSource]="season.episodes" class="mat-elevation-z8">
-			<ng-container matColumnDef="select">
-				<th mat-header-cell *matHeaderCellDef>
+		<!-- Season Overview -->
+		<p class="season-overview" *ngIf="selectedSeason.overview">{{ selectedSeason.overview }}</p>
+
+		<!-- Episode List -->
+		<div class="episode-list">
+			<div class="episode-header-row">
+				<span class="ep-col-select"></span>
+				<span class="ep-col-number">#</span>
+				<span class="ep-col-title">{{ 'Requests.GridTitle' | translate }}</span>
+				<span class="ep-col-date">{{ 'Requests.AirDate' | translate }}</span>
+				<span class="ep-col-status">{{ 'Requests.GridStatus' | translate }}</span>
+			</div>
+			<div
+				*ngFor="let ep of selectedSeason.episodes"
+				class="episode-row"
+				[class.disabled]="isEpisodeDisabled(ep)"
+				[class.selected]="selection.isSelected(ep)"
+				(click)="!isEpisodeDisabled(ep) ? selection.toggle(ep) : null"
+				(keydown.enter)="!isEpisodeDisabled(ep) ? selection.toggle(ep) : null"
+				(keydown.space)="!isEpisodeDisabled(ep) ? selection.toggle(ep) : null; $event.preventDefault()"
+				[attr.tabindex]="isEpisodeDisabled(ep) ? null : 0"
+				role="checkbox"
+				[attr.aria-checked]="selection.isSelected(ep)"
+				[attr.aria-disabled]="isEpisodeDisabled(ep)"
+				attr.data-test="episodeRow{{ selectedSeason.seasonNumber }}{{ ep.episodeNumber }}"
+			>
+				<span class="ep-col-select">
 					<mat-checkbox
-						attr.data-test="masterCheckbox{{ season.seasonNumber }}"
-						*ngIf="isSeasonCheckable(season)"
-						(change)="$event ? masterToggle(season.episodes) : null"
-						[checked]="selection.hasValue() && isAllSelected(season.episodes)"
-						[indeterminate]="selection.hasValue() && !isAllSelected(season.episodes)"
+						*ngIf="!isEpisodeDisabled(ep)"
+						[checked]="selection.isSelected(ep)"
+						(click)="$event.stopPropagation(); selection.toggle(ep)"
+						[tabIndex]="-1"
+						aria-hidden="true"
+						color="accent"
+						attr.data-test="episodeCheckbox{{ selectedSeason.seasonNumber }}{{ ep.episodeNumber }}"
+					></mat-checkbox>
+				</span>
+				<span class="ep-col-number">{{ ep.episodeNumber }}</span>
+				<span class="ep-col-title">{{ ep.title }}</span>
+				<span class="ep-col-date">{{ ep.airDate | ombiDate: 'P' }}</span>
+				<span class="ep-col-status">
+					<span
+						*ngIf="getEpisodeStatusKey(ep)"
+						class="status-chip {{ getEpisodeStatusKey(ep) }}"
+						attr.data-test="episodeStatus{{ selectedSeason.seasonNumber }}{{ ep.episodeNumber }}"
 					>
-					</mat-checkbox>
-				</th>
-				<td mat-cell *matCellDef="let row">
-					<mat-checkbox
-						attr.data-test="episodeCheckbox{{ season.seasonNumber }}{{ row.episodeNumber }}"
-						*ngIf="!row.available && !row.requested && !row.approved"
-						(click)="$event.stopPropagation()"
-						(change)="$event ? selection.toggle(row) : null"
-						[checked]="selection.isSelected(row)"
-					>
-					</mat-checkbox>
-				</td>
-			</ng-container>
+						{{ ep.requestStatus | translate }}
+					</span>
+				</span>
+			</div>
+		</div>
+	</mat-card>
 
-			<ng-container matColumnDef="number">
-				<th mat-header-cell *matHeaderCellDef>#</th>
-				<td mat-cell *matCellDef="let element">{{ element.episodeNumber }}</td>
-			</ng-container>
-
-			<ng-container matColumnDef="title">
-				<th mat-header-cell *matHeaderCellDef>{{ 'Requests.GridTitle' | translate }}</th>
-				<td mat-cell *matCellDef="let element">{{ element.title }}</td>
-			</ng-container>
-
-			<ng-container matColumnDef="airDate">
-				<th mat-header-cell *matHeaderCellDef>{{ 'Requests.AirDate' | translate }}</th>
-				<td mat-cell *matCellDef="let element">{{ element.airDate | ombiDate: 'P' }}</td>
-			</ng-container>
-
-			<ng-container matColumnDef="status">
-				<th mat-header-cell *matHeaderCellDef>{{ 'Requests.GridStatus' | translate }}</th>
-				<td mat-cell *matCellDef="let ep">
-					<div
-						attr.data-test="episodeStatus{{ season.seasonNumber }}{{ ep.episodeNumber }}"
-						class="{{ getEpisodeStatusClass(ep) }} top-right"
-					>
-						<span>{{ ep.requestStatus | translate }}</span>
-					</div>
-				</td>
-			</ng-container>
-
-			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-			<tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="selection.toggle(row)"></tr>
-		</table>
-	</mat-tab>
-</mat-tab-group>
-
-<!-- <div *ngIf="isAdmin">
-    <button *ngIf="!request.approved" mat-raised-button color="accent" (click)="approve(request);"> {{ 'Common.Approve' | translate }}</button>
-    <button *ngIf="!request.available" mat-raised-button color="warn" (click)="changeAvailability(request, true);">{{ 'Requests.MarkAvailable' | translate }}</button>
-    <button *ngIf="request.available" mat-raised-button color="warn" (click)="changeAvailability(request, false);">{{ 'Requests.MarkUnavailable' | translate }}</button>
-    <button *ngIf="!request.denied" mat-raised-button color="danger" (click)="deny(request);">{{ 'Requests.Deny' | translate }}</button>
+	<!-- Sticky Bottom Bar -->
+	<div class="sticky-bar" *ngIf="selectionCount > 0">
+		<div class="sticky-bar-content">
+			<span class="selection-count">
+				{{ selectionCount }} {{ (selectionCount === 1 ? 'MediaDetails.EpisodeSelector.EpisodeSelected' : 'MediaDetails.EpisodeSelector.EpisodesSelected') | translate }}
+			</span>
+			<button
+				mat-raised-button
+				color="accent"
+				class="request-selected-btn"
+				(click)="submitRequests()"
+				id="requestSelected"
+			>
+				<i class="fas fa-plus"></i>
+				{{ 'Common.Request' | translate }}
+			</button>
+		</div>
+	</div>
 </div>
- -->
-<button *ngIf="!tv.fullyAvailable && requestable" mat-fab color="accent" id="addFabBtn" class="floating-fab" [matMenuTriggerFor]="aboveMenu">
-	<i class="fas fa-plus fa-lg"></i>
-	<mat-menu #aboveMenu="matMenu" yPosition="above">
-		<button id="requestAll" mat-menu-item (click)="requestAllSeasons()">{{ 'Search.TvShows.AllSeasons' | translate }}</button>
-
-		<button id="requestFirst" mat-menu-item (click)="requestFirstSeason()">{{ 'Search.TvShows.FirstSeason' | translate }}</button>
-
-		<button id="requestLatest" mat-menu-item (click)="requestLatestSeason()">{{ 'Search.TvShows.LatestSeason' | translate }}</button>
-
-		<button id="requestSelected" mat-menu-item (click)="submitRequests()">{{ 'Common.Request' | translate }}</button>
-	</mat-menu>
-</button>
-

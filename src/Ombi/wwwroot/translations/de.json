@@ -255,7 +255,8 @@
         "RemoveNotification": "Benachrichtigungen entfernen",
         "SuccessfulNotify": "Sie werden nun für den Titel {{title}} benachrichtigt",
         "SuccessfulUnNotify": "Sie werden für den Titel {{title}} nicht mehr benachrichtigt",
-        "CouldntNotify": "Konnte für den Titel {{title}} nicht benachrichtigen"
+        "CouldntNotify": "Konnte für den Titel {{title}} nicht benachrichtigen",
+        "NoRequests": "No Requests"
     },
     "Issues": {
         "Title": "Probleme",
@@ -379,7 +380,12 @@
             "FirstSeasonTooltip": "Dies wird nur die erste Saison für diese Show anfordern",
             "LatestSeasonTooltip": "Dies wird nur die letzte Saison für diese Show anfordern",
             "NoEpisodes": "Es gibt leider noch keine Episodendaten für diese Sendung!",
-            "SeasonNumber": "Staffel {{number}}"
+            "SeasonNumber": "Staffel {{number}}",
+            "OrSelectEpisodes": "or select episodes",
+            "Episodes": "Episodes",
+            "SelectAll": "Select All",
+            "EpisodeSelected": "episode selected",
+            "EpisodesSelected": "episodes selected"
         },
         "SonarrConfiguration": "Sonarr Konfiguration",
         "RadarrConfiguration": "Radarr Konfiguration",

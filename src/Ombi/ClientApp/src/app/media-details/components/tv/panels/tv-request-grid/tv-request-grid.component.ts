@@ -3,18 +3,10 @@ import { CommonModule } from "@angular/common";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { MatSelectModule } from "@angular/material/select";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatInputModule } from "@angular/material/input";
-import { MatPaginatorModule } from "@angular/material/paginator";
-import { MatSortModule } from "@angular/material/sort";
-import { MatTableModule } from "@angular/material/table";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { MatTabsModule } from "@angular/material/tabs";
-import { MatMenuModule } from "@angular/material/menu";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { TranslateModule } from "@ngx-translate/core";
 import { IChildRequests, IEpisodesRequests, INewSeasonRequests, IRequestEngineResult, ISeasonsViewModel, ITvRequestViewModelV2, RequestType } from "../../../../../interfaces";
-import { RequestService } from "../../../../../services/request.service";
 import { MessageService } from "../../../../../services";
 import { ISearchTvResultV2 } from "../../../../../interfaces/ISearchTvResultV2";
 import { TranslateService } from "@ngx-translate/core";
@@ -22,13 +14,11 @@ import { MatDialog } from "@angular/material/dialog";
 import { SelectionModel } from "@angular/cdk/collections";
 import { RequestServiceV2 } from "../../../../../services/requestV2.service";
 import { AdminRequestDialogComponent } from "../../../../../shared/admin-request-dialog/admin-request-dialog.component";
-import { ImageComponent } from "../../../../../components";
 import { OmbiDatePipe } from "../../../../../pipes/OmbiDatePipe";
-import { DetailedCardComponent } from "../../../../../components/detailed-card/detailed-card.component";
 import { MatCardModule } from "@angular/material/card";
 
 @Component({
-        standalone: true,
+    standalone: true,
     templateUrl: "./tv-request-grid.component.html",
     styleUrls: ["./tv-request-grid.component.scss"],
     selector: "tv-request-grid",
@@ -37,18 +27,11 @@ import { MatCardModule } from "@angular/material/card";
         MatButtonModule,
         MatIconModule,
         MatTooltipModule,
-        MatSelectModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatTableModule,
         MatCheckboxModule,
-        MatTabsModule,
-        MatMenuModule,
+        MatSlideToggleModule,
         TranslateModule,
         OmbiDatePipe,
-        MatCardModule,  
+        MatCardModule,
     ]
 })
 export class TvRequestGridComponent {
@@ -56,40 +39,124 @@ export class TvRequestGridComponent {
     @Input() public tvRequest: IChildRequests[];
     @Input() public isAdmin: boolean;
     public selection = new SelectionModel<IEpisodesRequests>(true, []);
+    public selectedSeasonIndex: number = 0;
 
     public get requestable() {
-        return this.tv?.seasonRequests?.length > 0
+        return this.tv?.seasonRequests?.length > 0;
     }
 
-    public displayedColumns: string[] = ['select', 'number', 'title', 'airDate', 'status'];
-
-    constructor(private requestService: RequestService, private requestServiceV2: RequestServiceV2, private notificationService: MessageService,
-        private dialog: MatDialog, private translate: TranslateService) {
-
+    public get selectedSeason(): INewSeasonRequests | null {
+        if (!this.tv?.seasonRequests?.length) return null;
+        return this.tv.seasonRequests[this.selectedSeasonIndex] || this.tv.seasonRequests[0];
     }
+
+    public get selectionCount(): number {
+        return this.selection.selected.length;
+    }
+
+    constructor(
+        private readonly requestServiceV2: RequestServiceV2,
+        private readonly notificationService: MessageService,
+        private readonly dialog: MatDialog,
+        private readonly translate: TranslateService
+    ) {}
+
+    public selectSeason(index: number) {
+        this.selectedSeasonIndex = index;
+    }
+
+    public getCheckableEpisodes(season: INewSeasonRequests): IEpisodesRequests[] {
+        return season.episodes.filter(ep => !ep.available && !ep.requested && !ep.approved && !ep.denied);
+    }
+
+    public isAllSeasonSelected(season: INewSeasonRequests): boolean {
+        const checkable = this.getCheckableEpisodes(season);
+        return checkable.length > 0 && checkable.every(ep => this.selection.isSelected(ep));
+    }
+
+    public isSomeSeasonSelected(season: INewSeasonRequests): boolean {
+        const checkable = this.getCheckableEpisodes(season);
+        return checkable.some(ep => this.selection.isSelected(ep)) && !this.isAllSeasonSelected(season);
+    }
+
+    public toggleSelectAll(season: INewSeasonRequests) {
+        if (this.isAllSeasonSelected(season)) {
+            this.getCheckableEpisodes(season).forEach(ep => this.selection.deselect(ep));
+        } else {
+            this.getCheckableEpisodes(season).forEach(ep => this.selection.select(ep));
+        }
+    }
+
+    public getSeasonProgress(season: INewSeasonRequests): { available: number; requested: number; total: number } {
+        const total = season.episodes.length;
+        const available = season.episodes.filter(ep => ep.available).length;
+        const requested = season.episodes.filter(ep => ep.requested || ep.approved).length;
+        return { available, requested, total };
+    }
+
+    public getSeasonStatusClass(season: INewSeasonRequests): string {
+        const progress = this.getSeasonProgress(season);
+        if (progress.total === 0) return "";
+        if (progress.available === progress.total) return "available";
+        if (progress.available > 0 || progress.requested > 0) return "partial";
+        const allDenied = season.episodes.every(ep => ep.denied);
+        if (allDenied) return "denied";
+        return "";
+    }
+
+    public isEpisodeDisabled(ep: IEpisodesRequests): boolean {
+        return ep.available || ep.requested || ep.approved || ep.denied;
+    }
+
+    public getEpisodeStatusKey(ep: IEpisodesRequests): string {
+        if (ep.available) return "available";
+        if (ep.denied) return "denied";
+        if (ep.approved) return "approved";
+        if (ep.requested) return "requested";
+        return "";
+    }
+
+    public isSeasonCheckable(season: INewSeasonRequests) {
+        return this.getCheckableEpisodes(season).length > 0;
+    }
+
+    private pendingFirstSeason = false;
+    private pendingLatestSeason = false;
+    private pendingRequestAll = false;
 
     public async submitRequests() {
-        // Make sure something has been selected
         const selected = this.selection.hasValue();
-        if (!selected && !this.tv.requestAll && !this.tv.firstSeason && !this.tv.latestSeason) {
+        if (!selected && !this.pendingRequestAll && !this.pendingFirstSeason && !this.pendingLatestSeason) {
             this.notificationService.send(this.translate.instant("Requests.NeedToSelectEpisodes"));
             return;
         }
 
-        this.tv.requested = true;
+        const firstSeason = this.pendingFirstSeason;
+        const latestSeason = this.pendingLatestSeason;
+        const requestAll = this.pendingRequestAll;
+
+        // Clear pending flags immediately so they don't leak into future submissions
+        this.pendingFirstSeason = false;
+        this.pendingLatestSeason = false;
+        this.pendingRequestAll = false;
 
         const viewModel = <ITvRequestViewModelV2>{
-            firstSeason: this.tv.firstSeason, latestSeason: this.tv.latestSeason, requestAll: this.tv.requestAll, theMovieDbId: this.tv.id,
-            requestOnBehalf: null, languageCode: this.translate.currentLang
+            firstSeason,
+            latestSeason,
+            requestAll,
+            theMovieDbId: this.tv.id,
+            requestOnBehalf: null,
+            languageCode: this.translate.currentLang,
         };
+
+        const selectedEpisodes: IEpisodesRequests[] = [];
         viewModel.seasons = [];
         this.tv.seasonRequests.forEach((season) => {
             const seasonsViewModel = <ISeasonsViewModel>{ seasonNumber: season.seasonNumber, episodes: [] };
-            if (!this.tv.latestSeason && !this.tv.requestAll && !this.tv.firstSeason) {
-                season.episodes.forEach(ep => {
+            if (!latestSeason && !requestAll && !firstSeason) {
+                season.episodes.forEach((ep) => {
                     if (this.selection.isSelected(ep)) {
-                        ep.requested = true;
-                        ep.requestStatus = "Common.PendingApproval";
+                        selectedEpisodes.push(ep);
                         seasonsViewModel.episodes.push({ episodeNumber: ep.episodeNumber });
                     }
                 });
@@ -98,7 +165,11 @@ export class TvRequestGridComponent {
         });
 
         if (this.isAdmin) {
-            const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.tvShow, id: this.tv.id, is4k: null }, panelClass: 'modal-panel' });
+            const dialog = this.dialog.open(AdminRequestDialogComponent, {
+                width: "700px",
+                data: { type: RequestType.tvShow, id: this.tv.id, is4k: null },
+                panelClass: "modal-panel",
+            });
             dialog.afterClosed().subscribe(async (result) => {
                 if (result) {
                     viewModel.requestOnBehalf = result.username?.id;
@@ -107,133 +178,69 @@ export class TvRequestGridComponent {
                     viewModel.languageProfile = result?.sonarrLanguageId;
 
                     const requestResult = await this.requestServiceV2.requestTv(viewModel).toPromise();
-                    this.postRequest(requestResult);
+                    if (requestResult) {
+                        this.postRequest(requestResult, selectedEpisodes, { firstSeason, latestSeason, requestAll });
+                    }
                 }
             });
         } else {
             const requestResult = await this.requestServiceV2.requestTv(viewModel).toPromise();
-            this.postRequest(requestResult);
+            if (requestResult) {
+                this.postRequest(requestResult, selectedEpisodes, { firstSeason, latestSeason, requestAll });
+            }
         }
     }
 
     public async requestAllSeasons() {
-        this.tv.requestAll = true;
+        this.pendingRequestAll = true;
         await this.submitRequests();
     }
 
     public async requestFirstSeason() {
-        this.tv.firstSeason = true;
+        this.pendingFirstSeason = true;
         await this.submitRequests();
     }
 
     public async requestLatestSeason() {
-        this.tv.latestSeason = true;
+        this.pendingLatestSeason = true;
         await this.submitRequests();
     }
 
-      /** Whether the number of selected elements matches the total number of rows. */
-  public isAllSelected(dataSource: IEpisodesRequests[]) {
-    const numSelected = this.selection.selected.length;
-    const numRows = dataSource.length;
-    return numSelected === numRows;
-  }
-
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  public masterToggle(dataSource: IEpisodesRequests[]) {
-    this.isAllSelected(dataSource) ?
-        this.selection.clear() :
-        dataSource.forEach(row => {
-            if (!row.available && !row.requested && !row.approved) {
-                this.selection.select(row)
-            }
-        });
-  }
-
-  public isSeasonCheckable(season: INewSeasonRequests) {
-      const seasonAvailable = season.episodes.every((ep) => {
-        return ep.available || ep.requested || ep.approved;
-      });
-      return !seasonAvailable;
-    }
-
-    public getStatusClass(season: INewSeasonRequests): string {
-        const seasonAvailable = season.episodes.every((ep) => {
-            return ep.available;
-          });
-        if (seasonAvailable) {
-            return "available";
-        }
-
-        const allDenied = season.episodes.every((ep) => {
-            return ep.denied;
-        });
-        if (allDenied) {
-            return "denied";
-        }
-
-        const seasonPending = season.episodes.some((ep) => {
-            return ep.requested && !ep.approved
-          });
-        if (seasonPending) {
-            return "requested";
-        }
-
-        const seasonApproved = season.episodes.some((ep) => {
-            return ep.requested && ep.approved
-          });
-        if (seasonApproved) {
-            return "approved";
-        }
-        return "";
-    }
-
-    public getEpisodeStatusClass(ep: IEpisodesRequests): string {
-        if (ep.available) {
-            return "available";
-        }
-
-        if (ep.denied) {
-            return "denied";
-        }
-
-        if (ep.requested && !ep.approved) {
-            return "requested";
-        }
-
-        if (ep.requested && ep.approved) {
-            return "approved";
-        }
-        return "";
-    }
-
-    private postRequest(requestResult: IRequestEngineResult) {
+    private postRequest(
+        requestResult: IRequestEngineResult,
+        selectedEpisodes: IEpisodesRequests[],
+        flags: { firstSeason: boolean; latestSeason: boolean; requestAll: boolean }
+    ) {
         if (requestResult.result) {
             this.notificationService.send(
-                this.translate.instant("Requests.RequestAddedSuccessfully", { title:this.tv.title }));
+                this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.tv.title })
+            );
 
+            this.tv.requested = true;
             this.selection.clear();
 
-            if (this.tv.firstSeason) {
-                this.tv.seasonRequests[0].episodes.forEach(ep => {
+            const markPending = (season: INewSeasonRequests) => {
+                this.getCheckableEpisodes(season).forEach((ep) => {
                     ep.requested = true;
                     ep.requestStatus = "Common.PendingApproval";
                 });
+            };
+
+            if (flags.firstSeason) {
+                markPending(this.tv.seasonRequests[0]);
             }
-            if (this.tv.requestAll) {
-                this.tv.seasonRequests.forEach(season => {
-                    season.episodes.forEach(ep => {
-                        ep.requested = true;
-                        ep.requestStatus = "Common.PendingApproval";
-                    });
-                });
+            if (flags.requestAll) {
+                this.tv.seasonRequests.forEach(markPending);
             }
-            if (this.tv.latestSeason) {
-                this.tv.seasonRequests[this.tv.seasonRequests.length - 1].episodes.forEach(ep => {
-                    ep.requested = true;
-                    ep.requestStatus = "Common.PendingApproval";
-                });
+            if (flags.latestSeason) {
+                markPending(this.tv.seasonRequests[this.tv.seasonRequests.length - 1]);
             }
 
+            // Mark individually selected episodes
+            selectedEpisodes.forEach((ep) => {
+                ep.requested = true;
+                ep.requestStatus = "Common.PendingApproval";
+            });
         } else {
             this.notificationService.sendRequestEngineResultError(requestResult);
         }

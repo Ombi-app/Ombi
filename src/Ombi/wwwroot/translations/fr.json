@@ -255,7 +255,8 @@
         "RemoveNotification": "Supprimer les notifications",
         "SuccessfulNotify": "Vous allez maintenant être notifié pour {{title}}",
         "SuccessfulUnNotify": "Vous ne serez plus notifié pour {{title}}",
-        "CouldntNotify": "Impossible de notifier {{title}}"
+        "CouldntNotify": "Impossible de notifier {{title}}",
+        "NoRequests": "No Requests"
     },
     "Issues": {
         "Title": "Problèmes",
@@ -379,7 +380,12 @@
             "FirstSeasonTooltip": "Cette action ne demandera que la Première Saison de cette série",
             "LatestSeasonTooltip": "Cette action ne demandera que la Dernière Saison de cette série",
             "NoEpisodes": "Il n'y a malheureusement pas encore d'informations d'épisode pour cette série !",
-            "SeasonNumber": "Saison {{number}}"
+            "SeasonNumber": "Saison {{number}}",
+            "OrSelectEpisodes": "or select episodes",
+            "Episodes": "Episodes",
+            "SelectAll": "Select All",
+            "EpisodeSelected": "episode selected",
+            "EpisodesSelected": "episodes selected"
         },
         "SonarrConfiguration": "Configuration Sonarr",
         "RadarrConfiguration": "Configuration Radarr",

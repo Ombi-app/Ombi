@@ -255,7 +255,8 @@
         "RemoveNotification": "Odstrániť notifikácie",
         "SuccessfulNotify": "Budete upozornení na titul ",
         "SuccessfulUnNotify": "Nebudete upozornení na titul ",
-        "CouldntNotify": "Nie je možné upozornenie na titul "
+        "CouldntNotify": "Nie je možné upozornenie na titul ",
+        "NoRequests": "No Requests"
     },
     "Issues": {
         "Title": "Problémy",
@@ -379,7 +380,12 @@
             "FirstSeasonTooltip": "Požiadať iba prvú sezónu série.",
             "LatestSeasonTooltip": "Požiadať iba poslednú sezónu série",
             "NoEpisodes": "Pre tento seriál zatiaľ nie sú k dispozícii žiadne údaje o epizódach!",
-            "SeasonNumber": "Séria {{number}}"
+            "SeasonNumber": "Séria {{number}}",
+            "OrSelectEpisodes": "or select episodes",
+            "Episodes": "Episodes",
+            "SelectAll": "Select All",
+            "EpisodeSelected": "episode selected",
+            "EpisodesSelected": "episodes selected"
         },
         "SonarrConfiguration": "Nastavenie Sonarr",
         "RadarrConfiguration": "Nastavenie Radarr",
