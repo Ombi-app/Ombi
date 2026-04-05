@@ -1,4 +1,4 @@
-﻿using Ombi.Core.Models.Requests;
+using Ombi.Core.Models.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,16 +18,21 @@ namespace Ombi.Core.Rule
             RequestRules = new List<IRules<BaseRequest>>();
             SearchRules = new List<IRules<SearchViewModel>>();
             SpecificRules = new List<ISpecificRule<object>>();
-            
-            var baseSearchType = typeof(BaseRequestRule).FullName;
-            var baseRequestType = typeof(BaseSearchRule).FullName;
-            var baseSpecificRuleType = typeof(SpecificRule).FullName;
 
             var ass = typeof(RuleEvaluator).GetTypeInfo().Assembly;
 
-            GetTypes(provider, ass, baseSearchType, RequestRules);
-            GetTypes(provider, ass, baseRequestType, SearchRules);
-            GetTypes(provider, ass, baseSpecificRuleType, SpecificRules);
+            foreach (var instance in CreateInstances(provider, ass, typeof(BaseRequestRule).FullName))
+            {
+                RequestRules.Add((IRules<BaseRequest>)instance);
+            }
+            foreach (var instance in CreateInstances(provider, ass, typeof(BaseSearchRule).FullName))
+            {
+                SearchRules.Add((IRules<SearchViewModel>)instance);
+            }
+            foreach (var instance in CreateInstances(provider, ass, typeof(SpecificRule).FullName))
+            {
+                SpecificRules.Add((ISpecificRule<object>)instance);
+            }
         }
 
         private List<IRules<BaseRequest>> RequestRules { get; }
@@ -72,48 +77,41 @@ namespace Ombi.Core.Rule
             throw new RuleNotFoundException(nameof(selectedRule));
         }
 
-
-        private void GetTypes<T>(IServiceProvider provider, Assembly ass, string baseSearchType, List<IRules<T>> ruleList)
+        private static bool InheritsFrom(TypeInfo ti, string baseTypeName)
         {
-            foreach (var ti in ass.DefinedTypes)
+            var current = ti?.BaseType;
+            while (current != null)
             {
-                if (ti?.BaseType?.FullName == baseSearchType)
+                if (current.FullName == baseTypeName)
                 {
-                    var type = ti?.AsType();
-                    var ctors = type.GetConstructors();
-                    var ctor = ctors.FirstOrDefault();
-
-                    var services = new List<object>();
-                    foreach (var param in ctor.GetParameters())
-                    {
-                        services.Add(provider.GetService(param.ParameterType));
-                    }
-
-                    var item = Activator.CreateInstance(type, services.ToArray());
-                    ruleList.Add((IRules<T>)item);
+                    return true;
                 }
+                current = current.BaseType;
             }
+            return false;
         }
 
-        private void GetTypes<T>(IServiceProvider provider, Assembly ass, string baseSearchType, ICollection<ISpecificRule<T>> ruleList) where T : new()
+        private static IEnumerable<object> CreateInstances(IServiceProvider provider, Assembly ass, string baseTypeName)
         {
             foreach (var ti in ass.DefinedTypes)
             {
-                if (ti?.BaseType?.FullName == baseSearchType)
+                if (ti.IsAbstract || !InheritsFrom(ti, baseTypeName))
                 {
-                    var type = ti?.AsType();
-                    var ctors = type.GetConstructors();
-                    var ctor = ctors.FirstOrDefault();
-
-                    var services = new List<object>();
-                    foreach (var param in ctor.GetParameters())
-                    {
-                        services.Add(provider.GetService(param.ParameterType));
-                    }
-
-                    var item = Activator.CreateInstance(type, services.ToArray());
-                    ruleList.Add((ISpecificRule<T>)item);
+                    continue;
                 }
+
+                var type = ti.AsType();
+                var ctor = type.GetConstructors().FirstOrDefault();
+                if (ctor == null)
+                {
+                    continue;
+                }
+
+                var services = ctor.GetParameters()
+                    .Select(p => provider.GetService(p.ParameterType))
+                    .ToArray();
+
+                yield return Activator.CreateInstance(type, services);
             }
         }
     }
