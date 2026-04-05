@@ -1,3 +1,7 @@
+## [4.57.13](https://github.com/Ombi-app/Ombi/compare/v4.57.12...v4.57.13) (2026-04-05)
+
+
+
 ## [4.57.12](https://github.com/Ombi-app/Ombi/compare/v4.57.11...v4.57.12) (2026-04-05)
 
 
@@ -356,10 +360,6 @@
 ### Reverts
 
 * Revert "Update src/Ombi/Controllers/V1/TokenController.cs" ([0294dba](https://github.com/Ombi-app/Ombi/commit/0294dba4cc8d27ace0503fd2518b4419c3f0f08f))
-
-
-
-## [4.50.2](https://github.com/Ombi-app/Ombi/compare/v4.50.1...v4.50.2) (2025-10-04)
 
 
 
