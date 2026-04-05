@@ -44,6 +44,15 @@ namespace Ombi.Core.Rule.Rules.Search
                     }
                 }
             }
+
+            if (search.FullyAvailable)
+            {
+                // If fully available but some episodes have future air dates, also mark as partly available
+                // so the UI can indicate there are upcoming episodes
+                var hasUnairedEpisodes = search.SeasonRequests.Any(x =>
+                    x.Episodes.Any(e => e.AirDate >= DateTime.UtcNow));
+                search.PartlyAvailable = hasUnairedEpisodes;
+            }
         }
 
         public static async Task SingleEpisodeCheck(bool useImdb, IQueryable<IMediaServerEpisode> allEpisodes, EpisodeRequests episode,
