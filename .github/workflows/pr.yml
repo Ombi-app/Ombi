@@ -36,6 +36,9 @@ jobs:
       - name: Build UI
         run: yarn --cwd ./src/Ombi/ClientApp run build
 
+      - name: Run UI Tests
+        run: yarn --cwd ./src/Ombi/ClientApp run test
+
   unit-test:
     runs-on: ubuntu-latest
     steps:

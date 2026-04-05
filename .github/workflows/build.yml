@@ -26,6 +26,9 @@ jobs:
       - name: Build UI
         run: yarn --cwd ./src/Ombi/ClientApp run build
 
+      - name: Run UI Tests
+        run: yarn --cwd ./src/Ombi/ClientApp run test
+
       - name: Publish UI Artifacts
         uses: actions/upload-artifact@v4
         with:
