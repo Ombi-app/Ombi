@@ -89,6 +89,7 @@ export class TvRequestsPanelComponent {
             request.seasonRequests.forEach((season) => {
                 season.episodes.forEach((ep) => {
                     ep.approved = true;
+                    ep.denied = false;
                 });
             });
             this.messageService.send(this.translateService.instant("Requests.SuccessfullyApproved"));
@@ -101,7 +102,10 @@ export class TvRequestsPanelComponent {
         const result = await this.requestService.deleteChild(request.id).toPromise();
 
         if (result) {
-            this.tvRequest.splice(this.tvRequest.indexOf(request), 1);
+            const index = this.tvRequest.findIndex((r) => r.id === request.id);
+            if (index !== -1) {
+                this.tvRequest.splice(index, 1);
+            }
             this.messageService.send(this.translateService.instant("Requests.SuccessfullyDeleted"));
         }
     }
