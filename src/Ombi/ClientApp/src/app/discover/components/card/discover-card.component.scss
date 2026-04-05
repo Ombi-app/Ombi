@@ -237,11 +237,3 @@
         display: none;
     }
 }
-
-::ng-deep mat-dialog-container.mat-dialog-container {
-    border-radius: 8px;
-}
-
-::ng-deep .mat-menu-panel {
-    min-width: 190px !important;
-}
