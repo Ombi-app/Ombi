@@ -60,7 +60,6 @@ describe("Discover Cards Requests Tests", () => {
         cy.removeLogin();
         cy.loginWithCreds(id, "a");
 
-        window.localStorage.setItem("DiscoverOptions2", "2");
         cy.intercept("GET", "**/search/Movie/Popular/**", (req) => {
           req.reply((res) => {
             const body = res.body;
@@ -73,6 +72,10 @@ describe("Discover Cards Requests Tests", () => {
             res.send(body);
           });
         }).as("cardsResponse");
+
+        cy.then(() => {
+          window.localStorage.setItem("DiscoverOptions2", "2");
+        });
 
         Page.visit();
 
@@ -332,7 +335,9 @@ describe("Discover Cards Requests Tests", () => {
           });
         }).as("cardsResponse");
         cy.intercept("GET", "**/search/Tv/**").as("otherResponses");
-        window.localStorage.setItem("DiscoverOptions2", "3");
+        cy.then(() => {
+          window.localStorage.setItem("DiscoverOptions2", "3");
+        });
 
         Page.visit();
 
