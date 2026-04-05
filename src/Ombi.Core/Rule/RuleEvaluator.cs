@@ -1,4 +1,4 @@
-﻿using Ombi.Core.Models.Requests;
+using Ombi.Core.Models.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,16 +18,21 @@ namespace Ombi.Core.Rule
             RequestRules = new List<IRules<BaseRequest>>();
             SearchRules = new List<IRules<SearchViewModel>>();
             SpecificRules = new List<ISpecificRule<object>>();
-            
-            var baseSearchType = typeof(BaseRequestRule).FullName;
-            var baseRequestType = typeof(BaseSearchRule).FullName;
-            var baseSpecificRuleType = typeof(SpecificRule).FullName;
 
             var ass = typeof(RuleEvaluator).GetTypeInfo().Assembly;
 
-            GetTypes(provider, ass, baseSearchType, RequestRules);
-            GetTypes(provider, ass, baseRequestType, SearchRules);
-            GetTypes(provider, ass, baseSpecificRuleType, SpecificRules);
+            foreach (var instance in CreateInstances(provider, ass, typeof(BaseRequestRule).FullName))
+            {
+                RequestRules.Add((IRules<BaseRequest>)instance);
+            }
+            foreach (var instance in CreateInstances(provider, ass, typeof(BaseSearchRule).FullName))
+            {
+                SearchRules.Add((IRules<SearchViewModel>)instance);
+            }
+            foreach (var instance in CreateInstances(provider, ass, typeof(SpecificRule).FullName))
+            {
+                SpecificRules.Add((ISpecificRule<object>)instance);
+            }
         }
 
         private List<IRules<BaseRequest>> RequestRules { get; }
@@ -72,7 +77,6 @@ namespace Ombi.Core.Rule
             throw new RuleNotFoundException(nameof(selectedRule));
         }
 
-
         private static bool InheritsFrom(TypeInfo ti, string baseTypeName)
         {
             var current = ti?.BaseType;
@@ -87,11 +91,11 @@ namespace Ombi.Core.Rule
             return false;
         }
 
-        private void GetTypes<T>(IServiceProvider provider, Assembly ass, string baseSearchType, List<IRules<T>> ruleList)
+        private static IEnumerable<object> CreateInstances(IServiceProvider provider, Assembly ass, string baseTypeName)
         {
             foreach (var ti in ass.DefinedTypes)
             {
-                if (ti.IsAbstract || !InheritsFrom(ti, baseSearchType))
+                if (ti.IsAbstract || !InheritsFrom(ti, baseTypeName))
                 {
                     continue;
                 }
@@ -103,41 +107,11 @@ namespace Ombi.Core.Rule
                     continue;
                 }
 
-                var services = new List<object>();
-                foreach (var param in ctor.GetParameters())
-                {
-                    services.Add(provider.GetService(param.ParameterType));
-                }
+                var services = ctor.GetParameters()
+                    .Select(p => provider.GetService(p.ParameterType))
+                    .ToArray();
 
-                var item = Activator.CreateInstance(type, services.ToArray());
-                ruleList.Add((IRules<T>)item);
-            }
-        }
-
-        private void GetTypes<T>(IServiceProvider provider, Assembly ass, string baseSearchType, ICollection<ISpecificRule<T>> ruleList) where T : new()
-        {
-            foreach (var ti in ass.DefinedTypes)
-            {
-                if (ti.IsAbstract || !InheritsFrom(ti, baseSearchType))
-                {
-                    continue;
-                }
-
-                var type = ti.AsType();
-                var ctor = type.GetConstructors().FirstOrDefault();
-                if (ctor == null)
-                {
-                    continue;
-                }
-
-                var services = new List<object>();
-                foreach (var param in ctor.GetParameters())
-                {
-                    services.Add(provider.GetService(param.ParameterType));
-                }
-
-                var item = Activator.CreateInstance(type, services.ToArray());
-                ruleList.Add((ISpecificRule<T>)item);
+                yield return Activator.CreateInstance(type, services);
             }
         }
     }

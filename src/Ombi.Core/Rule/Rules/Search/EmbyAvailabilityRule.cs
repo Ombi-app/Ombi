@@ -2,10 +2,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Ombi.Core.Models.Search;
 using Ombi.Core.Services;
 using Ombi.Core.Settings;
-using Ombi.Helpers;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
@@ -29,41 +27,10 @@ namespace Ombi.Core.Rule.Rules.Search
 
         protected override async Task<ContentLookupResult> FindContent(SearchViewModel obj)
         {
-            var result = new ContentLookupResult();
-            EmbyContent item = null;
-
-            if (obj.ImdbId.HasValue())
-            {
-                item = await _repo.GetByImdbId(obj.ImdbId);
-                if (item != null)
-                {
-                    result.UseImdb = true;
-                }
-            }
-
-            if (item == null)
-            {
-                if (obj.TheMovieDbId.HasValue())
-                {
-                    item = await _repo.GetByTheMovieDbId(obj.TheMovieDbId);
-                    if (item != null)
-                    {
-                        result.UseTheMovieDb = true;
-                    }
-                }
-
-                if (item == null && obj.TheTvDbId.HasValue())
-                {
-                    item = await _repo.GetByTvDbId(obj.TheTvDbId);
-                    if (item != null)
-                    {
-                        result.UseTvDb = true;
-                    }
-                }
-            }
-
-            result.Content = item;
-            return result;
+            return await FindContentByProviderIds(obj,
+                async id => await _repo.GetByImdbId(id),
+                async id => await _repo.GetByTheMovieDbId(id),
+                async id => await _repo.GetByTvDbId(id));
         }
 
         protected override IQueryable<IMediaServerEpisode> GetAllEpisodes()

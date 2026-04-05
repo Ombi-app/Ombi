@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -90,13 +91,8 @@ namespace Ombi.Core.Rule.Rules.Search
             {
                 movie.Available4K = true;
             }
-            else
-            {
-                movie.Available = true;
-                movie.Quality = item.Quality;
-            }
 
-            if (item.Quality.HasValue())
+            if (item.Quality.HasValue() || !item.Has4K || !is4kEnabled)
             {
                 movie.Available = true;
                 movie.Quality = item.Quality;
@@ -154,6 +150,64 @@ namespace Ombi.Core.Rule.Rules.Search
             var settings = await _sonarrSettings.GetSettingsAsync();
             return settings != null && settings.Enabled &&
                    settings.ScanForAvailability && settings.PrioritizeArrAvailability;
+        }
+
+        /// <summary>
+        /// Shared content lookup by IMDB, TheMovieDb, and TvDb IDs.
+        /// Used by media servers that expose separate GetByImdbId/GetByTheMovieDbId/GetByTvDbId methods.
+        /// </summary>
+        protected static async Task<ContentLookupResult> FindContentByProviderIds(
+            SearchViewModel obj,
+            Func<string, Task<IMediaServerContent>> getByImdbId,
+            Func<string, Task<IMediaServerContent>> getByTheMovieDbId,
+            Func<string, Task<IMediaServerContent>> getByTvDbId,
+            bool lookupById = false)
+        {
+            var result = new ContentLookupResult();
+            IMediaServerContent item = null;
+
+            if (obj.ImdbId.HasValue())
+            {
+                item = await getByImdbId(obj.ImdbId);
+                if (item != null)
+                {
+                    result.UseImdb = true;
+                }
+            }
+
+            if (item == null)
+            {
+                if (lookupById && obj.Id > 0)
+                {
+                    item = await getByTheMovieDbId(obj.Id.ToString());
+                    if (item != null)
+                    {
+                        obj.TheMovieDbId = obj.Id.ToString();
+                        result.UseTheMovieDb = true;
+                    }
+                }
+
+                if (item == null && obj.TheMovieDbId.HasValue())
+                {
+                    item = await getByTheMovieDbId(obj.TheMovieDbId);
+                    if (item != null)
+                    {
+                        result.UseTheMovieDb = true;
+                    }
+                }
+
+                if (item == null && obj.TheTvDbId.HasValue())
+                {
+                    item = await getByTvDbId(obj.TheTvDbId);
+                    if (item != null)
+                    {
+                        result.UseTvDb = true;
+                    }
+                }
+            }
+
+            result.Content = item;
+            return result;
         }
     }
 
