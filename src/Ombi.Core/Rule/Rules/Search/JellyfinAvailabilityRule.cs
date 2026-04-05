@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Ombi.Core.Models.Search;
 using Ombi.Core.Services;
 using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models.External;
