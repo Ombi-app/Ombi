@@ -235,6 +235,7 @@
         "DeniedRequest": "Denied Request",
         "RequestCollection": "Request Collection",
         "CollectionSuccesfullyAdded": "The collection {{name}} has been successfully added!",
+        "NoRequests": "No requests yet",
         "NeedToSelectEpisodes": "You need to select some episodes!",
         "RequestAddedSuccessfully": "Заявката за {{title}} е успешно добавена",
         "ErrorCodes": {
@@ -379,7 +380,12 @@
             "FirstSeasonTooltip": "Това ще заяви само първия сезон на това предаване",
             "LatestSeasonTooltip": "Това ще заяви само последния сезон на това предаване",
             "NoEpisodes": "За съжаление все още няма данни за епизоди на това предаване!",
-            "SeasonNumber": "Сезон {{number}}"
+            "SeasonNumber": "Сезон {{number}}",
+            "OrSelectEpisodes": "or select specific episodes",
+            "Episodes": "episodes",
+            "SelectAll": "Select All",
+            "EpisodeSelected": "episode selected",
+            "EpisodesSelected": "episodes selected"
         },
         "SonarrConfiguration": "Конфигурация на Sonarr",
         "RadarrConfiguration": "Конфигурация на Radarr",
