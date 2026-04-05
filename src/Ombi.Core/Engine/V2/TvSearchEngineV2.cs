@@ -229,32 +229,25 @@ namespace Ombi.Core.Engine.V2
 
             if (settings.HideAvailableFromDiscover)
             {
-                // Parallelize show info + season episode fetches per show
-                var enrichTasks = nonDemoItems.Select(async tvMazeSearch =>
+                foreach (var tvMazeSearch in nonDemoItems)
                 {
                     var show = await Cache.GetOrAddAsync(nameof(GetShowInformation) + tvMazeSearch.Id.ToString(),
                         () => _movieApi.GetTVInfo(tvMazeSearch.Id.ToString()), DateTime.Now.AddHours(12));
 
                     if (show == null || string.IsNullOrEmpty(show.name) || show.seasons == null)
                     {
-                        return;
+                        continue;
                     }
 
-                    // Fetch all season episodes in parallel for this show
                     var seasons = show.seasons.Where(x => x.season_number != 0).ToList();
-                    var episodeTasks = seasons.Select(tvSeason =>
-                        Cache.GetOrAddAsync("SeasonEpisodes" + show.id + tvSeason.season_number,
-                            () => _movieApi.GetSeasonEpisodes(show.id, tvSeason.season_number, CancellationToken.None),
-                            DateTimeOffset.Now.AddHours(12)));
-                    var episodeResults = await Task.WhenAll(episodeTasks);
-
-                    // Map seasons sequentially per show (mutates SeasonRequests)
-                    for (int i = 0; i < seasons.Count; i++)
+                    foreach (var tvSeason in seasons)
                     {
-                        MapSeasons(tvMazeSearch.SeasonRequests, seasons[i], episodeResults[i]);
+                        var seasonEpisodes = await Cache.GetOrAddAsync("SeasonEpisodes" + show.id + tvSeason.season_number,
+                            () => _movieApi.GetSeasonEpisodes(show.id, tvSeason.season_number, CancellationToken.None),
+                            DateTimeOffset.Now.AddHours(12));
+                        MapSeasons(tvMazeSearch.SeasonRequests, tvSeason, seasonEpisodes);
                     }
-                });
-                await Task.WhenAll(enrichTasks);
+                }
             }
 
             // Run ProcessResult sequentially (RunSearchRules accesses DbContext which is not thread-safe)
