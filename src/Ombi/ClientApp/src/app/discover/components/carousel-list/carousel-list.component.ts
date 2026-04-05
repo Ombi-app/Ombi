@@ -353,9 +353,10 @@ export class CarouselListComponent {
     private mapTvModel(): IDiscoverCardResult[] {
         const tempResults = <IDiscoverCardResult[]>[];
         this.tvShows().forEach(m => {
+            const poster = m.posterPath || m.backdropPath;
             tempResults.push({
                 available: m.fullyAvailable || m.partlyAvailable,
-                posterPath: m.backdropPath ? `https://image.tmdb.org/t/p/w500/${m.backdropPath}` :  this.baseUrl + "/images/default_tv_poster.png",
+                posterPath: poster ? `https://image.tmdb.org/t/p/w500/${poster}` :  this.baseUrl + "/images/default_tv_poster.png",
                 requested: m.requested,
                 title: m.title,
                 type: RequestType.tvShow,
@@ -366,7 +367,7 @@ export class CarouselListComponent {
                 approved: m.approved || m.partlyAvailable,
                 imdbid: m.imdbId,
                 denied: false,
-                background: m.background
+                background: m.backdropPath
             });
         });
         return tempResults;
