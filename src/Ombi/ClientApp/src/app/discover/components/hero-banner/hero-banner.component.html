@@ -9,22 +9,33 @@
                     }
                     @if (activeItem().rating) {
                         <span class="hero-rating">
-                            <i class="fas fa-star"></i> {{ getRatingDisplay() }}
+                            <i class="fas fa-star" aria-hidden="true"></i> {{ getRatingDisplay() }}
                         </span>
                     }
                 </div>
                 <p class="hero-overview">{{ activeItem().overview }}</p>
                 <a [routerLink]="getDetailsLink()" class="hero-cta">
                     {{ 'Discovery.ViewDetails' | translate }}
-                    <i class="fas fa-arrow-right"></i>
+                    <i class="fas fa-arrow-right" aria-hidden="true"></i>
                 </a>
             </div>
             <div class="hero-indicators">
+                @if (items().length > 1) {
+                    <button
+                        type="button"
+                        class="hero-pause-btn"
+                        [attr.aria-pressed]="paused()"
+                        (click)="togglePause()"
+                        aria-label="Pause slideshow">
+                        <i [class]="paused() ? 'fas fa-play' : 'fas fa-pause'" aria-hidden="true"></i>
+                    </button>
+                }
                 @for (item of items(); track item.id; let i = $index) {
                     <button
                         type="button"
                         class="hero-indicator"
                         [class.active]="i === activeIndex()"
+                        [attr.aria-pressed]="i === activeIndex()"
                         (click)="selectItem(i)"
                         [attr.aria-label]="item.title">
                     </button>

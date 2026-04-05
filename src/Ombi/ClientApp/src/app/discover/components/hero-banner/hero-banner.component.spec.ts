@@ -2,7 +2,6 @@ import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { Injector, runInInjectionContext } from '@angular/core';
 import { HeroBannerComponent } from './hero-banner.component';
 import { SearchV2Service } from '../../../services';
-import { APP_BASE_HREF } from '@angular/common';
 import { ISearchMovieResult, RequestType } from '../../../interfaces';
 
 function makeMovie(overrides: Partial<ISearchMovieResult> = {}): ISearchMovieResult {
@@ -47,7 +46,6 @@ function createComponent(mockSearchService: any) {
   const injector = Injector.create({
     providers: [
       { provide: SearchV2Service, useValue: mockSearchService },
-      { provide: APP_BASE_HREF, useValue: '/' },
     ],
   });
 
@@ -221,6 +219,35 @@ describe('HeroBannerComponent', () => {
 
       component.selectItem(-1);
       expect(component.activeIndex()).toBe(0);
+    });
+  });
+
+  describe('togglePause', () => {
+    it('should pause rotation when playing', async () => {
+      const movies = [
+        makeMovie({ id: 1, backdropPath: '/bg1.jpg' }),
+        makeMovie({ id: 2, backdropPath: '/bg2.jpg' }),
+      ];
+      mockSearchService.nowPlayingMoviesByPage.mockResolvedValue(movies);
+      await component.ngOnInit();
+
+      expect(component.paused()).toBe(false);
+      component.togglePause();
+      expect(component.paused()).toBe(true);
+    });
+
+    it('should resume rotation when paused', async () => {
+      const movies = [
+        makeMovie({ id: 1, backdropPath: '/bg1.jpg' }),
+        makeMovie({ id: 2, backdropPath: '/bg2.jpg' }),
+      ];
+      mockSearchService.nowPlayingMoviesByPage.mockResolvedValue(movies);
+      await component.ngOnInit();
+
+      component.togglePause();
+      expect(component.paused()).toBe(true);
+      component.togglePause();
+      expect(component.paused()).toBe(false);
     });
   });
 

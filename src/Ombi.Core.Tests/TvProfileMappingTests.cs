@@ -215,6 +215,22 @@ namespace Ombi.Core.Tests
         }
 
         [Test]
+        public void TvSearchResult_Banner_Null_When_No_Paths()
+        {
+            var source = new TvSearchResult
+            {
+                Id = 1,
+                Name = "Test",
+                BackdropPath = null,
+                PosterPath = null,
+            };
+
+            var result = _mapper.Map<SearchTvShowViewModel>(source);
+
+            Assert.That(result.Banner, Is.Null);
+        }
+
+        [Test]
         public void MovieDbSearchResult_Banner_Uses_BackdropPath_When_Available()
         {
             var source = new MovieDbSearchResult
