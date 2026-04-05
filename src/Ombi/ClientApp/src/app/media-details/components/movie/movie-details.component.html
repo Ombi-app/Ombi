@@ -13,7 +13,7 @@
 
 			<!-- Info -->
 			<div class="hero-info">
-				<h1 class="hero-title">
+				<h1 id="mediaTitle" class="hero-title">
 					{{ movie.title }}
 					<span *ngIf="movie.releaseDate" class="hero-year">({{ movie.releaseDate | ombiDate: 'yyyy' }})</span>
 				</h1>
@@ -49,31 +49,31 @@
 				<div class="hero-actions">
 					<!-- View On buttons -->
 					<ng-container *ngIf="movie.available || movie.available4K">
-						<a *ngIf="movie.plexUrl" href="{{ movie.plexUrl }}" target="_blank" class="action-btn action-btn--viewon plex">
+						<a id="viewOnPlexButton" *ngIf="movie.plexUrl" href="{{ movie.plexUrl }}" target="_blank" class="action-btn action-btn--viewon plex">
 							<i class="far fa-play-circle"></i> {{ 'Search.ViewOnPlex' | translate }}
 						</a>
-						<a *ngIf="movie.embyUrl" href="{{ movie.embyUrl }}" target="_blank" class="action-btn action-btn--viewon emby">
+						<a id="viewOnEmbyButton" *ngIf="movie.embyUrl" href="{{ movie.embyUrl }}" target="_blank" class="action-btn action-btn--viewon emby">
 							<i class="far fa-play-circle"></i> {{ 'Search.ViewOnEmby' | translate }}
 						</a>
-						<a *ngIf="movie.jellyfinUrl" href="{{ movie.jellyfinUrl }}" target="_blank" class="action-btn action-btn--viewon jellyfin">
+						<a id="viewOnJellyfinButton" *ngIf="movie.jellyfinUrl" href="{{ movie.jellyfinUrl }}" target="_blank" class="action-btn action-btn--viewon jellyfin">
 							<i class="far fa-play-circle"></i> {{ 'Search.ViewOnJellyfin' | translate }}
 						</a>
 					</ng-container>
 
 					<!-- Available (no media server link) -->
-					<span *ngIf="movie.available && !movie.plexUrl && !movie.embyUrl && !movie.jellyfinUrl" class="action-btn action-btn--success">
+					<span id="availableBtn" *ngIf="movie.available && !movie.plexUrl && !movie.embyUrl && !movie.jellyfinUrl" class="action-btn action-btn--success">
 						<i class="fas fa-check"></i> {{ 'Common.Available' | translate }}
 					</span>
 
 					<!-- Regular request status -->
 					<ng-container *ngIf="!movie.available">
 						<ng-container *ngIf="movie.requested || movie.approved; else notRequestedBtn">
-							<span *ngIf="!hasRequest || (hasRequest && movieRequest && !movieRequest.denied)" class="action-btn action-btn--warning">
+							<span id="requestedBtn" *ngIf="!hasRequest || (hasRequest && movieRequest && !movieRequest.denied)" class="action-btn action-btn--warning">
 								<i class="fas fa-check"></i> {{ 'Common.Requested' | translate }}
 							</span>
 						</ng-container>
 						<ng-template #notRequestedBtn>
-							<button *ngIf="!movie.requested" class="action-btn action-btn--primary" (click)="request(false)">
+							<button id="requestBtn" *ngIf="!movie.requested" class="action-btn action-btn--primary" (click)="request(false)">
 								<i *ngIf="movie.requestProcessing" class="fas fa-circle-notch fa-spin"></i>
 								<i *ngIf="!movie.requestProcessing && !movie.processed" class="fas fa-plus"></i>
 								<i *ngIf="movie.processed && !movie.requestProcessing" class="fas fa-check"></i>
@@ -115,22 +115,22 @@
 					</button>
 
 					<!-- Report Issue -->
-					<button *ngIf="issuesEnabled" class="action-btn action-btn--danger" (click)="issue()">
+					<button id="reportIssueBtn" *ngIf="issuesEnabled" class="action-btn action-btn--danger" (click)="issue()">
 						<i class="fas fa-exclamation-triangle"></i> {{ 'Requests.ReportIssue' | translate }}
 					</button>
 
 					<!-- View Collection -->
-					<a *ngIf="movie.belongsToCollection" [routerLink]="'/discover/collection/' + movie.belongsToCollection.id" class="action-btn action-btn--secondary">
+					<a id="viewCollectionBtn" *ngIf="movie.belongsToCollection" [routerLink]="'/discover/collection/' + movie.belongsToCollection.id" class="action-btn action-btn--secondary">
 						<i class="fas fa-list"></i> {{ 'MediaDetails.ViewCollection' | translate }}
 					</a>
 				</div>
 
 				<!-- Admin Actions -->
 				<div class="admin-actions" *ngIf="isAdmin && hasRequest">
-					<button *ngIf="!movie.approved && movie.requested" (click)="approve(false)" class="action-btn action-btn--admin">
+					<button id="approveBtn" *ngIf="!movie.approved && movie.requested" (click)="approve(false)" class="action-btn action-btn--admin">
 						<i class="fas fa-check"></i> {{ 'Common.Approve' | translate }}
 					</button>
-					<button *ngIf="!movie.available && movie.requested" (click)="markAvailable(false)" class="action-btn action-btn--admin">
+					<button id="markAvailableBtn" *ngIf="!movie.available && movie.requested" (click)="markAvailable(false)" class="action-btn action-btn--admin">
 						<i class="fas fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}
 					</button>
 					<button *ngIf="movie.available && movie.requested" (click)="markUnavailable(false)" class="action-btn action-btn--admin">
@@ -152,10 +152,10 @@
 						</span>
 					</ng-container>
 
-					<button *ngIf="movieRequest && !movieRequest.denied && movie.requested" class="action-btn action-btn--danger" (click)="deny(false)">
+					<button id="denyBtn" *ngIf="movieRequest && !movieRequest.denied && movie.requested" class="action-btn action-btn--danger" (click)="deny()">
 						<i class="fas fa-times"></i> {{ 'Requests.Deny' | translate }}
 					</button>
-					<span *ngIf="movieRequest && movieRequest.denied" class="action-btn action-btn--warning" [matTooltip]="movieRequest?.deniedReason">
+					<span id="deniedButton" *ngIf="movieRequest && movieRequest.denied" class="action-btn action-btn--warning" [matTooltip]="movieRequest?.deniedReason">
 						<i class="fas fa-times"></i> {{ 'MediaDetails.Denied' | translate }}
 					</span>
 				</div>
