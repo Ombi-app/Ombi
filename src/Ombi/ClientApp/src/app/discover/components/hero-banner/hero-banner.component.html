@@ -26,7 +26,7 @@
                         class="hero-pause-btn"
                         [attr.aria-pressed]="paused()"
                         (click)="togglePause()"
-                        aria-label="Pause slideshow">
+                        [attr.aria-label]="paused() ? 'Play slideshow' : 'Pause slideshow'">
                         <i [class]="paused() ? 'fas fa-play' : 'fas fa-pause'" aria-hidden="true"></i>
                     </button>
                 }
