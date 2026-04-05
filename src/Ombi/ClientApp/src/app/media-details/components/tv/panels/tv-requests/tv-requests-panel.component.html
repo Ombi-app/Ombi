@@ -5,7 +5,7 @@
 <div class="requests-list" *ngIf="tvRequest?.length > 0">
 	<div *ngFor="let request of tvRequest" class="request-card">
 		<!-- Request Header -->
-		<div class="request-header" (click)="request._expanded = !request._expanded">
+		<div class="request-header" (click)="toggleExpanded(request)">
 			<div class="request-header-left">
 				<span class="request-status-indicator {{ getRequestStatusClass(request) }}"></span>
 				<div class="request-meta">
@@ -29,19 +29,19 @@
 				<span *ngIf="request.source !== RequestSource.Ombi" class="request-source">
 					{{ 'MediaDetails.RequestSource' | translate }} {{ RequestSource[request.source] }}
 				</span>
-				<i class="fas fa-chevron-down expand-icon" [class.expanded]="request._expanded"></i>
+				<i class="fas fa-chevron-down expand-icon" [class.expanded]="isExpanded(request)"></i>
 			</div>
 		</div>
 
 		<!-- Expanded Content -->
-		<div class="request-body" *ngIf="request._expanded">
+		<div class="request-body" *ngIf="isExpanded(request)">
 			<!-- Season Pills -->
 			<div class="request-season-selector">
 				<button
 					*ngFor="let season of request.seasonRequests; let i = index"
 					class="request-season-chip"
-					[class.active]="(request._selectedSeason ?? 0) === i"
-					(click)="request._selectedSeason = i"
+					[class.active]="getSelectedSeasonIndex(request) === i"
+					(click)="setSelectedSeason(request, i)"
 				>
 					{{ 'Requests.Season' | translate }} {{ season.seasonNumber }}
 				</button>

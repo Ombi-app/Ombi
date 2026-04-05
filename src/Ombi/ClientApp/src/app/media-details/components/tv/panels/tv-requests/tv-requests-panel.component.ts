@@ -28,6 +28,8 @@ export class TvRequestsPanelComponent {
     @Input() public manageOwnRequests: boolean;
 
     public RequestSource = RequestSource;
+    public expandedRequests = new Set<number>();
+    public selectedSeasons: Record<number, number> = {};
 
     constructor(
         private requestService: RequestService,
@@ -37,8 +39,28 @@ export class TvRequestsPanelComponent {
         private translateService: TranslateService
     ) {}
 
+    public isExpanded(request: IChildRequests): boolean {
+        return this.expandedRequests.has(request.id);
+    }
+
+    public toggleExpanded(request: IChildRequests): void {
+        if (this.expandedRequests.has(request.id)) {
+            this.expandedRequests.delete(request.id);
+        } else {
+            this.expandedRequests.add(request.id);
+        }
+    }
+
+    public getSelectedSeasonIndex(request: IChildRequests): number {
+        return this.selectedSeasons[request.id] ?? 0;
+    }
+
+    public setSelectedSeason(request: IChildRequests, index: number): void {
+        this.selectedSeasons[request.id] = index;
+    }
+
     public getSelectedSeason(request: IChildRequests): INewSeasonRequests | null {
-        const index = (request as any)._selectedSeason ?? 0;
+        const index = this.getSelectedSeasonIndex(request);
         return request.seasonRequests?.[index] || null;
     }
 
