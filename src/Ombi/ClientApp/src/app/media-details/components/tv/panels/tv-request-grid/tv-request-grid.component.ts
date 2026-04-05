@@ -127,24 +127,27 @@ export class TvRequestGridComponent {
             return;
         }
 
-        this.tv.requested = true;
+        const firstSeason = this.tv.firstSeason;
+        const latestSeason = this.tv.latestSeason;
+        const requestAll = this.tv.requestAll;
 
         const viewModel = <ITvRequestViewModelV2>{
-            firstSeason: this.tv.firstSeason,
-            latestSeason: this.tv.latestSeason,
-            requestAll: this.tv.requestAll,
+            firstSeason,
+            latestSeason,
+            requestAll,
             theMovieDbId: this.tv.id,
             requestOnBehalf: null,
             languageCode: this.translate.currentLang,
         };
+
+        const selectedEpisodes: IEpisodesRequests[] = [];
         viewModel.seasons = [];
         this.tv.seasonRequests.forEach((season) => {
             const seasonsViewModel = <ISeasonsViewModel>{ seasonNumber: season.seasonNumber, episodes: [] };
-            if (!this.tv.latestSeason && !this.tv.requestAll && !this.tv.firstSeason) {
+            if (!latestSeason && !requestAll && !firstSeason) {
                 season.episodes.forEach((ep) => {
                     if (this.selection.isSelected(ep)) {
-                        ep.requested = true;
-                        ep.requestStatus = "Common.PendingApproval";
+                        selectedEpisodes.push(ep);
                         seasonsViewModel.episodes.push({ episodeNumber: ep.episodeNumber });
                     }
                 });
@@ -167,14 +170,14 @@ export class TvRequestGridComponent {
 
                     const requestResult = await this.requestServiceV2.requestTv(viewModel).toPromise();
                     if (requestResult) {
-                        this.postRequest(requestResult);
+                        this.postRequest(requestResult, selectedEpisodes);
                     }
                 }
             });
         } else {
             const requestResult = await this.requestServiceV2.requestTv(viewModel).toPromise();
             if (requestResult) {
-                this.postRequest(requestResult);
+                this.postRequest(requestResult, selectedEpisodes);
             }
         }
     }
@@ -194,34 +197,37 @@ export class TvRequestGridComponent {
         await this.submitRequests();
     }
 
-    private postRequest(requestResult: IRequestEngineResult) {
+    private postRequest(requestResult: IRequestEngineResult, selectedEpisodes: IEpisodesRequests[]) {
         if (requestResult.result) {
             this.notificationService.send(
                 this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.tv.title })
             );
 
+            this.tv.requested = true;
             this.selection.clear();
 
-            if (this.tv.firstSeason) {
-                this.tv.seasonRequests[0].episodes.forEach((ep) => {
+            const markPending = (season: INewSeasonRequests) => {
+                this.getCheckableEpisodes(season).forEach((ep) => {
                     ep.requested = true;
                     ep.requestStatus = "Common.PendingApproval";
                 });
+            };
+
+            if (this.tv.firstSeason) {
+                markPending(this.tv.seasonRequests[0]);
             }
             if (this.tv.requestAll) {
-                this.tv.seasonRequests.forEach((season) => {
-                    season.episodes.forEach((ep) => {
-                        ep.requested = true;
-                        ep.requestStatus = "Common.PendingApproval";
-                    });
-                });
+                this.tv.seasonRequests.forEach(markPending);
             }
             if (this.tv.latestSeason) {
-                this.tv.seasonRequests[this.tv.seasonRequests.length - 1].episodes.forEach((ep) => {
-                    ep.requested = true;
-                    ep.requestStatus = "Common.PendingApproval";
-                });
+                markPending(this.tv.seasonRequests[this.tv.seasonRequests.length - 1]);
             }
+
+            // Mark individually selected episodes
+            selectedEpisodes.forEach((ep) => {
+                ep.requested = true;
+                ep.requestStatus = "Common.PendingApproval";
+            });
         } else {
             this.notificationService.sendRequestEngineResultError(requestResult);
         }
