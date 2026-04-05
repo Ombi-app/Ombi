@@ -598,31 +598,16 @@
 
 // --- Recommendations / Similar ---
 .media-grid {
-    display: flex;
-    gap: 16px;
-    overflow-x: auto;
-    padding-bottom: 16px;
-    scroll-snap-type: x mandatory;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 20px;
 
-    &::-webkit-scrollbar {
-        height: 6px;
-    }
-
-    &::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 3px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.15);
-        border-radius: 3px;
+    @media (min-width: 769px) {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     }
 }
 
 .media-card {
-    flex-shrink: 0;
-    width: 160px;
-    scroll-snap-align: start;
     transition: transform 0.2s ease;
 
     &:hover {
@@ -634,17 +619,23 @@
         display: block;
     }
 
-    ::ng-deep img {
+    ombi-image,
+    ombi-image img {
         width: 100%;
-        border-radius: 10px;
         display: block;
+    }
+
+    ombi-image img {
+        border-radius: 10px;
+        aspect-ratio: 2 / 3;
+        object-fit: cover;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 }
 
 .media-card-title {
     margin-top: 8px;
-    font-size: 0.82rem;
+    font-size: 0.85rem;
     color: rgba(255, 255, 255, 0.7);
     white-space: nowrap;
     overflow: hidden;
