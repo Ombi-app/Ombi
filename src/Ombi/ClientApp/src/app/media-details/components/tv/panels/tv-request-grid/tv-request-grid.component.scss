@@ -368,10 +368,10 @@
     backdrop-filter: blur(12px);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding: 12px 24px;
-    animation: slideUp 0.25s ease;
+    animation: slide-up 0.25s ease;
 }
 
-@keyframes slideUp {
+@keyframes slide-up {
     from {
         transform: translateY(100%);
         opacity: 0;

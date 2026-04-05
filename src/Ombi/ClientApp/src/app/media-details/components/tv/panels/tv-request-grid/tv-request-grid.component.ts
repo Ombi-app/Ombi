@@ -68,7 +68,7 @@ export class TvRequestGridComponent {
     }
 
     public getCheckableEpisodes(season: INewSeasonRequests): IEpisodesRequests[] {
-        return season.episodes.filter(ep => !ep.available && !ep.requested && !ep.approved);
+        return season.episodes.filter(ep => !ep.available && !ep.requested && !ep.approved && !ep.denied);
     }
 
     public isAllSeasonSelected(season: INewSeasonRequests): boolean {
@@ -98,6 +98,7 @@ export class TvRequestGridComponent {
 
     public getSeasonStatusClass(season: INewSeasonRequests): string {
         const progress = this.getSeasonProgress(season);
+        if (progress.total === 0) return "";
         if (progress.available === progress.total) return "available";
         if (progress.available > 0 || progress.requested > 0) return "partial";
         const allDenied = season.episodes.every(ep => ep.denied);
@@ -106,7 +107,7 @@ export class TvRequestGridComponent {
     }
 
     public isEpisodeDisabled(ep: IEpisodesRequests): boolean {
-        return ep.available || ep.requested || ep.approved;
+        return ep.available || ep.requested || ep.approved || ep.denied;
     }
 
     public getEpisodeStatusKey(ep: IEpisodesRequests): string {
