@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
+    <ProjectReference Include="..\Ombi.Mapping\Ombi.Mapping.csproj" />
     <ProjectReference Include="..\Ombi.Test.Common\Ombi.Test.Common.csproj" />
   </ItemGroup>
 

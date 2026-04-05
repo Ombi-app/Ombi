@@ -8,6 +8,7 @@ import { DiscoverType } from "../carousel-list/carousel-list.component";
 import { GenreButtonSelectComponent } from "../genre/genre-button-select.component";
 import { RecentlyRequestedListComponent } from "../recently-requested-list/recently-requested-list.component";
 import { CarouselListComponent } from "../carousel-list/carousel-list.component";
+import { HeroBannerComponent } from "../hero-banner/hero-banner.component";
 
 @Component({
     standalone: true,
@@ -20,7 +21,8 @@ import { CarouselListComponent } from "../carousel-list/carousel-list.component"
         SkeletonModule,
         GenreButtonSelectComponent,
         RecentlyRequestedListComponent,
-        CarouselListComponent
+        CarouselListComponent,
+        HeroBannerComponent
     ]
 })
 export class DiscoverComponent {
