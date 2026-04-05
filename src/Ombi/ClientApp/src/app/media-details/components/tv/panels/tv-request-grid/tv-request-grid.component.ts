@@ -168,12 +168,16 @@ export class TvRequestGridComponent {
                     viewModel.languageProfile = result?.sonarrLanguageId;
 
                     const requestResult = await this.requestServiceV2.requestTv(viewModel).toPromise();
-                    this.postRequest(requestResult);
+                    if (requestResult) {
+                        this.postRequest(requestResult);
+                    }
                 }
             });
         } else {
             const requestResult = await this.requestServiceV2.requestTv(viewModel).toPromise();
-            this.postRequest(requestResult);
+            if (requestResult) {
+                this.postRequest(requestResult);
+            }
         }
     }
 

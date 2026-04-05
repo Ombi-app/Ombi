@@ -84,7 +84,7 @@ export class TvRequestsPanelComponent {
             id: request.id
         }).toPromise();
 
-        if (result.result) {
+        if (result?.result) {
             request.approved = true;
             request.denied = false;
             request.seasonRequests.forEach((season) => {
@@ -93,7 +93,7 @@ export class TvRequestsPanelComponent {
                 });
             });
             this.messageService.send(this.translateService.instant("Requests.SuccessfullyApproved"));
-        } else {
+        } else if (result) {
             this.messageService.sendRequestEngineResultError(result);
         }
     }
