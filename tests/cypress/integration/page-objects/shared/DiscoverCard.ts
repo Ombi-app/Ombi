@@ -10,7 +10,7 @@ export enum DiscoverType {
 export class DiscoverCard {
     private id: string;
     private movie: boolean;
-    private type: DiscoverType;
+    private type?: DiscoverType;
 
     episodeRequestModal = new EpisodeRequestModal();
     constructor(id: string, movie: boolean, type?: DiscoverType) {

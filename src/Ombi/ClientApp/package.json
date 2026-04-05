@@ -12,7 +12,9 @@
 		"docs:json": "compodoc -p ./tsconfig.json -e json -d .",
 		"storybook": "start-storybook -p 6006",
 		"chromatic": "chromatic --exit-zero-on-changes",
-		"storybookbuild": "yarn build-storybook"
+		"storybookbuild": "yarn build-storybook",
+		"test": "vitest run",
+		"test:watch": "vitest"
 	},
 	"private": true,
 	"dependencies": {
@@ -71,7 +73,9 @@
 		"@typescript-eslint/utils": "^8.0.0",
 		"chromatic": "^6.7.1",
 		"eslint": "~9.18.0",
-		"typescript": "5.8.3"
+		"jsdom": "^29.0.1",
+		"typescript": "5.8.3",
+		"vitest": "^4.1.2"
 	},
 	"optionalDependencies": {
 		"ts-node": "~5.0.1"
