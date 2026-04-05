@@ -235,6 +235,7 @@
         "DeniedRequest": "Anmodningen blev afvist",
         "RequestCollection": "Anmod Om Samling",
         "CollectionSuccesfullyAdded": "Samlingen {{name}} er blevet tilføjet!",
+        "NoRequests": "No requests yet",
         "NeedToSelectEpisodes": "Du skal vælge nogle episoder!",
         "RequestAddedSuccessfully": "{{title}} er anmodet med succes",
         "ErrorCodes": {
@@ -379,7 +380,12 @@
             "FirstSeasonTooltip": "Dette vil kun anmode om den første sæson for denne tv-serie",
             "LatestSeasonTooltip": "Dette vil kun anmode den seneste sæson for denne tv-serie",
             "NoEpisodes": "Der er desværre ingen episode data for denne tv-serie endnu!",
-            "SeasonNumber": "Sæson {{number}}"
+            "SeasonNumber": "Sæson {{number}}",
+            "OrSelectEpisodes": "or select specific episodes",
+            "Episodes": "episodes",
+            "SelectAll": "Select All",
+            "EpisodeSelected": "episode selected",
+            "EpisodesSelected": "episodes selected"
         },
         "SonarrConfiguration": "Konfiguration Af Sonarr",
         "RadarrConfiguration": "Konfiguration Af Radarr",
