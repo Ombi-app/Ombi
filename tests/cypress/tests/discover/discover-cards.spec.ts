@@ -35,6 +35,7 @@ describe("Discover Cards Tests", () => {
     cy.intercept("GET", "**/search/Movie/Popular/**").as("moviePopular");
     Page.visit();
     Page.popularCarousel.movieButton
+      .parent()
       .should("have.class", "filter-active");
 
     cy.wait("@moviePopular");
@@ -45,6 +46,7 @@ describe("Discover Cards Tests", () => {
     cy.intercept("GET", "**/search/Tv/popular/**").as("tvPopular");
     Page.visit();
     Page.popularCarousel.tvButton
+      .parent()
       .should("have.class", "filter-active");
 
     cy.wait("@tvPopular");
@@ -56,6 +58,7 @@ describe("Discover Cards Tests", () => {
     cy.intercept("GET", "**/search/Tv/popular/**").as("tvPopular");
     Page.visit();
     Page.popularCarousel.combinedButton
+      .parent()
       .should("have.class", "filter-active");
 
     cy.wait("@moviePopular");
