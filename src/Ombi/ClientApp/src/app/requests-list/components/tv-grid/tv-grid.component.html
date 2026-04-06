@@ -30,7 +30,7 @@
   <div class="request-card" *ngFor="let item of dataSource">
     <!-- Poster -->
     <a class="card-poster" [routerLink]="'/details/tv/' + item.parentRequest.externalProviderId">
-      <img *ngIf="item.parentRequest.background" [src]="item.parentRequest.background" [alt]="item.parentRequest.title" loading="lazy" />
+      <img *ngIf="item.parentRequest.background" [src]="'https://image.tmdb.org/t/p/w300' + item.parentRequest.background" [alt]="item.parentRequest.title" loading="lazy" />
       <div *ngIf="!item.parentRequest.background" class="no-poster">
         <i class="fas fa-tv"></i>
       </div>
