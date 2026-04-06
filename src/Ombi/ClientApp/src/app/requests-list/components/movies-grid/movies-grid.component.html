@@ -39,7 +39,7 @@
 <div class="card-grid" *ngIf="dataSource && dataSource.data.length > 0">
   <div class="request-card" *ngFor="let item of dataSource.data" [class.selected]="selection.isSelected(item)">
     <!-- Selection Checkbox -->
-    <div class="card-select" *ngIf="isAdmin" (click)="$event.stopPropagation()">
+    <div class="card-select" *ngIf="isAdmin" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
       <mat-checkbox
         [id]="'adminSelectCheckbox' + item.theMovieDbId"
         [attr.aria-label]="('Requests.Select' | translate: { title: item.title })"
@@ -78,7 +78,7 @@
       <div class="card-meta">
         <div class="meta-item">
           <i class="fas fa-user"></i>
-          <span [id]="'requestedBy' + item.theMovieDbId">{{ item.requestedByAlias ? item.requestedByAlias : item.requestedUser?.userAlias }}</span>
+          <span [id]="'requestedBy' + item.theMovieDbId">{{ item.requestedByAlias || item.requestedUser?.userAlias }}</span>
         </div>
         <div class="meta-item">
           <i class="fas fa-calendar-alt"></i>
