@@ -7,8 +7,13 @@
         "SignInWith": "Влезте с {{appName}}",
         "SignInWithPlex": "Влезте с Plex",
         "ForgottenPassword": "Забравили сте паролата си?",
+        "Or": "or",
+        "BackToSignInOptions": "Back to sign in options",
+        "ShowPassword": "Show password",
+        "HidePassword": "Hide password",
         "Errors": {
-            "IncorrectCredentials": "Неправилно потребителско име или парола"
+            "IncorrectCredentials": "Неправилно потребителско име или парола",
+            "UsernameRequired": "Username is required"
         }
     },
     "Common": {
