@@ -21,7 +21,7 @@ export abstract class BaseGridComponent<T> implements OnInit, AfterViewInit {
 
     protected sortActive: string = "requestedDate";
     protected sortDirection: string = "desc";
-    private reload$ = new Subject<void>();
+    private readonly reload$ = new Subject<void>();
 
     protected abstract storageKeySort: string;
     protected abstract storageKeySortOrder: string;

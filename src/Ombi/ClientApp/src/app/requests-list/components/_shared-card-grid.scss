@@ -20,7 +20,7 @@
   padding: 7px 16px;
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  background: transparent;
+  background: none;
   color: rgba(255, 255, 255, 0.6);
   font-size: 0.82rem;
   font-weight: 500;
@@ -30,8 +30,8 @@
 
   &:hover {
     border-color: rgba(255, 255, 255, 0.25);
-    color: rgba(255, 255, 255, 0.85);
-    background: rgba(255, 255, 255, 0.04);
+    color: #d9d9d9;
+    background: #141414;
   }
 
   &.active {
@@ -267,7 +267,7 @@
   justify-content: center;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  background: transparent;
+  background: none;
   color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -275,7 +275,7 @@
   &:hover {
     border-color: rgba(255, 255, 255, 0.25);
     color: #fff;
-    background: rgba(255, 255, 255, 0.06);
+    background: #1a1a1a;
   }
 }
 
@@ -305,7 +305,7 @@
 // Paginator
 /* stylelint-disable selector-pseudo-element-no-unknown */
 ::ng-deep .mat-paginator {
-  background: transparent !important;
+  background: none !important;
   color: rgba(255, 255, 255, 0.6);
   margin-top: 24px;
 }

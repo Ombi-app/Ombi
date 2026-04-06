@@ -49,7 +49,7 @@
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
-  background: transparent;
+  background: none;
   color: rgba(255, 255, 255, 0.55);
   font-size: 0.9rem;
   font-weight: 500;
@@ -62,8 +62,8 @@
   }
 
   &:hover {
-    color: rgba(255, 255, 255, 0.8);
-    background: rgba(255, 255, 255, 0.1);
+    color: #ccc;
+    background: #1a1a1a;
   }
 
   &.active {
