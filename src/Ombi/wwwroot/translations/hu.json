@@ -236,6 +236,11 @@
         "RequestCollection": "Kérés gyűjtemény",
         "CollectionSuccesfullyAdded": "A(z) {{name}} gyűjtemény sikeresen hozzáadva!",
         "NoRequests": "No requests yet",
+        "SelectAll": "Select All",
+        "Select": "Select {{title}}",
+        "GridSize": "Grid size",
+        "BulkActions": "Bulk actions for {{count}} items",
+        "ManageYourRequests": "Manage your requests",
         "NeedToSelectEpisodes": "Ki kell választani néhány epizódot!",
         "RequestAddedSuccessfully": "Kérés sikeresen leadva erre: {{title}}",
         "ErrorCodes": {
