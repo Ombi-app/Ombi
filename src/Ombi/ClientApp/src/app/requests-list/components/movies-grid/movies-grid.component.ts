@@ -81,6 +81,7 @@ export class MoviesGridComponent extends BaseGridComponent<IMovieRequests> {
     }
 
     protected override setData(data: IMovieRequests[]) {
+        this.selection.clear();
         this.dataSource = new MatTableDataSource(data);
     }
 

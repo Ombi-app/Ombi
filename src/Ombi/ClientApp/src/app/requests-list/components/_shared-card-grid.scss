@@ -51,6 +51,7 @@
 .display-count {
   width: 72px;
 
+  /* stylelint-disable selector-pseudo-element-no-unknown */
   ::ng-deep .mat-form-field-wrapper {
     padding-bottom: 0;
   }
@@ -60,6 +61,7 @@
     padding: 6px 0;
     margin-top: 0;
   }
+  /* stylelint-enable selector-pseudo-element-no-unknown */
 }
 
 // Card Grid
@@ -301,11 +303,13 @@
 }
 
 // Paginator
+/* stylelint-disable selector-pseudo-element-no-unknown */
 ::ng-deep .mat-paginator {
   background: transparent !important;
   color: rgba(255, 255, 255, 0.6);
   margin-top: 24px;
 }
+/* stylelint-enable selector-pseudo-element-no-unknown */
 
 // Responsive
 @media (max-width: 640px) {
