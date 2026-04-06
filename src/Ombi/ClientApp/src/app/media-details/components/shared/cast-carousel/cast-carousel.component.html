@@ -1,29 +1,22 @@
-<mat-card class="mat-elevation-z8  spacing-below">
-    <mat-card-header>{{'MediaDetails.Casts.CastTitle' | translate}}</mat-card-header>
-    <mat-card-content>
-        <p-carousel [value]="cast" easing="easeOutStrong" [responsiveOptions]="responsiveOptions"  [numVisible]="5" >
-            <ng-template let-item pTemplate="item">
-                <div class="row justify-content-md-center mat-card mat-card-flat carousel-item">
-                    <div class="bottom-space">
-                        <a *ngIf="item.image" [routerLink]="'/discover/actor/' + item.id">
-                            <ombi-image class="cast-profile-img" src="https://image.tmdb.org/t/p/w300{{item.image}}"></ombi-image>
-                        </a>
-                        <a *ngIf="item.profile_path" [routerLink]="'/discover/actor/' + item.id">
-                            <ombi-image class="cast-profile-img" src="https://image.tmdb.org/t/p/w300{{item.profile_path}}"></ombi-image>
-                        </a>
-                        <i *ngIf="!item.image && !item.profile_path"  class="fa-solid fa-user-large  fa-2xl crew-profile-img" aria-hidden="true"></i>
-
-                    </div>
-                    <div class="col-12">
-                        <span *ngIf="item.name"><strong>{{item.name}}</strong></span>
-                        <span *ngIf="item.person"><strong>{{item.person}}</strong></span>
-                    </div>
-                    <div class="col-12">
-                        <span *ngIf="item.character"><small>{{item.character}}</small></span>
-                    </div>
-
-                </div>
-            </ng-template>
-        </p-carousel>
-    </mat-card-content>
-</mat-card>
+<p-carousel [value]="cast" easing="easeOutStrong" [responsiveOptions]="responsiveOptions" [numVisible]="6">
+    <ng-template let-item pTemplate="item">
+        <div class="cast-card">
+            <div class="cast-image-wrap">
+                <ng-container *ngIf="item.image || item.profile_path; else placeholderIcon">
+                    <a [routerLink]="'/discover/actor/' + item.id" [attr.aria-label]="item.name || item.person">
+                        <ombi-image class="cast-profile-img" src="https://image.tmdb.org/t/p/w300{{item.image || item.profile_path}}"></ombi-image>
+                    </a>
+                </ng-container>
+                <ng-template #placeholderIcon>
+                    <i class="fa-solid fa-user-large fa-2xl cast-placeholder-icon" aria-hidden="true"></i>
+                </ng-template>
+            </div>
+            <div class="cast-name">
+                <strong>{{item.name || item.person}}</strong>
+            </div>
+            <div class="cast-character" *ngIf="item.character">
+                <small>{{item.character}}</small>
+            </div>
+        </div>
+    </ng-template>
+</p-carousel>
