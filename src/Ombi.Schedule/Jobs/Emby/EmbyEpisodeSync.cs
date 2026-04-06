@@ -28,6 +28,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.External.MediaServers.Emby;
@@ -107,21 +108,22 @@ namespace Ombi.Schedule.Jobs.Emby
         {
             // Preload existing data to eliminate N+1 queries
             var seriesLookup = await _repo.GetAllSeriesEmbyIds();
-            var episodeLookup = await _repo.GetAllEpisodeEmbyIds();
+            var episodeMetadata = await _repo.GetAllEpisodeMetadata();
 
             var total = 0;
             var processed = 0;
             var epToAdd = new HashSet<EmbyEpisode>();
+            var hasUpserts = false;
             var episodesInCurrentBatch = new HashSet<string>(); // Track episodes in current batch to avoid duplicates
-            
+
             _logger.LogInformation($"Starting episode sync for server {server.Name}");
-            
+
             // Get initial episode count
             EmbyItemContainer<EmbyEpisodes> allEpisodes;
             if (recentlyAdded)
             {
                 var recentlyAddedAmountToTake = AmountToTake;
-                allEpisodes = await Api.RecentlyAddedEpisodes(server.ApiKey, parentIdFilter, 0, recentlyAddedAmountToTake, server.AdministratorId, server.FullUri);
+                allEpisodes = await FetchEpisodesWithRetry(() => Api.RecentlyAddedEpisodes(server.ApiKey, parentIdFilter, 0, recentlyAddedAmountToTake, server.AdministratorId, server.FullUri));
                 total = allEpisodes.TotalRecordCount;
                 if (total > recentlyAddedAmountToTake)
                 {
@@ -130,12 +132,12 @@ namespace Ombi.Schedule.Jobs.Emby
             }
             else
             {
-                allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, 0, AmountToTake, server.AdministratorId, server.FullUri);
+                allEpisodes = await FetchEpisodesWithRetry(() => Api.GetAllEpisodes(server.ApiKey, parentIdFilter, 0, AmountToTake, server.AdministratorId, server.FullUri));
                 total = allEpisodes.TotalRecordCount;
             }
-            
+
             _logger.LogInformation($"Processing {total} episodes in chunks of {AmountToTake}");
-            
+
             while (processed < total)
             {
                 _logger.LogInformation($"Processing chunk {processed}/{total}");
@@ -154,17 +156,35 @@ namespace Ombi.Schedule.Jobs.Emby
 
                     // Create unique key for multi-episode files to prevent duplicates
                     var episodeKey = $"{ep.Id}_{ep.IndexNumber}_{ep.ParentIndexNumber}";
-                    
-                    // Check if episode already exists using preloaded HashSet (O(1) lookup)
-                    var existingInDatabase = episodeLookup.Contains(ep.Id);
+
+                    // Check if episode already exists using preloaded metadata (O(1) lookup)
+                    var existingInDatabase = episodeMetadata.ContainsKey(ep.Id);
                     var existingInCurrentBatch = episodesInCurrentBatch.Contains(episodeKey);
 
-                    if (!existingInDatabase && !existingInCurrentBatch)
+                    if (existingInDatabase)
                     {
-                        // Sanity checks
-                        if (ep.IndexNumber == 0)
+                        // Check if metadata has changed (e.g. Emby re-identified the file)
+                        var existing = episodeMetadata[ep.Id];
+                        if (existing.EpisodeNumber != ep.IndexNumber || existing.SeasonNumber != ep.ParentIndexNumber)
                         {
-                            _logger.LogWarning($"Episode {ep.Name} has no episode number. Skipping.");
+                            _logger.LogInformation("Episode {0} metadata changed (S{1}E{2} -> S{3}E{4}), updating",
+                                ep.Name, existing.SeasonNumber, existing.EpisodeNumber, ep.ParentIndexNumber, ep.IndexNumber);
+                            var entity = await _repo.GetEpisodeByEmbyId(ep.Id);
+                            if (entity != null)
+                            {
+                                entity.EpisodeNumber = ep.IndexNumber;
+                                entity.SeasonNumber = ep.ParentIndexNumber;
+                                hasUpserts = true;
+                            }
+                            episodeMetadata[ep.Id] = (ep.IndexNumber, ep.ParentIndexNumber);
+                        }
+                    }
+                    else if (!existingInCurrentBatch)
+                    {
+                        // Sanity checks - skip only true unindexed specials (no episode AND no season number)
+                        if (ep.IndexNumber == 0 && ep.ParentIndexNumber == 0)
+                        {
+                            _logger.LogWarning($"Episode {ep.Name} has no episode or season number. Skipping.");
                             continue;
                         }
 
@@ -232,37 +252,64 @@ namespace Ombi.Schedule.Jobs.Emby
                     {
                         await _repo.AddRange(epToAdd);
                         _logger.LogInformation($"Committed {epToAdd.Count} episodes to database. Progress: {processed}/{total}");
-                        
-                        // Update the episode lookup with newly added episodes to prevent duplicates in subsequent batches
+
+                        // Update the episode metadata with newly added episodes to prevent duplicates in subsequent batches
                         foreach (var episode in epToAdd)
                         {
-                            episodeLookup.Add(episode.EmbyId);
+                            episodeMetadata[episode.EmbyId] = (episode.EpisodeNumber, episode.SeasonNumber);
                         }
                     }
+                    else if (hasUpserts)
+                    {
+                        // Save upserted episode metadata changes even if no new episodes were added
+                        await _repo.SaveChangesAsync();
+                        _logger.LogInformation($"Saved episode metadata updates. Progress: {processed}/{total}");
+                    }
                     epToAdd.Clear();
+                    hasUpserts = false;
                     episodesInCurrentBatch.Clear();
                 }
 
                 // Get next chunk of episodes for processing
                 if (!recentlyAdded && processed < total)
                 {
-                    allEpisodes = await Api.GetAllEpisodes(server.ApiKey, parentIdFilter, processed, AmountToTake, server.AdministratorId, server.FullUri);
+                    allEpisodes = await FetchEpisodesWithRetry(() => Api.GetAllEpisodes(server.ApiKey, parentIdFilter, processed, AmountToTake, server.AdministratorId, server.FullUri));
                 }
             }
 
-            // Final commit for any remaining episodes
+            // Final commit for any remaining episodes or upserts
             if (epToAdd.Any())
             {
                 await _repo.AddRange(epToAdd);
                 _logger.LogInformation($"Final commit: {epToAdd.Count} episodes");
-                
-                // Update the episode lookup with newly added episodes
-                foreach (var episode in epToAdd)
-                {
-                    episodeLookup.Add(episode.EmbyId);
-                }
+            }
+            else if (hasUpserts)
+            {
+                await _repo.SaveChangesAsync();
+                _logger.LogInformation("Final commit: saved episode metadata updates");
             }
         }
+        private async Task<T> FetchEpisodesWithRetry<T>(Func<Task<T>> apiCall, int maxAttempts = 3)
+        {
+            for (var attempt = 1; attempt <= maxAttempts; attempt++)
+            {
+                try
+                {
+                    return await apiCall();
+                }
+                catch (Exception ex) when (attempt < maxAttempts && (ex is TaskCanceledException || ex is HttpRequestException))
+                {
+                    var delay = TimeSpan.FromSeconds(Math.Pow(2, attempt));
+                    _logger.LogWarning(ex, "Emby API call failed (attempt {Attempt}/{MaxAttempts}). Retrying in {Delay}s...",
+                        attempt, maxAttempts, delay.TotalSeconds);
+                    await Task.Delay(delay);
+                }
+            }
+
+            // Should not reach here, but satisfies the compiler
+            return await apiCall();
+        }
+
         private bool _disposed;
         protected virtual void Dispose(bool disposing)
         {

@@ -20,6 +20,7 @@ namespace Ombi.Store.Repository
         // Performance optimization methods
         Task<HashSet<string>> GetAllSeriesEmbyIds();
         Task<HashSet<string>> GetAllEpisodeEmbyIds();
+        Task<Dictionary<string, (int EpisodeNumber, int SeasonNumber)>> GetAllEpisodeMetadata();
 
     }
 }
