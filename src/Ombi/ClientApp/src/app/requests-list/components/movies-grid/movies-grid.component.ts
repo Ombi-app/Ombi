@@ -136,9 +136,16 @@ export class MoviesGridComponent extends BaseGridComponent<IMovieRequests> {
 
     public async bulkDelete() {
         if (this.selection.isEmpty()) return;
-        let tasks = new Array<Observable<IRequestEngineResult>>();
+        const tasks = new Array<Observable<IRequestEngineResult>>();
         this.selection.selected.forEach(s => tasks.push(this.requestServiceV1.removeMovieRequestAsync(s.id)));
-        combineLatest(tasks).subscribe(() => {
+        combineLatest(tasks).subscribe((result: IRequestEngineResult[]) => {
+            const failed = result.filter(x => !x.result);
+            if (failed.length > 0) {
+                this.notification.error(`Some requests failed to delete: ${failed[0].errorMessage}`);
+                this.selection.clear();
+                this.refresh();
+                return;
+            }
             this.notification.success(this.translateService.instant('Requests.RequestPanel.Deleted'));
             this.selection.clear();
             this.refresh();
@@ -179,7 +186,8 @@ export class MoviesGridComponent extends BaseGridComponent<IMovieRequests> {
     }
 
     public getRequestDate(request: IMovieRequests): Date {
-        if (new Date(request.requestedDate).getFullYear() === 1) return request.requestedDate4k;
-        return request.requestedDate;
+        return this.checkDate(request.requestedDate)
+            ? request.requestedDate
+            : request.requestedDate4k;
     }
 }

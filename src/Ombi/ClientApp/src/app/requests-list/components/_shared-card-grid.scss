@@ -91,10 +91,13 @@
 
 // Poster
 .card-poster {
+  display: block;
   position: relative;
   overflow: hidden;
   cursor: pointer;
   background: #0e0e0e;
+  text-decoration: none;
+  color: inherit;
 
   img {
     width: 100%;
@@ -160,12 +163,17 @@
   color: #fff;
   margin: 0;
   line-height: 1.3;
-  cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 
-  &:hover { color: $accent-dark; }
+  a {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover { color: $accent-dark; }
+  }
 }
 
 .card-year {

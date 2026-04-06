@@ -3,6 +3,7 @@
   <div class="filter-chips">
     <button *ngFor="let filter of filterOptions" type="button" class="chip"
       [id]="filter.id" [class.active]="currentFilter === filter.type"
+      [attr.aria-pressed]="currentFilter === filter.type"
       (click)="switchFilter(filter.type)">
       {{ filter.label | translate }}
     </button>
@@ -27,7 +28,7 @@
 <div class="card-grid" *ngIf="dataSource.length > 0">
   <div class="request-card" *ngFor="let item of dataSource">
     <!-- Cover Art -->
-    <div class="card-poster" [routerLink]="'/details/artist/' + item.foreignArtistId">
+    <a class="card-poster" [routerLink]="'/details/artist/' + item.foreignArtistId">
       <img *ngIf="item.cover" [src]="item.cover" [alt]="item.title" loading="lazy" />
       <div *ngIf="!item.cover" class="no-poster">
         <i class="fas fa-music"></i>
@@ -35,12 +36,12 @@
       <div class="poster-overlay">
         <span class="view-details">{{ 'Requests.Details' | translate }}</span>
       </div>
-    </div>
+    </a>
 
     <!-- Card Body -->
     <div class="card-body">
       <div class="card-header">
-        <h3 class="card-title" [routerLink]="'/details/artist/' + item.foreignArtistId">{{ item.title }}</h3>
+        <h3 class="card-title"><a [routerLink]="'/details/artist/' + item.foreignArtistId">{{ item.title }}</a></h3>
         <span class="card-artist">{{ item.artistName }}</span>
         <span class="card-year">{{ item.releaseDate | ombiDate: 'P' }}</span>
       </div>

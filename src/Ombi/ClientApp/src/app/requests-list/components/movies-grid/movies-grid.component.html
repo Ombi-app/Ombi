@@ -3,6 +3,7 @@
   <div class="filter-chips">
     <button *ngFor="let filter of filterOptions" type="button" class="chip"
       [id]="filter.id" [class.active]="currentFilter === filter.type"
+      [attr.aria-pressed]="currentFilter === filter.type"
       (click)="switchFilter(filter.type)">
       {{ filter.label | translate }}
     </button>
@@ -47,7 +48,7 @@
     </div>
 
     <!-- Poster -->
-    <div class="card-poster" [routerLink]="'/details/movie/' + item.theMovieDbId">
+    <a class="card-poster" [routerLink]="'/details/movie/' + item.theMovieDbId">
       <img *ngIf="item.posterPath" [src]="'https://image.tmdb.org/t/p/w300' + item.posterPath" [alt]="item.title" loading="lazy" />
       <div *ngIf="!item.posterPath" class="no-poster">
         <i class="fas fa-film"></i>
@@ -55,12 +56,12 @@
       <div class="poster-overlay">
         <span class="view-details">{{ 'Requests.Details' | translate }}</span>
       </div>
-    </div>
+    </a>
 
     <!-- Card Body -->
     <div class="card-body">
       <div class="card-header">
-        <h3 class="card-title" [id]="'title' + item.theMovieDbId" [routerLink]="'/details/movie/' + item.theMovieDbId">{{ item.title }}</h3>
+        <h3 class="card-title" [id]="'title' + item.theMovieDbId"><a [routerLink]="'/details/movie/' + item.theMovieDbId">{{ item.title }}</a></h3>
         <span class="card-year">{{ item.releaseDate | ombiDate: 'P' }}</span>
       </div>
 
