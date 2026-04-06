@@ -15,6 +15,7 @@ import { IStreamingData } from "../../../../interfaces/IStreams";
 import { TranslateStatusPipe } from "../../../../pipes/TranslateStatus";
 import { OmbiDatePipe } from "../../../../pipes/OmbiDatePipe";
 import { ThousandShortPipe } from "../../../../pipes/ThousandShortPipe";
+import { QualityPipe } from "../../../../pipes/QualityPipe";
 
 @Component({
     standalone: true,
@@ -30,7 +31,8 @@ import { ThousandShortPipe } from "../../../../pipes/ThousandShortPipe";
         MatTooltipModule,
         TranslateStatusPipe,
         OmbiDatePipe,
-        ThousandShortPipe
+        ThousandShortPipe,
+        QualityPipe
     ]
 })
 export class MovieInformationPanelComponent implements OnInit {
