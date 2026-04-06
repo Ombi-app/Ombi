@@ -1,260 +1,358 @@
 @use "./styles/variables.scss" as *;
+
+// ─── Layout ──────────────────────────────────────────────
 .sidenav-container {
     min-height: 100vh;
-    -webkit-overflow-scrolling:touch;
-    overflow:auto;
+    overflow: auto;
 }
 
-.sidenav .mat-toolbar {
-    background: inherit;
-}
-
-.mat-toolbar.mat-primary {
+// ─── Top Bar ─────────────────────────────────────────────
+.top-bar {
     position: sticky;
     top: 0;
-    z-index: 1;
-}
-
-.middle {
+    z-index: 10;
     display: flex;
+    align-items: center;
+    gap: 16px;
+    height: 56px;
+    padding: 0 24px;
+    background: rgba($ombi-background-primary, 0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    transition: background 0.3s ease;
 }
 
-.menu-spacing {
-    margin-bottom: 5%;
+.hamburger-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+    }
 }
 
-.icon-spacing {
-    width:40px;
+.top-bar-search {
+    flex: 0 1 auto;
+    display: flex;
+    align-items: center;
+}
+
+.top-bar-spacer {
+    flex: 1;
+}
+
+// ─── Filter Chips ────────────────────────────────────────
+.filter-chips {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 30px;
+    padding: 0 14px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 12px;
+    font-weight: 500;
+    font-family: Inter, Roboto, sans-serif;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    user-select: none;
+
+    i {
+        font-size: 11px;
+    }
+
+    &:hover {
+        border-color: rgba(255, 255, 255, 0.25);
+        color: rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    &.active {
+        background: rgba($ombi-active, 0.15);
+        border-color: rgba($ombi-active, 0.4);
+        color: $ombi-active;
+
+        &:hover {
+            background: rgba($ombi-active, 0.22);
+            border-color: rgba($ombi-active, 0.55);
+        }
+    }
+}
+
+// ─── Profile (Top Bar) ──────────────────────────────────
+.profile-block {
+    flex-shrink: 0;
+}
+
+.profile-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.8);
+    padding: 4px 4px 4px 12px;
+    border-radius: 24px;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+
+        .profile-avatar {
+            box-shadow: 0 0 0 2px rgba($ombi-active, 0.4);
+        }
+    }
+}
+
+.profile-username {
+    font-size: 13px;
+    font-weight: 500;
+    font-family: Inter, Roboto, sans-serif;
+    letter-spacing: 0.01em;
+}
+
+.profile-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+// ─── Sidebar ────────────────────────────────────────────
+$sidenav-width: 240px;
+
+.sidenav {
+    width: $sidenav-width;
+    border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.sidenav-container .sidenav {
+    background: $ombi-background-accent;
+    color: #fff;
+    font-family: Inter, Roboto, sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+
+// ─── Sidebar Brand ───────────────────────────────────────
+.sidebar-brand {
+    padding: 28px 24px 20px;
+
+    .brand-link {
+        font-family: Montserrat, sans-serif;
+        font-weight: 800;
+        font-size: 22px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: $ombi-active;
+        text-decoration: none;
+        display: block;
+        line-height: 1.2;
+        overflow-wrap: break-word;
+
+        &:hover, &:focus, &:active {
+            color: $ombi-active;
+        }
+    }
+}
+
+// ─── Sidebar Navigation ─────────────────────────────────
+.sidebar-nav {
+    flex: 1;
+    padding: 0 12px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.nav-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.35);
+    padding: 16px 12px 8px;
+    text-transform: uppercase;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    padding: 10px 12px;
+    margin-bottom: 2px;
+    border-radius: 10px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.65);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.95);
+    }
+
+    .nav-indicator {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3px;
+        height: 0;
+        border-radius: 0 3px 3px 0;
+        background: $ombi-active;
+        transition: height 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &--active {
+        background: rgba($ombi-active, 0.12);
+        color: #fff;
+
+        &:hover {
+            background: rgba($ombi-active, 0.18);
+            color: #fff;
+        }
+
+        .nav-indicator {
+            height: 20px;
+        }
+
+        .nav-icon {
+            color: $ombi-active;
+        }
+    }
+}
+
+.nav-icon {
+    width: 20px;
     text-align: center;
+    font-size: 14px;
+    flex-shrink: 0;
+    transition: color 0.15s ease;
 }
 
-.example-form {
-    min-width: 150px;
-    max-width: 500px;
-    width: 100%;
+.nav-label {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.quater-width {
-    width: 25%;
+.nav-external-icon {
+    font-size: 10px;
+    opacity: 0.4;
+    margin-left: auto;
 }
 
-.autocomplete-img {
-    vertical-align: middle;
-    height: 63px;
+.nav-item-wrapper {
+    position: relative;
+
+    &:hover .nav-action,
+    &:focus-within .nav-action {
+        opacity: 0.5;
+        pointer-events: auto;
+    }
 }
 
-.mat-option {
-    height: 50px;
-    line-height: 50px;
-    padding: 0px 5px;
-}
-
-.slide-menu {
-    width: 100%;
-}
-
-::ng-deep .smaller-panel {
-    max-width: 170px !important;
-}
-
-.top-bar-container{
-    width: 95%;
+.nav-action {
     display: flex;
-    justify-content: center;
     align-items: center;
-    margin: auto;
+    justify-content: center;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    opacity: 0;
+    pointer-events: none;
+    padding: 4px 6px;
+    border: none;
+    background: none;
+    color: inherit;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 1 !important;
+        pointer-events: auto;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    &:focus-visible {
+        opacity: 1;
+        pointer-events: auto;
+        outline: 2px solid $ombi-active;
+        outline-offset: 2px;
+    }
 }
 
-.top-search-block{
-    height:84px;
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    flex:1;
-    margin-right:5%;
+.nav-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 12px 12px;
 }
 
-.top-search-bar{
-    width:100%;
+// ─── Sidebar Footer ─────────────────────────────────────
+.sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+// ─── Content ─────────────────────────────────────────────
+.content-container {
+    background: $ombi-background-primary;
+    color: #FFF;
 }
 
 .mat-drawer-content {
     position: relative;
-    overflow: hidden;
+    overflow: auto;
     z-index: 1;
     display: block;
     height: 100%;
-    /* overflow: auto; */
 }
 
-.profile-block a{
-    color: #FFF;
-    font-size: 0.8em;
-    font-weight: 100;
-    display:flex;
-    justify-content: flex-end;
-    align-items: flex-end;
-    text-transform: capitalize;
-    flex:0 0 250px;
-}
-
-
-.profile-username{
-    justify-content: center;
-    display:flex;
-    height:50px;
-    align-items: center;
-    margin-right:5px;
-}
-
-#nav-openMobile {
-    display: none;
-}
-
-@media (max-width: 600px) {
-    .profile-username{
-        display:none;
-    }
-
-}
-
-@media (max-width: 950px) {
-    #nav-openMobile {
-        display: block;
-    }
-}
-
-.profile-img{
-    display: flex;
-    justify-content: center;
-    align-self: center;
-}
-
-.profile-img img {
-    width: 40px;
-}
-
-
-.full {
-    width: 100%;
-}
-.bottom-nav {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    text-align: center;
-}
-// New CSS for new style //
-
-.sidenav-container .sidenav{
-    background: $ombi-background-accent;
-    color:#FFF;
-    font-family: 'Montserrat', sans-serif;
-
-
-    .application-name{
-        font-family: 'Montserrat', sans-serif;
-        text-transform: uppercase;
-        color: $ombi-active;
-        align-items:center;
-        font-weight: 700;
-        font-size:36px;
-        padding:40px 20px;
-        height:auto;
-        max-width: 300px;
-        display: flex;
-        white-space: normal;
-        word-break: break-word;
-
-        .application-name-link {
-            text-decoration: none;
-            color: inherit;
-
-            &:active, &:hover, &:focus {
-                color: inherit;
-            }
-        }
-    }
-
-    .outer-profile {
-        background: inherit;
-        box-shadow:none;
-    }
-
-    .mat-list-item{
-        color:#FFF;
-        font-family:Roboto, sans-serif;
-        font-size: 16px;
-        font-weight: 400;
-        padding:10px 20px;
-        height:auto;
-        margin-bottom:0.5rem;
-    }
-    
-    .active-list-item{
-        color:$ombi-background-accent;
-        background: $ombi-active;
-        border-radius:0px 30px 30px 0px;
-        padding:10px 20px;
-        height:auto;
-    }
-}
-
-@media (max-width: 600px) {
-    .sidenav-container .sidenav{
-        .application-name{
-            font-size:2em;
-            max-width:200px;
-        }
-        .mat-list-item{
-            width:14rem;
-            padding:10px 0px;
-        }
-        .active-list-item{
-            width:14rem;
-            padding:10px 0px;
-        }
-    }
-}
-
-.sidenav {
-    width: 230px;
-}
-
-.outer-profile .profile-img-container {
-    background: inherit;
-}
-
-.content-container{
-    background: $ombi-background-primary;
-    color:#FFF;
-
-    .top-bar-container{
-        background: $ombi-background-primary;
-        color:$ombi-background-primary-accent;
-        padding-top:1em;
-    }
-
-}
-
-::ng-deep .mat-toolbar-row, .mat-toolbar-single-row{
-    height:auto;
-}
-
-::ng-deep .mat-sidenav-fixed .mat-list-base .mat-list-item .mat-list-item-content, .mat-list-base .mat-list-option .mat-list-item-content{
-    padding:0;
-    margin: 0 4em 0 0.5em;
-}
-
-.advanced-search {
-    float:right;
-    margin-top: 6%;
-    margin-right: 10%;
-    cursor: pointer;
-}
-.active-advanced {
-    color:$ombi-background-accent;
-        background: $ombi-active;
+// ─── Overrides ───────────────────────────────────────────
+::ng-deep .mat-toolbar-row, ::ng-deep .mat-toolbar-single-row {
+    height: auto;
 }
 
 ::ng-deep .dialog-responsive {
@@ -266,9 +364,50 @@
         width: 100%;
     }
 }
-@media only screen and (min-width: 1025px) {
 
-    .content-container{
-        margin-left: 223px !important;
+// ─── Responsive ──────────────────────────────────────────
+#nav-openMobile {
+    display: none;
+}
+
+@media (max-width: 600px) {
+    .profile-username {
+        display: none;
+    }
+
+    .top-bar {
+        padding: 0 12px;
+        gap: 8px;
+    }
+
+    .chip .chip-label {
+        display: none;
+    }
+
+    .chip {
+        padding: 0 10px;
+        min-width: 30px;
+        justify-content: center;
+    }
+
+    .sidenav {
+        width: 260px;
+    }
+}
+
+@media (max-width: 950px) {
+    #nav-openMobile {
+        display: flex;
+    }
+
+    .filter-chips {
+        gap: 6px;
+    }
+}
+
+@media only screen and (min-width: 1025px) {
+    .content-container {
+        // Override Angular Material's inline margin-left on mat-sidenav-content
+        margin-left: $sidenav-width - 7px !important;
     }
 }

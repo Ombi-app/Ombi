@@ -1,5 +1,19 @@
-<form [formGroup]='searchForm'>
-    <mat-form-field floatLabel="never" style="width: 100%;">
-        <input id="nav-search"  autofocus="autofocus" matInput placeholder="{{'NavigationBar.Search' | translate}}"  formControlName='input'>
-    </mat-form-field>
+<form [formGroup]='searchForm' class="search-wrapper" [class.expanded]="isExpanded"
+    (submit)="$event.preventDefault()">
+    <button type="button" id="nav-search-btn" class="search-icon-btn" (click)="toggleSearch()" aria-label="Search">
+        <i class="fas fa-search"></i>
+    </button>
+    <input
+        #searchInput
+        id="nav-search"
+        class="search-input"
+        [attr.tabindex]="isExpanded ? null : -1"
+        [placeholder]="isExpanded ? ('NavigationBar.Search' | translate) : ''"
+        formControlName="input"
+        (blur)="onBlur()"
+        autocomplete="off"
+        spellcheck="false">
+    <button type="button" class="search-clear-btn" *ngIf="searchForm.get('input')?.value" (click)="clearSearch()" aria-label="Clear search">
+        <i class="fas fa-times"></i>
+    </button>
 </form>
