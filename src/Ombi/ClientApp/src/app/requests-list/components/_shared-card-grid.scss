@@ -19,7 +19,7 @@
 .chip {
   padding: 7px 16px;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid #222;
   background: #111;
   color: #999;
   font-size: 0.82rem;
@@ -29,7 +29,7 @@
   white-space: nowrap;
 
   &:hover {
-    border-color: rgba(255, 255, 255, 0.25);
+    border-color: #444;
     color: #d9d9d9;
     background: #141414;
   }
@@ -79,15 +79,15 @@
 
 // Request Card
 .request-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #111;
+  border: 1px solid #1a1a1a;
   border-radius: 12px;
   overflow: hidden;
   transition: all 0.25s ease;
 
   &:hover {
-    border-color: rgba(255, 255, 255, 0.12);
-    background: rgba(255, 255, 255, 0.05);
+    border-color: #2a2a2a;
+    background: #141414;
     transform: translateY(-2px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 
@@ -96,7 +96,7 @@
 
   &.selected {
     border-color: $accent-dark;
-    background: rgba($accent-dark, 0.06);
+    background: #0d1a1f;
   }
 }
 
@@ -105,7 +105,7 @@
   position: relative;
   overflow: hidden;
   cursor: pointer;
-  background: rgba(255, 255, 255, 0.02);
+  background: #0e0e0e;
 
   img {
     width: 100%;
@@ -122,11 +122,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 100%);
+    background: linear-gradient(135deg, #111 0%, #141414 100%);
 
     i {
       font-size: 2.5rem;
-      color: rgba(255, 255, 255, 0.15);
+      color: #333;
     }
   }
 }
@@ -134,7 +134,7 @@
 .poster-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%);
+  background: linear-gradient(to top, #0a0a0a 0%, #111 60%);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -182,7 +182,7 @@
 
 .card-year {
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: #777;
 }
 
 // Status
@@ -221,7 +221,7 @@
   align-items: center;
   gap: 8px;
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: #808080;
 
   i {
     width: 14px;
@@ -237,7 +237,7 @@
   gap: 8px;
   margin-top: 4px;
   padding-top: 10px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid #1a1a1a;
 }
 
 .btn-detail {
@@ -267,14 +267,14 @@
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid #222;
   background: #111;
   color: #808080;
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
-    border-color: rgba(255, 255, 255, 0.25);
+    border-color: #444;
     color: #fff;
     background: #1a1a1a;
   }
@@ -291,14 +291,14 @@
 
   .empty-icon {
     font-size: 3rem;
-    color: rgba(255, 255, 255, 0.1);
+    color: #333;
     margin-bottom: 16px;
   }
 
   h3 {
     font-size: 1.1rem;
     font-weight: 500;
-    color: rgba(255, 255, 255, 0.4);
+    color: #777;
     margin: 0;
   }
 }

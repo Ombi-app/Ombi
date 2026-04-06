@@ -9,8 +9,8 @@
 }
 
 .skeleton-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #111;
+  border: 1px solid #1a1a1a;
   border-radius: 12px;
   overflow: hidden;
 }
@@ -18,7 +18,7 @@
 .skeleton-poster {
   aspect-ratio: var(--request-skeleton-media-ratio, 2 / 3);
   max-height: 200px;
-  background: rgba(255, 255, 255, 0.04);
+  background: #141414;
 }
 
 .sr-only {
@@ -43,7 +43,7 @@
 .skeleton-line {
   height: 12px;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.04);
+  background: #141414;
 
   &.wide { width: 85%; }
   &.medium { width: 60%; }
@@ -60,9 +60,9 @@
     inset: 0;
     background: linear-gradient(
       90deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.04) 50%,
-      transparent 100%
+      #141414 0%,
+      #1a1a1a 50%,
+      #141414 100%
     );
     animation: shimmer 1.5s infinite;
   }

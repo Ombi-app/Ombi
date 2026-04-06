@@ -4,7 +4,7 @@
 
 .options-header {
   padding: 12px 20px 8px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid #1a1a1a;
   margin-bottom: 4px;
 }
 
@@ -13,7 +13,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: rgba(255, 255, 255, 0.4);
+  color: #777;
 }
 
 .options-list {
@@ -39,7 +39,7 @@
     .option-icon { color: #f87171; }
 
     &:hover {
-      background: rgba(239, 68, 68, 0.08) !important;
+      background: #1f1111 !important;
     }
   }
 }
