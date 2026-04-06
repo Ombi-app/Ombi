@@ -1,136 +1,119 @@
 @use "./styles/variables.scss" as *;
 
-.ombi-card {
-    padding: 5px;
-}
-::ng-deep .p-carousel-indicators {
-  display: none !important;
-  }
-
-    
-.image {
-    border-radius: 10px;
-    opacity: 1;
+:host {
     display: block;
-    width: 100%;
-    height: auto;
-    transition: .5s ease;
-    backface-visibility: hidden;
-  }
-
-  
-.middle {
-    transition: .5s ease;
-    opacity: 0;
-    position: absolute;
-    top: 75%;
-    width: 90%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-  }
-
-  
-  .c {
-    position: relative;
-  }
-  
-.c:hover .image {
-    opacity: 0.3;
-  }
-  
-  .c:hover .middle {
-    opacity: 1;
-  }
-  
-.small-text {
-  font-size: 11px;
-}
-.title {
-  font-size: 16px;
-}
-.top-left {
-  font-size: 14px;
-  position: absolute;
-  top: 8px;
-  left: 16px;
 }
 
-
-.right {
-  text-align: right;
-  margin-top:-61px;
-}
-
-@media (max-width:520px){
-  .right{
-      margin-top:0px;
-      text-align: center;;
-  }
-}
-
-.discover-filter-buttons-group {
-  background: $ombi-background-primary;
-  border: 1px solid #293a4c;
-  border-radius: 30px;
-  color:#fff;
-  margin-bottom:10px;
-  margin-right: 30px;
-
-  .discover-filter-button{
-    background:inherit;
-    color:inherit;
-    padding:0 0px;
-    border-radius: 30px;
-    padding-left: 20px;
-    padding-right: 20px;
-    border-left:none;
-  }
-
-  ::ng-deep .mat-button-toggle-appearance-standard .mat-button-toggle-label-content{
-    line-height:40px;
-  }
-
-  .button-active{
-    background:#293a4c;
-  }
-
-
-}
-::ng-deep .discover-filter-button .mat-button-toggle-button:focus{
-  outline:none;
-}
-
-.card-skeleton {
-   padding: 5px;
-}
-
-.loading-container {
+// Filter toggle bar
+.filter-bar {
     display: flex;
-    gap: 10px;
-    padding: 0 20px;
-    margin-top: 20px;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+    margin-top: -44px;
 }
 
-.loading-container .col-2 {
-    flex: 0 0 auto;
-    width: calc(10% - 9px);
+.filter-toggle-group {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
+
+    .filter-toggle {
+        background: transparent;
+        color: rgba(255, 255, 255, 0.5);
+        border-left: none;
+        transition: all 0.2s ease;
+
+        &:hover {
+            color: rgba(255, 255, 255, 0.8);
+        }
+    }
+
+    .filter-active {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
+
+    ::ng-deep .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+        line-height: 36px;
+        padding: 0 18px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+    }
+
+    ::ng-deep .mat-button-toggle-button:focus {
+        outline: none;
+    }
+
+    ::ng-deep .mat-button-toggle-button:focus-visible {
+        outline: 2px solid rgba(255, 255, 255, 0.7);
+        outline-offset: -2px;
+    }
+}
+
+// Carousel wrapper
+.carousel-wrapper {
+    margin: 0 -4px;
+}
+
+:host ::ng-deep .p-carousel-indicators {
+    display: none !important;
+}
+
+// Carousel navigation arrows
+:host ::ng-deep .p-carousel-prev,
+:host ::ng-deep .p-carousel-next {
+    background: rgba(15, 23, 31, 0.7) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+    border-radius: 50% !important;
+    width: 40px !important;
+    height: 40px !important;
+    transition: all 0.2s ease !important;
+    backdrop-filter: blur(8px);
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.15) !important;
+        border-color: rgba(255, 255, 255, 0.3) !important;
+    }
+}
+
+// Responsive item sizing
+@media (min-width: 755px) {
+    :host ::ng-deep .p-carousel-item {
+        flex: 1 0 200px !important;
+    }
+}
+
+// Skeleton loading
+.skeleton-row {
+    display: flex;
+    gap: 12px;
+    overflow: hidden;
+}
+
+.skeleton-card {
+    flex: 0 0 180px;
+}
+
+// Mobile
+@media (max-width: 520px) {
+    .filter-bar {
+        margin-top: 0;
+        justify-content: center;
+        margin-bottom: 12px;
+    }
 }
 
 @media (max-width: 768px) {
-    .loading-container .col-2 {
-        width: calc(50% - 5px);
+    .skeleton-card {
+        flex: 0 0 140px;
     }
 }
 
 @media (max-width: 480px) {
-    .loading-container .col-2 {
-        width: calc(100% - 0px);
+    .skeleton-card {
+        flex: 0 0 120px;
     }
-}
-
-@media (min-width:755px){
-  :host ::ng-deep .p-carousel-item{
-    flex: 1 0 200px !important;
-  }
 }
