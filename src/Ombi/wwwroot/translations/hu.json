@@ -355,6 +355,7 @@
         "Availability": "Elérhetőség:",
         "RequestStatus": "Request Status:",
         "Quality": "Minőség:",
+        "Quality4K": "Quality (4K):",
         "RootFolderOverride": "Gyökér mappa felülírása:",
         "QualityOverride": "Minőség felülírása:",
         "Network": "Hálózat:",
@@ -375,6 +376,11 @@
         "Crews": {
             "CrewTitle": "Stáb"
         },
+        "OverviewTitle": "Overview",
+        "TmdbRating": "TMDB Rating",
+        "Critics": "Critics",
+        "Audience": "Audience",
+        "TrailerFor": "Trailer for",
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Ezzel kérni fogja a sorozat összes évadát",
             "FirstSeasonTooltip": "Ezzel kérni fogja a sorozat első évadát",
