@@ -236,6 +236,11 @@
         "RequestCollection": "Anmod Om Samling",
         "CollectionSuccesfullyAdded": "Samlingen {{name}} er blevet tilføjet!",
         "NoRequests": "No requests yet",
+        "SelectAll": "Select All",
+        "Select": "Select {{title}}",
+        "GridSize": "Grid size",
+        "BulkActions": "Bulk actions for {{count}} items",
+        "ManageYourRequests": "Manage your requests",
         "NeedToSelectEpisodes": "Du skal vælge nogle episoder!",
         "RequestAddedSuccessfully": "{{title}} er anmodet med succes",
         "ErrorCodes": {
