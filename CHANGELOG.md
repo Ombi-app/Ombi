@@ -1,127 +1,21 @@
-## [4.57.20](https://github.com/Ombi-app/Ombi/compare/v4.57.19...v4.57.20) (2026-04-06)
-
-
-
-## [4.57.19](https://github.com/Ombi-app/Ombi/compare/v4.57.18...v4.57.19) (2026-04-06)
+# [4.58.0](https://github.com/Ombi-app/Ombi/compare/v4.55.7...v4.58.0) (2026-04-06)
 
 
 ### Bug Fixes
 
-* the post path on the requests page for TV ([92d67a8](https://github.com/Ombi-app/Ombi/commit/92d67a876bab414634a4844358b2df91c3e85781))
-
-
-
-## [4.57.18](https://github.com/Ombi-app/Ombi/compare/v4.57.17...v4.57.18) (2026-04-06)
-
-
-
-## [4.57.17](https://github.com/Ombi-app/Ombi/compare/v4.57.16...v4.57.17) (2026-04-06)
-
-
-
-## [4.57.16](https://github.com/Ombi-app/Ombi/compare/v4.57.15...v4.57.16) (2026-04-06)
-
-
-
-## [4.57.15](https://github.com/Ombi-app/Ombi/compare/v4.57.14...v4.57.15) (2026-04-06)
-
-
-
-## [4.57.14](https://github.com/Ombi-app/Ombi/compare/v4.57.13...v4.57.14) (2026-04-06)
-
-
-
-## [4.57.13](https://github.com/Ombi-app/Ombi/compare/v4.57.12...v4.57.13) (2026-04-05)
-
-
-
-## [4.57.12](https://github.com/Ombi-app/Ombi/compare/v4.57.11...v4.57.12) (2026-04-05)
-
-
-
-## [4.57.11](https://github.com/Ombi-app/Ombi/compare/v4.57.10...v4.57.11) (2026-04-05)
-
-
-### Bug Fixes
-
-* restore missing SearchViewModel using in Emby and Jellyfin rules ([8ddb604](https://github.com/Ombi-app/Ombi/commit/8ddb60417aa9eccd5da13dfce3e2a844393379af))
-* set PartlyAvailable when fully available with unaired episodes ([d02cc57](https://github.com/Ombi-app/Ombi/commit/d02cc57d31a0a7ca37126eca0363b30a04807a89))
-* use DateTime.Now.Date consistently in AvailabilityRuleHelper ([7aa83d6](https://github.com/Ombi-app/Ombi/commit/7aa83d635f432cddb6698300f2d21066a74f35ad))
-
-
-
-## [4.57.10](https://github.com/Ombi-app/Ombi/compare/v4.57.9...v4.57.10) (2026-04-05)
-
-
-### Bug Fixes
-
-* extend request cache TTL and add null guards for TV results ([2e91d32](https://github.com/Ombi-app/Ombi/commit/2e91d329808bc86bfc8e4ad2a7f5a3edca94836a))
-* make discover page processing sequential to fix test failures ([e38a784](https://github.com/Ombi-app/Ombi/commit/e38a7849d01e137cc8b047be407d70c4732d719d))
-* move API throttle inside cache factory to avoid contention on cache hits ([c1e708c](https://github.com/Ombi-app/Ombi/commit/c1e708cc94e842070d1552b13294f492789d73e2))
-* parallelize discover page API calls and processing for faster load times ([aa8e0fc](https://github.com/Ombi-app/Ombi/commit/aa8e0fc3a37fbc79fd161020e0a1fe9dbfa7c86f))
-* remove SemaphoreSlim throttle - unnecessary given TMDB rate limits ([1936742](https://github.com/Ombi-app/Ombi/commit/193674256d8af32f3b3fbf4c29d9902810785ed1))
-* restore TransformMovieResultsToResponse to match original code ([92dff6c](https://github.com/Ombi-app/Ombi/commit/92dff6c58d6e5fbbbf21d05406cdbc94d11d2268))
-* run search rules sequentially to avoid DbContext thread-safety issues ([0c32745](https://github.com/Ombi-app/Ombi/commit/0c3274548580262a96497cb705fa3a38e8f4dcc7))
-
-
-
-## [4.57.9](https://github.com/Ombi-app/Ombi/compare/v4.57.8...v4.57.9) (2026-04-05)
-
-
-
-## [4.57.8](https://github.com/Ombi-app/Ombi/compare/v4.57.7...v4.57.8) (2026-04-05)
-
-
-
-## [4.57.7](https://github.com/Ombi-app/Ombi/compare/v4.57.6...v4.57.7) (2026-04-05)
-
-
-
-## [4.57.6](https://github.com/Ombi-app/Ombi/compare/v4.57.5...v4.57.6) (2026-04-04)
-
-
-
-## [4.57.5](https://github.com/Ombi-app/Ombi/compare/v4.57.4...v4.57.5) (2026-04-04)
-
-
-
-## [4.57.4](https://github.com/Ombi-app/Ombi/compare/v4.57.3...v4.57.4) (2026-03-27)
-
-
-
-## [4.57.3](https://github.com/Ombi-app/Ombi/compare/v4.57.2...v4.57.3) (2026-03-24)
-
-
-### Bug Fixes
-
-* disable font inlining in Angular production build ([e6c7f75](https://github.com/Ombi-app/Ombi/commit/e6c7f7556c10364c587a9d622eb99083896fdfe6))
-
-
-
-## [4.57.2](https://github.com/Ombi-app/Ombi/compare/v4.57.1...v4.57.2) (2026-03-24)
-
-
-### Bug Fixes
-
-* update Dockerfile COPY commands to match current project structure ([713a098](https://github.com/Ombi-app/Ombi/commit/713a098f9c8bef5f06464654a986e9b638a1ad84))
-
-
-
-## [4.57.1](https://github.com/Ombi-app/Ombi/compare/v4.57.0...v4.57.1) (2026-03-24)
-
-
-### Bug Fixes
-
-* remove unsupported linux/arm/v7 platform from Docker build ([8070723](https://github.com/Ombi-app/Ombi/commit/8070723b45481ce1ecc8299bc45177322fe36dd4))
-
-
-
-# [4.57.0](https://github.com/Ombi-app/Ombi/compare/v4.55.7...v4.57.0) (2026-03-24)
-
-
-### Bug Fixes
-
-* guard Docker image push to master/develop branches only ([5db9ff9](https://github.com/Ombi-app/Ombi/commit/5db9ff926b25047439fc7299e708226e37d2aa8a))
+* disable font inlining in Angular production build ([713c2fd](https://github.com/Ombi-app/Ombi/commit/713c2fd5e9456efbf6da016db67e4b3364c82fb0))
+* extend request cache TTL and add null guards for TV results ([195c989](https://github.com/Ombi-app/Ombi/commit/195c9898ebcae816fed73ff12859b55b67f3def1))
+* guard Docker image push to master/develop branches only ([86427e5](https://github.com/Ombi-app/Ombi/commit/86427e57df1cf91dc68a911870939db9a208fae2))
+* make discover page processing sequential to fix test failures ([aa087c7](https://github.com/Ombi-app/Ombi/commit/aa087c7b9b860b4c39283b54163c95da83d5b08a))
+* move API throttle inside cache factory to avoid contention on cache hits ([4e41ce6](https://github.com/Ombi-app/Ombi/commit/4e41ce6dcf9fc900a193338ac729be56d8ab28ce))
+* parallelize discover page API calls and processing for faster load times ([c417eea](https://github.com/Ombi-app/Ombi/commit/c417eeaa68f313a37369726fa4917d4550a7fa71))
+* remove SemaphoreSlim throttle - unnecessary given TMDB rate limits ([feee9f8](https://github.com/Ombi-app/Ombi/commit/feee9f8514b07ddd877615eb42beedd470daeef5))
+* remove unsupported linux/arm/v7 platform from Docker build ([90d502f](https://github.com/Ombi-app/Ombi/commit/90d502f8c3359d0d09c229f501a6478abe81c230))
+* restore missing SearchViewModel using in Emby and Jellyfin rules ([afad1c9](https://github.com/Ombi-app/Ombi/commit/afad1c9890c30cb5483a9b6b8e61e2b96a345eaa))
+* restore TransformMovieResultsToResponse to match original code ([5cd43e2](https://github.com/Ombi-app/Ombi/commit/5cd43e282e609be953c5b9527e901111bb9df24b))
+* run search rules sequentially to avoid DbContext thread-safety issues ([7172269](https://github.com/Ombi-app/Ombi/commit/7172269d1026a43a8cfcb87a29f1ccfd45bab8fd))
+* set PartlyAvailable when fully available with unaired episodes ([783620b](https://github.com/Ombi-app/Ombi/commit/783620bc7ea6b99e75480757ab8cdf6b1622fe62))
+* the post path on the requests page for TV ([089eef5](https://github.com/Ombi-app/Ombi/commit/089eef5e30e0e2dc2cdc13d709678c58ad0c0b92))
 * **translations:** 🌐 New translations from Crowdin [skip ci] ([cb6e7ce](https://github.com/Ombi-app/Ombi/commit/cb6e7ce96cbe25a9ad02a69d710440d0a032b5b1))
 * **translations:** 🌐 New translations from Crowdin [skip ci] ([cbeb8a3](https://github.com/Ombi-app/Ombi/commit/cbeb8a325e56634695348b2737cd4796138e8342))
 * **translations:** 🌐 New translations from Crowdin [skip ci] ([116775e](https://github.com/Ombi-app/Ombi/commit/116775ecbccafdcb70948f4f464444d370ff2bfb))
@@ -144,12 +38,14 @@
 * **translations:** 🌐 New translations from Crowdin [skip ci] ([3236324](https://github.com/Ombi-app/Ombi/commit/3236324efd0c40c173738fe5fbd68f9f18e638cd))
 * **translations:** 🌐 New translations from Crowdin [skip ci] ([2e2aacd](https://github.com/Ombi-app/Ombi/commit/2e2aacd1767f6c6b7571f6d40e6454caa939f4a0))
 * **translations:** 🌐 New translations from Crowdin [skip ci] ([c282583](https://github.com/Ombi-app/Ombi/commit/c2825833c17b64b70ba5166ca2d5e34c2a35b783))
-* update actions/checkout to v4 in docker job ([4b3e126](https://github.com/Ombi-app/Ombi/commit/4b3e1268d71edbce1690716b206cd7f3a3c8acd7))
+* update actions/checkout to v4 in docker job ([d8c2042](https://github.com/Ombi-app/Ombi/commit/d8c2042e037cbaf73c4064eb57be13cbebbc5066))
+* update Dockerfile COPY commands to match current project structure ([3d67329](https://github.com/Ombi-app/Ombi/commit/3d6732919d8208d7552df25f6d4f4e700a825cd1))
+* use DateTime.Now.Date consistently in AvailabilityRuleHelper ([59dca57](https://github.com/Ombi-app/Ombi/commit/59dca5799ba1701ae06d5762a23799c7a60495de))
 
 
 ### Features
 
-* add Docker image publishing to CI pipeline ([7f393dd](https://github.com/Ombi-app/Ombi/commit/7f393dd7d1f3cde4828121fa1f78a073b27df3a5))
+* add Docker image publishing to CI pipeline ([2268f7b](https://github.com/Ombi-app/Ombi/commit/2268f7b8f4b72001c1821e892d1f43e09af5e4fe))
 
 
 
@@ -324,6 +220,162 @@
 
 * Revert "deterministic refresh (rather than 3 second wait)" ([a8bd017](https://github.com/Ombi-app/Ombi/commit/a8bd01793f67d86f6da345d7a3fe3adbaee920ca))
 * Revert "address sonarqube feedback" ([10992c7](https://github.com/Ombi-app/Ombi/commit/10992c78b6c9c33fa5b31407b02fc8eee9be59f2))
+
+
+
+## [4.51.6](https://github.com/Ombi-app/Ombi/compare/v4.51.5...v4.51.6) (2025-10-15)
+
+
+### Bug Fixes
+
+* **emby:** :bug: Skip very large multipart episodes ([fb70aa1](https://github.com/Ombi-app/Ombi/commit/fb70aa16dea5e682a27878c0845d2ef2cf3e7b07))
+
+
+
+## [4.51.5](https://github.com/Ombi-app/Ombi/compare/v4.51.4...v4.51.5) (2025-10-14)
+
+
+### Bug Fixes
+
+* **emby:** actually fix the dupes ([4167942](https://github.com/Ombi-app/Ombi/commit/41679427f65cfa6756ab8bb1d89eb37cf8a40b42))
+
+
+
+## [4.51.4](https://github.com/Ombi-app/Ombi/compare/v4.51.3...v4.51.4) (2025-10-14)
+
+
+### Bug Fixes
+
+* **emby:** fixed duplicate episodes ([a1d3755](https://github.com/Ombi-app/Ombi/commit/a1d37554bdb9167dc82df121caa194e7641142df))
+
+
+
+## [4.51.3](https://github.com/Ombi-app/Ombi/compare/v4.51.2...v4.51.3) (2025-10-14)
+
+
+
+## [4.51.2](https://github.com/Ombi-app/Ombi/compare/v4.51.1...v4.51.2) (2025-10-10)
+
+
+### Bug Fixes
+
+* **emby:** :bug: Fixed where we didn't scan episodes for mixed content libraries ([b815853](https://github.com/Ombi-app/Ombi/commit/b81585363ff5fd8eb06a814f36f20692077cdb27))
+
+
+
+## [4.51.1](https://github.com/Ombi-app/Ombi/compare/v4.51.0...v4.51.1) (2025-10-09)
+
+
+### Bug Fixes
+
+* **user-management:** Put back the user filter ([cb63060](https://github.com/Ombi-app/Ombi/commit/cb63060c778011927dc280f47f8b1836b6739150))
+
+
+
+# [4.51.0](https://github.com/Ombi-app/Ombi/compare/v4.50.2...v4.51.0) (2025-10-06)
+
+
+### Bug Fixes
+
+* **translations:** 🌐 New translations from Crowdin [skip ci] ([102c84e](https://github.com/Ombi-app/Ombi/commit/102c84edb0df41f2f9ca27fd9d76f1e9cb22e755))
+
+
+### Features
+
+* improve contributor guidance ([d045f32](https://github.com/Ombi-app/Ombi/commit/d045f32b85fd4c019239e13a6a0eefb842ed1b31))
+* **TvSender:** add logging for missing seasons in Sonarr during monitoring updates ([0d219e4](https://github.com/Ombi-app/Ombi/commit/0d219e4612ce047d7a507c2447ed6d76d616768e))
+
+
+### Reverts
+
+* Revert "Update src/Ombi/Controllers/V1/TokenController.cs" ([0294dba](https://github.com/Ombi-app/Ombi/commit/0294dba4cc8d27ace0503fd2518b4419c3f0f08f))
+
+
+
+## [4.50.2](https://github.com/Ombi-app/Ombi/compare/v4.50.1...v4.50.2) (2025-10-04)
+
+
+
+## [4.50.1](https://github.com/Ombi-app/Ombi/compare/v4.50.0...v4.50.1) (2025-09-26)
+
+
+### Bug Fixes
+
+* **sonarr:** :bug: Ensure we are monitoring shows that already exist in Sonarr [#5257](https://github.com/Ombi-app/Ombi/issues/5257) ([bf83c95](https://github.com/Ombi-app/Ombi/commit/bf83c95da05feefa956ea73a3959304af94483dd))
+
+
+
+# [4.50.0](https://github.com/Ombi-app/Ombi/compare/v4.49.10...v4.50.0) (2025-09-21)
+
+
+### Features
+
+* pipes ([1ac20e8](https://github.com/Ombi-app/Ombi/commit/1ac20e84dbf9b90e6797cb49cf3fd4e863f7352d))
+
+
+
+## [4.49.10](https://github.com/Ombi-app/Ombi/compare/v4.49.9...v4.49.10) (2025-09-19)
+
+
+
+## [4.49.9](https://github.com/Ombi-app/Ombi/compare/v4.49.8...v4.49.9) (2025-09-16)
+
+
+
+## [4.49.8](https://github.com/Ombi-app/Ombi/compare/v4.49.7...v4.49.8) (2025-09-13)
+
+
+
+## [4.49.7](https://github.com/Ombi-app/Ombi/compare/v4.49.6...v4.49.7) (2025-09-11)
+
+
+### Bug Fixes
+
+* Use new server discovery url [#5260](https://github.com/Ombi-app/Ombi/issues/5260) ([56a91d6](https://github.com/Ombi-app/Ombi/commit/56a91d6240f53a4306fcd0648575976f9d459048))
+
+
+
+## [4.49.6](https://github.com/Ombi-app/Ombi/compare/v4.49.5...v4.49.6) (2025-08-24)
+
+
+
+## [4.49.5](https://github.com/Ombi-app/Ombi/compare/v4.49.4...v4.49.5) (2025-08-23)
+
+
+### Bug Fixes
+
+* set MarkedAsApproved on TV requests ([57d3880](https://github.com/Ombi-app/Ombi/commit/57d3880115f8e65e7d7d522aaa725b01878b45fe))
+
+
+
+## [4.49.4](https://github.com/Ombi-app/Ombi/compare/v4.49.3...v4.49.4) (2025-08-23)
+
+
+
+## [4.49.3](https://github.com/Ombi-app/Ombi/compare/v4.49.2...v4.49.3) (2025-08-17)
+
+
+### Bug Fixes
+
+* **plex-api:** update Plex Watchlist URL ([11fd7a5](https://github.com/Ombi-app/Ombi/commit/11fd7a5fc853da75974a16bf4fdecd72a836f54b))
+
+
+
+## [4.49.2](https://github.com/Ombi-app/Ombi/compare/v4.49.1...v4.49.2) (2025-07-12)
+
+
+### Performance Improvements
+
+* **discover:** :zap: Improve the loading performance on the discover page ([97d5167](https://github.com/Ombi-app/Ombi/commit/97d5167db6c9f915021f32b96b281d7db3741d7f))
+
+
+
+## [4.49.1](https://github.com/Ombi-app/Ombi/compare/v4.49.0...v4.49.1) (2025-07-12)
+
+
+### Bug Fixes
+
+* **auth:** Fixed an issue where refreshing the page as a power user would stop the application from loading [#5242](https://github.com/Ombi-app/Ombi/issues/5242) ([cee4014](https://github.com/Ombi-app/Ombi/commit/cee40146ee02f7fb79e2019d6fe2f9d5c5dbdfc8))
 
 
 
