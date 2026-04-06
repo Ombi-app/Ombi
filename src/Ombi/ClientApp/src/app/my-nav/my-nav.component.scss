@@ -340,7 +340,7 @@ $sidenav-width: 240px;
 
 .mat-drawer-content {
     position: relative;
-    overflow: hidden;
+    overflow: auto;
     z-index: 1;
     display: block;
     height: 100%;
