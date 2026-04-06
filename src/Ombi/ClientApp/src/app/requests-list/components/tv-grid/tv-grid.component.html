@@ -1,19 +1,19 @@
 <!-- Filter Bar -->
 <div class="filter-bar">
   <div class="filter-chips">
-    <button class="chip" [class.active]="currentFilter === RequestFilter.All" (click)="switchFilter(RequestFilter.All)">
+    <button class="chip" id="filterAll" [class.active]="currentFilter === RequestFilter.All" (click)="switchFilter(RequestFilter.All)">
       {{ 'Requests.AllRequests' | translate }}
     </button>
-    <button class="chip" [class.active]="currentFilter === RequestFilter.Pending" (click)="switchFilter(RequestFilter.Pending)">
+    <button class="chip" id="filterPending" [class.active]="currentFilter === RequestFilter.Pending" (click)="switchFilter(RequestFilter.Pending)">
       {{ 'Requests.PendingRequests' | translate }}
     </button>
-    <button class="chip" [class.active]="currentFilter === RequestFilter.Processing" (click)="switchFilter(RequestFilter.Processing)">
+    <button class="chip" id="filterProcessing" [class.active]="currentFilter === RequestFilter.Processing" (click)="switchFilter(RequestFilter.Processing)">
       {{ 'Requests.ProcessingRequests' | translate }}
     </button>
-    <button class="chip" [class.active]="currentFilter === RequestFilter.Available" (click)="switchFilter(RequestFilter.Available)">
+    <button class="chip" id="filterAvailable" [class.active]="currentFilter === RequestFilter.Available" (click)="switchFilter(RequestFilter.Available)">
       {{ 'Requests.AvailableRequests' | translate }}
     </button>
-    <button class="chip" [class.active]="currentFilter === RequestFilter.Denied" (click)="switchFilter(RequestFilter.Denied)">
+    <button class="chip" id="filterDenied" [class.active]="currentFilter === RequestFilter.Denied" (click)="switchFilter(RequestFilter.Denied)">
       {{ 'Requests.DeniedRequests' | translate }}
     </button>
   </div>
@@ -53,14 +53,15 @@
     <!-- Card Body -->
     <div class="card-body">
       <div class="card-header">
-        <h3 class="card-title" [routerLink]="'/details/tv/' + item.parentRequest.externalProviderId">
+        <h3 class="card-title" [id]="'title' + item.parentRequest.externalProviderId"
+            [routerLink]="'/details/tv/' + item.parentRequest.externalProviderId">
           {{ item.parentRequest.title }}
         </h3>
       </div>
 
       <!-- Status Badge -->
       <div class="status-row">
-        <span class="status-badge" [ngClass]="getStatusClass(item)">
+        <span class="status-badge" [id]="'requestedStatus' + item.parentRequest.externalProviderId" [ngClass]="getStatusClass(item)">
           {{ item.requestStatus | translate }}
         </span>
       </div>
@@ -69,15 +70,15 @@
       <div class="card-meta">
         <div class="meta-item">
           <i class="fas fa-user"></i>
-          <span>{{ item.requestedByAlias ? item.requestedByAlias : item.requestedUser?.userAlias }}</span>
+          <span [id]="'requestedBy' + item.parentRequest.externalProviderId">{{ item.requestedByAlias ? item.requestedByAlias : item.requestedUser?.userAlias }}</span>
         </div>
         <div class="meta-item">
           <i class="fas fa-calendar-alt"></i>
-          <span>{{ item.requestedDate | ombiDate: 'PP' }}</span>
+          <span [id]="'requestedDate' + item.parentRequest.externalProviderId">{{ item.requestedDate | ombiDate: 'PP' }}</span>
         </div>
         <div class="meta-item" *ngIf="item.parentRequest.status">
           <i class="fas fa-info-circle"></i>
-          <span>{{ item.parentRequest.status | translateStatus }}</span>
+          <span [id]="'status' + item.parentRequest.externalProviderId">{{ item.parentRequest.status | translateStatus }}</span>
         </div>
         <div class="meta-item" *ngIf="isPlayedSyncEnabled && item.requestedUserPlayedProgress > 0">
           <i class="fas fa-eye"></i>
@@ -90,10 +91,15 @@
 
       <!-- Actions -->
       <div class="card-actions">
-        <a class="btn-detail" [routerLink]="'/details/tv/' + item.parentRequest.externalProviderId">
+        <a class="btn-detail" [id]="'detailsButton' + item.parentRequest.externalProviderId"
+           [routerLink]="'/details/tv/' + item.parentRequest.externalProviderId">
           {{ 'Requests.Details' | translate }}
         </a>
-        <button class="btn-options" (click)="openOptions(item)" *ngIf="isAdmin">
+        <button class="btn-options" type="button"
+          [id]="'optionsButton' + item.parentRequest.externalProviderId"
+          [attr.aria-label]="'Requests.Options' | translate"
+          (click)="openOptions(item)"
+          *ngIf="isAdmin || (manageOwnRequests && item.requestedUser?.userName === userName)">
           <i class="fas fa-ellipsis-h"></i>
         </button>
       </div>

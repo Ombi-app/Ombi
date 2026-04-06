@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { MoviesGridComponent } from './movies-grid.component';
 import { RequestFilterType } from '../../models/RequestFilterType';
 
@@ -93,7 +93,7 @@ describe('MoviesGridComponent', () => {
       expect(comp.isPlayedSyncEnabled).toBe(true);
     });
 
-    it('should load grid count from storage', () => {
+    it('should load grid count and filter from storage', () => {
       const { comp, mockStorageService } = createComponent();
       mockStorageService.get.mockImplementation((key: string) => {
         if (key === 'Movie_DefaultGridCount') return '25';
@@ -118,57 +118,45 @@ describe('MoviesGridComponent', () => {
   describe('getStatusClass', () => {
     it('should return status-available for available requests', () => {
       const { comp } = createComponent();
-      const item = { requestStatus: 'Common.Available' } as any;
-      expect(comp.getStatusClass(item)).toBe('status-available');
+      expect(comp.getStatusClass({ requestStatus: 'Common.Available' })).toBe('status-available');
     });
 
     it('should return status-pending for pending requests', () => {
       const { comp } = createComponent();
-      const item = { requestStatus: 'Common.Pending' } as any;
-      expect(comp.getStatusClass(item)).toBe('status-pending');
+      expect(comp.getStatusClass({ requestStatus: 'Common.Pending' })).toBe('status-pending');
     });
 
     it('should return status-processing for processing requests', () => {
       const { comp } = createComponent();
-      const item = { requestStatus: 'Common.ProcessingRequest' } as any;
-      expect(comp.getStatusClass(item)).toBe('status-processing');
+      expect(comp.getStatusClass({ requestStatus: 'Common.ProcessingRequest' })).toBe('status-processing');
     });
 
     it('should return status-denied for denied requests', () => {
       const { comp } = createComponent();
-      const item = { requestStatus: 'Common.Denied' } as any;
-      expect(comp.getStatusClass(item)).toBe('status-denied');
+      expect(comp.getStatusClass({ requestStatus: 'Common.Denied' })).toBe('status-denied');
     });
 
     it('should return status-default for unknown status', () => {
       const { comp } = createComponent();
-      const item = { requestStatus: 'SomethingElse' } as any;
-      expect(comp.getStatusClass(item)).toBe('status-default');
+      expect(comp.getStatusClass({ requestStatus: 'SomethingElse' })).toBe('status-default');
     });
 
     it('should return status-default when requestStatus is null', () => {
       const { comp } = createComponent();
-      const item = { requestStatus: null } as any;
-      expect(comp.getStatusClass(item)).toBe('status-default');
+      expect(comp.getStatusClass({ requestStatus: null })).toBe('status-default');
     });
   });
 
   describe('getRequestDate', () => {
     it('should return requestedDate when year is not 1', () => {
       const { comp } = createComponent();
-      const request = {
-        requestedDate: new Date('2023-06-15'),
-        requestedDate4k: new Date('2023-07-20'),
-      } as any;
+      const request = { requestedDate: new Date('2023-06-15'), requestedDate4k: new Date('2023-07-20') } as any;
       expect(comp.getRequestDate(request)).toEqual(new Date('2023-06-15'));
     });
 
-    it('should return requestedDate4k when requestedDate year is 1 (default)', () => {
+    it('should return requestedDate4k when requestedDate year is 1', () => {
       const { comp } = createComponent();
-      const request = {
-        requestedDate: new Date('0001-01-01'),
-        requestedDate4k: new Date('2023-07-20'),
-      } as any;
+      const request = { requestedDate: new Date('0001-01-01'), requestedDate4k: new Date('2023-07-20') } as any;
       expect(comp.getRequestDate(request)).toEqual(new Date('2023-07-20'));
     });
   });
@@ -222,14 +210,14 @@ describe('MoviesGridComponent', () => {
   describe('switchFilter', () => {
     it('should update currentFilter via the method', () => {
       const { comp } = createComponent();
-      // Stub ngAfterViewInit since it requires DOM (paginator ViewChild)
-      vi.spyOn(comp, 'ngAfterViewInit').mockImplementation(() => {});
-      comp.currentFilter = RequestFilterType.All;
+      (comp as any).paginator = { firstPage: vi.fn() };
+      (comp as any).reload$ = { next: vi.fn() };
 
       comp.switchFilter(RequestFilterType.Pending);
 
       expect(comp.currentFilter).toBe(RequestFilterType.Pending);
-      expect(comp.ngAfterViewInit).toHaveBeenCalled();
+      expect((comp as any).paginator.firstPage).toHaveBeenCalled();
+      expect((comp as any).reload$.next).toHaveBeenCalled();
     });
   });
 });

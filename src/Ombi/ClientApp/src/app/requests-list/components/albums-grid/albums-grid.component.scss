@@ -1,4 +1,8 @@
 // Album-specific: square cover art
+:host {
+  --request-skeleton-media-ratio: 1 / 1;
+}
+
 .card-poster {
   aspect-ratio: 1;
   max-height: 220px;

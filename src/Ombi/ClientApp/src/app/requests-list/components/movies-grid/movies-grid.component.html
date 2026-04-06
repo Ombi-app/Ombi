@@ -1,19 +1,19 @@
 <!-- Filter Bar -->
 <div class="filter-bar">
   <div class="filter-chips">
-    <button class="chip" [class.active]="currentFilter === RequestFilter.All" (click)="switchFilter(RequestFilter.All)">
+    <button class="chip" id="filterAll" [class.active]="currentFilter === RequestFilter.All" (click)="switchFilter(RequestFilter.All)">
       {{ 'Requests.AllRequests' | translate }}
     </button>
-    <button class="chip" [class.active]="currentFilter === RequestFilter.Pending" (click)="switchFilter(RequestFilter.Pending)">
+    <button class="chip" id="filterPending" [class.active]="currentFilter === RequestFilter.Pending" (click)="switchFilter(RequestFilter.Pending)">
       {{ 'Requests.PendingRequests' | translate }}
     </button>
-    <button class="chip" [class.active]="currentFilter === RequestFilter.Processing" (click)="switchFilter(RequestFilter.Processing)">
+    <button class="chip" id="filterProcessing" [class.active]="currentFilter === RequestFilter.Processing" (click)="switchFilter(RequestFilter.Processing)">
       {{ 'Requests.ProcessingRequests' | translate }}
     </button>
-    <button class="chip" [class.active]="currentFilter === RequestFilter.Available" (click)="switchFilter(RequestFilter.Available)">
+    <button class="chip" id="filterAvailable" [class.active]="currentFilter === RequestFilter.Available" (click)="switchFilter(RequestFilter.Available)">
       {{ 'Requests.AvailableRequests' | translate }}
     </button>
-    <button class="chip" [class.active]="currentFilter === RequestFilter.Denied" (click)="switchFilter(RequestFilter.Denied)">
+    <button class="chip" id="filterDenied" [class.active]="currentFilter === RequestFilter.Denied" (click)="switchFilter(RequestFilter.Denied)">
       {{ 'Requests.DeniedRequests' | translate }}
     </button>
   </div>
@@ -51,6 +51,7 @@
     <!-- Selection Checkbox -->
     <div class="card-select" *ngIf="isAdmin" (click)="$event.stopPropagation()">
       <mat-checkbox
+        [id]="'adminMasterCheckbox' + item.theMovieDbId"
         (change)="$event ? selection.toggle(item) : null"
         [checked]="selection.isSelected(item)"
       ></mat-checkbox>
@@ -70,13 +71,13 @@
     <!-- Card Body -->
     <div class="card-body">
       <div class="card-header">
-        <h3 class="card-title" [routerLink]="'/details/movie/' + item.theMovieDbId">{{ item.title }}</h3>
+        <h3 class="card-title" [id]="'title' + item.theMovieDbId" [routerLink]="'/details/movie/' + item.theMovieDbId">{{ item.title }}</h3>
         <span class="card-year">{{ item.releaseDate | ombiDate: 'P' }}</span>
       </div>
 
       <!-- Status Badge -->
       <div class="status-row">
-        <span class="status-badge" [ngClass]="getStatusClass(item)">
+        <span class="status-badge" [id]="'requestedStatus' + item.theMovieDbId" [ngClass]="getStatusClass(item)">
           {{ item.requestStatus | translate }}
         </span>
         <span *ngIf="item.has4KRequest" class="badge-4k">4K</span>
@@ -86,15 +87,15 @@
       <div class="card-meta">
         <div class="meta-item">
           <i class="fas fa-user"></i>
-          <span>{{ item.requestedByAlias ? item.requestedByAlias : item.requestedUser?.userAlias }}</span>
+          <span [id]="'requestedBy' + item.theMovieDbId">{{ item.requestedByAlias ? item.requestedByAlias : item.requestedUser?.userAlias }}</span>
         </div>
         <div class="meta-item">
           <i class="fas fa-calendar-alt"></i>
-          <span>{{ getRequestDate(item) | ombiDate: 'PP' }}</span>
+          <span [id]="'requestedDate' + item.theMovieDbId">{{ getRequestDate(item) | ombiDate: 'PP' }}</span>
         </div>
         <div class="meta-item" *ngIf="item.status">
           <i class="fas fa-info-circle"></i>
-          <span>{{ item.status | translateStatus }}</span>
+          <span [id]="'status' + item.theMovieDbId">{{ item.status | translateStatus }}</span>
         </div>
         <div class="meta-item watched" *ngIf="isPlayedSyncEnabled && item.watchedByRequestedUser">
           <i class="fas fa-eye"></i>
@@ -104,11 +105,14 @@
 
       <!-- Actions -->
       <div class="card-actions">
-        <a class="btn-detail" [routerLink]="'/details/movie/' + item.theMovieDbId">
+        <a class="btn-detail" [id]="'detailsButton' + item.theMovieDbId" [routerLink]="'/details/movie/' + item.theMovieDbId">
           {{ 'Requests.Details' | translate }}
         </a>
-        <button class="btn-options" (click)="openOptions(item)"
-          *ngIf="isAdmin || (manageOwnRequests && item.requestedUser?.userName == userName)">
+        <button class="btn-options" type="button"
+          [id]="'optionsButton' + item.theMovieDbId"
+          [attr.aria-label]="'Requests.Options' | translate"
+          (click)="openOptions(item)"
+          *ngIf="isAdmin || (manageOwnRequests && item.requestedUser?.userName === userName)">
           <i class="fas fa-ellipsis-h"></i>
         </button>
       </div>
@@ -126,12 +130,12 @@
 <mat-paginator [length]="resultsLength" [pageSize]="gridCount" showFirstLastButtons></mat-paginator>
 
 <!-- Bulk Action FAB -->
-<button *ngIf="selection.hasValue() && isAdmin" class="fab-button" [matMenuTriggerFor]="aboveMenu">
+<button *ngIf="selection.hasValue() && isAdmin" id="bulkFab" class="fab-button" [matMenuTriggerFor]="aboveMenu">
   <i class="fas fa-bolt"></i>
   <span class="fab-count">{{ selection.selected.length }}</span>
 </button>
 <mat-menu #aboveMenu="matMenu" yPosition="above">
-  <button mat-menu-item (click)="bulkApprove()">
+  <button mat-menu-item id="approveFabButton" (click)="bulkApprove()">
     <i class="fas fa-check menu-icon approve"></i>
     {{ 'Requests.RequestPanel.Approve' | translate }}
   </button>
@@ -147,7 +151,7 @@
     <i class="fas fa-times-circle menu-icon deny"></i>
     {{ 'Requests.RequestPanel.Deny4K' | translate }}
   </button>
-  <button mat-menu-item (click)="bulkDelete()">
+  <button mat-menu-item id="deleteFabButton" (click)="bulkDelete()">
     <i class="fas fa-trash menu-icon delete"></i>
     {{ 'Requests.RequestPanel.Delete' | translate }}
   </button>

@@ -1,11 +1,10 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component } from "@angular/core";
 import { IChildRequests, IRequestsViewModel } from "../../../interfaces";
-import { Observable, merge, of as observableOf } from 'rxjs';
-import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 import { AuthService } from "../../../auth/auth.service";
 import { FeaturesFacade } from "../../../state/features/features.facade";
-import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
+import { MatPaginatorModule } from "@angular/material/paginator";
 import { RequestFilterType } from "../../models/RequestFilterType";
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { StorageService } from "../../../shared/storage/storage-service";
@@ -18,6 +17,7 @@ import { TranslateModule } from "@ngx-translate/core";
 import { OmbiDatePipe } from "../../../pipes/OmbiDatePipe";
 import { TranslateStatusPipe } from "../../../pipes/TranslateStatus";
 import { GridSpinnerComponent } from "../grid-spinner/grid-spinner.component";
+import { BaseGridComponent } from "../base-grid/base-grid.component";
 
 @Component({
     standalone: true,
@@ -37,123 +37,55 @@ import { GridSpinnerComponent } from "../grid-spinner/grid-spinner.component";
         GridSpinnerComponent
     ]
 })
-export class TvGridComponent implements OnInit, AfterViewInit {
+export class TvGridComponent extends BaseGridComponent<IChildRequests> {
     public dataSource: IChildRequests[] = [];
-    public resultsLength: number;
-    public isLoadingResults = true;
-    public gridCount: string = "15";
-    public isAdmin: boolean;
     public isPlayedSyncEnabled = false;
-    public currentFilter: RequestFilterType = RequestFilterType.All;
 
-    public RequestFilter = RequestFilterType;
-    public manageOwnRequests: boolean;
+    protected storageKeySort = "Tv_DefaultRequestListSort";
+    protected storageKeySortOrder = "Tv_DefaultRequestListSortOrder";
+    protected storageKeyGridCount = "Tv_DefaultGridCount";
+    protected storageKeyCurrentFilter = "Tv_DefaultFilter";
 
-    private sortActive: string = "requestedDate";
-    private sortDirection: string = "desc";
-    private storageKey = "Tv_DefaultRequestListSort";
-    private storageKeyOrder = "Tv_DefaultRequestListSortOrder";
-    private storageKeyGridCount = "Tv_DefaultGridCount";
-    private storageKeyCurrentFilter = "Tv_DefaultFilter";
-
-    @Output() public onOpenOptions = new EventEmitter<{ request: any, filter: any, onChange: any, manageOwnRequests: boolean, isAdmin: boolean, has4kRequest: boolean, hasRegularRequest: boolean }>();
-
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-
-    constructor(private requestService: RequestServiceV2, private auth: AuthService,
-                private ref: ChangeDetectorRef, private storageService: StorageService,
-                private featureFacade: FeaturesFacade) {
+    constructor(
+        private requestService: RequestServiceV2,
+        auth: AuthService,
+        ref: ChangeDetectorRef,
+        storageService: StorageService,
+        private featureFacade: FeaturesFacade
+    ) {
+        super(auth, ref, storageService);
     }
 
-    public ngOnInit() {
-        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+    protected override initFeatures() {
         this.isPlayedSyncEnabled = this.featureFacade.isPlayedSyncEnabled();
+    }
 
-        const defaultCount = this.storageService.get(this.storageKeyGridCount);
-        const defaultSort = this.storageService.get(this.storageKey);
-        const defaultOrder = this.storageService.get(this.storageKeyOrder);
-        const defaultFilter = +this.storageService.get(this.storageKeyCurrentFilter);
-        if (defaultSort) {
-            this.sortActive = defaultSort;
-        }
-        if (defaultOrder) {
-            this.sortDirection = defaultOrder;
-        }
-        if (defaultCount) {
-            this.gridCount = defaultCount;
-        }
-        if (defaultFilter) {
-            this.currentFilter = defaultFilter;
+    protected loadData(): Observable<IRequestsViewModel<IChildRequests>> {
+        const count = +this.gridCount;
+        const offset = this.paginator.pageIndex * count;
+        switch(RequestFilterType[RequestFilterType[this.currentFilter]]) {
+            case RequestFilterType.All:
+                return this.requestService.getTvRequests(count, offset, this.sortActive, this.sortDirection);
+            case RequestFilterType.Pending:
+                return this.requestService.getPendingTvRequests(count, offset, this.sortActive, this.sortDirection);
+            case RequestFilterType.Available:
+                return this.requestService.getAvailableTvRequests(count, offset, this.sortActive, this.sortDirection);
+            case RequestFilterType.Processing:
+                return this.requestService.getProcessingTvRequests(count, offset, this.sortActive, this.sortDirection);
+            case RequestFilterType.Denied:
+                return this.requestService.getDeniedTvRequests(count, offset, this.sortActive, this.sortDirection);
         }
     }
 
-    public async ngAfterViewInit() {
-        this.storageService.save(this.storageKeyGridCount, this.gridCount);
-        this.storageService.save(this.storageKeyCurrentFilter, (+this.currentFilter).toString());
-        this.paginator.showFirstLastButtons = true;
+    protected override setData(data: IChildRequests[]) {
+        this.dataSource = data;
+    }
 
-        this.paginator.page
-            .pipe(
-                startWith({}),
-                switchMap(() => {
-                    this.isLoadingResults = true;
-                    return this.loadData();
-                }),
-                map((data: IRequestsViewModel<IChildRequests>) => {
-                    this.isLoadingResults = false;
-                    this.resultsLength = data.total;
-                    return data.collection;
-                }),
-                catchError(() => {
-                    this.isLoadingResults = false;
-                    return observableOf([]);
-                })
-            ).subscribe(data => this.dataSource = data);
+    protected removeFromDataSource(id: number) {
+        this.dataSource = this.dataSource.filter(req => req.id !== id);
     }
 
     public openOptions(request: IChildRequests) {
-        const filter = () => { this.dataSource = this.dataSource.filter((req) => {
-            return req.id !== request.id;
-        })};
-
-        const onChange = () => {
-            this.ref.detectChanges();
-        };
-
-        const data = { request: request, filter: filter, onChange: onChange, manageOwnRequests: this.manageOwnRequests, isAdmin: this.isAdmin, has4kRequest: false, hasRegularRequest: true  };
-        this.onOpenOptions.emit(data);
-    }
-
-    private loadData(): Observable<IRequestsViewModel<IChildRequests>> {
-        switch(RequestFilterType[RequestFilterType[this.currentFilter]]) {
-            case RequestFilterType.All:
-                return this.requestService.getTvRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sortActive, this.sortDirection);
-            case RequestFilterType.Pending:
-                return this.requestService.getPendingTvRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sortActive, this.sortDirection);
-            case RequestFilterType.Available:
-                return this.requestService.getAvailableTvRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sortActive, this.sortDirection);
-            case RequestFilterType.Processing:
-                return this.requestService.getProcessingTvRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sortActive, this.sortDirection);
-            case RequestFilterType.Denied:
-                return this.requestService.getDeniedTvRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sortActive, this.sortDirection);
-        }
-    }
-
-    public getStatusClass(item: IChildRequests): string {
-        const status = item.requestStatus?.toLowerCase() || '';
-        if (status.includes('available')) return 'status-available';
-        if (status.includes('pending') || status.includes('notyetrequest')) return 'status-pending';
-        if (status.includes('processing') || status.includes('approved')) return 'status-processing';
-        if (status.includes('denied')) return 'status-denied';
-        return 'status-default';
-    }
-
-    public switchFilter(type: RequestFilterType) {
-        this.currentFilter = type;
-        this.ngAfterViewInit();
-    }
-
-    public onGridCountChange() {
-        this.ngAfterViewInit();
+        this.emitOptions(request, { has4kRequest: false, hasRegularRequest: true });
     }
 }

@@ -1,4 +1,4 @@
-<div class="loading-container" *ngIf="loading">
+<div class="loading-container" *ngIf="loading" aria-hidden="true">
     <div class="skeleton-grid">
         <div class="skeleton-card" *ngFor="let i of [1,2,3,4,5,6]">
             <div class="skeleton-poster shimmer"></div>
@@ -10,3 +10,4 @@
         </div>
     </div>
 </div>
+<div *ngIf="loading" role="status" aria-live="polite" class="sr-only">{{ 'Requests.Loading' | translate }}</div>

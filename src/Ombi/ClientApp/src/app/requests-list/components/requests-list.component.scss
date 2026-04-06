@@ -79,10 +79,10 @@
 
 // Tab Content
 .tab-content {
-  animation: fadeIn 0.25s ease;
+  animation: fade-in 0.25s ease;
 }
 
-@keyframes fadeIn {
+@keyframes fade-in {
   from {
     opacity: 0;
     transform: translateY(6px);

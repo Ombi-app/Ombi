@@ -8,16 +8,22 @@
   </div>
 
   <!-- Tab Navigation -->
-  <div class="tab-bar">
-    <button class="tab-item" [class.active]="activeTab === 'movies'" (click)="activeTab = 'movies'">
+  <div class="tab-bar" role="tablist" (keydown)="onTabKeydown($event)">
+    <button class="tab-item" role="tab" type="button"
+      id="tab-movies" [attr.aria-selected]="activeTab === 'movies'" aria-controls="panel-movies"
+      [class.active]="activeTab === 'movies'" (click)="activeTab = 'movies'">
       <i class="fas fa-film tab-icon"></i>
       <span>{{ 'NavigationBar.Filter.Movies' | translate }}</span>
     </button>
-    <button class="tab-item" [class.active]="activeTab === 'tv'" (click)="activeTab = 'tv'">
+    <button class="tab-item" role="tab" type="button"
+      id="tab-tv" [attr.aria-selected]="activeTab === 'tv'" aria-controls="panel-tv"
+      [class.active]="activeTab === 'tv'" (click)="activeTab = 'tv'">
       <i class="fas fa-tv tab-icon"></i>
       <span>{{ 'NavigationBar.Filter.TvShows' | translate }}</span>
     </button>
-    <button *ngIf="musicEnabled$ | async" class="tab-item" [class.active]="activeTab === 'music'" (click)="activeTab = 'music'">
+    <button *ngIf="musicEnabled$ | async" class="tab-item" role="tab" type="button"
+      id="tab-music" [attr.aria-selected]="activeTab === 'music'" aria-controls="panel-music"
+      [class.active]="activeTab === 'music'" (click)="activeTab = 'music'">
       <i class="fas fa-music tab-icon"></i>
       <span>{{ 'NavigationBar.Filter.Music' | translate }}</span>
     </button>
@@ -25,8 +31,14 @@
 
   <!-- Tab Content -->
   <div class="tab-content">
-    <movies-grid *ngIf="activeTab === 'movies'" (onOpenOptions)="onOpenOptions($event)"></movies-grid>
-    <tv-grid *ngIf="activeTab === 'tv'" (onOpenOptions)="onOpenOptions($event)"></tv-grid>
-    <albums-grid *ngIf="activeTab === 'music'" (onOpenOptions)="onOpenOptions($event)"></albums-grid>
+    <div *ngIf="activeTab === 'movies'" role="tabpanel" id="panel-movies" aria-labelledby="tab-movies">
+      <movies-grid (onOpenOptions)="onOpenOptions($event)"></movies-grid>
+    </div>
+    <div *ngIf="activeTab === 'tv'" role="tabpanel" id="panel-tv" aria-labelledby="tab-tv">
+      <tv-grid (onOpenOptions)="onOpenOptions($event)"></tv-grid>
+    </div>
+    <div *ngIf="activeTab === 'music'" role="tabpanel" id="panel-music" aria-labelledby="tab-music">
+      <albums-grid (onOpenOptions)="onOpenOptions($event)"></albums-grid>
+    </div>
   </div>
 </div>

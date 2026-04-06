@@ -82,8 +82,10 @@
         <a class="btn-detail" [routerLink]="'/details/artist/' + item.foreignArtistId">
           {{ 'Requests.Details' | translate }}
         </a>
-        <button class="btn-options" (click)="openOptions(item)"
-          *ngIf="isAdmin || (manageOwnRequests && item.requestedUser?.userName == userName)">
+        <button class="btn-options" type="button"
+          [attr.aria-label]="'Requests.Options' | translate"
+          (click)="openOptions(item)"
+          *ngIf="isAdmin || (manageOwnRequests && item.requestedUser?.userName === userName)">
           <i class="fas fa-ellipsis-h"></i>
         </button>
       </div>

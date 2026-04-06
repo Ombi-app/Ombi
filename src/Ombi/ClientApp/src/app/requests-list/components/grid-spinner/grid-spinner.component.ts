@@ -1,5 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { TranslateModule } from "@ngx-translate/core";
 
 
 @Component({
@@ -8,7 +9,8 @@ import { CommonModule } from "@angular/common";
     selector: "grid-spinner",
     styleUrls: ["./grid-spinner.component.scss"],
     imports: [
-        CommonModule
+        CommonModule,
+        TranslateModule
     ]
 })
 export class GridSpinnerComponent{

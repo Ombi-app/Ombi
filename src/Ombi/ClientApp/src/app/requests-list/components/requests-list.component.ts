@@ -27,8 +27,27 @@ import { AlbumsGridComponent } from "./albums-grid/albums-grid.component";
 export class RequestsListComponent {
 
     public activeTab: 'movies' | 'tv' | 'music' = 'movies';
+    private tabs: Array<'movies' | 'tv' | 'music'> = ['movies', 'tv', 'music'];
 
     constructor(private bottomSheet: MatBottomSheet, private lidarrService: LidarrService) { }
+
+    public onTabKeydown(event: KeyboardEvent) {
+        const idx = this.tabs.indexOf(this.activeTab);
+        if (event.key === 'ArrowRight') {
+            this.activeTab = this.tabs[(idx + 1) % this.tabs.length];
+            this.focusActiveTab();
+        } else if (event.key === 'ArrowLeft') {
+            this.activeTab = this.tabs[(idx - 1 + this.tabs.length) % this.tabs.length];
+            this.focusActiveTab();
+        }
+    }
+
+    private focusActiveTab() {
+        setTimeout(() => {
+            const el = document.getElementById('tab-' + this.activeTab);
+            if (el) el.focus();
+        });
+    }
 
     public readonly musicEnabled$ = this.lidarrService.enabled().pipe(take(1));
 
