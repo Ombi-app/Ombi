@@ -9,18 +9,185 @@ on:
     - cron: '0 0 * * *'
   workflow_dispatch:
 
-jobs:
-  automation-tests:
+# Required secrets:
+#   CYPRESS_RECORD_KEY          - Shared Cypress record key
+#   CYPRESS_PROJECT_ID_MYSQL    - Cypress Cloud project ID for MySQL runs
+#   CYPRESS_PROJECT_ID_POSTGRES - Cypress Cloud project ID for PostgreSQL runs
+#   CYPRESS_PROJECT_ID_SQLITE   - Cypress Cloud project ID for SQLite runs
 
+jobs:
+  # ──────────────────────────────────────────────────────────────
+  # MySQL (full suite) and PostgreSQL (smoke) — need Docker services
+  # ──────────────────────────────────────────────────────────────
+  db-tests:
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - db: mysql
+            db_type: MySQL
+            connection_string: "Server=127.0.0.1;Port=3306;Database=ombi;User=ombi;Password=ombi;"
+            cypress_project_id_secret: CYPRESS_PROJECT_ID_MYSQL
+            cypress_spec: ""
+            test_scope: full
+          - db: postgres
+            db_type: Postgres
+            connection_string: "Host=127.0.0.1;Port=5432;Database=ombi;Username=ombi;Password=ombi;"
+            cypress_project_id_secret: CYPRESS_PROJECT_ID_POSTGRES
+            cypress_spec: "cypress/features/01-wizard/wizard.feature,cypress/features/login/login.feature,cypress/tests/login/login.spec.ts"
+            test_scope: smoke
+
+    services:
+      mysql:
+        image: mysql:8
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: ombi
+          MYSQL_USER: ombi
+          MYSQL_PASSWORD: ombi
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+      postgres:
+        image: postgres:15
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: ombi
+          POSTGRES_USER: ombi
+          POSTGRES_PASSWORD: ombi
+        options: >-
+          --health-cmd="pg_isready -U ombi"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    name: "E2E Tests (${{ matrix.db }} - ${{ matrix.test_scope }})"
+
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
+
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-    - uses: actions/setup-node@v2
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - uses: actions/cache@v4
+      with:
+        path: |
+          '**/node_modules'
+          '/home/runner/.cache/Cypress'
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+    - name: Install Frontend Deps
+      run: yarn --cwd ./src/Ombi/ClientApp install
+
+    - name: Install Test Dependencies
+      run: yarn --cwd ./tests install
+
+    - name: Start Frontend
+      run: |
+        nohup yarn --cwd ./src/Ombi/ClientApp start &
+
+    - name: Restore .NET Dependencies
+      run: dotnet restore ./src/Ombi/Ombi.csproj
+
+    - name: Build .NET Project
+      run: dotnet build ./src/Ombi/Ombi.csproj --no-restore
+
+    - name: Write database.json
+      run: |
+        cat > ./src/Ombi/database.json <<EOF
+        {
+          "OmbiDatabase": {
+            "Type": "${{ matrix.db_type }}",
+            "ConnectionString": "${{ matrix.connection_string }}"
+          },
+          "SettingsDatabase": {
+            "Type": "${{ matrix.db_type }}",
+            "ConnectionString": "${{ matrix.connection_string }}"
+          },
+          "ExternalDatabase": {
+            "Type": "${{ matrix.db_type }}",
+            "ConnectionString": "${{ matrix.connection_string }}"
+          }
+        }
+        EOF
+
+    - name: Start Backend
+      run: |
+        nohup dotnet run --project ./src/Ombi -- --host http://*:3577 &
+
+    - name: Run Wiremock
+      run: nohup docker run --rm -p 32400:8080 --name wiremock wiremock/wiremock:2.35.0 &
+
+    - name: Sleep for server to start
+      run: sleep 20
+
+    - name: Cypress Tests (full suite)
+      if: matrix.cypress_spec == ''
+      uses: cypress-io/github-action@v4
+      with:
+        record: true
+        browser: chrome
+        headless: true
+        working-directory: tests
+        wait-on: http://localhost:3577/
+        wait-on-timeout: 600
+      env:
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        CYPRESS_PROJECT_ID: ${{ secrets[matrix.cypress_project_id_secret] }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Cypress Tests (smoke)
+      if: matrix.cypress_spec != ''
+      uses: cypress-io/github-action@v4
+      with:
+        record: true
+        browser: chrome
+        headless: true
+        working-directory: tests
+        spec: ${{ matrix.cypress_spec }}
+        wait-on: http://localhost:3577/
+        wait-on-timeout: 600
+      env:
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        CYPRESS_PROJECT_ID: ${{ secrets[matrix.cypress_project_id_secret] }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Stop Services
+      if: always()
+      run: |
+        pkill -f "dotnet.*Ombi" || true
+        docker container kill wiremock || true
+
+  # ──────────────────────────────────────────────────────────────
+  # SQLite (smoke) — no Docker services needed
+  # ──────────────────────────────────────────────────────────────
+  sqlite-tests:
+    runs-on: ubuntu-latest
+
+    name: "E2E Tests (sqlite - smoke)"
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - uses: actions/setup-node@v4
       with:
         node-version: '20'
 
@@ -57,18 +224,19 @@ jobs:
     - name: Sleep for server to start
       run: sleep 20
 
-    - name: Cypress Tests
+    - name: Cypress Tests (smoke)
       uses: cypress-io/github-action@v4
       with:
         record: true
         browser: chrome
         headless: true
         working-directory: tests
+        spec: "cypress/features/01-wizard/wizard.feature,cypress/features/login/login.feature,cypress/tests/login/login.spec.ts"
         wait-on: http://localhost:3577/
-        # 10 minutes
         wait-on-timeout: 600
       env:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID_SQLITE }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Stop Services
