@@ -1,19 +1,19 @@
 <!-- Filter Bar -->
 <div class="filter-bar">
   <div class="filter-chips">
-    <button class="chip" [class.active]="currentFilter === RequestFilter.All" (click)="switchFilter(RequestFilter.All)">
+    <button type="button" class="chip" [class.active]="currentFilter === RequestFilter.All" (click)="switchFilter(RequestFilter.All)">
       {{ 'Requests.AllRequests' | translate }}
     </button>
-    <button class="chip" [class.active]="currentFilter === RequestFilter.Pending" (click)="switchFilter(RequestFilter.Pending)">
+    <button type="button" class="chip" [class.active]="currentFilter === RequestFilter.Pending" (click)="switchFilter(RequestFilter.Pending)">
       {{ 'Requests.PendingRequests' | translate }}
     </button>
-    <button class="chip" [class.active]="currentFilter === RequestFilter.Processing" (click)="switchFilter(RequestFilter.Processing)">
+    <button type="button" class="chip" [class.active]="currentFilter === RequestFilter.Processing" (click)="switchFilter(RequestFilter.Processing)">
       {{ 'Requests.ProcessingRequests' | translate }}
     </button>
-    <button class="chip" [class.active]="currentFilter === RequestFilter.Available" (click)="switchFilter(RequestFilter.Available)">
+    <button type="button" class="chip" [class.active]="currentFilter === RequestFilter.Available" (click)="switchFilter(RequestFilter.Available)">
       {{ 'Requests.AvailableRequests' | translate }}
     </button>
-    <button class="chip" [class.active]="currentFilter === RequestFilter.Denied" (click)="switchFilter(RequestFilter.Denied)">
+    <button type="button" class="chip" [class.active]="currentFilter === RequestFilter.Denied" (click)="switchFilter(RequestFilter.Denied)">
       {{ 'Requests.DeniedRequests' | translate }}
     </button>
   </div>

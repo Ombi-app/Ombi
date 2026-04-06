@@ -52,7 +52,7 @@ import { BaseGridComponent } from "../base-grid/base-grid.component";
     ]
 })
 export class MoviesGridComponent extends BaseGridComponent<IMovieRequests> {
-    public dataSource: MatTableDataSource<IMovieRequests>;
+    public dataSource: MatTableDataSource<IMovieRequests> = new MatTableDataSource<IMovieRequests>();
     public is4kEnabled = false;
     public isPlayedSyncEnabled = false;
     public selection = new SelectionModel<IMovieRequests>(true, []);
@@ -105,6 +105,10 @@ export class MoviesGridComponent extends BaseGridComponent<IMovieRequests> {
     }
 
     protected removeFromDataSource(id: number) {
+        const removed = this.dataSource.data.find(req => req.id === id);
+        if (removed) {
+            this.selection.deselect(removed);
+        }
         this.dataSource.data = this.dataSource.data.filter(req => req.id !== id);
     }
 
@@ -162,6 +166,7 @@ export class MoviesGridComponent extends BaseGridComponent<IMovieRequests> {
                 const action = approve ? 'approve' : 'deny';
                 this.notification.error(`Some requests failed to ${action}: ${failed[0].errorMessage}`);
                 this.selection.clear();
+                this.refresh();
                 return;
             }
             const key = approve ? 'Requests.RequestPanel.Approved' : 'Requests.RequestPanel.Denied';

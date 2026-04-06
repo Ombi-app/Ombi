@@ -202,11 +202,11 @@
   text-transform: uppercase;
   letter-spacing: 0.03em;
 
-  &.status-available { background: rgba(16, 185, 129, 0.15); color: #34d399; }
-  &.status-pending { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
-  &.status-processing { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
-  &.status-denied { background: rgba(239, 68, 68, 0.15); color: #f87171; }
-  &.status-default { background: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.6); }
+  &.status-available { background: #0d3d2d; color: #34d399; }
+  &.status-pending { background: #3d3010; color: #fbbf24; }
+  &.status-processing { background: #132644; color: #60a5fa; }
+  &.status-denied { background: #3d1515; color: #f87171; }
+  &.status-default { background: #1a1a1a; color: #a3a3a3; }
 }
 
 // Meta
@@ -244,8 +244,8 @@
   flex: 1;
   padding: 8px 16px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.8);
+  background: #1a1a1a;
+  color: #ccc;
   font-size: 0.82rem;
   font-weight: 500;
   text-align: center;

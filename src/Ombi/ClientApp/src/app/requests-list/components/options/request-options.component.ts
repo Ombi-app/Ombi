@@ -79,7 +79,7 @@ export class RequestOptionsComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result && result.denied) {
+      if (result?.denied) {
         this.bottomSheetRef.dismiss({ type: UpdateType.Deny });
       }
     });

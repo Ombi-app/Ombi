@@ -79,6 +79,6 @@ export class AlbumsGridComponent extends BaseGridComponent<IAlbumRequest> {
     }
 
     public openOptions(request: IAlbumRequest) {
-        this.emitOptions(request, { has4kRequest: false });
+        this.emitOptions(request, { has4kRequest: false, hasRegularRequest: true });
     }
 }

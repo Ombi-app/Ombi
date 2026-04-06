@@ -67,17 +67,18 @@ export abstract class BaseGridComponent<T> implements OnInit, AfterViewInit {
                     this.storageService.save(this.storageKeyGridCount, this.gridCount);
                     this.storageService.save(this.storageKeyCurrentFilter, (+this.currentFilter).toString());
                     this.isLoadingResults = true;
-                    return this.loadData();
+                    return this.loadData().pipe(
+                        map((data: IRequestsViewModel<T>) => {
+                            this.isLoadingResults = false;
+                            this.resultsLength = data.total;
+                            return data.collection;
+                        }),
+                        catchError(() => {
+                            this.isLoadingResults = false;
+                            return observableOf([]);
+                        })
+                    );
                 }),
-                map((data: IRequestsViewModel<T>) => {
-                    this.isLoadingResults = false;
-                    this.resultsLength = data.total;
-                    return data.collection;
-                }),
-                catchError(() => {
-                    this.isLoadingResults = false;
-                    return observableOf([]);
-                })
             ).subscribe(data => this.setData(data));
     }
 
@@ -113,7 +114,10 @@ export abstract class BaseGridComponent<T> implements OnInit, AfterViewInit {
     protected abstract removeFromDataSource(id: number): void;
 
     protected emitOptions(request: any, extras: Record<string, any> = {}) {
-        const filter = () => this.removeFromDataSource(request.id);
+        const filter = () => {
+            this.removeFromDataSource(request.id);
+            this.resultsLength = Math.max(0, this.resultsLength - 1);
+        };
         const onChange = () => this.ref.detectChanges();
         this.onOpenOptions.emit({
             request, filter, onChange,
