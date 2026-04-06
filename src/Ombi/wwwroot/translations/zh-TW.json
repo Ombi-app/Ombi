@@ -355,6 +355,7 @@
         "Availability": "可用性:",
         "RequestStatus": "Request Status:",
         "Quality": "画质：",
+        "Quality4K": "Quality (4K):",
         "RootFolderOverride": "根目录覆盖：",
         "QualityOverride": "质量覆盖：",
         "Network": "网络：",
@@ -375,6 +376,11 @@
         "Crews": {
             "CrewTitle": "Crew"
         },
+        "OverviewTitle": "Overview",
+        "TmdbRating": "TMDB Rating",
+        "Critics": "Critics",
+        "Audience": "Audience",
+        "TrailerFor": "Trailer for",
         "EpisodeSelector": {
             "AllSeasonsTooltip": "请求这个节目的每一季",
             "FirstSeasonTooltip": "请求这个节目的第一季",
