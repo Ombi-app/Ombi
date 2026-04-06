@@ -3,7 +3,7 @@
         <div class="cast-card">
             <div class="cast-image-wrap">
                 <ng-container *ngIf="item.image || item.profile_path; else placeholderIcon">
-                    <a [routerLink]="'/discover/actor/' + item.id">
+                    <a [routerLink]="'/discover/actor/' + item.id" [attr.aria-label]="item.name || item.person">
                         <ombi-image class="cast-profile-img" src="https://image.tmdb.org/t/p/w300{{item.image || item.profile_path}}"></ombi-image>
                     </a>
                 </ng-container>

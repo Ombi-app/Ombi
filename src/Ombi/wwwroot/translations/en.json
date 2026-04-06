@@ -377,6 +377,10 @@
             "CrewTitle": "Crew"
         },
         "OverviewTitle": "Overview",
+        "TmdbRating": "TMDB Rating",
+        "Critics": "Critics",
+        "Audience": "Audience",
+        "TrailerFor": "Trailer for",
         "EpisodeSelector": {
             "AllSeasonsTooltip": "This will request every season for this show",
             "FirstSeasonTooltip": "This will only request the First Season for this show",

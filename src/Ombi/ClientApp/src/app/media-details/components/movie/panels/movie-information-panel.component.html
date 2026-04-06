@@ -35,10 +35,12 @@
 			</div>
 		</div>
 
+		@if (movie.status) {
 		<div class="info-item">
 			<div class="info-label">{{ 'MediaDetails.Status' | translate }}</div>
 			<div class="info-value" id="status">{{ movie.status | translateStatus }}</div>
 		</div>
+		}
 
 		<div class="info-item">
 			<div class="info-label">{{ 'MediaDetails.Availability' | translate }}</div>
@@ -89,10 +91,12 @@
 			<div class="info-value">{{ '4K' | quality }}</div>
 		</div>
 
+		@if (movie.releaseDate) {
 		<div class="info-item">
 			<div class="info-label">{{ 'MediaDetails.TheatricalRelease' | translate }}</div>
 			<div class="info-value">{{ movie.releaseDate | ombiDate: 'PP' }}</div>
 		</div>
+		}
 
 		<div class="info-item" *ngIf="movie.digitalReleaseDate">
 			<div class="info-label">{{ 'MediaDetails.DigitalRelease' | translate }}</div>
