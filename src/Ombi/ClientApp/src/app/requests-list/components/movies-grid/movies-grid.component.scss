@@ -1,49 +1,100 @@
 @use "./styles/variables.scss" as *;
 
-.dark .mat-header-cell {
-	background: $accent-dark !important;
-	font-size: 1em;
-	font-weight: bold;
-	color: $ombi-background-primary-accent;
+// Movie-specific: poster aspect ratio
+.card-poster {
+  aspect-ratio: 2/3;
+  max-height: 200px;
 }
 
-.mat-form-field {
-	float:right;
-	margin-right:20px;
+// Card select checkbox overlay
+.card-select {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  background: #0a0a0a;
+  border-radius: 6px;
+  padding: 2px 4px;
+  backdrop-filter: blur(4px);
 }
 
-/*::ng-deep .dark .mat-form-field-label{
-	font-size: 1.2em;
-}*/
+.sort-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 
-::ng-deep .mat-form-field-infix {
-	width: 8em;
-	margin-top:1em;
+  .select-label {
+    font-size: 0.82rem;
+    color: #888;
+  }
 }
 
-::ng-deep .dark .mat-tab-label-active{
-	background: $accent-dark !important;
-	color: $ombi-background-primary-accent !important;
-	font-weight:bold;
+// 4K Badge
+.badge-4k {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #6d28d9, #4338ca);
+  color: #fff;
+  letter-spacing: 0.02em;
 }
 
-::ng-deep .mat-tab-label{
-	opacity: 1;
+.meta-item.watched {
+  color: #34d399;
 }
 
-::ng-deep .row {
-	margin-right:0;
-	margin-left:0;
+// FAB
+.fab-button {
+  position: fixed;
+  right: 32px;
+  bottom: 32px;
+  z-index: 100;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  border: none;
+  background: $accent-dark;
+  color: #111;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: scale(1.08);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .fab-count {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #b91c1c;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
-@media (min-width: 500px) {
-	.justify-content-md-center {
-    	justify-content: normal !important;
-	}
-}
+// Menu icons
+.menu-icon {
+  margin-right: 10px;
+  width: 16px;
+  text-align: center;
 
-@media (min-width: 1170px){
-	.justify-content-md-center {
-    	justify-content: center !important;
-	}
+  &.approve { color: #34d399; }
+  &.deny { color: #fbbf24; }
+  &.delete { color: #f87171; }
 }
