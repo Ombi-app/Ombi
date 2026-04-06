@@ -1,5 +1,12 @@
-<div class="loading-shade" *ngIf="loading">
-    <div class="row justify-content-md-center top-spacing loading-spinner">
-        <mat-spinner [color]="'accent'"></mat-spinner>
+<div class="loading-container" *ngIf="loading">
+    <div class="skeleton-grid">
+        <div class="skeleton-card" *ngFor="let i of [1,2,3,4,5,6]">
+            <div class="skeleton-poster shimmer"></div>
+            <div class="skeleton-body">
+                <div class="skeleton-line wide shimmer"></div>
+                <div class="skeleton-line medium shimmer"></div>
+                <div class="skeleton-line narrow shimmer"></div>
+            </div>
+        </div>
     </div>
 </div>

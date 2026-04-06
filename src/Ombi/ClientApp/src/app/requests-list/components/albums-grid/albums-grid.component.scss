@@ -1,49 +1,332 @@
 @use "./styles/variables.scss" as *;
 
-.dark .mat-header-cell {
-	background: $accent-dark !important;
-	font-size: 1em;
-	font-weight: bold;
-	color: #303030;
+// Filter Bar
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
 }
 
-.mat-form-field {
-	float:right;
-	margin-right:20px;
+.filter-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
-/*::ng-deep .dark .mat-form-field-label{
-	font-size: 1.2em;
-}*/
+.chip {
+  padding: 7px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
 
-::ng-deep .mat-form-field-infix {
-	width: 8em;
-	margin-top:1em;
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+    color: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  &.active {
+    background: $accent-dark;
+    border-color: $accent-dark;
+    color: #111;
+    font-weight: 600;
+  }
 }
 
-::ng-deep .dark .mat-tab-label-active{
-	background: $accent-dark !important;
-	color: #303030 !important;
-	font-weight:bold;
+.filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-::ng-deep .mat-tab-label{
-	opacity: 1;
+.display-count {
+  width: 72px;
+
+  ::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 0;
+  }
+
+  ::ng-deep .mat-form-field-infix {
+    width: auto;
+    padding: 6px 0;
+    margin-top: 0;
+  }
 }
 
-::ng-deep .row {
-	margin-right:0;
-	margin-left:0;
+// Card Grid
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+  animation: fadeUp 0.3s ease;
 }
 
-@media (min-width: 500px) {
-	.justify-content-md-center {
-    	justify-content: normal !important;
-	}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@media (min-width: 1170px){
-	.justify-content-md-center {
-    	justify-content: center !important;
-	}
+// Request Card
+.request-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.25s ease;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+    .poster-overlay { opacity: 1; }
+  }
+}
+
+// Cover Art (square for albums)
+.card-poster {
+  position: relative;
+  aspect-ratio: 1;
+  max-height: 220px;
+  overflow: hidden;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.02);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  &:hover img { transform: scale(1.05); }
+
+  .no-poster {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 100%);
+
+    i {
+      font-size: 2.5rem;
+      color: rgba(255, 255, 255, 0.15);
+    }
+  }
+}
+
+.poster-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 16px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+
+  .view-details {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: $accent-dark;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+// Card Body
+.card-body {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+  line-height: 1.3;
+  cursor: pointer;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  &:hover { color: $accent-dark; }
+}
+
+.card-artist {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+}
+
+.card-year {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+// Status
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+
+  &.status-available { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+  &.status-pending { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+  &.status-processing { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+  &.status-denied { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+  &.status-default { background: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.6); }
+}
+
+// Meta
+.card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.45);
+
+  i {
+    width: 14px;
+    text-align: center;
+    font-size: 0.75rem;
+  }
+}
+
+// Actions
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.btn-detail {
+  flex: 1;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    background: $accent-dark;
+    color: #111;
+  }
+}
+
+.btn-options {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+  }
+}
+
+// Empty State
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  text-align: center;
+
+  .empty-icon {
+    font-size: 3rem;
+    color: rgba(255, 255, 255, 0.1);
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.4);
+    margin: 0;
+  }
+}
+
+// Paginator
+::ng-deep .mat-paginator {
+  background: transparent !important;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 24px;
+}
+
+// Responsive
+@media (max-width: 640px) {
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-chips {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar { display: none; }
+  }
+
+  .card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
 }

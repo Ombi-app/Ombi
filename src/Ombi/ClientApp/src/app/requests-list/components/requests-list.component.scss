@@ -1,72 +1,120 @@
 @use "./styles/variables.scss" as *;
 
-.small-middle-container{
-	margin: auto;
-	width: 85%;
-	margin-top:10px;
+.requests-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px 48px;
 }
 
-::ng-deep .dark .mat-header-cell {
-	background: rgba(0, 0, 0, 0.381)!important;
-	font-size: 1em;
-	font-weight: 500;
-	color: rgba(255, 255, 255, 0.842) !important;
+// Page Header
+.page-header {
+  padding: 32px 0 24px;
+
+  .header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0;
+    color: #fff;
+  }
+
+  .page-subtitle {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0;
+  }
 }
 
-::ng-deep .dark .mat-header-cell .mat-checkbox-frame {
-    border-color: #FFF;
+// Tab Bar
+.tab-bar {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  margin-bottom: 24px;
+  width: fit-content;
 }
 
-.mat-form-field {
-	float:right;
+.tab-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  .tab-icon {
+    font-size: 0.85rem;
+  }
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  &.active {
+    background: $accent-dark;
+    color: #111;
+    font-weight: 600;
+
+    .tab-icon {
+      color: #111;
+    }
+  }
 }
 
-::ng-deep .mat-form-field-infix {
-	width: 10em;
-	margin-top:1em;
+// Tab Content
+.tab-content {
+  animation: fadeIn 0.25s ease;
 }
 
-::ng-deep .dark .mat-tab-label-active{
-	background: $accent-dark !important;
-	color: #303030 !important;
-	font-weight:bold;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-::ng-deep .mat-tab-label{
-	opacity: 1;
-}
+// Responsive
+@media (max-width: 768px) {
+  .requests-page {
+    padding: 0 16px 32px;
+  }
 
-::ng-deep .mat-tab-header {
-	margin-top: 2em;
-}
+  .page-header {
+    padding: 24px 0 16px;
 
-::ng-deep .dark .mat-sort-header-arrow{
-	color:#c6c6c6;
-}
+    .page-title {
+      font-size: 1.5rem;
+    }
+  }
 
-::ng-deep .mat-column-actions{
-	text-align:end;
-}
+  .tab-bar {
+    width: 100%;
+  }
 
-@media (min-width: 500px) {
-	.justify-content-md-center {
-    	justify-content: normal !important;
-	}
-}
-
-@media (min-width: 1170px){
-	.justify-content-md-center {
-    	justify-content: center !important;
-	}
-}
-
-::ng-deep table.requests button{
-	margin:5px;
-}
-
-::ng-deep .floating-fab {
-    position: fixed;
-    right: 3%;
-    bottom: 6%;
-    z-index: 10;
+  .tab-item {
+    flex: 1;
+    justify-content: center;
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
 }

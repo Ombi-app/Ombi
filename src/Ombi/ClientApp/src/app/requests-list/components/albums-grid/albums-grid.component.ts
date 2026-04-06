@@ -5,30 +5,20 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 import { AuthService } from "../../../auth/auth.service";
 import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
-import { MatSort, MatSortModule } from "@angular/material/sort";
-import { MatTableModule } from "@angular/material/table";
 import { RequestFilterType } from "../../models/RequestFilterType";
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { StorageService } from "../../../shared/storage/storage-service";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { MatButtonModule } from "@angular/material/button";
-import { MatIconModule } from "@angular/material/icon";
-import { MatTooltipModule } from "@angular/material/tooltip";
-import { MatCheckboxModule } from "@angular/material/checkbox";
-import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from "@angular/material/select";
-import { MatMenuModule } from "@angular/material/menu";
 import { TranslateModule } from "@ngx-translate/core";
-import { ImageComponent } from "../../../components";
 import { OmbiDatePipe } from "../../../pipes/OmbiDatePipe";
-import { TranslateStatusPipe } from "../../../pipes/TranslateStatus";
-import { DetailedCardComponent } from "../../../components/detailed-card/detailed-card.component";
 import { GridSpinnerComponent } from "../grid-spinner/grid-spinner.component";
 
 @Component({
-        standalone: true,
+    standalone: true,
     templateUrl: "./albums-grid.component.html",
     selector: "albums-grid",
     styleUrls: ["./albums-grid.component.scss"],
@@ -36,16 +26,9 @@ import { GridSpinnerComponent } from "../grid-spinner/grid-spinner.component";
         CommonModule,
         RouterModule,
         MatPaginatorModule,
-        MatSortModule,
-        MatTableModule,
         MatButtonModule,
-        MatIconModule,
-        MatTooltipModule,
-        MatCheckboxModule,
-        MatInputModule,
         MatFormFieldModule,
         MatSelectModule,
-        MatMenuModule,
         TranslateModule,
         OmbiDatePipe,
         GridSpinnerComponent
@@ -55,18 +38,16 @@ export class AlbumsGridComponent implements OnInit, AfterViewInit {
     public dataSource: IAlbumRequest[] = [];
     public resultsLength: number;
     public isLoadingResults = true;
-    public displayedColumns: string[] = ['artistName', 'title', 'requestedUser.requestedBy', 'requestStatus','requestedDate', 'actions'];
     public gridCount: string = "15";
     public isAdmin: boolean;
-    public defaultSort: string = "requestedDate";
-    public defaultOrder: string = "desc";
     public currentFilter: RequestFilterType = RequestFilterType.All;
     public manageOwnRequests: boolean;
     public userName: string;
 
     public RequestFilter = RequestFilterType;
 
-
+    private sortActive: string = "requestedDate";
+    private sortDirection: string = "desc";
     private storageKey = "Albums_DefaultRequestListSort";
     private storageKeyOrder = "Albums_DefaultRequestListSortOrder";
     private storageKeyGridCount = "Albums_DefaultGridCount";
@@ -75,7 +56,6 @@ export class AlbumsGridComponent implements OnInit, AfterViewInit {
     @Output() public onOpenOptions = new EventEmitter<{ request: any, filter: any, onChange: any }>();
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
 
     constructor(private requestService: RequestServiceV2, private ref: ChangeDetectorRef,
                 private auth: AuthService, private storageService: StorageService) {
@@ -92,10 +72,10 @@ export class AlbumsGridComponent implements OnInit, AfterViewInit {
         const defaultOrder = this.storageService.get(this.storageKeyOrder);
         const defaultFilter = +this.storageService.get(this.storageKeyCurrentFilter);
         if (defaultSort) {
-            this.defaultSort = defaultSort;
+            this.sortActive = defaultSort;
         }
         if (defaultOrder) {
-            this.defaultOrder = defaultOrder;
+            this.sortDirection = defaultOrder;
         }
         if (defaultCount) {
             this.gridCount = defaultCount;
@@ -106,33 +86,24 @@ export class AlbumsGridComponent implements OnInit, AfterViewInit {
     }
 
     public async ngAfterViewInit() {
-
         this.storageService.save(this.storageKeyGridCount, this.gridCount);
         this.storageService.save(this.storageKeyCurrentFilter, (+this.currentFilter).toString());
 
-        // If the user changes the sort order, reset back to the first page.
-        this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
         this.paginator.showFirstLastButtons = true;
 
-        merge(this.sort.sortChange, this.paginator.page)
+        this.paginator.page
             .pipe(
                 startWith({}),
-                switchMap((value: any) => {
+                switchMap(() => {
                     this.isLoadingResults = true;
-                    if (value.active || value.direction) {
-                        this.storageService.save(this.storageKey, value.active);
-                        this.storageService.save(this.storageKeyOrder, value.direction);
-                    }
                     return this.loadData();
                 }),
                 map((data: IRequestsViewModel<IAlbumRequest>) => {
-                    // Flip flag to show that loading has finished.
                     this.isLoadingResults = false;
                     this.resultsLength = data.total;
-
                     return data.collection;
                 }),
-                catchError((err) => {
+                catchError(() => {
                     this.isLoadingResults = false;
                     return observableOf([]);
                 })
@@ -142,17 +113,16 @@ export class AlbumsGridComponent implements OnInit, AfterViewInit {
     public loadData(): Observable<IRequestsViewModel<IAlbumRequest>> {
         switch(RequestFilterType[RequestFilterType[this.currentFilter]]) {
             case RequestFilterType.All:
-                return this.requestService.getAlbumRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+                return this.requestService.getAlbumRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sortActive, this.sortDirection);
             case RequestFilterType.Pending:
-                return this.requestService.getAlbumPendingRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+                return this.requestService.getAlbumPendingRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sortActive, this.sortDirection);
             case RequestFilterType.Available:
-                return this.requestService.getAlbumAvailableRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+                return this.requestService.getAlbumAvailableRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sortActive, this.sortDirection);
             case RequestFilterType.Processing:
-                return this.requestService.getAlbumProcessingRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+                return this.requestService.getAlbumProcessingRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sortActive, this.sortDirection);
             case RequestFilterType.Denied:
-                return this.requestService.getAlbumDeniedRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+                return this.requestService.getAlbumDeniedRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sortActive, this.sortDirection);
         }
-
     }
 
     public openOptions(request: IAlbumRequest) {
@@ -170,8 +140,21 @@ export class AlbumsGridComponent implements OnInit, AfterViewInit {
         this.onOpenOptions.emit(data);
     }
 
+    public getStatusClass(item: IAlbumRequest): string {
+        const status = (item as any).requestStatus?.toLowerCase() || '';
+        if (status.includes('available')) return 'status-available';
+        if (status.includes('pending') || status.includes('notyetrequest')) return 'status-pending';
+        if (status.includes('processing') || status.includes('approved')) return 'status-processing';
+        if (status.includes('denied')) return 'status-denied';
+        return 'status-default';
+    }
+
     public switchFilter(type: RequestFilterType) {
         this.currentFilter = type;
+        this.ngAfterViewInit();
+    }
+
+    public onGridCountChange() {
         this.ngAfterViewInit();
     }
 }

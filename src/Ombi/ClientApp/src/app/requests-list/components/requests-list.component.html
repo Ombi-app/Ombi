@@ -1,22 +1,32 @@
-<div class="small-middle-container">
-  <mat-tab-group>
-    <div class="buttons">
-    <mat-tab label="{{ 'NavigationBar.Filter.Movies' | translate }}">
-        <ng-template matTabContent>
-          <movies-grid (onOpenOptions)="onOpenOptions($event)"></movies-grid>
-          </ng-template>
-    </mat-tab>
-    <mat-tab label="{{ 'NavigationBar.Filter.TvShows' | translate }}">
-        <ng-template matTabContent>
-          <tv-grid (onOpenOptions)="onOpenOptions($event)"></tv-grid>
-          </ng-template>
-    </mat-tab>
-    <mat-tab *ngIf="musicEnabled$ | async" label="{{ 'NavigationBar.Filter.Music' | translate }}">
-      <ng-template matTabContent>
-        <albums-grid (onOpenOptions)="onOpenOptions($event)"></albums-grid>
-        </ng-template>
-    </mat-tab>
+<div class="requests-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">{{ 'NavigationBar.Requests' | translate }}</h1>
+      <p class="page-subtitle">{{ 'Requests.ManageYourRequests' | translate }}</p>
+    </div>
   </div>
-  </mat-tab-group>
 
+  <!-- Tab Navigation -->
+  <div class="tab-bar">
+    <button class="tab-item" [class.active]="activeTab === 'movies'" (click)="activeTab = 'movies'">
+      <i class="fas fa-film tab-icon"></i>
+      <span>{{ 'NavigationBar.Filter.Movies' | translate }}</span>
+    </button>
+    <button class="tab-item" [class.active]="activeTab === 'tv'" (click)="activeTab = 'tv'">
+      <i class="fas fa-tv tab-icon"></i>
+      <span>{{ 'NavigationBar.Filter.TvShows' | translate }}</span>
+    </button>
+    <button *ngIf="musicEnabled$ | async" class="tab-item" [class.active]="activeTab === 'music'" (click)="activeTab = 'music'">
+      <i class="fas fa-music tab-icon"></i>
+      <span>{{ 'NavigationBar.Filter.Music' | translate }}</span>
+    </button>
+  </div>
+
+  <!-- Tab Content -->
+  <div class="tab-content">
+    <movies-grid *ngIf="activeTab === 'movies'" (onOpenOptions)="onOpenOptions($event)"></movies-grid>
+    <tv-grid *ngIf="activeTab === 'tv'" (onOpenOptions)="onOpenOptions($event)"></tv-grid>
+    <albums-grid *ngIf="activeTab === 'music'" (onOpenOptions)="onOpenOptions($event)"></albums-grid>
+  </div>
 </div>

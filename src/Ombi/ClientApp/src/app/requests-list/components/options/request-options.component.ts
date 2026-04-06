@@ -12,11 +12,12 @@ import { MatListModule } from '@angular/material/list';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-        standalone: true,
-  selector: 'request-options',
-  templateUrl: './request-options.component.html',
+    standalone: true,
+    selector: 'request-options',
+    templateUrl: './request-options.component.html',
+    styleUrls: ['./request-options.component.scss'],
     imports: [
-      MatListModule,
+        MatListModule,
         CommonModule,
         TranslateModule
     ]

@@ -1,7 +1,6 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatBottomSheetModule } from "@angular/material/bottom-sheet";
-import { MatTabsModule } from "@angular/material/tabs";
 import { TranslateModule } from "@ngx-translate/core";
 import { MatBottomSheet } from "@angular/material/bottom-sheet";
 import { RequestOptionsComponent } from "./options/request-options.component";
@@ -11,7 +10,6 @@ import { take } from "rxjs";
 import { MoviesGridComponent } from "./movies-grid/movies-grid.component";
 import { TvGridComponent } from "./tv-grid/tv-grid.component";
 import { AlbumsGridComponent } from "./albums-grid/albums-grid.component";
-import { GridSpinnerComponent } from "./grid-spinner/grid-spinner.component";
 
 @Component({
     standalone: true,
@@ -20,7 +18,6 @@ import { GridSpinnerComponent } from "./grid-spinner/grid-spinner.component";
     imports: [
         CommonModule,
         MatBottomSheetModule,
-        MatTabsModule,
         TranslateModule,
         MoviesGridComponent,
         TvGridComponent,
@@ -28,6 +25,8 @@ import { GridSpinnerComponent } from "./grid-spinner/grid-spinner.component";
     ]
 })
 export class RequestsListComponent {
+
+    public activeTab: 'movies' | 'tv' | 'music' = 'movies';
 
     constructor(private bottomSheet: MatBottomSheet, private lidarrService: LidarrService) { }
 

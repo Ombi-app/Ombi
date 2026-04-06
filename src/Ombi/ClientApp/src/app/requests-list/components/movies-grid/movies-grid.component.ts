@@ -1,14 +1,13 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, signal, Signal, ViewChild } from "@angular/core";
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild } from "@angular/core";
 import { IMovieRequests, IRequestEngineResult, IRequestsViewModel } from "../../../interfaces";
 import { NotificationService, RequestService } from "../../../services";
-import { Observable, combineLatest, forkJoin, merge, of as observableOf } from 'rxjs';
+import { Observable, combineLatest, forkJoin, merge, of as observableOf, Subject } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 import { AuthService } from "../../../auth/auth.service";
 import { FeaturesFacade } from "../../../state/features/features.facade";
 import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
-import { MatSort, MatSortModule } from "@angular/material/sort";
-import { MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { MatTableDataSource } from "@angular/material/table";
 import { RequestFilterType } from "../../models/RequestFilterType";
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { SelectionModel } from "@angular/cdk/collections";
@@ -26,11 +25,8 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { MatInputModule } from "@angular/material/input";
-import { ImageComponent } from "../../../components";
 import { OmbiDatePipe } from "../../../pipes/OmbiDatePipe";
 import { TranslateStatusPipe } from "../../../pipes/TranslateStatus";
-import { DetailedCardComponent } from "../../../components/detailed-card/detailed-card.component";
 
 @Component({
     standalone: true,
@@ -45,15 +41,12 @@ import { DetailedCardComponent } from "../../../components/detailed-card/detaile
         MatFormFieldModule,
         MatOptionModule,
         MatPaginatorModule,
-        MatSortModule,
-        MatTableModule,
         MatSelectModule,
         MatMenuModule,
         MatButtonModule,
         MatIconModule,
         MatTooltipModule,
         MatCheckboxModule,
-        MatInputModule,
         OmbiDatePipe,
         TranslateStatusPipe
     ]
@@ -62,21 +55,19 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     public dataSource: MatTableDataSource<IMovieRequests>;
     public resultsLength: number;
     public isLoadingResults = true;
-    public displayedColumns: string[];
     public gridCount: string = "15";
     public isAdmin: boolean;
     public is4kEnabled = false;
     public isPlayedSyncEnabled = false;
     public manageOwnRequests: boolean;
-    public defaultSort: string = "requestedDate";
-    public defaultOrder: string = "desc";
     public currentFilter: RequestFilterType = RequestFilterType.All;
     public selection = new SelectionModel<IMovieRequests>(true, []);
     public userName: string;
 
     public RequestFilter = RequestFilterType;
 
-
+    private sortActive: string = "requestedDate";
+    private sortDirection: string = "desc";
     private storageKey = "Movie_DefaultRequestListSort";
     private storageKeyOrder = "Movie_DefaultRequestListSortOrder";
     private storageKeyGridCount = "Movie_DefaultGridCount";
@@ -85,7 +76,6 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     @Output() public onOpenOptions = new EventEmitter<{ request: any, filter: any, onChange: any, manageOwnRequests: boolean, isAdmin: boolean, has4kRequest: boolean, hasRegularRequest: boolean }>();
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
 
     constructor(private requestService: RequestServiceV2, private ref: ChangeDetectorRef,
         private auth: AuthService, private storageService: StorageService,
@@ -103,16 +93,15 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
         this.is4kEnabled = this.featureFacade.is4kEnabled();
         this.isPlayedSyncEnabled = this.featureFacade.isPlayedSyncEnabled();
 
-
         const defaultCount = this.storageService.get(this.storageKeyGridCount);
         const defaultSort = this.storageService.get(this.storageKey);
         const defaultOrder = this.storageService.get(this.storageKeyOrder);
         const defaultFilter = +this.storageService.get(this.storageKeyCurrentFilter);
         if (defaultSort) {
-            this.defaultSort = defaultSort;
+            this.sortActive = defaultSort;
         }
         if (defaultOrder) {
-            this.defaultOrder = defaultOrder;
+            this.sortDirection = defaultOrder;
         }
         if (defaultCount) {
             this.gridCount = defaultCount;
@@ -122,57 +111,25 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
         }
     }
 
-    setDisplayedColumns() {
-      this.displayedColumns = ['title', 'requestedUser.requestedBy',  'status', 'requestStatus','requestedDate'];
-
-      if (this.isAdmin) {
-        this.displayedColumns.unshift('select');
-      }
-
-      if ((this.isAdmin || this.auth.hasRole("Request4KMovie"))
-          && this.is4kEnabled) {
-          this.displayedColumns.splice(4, 0, 'has4kRequest');
-      }
-
-      if (this.isPlayedSyncEnabled
-        && ( this.currentFilter == RequestFilterType.All || this.currentFilter == RequestFilterType.Available ) ) {
-          this.displayedColumns.push('watchedByRequestedUser');
-      }
-
-      // always put the actions column at the end
-      this.displayedColumns.push('actions');
-    }
-
     public async ngAfterViewInit() {
-
-        this.setDisplayedColumns();
-
         this.storageService.save(this.storageKeyGridCount, this.gridCount);
         this.storageService.save(this.storageKeyCurrentFilter, (+this.currentFilter).toString());
 
-        // If the user changes the sort order, reset back to the first page.
-        this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
         this.paginator.showFirstLastButtons = true;
 
-        merge(this.sort.sortChange, this.paginator.page)
+        this.paginator.page
             .pipe(
                 startWith({}),
-                switchMap((value: any) => {
+                switchMap(() => {
                     this.isLoadingResults = true;
-                    if (value.active || value.direction) {
-                        this.storageService.save(this.storageKey, value.active);
-                        this.storageService.save(this.storageKeyOrder, value.direction);
-                    }
                     return this.loadData();
                 }),
                 map((data: IRequestsViewModel<IMovieRequests>) => {
-                    // Flip flag to show that loading has finished.
                     this.isLoadingResults = false;
                     this.resultsLength = data.total;
-
                     return data.collection;
                 }),
-                catchError((err) => {
+                catchError(() => {
                     this.isLoadingResults = false;
                     return observableOf([]);
                 })
@@ -182,17 +139,16 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     public loadData(): Observable<IRequestsViewModel<IMovieRequests>> {
         switch(RequestFilterType[RequestFilterType[this.currentFilter]]) {
             case RequestFilterType.All:
-                return this.requestService.getMovieRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+                return this.requestService.getMovieRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sortActive, this.sortDirection);
             case RequestFilterType.Pending:
-                return this.requestService.getMoviePendingRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+                return this.requestService.getMoviePendingRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sortActive, this.sortDirection);
             case RequestFilterType.Available:
-                return this.requestService.getMovieAvailableRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+                return this.requestService.getMovieAvailableRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sortActive, this.sortDirection);
             case RequestFilterType.Processing:
-                return this.requestService.getMovieProcessingRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+                return this.requestService.getMovieProcessingRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sortActive, this.sortDirection);
             case RequestFilterType.Denied:
-                return this.requestService.getMovieDeniedRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+                return this.requestService.getMovieDeniedRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sortActive, this.sortDirection);
         }
-
     }
 
     public openOptions(request: IMovieRequests) {
@@ -223,6 +179,19 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     public switchFilter(type: RequestFilterType) {
         this.currentFilter = type;
         this.ngAfterViewInit();
+    }
+
+    public onGridCountChange() {
+        this.ngAfterViewInit();
+    }
+
+    public getStatusClass(item: IMovieRequests): string {
+        const status = item.requestStatus?.toLowerCase() || '';
+        if (status.includes('available')) return 'status-available';
+        if (status.includes('pending') || status.includes('notyetrequest')) return 'status-pending';
+        if (status.includes('processing') || status.includes('approved')) return 'status-processing';
+        if (status.includes('denied')) return 'status-denied';
+        return 'status-default';
     }
 
     public isAllSelected() {
@@ -295,7 +264,7 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
             tasks.push(this.requestServiceV1.denyMovie({
                 id: selected.id,
                 is4K: is4k,
-                reason: `` // TOOD: reuse DenyDialog to allow for a reason to be entered
+                reason: ``
             }));
         });
 
