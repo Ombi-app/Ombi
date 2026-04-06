@@ -287,33 +287,6 @@ namespace Ombi.Schedule.Jobs.Emby
                     allEpisodes = await FetchEpisodesWithRetry(() => Api.GetAllEpisodes(server.ApiKey, parentIdFilter, processed, AmountToTake, server.AdministratorId, server.FullUri));
                 }
             }
-
-            // Apply any remaining batched metadata updates
-            if (pendingUpdates.Any())
-            {
-                foreach (var update in pendingUpdates)
-                {
-                    var entity = await _repo.GetEpisodeByEmbyId(update.Key);
-                    if (entity != null)
-                    {
-                        entity.EpisodeNumber = update.Value.EpisodeNumber;
-                        entity.SeasonNumber = update.Value.SeasonNumber;
-                        hasUpserts = true;
-                    }
-                }
-            }
-
-            // Final commit for any remaining episodes or upserts
-            if (epToAdd.Any())
-            {
-                await _repo.AddRange(epToAdd);
-                _logger.LogInformation($"Final commit: {epToAdd.Count} episodes");
-            }
-            else if (hasUpserts)
-            {
-                await _repo.SaveChangesAsync();
-                _logger.LogInformation("Final commit: saved episode metadata updates");
-            }
         }
         private async Task<T> FetchEpisodesWithRetry<T>(Func<Task<T>> apiCall, int maxAttempts = 3)
         {
