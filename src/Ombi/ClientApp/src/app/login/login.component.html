@@ -48,6 +48,7 @@
               <input id="username-field" type="text" formControlName="username"
                      class="login-input"
                      [placeholder]="'Login.UsernamePlaceholder' | translate"
+                     [attr.aria-label]="'Login.UsernamePlaceholder' | translate"
                      (focus)="usernameFocused = true"
                      (blur)="usernameFocused = false"
                      autocomplete="username" />
@@ -63,10 +64,14 @@
               <input id="password-field" [type]="showPassword ? 'text' : 'password'" formControlName="password"
                      class="login-input"
                      [placeholder]="'Login.PasswordPlaceholder' | translate"
+                     [attr.aria-label]="'Login.PasswordPlaceholder' | translate"
                      (focus)="passwordFocused = true"
                      (blur)="passwordFocused = false"
                      autocomplete="current-password" />
-              <button type="button" class="toggle-password" (click)="showPassword = !showPassword" tabindex="-1" [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+              <button type="button"
+                      class="toggle-password"
+                      (click)="showPassword = !showPassword"
+                      [attr.aria-label]="showPassword ? ('Login.HidePassword' | translate) : ('Login.ShowPassword' | translate)">
                 <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
               </button>
             </div>
