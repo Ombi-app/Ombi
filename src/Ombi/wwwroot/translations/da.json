@@ -355,6 +355,7 @@
         "Availability": "Tilgængelighed:",
         "RequestStatus": "Request Status:",
         "Quality": "Kvalitet:",
+        "Quality4K": "Quality (4K):",
         "RootFolderOverride": "Tilsidesæt rodmappe:",
         "QualityOverride": "Tilsidesæt kvalitet:",
         "Network": "Netværk:",
@@ -375,6 +376,11 @@
         "Crews": {
             "CrewTitle": "Crew"
         },
+        "OverviewTitle": "Overview",
+        "TmdbRating": "TMDB Rating",
+        "Critics": "Critics",
+        "Audience": "Audience",
+        "TrailerFor": "Trailer for",
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Dette vil anmode om hver sæson for denne tv-serie",
             "FirstSeasonTooltip": "Dette vil kun anmode om den første sæson for denne tv-serie",
