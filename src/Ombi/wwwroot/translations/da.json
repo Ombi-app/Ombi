@@ -7,8 +7,13 @@
         "SignInWith": "Log ind med {{appName}}",
         "SignInWithPlex": "Log ind med Plex",
         "ForgottenPassword": "Glemt adgangskode?",
+        "Or": "or",
+        "BackToSignInOptions": "Back to sign in options",
+        "ShowPassword": "Show password",
+        "HidePassword": "Hide password",
         "Errors": {
-            "IncorrectCredentials": "Forkert brugernavn eller adgangskode"
+            "IncorrectCredentials": "Forkert brugernavn eller adgangskode",
+            "UsernameRequired": "Username is required"
         }
     },
     "Common": {
