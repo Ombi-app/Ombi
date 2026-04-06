@@ -214,27 +214,42 @@ export class LoginComponent implements OnDestroy, OnInit {
         width=500,
         height=500`
     );
-    this.plexTv.GetPin(this.clientId, this.appName).subscribe((pin: any) => {
-      this.authService
-        .login({
-          usePlexOAuth: true,
-          password: "",
-          rememberMe: true,
-          username: "",
-          plexTvPin: pin,
-        })
-        .subscribe((x) => {
-          this.oAuthWindow!.location.replace(x.url);
+    this.plexTv.GetPin(this.clientId, this.appName).subscribe({
+      next: (pin: any) => {
+        this.authService
+          .login({
+            usePlexOAuth: true,
+            password: "",
+            rememberMe: true,
+            username: "",
+            plexTvPin: pin,
+          })
+          .subscribe({
+            next: (x) => {
+              this.oAuthWindow!.location.replace(x.url);
 
-          if (this.pinTimer) {
-            clearInterval(this.pinTimer);
-          }
+              if (this.pinTimer) {
+                clearInterval(this.pinTimer);
+              }
 
-          this.pinTimer = setInterval(() => {
-              this.oauthLoading = true;
-              this.getPinResult(x.pinId);
-          }, 1000);
-        });
+              this.pinTimer = setInterval(() => {
+                this.getPinResult(x.pinId);
+              }, 1000);
+            },
+            error: () => {
+              this.oauthLoading = false;
+              if (this.oAuthWindow) {
+                this.oAuthWindow.close();
+              }
+            }
+          });
+      },
+      error: () => {
+        this.oauthLoading = false;
+        if (this.oAuthWindow) {
+          this.oAuthWindow.close();
+        }
+      }
     });
   }
 
