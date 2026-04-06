@@ -21,7 +21,7 @@ import { GridSpinnerComponent } from "../grid-spinner/grid-spinner.component";
     standalone: true,
     templateUrl: "./albums-grid.component.html",
     selector: "albums-grid",
-    styleUrls: ["./albums-grid.component.scss"],
+    styleUrls: ["../_shared-card-grid.scss", "./albums-grid.component.scss"],
     imports: [
         CommonModule,
         RouterModule,

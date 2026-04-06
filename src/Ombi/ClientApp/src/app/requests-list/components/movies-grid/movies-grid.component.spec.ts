@@ -93,20 +93,16 @@ describe('MoviesGridComponent', () => {
       expect(comp.isPlayedSyncEnabled).toBe(true);
     });
 
-    it('should load defaults from storage', () => {
+    it('should load grid count from storage', () => {
       const { comp, mockStorageService } = createComponent();
       mockStorageService.get.mockImplementation((key: string) => {
-        if (key === 'Movie_DefaultRequestListSort') return 'title';
-        if (key === 'Movie_DefaultRequestListSortOrder') return 'asc';
         if (key === 'Movie_DefaultGridCount') return '25';
-        if (key === 'Movie_DefaultFilter') return '2'; // Pending
+        if (key === 'Movie_DefaultFilter') return '2';
         return null;
       });
 
       comp.ngOnInit();
 
-      expect(comp.defaultSort).toBe('title');
-      expect(comp.defaultOrder).toBe('asc');
       expect(comp.gridCount).toBe('25');
       expect(comp.currentFilter).toBe(2);
     });
@@ -114,85 +110,46 @@ describe('MoviesGridComponent', () => {
     it('should keep defaults when storage returns null', () => {
       const { comp } = createComponent();
       comp.ngOnInit();
-      expect(comp.defaultSort).toBe('requestedDate');
-      expect(comp.defaultOrder).toBe('desc');
       expect(comp.gridCount).toBe('15');
       expect(comp.currentFilter).toBe(RequestFilterType.All);
     });
   });
 
-  describe('setDisplayedColumns', () => {
-    it('should include base columns for non-admin', () => {
+  describe('getStatusClass', () => {
+    it('should return status-available for available requests', () => {
       const { comp } = createComponent();
-      comp.isAdmin = false;
-      comp.is4kEnabled = false;
-      comp.isPlayedSyncEnabled = false;
-      comp.currentFilter = RequestFilterType.All;
-      comp.setDisplayedColumns();
-      expect(comp.displayedColumns).toEqual([
-        'title', 'requestedUser.requestedBy', 'status', 'requestStatus', 'requestedDate', 'actions'
-      ]);
+      const item = { requestStatus: 'Common.Available' } as any;
+      expect(comp.getStatusClass(item)).toBe('status-available');
     });
 
-    it('should add select column for admin', () => {
+    it('should return status-pending for pending requests', () => {
       const { comp } = createComponent();
-      comp.isAdmin = true;
-      comp.is4kEnabled = false;
-      comp.isPlayedSyncEnabled = false;
-      comp.currentFilter = RequestFilterType.All;
-      comp.setDisplayedColumns();
-      expect(comp.displayedColumns[0]).toBe('select');
+      const item = { requestStatus: 'Common.Pending' } as any;
+      expect(comp.getStatusClass(item)).toBe('status-pending');
     });
 
-    it('should add has4kRequest column when 4K enabled and admin', () => {
-      const { comp, mockAuth } = createComponent();
-      comp.isAdmin = true;
-      comp.is4kEnabled = true;
-      comp.isPlayedSyncEnabled = false;
-      comp.currentFilter = RequestFilterType.All;
-      mockAuth.hasRole.mockReturnValue(true);
-      comp.setDisplayedColumns();
-      expect(comp.displayedColumns).toContain('has4kRequest');
+    it('should return status-processing for processing requests', () => {
+      const { comp } = createComponent();
+      const item = { requestStatus: 'Common.ProcessingRequest' } as any;
+      expect(comp.getStatusClass(item)).toBe('status-processing');
     });
 
-    it('should add watchedByRequestedUser when PlayedSync enabled and filter is All', () => {
+    it('should return status-denied for denied requests', () => {
       const { comp } = createComponent();
-      comp.isAdmin = false;
-      comp.is4kEnabled = false;
-      comp.isPlayedSyncEnabled = true;
-      comp.currentFilter = RequestFilterType.All;
-      comp.setDisplayedColumns();
-      expect(comp.displayedColumns).toContain('watchedByRequestedUser');
+      const item = { requestStatus: 'Common.Denied' } as any;
+      expect(comp.getStatusClass(item)).toBe('status-denied');
     });
 
-    it('should add watchedByRequestedUser when PlayedSync enabled and filter is Available', () => {
+    it('should return status-default for unknown status', () => {
       const { comp } = createComponent();
-      comp.isAdmin = false;
-      comp.is4kEnabled = false;
-      comp.isPlayedSyncEnabled = true;
-      comp.currentFilter = RequestFilterType.Available;
-      comp.setDisplayedColumns();
-      expect(comp.displayedColumns).toContain('watchedByRequestedUser');
+      const item = { requestStatus: 'SomethingElse' } as any;
+      expect(comp.getStatusClass(item)).toBe('status-default');
     });
 
-    it('should not add watchedByRequestedUser when filter is Pending', () => {
+    it('should return status-default when requestStatus is null', () => {
       const { comp } = createComponent();
-      comp.isAdmin = false;
-      comp.is4kEnabled = false;
-      comp.isPlayedSyncEnabled = true;
-      comp.currentFilter = RequestFilterType.Pending;
-      comp.setDisplayedColumns();
-      expect(comp.displayedColumns).not.toContain('watchedByRequestedUser');
-    });
-
-    it('should always put actions column at the end', () => {
-      const { comp } = createComponent();
-      comp.isAdmin = true;
-      comp.is4kEnabled = true;
-      comp.isPlayedSyncEnabled = true;
-      comp.currentFilter = RequestFilterType.All;
-      comp.setDisplayedColumns();
-      expect(comp.displayedColumns[comp.displayedColumns.length - 1]).toBe('actions');
+      const item = { requestStatus: null } as any;
+      expect(comp.getStatusClass(item)).toBe('status-default');
     });
   });
 
@@ -265,7 +222,7 @@ describe('MoviesGridComponent', () => {
   describe('switchFilter', () => {
     it('should update currentFilter via the method', () => {
       const { comp } = createComponent();
-      // Stub ngAfterViewInit since it requires DOM (paginator/sort ViewChild)
+      // Stub ngAfterViewInit since it requires DOM (paginator ViewChild)
       vi.spyOn(comp, 'ngAfterViewInit').mockImplementation(() => {});
       comp.currentFilter = RequestFilterType.All;
 

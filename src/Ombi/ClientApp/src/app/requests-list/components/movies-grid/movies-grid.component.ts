@@ -32,7 +32,7 @@ import { TranslateStatusPipe } from "../../../pipes/TranslateStatus";
     standalone: true,
     templateUrl: "./movies-grid.component.html",
     selector: "movies-grid",
-    styleUrls: ["./movies-grid.component.scss"],
+    styleUrls: ["../_shared-card-grid.scss", "./movies-grid.component.scss"],
     imports: [
         CommonModule,
         RouterModule,

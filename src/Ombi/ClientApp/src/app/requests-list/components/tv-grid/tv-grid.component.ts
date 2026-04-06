@@ -23,7 +23,7 @@ import { GridSpinnerComponent } from "../grid-spinner/grid-spinner.component";
     standalone: true,
     templateUrl: "./tv-grid.component.html",
     selector: "tv-grid",
-    styleUrls: ["./tv-grid.component.scss"],
+    styleUrls: ["../_shared-card-grid.scss", "./tv-grid.component.scss"],
     imports: [
         CommonModule,
         RouterModule,
