@@ -1,157 +1,103 @@
 <nav class="settings-nav">
-    <div class="nav-section">
-        <div class="nav-section-title">Configuration</div>
-        <a class="nav-item" routerLink="/Settings/Ombi" routerLinkActive="active">
-            <i class="fas fa-cog"></i>
-            <span>General</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/Features" routerLinkActive="active">
-            <i class="fas fa-rocket"></i>
-            <span>Features</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/Customization" routerLinkActive="active">
-            <i class="fas fa-paint-brush"></i>
-            <span>Customization</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/LandingPage" routerLinkActive="active">
-            <i class="far fa-file"></i>
-            <span>Landing Page</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/Issues" routerLinkActive="active">
-            <i class="fas fa-exclamation-triangle"></i>
-            <span>Issues</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/UserManagement" routerLinkActive="active">
-            <i class="fas fa-users-cog"></i>
-            <span>User Management</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/Authentication" routerLinkActive="active">
-            <i class="fas fa-shield-alt"></i>
-            <span>Authentication</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/TheMovieDb" routerLinkActive="active">
-            <i class="fas fa-film"></i>
-            <span>The Movie Database</span>
-        </a>
-    </div>
+    <div class="nav-scroll-container">
+        <div class="nav-group" [class.active]="activeGroup === 'configuration'">
+            <button class="nav-group-btn" [matMenuTriggerFor]="configMenu">
+                <i class="fas fa-cog"></i>
+                <span>Configuration</span>
+                <i class="fas fa-chevron-down chevron"></i>
+            </button>
+            <mat-menu #configMenu="matMenu" class="settings-dropdown">
+                <a mat-menu-item routerLink="/Settings/Ombi" routerLinkActive="active-item">
+                    <i class="fas fa-cog icon"></i> General
+                </a>
+                <a mat-menu-item routerLink="/Settings/Features" routerLinkActive="active-item">
+                    <i class="fas fa-rocket icon"></i> Features
+                </a>
+                <a mat-menu-item routerLink="/Settings/Customization" routerLinkActive="active-item">
+                    <i class="fas fa-paint-brush icon"></i> Customization
+                </a>
+                <a mat-menu-item routerLink="/Settings/LandingPage" routerLinkActive="active-item">
+                    <i class="far fa-file icon"></i> Landing Page
+                </a>
+                <a mat-menu-item routerLink="/Settings/Issues" routerLinkActive="active-item">
+                    <i class="fas fa-exclamation-triangle icon"></i> Issues
+                </a>
+                <a mat-menu-item routerLink="/Settings/UserManagement" routerLinkActive="active-item">
+                    <i class="fas fa-users-cog icon"></i> User Management
+                </a>
+                <a mat-menu-item routerLink="/Settings/Authentication" routerLinkActive="active-item">
+                    <i class="fas fa-shield-alt icon"></i> Authentication
+                </a>
+                <a mat-menu-item routerLink="/Settings/TheMovieDb" routerLinkActive="active-item">
+                    <i class="fas fa-film icon"></i> The Movie Database
+                </a>
+            </mat-menu>
+        </div>
 
-    <div class="nav-section">
-        <div class="nav-section-title">Media Servers</div>
-        <a class="nav-item" routerLink="/Settings/Plex" routerLinkActive="active">
-            <i class="fas fa-server"></i>
-            <span>Plex</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/Emby" routerLinkActive="active">
-            <i class="fas fa-server"></i>
-            <span>Emby</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/Jellyfin" routerLinkActive="active">
-            <i class="fas fa-server"></i>
-            <span>Jellyfin</span>
-        </a>
-    </div>
+        <div class="nav-group" [class.active]="activeGroup === 'media-servers'">
+            <button class="nav-group-btn" [matMenuTriggerFor]="mediaServerMenu">
+                <i class="fas fa-server"></i>
+                <span>Media Servers</span>
+                <i class="fas fa-chevron-down chevron"></i>
+            </button>
+            <mat-menu #mediaServerMenu="matMenu" class="settings-dropdown">
+                <a mat-menu-item routerLink="/Settings/Plex" routerLinkActive="active-item">Plex</a>
+                <a mat-menu-item routerLink="/Settings/Emby" routerLinkActive="active-item">Emby</a>
+                <a mat-menu-item routerLink="/Settings/Jellyfin" routerLinkActive="active-item">Jellyfin</a>
+            </mat-menu>
+        </div>
 
-    <div class="nav-section">
-        <div class="nav-section-title">Media Management</div>
-        <a class="nav-item" routerLink="/Settings/Sonarr" routerLinkActive="active">
-            <i class="fas fa-tv"></i>
-            <span>Sonarr</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/SickRage" routerLinkActive="active">
-            <i class="fas fa-tv"></i>
-            <span>SickRage</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/Radarr" routerLinkActive="active">
-            <i class="fas fa-film"></i>
-            <span>Radarr</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/CouchPotato" routerLinkActive="active">
-            <i class="fas fa-film"></i>
-            <span>CouchPotato</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/Lidarr" routerLinkActive="active">
-            <i class="fas fa-music"></i>
-            <span>Lidarr</span>
-        </a>
-    </div>
+        <div class="nav-group" [class.active]="activeGroup === 'media-management'">
+            <button class="nav-group-btn" [matMenuTriggerFor]="mediaManagementMenu">
+                <i class="fas fa-download"></i>
+                <span>Media</span>
+                <i class="fas fa-chevron-down chevron"></i>
+            </button>
+            <mat-menu #mediaManagementMenu="matMenu" class="settings-dropdown">
+                <a mat-menu-item routerLink="/Settings/Sonarr" routerLinkActive="active-item">Sonarr</a>
+                <a mat-menu-item routerLink="/Settings/SickRage" routerLinkActive="active-item">SickRage</a>
+                <a mat-menu-item routerLink="/Settings/Radarr" routerLinkActive="active-item">Radarr</a>
+                <a mat-menu-item routerLink="/Settings/CouchPotato" routerLinkActive="active-item">CouchPotato</a>
+                <a mat-menu-item routerLink="/Settings/Lidarr" routerLinkActive="active-item">Lidarr</a>
+            </mat-menu>
+        </div>
 
-    <div class="nav-section">
-        <div class="nav-section-title">Notifications</div>
-        <a class="nav-item" routerLink="/Settings/CloudMobile" routerLinkActive="active">
-            <i class="fas fa-mobile-alt"></i>
-            <span>Mobile</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/Email" routerLinkActive="active">
-            <i class="far fa-envelope"></i>
-            <span>Email</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/MassEmail" routerLinkActive="active">
-            <i class="fas fa-mail-bulk"></i>
-            <span>Mass Email</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/Newsletter" routerLinkActive="active">
-            <i class="fas fa-inbox"></i>
-            <span>Newsletter</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/Discord" routerLinkActive="active">
-            <i class="fab fa-discord"></i>
-            <span>Discord</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/Slack" routerLinkActive="active">
-            <i class="fab fa-slack"></i>
-            <span>Slack</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/Pushbullet" routerLinkActive="active">
-            <i class="far fa-comments"></i>
-            <span>Pushbullet</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/Pushover" routerLinkActive="active">
-            <i class="fas fa-comments"></i>
-            <span>Pushover</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/Mattermost" routerLinkActive="active">
-            <i class="far fa-comments"></i>
-            <span>Mattermost</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/Telegram" routerLinkActive="active">
-            <i class="fab fa-telegram"></i>
-            <span>Telegram</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/Gotify" routerLinkActive="active">
-            <i class="fas fa-bell"></i>
-            <span>Gotify</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/Ntfy" routerLinkActive="active">
-            <i class="fas fa-bell"></i>
-            <span>Ntfy</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/Twilio" routerLinkActive="active">
-            <i class="fas fa-sms"></i>
-            <span>Twilio</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/Webhook" routerLinkActive="active">
-            <i class="fas fa-sync"></i>
-            <span>Webhook</span>
-        </a>
-    </div>
+        <div class="nav-group" [class.active]="activeGroup === 'notifications'">
+            <button class="nav-group-btn" [matMenuTriggerFor]="notificationMenu">
+                <i class="fas fa-bell"></i>
+                <span>Notifications</span>
+                <i class="fas fa-chevron-down chevron"></i>
+            </button>
+            <mat-menu #notificationMenu="matMenu" class="settings-dropdown">
+                <a mat-menu-item routerLink="/Settings/CloudMobile" routerLinkActive="active-item">Mobile</a>
+                <a mat-menu-item routerLink="/Settings/Email" routerLinkActive="active-item">Email</a>
+                <a mat-menu-item routerLink="/Settings/MassEmail" routerLinkActive="active-item">Mass Email</a>
+                <a mat-menu-item routerLink="/Settings/Newsletter" routerLinkActive="active-item">Newsletter</a>
+                <a mat-menu-item routerLink="/Settings/Discord" routerLinkActive="active-item">Discord</a>
+                <a mat-menu-item routerLink="/Settings/Slack" routerLinkActive="active-item">Slack</a>
+                <a mat-menu-item routerLink="/Settings/Pushbullet" routerLinkActive="active-item">Pushbullet</a>
+                <a mat-menu-item routerLink="/Settings/Pushover" routerLinkActive="active-item">Pushover</a>
+                <a mat-menu-item routerLink="/Settings/Mattermost" routerLinkActive="active-item">Mattermost</a>
+                <a mat-menu-item routerLink="/Settings/Telegram" routerLinkActive="active-item">Telegram</a>
+                <a mat-menu-item routerLink="/Settings/Gotify" routerLinkActive="active-item">Gotify</a>
+                <a mat-menu-item routerLink="/Settings/Ntfy" routerLinkActive="active-item">Ntfy</a>
+                <a mat-menu-item routerLink="/Settings/Twilio" routerLinkActive="active-item">Twilio</a>
+                <a mat-menu-item routerLink="/Settings/Webhook" routerLinkActive="active-item">Webhook</a>
+            </mat-menu>
+        </div>
 
-    <div class="nav-section">
-        <div class="nav-section-title">System</div>
-        <a class="nav-item" routerLink="/Settings/About" routerLinkActive="active">
-            <i class="fas fa-info-circle"></i>
-            <span>About</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/FailedRequests" routerLinkActive="active">
-            <i class="fas fa-times-circle"></i>
-            <span>Failed Requests</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/Jobs" routerLinkActive="active">
-            <i class="fas fa-clock"></i>
-            <span>Scheduled Tasks</span>
-        </a>
-        <a class="nav-item" routerLink="/Settings/Logs" routerLinkActive="active">
-            <i class="fas fa-stream"></i>
-            <span>Logs</span>
-        </a>
+        <div class="nav-group" [class.active]="activeGroup === 'system'">
+            <button class="nav-group-btn" [matMenuTriggerFor]="systemMenu">
+                <i class="fas fa-sliders-h"></i>
+                <span>System</span>
+                <i class="fas fa-chevron-down chevron"></i>
+            </button>
+            <mat-menu #systemMenu="matMenu" class="settings-dropdown">
+                <a mat-menu-item routerLink="/Settings/About" routerLinkActive="active-item">About</a>
+                <a mat-menu-item routerLink="/Settings/FailedRequests" routerLinkActive="active-item">Failed Requests</a>
+                <a mat-menu-item routerLink="/Settings/Jobs" routerLinkActive="active-item">Scheduled Tasks</a>
+                <a mat-menu-item routerLink="/Settings/Logs" routerLinkActive="active-item">Logs</a>
+            </mat-menu>
+        </div>
     </div>
 </nav>

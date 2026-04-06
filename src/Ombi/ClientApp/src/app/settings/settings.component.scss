@@ -2,43 +2,19 @@
 
 .settings-layout {
   display: flex;
+  flex-direction: column;
   min-height: calc(100vh - 64px);
-  background-color: $ombi-background-primary;
-}
-
-.settings-sidebar {
-  width: 260px;
-  min-width: 260px;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-  background-color: rgba(0, 0, 0, 0.15);
-  overflow-y: auto;
-  position: sticky;
-  top: 64px;
-  height: calc(100vh - 64px);
 }
 
 .settings-content {
   flex: 1;
-  min-width: 0;
   padding: 32px 40px;
-  max-width: 900px;
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 @media (max-width: 768px) {
-  .settings-layout {
-    flex-direction: column;
-  }
-
-  .settings-sidebar {
-    width: 100%;
-    min-width: 100%;
-    position: relative;
-    top: auto;
-    height: auto;
-    border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  }
-
   .settings-content {
     padding: 20px 16px;
   }

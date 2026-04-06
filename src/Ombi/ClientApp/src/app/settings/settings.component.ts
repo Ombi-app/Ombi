@@ -12,9 +12,7 @@ import { SettingsMenuComponent } from "./settingsmenu.component";
     ],
     template: `
         <div class="settings-layout">
-            <div class="settings-sidebar">
-                <settings-menu></settings-menu>
-            </div>
+            <settings-menu></settings-menu>
             <div class="settings-content">
                 <router-outlet></router-outlet>
             </div>
