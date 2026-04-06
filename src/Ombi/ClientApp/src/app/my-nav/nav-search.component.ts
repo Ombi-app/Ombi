@@ -36,7 +36,7 @@ export class NavSearchComponent implements OnInit {
     private fb: UntypedFormBuilder
   ) {}
 
-  public async ngOnInit() {
+  public ngOnInit() {
     this.searchForm = this.fb.group({
       input: null,
     });
@@ -62,7 +62,7 @@ export class NavSearchComponent implements OnInit {
       this.isExpanded = false;
     } else if (!this.isExpanded) {
       this.isExpanded = true;
-      setTimeout(() => this.searchInput?.nativeElement?.focus(), 100);
+      requestAnimationFrame(() => this.searchInput?.nativeElement?.focus());
     }
   }
 
