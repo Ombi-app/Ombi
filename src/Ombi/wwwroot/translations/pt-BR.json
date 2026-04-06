@@ -7,8 +7,13 @@
         "SignInWith": "Entre com {{appName}}",
         "SignInWithPlex": "Iniciar sessão com Plex",
         "ForgottenPassword": "Esqueceu sua senha?",
+        "Or": "or",
+        "BackToSignInOptions": "Back to sign in options",
+        "ShowPassword": "Show password",
+        "HidePassword": "Hide password",
         "Errors": {
-            "IncorrectCredentials": "Nome de usuário ou senha incorretos"
+            "IncorrectCredentials": "Nome de usuário ou senha incorretos",
+            "UsernameRequired": "Username is required"
         }
     },
     "Common": {
