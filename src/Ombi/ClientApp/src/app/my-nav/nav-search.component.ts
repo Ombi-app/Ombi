@@ -46,8 +46,9 @@ export class NavSearchComponent implements OnInit {
       inputControl.valueChanges.pipe(
         debounceTime(600),
         switchMap((value: string) => {
-          if (value) {
-            this.router.navigate([`discover`, value]);
+          const term = (value ?? '').trim();
+          if (term) {
+            this.router.navigate([`discover`, term]);
           }
           return EMPTY;
         }),

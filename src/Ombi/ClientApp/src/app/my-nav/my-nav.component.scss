@@ -132,7 +132,6 @@
     font-weight: 500;
     font-family: Inter, Roboto, sans-serif;
     letter-spacing: 0.01em;
-    text-transform: capitalize;
 }
 
 .profile-avatar {
@@ -279,8 +278,10 @@ $sidenav-width: 240px;
 .nav-item-wrapper {
     position: relative;
 
-    &:hover .nav-action {
+    &:hover .nav-action,
+    &:focus-within .nav-action {
         opacity: 0.5;
+        pointer-events: auto;
     }
 }
 
@@ -294,6 +295,7 @@ $sidenav-width: 240px;
     transform: translateY(-50%);
     font-size: 12px;
     opacity: 0;
+    pointer-events: none;
     padding: 4px 6px;
     border: none;
     background: none;
@@ -304,11 +306,13 @@ $sidenav-width: 240px;
 
     &:hover {
         opacity: 1 !important;
+        pointer-events: auto;
         background: rgba(255, 255, 255, 0.1);
     }
 
     &:focus-visible {
         opacity: 1;
+        pointer-events: auto;
         outline: 2px solid $ombi-active;
         outline-offset: 2px;
     }
@@ -343,7 +347,7 @@ $sidenav-width: 240px;
 }
 
 // ─── Overrides ───────────────────────────────────────────
-::ng-deep .mat-toolbar-row, .mat-toolbar-single-row {
+::ng-deep .mat-toolbar-row, ::ng-deep .mat-toolbar-single-row {
     height: auto;
 }
 
