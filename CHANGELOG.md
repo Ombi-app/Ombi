@@ -1,3 +1,7 @@
+## [4.57.16](https://github.com/Ombi-app/Ombi/compare/v4.57.15...v4.57.16) (2026-04-06)
+
+
+
 ## [4.57.15](https://github.com/Ombi-app/Ombi/compare/v4.57.14...v4.57.15) (2026-04-06)
 
 
@@ -330,15 +334,6 @@
 
 
 ## [4.51.3](https://github.com/Ombi-app/Ombi/compare/v4.51.2...v4.51.3) (2025-10-14)
-
-
-
-## [4.51.2](https://github.com/Ombi-app/Ombi/compare/v4.51.1...v4.51.2) (2025-10-10)
-
-
-### Bug Fixes
-
-* **emby:** :bug: Fixed where we didn't scan episodes for mixed content libraries ([b815853](https://github.com/Ombi-app/Ombi/commit/b81585363ff5fd8eb06a814f36f20692077cdb27))
 
 
 
