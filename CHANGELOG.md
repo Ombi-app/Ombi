@@ -1,3 +1,7 @@
+## [4.57.21](https://github.com/Ombi-app/Ombi/compare/v4.57.20...v4.57.21) (2026-04-06)
+
+
+
 ## [4.57.20](https://github.com/Ombi-app/Ombi/compare/v4.57.19...v4.57.20) (2026-04-06)
 
 
@@ -309,21 +313,6 @@
 ### Features
 
 * **availability:** :sparkles: Add the option for the *arr to take media availability priority ([d43a2e4](https://github.com/Ombi-app/Ombi/commit/d43a2e4efcbf9ea55e25305a52657dc107acaee3)), closes [#5286](https://github.com/Ombi-app/Ombi/issues/5286)
-
-
-
-# [4.52.0](https://github.com/Ombi-app/Ombi/compare/v4.51.6...v4.52.0) (2025-11-06)
-
-
-### Features
-
-* allow admins to force Plex watchlist revalidation ([4fa17a8](https://github.com/Ombi-app/Ombi/commit/4fa17a8f8155a6eeb40840444eca01a96f0134e0))
-
-
-### Reverts
-
-* Revert "deterministic refresh (rather than 3 second wait)" ([a8bd017](https://github.com/Ombi-app/Ombi/commit/a8bd01793f67d86f6da345d7a3fe3adbaee920ca))
-* Revert "address sonarqube feedback" ([10992c7](https://github.com/Ombi-app/Ombi/commit/10992c78b6c9c33fa5b31407b02fc8eee9be59f2))
 
 
 
