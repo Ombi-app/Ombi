@@ -236,6 +236,11 @@
         "RequestCollection": "请求合集",
         "CollectionSuccesfullyAdded": "合集 {{name}} 已成功添加！",
         "NoRequests": "No requests yet",
+        "SelectAll": "Select All",
+        "Select": "Select {{title}}",
+        "GridSize": "Grid size",
+        "BulkActions": "Bulk actions for {{count}} items",
+        "ManageYourRequests": "Manage your requests",
         "NeedToSelectEpisodes": "您需要选择集数！",
         "RequestAddedSuccessfully": "{{title}} 的请求已成功添加",
         "ErrorCodes": {
