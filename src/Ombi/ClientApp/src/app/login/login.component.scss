@@ -359,14 +359,19 @@
     background: #e5a00d;
     color: #1a1a2e;
 
-    &:hover {
+    &:hover:not(:disabled) {
       background: #f5b020;
       transform: translateY(-1px);
       box-shadow: 0 6px 20px rgba(229, 160, 13, 0.3);
     }
 
-    &:active {
+    &:active:not(:disabled) {
       transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
     }
   }
 }

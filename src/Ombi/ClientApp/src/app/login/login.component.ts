@@ -193,6 +193,11 @@ export class LoginComponent implements OnDestroy, OnInit {
   }
 
   public oauth() {
+    if (this.oauthLoading) {
+      return;
+    }
+    this.oauthLoading = true;
+
     if (this.oAuthWindow) {
       this.oAuthWindow.close();
     }

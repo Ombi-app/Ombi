@@ -29,7 +29,12 @@
             <span class="divider-text">{{'Login.Or' | translate}}</span>
             <span class="divider-line"></span>
           </div>
-          <button class="btn-login btn-login--plex" type="button" data-cy="oAuthPlexButton" (click)="oauth()">
+          <button class="btn-login btn-login--plex"
+                  type="button"
+                  data-cy="oAuthPlexButton"
+                  (click)="oauth()"
+                  [disabled]="oauthLoading"
+                  [attr.aria-busy]="oauthLoading">
             <span *ngIf="!oauthLoading">{{'Login.SignInWithPlex' | translate}}</span>
             <span *ngIf="oauthLoading" class="spinner-wrap">
               <span class="spinner"></span>
