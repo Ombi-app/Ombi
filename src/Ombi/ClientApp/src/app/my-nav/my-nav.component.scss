@@ -407,6 +407,7 @@ $sidenav-width: 240px;
 
 @media only screen and (min-width: 1025px) {
     .content-container {
+        // Override Angular Material's inline margin-left on mat-sidenav-content
         margin-left: $sidenav-width - 7px !important;
     }
 }

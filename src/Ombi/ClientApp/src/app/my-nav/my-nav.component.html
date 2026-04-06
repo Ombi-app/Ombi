@@ -19,7 +19,7 @@
                 <ng-container *ngIf="(nav.requiresAdmin && isAdmin || !nav.requiresAdmin) && nav.enabled">
                     <!-- External link -->
                     <a *ngIf="nav.externalLink" class="nav-item" id="{{nav.id}}"
-                        [href]="nav.link" target="_blank"
+                        [href]="nav.link" target="_blank" rel="noopener noreferrer"
                         matTooltip="{{nav.toolTipMessage | translate}}" matTooltipPosition="right">
                         <i class="nav-icon {{nav.icon}}" aria-hidden="true"></i>
                         <span class="nav-label">{{nav.name | translate}}</span>
@@ -31,13 +31,13 @@
                         <a class="nav-item" id="{{nav.id}}"
                             [routerLink]="nav.link" [routerLinkActive]="'nav-item--active'">
                             <span class="nav-indicator"></span>
-                            <i class="nav-icon {{nav.icon}}"></i>
+                            <i class="nav-icon {{nav.icon}}" aria-hidden="true"></i>
                             <span class="nav-label">{{nav.name | translate}}</span>
                         </a>
                         <button type="button" *ngIf="nav.id === 'nav-discover'" class="nav-action"
                             aria-label="Advanced search"
                             (click)="openAdvancedSearch()">
-                            <i class="fas fa-filter"></i>
+                            <i class="fas fa-filter" aria-hidden="true"></i>
                         </button>
                     </div>
                 </ng-container>
@@ -46,12 +46,12 @@
             <div class="nav-divider"></div>
 
             <button type="button" class="nav-item" id="nav-openMobile" (click)="openMobileApp($event);">
-                <i class="nav-icon fas fa-mobile-alt"></i>
+                <i class="nav-icon fas fa-mobile-alt" aria-hidden="true"></i>
                 <span class="nav-label">{{ 'NavigationBar.OpenMobileApp' | translate }}</span>
             </button>
 
             <button type="button" class="nav-item" id="nav-logout" (click)="logOut();">
-                <i class="nav-icon fas fa-sign-out-alt"></i>
+                <i class="nav-icon fas fa-sign-out-alt" aria-hidden="true"></i>
                 <span class="nav-label">{{ 'NavigationBar.Logout' | translate }}</span>
             </button>
         </nav>
