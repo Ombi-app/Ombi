@@ -1,3 +1,7 @@
+## [4.57.20](https://github.com/Ombi-app/Ombi/compare/v4.57.19...v4.57.20) (2026-04-06)
+
+
+
 ## [4.57.19](https://github.com/Ombi-app/Ombi/compare/v4.57.18...v4.57.19) (2026-04-06)
 
 
@@ -320,15 +324,6 @@
 
 * Revert "deterministic refresh (rather than 3 second wait)" ([a8bd017](https://github.com/Ombi-app/Ombi/commit/a8bd01793f67d86f6da345d7a3fe3adbaee920ca))
 * Revert "address sonarqube feedback" ([10992c7](https://github.com/Ombi-app/Ombi/commit/10992c78b6c9c33fa5b31407b02fc8eee9be59f2))
-
-
-
-## [4.51.6](https://github.com/Ombi-app/Ombi/compare/v4.51.5...v4.51.6) (2025-10-15)
-
-
-### Bug Fixes
-
-* **emby:** :bug: Skip very large multipart episodes ([fb70aa1](https://github.com/Ombi-app/Ombi/commit/fb70aa16dea5e682a27878c0845d2ef2cf3e7b07))
 
 
 
