@@ -41,7 +41,7 @@
     <!-- Selection Checkbox -->
     <div class="card-select" *ngIf="isAdmin" (click)="$event.stopPropagation()">
       <mat-checkbox
-        [id]="'adminMasterCheckbox' + item.theMovieDbId"
+        [id]="'adminSelectCheckbox' + item.theMovieDbId"
         [attr.aria-label]="('Requests.Select' | translate: { title: item.title })"
         (change)="$event ? selection.toggle(item) : null"
         [checked]="selection.isSelected(item)"
@@ -121,7 +121,8 @@
 <mat-paginator [length]="resultsLength" [pageSize]="gridCount" showFirstLastButtons></mat-paginator>
 
 <!-- Bulk Action FAB -->
-<button *ngIf="selection.hasValue() && isAdmin" id="bulkFab" class="fab-button" [matMenuTriggerFor]="aboveMenu">
+<button *ngIf="selection.hasValue() && isAdmin" id="bulkFab" class="fab-button" [matMenuTriggerFor]="aboveMenu"
+  [attr.aria-label]="'Requests.BulkActions' | translate: { count: selection.selected.length }">
   <i class="fas fa-bolt"></i>
   <span class="fab-count">{{ selection.selected.length }}</span>
 </button>

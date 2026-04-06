@@ -58,7 +58,7 @@
       <div class="card-meta">
         <div class="meta-item">
           <i class="fas fa-user"></i>
-          <span>{{ item.requestedUser?.userAlias }}</span>
+          <span>{{ item.requestedUser?.userAlias || item.requestedUser?.userName }}</span>
         </div>
         <div class="meta-item">
           <i class="fas fa-calendar-alt"></i>
