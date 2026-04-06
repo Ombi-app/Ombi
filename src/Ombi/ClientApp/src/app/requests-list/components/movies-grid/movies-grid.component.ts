@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, EventEmitter, Output, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component } from "@angular/core";
 import { IMovieRequests, IRequestEngineResult, IRequestsViewModel } from "../../../interfaces";
 import { NotificationService, RequestService } from "../../../services";
-import { Observable, combineLatest, forkJoin, of as observableOf } from 'rxjs';
+import { Observable, combineLatest, forkJoin } from 'rxjs';
 
 import { AuthService } from "../../../auth/auth.service";
 import { FeaturesFacade } from "../../../state/features/features.facade";

@@ -32,13 +32,13 @@
   <!-- Tab Content -->
   <div class="tab-content">
     <div *ngIf="activeTab === 'movies'" role="tabpanel" id="panel-movies" aria-labelledby="tab-movies">
-      <movies-grid (onOpenOptions)="onOpenOptions($event)"></movies-grid>
+      <movies-grid (openOptionsEvent)="onOpenOptions($event)"></movies-grid>
     </div>
     <div *ngIf="activeTab === 'tv'" role="tabpanel" id="panel-tv" aria-labelledby="tab-tv">
-      <tv-grid (onOpenOptions)="onOpenOptions($event)"></tv-grid>
+      <tv-grid (openOptionsEvent)="onOpenOptions($event)"></tv-grid>
     </div>
     <div *ngIf="activeTab === 'music'" role="tabpanel" id="panel-music" aria-labelledby="tab-music">
-      <albums-grid (onOpenOptions)="onOpenOptions($event)"></albums-grid>
+      <albums-grid (openOptionsEvent)="onOpenOptions($event)"></albums-grid>
     </div>
   </div>
 </div>

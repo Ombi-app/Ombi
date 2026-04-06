@@ -38,7 +38,7 @@ export abstract class BaseGridComponent<T> implements OnInit, AfterViewInit {
     protected abstract storageKeyGridCount: string;
     protected abstract storageKeyCurrentFilter: string;
 
-    @Output() public onOpenOptions = new EventEmitter<any>();
+    @Output() public openOptionsEvent = new EventEmitter<any>();
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
     constructor(
@@ -65,7 +65,9 @@ export abstract class BaseGridComponent<T> implements OnInit, AfterViewInit {
         this.initFeatures();
     }
 
-    protected initFeatures() {}
+    protected initFeatures(): void {
+        // Override in subclasses to initialize feature flags
+    }
 
     public ngAfterViewInit() {
         this.paginator.showFirstLastButtons = true;
@@ -130,7 +132,7 @@ export abstract class BaseGridComponent<T> implements OnInit, AfterViewInit {
             this.resultsLength = Math.max(0, this.resultsLength - 1);
         };
         const onChange = () => this.ref.detectChanges();
-        this.onOpenOptions.emit({
+        this.openOptionsEvent.emit({
             request, filter, onChange,
             manageOwnRequests: this.manageOwnRequests,
             isAdmin: this.isAdmin,
