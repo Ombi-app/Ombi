@@ -42,17 +42,16 @@ print_status "Checking for required tools..."
 
 # Check .NET
 if ! command -v dotnet &> /dev/null; then
-    print_error ".NET 10.0 SDK is required but not installed"
-    print_status "Please install from: https://dotnet.microsoft.com/download/dotnet/10.0"
+    print_error ".NET 8.0 SDK is required but not installed"
+    print_status "Please install from: https://dotnet.microsoft.com/download/dotnet/8.0"
     exit 1
 else
     DOTNET_VERSION=$(dotnet --version)
-    REQUIRED_VERSION=$(grep -oE '"version"[[:space:]]*:[[:space:]]*"[^"]+"' global.json | head -n1 | sed -E 's/.*"([^"]+)"/\1/')
-    if dotnet --list-sdks | awk '{print $1}' | grep -Fxq "$REQUIRED_VERSION"; then
-        print_success "Found required .NET SDK version from global.json: $REQUIRED_VERSION"
+    if [[ $DOTNET_VERSION == 8.* ]]; then
+        print_success "Found .NET version: $DOTNET_VERSION"
     else
-        print_error ".NET SDK $REQUIRED_VERSION is required (from global.json), but current SDK is $DOTNET_VERSION"
-        print_status "Please install from: https://dotnet.microsoft.com/download/dotnet/10.0"
+        print_error ".NET 8.0 SDK is required but $DOTNET_VERSION is installed"
+        print_status "Please install from: https://dotnet.microsoft.com/download/dotnet/8.0"
         exit 1
     fi
 fi

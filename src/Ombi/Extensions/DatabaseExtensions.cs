@@ -113,7 +113,7 @@ namespace Ombi.Extensions
             if (builder != null)
             {
                 builder.AddSqlite(
-                    connectionString: config.ConnectionString,
+                    sqliteConnectionString: config.ConnectionString,
                     name: dbName,
                     failureStatus: HealthStatus.Unhealthy,
                     tags: new string[] { "db" });
@@ -138,7 +138,7 @@ namespace Ombi.Extensions
             if (builder != null)
             {
                 builder.AddNpgSql(
-                    connectionString: config.ConnectionString,
+                    npgsqlConnectionString: config.ConnectionString,
                     name: dbName,
                     failureStatus: HealthStatus.Unhealthy,
                     tags: new string[] { "db" }

@@ -7,7 +7,7 @@ COPY Ombi/ClientApp Ombi/ClientApp
 RUN yarn --cwd Ombi/ClientApp run build
 
 # Stage 2: Build and publish .NET backend
-FROM mcr.microsoft.com/dotnet/sdk:10.0-noble AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0-jammy AS build
 ARG VERSION=1.0.0
 WORKDIR /source
 
@@ -33,7 +33,7 @@ COPY . .
 RUN dotnet publish Ombi/Ombi.csproj -c Release --no-restore -o /app/publish
 
 # Stage 3: Final runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:10.0-noble
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy
 WORKDIR /opt/ombi
 EXPOSE 5000
 
