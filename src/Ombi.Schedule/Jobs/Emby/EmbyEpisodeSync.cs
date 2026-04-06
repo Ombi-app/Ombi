@@ -114,6 +114,7 @@ namespace Ombi.Schedule.Jobs.Emby
             var processed = 0;
             var epToAdd = new HashSet<EmbyEpisode>();
             var hasUpserts = false;
+            var pendingUpdates = new Dictionary<string, (int EpisodeNumber, int SeasonNumber)>();
             var episodesInCurrentBatch = new HashSet<string>(); // Track episodes in current batch to avoid duplicates
 
             _logger.LogInformation($"Starting episode sync for server {server.Name}");
@@ -167,15 +168,9 @@ namespace Ombi.Schedule.Jobs.Emby
                         var existing = episodeMetadata[ep.Id];
                         if (existing.EpisodeNumber != ep.IndexNumber || existing.SeasonNumber != ep.ParentIndexNumber)
                         {
-                            _logger.LogInformation("Episode {0} metadata changed (S{1}E{2} -> S{3}E{4}), updating",
+                            _logger.LogInformation("Episode {0} metadata changed (S{1}E{2} -> S{3}E{4}), queuing update",
                                 ep.Name, existing.SeasonNumber, existing.EpisodeNumber, ep.ParentIndexNumber, ep.IndexNumber);
-                            var entity = await _repo.GetEpisodeByEmbyId(ep.Id);
-                            if (entity != null)
-                            {
-                                entity.EpisodeNumber = ep.IndexNumber;
-                                entity.SeasonNumber = ep.ParentIndexNumber;
-                                hasUpserts = true;
-                            }
+                            pendingUpdates[ep.Id] = (ep.IndexNumber, ep.ParentIndexNumber);
                             episodeMetadata[ep.Id] = (ep.IndexNumber, ep.ParentIndexNumber);
                         }
                     }
@@ -246,6 +241,22 @@ namespace Ombi.Schedule.Jobs.Emby
                 }
 
                 // Only commit to database when we reach the batch size or finish processing
+                // Apply batched metadata updates
+                if (pendingUpdates.Any())
+                {
+                    foreach (var update in pendingUpdates)
+                    {
+                        var entity = await _repo.GetEpisodeByEmbyId(update.Key);
+                        if (entity != null)
+                        {
+                            entity.EpisodeNumber = update.Value.EpisodeNumber;
+                            entity.SeasonNumber = update.Value.SeasonNumber;
+                            hasUpserts = true;
+                        }
+                    }
+                    pendingUpdates.Clear();
+                }
+
                 if (epToAdd.Count >= DatabaseBatchSize || processed >= total)
                 {
                     if (epToAdd.Any())
@@ -277,6 +288,21 @@ namespace Ombi.Schedule.Jobs.Emby
                 }
             }
 
+            // Apply any remaining batched metadata updates
+            if (pendingUpdates.Any())
+            {
+                foreach (var update in pendingUpdates)
+                {
+                    var entity = await _repo.GetEpisodeByEmbyId(update.Key);
+                    if (entity != null)
+                    {
+                        entity.EpisodeNumber = update.Value.EpisodeNumber;
+                        entity.SeasonNumber = update.Value.SeasonNumber;
+                        hasUpserts = true;
+                    }
+                }
+            }
+
             // Final commit for any remaining episodes or upserts
             if (epToAdd.Any())
             {
@@ -297,8 +323,13 @@ namespace Ombi.Schedule.Jobs.Emby
                 {
                     return await apiCall();
                 }
-                catch (Exception ex) when (attempt < maxAttempts && (ex is TaskCanceledException || ex is HttpRequestException))
+                catch (Exception ex) when (ex is TaskCanceledException || ex is HttpRequestException)
                 {
+                    if (attempt >= maxAttempts)
+                    {
+                        throw;
+                    }
+
                     var delay = TimeSpan.FromSeconds(Math.Pow(2, attempt));
                     _logger.LogWarning(ex, "Emby API call failed (attempt {Attempt}/{MaxAttempts}). Retrying in {Delay}s...",
                         attempt, maxAttempts, delay.TotalSeconds);
@@ -306,8 +337,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 }
             }
 
-            // Should not reach here, but satisfies the compiler
-            return await apiCall();
+            throw new InvalidOperationException("Retry logic failed unexpectedly");
         }
 
         private bool _disposed;
