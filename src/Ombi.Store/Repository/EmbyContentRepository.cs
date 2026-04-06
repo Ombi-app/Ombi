@@ -129,5 +129,16 @@ namespace Ombi.Store.Repository
                 .ToListAsync();
             return new HashSet<string>(ids);
         }
+
+        public async Task<Dictionary<string, (int EpisodeNumber, int SeasonNumber)>> GetAllEpisodeMetadata()
+        {
+            var episodes = await Db.EmbyEpisode
+                .Where(x => !string.IsNullOrEmpty(x.EmbyId))
+                .Select(x => new { x.EmbyId, x.EpisodeNumber, x.SeasonNumber })
+                .ToListAsync();
+            return episodes
+                .GroupBy(x => x.EmbyId)
+                .ToDictionary(g => g.Key, g => (g.First().EpisodeNumber, g.First().SeasonNumber));
+        }
     }
 }

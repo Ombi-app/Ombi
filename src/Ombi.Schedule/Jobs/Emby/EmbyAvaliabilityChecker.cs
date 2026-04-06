@@ -135,6 +135,7 @@ namespace Ombi.Schedule.Jobs.Emby
 
                 var useImdb = false;
                 var useTvDb = false;
+                var useMovieDb = false;
                 if (child.ParentRequest.ImdbId.HasValue())
                 {
                     useImdb = true;
@@ -143,6 +144,11 @@ namespace Ombi.Schedule.Jobs.Emby
                 if (child.ParentRequest.TvDbId.ToString().HasValue())
                 {
                     useTvDb = true;
+                }
+
+                if (child.ParentRequest.ExternalProviderId > 0)
+                {
+                    useMovieDb = true;
                 }
 
                 var tvDbId = child.ParentRequest.TvDbId;
@@ -158,12 +164,12 @@ namespace Ombi.Schedule.Jobs.Emby
                     seriesEpisodes = embyEpisodes.Where(x => x.Series.TvDbId == tvDbId.ToString());
                 }
 
-                if (seriesEpisodes == null)
+                if (useMovieDb && (seriesEpisodes == null || !seriesEpisodes.Any()))
                 {
-                    continue;
+                    seriesEpisodes = embyEpisodes.Where(x => x.Series.TheMovieDbId == child.ParentRequest.ExternalProviderId.ToString());
                 }
 
-                if (!seriesEpisodes.Any())
+                if (seriesEpisodes == null || !seriesEpisodes.Any())
                 {
                     // Let's try and match the series by name
                     seriesEpisodes = embyEpisodes.Where(x =>
