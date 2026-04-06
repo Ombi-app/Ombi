@@ -14,10 +14,12 @@
                     }
                 </div>
                 <p class="hero-overview">{{ activeItem().overview }}</p>
-                <a [routerLink]="getDetailsLink()" class="hero-cta">
-                    {{ 'Discovery.ViewDetails' | translate }}
-                    <i class="fas fa-arrow-right" aria-hidden="true"></i>
-                </a>
+                <div class="hero-actions">
+                    <a [routerLink]="getDetailsLink()" class="hero-cta">
+                        <i class="fas fa-info-circle" aria-hidden="true"></i>
+                        {{ 'Discovery.ViewDetails' | translate }}
+                    </a>
+                </div>
             </div>
             <div class="hero-indicators">
                 @if (items().length > 1) {

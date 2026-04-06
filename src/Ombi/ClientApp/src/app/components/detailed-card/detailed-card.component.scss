@@ -1,63 +1,217 @@
-@use "./styles/variables.scss" as *;
+:host {
+    display: block;
+    padding: 4px;
+}
 
-.detailed-container {
-    width: 200px;
-    height: auto;
-    margin: 10px;
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid $ombi-background-primary-accent;
-    background-color: $ombi-background-accent;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
+.detailed-card {
+    position: relative;
+    width: 180px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #1a2634;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 
-    @media (min-width: 768px) {
-        width: 400px;
-        height: 250px;
+    &:hover {
+        transform: translateY(-6px) scale(1.03);
+        box-shadow:
+            0 12px 40px rgba(0, 0, 0, 0.5),
+            0 0 0 1px rgba(255, 255, 255, 0.08);
     }
 
-    .overview {
-        display: -webkit-box;
-        -webkit-line-clamp: 4;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .year {
-        padding-top: 3%;
-        
-        @media (min-width: 768px) {
-            padding-top: 0;
-        }
-    }
-
-    ::ng-deep .poster {
-        cursor: pointer;
-        border-radius: 10px;
+    &:hover .card-actions,
+    &:focus-within .card-actions {
         opacity: 1;
-        display: block;
-        height: auto;
-        width: 100%;
-        transition: .5s ease;
-        backface-visibility: hidden;
-        border: 1px solid #35465c;
-
-        @media (min-width: 768px) {
-            height: 225px;
-        }
-    }
-
-    .action-items {
-        @media (min-width:768px) {
-            bottom: 0;
-            position: absolute;
-        }
-    }
-
-    .action-items button {
-      margin: 4px;
+        transform: translateY(0);
+        pointer-events: auto;
     }
 }
 
+// Image area
+.card-image-wrapper {
+    position: relative;
+    aspect-ratio: 2/3;
+    overflow: hidden;
+}
+
+.card-backdrop {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+}
+
+/* stylelint-disable-next-line selector-pseudo-element-no-unknown */
+::ng-deep .card-poster {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+// Status badge
+.card-status-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(8px);
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: #fff;
+    z-index: 3;
+    letter-spacing: 0.3px;
+
+    .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+    }
+
+    &.badge-success .status-dot {
+        background: #1DE9B6;
+        box-shadow: 0 0 6px rgba(29, 233, 182, 0.5);
+    }
+
+    &.badge-primary .status-dot {
+        background: #ffd740;
+        box-shadow: 0 0 6px rgba(255, 215, 64, 0.5);
+    }
+
+    &.badge-danger .status-dot {
+        background: #ef5350;
+        box-shadow: 0 0 6px rgba(239, 83, 80, 0.5);
+    }
+
+    &.badge-info .status-dot {
+        background: #ff9800;
+        box-shadow: 0 0 6px rgba(255, 152, 0, 0.5);
+    }
+}
+
+// Info area below poster
+.card-info {
+    padding: 10px 10px 12px;
+}
+
+.card-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 4px 0;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 2px;
+}
+
+.card-year {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 500;
+}
+
+.card-user {
+    min-width: 0;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    i {
+        font-size: 0.6rem;
+        margin-right: 3px;
+    }
+}
+
+.card-date {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.35);
+}
+
+// Admin approve/deny actions
+.card-actions {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    gap: 6px;
+    padding: 8px;
+    background: linear-gradient(to top, rgba(15, 23, 31, 0.95), transparent);
+    opacity: 0;
+    transform: translateY(4px);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 4;
+}
+
+@media (hover: none), (pointer: coarse) {
+    .card-actions {
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+    }
+}
+
+.action-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.approve-btn {
+    background: rgba(29, 233, 182, 0.9);
+    color: #0f171f;
+
+    &:hover {
+        background: #1DE9B6;
+    }
+}
+
+.deny-btn {
+    background: rgba(211, 47, 47, 0.95);
+    color: #fff;
+
+    &:hover {
+        background: #c62828;
+    }
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .detailed-card {
+        width: 160px;
+    }
+}
+
+@media (max-width: 480px) {
+    .detailed-card {
+        width: 140px;
+    }
+
+    .card-user {
+        max-width: 60px;
+    }
+}

@@ -204,7 +204,7 @@ export class RecentlyRequestedListComponent implements OnInit, OnDestroy, AfterV
         if (!targetCardWidth || targetCardWidth === 0) {
             // Get viewport width for responsive heuristics
             const viewportWidth = globalThis.window?.innerWidth || globalThis.document?.documentElement?.clientWidth || width;
-            targetCardWidth = viewportWidth <= 768 ? 220 : 420;
+            targetCardWidth = viewportWidth <= 768 ? 170 : 200;
         }
         // Guard against pathological values
         if (targetCardWidth < 120) { targetCardWidth = 120; }

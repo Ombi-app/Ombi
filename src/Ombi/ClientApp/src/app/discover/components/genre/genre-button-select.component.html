@@ -1,24 +1,29 @@
-
 @defer (when movieGenreList()) {
-    <div class="genre-container">
-        <mat-button-toggle-group name="discoverMode" (change)="toggleChanged($event, genre.type)" *ngFor="let genre of movieGenreList()"
-            class="discover-filter-buttons-group">
-            <mat-button-toggle value="{{genre.id}}" class="discover-filter-button">{{genre.name}}</mat-button-toggle>
-        </mat-button-toggle-group>
+    <div class="genre-row">
+        <span class="genre-label">{{ 'Discovery.Movies' | translate }}</span>
+        <div class="genre-scroll">
+            <mat-button-toggle-group name="movieGenres" (change)="toggleChanged($event, genre.type)" *ngFor="let genre of movieGenreList()"
+                class="genre-chip-group">
+                <mat-button-toggle [value]="genre.id" class="genre-chip">{{genre.name}}</mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
     </div>
 }
 @placeholder(minimum 500) {
-    <p-skeleton width="100%" height="3.5rem"></p-skeleton>
+    <p-skeleton width="100%" height="2.5rem" borderRadius="20px"></p-skeleton>
 }
 
 @defer (when tvGenreList()) {
-    <div class="genre-container">
-        <mat-button-toggle-group name="discoverMode" (change)="toggleChanged($event, genre.type)" *ngFor="let genre of tvGenreList()"
-            class="discover-filter-buttons-group">
-            <mat-button-toggle value="{{genre.id}}" class="discover-filter-button">{{genre.name}}</mat-button-toggle>
-        </mat-button-toggle-group>
+    <div class="genre-row">
+        <span class="genre-label">{{ 'Discovery.Tv' | translate }}</span>
+        <div class="genre-scroll">
+            <mat-button-toggle-group name="tvGenres" (change)="toggleChanged($event, genre.type)" *ngFor="let genre of tvGenreList()"
+                class="genre-chip-group">
+                <mat-button-toggle [value]="genre.id" class="genre-chip">{{genre.name}}</mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
     </div>
 }
 @placeholder(minimum 500) {
-    <p-skeleton width="100%" height="3.5rem"></p-skeleton>
+    <p-skeleton width="100%" height="2.5rem" borderRadius="20px"></p-skeleton>
 }
