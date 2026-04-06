@@ -7,8 +7,13 @@
         "SignInWith": "Belépés {{appName}} fiókkal",
         "SignInWithPlex": "Belépés Plex fiókkal",
         "ForgottenPassword": "Elfelejtetted a jelszavad?",
+        "Or": "or",
+        "BackToSignInOptions": "Back to sign in options",
+        "ShowPassword": "Show password",
+        "HidePassword": "Hide password",
         "Errors": {
-            "IncorrectCredentials": "Helytelen felhasználónév vagy jelszó"
+            "IncorrectCredentials": "Helytelen felhasználónév vagy jelszó",
+            "UsernameRequired": "Username is required"
         }
     },
     "Common": {
