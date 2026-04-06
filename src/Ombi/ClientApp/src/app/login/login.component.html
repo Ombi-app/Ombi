@@ -26,7 +26,7 @@
           </button>
           <div class="divider-row">
             <span class="divider-line"></span>
-            <span class="divider-text">or</span>
+            <span class="divider-text">{{'Login.Or' | translate}}</span>
             <span class="divider-line"></span>
           </div>
           <button class="btn-login btn-login--plex" type="button" data-cy="oAuthPlexButton" (click)="oauth()">
@@ -53,7 +53,7 @@
                      autocomplete="username" />
             </div>
             <div class="field-error" *ngIf="form.get('username').hasError('required') && form.get('username').touched">
-              {{'Login.UsernamePlaceholder' | translate}} is required
+              {{'Login.Errors.UsernameRequired' | translate}}
             </div>
           </div>
 
@@ -66,7 +66,7 @@
                      (focus)="passwordFocused = true"
                      (blur)="passwordFocused = false"
                      autocomplete="current-password" />
-              <button type="button" class="toggle-password" (click)="showPassword = !showPassword" tabindex="-1">
+              <button type="button" class="toggle-password" (click)="showPassword = !showPassword" tabindex="-1" [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
                 <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
               </button>
             </div>
@@ -90,7 +90,7 @@
         <div *ngIf="authenticationSettings.enableOAuth && loginWithOmbi" class="back-to-oauth">
           <button type="button" class="btn-back" (click)="loginWithOmbi = false">
             <mat-icon>arrow_back</mat-icon>
-            <span>Back to sign in options</span>
+            <span>{{'Login.BackToSignInOptions' | translate}}</span>
           </button>
         </div>
       </div>
