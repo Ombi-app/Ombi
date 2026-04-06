@@ -54,6 +54,9 @@ export class LoginComponent implements OnDestroy, OnInit {
   public loginWithOmbi: boolean;
   public pinTimer: any;
   public oauthLoading: boolean;
+  public usernameFocused: boolean = false;
+  public passwordFocused: boolean = false;
+  public showPassword: boolean = false;
 
   public get appName(): string {
     if (this.customizationSettings.applicationName) {
