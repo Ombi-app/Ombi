@@ -355,6 +355,7 @@
         "Availability": "Disponibilidad:",
         "RequestStatus": "Estado de Solicitud:",
         "Quality": "Calidad:",
+        "Quality4K": "Quality (4K):",
         "RootFolderOverride": "Sobreescribir carpeta raíz:",
         "QualityOverride": "Sobreescribir calidad:",
         "Network": "Cadena:",
@@ -375,6 +376,11 @@
         "Crews": {
             "CrewTitle": "Equipo"
         },
+        "OverviewTitle": "Overview",
+        "TmdbRating": "TMDB Rating",
+        "Critics": "Critics",
+        "Audience": "Audience",
+        "TrailerFor": "Trailer for",
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Esto solicitará cada temporada para este programa",
             "FirstSeasonTooltip": "Esto solo solicitará la primera temporada para este programa",
