@@ -1,3 +1,7 @@
+## [4.57.14](https://github.com/Ombi-app/Ombi/compare/v4.57.13...v4.57.14) (2026-04-06)
+
+
+
 ## [4.57.13](https://github.com/Ombi-app/Ombi/compare/v4.57.12...v4.57.13) (2026-04-05)
 
 
@@ -340,26 +344,6 @@
 ### Bug Fixes
 
 * **user-management:** Put back the user filter ([cb63060](https://github.com/Ombi-app/Ombi/commit/cb63060c778011927dc280f47f8b1836b6739150))
-
-
-
-# [4.51.0](https://github.com/Ombi-app/Ombi/compare/v4.50.2...v4.51.0) (2025-10-06)
-
-
-### Bug Fixes
-
-* **translations:** 🌐 New translations from Crowdin [skip ci] ([102c84e](https://github.com/Ombi-app/Ombi/commit/102c84edb0df41f2f9ca27fd9d76f1e9cb22e755))
-
-
-### Features
-
-* improve contributor guidance ([d045f32](https://github.com/Ombi-app/Ombi/commit/d045f32b85fd4c019239e13a6a0eefb842ed1b31))
-* **TvSender:** add logging for missing seasons in Sonarr during monitoring updates ([0d219e4](https://github.com/Ombi-app/Ombi/commit/0d219e4612ce047d7a507c2447ed6d76d616768e))
-
-
-### Reverts
-
-* Revert "Update src/Ombi/Controllers/V1/TokenController.cs" ([0294dba](https://github.com/Ombi-app/Ombi/commit/0294dba4cc8d27ace0503fd2518b4419c3f0f08f))
 
 
 
