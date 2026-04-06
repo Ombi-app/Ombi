@@ -236,6 +236,11 @@
         "RequestCollection": "Collectie aanvragen",
         "CollectionSuccesfullyAdded": "De collectie {{name}} is succesvol toegevoegd!",
         "NoRequests": "No requests yet",
+        "SelectAll": "Select All",
+        "Select": "Select {{title}}",
+        "GridSize": "Grid size",
+        "BulkActions": "Bulk actions for {{count}} items",
+        "ManageYourRequests": "Manage your requests",
         "NeedToSelectEpisodes": "Je moet enkele afleveringen selecteren!",
         "RequestAddedSuccessfully": "Aanvraag voor {{title}} is succesvol toegevoegd",
         "ErrorCodes": {
