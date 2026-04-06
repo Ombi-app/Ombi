@@ -7,8 +7,13 @@
         "SignInWith": "使用 {{appName}} 登录",
         "SignInWithPlex": "使用 Plex 登录",
         "ForgottenPassword": "忘记密码？",
+        "Or": "or",
+        "BackToSignInOptions": "Back to sign in options",
+        "ShowPassword": "Show password",
+        "HidePassword": "Hide password",
         "Errors": {
-            "IncorrectCredentials": "用户名或密码错误"
+            "IncorrectCredentials": "用户名或密码错误",
+            "UsernameRequired": "Username is required"
         }
     },
     "Common": {
