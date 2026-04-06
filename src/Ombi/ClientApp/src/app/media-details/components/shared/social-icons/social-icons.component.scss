@@ -18,6 +18,9 @@
     cursor: pointer;
     text-decoration: none;
     line-height: 1;
+    background: transparent;
+    border: none;
+    padding: 0;
 
     &:hover {
         color: $ombi-active;
@@ -40,6 +43,10 @@
     width: 1px;
     height: 20px;
     background: rgba(255, 255, 255, 0.15);
+}
+
+.menu-icon {
+    margin-right: 8px;
 }
 
 .admin-cog-btn {

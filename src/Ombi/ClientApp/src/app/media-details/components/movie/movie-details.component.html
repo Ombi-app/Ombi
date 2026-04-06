@@ -73,7 +73,7 @@
 							</span>
 						</ng-container>
 						<ng-template #notRequestedBtn>
-							<button id="requestBtn" *ngIf="!movie.requested" class="action-btn action-btn--primary" (click)="request(false)">
+							<button id="requestBtn" *ngIf="!movie.requested" class="action-btn action-btn--primary" [disabled]="movie.requestProcessing" (click)="request(false)">
 								<i *ngIf="movie.requestProcessing" class="fas fa-circle-notch fa-spin"></i>
 								<i *ngIf="!movie.requestProcessing && !movie.processed" class="fas fa-plus"></i>
 								<i *ngIf="movie.processed && !movie.requestProcessing" class="fas fa-check"></i>
@@ -95,7 +95,7 @@
 									</span>
 								</ng-container>
 								<ng-template #notRequestedBtn4K>
-									<button *ngIf="!movie.has4KRequest" class="action-btn action-btn--primary" (click)="request(true)">
+									<button *ngIf="!movie.has4KRequest" class="action-btn action-btn--primary" [disabled]="movie.requestProcessing" (click)="request(true)">
 										<i *ngIf="movie.requestProcessing" class="fas fa-circle-notch fa-spin"></i>
 										<i *ngIf="!movie.requestProcessing && !movie.processed" class="fas fa-plus"></i>
 										<i *ngIf="movie.processed && !movie.requestProcessing" class="fas fa-check"></i>
@@ -234,6 +234,7 @@
 					<iframe
 						*ngFor="let video of movie.videos?.results | slice:0:4"
 						[src]="'https://www.youtube.com/embed/' + video.key | safe"
+						[title]="video.name || ('Trailer for ' + movie.title)"
 						frameborder="0"
 						allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
 						allowfullscreen

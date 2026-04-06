@@ -7,6 +7,7 @@
 				class="streaming-logo stream-small"
 				id="stream{{ stream.streamingProvider }}"
 				[matTooltip]="stream.streamingProvider"
+				[alt]="stream.streamingProvider"
 				src="https://image.tmdb.org/t/p/original{{ stream.logo }}"
 			/>
 		</span>
@@ -15,15 +16,15 @@
 	<!-- Info Grid -->
 	<div class="info-grid">
 		<div class="info-item" *ngIf="tv.rating">
-			<div class="info-label">TMDB Rating</div>
+			<div class="info-label">{{ 'MediaDetails.TmdbRating' | translate }}</div>
 			<div class="info-value">
-				<img class="rating-small" src="{{ baseUrl }}/images/tmdb-logo.svg" />
+				<img class="rating-small" src="{{ baseUrl }}/images/tmdb-logo.svg" alt="TMDB" />
 				{{ tv.rating * 10 | number: '1.0-0' }}%
 			</div>
 		</div>
 
 		<div class="info-item" *ngIf="ratings?.score && ratings?.class">
-			<div class="info-label">Critics</div>
+			<div class="info-label">{{ 'MediaDetails.Critics' | translate }}</div>
 			<div class="info-value">
 				<img class="rating-small" src="{{ baseUrl }}/images/{{ ratings.class === 'rotten' ? 'rotten-rotten.svg' : 'rotten-fresh.svg' }}" />
 				{{ ratings.score }}%

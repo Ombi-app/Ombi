@@ -90,8 +90,7 @@
         transform: scale(1.02);
     }
 
-    :host ::ng-deep img,
-    ::ng-deep img {
+    img {
         width: 100%;
         display: block;
         border-radius: 12px;
@@ -544,24 +543,24 @@
 
 // --- Cast Carousel Overrides ---
 .details-cast {
-    ::ng-deep .mat-mdc-card,
-    ::ng-deep .mat-card {
+    .mat-mdc-card,
+    .mat-card {
         background: transparent;
         border: none;
         box-shadow: none;
     }
 
-    ::ng-deep .mat-card-header,
-    ::ng-deep .mat-mdc-card-header {
+    .mat-card-header,
+    .mat-mdc-card-header {
         display: none;
     }
 
-    ::ng-deep .carousel-item {
+    .carousel-item {
         text-align: center;
         padding: 8px;
     }
 
-    ::ng-deep .cast-profile-img {
+    .cast-profile-img {
         border-radius: 50%;
         width: 120px;
         height: 120px;
@@ -570,11 +569,11 @@
         transition: border-color 0.2s;
     }
 
-    ::ng-deep .carousel-item:hover .cast-profile-img {
+    .carousel-item:hover .cast-profile-img {
         border-color: $ombi-active;
     }
 
-    ::ng-deep .p-carousel-indicators {
+    .p-carousel-indicators {
         display: none !important;
     }
 }
@@ -645,7 +644,7 @@
 
 // --- Issues Panel ---
 .details-issues {
-    ::ng-deep .issuesPanel {
+    .issuesPanel {
         padding: 0;
     }
 }
@@ -659,14 +658,14 @@
 .details-requests-panel {
     margin-bottom: 40px;
 
-    ::ng-deep .mat-expansion-panel {
+    .mat-expansion-panel {
         background: rgba(255, 255, 255, 0.04);
         border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 12px !important;
         box-shadow: none;
     }
 
-    ::ng-deep .mat-expansion-panel-header {
+    .mat-expansion-panel-header {
         font-size: 1rem;
         font-weight: 600;
     }
@@ -700,7 +699,7 @@
 }
 
 // PrimeNG carousel indicator override
-::ng-deep .p-carousel-indicators {
+.p-carousel-indicators {
     display: none !important;
 }
 
@@ -726,15 +725,11 @@
 }
 
 .genre-button-container .mat-chip-list .mat-chip-list-wrapper {
-    margin-top: 3px;
-    margin: 0;
-    margin-left: -6px;
+    margin: 3px 0 0 -6px;
 }
 
 .keyword-button-container .mat-chip-list .mat-chip-list-wrapper {
-    margin-top: 3px;
-    margin: 0;
-    margin-left: -6px;
+    margin: 3px 0 0 -6px;
 }
 
 // Skeleton placeholder

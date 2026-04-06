@@ -3,7 +3,7 @@
 	<div *ngIf="streams?.length > 0" class="streaming-row">
 		<span class="streaming-label">{{ 'MediaDetails.StreamingOn' | translate }}</span>
 		<span *ngFor="let stream of streams">
-			<img class="streaming-logo" [matTooltip]="stream.streamingProvider" src="https://image.tmdb.org/t/p/original{{ stream.logo }}" />
+			<img class="streaming-logo" [matTooltip]="stream.streamingProvider" [alt]="stream.streamingProvider" src="https://image.tmdb.org/t/p/original{{ stream.logo }}" />
 		</span>
 	</div>
 
@@ -13,24 +13,24 @@
 		<div class="info-item" *ngIf="movie.voteAverage">
 			<div class="info-label">{{ 'MediaDetails.Votes' | translate }}</div>
 			<div class="info-value">
-				<img class="rating-small" src="{{ baseUrl }}/images/tmdb-logo.svg" />
+				<img class="rating-small" src="{{ baseUrl }}/images/tmdb-logo.svg" alt="TMDB" />
 				{{ movie.voteAverage | number: '1.0-1' }}/10
 				<span class="info-sub">({{ movie.voteCount | thousandShort: 1 }})</span>
 			</div>
 		</div>
 
 		<div class="info-item" *ngIf="ratings?.critics_rating && ratings?.critics_score">
-			<div class="info-label">Critics</div>
+			<div class="info-label">{{ 'MediaDetails.Critics' | translate }}</div>
 			<div class="info-value">
-				<img class="rating-small" src="{{ baseUrl }}/images/{{ ratings.critics_rating === 'Rotten' ? 'rotten-rotten.svg' : 'rotten-fresh.svg' }}" />
+				<img class="rating-small" [alt]="ratings.critics_rating" src="{{ baseUrl }}/images/{{ ratings.critics_rating === 'Rotten' ? 'rotten-rotten.svg' : 'rotten-fresh.svg' }}" />
 				{{ ratings.critics_score }}%
 			</div>
 		</div>
 
 		<div class="info-item" *ngIf="ratings?.audience_rating && ratings?.audience_score">
-			<div class="info-label">Audience</div>
+			<div class="info-label">{{ 'MediaDetails.Audience' | translate }}</div>
 			<div class="info-value">
-				<img class="rating-small" src="{{ baseUrl }}/images/{{ ratings.audience_rating === 'Upright' ? 'rotten-audience-fresh.svg' : 'rotten-audience-rotten.svg' }}" />
+				<img class="rating-small" [alt]="ratings.audience_rating" src="{{ baseUrl }}/images/{{ ratings.audience_rating === 'Upright' ? 'rotten-audience-fresh.svg' : 'rotten-audience-rotten.svg' }}" />
 				{{ ratings.audience_score }}%
 			</div>
 		</div>
@@ -61,7 +61,7 @@
 		<div class="info-item" *ngIf="request">
 			<div class="info-label">{{ 'MediaDetails.RequestDate' | translate }}</div>
 			<div class="info-value">
-				<span *ngIf="request.requestedDate < request.requestedDate4k">{{ request.requestedDate4k | ombiDate: 'PP' }}</span>
+				<span *ngIf="request.requestedDate <= request.requestedDate4k">{{ request.requestedDate4k | ombiDate: 'PP' }}</span>
 				<span *ngIf="request.requestedDate > request.requestedDate4k">{{ request.requestedDate | ombiDate: 'PP' }}</span>
 			</div>
 		</div>

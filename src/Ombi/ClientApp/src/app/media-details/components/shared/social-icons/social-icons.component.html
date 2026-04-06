@@ -1,50 +1,50 @@
 <div class="social-links-row">
-    <a *ngIf="homepage" class="social-link" href="{{homepage}}" target="_blank">
+    <a *ngIf="homepage" class="social-link" href="{{homepage}}" target="_blank" aria-label="Homepage">
         <i matTooltip="Homepage" class="fas fa-home"></i>
     </a>
-    <a *ngIf="theMoviedbId" href="https://www.themoviedb.org/{{type === RequestType.movie ? 'movie' : 'tv'}}/{{theMoviedbId}}" class="social-link" target="_blank">
+    <a *ngIf="theMoviedbId" href="https://www.themoviedb.org/{{type === RequestType.movie ? 'movie' : 'tv'}}/{{theMoviedbId}}" class="social-link" target="_blank" aria-label="The Movie DB">
         <i matTooltip="The Movie DB" class="fas fa-film"></i>
     </a>
-    <a *ngIf="tvdbId" href="https://www.thetvdb.com/?id={{tvdbId}}&tab=series" class="social-link" target="_blank">
+    <a *ngIf="tvdbId" href="https://www.thetvdb.com/?id={{tvdbId}}&tab=series" class="social-link" target="_blank" aria-label="The TV DB">
         <i matTooltip="The TV DB" class="fas fa-tv"></i>
     </a>
-    <a *ngIf="hasTrailer" data-testid="social-trailer" class="social-link" (click)="openDialog()">
+    <button *ngIf="hasTrailer" type="button" data-testid="social-trailer" class="social-link" (click)="openDialog()" aria-label="Play trailer">
         <i matTooltip="Trailer" class="fab fa-youtube"></i>
-    </a>
-    <a *ngIf="imdbId" class="social-link" [href]="doNotAppend ? imdbid : 'https://imdb.com/title/' + imdbId" target="_blank">
+    </button>
+    <a *ngIf="imdbId" class="social-link" [href]="doNotAppend ? imdbId : 'https://imdb.com/title/' + imdbId" target="_blank" aria-label="IMDb">
         <i matTooltip="IMDb" class="fab fa-imdb"></i>
     </a>
-    <a *ngIf="theMoviedbId" class="social-link" href="https://trakt.tv/search/tmdb/{{theMoviedbId}}?id_type={{type === RequestType.movie ? 'movie' : 'show'}}" target="_blank">
-        <img matTooltip="Trakt" src="{{baseUrl}}/images/trakt.svg" />
+    <a *ngIf="theMoviedbId" class="social-link" href="https://trakt.tv/search/tmdb/{{theMoviedbId}}?id_type={{type === RequestType.movie ? 'movie' : 'show'}}" target="_blank" aria-label="Trakt">
+        <img matTooltip="Trakt" src="{{baseUrl}}/images/trakt.svg" alt="Trakt" />
     </a>
-    <a *ngIf="twitter" class="social-link" [href]="doNotAppend ? twitter : 'https://twitter.com/' + twitter" target="_blank">
+    <a *ngIf="twitter" class="social-link" [href]="doNotAppend ? twitter : 'https://twitter.com/' + twitter" target="_blank" aria-label="Twitter">
         <i matTooltip="Twitter" class="fab fa-twitter"></i>
     </a>
-    <a *ngIf="facebook" class="social-link" [href]="doNotAppend ? facebook : 'https://facebook.com/' + facebook" target="_blank">
+    <a *ngIf="facebook" class="social-link" [href]="doNotAppend ? facebook : 'https://facebook.com/' + facebook" target="_blank" aria-label="Facebook">
         <i matTooltip="Facebook" class="fab fa-facebook"></i>
     </a>
-    <a *ngIf="instagram" class="social-link" [href]="doNotAppend ? instagram : 'https://instagram.com/' + instagram" target="_blank">
+    <a *ngIf="instagram" class="social-link" [href]="doNotAppend ? instagram : 'https://instagram.com/' + instagram" target="_blank" aria-label="Instagram">
         <i matTooltip="Instagram" class="fab fa-instagram"></i>
     </a>
 
     <!-- Admin cog -->
     <ng-container *ngIf="isAdmin">
         <span class="social-divider"></span>
-        <button mat-icon-button [matMenuTriggerFor]="menu" class="admin-cog-btn">
+        <button mat-icon-button [matMenuTriggerFor]="menu" class="admin-cog-btn" aria-label="Admin settings">
             <i class="fas fa-cog"></i>
         </button>
         <mat-menu #menu="matMenu">
             <button mat-menu-item [disabled]="!canShowAdvanced" (click)="openAdvancedOptions()">
-                <i class="fas fa-ticket-alt" style="margin-right:8px"></i>
+                <i class="fas fa-ticket-alt menu-icon"></i>
                 <span *ngIf="type === RequestType.movie"> {{ 'MediaDetails.RadarrConfiguration' | translate}}</span>
                 <span *ngIf="type === RequestType.tvShow"> {{ 'MediaDetails.SonarrConfiguration' | translate}}</span>
             </button>
             <button *ngIf="type === RequestType.movie" mat-menu-item (click)="reProcessRequest(false)">
-                <i class="fas fa-sync" style="margin-right:8px"></i>
+                <i class="fas fa-sync menu-icon"></i>
                 <span> {{ 'MediaDetails.ReProcessRequest' | translate}}</span>
             </button>
             <button *ngIf="type === RequestType.movie && has4KRequest" mat-menu-item (click)="reProcessRequest(true)">
-                <i class="fas fa-sync" style="margin-right:8px"></i>
+                <i class="fas fa-sync menu-icon"></i>
                 <span> {{ 'MediaDetails.ReProcessRequest4K' | translate}}</span>
             </button>
         </mat-menu>

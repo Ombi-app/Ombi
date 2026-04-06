@@ -11,8 +11,7 @@
                 <i *ngIf="!item.image && !item.profile_path" class="fa-solid fa-user-large fa-2xl cast-placeholder-icon" aria-hidden="true"></i>
             </div>
             <div class="cast-name">
-                <span *ngIf="item.name"><strong>{{item.name}}</strong></span>
-                <span *ngIf="item.person"><strong>{{item.person}}</strong></span>
+                <strong>{{item.name || item.person}}</strong>
             </div>
             <div class="cast-character" *ngIf="item.character">
                 <small>{{item.character}}</small>
