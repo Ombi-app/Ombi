@@ -88,7 +88,7 @@ export class MoviesGridComponent extends BaseGridComponent<IMovieRequests> {
     public loadData(): Observable<IRequestsViewModel<IMovieRequests>> {
         const count = this.gridCount;
         const offset = this.paginator.pageIndex * count;
-        switch(RequestFilterType[RequestFilterType[this.currentFilter]]) {
+        switch(this.currentFilter) {
             case RequestFilterType.All:
                 return this.requestService.getMovieRequests(count, offset, this.sortActive, this.sortDirection);
             case RequestFilterType.Pending:
@@ -99,8 +99,6 @@ export class MoviesGridComponent extends BaseGridComponent<IMovieRequests> {
                 return this.requestService.getMovieProcessingRequests(count, offset, this.sortActive, this.sortDirection);
             case RequestFilterType.Denied:
                 return this.requestService.getMovieDeniedRequests(count, offset, this.sortActive, this.sortDirection);
-            default:
-                return this.requestService.getMovieRequests(count, offset, this.sortActive, this.sortDirection);
         }
     }
 
@@ -121,8 +119,7 @@ export class MoviesGridComponent extends BaseGridComponent<IMovieRequests> {
 
     private checkDate(date: Date|string): boolean {
         if (typeof date === 'string') return new Date(date).getFullYear() > 1;
-        if (date instanceof Date) return date.getFullYear() > 1;
-        return false;
+        return date.getFullYear() > 1;
     }
 
     public isAllSelected() {

@@ -54,7 +54,7 @@ export class AlbumsGridComponent extends BaseGridComponent<IAlbumRequest> {
     public loadData(): Observable<IRequestsViewModel<IAlbumRequest>> {
         const count = this.gridCount;
         const offset = this.paginator.pageIndex * count;
-        switch(RequestFilterType[RequestFilterType[this.currentFilter]]) {
+        switch(this.currentFilter) {
             case RequestFilterType.All:
                 return this.requestService.getAlbumRequests(count, offset, this.sortActive, this.sortDirection);
             case RequestFilterType.Pending:
@@ -65,8 +65,6 @@ export class AlbumsGridComponent extends BaseGridComponent<IAlbumRequest> {
                 return this.requestService.getAlbumProcessingRequests(count, offset, this.sortActive, this.sortDirection);
             case RequestFilterType.Denied:
                 return this.requestService.getAlbumDeniedRequests(count, offset, this.sortActive, this.sortDirection);
-            default:
-                return this.requestService.getAlbumRequests(count, offset, this.sortActive, this.sortDirection);
         }
     }
 

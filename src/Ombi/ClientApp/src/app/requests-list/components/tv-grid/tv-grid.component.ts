@@ -63,7 +63,7 @@ export class TvGridComponent extends BaseGridComponent<IChildRequests> {
     protected loadData(): Observable<IRequestsViewModel<IChildRequests>> {
         const count = this.gridCount;
         const offset = this.paginator.pageIndex * count;
-        switch(RequestFilterType[RequestFilterType[this.currentFilter]]) {
+        switch(this.currentFilter) {
             case RequestFilterType.All:
                 return this.requestService.getTvRequests(count, offset, this.sortActive, this.sortDirection);
             case RequestFilterType.Pending:
@@ -74,8 +74,6 @@ export class TvGridComponent extends BaseGridComponent<IChildRequests> {
                 return this.requestService.getProcessingTvRequests(count, offset, this.sortActive, this.sortDirection);
             case RequestFilterType.Denied:
                 return this.requestService.getDeniedTvRequests(count, offset, this.sortActive, this.sortDirection);
-            default:
-                return this.requestService.getTvRequests(count, offset, this.sortActive, this.sortDirection);
         }
     }
 
