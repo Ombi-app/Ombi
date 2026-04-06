@@ -47,11 +47,11 @@ export class TvGridComponent extends BaseGridComponent<IChildRequests> {
     protected storageKeyCurrentFilter = "Tv_DefaultFilter";
 
     constructor(
-        private requestService: RequestServiceV2,
+        private readonly requestService: RequestServiceV2,
         auth: AuthService,
         ref: ChangeDetectorRef,
         storageService: StorageService,
-        private featureFacade: FeaturesFacade
+        private readonly featureFacade: FeaturesFacade
     ) {
         super(auth, ref, storageService);
     }
@@ -74,6 +74,8 @@ export class TvGridComponent extends BaseGridComponent<IChildRequests> {
                 return this.requestService.getProcessingTvRequests(count, offset, this.sortActive, this.sortDirection);
             case RequestFilterType.Denied:
                 return this.requestService.getDeniedTvRequests(count, offset, this.sortActive, this.sortDirection);
+            default:
+                return this.requestService.getTvRequests(count, offset, this.sortActive, this.sortDirection);
         }
     }
 

@@ -43,7 +43,7 @@ export class AlbumsGridComponent extends BaseGridComponent<IAlbumRequest> {
     protected storageKeyCurrentFilter = "Albums_DefaultFilter";
 
     constructor(
-        private requestService: RequestServiceV2,
+        private readonly requestService: RequestServiceV2,
         ref: ChangeDetectorRef,
         auth: AuthService,
         storageService: StorageService
@@ -65,6 +65,8 @@ export class AlbumsGridComponent extends BaseGridComponent<IAlbumRequest> {
                 return this.requestService.getAlbumProcessingRequests(count, offset, this.sortActive, this.sortDirection);
             case RequestFilterType.Denied:
                 return this.requestService.getAlbumDeniedRequests(count, offset, this.sortActive, this.sortDirection);
+            default:
+                return this.requestService.getAlbumRequests(count, offset, this.sortActive, this.sortDirection);
         }
     }
 

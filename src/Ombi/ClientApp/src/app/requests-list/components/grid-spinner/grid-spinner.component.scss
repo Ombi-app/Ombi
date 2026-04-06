@@ -17,7 +17,7 @@
 
 .skeleton-poster {
   aspect-ratio: var(--request-skeleton-media-ratio, 2 / 3);
-  max-height: 200px;
+  max-height: var(--request-skeleton-media-max-height, 200px);
   background: #141414;
 }
 
@@ -71,4 +71,10 @@
 @keyframes shimmer {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer::after {
+    animation: none;
+  }
 }

@@ -2,7 +2,7 @@
 <div class="filter-bar">
   <div class="filter-chips">
     <button *ngFor="let filter of filterOptions" type="button" class="chip"
-      [class.active]="currentFilter === filter.type"
+      [id]="filter.id" [class.active]="currentFilter === filter.type"
       (click)="switchFilter(filter.type)">
       {{ filter.label | translate }}
     </button>

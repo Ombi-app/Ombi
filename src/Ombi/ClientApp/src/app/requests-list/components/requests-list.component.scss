@@ -66,6 +66,11 @@
     background: #1a1a1a;
   }
 
+  &:focus-visible {
+    outline: 2px solid $accent-dark;
+    outline-offset: 2px;
+  }
+
   &.active {
     background: $accent-dark;
     color: #111;
@@ -90,6 +95,12 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab-content {
+    animation: none;
   }
 }
 

@@ -99,6 +99,8 @@ export class MoviesGridComponent extends BaseGridComponent<IMovieRequests> {
                 return this.requestService.getMovieProcessingRequests(count, offset, this.sortActive, this.sortDirection);
             case RequestFilterType.Denied:
                 return this.requestService.getMovieDeniedRequests(count, offset, this.sortActive, this.sortDirection);
+            default:
+                return this.requestService.getMovieRequests(count, offset, this.sortActive, this.sortDirection);
         }
     }
 
@@ -149,8 +151,11 @@ export class MoviesGridComponent extends BaseGridComponent<IMovieRequests> {
     public bulkDeny4K = () => this.bulkAction(true, false);
 
     private bulkAction(is4k: boolean, approve: boolean) {
-        if (this.selection.isEmpty()) return;
-        const tasks = this.selection.selected.map(s =>
+        const eligible = this.selection.selected.filter(s =>
+            is4k ? s.has4KRequest : this.checkDate(s.requestedDate)
+        );
+        if (eligible.length === 0) return;
+        const tasks = eligible.map(s =>
             approve
                 ? this.requestServiceV1.approveMovie({ id: s.id, is4K: is4k })
                 : this.requestServiceV1.denyMovie({ id: s.id, is4K: is4k, reason: '' })

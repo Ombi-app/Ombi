@@ -1,6 +1,7 @@
 // Album-specific: square cover art
 :host {
   --request-skeleton-media-ratio: 1 / 1;
+  --request-skeleton-media-max-height: none;
 }
 
 .card-poster {
