@@ -236,6 +236,11 @@
         "RequestCollection": "Anfrage Sammlung",
         "CollectionSuccesfullyAdded": "Die Sammlung {{name}} wurde erfolgreich hinzugefügt!",
         "NoRequests": "No requests yet",
+        "SelectAll": "Select All",
+        "Select": "Select {{title}}",
+        "GridSize": "Grid size",
+        "BulkActions": "Bulk actions for {{count}} items",
+        "ManageYourRequests": "Manage your requests",
         "NeedToSelectEpisodes": "Sie müssen einige Episoden auswählen!",
         "RequestAddedSuccessfully": "Anfrage für {{title}} wurde erfolgreich hinzugefügt",
         "ErrorCodes": {
