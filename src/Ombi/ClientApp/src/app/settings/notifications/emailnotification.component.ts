@@ -15,7 +15,8 @@ import { TesterService } from "../../services";
 import { ValidationService } from "../../services";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
-    import { NotificationTemplate } from "./notificationtemplate.component";
+import { NotificationTemplate } from "./notificationtemplate.component";
+import { SettingsMenuComponent } from "../settingsmenu.component";
 
 @Component({
     standalone: true,
@@ -31,7 +32,8 @@ import { SettingsService } from "../../services";
         MatSlideToggleModule,
         MatTooltipModule,
         TranslateModule,
-        NotificationTemplate
+        NotificationTemplate,
+        SettingsMenuComponent
     ],
     templateUrl: "./emailnotification.component.html",
     styleUrls: ["./notificationtemplate.component.scss"]
@@ -62,6 +64,9 @@ export class EmailNotificationComponent implements OnInit {
                 username: [x.username],
                 disableTLS: [x.disableTLS],
                 disableCertificateChecking: [x.disableCertificateChecking],
+                useBasicWrapper: [x.useBasicWrapper ?? true],
+                includeWrapperLogo: [x.includeWrapperLogo ?? true],
+                includeWrapperPoster: [x.includeWrapperPoster ?? true],
             });
 
             if (x.authentication) {

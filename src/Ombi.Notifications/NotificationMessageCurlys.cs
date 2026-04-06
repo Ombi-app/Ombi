@@ -19,6 +19,7 @@ namespace Ombi.Notifications
         {
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s.ApplicationName;
             ApplicationUrl = s?.ApplicationUrl.HasValue() ?? false ? s.ApplicationUrl : string.Empty;
+            ItemUrl = string.Empty;
         }
 
         public void Setup(OmbiUser user, CustomizationSettings s)
@@ -28,6 +29,7 @@ namespace Ombi.Notifications
             RequestedUser = user.UserName;
             Alias = user.UserAlias;
             UserName = user.UserName;
+            ItemUrl = string.Empty;
         }
 
         public void Setup(NotificationOptions opts, MovieRequests req, CustomizationSettings s,
@@ -141,6 +143,9 @@ namespace Ombi.Notifications
             {
                 PosterImage = string.Empty;
             }
+
+            // For issues without a specific request context, these URLs will be empty
+            ItemUrl = string.Empty;
         }
 
         private void LoadCommon(BaseRequest req, CustomizationSettings s, UserNotificationPreferences pref, NotificationOptions opts)
@@ -152,8 +157,10 @@ namespace Ombi.Notifications
             RequestId = req?.Id.ToString();
             RequestedUser = req?.RequestedUser?.UserName;
             RequestedDate = req?.RequestedDate.ToString("D");
-            DetailsUrl = GetDetailsUrl(s, req);
+            var detailsUrl = GetDetailsUrl(s, req);
+            DetailsUrl = detailsUrl;
             RequestedByAlias = req?.RequestedByAlias;
+            ItemUrl = detailsUrl;
 
             if (Type.IsNullOrEmpty())
             {
@@ -229,7 +236,7 @@ namespace Ombi.Notifications
 
         private string GetDetailsUrl(CustomizationSettings s, BaseRequest req)
         {
-            if (string.IsNullOrEmpty(s.ApplicationUrl))
+            if (string.IsNullOrEmpty(s?.ApplicationUrl))
             {
                 return string.Empty;
             }
@@ -238,7 +245,7 @@ namespace Ombi.Notifications
             {
                 case MovieRequests movieRequest:
                     return $"{s.ApplicationUrl}/details/movie/{movieRequest.TheMovieDbId}";
-                case ChildRequests tvRequest:
+                case ChildRequests tvRequest when tvRequest.ParentRequest != null:
                     return $"{s.ApplicationUrl}/details/tv/{tvRequest.ParentRequest.ExternalProviderId}";
                 case AlbumRequest albumRequest:
                     return $"{s.ApplicationUrl}/details/artist/{albumRequest.ForeignArtistId}";
@@ -307,6 +314,7 @@ namespace Ombi.Notifications
         public string PartiallyAvailableSeasonNumber { get; set; }
         public string PartiallyAvailableEpisodeCount { get; set; }
         public string PartiallyAvailableEpisodesList { get; set; }
+        public string ItemUrl { get; set; }
 
         // System Defined
         private string LongDate => DateTime.Now.ToString("D");
@@ -351,6 +359,7 @@ namespace Ombi.Notifications
             { nameof(PartiallyAvailableSeasonNumber), PartiallyAvailableSeasonNumber },
             { nameof(PartiallyAvailableEpisodesList), PartiallyAvailableEpisodesList },
             { nameof(PartiallyAvailableEpisodeCount), PartiallyAvailableEpisodeCount },
+            { nameof(ItemUrl), ItemUrl },
         };
     }
 }

@@ -63,16 +63,23 @@ namespace Ombi.Notifications.Agents
                 Logger.LogInformation($"Template {type} is disabled for {NotificationAgent.Email}");
                 return null;
             }
-            var email = new EmailBasicTemplate();
-            var html = email.LoadTemplate(parsed.Subject, parsed.Message, parsed.Image, Customization.Logo, parsed.DetailsUrl);
 
+            string html;
+            if (settings.UseBasicWrapper)
+            {
+                var email = new EmailBasicTemplate();
+                html = email.LoadTemplate(parsed.Subject, parsed.Message, parsed.Image, Customization.Logo, parsed.DetailsUrl, settings.IncludeWrapperLogo, settings.IncludeWrapperPoster);
+            }
+            else
+            {
+                html = parsed.Message;
+            }
 
             var message = new NotificationMessage
             {
                 Message = html,
                 Subject = parsed.Subject,
             };
-
 
             return message;
         }
@@ -295,10 +302,17 @@ namespace Ombi.Notifications.Agents
 
         protected override async Task Test(NotificationOptions model, EmailNotificationSettings settings)
         {
-            var email = new EmailBasicTemplate();
-            var html = email.LoadTemplate(
-                "Test Message",
-                "This is just a test! Success!", "", Customization.Logo);
+            string html;
+            if (settings.UseBasicWrapper)
+            {
+                var email = new EmailBasicTemplate();
+                html = email.LoadTemplate("Test Message", "This is just a test! Success!", "", Customization.Logo, "", settings.IncludeWrapperLogo, settings.IncludeWrapperPoster);
+            }
+            else
+            {
+                html = "This is just a test! Success!";
+            }
+
             var message = new NotificationMessage
             {
                 Message = html,
