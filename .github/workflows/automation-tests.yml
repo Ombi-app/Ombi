@@ -57,16 +57,33 @@ jobs:
     - name: Sleep for server to start
       run: sleep 20
 
-    - name: Cypress Tests
-      uses: cypress-io/github-action@v4
+    - name: Cypress Tests - Setup (Wizard)
+      # v4.2.2 of the action - pinned to a commit to prevent hijacking of /v4 tag
+      uses: cypress-io/github-action@d79d2d530a66e641eb4a5f227e13bc985c60b964
       with:
         record: true
         browser: chrome
         headless: true
         working-directory: tests
         wait-on: http://localhost:3577/
-        # 10 minutes
         wait-on-timeout: 600
+        spec: cypress/features/01-wizard/wizard.feature
+      env:
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Cypress Tests - All other tests
+      # v4.2.2 of the action - pinned to a commit to prevent hijacking of /v4 tag
+      uses: cypress-io/github-action@d79d2d530a66e641eb4a5f227e13bc985c60b964
+      with:
+        record: true
+        browser: chrome
+        headless: true
+        working-directory: tests
+        wait-on: http://localhost:3577/
+        wait-on-timeout: 600
+        spec: >-
+          cypress/tests/**/*
       env:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
