@@ -19,6 +19,16 @@ export abstract class BaseGridComponent<T> implements OnInit, AfterViewInit {
     public currentFilter: RequestFilterType = RequestFilterType.All;
     public RequestFilter = RequestFilterType;
 
+    public readonly filterOptions = [
+        { type: RequestFilterType.All, label: 'Requests.AllRequests', id: 'filterAll' },
+        { type: RequestFilterType.Pending, label: 'Requests.PendingRequests', id: 'filterPending' },
+        { type: RequestFilterType.Processing, label: 'Requests.ProcessingRequests', id: 'filterProcessing' },
+        { type: RequestFilterType.Available, label: 'Requests.AvailableRequests', id: 'filterAvailable' },
+        { type: RequestFilterType.Denied, label: 'Requests.DeniedRequests', id: 'filterDenied' },
+    ];
+
+    public readonly gridCountOptions = [10, 15, 30, 100];
+
     protected sortActive: string = "requestedDate";
     protected sortDirection: string = "desc";
     private readonly reload$ = new Subject<void>();

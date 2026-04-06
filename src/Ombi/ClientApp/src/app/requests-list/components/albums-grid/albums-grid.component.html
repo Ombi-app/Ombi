@@ -1,20 +1,10 @@
 <!-- Filter Bar -->
 <div class="filter-bar">
   <div class="filter-chips">
-    <button type="button" class="chip" [class.active]="currentFilter === RequestFilter.All" (click)="switchFilter(RequestFilter.All)">
-      {{ 'Requests.AllRequests' | translate }}
-    </button>
-    <button type="button" class="chip" [class.active]="currentFilter === RequestFilter.Pending" (click)="switchFilter(RequestFilter.Pending)">
-      {{ 'Requests.PendingRequests' | translate }}
-    </button>
-    <button type="button" class="chip" [class.active]="currentFilter === RequestFilter.Processing" (click)="switchFilter(RequestFilter.Processing)">
-      {{ 'Requests.ProcessingRequests' | translate }}
-    </button>
-    <button type="button" class="chip" [class.active]="currentFilter === RequestFilter.Available" (click)="switchFilter(RequestFilter.Available)">
-      {{ 'Requests.AvailableRequests' | translate }}
-    </button>
-    <button type="button" class="chip" [class.active]="currentFilter === RequestFilter.Denied" (click)="switchFilter(RequestFilter.Denied)">
-      {{ 'Requests.DeniedRequests' | translate }}
+    <button *ngFor="let filter of filterOptions" type="button" class="chip"
+      [class.active]="currentFilter === filter.type"
+      (click)="switchFilter(filter.type)">
+      {{ filter.label | translate }}
     </button>
   </div>
 
@@ -24,10 +14,7 @@
         [(value)]="gridCount"
         (selectionChange)="onGridCountChange()"
       >
-        <mat-option [value]="10">10</mat-option>
-        <mat-option [value]="15">15</mat-option>
-        <mat-option [value]="30">30</mat-option>
-        <mat-option [value]="100">100</mat-option>
+        <mat-option *ngFor="let count of gridCountOptions" [value]="count">{{ count }}</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
@@ -79,9 +66,9 @@
 
       <!-- Actions -->
       <div class="card-actions">
-        <a class="btn-detail" [routerLink]="'/details/artist/' + item.foreignArtistId">
+        <button class="btn-detail" type="button" [routerLink]="'/details/artist/' + item.foreignArtistId">
           {{ 'Requests.Details' | translate }}
-        </a>
+        </button>
         <button class="btn-options" type="button"
           [attr.aria-label]="'Requests.Options' | translate"
           (click)="openOptions(item)"
