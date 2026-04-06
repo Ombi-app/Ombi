@@ -57,7 +57,7 @@ export abstract class BaseGridComponent<T> implements OnInit, AfterViewInit {
 
     protected initFeatures() {}
 
-    public async ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.paginator.showFirstLastButtons = true;
 
         merge(this.paginator.page, this.reload$)
