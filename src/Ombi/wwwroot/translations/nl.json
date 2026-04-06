@@ -355,6 +355,7 @@
         "Availability": "Beschikbaarheid:",
         "RequestStatus": "Aanvraag status:",
         "Quality": "Kwaliteit:",
+        "Quality4K": "Quality (4K):",
         "RootFolderOverride": "Hoofdmap overschrijven:",
         "QualityOverride": "Kwaliteit overschrijven:",
         "Network": "Netwerk:",
@@ -375,6 +376,11 @@
         "Crews": {
             "CrewTitle": "Crew"
         },
+        "OverviewTitle": "Overview",
+        "TmdbRating": "TMDB Rating",
+        "Critics": "Critics",
+        "Audience": "Audience",
+        "TrailerFor": "Trailer for",
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Dit verzoekt ieder seizoen van deze serie",
             "FirstSeasonTooltip": "Dit verzoekt alleen het eerste seizoen van deze serie",
