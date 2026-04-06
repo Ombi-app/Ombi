@@ -3,7 +3,6 @@
 // ─── Layout ──────────────────────────────────────────────
 .sidenav-container {
     min-height: 100vh;
-    -webkit-overflow-scrolling: touch;
     overflow: auto;
 }
 
@@ -218,7 +217,7 @@ $sidenav-width: 240px;
     color: rgba(255, 255, 255, 0.65);
     text-decoration: none;
     font-size: 14px;
-    font-weight: 450;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.15s ease;
     user-select: none;
