@@ -14,6 +14,7 @@
       <mat-select
         [(value)]="gridCount"
         (selectionChange)="onGridCountChange()"
+        [aria-label]="'Requests.GridSize' | translate"
       >
         <mat-option *ngFor="let count of gridCountOptions" [value]="count">{{ count }}</mat-option>
       </mat-select>
@@ -41,14 +42,14 @@
     <!-- Card Body -->
     <div class="card-body">
       <div class="card-header">
-        <h3 class="card-title" [id]="'title' + item.parentRequest.externalProviderId">
+        <h3 class="card-title" [id]="'title' + item.id">
           <a [routerLink]="'/details/tv/' + item.parentRequest.externalProviderId">{{ item.parentRequest.title }}</a>
         </h3>
       </div>
 
       <!-- Status Badge -->
       <div class="status-row">
-        <span class="status-badge" [id]="'requestedStatus' + item.parentRequest.externalProviderId" [ngClass]="getStatusClass(item)">
+        <span class="status-badge" [id]="'requestedStatus' + item.id" [ngClass]="getStatusClass(item)">
           {{ item.requestStatus | translate }}
         </span>
       </div>
@@ -57,15 +58,15 @@
       <div class="card-meta">
         <div class="meta-item">
           <i class="fas fa-user"></i>
-          <span [id]="'requestedBy' + item.parentRequest.externalProviderId">{{ item.requestedByAlias ? item.requestedByAlias : item.requestedUser?.userAlias }}</span>
+          <span [id]="'requestedBy' + item.id">{{ item.requestedByAlias ? item.requestedByAlias : item.requestedUser?.userAlias }}</span>
         </div>
         <div class="meta-item">
           <i class="fas fa-calendar-alt"></i>
-          <span [id]="'requestedDate' + item.parentRequest.externalProviderId">{{ item.requestedDate | ombiDate: 'PP' }}</span>
+          <span [id]="'requestedDate' + item.id">{{ item.requestedDate | ombiDate: 'PP' }}</span>
         </div>
         <div class="meta-item" *ngIf="item.parentRequest.status">
           <i class="fas fa-info-circle"></i>
-          <span [id]="'status' + item.parentRequest.externalProviderId">{{ item.parentRequest.status | translateStatus }}</span>
+          <span [id]="'status' + item.id">{{ item.parentRequest.status | translateStatus }}</span>
         </div>
         <div class="meta-item" *ngIf="isPlayedSyncEnabled && item.requestedUserPlayedProgress > 0">
           <i class="fas fa-eye"></i>
@@ -78,12 +79,12 @@
 
       <!-- Actions -->
       <div class="card-actions">
-        <button class="btn-detail" type="button" [id]="'detailsButton' + item.parentRequest.externalProviderId"
+        <button class="btn-detail" type="button" [id]="'detailsButton' + item.id"
            [routerLink]="'/details/tv/' + item.parentRequest.externalProviderId">
           {{ 'Requests.Details' | translate }}
         </button>
         <button class="btn-options" type="button"
-          [id]="'optionsButton' + item.parentRequest.externalProviderId"
+          [id]="'optionsButton' + item.id"
           [attr.aria-label]="'Requests.Options' | translate"
           (click)="openOptions(item)"
           *ngIf="isAdmin || (manageOwnRequests && item.requestedUser?.userName === userName)">

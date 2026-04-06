@@ -300,6 +300,7 @@
 }
 
 // Paginator - ViewEncapsulation requires ng-deep to style child component
+/* stylelint-disable-next-line selector-pseudo-element-no-unknown */
 :host ::ng-deep .mat-paginator { /* NOSONAR */
   background: #111 !important;
   color: #999;

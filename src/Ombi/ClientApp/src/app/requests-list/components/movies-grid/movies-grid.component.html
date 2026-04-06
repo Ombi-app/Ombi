@@ -24,6 +24,7 @@
       <mat-select
         [(value)]="gridCount"
         (selectionChange)="onGridCountChange()"
+        [aria-label]="'Requests.GridSize' | translate"
       >
         <mat-option *ngFor="let count of gridCountOptions" [value]="count">{{ count }}</mat-option>
       </mat-select>
@@ -41,7 +42,7 @@
     <div class="card-select" *ngIf="isAdmin" (click)="$event.stopPropagation()">
       <mat-checkbox
         [id]="'adminMasterCheckbox' + item.theMovieDbId"
-        [attr.aria-label]="'Select ' + item.title"
+        [attr.aria-label]="('Requests.Select' | translate: { title: item.title })"
         (change)="$event ? selection.toggle(item) : null"
         [checked]="selection.isSelected(item)"
       ></mat-checkbox>

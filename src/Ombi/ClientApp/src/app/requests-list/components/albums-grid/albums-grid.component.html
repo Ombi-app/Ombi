@@ -14,6 +14,7 @@
       <mat-select
         [(value)]="gridCount"
         (selectionChange)="onGridCountChange()"
+        [aria-label]="'Requests.GridSize' | translate"
       >
         <mat-option *ngFor="let count of gridCountOptions" [value]="count">{{ count }}</mat-option>
       </mat-select>
