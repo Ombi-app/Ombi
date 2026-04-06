@@ -51,17 +51,6 @@
 .display-count {
   width: 72px;
 
-  /* stylelint-disable selector-pseudo-element-no-unknown */
-  ::ng-deep .mat-form-field-wrapper {
-    padding-bottom: 0;
-  }
-
-  ::ng-deep .mat-form-field-infix {
-    width: auto;
-    padding: 6px 0;
-    margin-top: 0;
-  }
-  /* stylelint-enable selector-pseudo-element-no-unknown */
 }
 
 // Card Grid
@@ -172,10 +161,9 @@
   margin: 0;
   line-height: 1.3;
   cursor: pointer;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
   &:hover { color: $accent-dark; }
 }
@@ -303,14 +291,12 @@
   }
 }
 
-// Paginator
-/* stylelint-disable selector-pseudo-element-no-unknown */
-::ng-deep .mat-paginator {
+// Paginator - ViewEncapsulation requires ng-deep to style child component
+:host ::ng-deep .mat-paginator { /* NOSONAR */
   background: #111 !important;
   color: #999;
   margin-top: 24px;
 }
-/* stylelint-enable selector-pseudo-element-no-unknown */
 
 // Responsive
 @media (max-width: 640px) {
@@ -322,10 +308,7 @@
   .filter-chips {
     overflow-x: auto;
     flex-wrap: nowrap;
-    -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-
-    &::-webkit-scrollbar { display: none; }
   }
 
   .card-grid {
