@@ -4,10 +4,6 @@ class SearchFilter {
 
   constructor() { }
 
-  get filterButton(): Cypress.Chainable<any> {
-    return cy.get('#search-filter');
-  }
-
   get moviesToggle(): Cypress.Chainable<any> {
     return cy.get('#filterMovies');
   }

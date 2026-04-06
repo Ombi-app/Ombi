@@ -4,22 +4,16 @@ import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatRippleModule } from '@angular/material/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatSlideToggleModule, MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { ICustomizationSettings, IUser, RequestType, UserType } from '../interfaces';
+import { ICustomizationSettings, RequestType } from '../interfaces';
 import { LidarrService, SettingsService, SettingsStateService } from '../services';
 
 import { AdvancedSearchDialogComponent } from '../shared/advanced-search-dialog/advanced-search-dialog.component';
 import { CustomizationFacade } from '../state/customization';
 import { FilterService } from '../discover/services/filter-service';
-import { ILocalUser } from '../auth/IUserLogin';
 import { INavBar } from '../interfaces/ICommon';
 import { Md5 } from 'ts-md5';
 import { Observable } from 'rxjs';
@@ -46,12 +40,7 @@ export enum SearchFilterType {
         MatButtonModule,
         MatDialogModule,
         MatIconModule,
-        MatListModule,
-        MatMenuModule,
-        MatRippleModule,
         MatSidenavModule,
-        MatSlideToggleModule,
-        MatToolbarModule,
         MatTooltipModule,
         RouterModule,
         TranslateModule,
@@ -129,7 +118,6 @@ export class MyNavComponent implements OnInit {
       { id: "nav-requests", name: "NavigationBar.Requests", icon: "fas fa-stream", link: "/requests-list", requiresAdmin: false, enabled: true },
       { id: "nav-issues", name: "NavigationBar.Issues", icon: "fas fa-exclamation-triangle", link: "/issues", requiresAdmin: false, enabled: this.issuesEnabled },
       { id: "nav-userManagement", name: "NavigationBar.UserManagement", icon: "fas fa-users", link: "/usermanagement", requiresAdmin: true, enabled: true },
-      //id: "",  { name: "NavigationBar.Calendar", icon: "calendar_today", link: "/calendar", requiresAdmin: false, enabled: true },
       { id: "nav-adminDonate", name: "NavigationBar.Donate", icon: "fas fa-dollar-sign", link: "https://www.paypal.me/PlexRequestsNet", externalLink: true, requiresAdmin: true, enabled: true, toolTip: true, style: "color:red;", toolTipMessage: 'NavigationBar.DonateTooltip' },
       { id: "nav-userDonate", name: "NavigationBar.Donate", icon: "fas fa-dollar-sign", link: this.customizationSettings.customDonationUrl, externalLink: true, requiresAdmin: false, enabled: this.customizationSettings.enableCustomDonations, toolTip: true, toolTipMessage: this.customizationSettings.customDonationMessage },
       { id: "nav-featureSuggestion", name: "NavigationBar.FeatureSuggestion", icon: "far fa-lightbulb", link: "https://features.ombi.io/", externalLink: true, requiresAdmin: true, enabled: true, toolTip: true, toolTipMessage: 'NavigationBar.FeatureSuggestionTooltip'},
@@ -147,19 +135,19 @@ export class MyNavComponent implements OnInit {
     this.logoutClick.emit();
   }
 
-  public changeFilter(event: MatSlideToggleChange, searchFilterType: SearchFilterType) {
+  public toggleFilterChip(searchFilterType: SearchFilterType) {
     switch (searchFilterType) {
       case SearchFilterType.Movie:
-        this.searchFilter.movies = event.checked;
+        this.searchFilter.movies = !this.searchFilter.movies;
         break;
       case SearchFilterType.TvShow:
-        this.searchFilter.tvShows = event.checked;
+        this.searchFilter.tvShows = !this.searchFilter.tvShows;
         break;
       case SearchFilterType.Music:
-        this.searchFilter.music = event.checked;
+        this.searchFilter.music = !this.searchFilter.music;
         break;
       case SearchFilterType.People:
-        this.searchFilter.people = event.checked;
+        this.searchFilter.people = !this.searchFilter.people;
         break;
     }
     this.filterService.changeFilter(this.searchFilter);
@@ -182,7 +170,7 @@ export class MyNavComponent implements OnInit {
     if (email) {
         const md5 = new Md5();
         const emailHash = md5.appendStr(email).end();
-        this.userProfileImageUrl = `https://www.gravatar.com/avatar/${emailHash}?d=404`;;
+        this.userProfileImageUrl = `https://www.gravatar.com/avatar/${emailHash}?d=404`;
     }
     else {
         this.userProfileImageUrl = this.getFallbackProfileImageUrl();

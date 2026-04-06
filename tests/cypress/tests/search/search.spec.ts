@@ -86,7 +86,6 @@ describe("Search Tests", () => {
     cy.wait('@searchResponse');
     Page.noSearchResultMessage.should('exist');
 
-    Page.navbar.searchFilter.filterButton.click();
     Page.navbar.searchFilter.moviesToggle.click();
 
     cy.wait('@searchResponse');
@@ -106,7 +105,6 @@ describe("Search Tests", () => {
     cy.wait('@searchResponse');
     Page.noSearchResultMessage.should('exist');
 
-    Page.navbar.searchFilter.filterButton.click();
     Page.navbar.searchFilter.tvToggle.click();
 
     cy.wait('@searchResponse');
@@ -158,7 +156,10 @@ describe("Search Tests", () => {
 
     cy.wait('@searchResponse');
 
+    Page.navbar.searchBar.searchButton.click();
     Page.navbar.searchBar.searchInput.type('007');
+
+    cy.wait('@searchResponse');
 
     Page.searchResultsContainer.invoke('attr', 'search-count').then((x: string) => {
       expect(+x).to.be.greaterThan(0);

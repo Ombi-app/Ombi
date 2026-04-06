@@ -3,111 +3,116 @@
         [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
         [opened]="!(isHandset$ | async)">
 
-        <mat-toolbar class="application-name" id="nav-applicationName">
-            <a *ngIf="applicationUrl; else noApplicationUrlLogo" class="application-name-link" [href]="applicationUrl">{{applicationName}}</a>
-        </mat-toolbar>
-        <ng-template #noApplicationUrlLogo>
-            {{applicationName}}
-        </ng-template>
-
-        <mat-nav-list>
-            <span  mat-list-item  *ngFor="let nav of navItems">
-
-                <div class="menu-spacing mat-ripple" mat-ripple *ngIf="(nav.requiresAdmin && isAdmin || !nav.requiresAdmin) && nav.enabled">
-                    <!-- External -->
-                    <a [disableRipple]="true" mat-list-item  id="{{nav.id}}" *ngIf="nav.externalLink" [href]="nav.link" target="_blank"
-                        matTooltip="{{nav.toolTipMessage | translate}}" matTooltipPosition="right"
-                        [routerLinkActive]="'active-list-item'">
-
-                        <i *ngIf="nav.icon" class="fa-lg {{nav.icon}} icon-spacing"
-                            style="padding-left: 5px; padding-right: 5px;" aria-hidden="true"></i>
-                        &nbsp;{{nav.name | translate}}
-                    </a>
-
-                    <!-- Internal -->
-                    <ng-container *ngIf="nav.id === 'nav-discover'">
-                        <em class="advanced-search fa-lg fas fa-filter " (click)="openAdvancedSearch()" [routerLinkActive]="'active-advanced'" [routerLink]="nav.link"></em>
-                    </ng-container>
-                    <a [disableRipple]="true" mat-list-item id="{{nav.id}}" *ngIf="!nav.externalLink" [routerLink]="nav.link" [style]="nav.style"
-                        [routerLinkActive]="'active-list-item'">
-
-                        <i class="fa-lg {{nav.icon}} icon-spacing"></i>
-                        &nbsp;{{nav.name | translate}}
-                    </a>
-                </div>
-            </span>
-
-            <span mat-list-item >
-            <a mat-list-item [disableRipple]="true" id="nav-openMobile" [routerLinkActive]="'active-list-item'"
-                aria-label="Toggle sidenav" (click)="openMobileApp($event);">
-                <i class="fa-lg fas fa-mobile-alt  icon-spacing"></i>
-                &nbsp;{{ 'NavigationBar.OpenMobileApp' | translate }}
-            </a></span>
-
-            <a mat-list-item [disableRipple]="true"   class="menu-spacing" id="nav-logout" [routerLinkActive]="'active-list-item'"
-                aria-label="Toggle sidenav" (click)="logOut();">
-                <i class="fa-lg fas fa-sign-out-alt  icon-spacing"></i>
-                &nbsp;{{ 'NavigationBar.Logout' | translate }}
-            </a>
-
-
-        </mat-nav-list>
-
-        <div class="bottom-nav full">
-            <div class="outer-profile">
-                <app-remaining-requests [type]="RequestType.movie"></app-remaining-requests>
-                <app-remaining-requests [type]="RequestType.tvShow"></app-remaining-requests>
-                <app-remaining-requests [type]="RequestType.album"></app-remaining-requests>
+        <!-- Brand -->
+        <div class="sidebar-brand" id="nav-applicationName">
+            <a *ngIf="applicationUrl; else noApplicationUrlLogo" class="brand-link" [href]="applicationUrl">{{applicationName}}</a>
+            <ng-template #noApplicationUrlLogo>
+                <span class="brand-link">{{applicationName}}</span>
+            </ng-template>
         </div>
+
+        <!-- Navigation -->
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">{{ 'NavigationBar.Discover' | translate | uppercase }}</div>
+
+            <ng-container *ngFor="let nav of navItems">
+                <ng-container *ngIf="(nav.requiresAdmin && isAdmin || !nav.requiresAdmin) && nav.enabled">
+                    <!-- External link -->
+                    <a *ngIf="nav.externalLink" class="nav-item" id="{{nav.id}}"
+                        [href]="nav.link" target="_blank" rel="noopener noreferrer"
+                        matTooltip="{{nav.toolTipMessage | translate}}" matTooltipPosition="right">
+                        <i class="nav-icon {{nav.icon}}" aria-hidden="true"></i>
+                        <span class="nav-label">{{nav.name | translate}}</span>
+                        <i class="fas fa-external-link-alt nav-external-icon" aria-hidden="true"></i>
+                    </a>
+
+                    <!-- Internal link -->
+                    <div *ngIf="!nav.externalLink" class="nav-item-wrapper">
+                        <a class="nav-item" id="{{nav.id}}"
+                            [routerLink]="nav.link" [routerLinkActive]="'nav-item--active'">
+                            <span class="nav-indicator"></span>
+                            <i class="nav-icon {{nav.icon}}" aria-hidden="true"></i>
+                            <span class="nav-label">{{nav.name | translate}}</span>
+                        </a>
+                        <button type="button" *ngIf="nav.id === 'nav-discover'" class="nav-action"
+                            aria-label="Advanced search"
+                            (click)="openAdvancedSearch()">
+                            <i class="fas fa-filter" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </ng-container>
+            </ng-container>
+
+            <div class="nav-divider"></div>
+
+            <button type="button" class="nav-item" id="nav-openMobile" (click)="openMobileApp($event);">
+                <i class="nav-icon fas fa-mobile-alt" aria-hidden="true"></i>
+                <span class="nav-label">{{ 'NavigationBar.OpenMobileApp' | translate }}</span>
+            </button>
+
+            <button type="button" class="nav-item" id="nav-logout" (click)="logOut();">
+                <i class="nav-icon fas fa-sign-out-alt" aria-hidden="true"></i>
+                <span class="nav-label">{{ 'NavigationBar.Logout' | translate }}</span>
+            </button>
+        </nav>
+
+        <!-- Bottom quota section -->
+        <div class="sidebar-footer">
+            <app-remaining-requests [type]="RequestType.movie"></app-remaining-requests>
+            <app-remaining-requests [type]="RequestType.tvShow"></app-remaining-requests>
+            <app-remaining-requests [type]="RequestType.album"></app-remaining-requests>
         </div>
     </mat-sidenav>
 
     <mat-sidenav-content autosize class="content-container">
-        <mat-toolbar color="primary" class="top-bar-container">
-            <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
+        <div class="top-bar">
+            <button type="button" aria-label="Toggle sidenav" class="hamburger-btn" (click)="drawer.toggle()"
                 *ngIf="isHandset$ | async">
-                <i class="fa-lg fas fa-bars"></i>
+                <i class="fas fa-bars"></i>
             </button>
 
-            <div class="top-search-block">
-                    <!-- Search Bar -->
-                    <div class="top-search-bar">
-                        <app-nav-search></app-nav-search>
-                    </div>
-                    <button id="search-filter" mat-icon-button [matMenuTriggerFor]="filterMenu">
-                        <i class="fa-lg fas fa-filter"></i>
-                    </button>
-                    <mat-menu #filterMenu="matMenu" yPosition="below" class="smaller-panel">
-                        <mat-slide-toggle id="filterMovies" class="mat-menu-item slide-menu" [checked]="searchFilter.movies"
-                            (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Movie)">
-                            {{ 'NavigationBar.Filter.Movies' | translate}}</mat-slide-toggle>
-                        <mat-slide-toggle id="filterTv" class="mat-menu-item slide-menu" [checked]="searchFilter.tvShows"
-                            (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.TvShow)">
-                            {{ 'NavigationBar.Filter.TvShows' | translate}}</mat-slide-toggle>
-                        <mat-slide-toggle *ngIf="musicEnabled$ | async" id="filterMusic" class="mat-menu-item slide-menu" [checked]="searchFilter.music"
-                            (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Music)">
-                            {{ 'NavigationBar.Filter.Music' | translate}}</mat-slide-toggle>
-                        <!-- <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.people"
-                            (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.People)">
-                            {{ 'NavigationBar.Filter.People' | translate}}</mat-slide-toggle> -->
-                    </mat-menu>
+            <div class="top-bar-search">
+                <app-nav-search></app-nav-search>
             </div>
+
+            <div class="filter-chips">
+                <button type="button" id="filterMovies" class="chip" [class.active]="searchFilter.movies"
+                    [attr.aria-label]="'NavigationBar.Filter.Movies' | translate"
+                    [attr.aria-pressed]="searchFilter.movies"
+                    (click)="toggleFilterChip(SearchFilterType.Movie)">
+                    <i class="fas fa-film"></i>
+                    <span class="chip-label">{{ 'NavigationBar.Filter.Movies' | translate}}</span>
+                </button>
+                <button type="button" id="filterTv" class="chip" [class.active]="searchFilter.tvShows"
+                    [attr.aria-label]="'NavigationBar.Filter.TvShows' | translate"
+                    [attr.aria-pressed]="searchFilter.tvShows"
+                    (click)="toggleFilterChip(SearchFilterType.TvShow)">
+                    <i class="fas fa-tv"></i>
+                    <span class="chip-label">{{ 'NavigationBar.Filter.TvShows' | translate}}</span>
+                </button>
+                <button type="button" *ngIf="musicEnabled$ | async" id="filterMusic" class="chip" [class.active]="searchFilter.music"
+                    [attr.aria-label]="'NavigationBar.Filter.Music' | translate"
+                    [attr.aria-pressed]="searchFilter.music"
+                    (click)="toggleFilterChip(SearchFilterType.Music)">
+                    <i class="fas fa-music"></i>
+                    <span class="chip-label">{{ 'NavigationBar.Filter.Music' | translate}}</span>
+                </button>
+            </div>
+
+            <div class="top-bar-spacer"></div>
+
             <div class="profile-block">
-                <a routerLink="/user-preferences">
-                <div class="profile-username" data-test="profile-username">{{userName}}</div>
-                <div class="profile-img" data-test="profile-image">
-                    <img [src]="userProfileImageUrl" (error)="onProfileImageError()" >
-                </div>
-            </a>
+                <a routerLink="/user-preferences" class="profile-link" [attr.aria-label]="userName">
+                    <span class="profile-username" data-test="profile-username">{{userName}}</span>
+                    <div class="profile-avatar" data-test="profile-image">
+                        <img [src]="userProfileImageUrl" (error)="onProfileImageError()" alt="Profile" width="32" height="32">
+                    </div>
+                </a>
             </div>
-
-        </mat-toolbar>
-
-
+        </div>
 
         <!-- Page -->
         <ng-container *ngTemplateOutlet="template"></ng-container>
-
 
     </mat-sidenav-content>
 </mat-sidenav-container>
