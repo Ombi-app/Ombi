@@ -1,3 +1,7 @@
+## [4.57.17](https://github.com/Ombi-app/Ombi/compare/v4.57.16...v4.57.17) (2026-04-06)
+
+
+
 ## [4.57.16](https://github.com/Ombi-app/Ombi/compare/v4.57.15...v4.57.16) (2026-04-06)
 
 
@@ -330,10 +334,6 @@
 ### Bug Fixes
 
 * **emby:** fixed duplicate episodes ([a1d3755](https://github.com/Ombi-app/Ombi/commit/a1d37554bdb9167dc82df121caa194e7641142df))
-
-
-
-## [4.51.3](https://github.com/Ombi-app/Ombi/compare/v4.51.2...v4.51.3) (2025-10-14)
 
 
 
