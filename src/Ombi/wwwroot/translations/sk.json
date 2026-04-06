@@ -355,6 +355,7 @@
         "Availability": "Dostupnosť:",
         "RequestStatus": "Stav požiadavky:",
         "Quality": "Kvalita:",
+        "Quality4K": "Quality (4K):",
         "RootFolderOverride": "Prepísanie koreňového priečinku:",
         "QualityOverride": "Prepísanie kvality:",
         "Network": "Sieť:",
@@ -375,6 +376,11 @@
         "Crews": {
             "CrewTitle": "Obsadenie"
         },
+        "OverviewTitle": "Overview",
+        "TmdbRating": "TMDB Rating",
+        "Critics": "Critics",
+        "Audience": "Audience",
+        "TrailerFor": "Trailer for",
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Požiadať všetky sezóny série.",
             "FirstSeasonTooltip": "Požiadať iba prvú sezónu série.",
