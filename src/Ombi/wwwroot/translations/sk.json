@@ -7,8 +7,13 @@
         "SignInWith": "Prihlásiť sa s {{appName}}",
         "SignInWithPlex": "Prihlásiť sa s Plex",
         "ForgottenPassword": "Zabudli ste heslo?",
+        "Or": "or",
+        "BackToSignInOptions": "Back to sign in options",
+        "ShowPassword": "Show password",
+        "HidePassword": "Hide password",
         "Errors": {
-            "IncorrectCredentials": "Nesprávne meno alebo heslo"
+            "IncorrectCredentials": "Nesprávne meno alebo heslo",
+            "UsernameRequired": "Username is required"
         }
     },
     "Common": {
