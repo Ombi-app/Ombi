@@ -86,7 +86,7 @@ export class MoviesGridComponent extends BaseGridComponent<IMovieRequests> {
     }
 
     public loadData(): Observable<IRequestsViewModel<IMovieRequests>> {
-        const count = +this.gridCount;
+        const count = this.gridCount;
         const offset = this.paginator.pageIndex * count;
         switch(RequestFilterType[RequestFilterType[this.currentFilter]]) {
             case RequestFilterType.All:

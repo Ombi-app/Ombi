@@ -103,14 +103,14 @@ describe('MoviesGridComponent', () => {
 
       comp.ngOnInit();
 
-      expect(comp.gridCount).toBe('25');
+      expect(comp.gridCount).toBe(25);
       expect(comp.currentFilter).toBe(2);
     });
 
     it('should keep defaults when storage returns null', () => {
       const { comp } = createComponent();
       comp.ngOnInit();
-      expect(comp.gridCount).toBe('15');
+      expect(comp.gridCount).toBe(15);
       expect(comp.currentFilter).toBe(RequestFilterType.All);
     });
   });

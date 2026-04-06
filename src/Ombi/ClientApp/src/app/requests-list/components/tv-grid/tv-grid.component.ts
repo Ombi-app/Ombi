@@ -61,7 +61,7 @@ export class TvGridComponent extends BaseGridComponent<IChildRequests> {
     }
 
     protected loadData(): Observable<IRequestsViewModel<IChildRequests>> {
-        const count = +this.gridCount;
+        const count = this.gridCount;
         const offset = this.paginator.pageIndex * count;
         switch(RequestFilterType[RequestFilterType[this.currentFilter]]) {
             case RequestFilterType.All:

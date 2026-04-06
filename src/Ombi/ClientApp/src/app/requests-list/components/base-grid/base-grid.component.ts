@@ -12,7 +12,7 @@ import { StorageService } from "../../../shared/storage/storage-service";
 export abstract class BaseGridComponent<T> implements OnInit, AfterViewInit {
     public resultsLength: number;
     public isLoadingResults = true;
-    public gridCount: string = "15";
+    public gridCount: number = 15;
     public isAdmin: boolean;
     public manageOwnRequests: boolean;
     public userName: string;
@@ -49,7 +49,7 @@ export abstract class BaseGridComponent<T> implements OnInit, AfterViewInit {
         const defaultFilter = +this.storageService.get(this.storageKeyCurrentFilter);
         if (defaultSort) this.sortActive = defaultSort;
         if (defaultOrder) this.sortDirection = defaultOrder;
-        if (defaultCount) this.gridCount = defaultCount;
+        if (defaultCount) this.gridCount = +defaultCount;
         if (defaultFilter) this.currentFilter = defaultFilter;
 
         this.initFeatures();
@@ -64,7 +64,7 @@ export abstract class BaseGridComponent<T> implements OnInit, AfterViewInit {
             .pipe(
                 startWith(null),
                 switchMap(() => {
-                    this.storageService.save(this.storageKeyGridCount, this.gridCount);
+                    this.storageService.save(this.storageKeyGridCount, String(this.gridCount));
                     this.storageService.save(this.storageKeyCurrentFilter, (+this.currentFilter).toString());
                     this.isLoadingResults = true;
                     return this.loadData().pipe(
@@ -75,6 +75,7 @@ export abstract class BaseGridComponent<T> implements OnInit, AfterViewInit {
                         }),
                         catchError(() => {
                             this.isLoadingResults = false;
+                            this.resultsLength = 0;
                             return observableOf([]);
                         })
                     );

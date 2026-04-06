@@ -20,8 +20,8 @@
   padding: 7px 16px;
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  background: none;
-  color: rgba(255, 255, 255, 0.6);
+  background: #111;
+  color: #999;
   font-size: 0.82rem;
   font-weight: 500;
   cursor: pointer;
@@ -267,8 +267,8 @@
   justify-content: center;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  background: none;
-  color: rgba(255, 255, 255, 0.5);
+  background: #111;
+  color: #808080;
   cursor: pointer;
   transition: all 0.2s ease;
 
@@ -305,8 +305,8 @@
 // Paginator
 /* stylelint-disable selector-pseudo-element-no-unknown */
 ::ng-deep .mat-paginator {
-  background: none !important;
-  color: rgba(255, 255, 255, 0.6);
+  background: #111 !important;
+  color: #999;
   margin-top: 24px;
 }
 /* stylelint-enable selector-pseudo-element-no-unknown */

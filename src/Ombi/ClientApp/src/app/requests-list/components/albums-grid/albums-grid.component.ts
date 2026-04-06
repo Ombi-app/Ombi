@@ -52,7 +52,7 @@ export class AlbumsGridComponent extends BaseGridComponent<IAlbumRequest> {
     }
 
     public loadData(): Observable<IRequestsViewModel<IAlbumRequest>> {
-        const count = +this.gridCount;
+        const count = this.gridCount;
         const offset = this.paginator.pageIndex * count;
         switch(RequestFilterType[RequestFilterType[this.currentFilter]]) {
             case RequestFilterType.All:
