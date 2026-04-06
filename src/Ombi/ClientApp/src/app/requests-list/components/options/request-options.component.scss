@@ -1,0 +1,45 @@
+.options-sheet {
+  padding: 8px 0;
+}
+
+.options-header {
+  padding: 12px 20px 8px;
+  border-bottom: 1px solid #1a1a1a;
+  margin-bottom: 4px;
+}
+
+.options-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #777;
+}
+
+.options-list {
+  padding: 0 !important;
+}
+
+.option-item {
+  border-radius: 0 !important;
+  transition: background 0.15s ease !important;
+
+  .option-icon {
+    margin-right: 12px;
+    width: 18px;
+    text-align: center;
+    font-size: 0.9rem;
+
+    &.approve { color: #34d399; }
+    &.deny { color: #fbbf24; }
+    &.availability { color: #60a5fa; }
+  }
+
+  &.delete {
+    .option-icon { color: #f87171; }
+
+    &:hover {
+      background: #1f1111 !important;
+    }
+  }
+}

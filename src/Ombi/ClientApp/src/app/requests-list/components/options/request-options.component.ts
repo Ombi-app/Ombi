@@ -12,11 +12,12 @@ import { MatListModule } from '@angular/material/list';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-        standalone: true,
-  selector: 'request-options',
-  templateUrl: './request-options.component.html',
+    standalone: true,
+    selector: 'request-options',
+    templateUrl: './request-options.component.html',
+    styleUrls: ['./request-options.component.scss'],
     imports: [
-      MatListModule,
+        MatListModule,
         CommonModule,
         TranslateModule
     ]
@@ -32,22 +33,20 @@ export class RequestOptionsComponent {
     private bottomSheetRef: MatBottomSheetRef<RequestOptionsComponent>,
     private translate: TranslateService) { }
 
-  public async delete() {
-    var  request: Observable<IRequestEngineResult>;
+  public delete() {
+    let request: Observable<IRequestEngineResult> | undefined;
     if (this.data.type === RequestType.movie) {
       request = this.requestService.removeMovieRequestAsync(this.data.id);
-    }
-    if (this.data.type === RequestType.tvShow) {
+    } else if (this.data.type === RequestType.tvShow) {
       request = this.requestService.deleteChild(this.data.id);
-    }
-    if (this.data.type === RequestType.album) {
+    } else if (this.data.type === RequestType.album) {
       request = this.requestService.removeAlbumRequest(this.data.id);
     }
+    if (!request) { return; }
     request.subscribe(result => {
       if (result.result) {
         this.messageService.send(this.translate.instant("Requests.SuccessfullyDeleted"));
         this.bottomSheetRef.dismiss({type: UpdateType.Delete});
-        return;
       } else {
         this.messageService.sendRequestEngineResultError(result);
       }
@@ -80,9 +79,8 @@ export class RequestOptionsComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result.denied) {
+      if (result?.denied) {
         this.bottomSheetRef.dismiss({ type: UpdateType.Deny });
-
       }
     });
   }

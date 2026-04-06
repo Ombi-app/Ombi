@@ -1,7 +1,6 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatBottomSheetModule } from "@angular/material/bottom-sheet";
-import { MatTabsModule } from "@angular/material/tabs";
 import { TranslateModule } from "@ngx-translate/core";
 import { MatBottomSheet } from "@angular/material/bottom-sheet";
 import { RequestOptionsComponent } from "./options/request-options.component";
@@ -11,7 +10,6 @@ import { take } from "rxjs";
 import { MoviesGridComponent } from "./movies-grid/movies-grid.component";
 import { TvGridComponent } from "./tv-grid/tv-grid.component";
 import { AlbumsGridComponent } from "./albums-grid/albums-grid.component";
-import { GridSpinnerComponent } from "./grid-spinner/grid-spinner.component";
 
 @Component({
     standalone: true,
@@ -20,7 +18,6 @@ import { GridSpinnerComponent } from "./grid-spinner/grid-spinner.component";
     imports: [
         CommonModule,
         MatBottomSheetModule,
-        MatTabsModule,
         TranslateModule,
         MoviesGridComponent,
         TvGridComponent,
@@ -29,7 +26,33 @@ import { GridSpinnerComponent } from "./grid-spinner/grid-spinner.component";
 })
 export class RequestsListComponent {
 
+    public activeTab: 'movies' | 'tv' | 'music' = 'movies';
+    private readonly tabs: Array<'movies' | 'tv' | 'music'> = ['movies', 'tv', 'music'];
+
     constructor(private bottomSheet: MatBottomSheet, private lidarrService: LidarrService) { }
+
+    public onTabKeydown(event: KeyboardEvent) {
+        const visible = this.getVisibleTabs();
+        const idx = visible.indexOf(this.activeTab);
+        if (event.key === 'ArrowRight') {
+            this.activeTab = visible[(idx + 1) % visible.length];
+            this.focusActiveTab();
+        } else if (event.key === 'ArrowLeft') {
+            this.activeTab = visible[(idx - 1 + visible.length) % visible.length];
+            this.focusActiveTab();
+        }
+    }
+
+    private getVisibleTabs(): Array<'movies' | 'tv' | 'music'> {
+        return this.tabs.filter(t => !!document.getElementById('tab-' + t));
+    }
+
+    private focusActiveTab() {
+        setTimeout(() => {
+            const el = document.getElementById('tab-' + this.activeTab);
+            if (el) el.focus();
+        });
+    }
 
     public readonly musicEnabled$ = this.lidarrService.enabled().pipe(take(1));
 

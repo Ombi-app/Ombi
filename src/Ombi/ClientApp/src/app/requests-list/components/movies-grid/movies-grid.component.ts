@@ -1,14 +1,12 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, signal, Signal, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component } from "@angular/core";
 import { IMovieRequests, IRequestEngineResult, IRequestsViewModel } from "../../../interfaces";
 import { NotificationService, RequestService } from "../../../services";
-import { Observable, combineLatest, forkJoin, merge, of as observableOf } from 'rxjs';
-import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { Observable, combineLatest, forkJoin } from 'rxjs';
 
 import { AuthService } from "../../../auth/auth.service";
 import { FeaturesFacade } from "../../../state/features/features.facade";
-import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
-import { MatSort, MatSortModule } from "@angular/material/sort";
-import { MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatTableDataSource } from "@angular/material/table";
 import { RequestFilterType } from "../../models/RequestFilterType";
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { SelectionModel } from "@angular/cdk/collections";
@@ -26,17 +24,15 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { MatInputModule } from "@angular/material/input";
-import { ImageComponent } from "../../../components";
 import { OmbiDatePipe } from "../../../pipes/OmbiDatePipe";
 import { TranslateStatusPipe } from "../../../pipes/TranslateStatus";
-import { DetailedCardComponent } from "../../../components/detailed-card/detailed-card.component";
+import { BaseGridComponent } from "../base-grid/base-grid.component";
 
 @Component({
     standalone: true,
     templateUrl: "./movies-grid.component.html",
     selector: "movies-grid",
-    styleUrls: ["./movies-grid.component.scss"],
+    styleUrls: ["../_shared-card-grid.scss", "./movies-grid.component.scss"],
     imports: [
         CommonModule,
         RouterModule,
@@ -45,190 +41,91 @@ import { DetailedCardComponent } from "../../../components/detailed-card/detaile
         MatFormFieldModule,
         MatOptionModule,
         MatPaginatorModule,
-        MatSortModule,
-        MatTableModule,
         MatSelectModule,
         MatMenuModule,
         MatButtonModule,
         MatIconModule,
         MatTooltipModule,
         MatCheckboxModule,
-        MatInputModule,
         OmbiDatePipe,
         TranslateStatusPipe
     ]
 })
-export class MoviesGridComponent implements OnInit, AfterViewInit {
-    public dataSource: MatTableDataSource<IMovieRequests>;
-    public resultsLength: number;
-    public isLoadingResults = true;
-    public displayedColumns: string[];
-    public gridCount: string = "15";
-    public isAdmin: boolean;
+export class MoviesGridComponent extends BaseGridComponent<IMovieRequests> {
+    public dataSource: MatTableDataSource<IMovieRequests> = new MatTableDataSource<IMovieRequests>();
     public is4kEnabled = false;
     public isPlayedSyncEnabled = false;
-    public manageOwnRequests: boolean;
-    public defaultSort: string = "requestedDate";
-    public defaultOrder: string = "desc";
-    public currentFilter: RequestFilterType = RequestFilterType.All;
     public selection = new SelectionModel<IMovieRequests>(true, []);
-    public userName: string;
 
-    public RequestFilter = RequestFilterType;
+    protected storageKeySort = "Movie_DefaultRequestListSort";
+    protected storageKeySortOrder = "Movie_DefaultRequestListSortOrder";
+    protected storageKeyGridCount = "Movie_DefaultGridCount";
+    protected storageKeyCurrentFilter = "Movie_DefaultFilter";
 
-
-    private storageKey = "Movie_DefaultRequestListSort";
-    private storageKeyOrder = "Movie_DefaultRequestListSortOrder";
-    private storageKeyGridCount = "Movie_DefaultGridCount";
-    private storageKeyCurrentFilter = "Movie_DefaultFilter";
-
-    @Output() public onOpenOptions = new EventEmitter<{ request: any, filter: any, onChange: any, manageOwnRequests: boolean, isAdmin: boolean, has4kRequest: boolean, hasRegularRequest: boolean }>();
-
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
-
-    constructor(private requestService: RequestServiceV2, private ref: ChangeDetectorRef,
-        private auth: AuthService, private storageService: StorageService,
-        private requestServiceV1: RequestService, private notification: NotificationService,
-        private translateService: TranslateService,
-        private featureFacade: FeaturesFacade) {
-
-        this.userName = auth.claims().name;
+    constructor(
+        private readonly requestService: RequestServiceV2,
+        ref: ChangeDetectorRef,
+        auth: AuthService,
+        storageService: StorageService,
+        private readonly requestServiceV1: RequestService,
+        private readonly notification: NotificationService,
+        private readonly translateService: TranslateService,
+        private readonly featureFacade: FeaturesFacade
+    ) {
+        super(auth, ref, storageService);
     }
 
-    public ngOnInit() {
-        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
-        this.manageOwnRequests = this.auth.hasRole("ManageOwnRequests")
-
+    protected override initFeatures() {
         this.is4kEnabled = this.featureFacade.is4kEnabled();
         this.isPlayedSyncEnabled = this.featureFacade.isPlayedSyncEnabled();
-
-
-        const defaultCount = this.storageService.get(this.storageKeyGridCount);
-        const defaultSort = this.storageService.get(this.storageKey);
-        const defaultOrder = this.storageService.get(this.storageKeyOrder);
-        const defaultFilter = +this.storageService.get(this.storageKeyCurrentFilter);
-        if (defaultSort) {
-            this.defaultSort = defaultSort;
-        }
-        if (defaultOrder) {
-            this.defaultOrder = defaultOrder;
-        }
-        if (defaultCount) {
-            this.gridCount = defaultCount;
-        }
-        if (defaultFilter) {
-            this.currentFilter = defaultFilter;
-        }
     }
 
-    setDisplayedColumns() {
-      this.displayedColumns = ['title', 'requestedUser.requestedBy',  'status', 'requestStatus','requestedDate'];
-
-      if (this.isAdmin) {
-        this.displayedColumns.unshift('select');
-      }
-
-      if ((this.isAdmin || this.auth.hasRole("Request4KMovie"))
-          && this.is4kEnabled) {
-          this.displayedColumns.splice(4, 0, 'has4kRequest');
-      }
-
-      if (this.isPlayedSyncEnabled
-        && ( this.currentFilter == RequestFilterType.All || this.currentFilter == RequestFilterType.Available ) ) {
-          this.displayedColumns.push('watchedByRequestedUser');
-      }
-
-      // always put the actions column at the end
-      this.displayedColumns.push('actions');
-    }
-
-    public async ngAfterViewInit() {
-
-        this.setDisplayedColumns();
-
-        this.storageService.save(this.storageKeyGridCount, this.gridCount);
-        this.storageService.save(this.storageKeyCurrentFilter, (+this.currentFilter).toString());
-
-        // If the user changes the sort order, reset back to the first page.
-        this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-        this.paginator.showFirstLastButtons = true;
-
-        merge(this.sort.sortChange, this.paginator.page)
-            .pipe(
-                startWith({}),
-                switchMap((value: any) => {
-                    this.isLoadingResults = true;
-                    if (value.active || value.direction) {
-                        this.storageService.save(this.storageKey, value.active);
-                        this.storageService.save(this.storageKeyOrder, value.direction);
-                    }
-                    return this.loadData();
-                }),
-                map((data: IRequestsViewModel<IMovieRequests>) => {
-                    // Flip flag to show that loading has finished.
-                    this.isLoadingResults = false;
-                    this.resultsLength = data.total;
-
-                    return data.collection;
-                }),
-                catchError((err) => {
-                    this.isLoadingResults = false;
-                    return observableOf([]);
-                })
-            ).subscribe(data => this.dataSource = new MatTableDataSource(data));
+    protected override setData(data: IMovieRequests[]) {
+        this.selection.clear();
+        this.dataSource = new MatTableDataSource(data);
     }
 
     public loadData(): Observable<IRequestsViewModel<IMovieRequests>> {
-        switch(RequestFilterType[RequestFilterType[this.currentFilter]]) {
+        const count = this.gridCount;
+        const offset = this.paginator.pageIndex * count;
+        switch(this.currentFilter) {
             case RequestFilterType.All:
-                return this.requestService.getMovieRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+                return this.requestService.getMovieRequests(count, offset, this.sortActive, this.sortDirection);
             case RequestFilterType.Pending:
-                return this.requestService.getMoviePendingRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+                return this.requestService.getMoviePendingRequests(count, offset, this.sortActive, this.sortDirection);
             case RequestFilterType.Available:
-                return this.requestService.getMovieAvailableRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+                return this.requestService.getMovieAvailableRequests(count, offset, this.sortActive, this.sortDirection);
             case RequestFilterType.Processing:
-                return this.requestService.getMovieProcessingRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+                return this.requestService.getMovieProcessingRequests(count, offset, this.sortActive, this.sortDirection);
             case RequestFilterType.Denied:
-                return this.requestService.getMovieDeniedRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+                return this.requestService.getMovieDeniedRequests(count, offset, this.sortActive, this.sortDirection);
+            default:
+                return this.requestService.getMovieRequests(count, offset, this.sortActive, this.sortDirection);
         }
+    }
 
+    protected removeFromDataSource(id: number) {
+        const removed = this.dataSource.data.find(req => req.id === id);
+        if (removed) {
+            this.selection.deselect(removed);
+        }
+        this.dataSource.data = this.dataSource.data.filter(req => req.id !== id);
     }
 
     public openOptions(request: IMovieRequests) {
-        const filter = () => {
-            this.dataSource.data = this.dataSource.data.filter((req) => {
-                return req.id !== request.id;
-            });
-        };
-
-        const onChange = () => {
-            this.ref.detectChanges();
-        };
-
-        const data = { request: request, filter: filter, onChange: onChange, manageOwnRequests: this.manageOwnRequests, isAdmin: this.isAdmin, has4kRequest: request.has4KRequest, hasRegularRequest: this.checkDate(request.requestedDate) };
-        this.onOpenOptions.emit(data);
+        this.emitOptions(request, {
+            has4kRequest: request.has4KRequest,
+            hasRegularRequest: this.checkDate(request.requestedDate)
+        });
     }
 
     private checkDate(date: Date|string): boolean {
-        if (typeof date === 'string') {
-            return new Date(date).getFullYear() > 1;
-        }
-        if (date instanceof Date) {
-            return date.getFullYear() > 1;
-        }
-        return false;
-    }
-
-    public switchFilter(type: RequestFilterType) {
-        this.currentFilter = type;
-        this.ngAfterViewInit();
+        if (typeof date === 'string') return new Date(date).getFullYear() > 1;
+        return date.getFullYear() > 1;
     }
 
     public isAllSelected() {
-        const numSelected = this.selection.selected.length;
-        const numRows = this.dataSource.data.length;
-        return numSelected === numRows;
+        return this.selection.selected.length === this.dataSource.data.length;
     }
 
     public masterToggle() {
@@ -238,86 +135,59 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     }
 
     public async bulkDelete() {
-        if (this.selection.isEmpty()) {
-            return;
-        }
-        let tasks = new Array<Observable<IRequestEngineResult>>();
-        this.selection.selected.forEach((selected) => {
-            tasks.push(this.requestServiceV1.removeMovieRequestAsync(selected.id));
-        });
-
-        combineLatest(tasks).subscribe(() => {
-            this.notification.success(this.translateService.instant('Requests.RequestPanel.Deleted'))
-            this.selection.clear();
-            this.ngAfterViewInit();
-        });
-    }
-
-    public bulkApprove = () => this.bulkApproveInternal(false);
-
-    public bulkApprove4K = () => this.bulkApproveInternal(true);
-
-    private bulkApproveInternal(is4k: boolean) {
-        if (this.selection.isEmpty()) {
-            return;
-        }
-        let tasks = new Array<Observable<IRequestEngineResult>>();
-        this.selection.selected.forEach((selected) => {
-            tasks.push(this.requestServiceV1.approveMovie({ id: selected.id, is4K: is4k }));
-        });
-
-        this.isLoadingResults = true;
-        forkJoin(tasks).subscribe((result: IRequestEngineResult[]) => {
-            this.isLoadingResults = false;
+        if (this.selection.isEmpty()) return;
+        const tasks = new Array<Observable<IRequestEngineResult>>();
+        this.selection.selected.forEach(s => tasks.push(this.requestServiceV1.removeMovieRequestAsync(s.id)));
+        combineLatest(tasks).subscribe((result: IRequestEngineResult[]) => {
             const failed = result.filter(x => !x.result);
-            if(failed.length > 0) {
-                this.notification.error("Some requests failed to approve: " + failed[0].errorMessage);
+            if (failed.length > 0) {
+                this.notification.error(`Some requests failed to delete: ${failed[0].errorMessage}`);
                 this.selection.clear();
+                this.refresh();
                 return;
             }
-            this.notification.success(this.translateService.instant('Requests.RequestPanel.Approved'));
+            this.notification.success(this.translateService.instant('Requests.RequestPanel.Deleted'));
             this.selection.clear();
-            this.ngAfterViewInit();
-        })
+            this.refresh();
+        });
     }
 
-    public bulkDeny = () => this.bulkDenyInternal(false);
+    public bulkApprove = () => this.bulkAction(false, true);
+    public bulkApprove4K = () => this.bulkAction(true, true);
+    public bulkDeny = () => this.bulkAction(false, false);
+    public bulkDeny4K = () => this.bulkAction(true, false);
 
-    public bulkDeny4K = () => this.bulkDenyInternal(true);
-
-    private bulkDenyInternal(is4k: boolean) {
-        if (this.selection.isEmpty()) {
-            return;
-        }
-        let tasks = new Array<Observable<IRequestEngineResult>>();
-        this.selection.selected.forEach((selected) => {
-
-            tasks.push(this.requestServiceV1.denyMovie({
-                id: selected.id,
-                is4K: is4k,
-                reason: `` // TOOD: reuse DenyDialog to allow for a reason to be entered
-            }));
-        });
-
+    private bulkAction(is4k: boolean, approve: boolean) {
+        const eligible = this.selection.selected.filter(s =>
+            is4k ? s.has4KRequest : this.checkDate(s.requestedDate)
+        );
+        if (eligible.length === 0) return;
+        const tasks = eligible.map(s =>
+            approve
+                ? this.requestServiceV1.approveMovie({ id: s.id, is4K: is4k })
+                : this.requestServiceV1.denyMovie({ id: s.id, is4K: is4k, reason: '' })
+        );
         this.isLoadingResults = true;
         forkJoin(tasks).subscribe((result: IRequestEngineResult[]) => {
             this.isLoadingResults = false;
             const failed = result.filter(x => !x.result);
             if (failed.length > 0) {
-                this.notification.error("Some requests failed to deny: " + failed[0].errorMessage);
+                const action = approve ? 'approve' : 'deny';
+                this.notification.error(`Some requests failed to ${action}: ${failed[0].errorMessage}`);
                 this.selection.clear();
+                this.refresh();
                 return;
             }
-            this.notification.success(this.translateService.instant('Requests.RequestPanel.Denied'));
+            const key = approve ? 'Requests.RequestPanel.Approved' : 'Requests.RequestPanel.Denied';
+            this.notification.success(this.translateService.instant(key));
             this.selection.clear();
-            this.ngAfterViewInit();
-        })
+            this.refresh();
+        });
     }
 
     public getRequestDate(request: IMovieRequests): Date {
-        if (new Date(request.requestedDate).getFullYear() === 1) {
-            return request.requestedDate4k;
-        }
-        return request.requestedDate;
+        return this.checkDate(request.requestedDate)
+            ? request.requestedDate
+            : request.requestedDate4k;
     }
 }

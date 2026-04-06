@@ -1,6 +1,28 @@
 @use "./styles/variables.scss" as *;
 
-.played-progress {
-  width: 5rem;
-  height: 1rem;
+// TV-specific: landscape poster
+.card-poster {
+  aspect-ratio: 16/9;
+  max-height: 180px;
+}
+
+// Progress Bar
+.progress-bar-container {
+  width: 60px;
+  height: 4px;
+  background: #222;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: $accent-dark;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 0.72rem;
+  color: #777;
 }
