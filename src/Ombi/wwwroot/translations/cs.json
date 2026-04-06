@@ -7,8 +7,13 @@
         "SignInWith": "Přihlásit se pomocí {{appName}}",
         "SignInWithPlex": "Přihlásit se přes Plex",
         "ForgottenPassword": "Zapomněli jste heslo?",
+        "Or": "or",
+        "BackToSignInOptions": "Back to sign in options",
+        "ShowPassword": "Show password",
+        "HidePassword": "Hide password",
         "Errors": {
-            "IncorrectCredentials": "Nesprávné uživatelské jméno nebo heslo"
+            "IncorrectCredentials": "Nesprávné uživatelské jméno nebo heslo",
+            "UsernameRequired": "Username is required"
         }
     },
     "Common": {
