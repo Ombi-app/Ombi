@@ -1,3 +1,12 @@
+## [4.57.19](https://github.com/Ombi-app/Ombi/compare/v4.57.18...v4.57.19) (2026-04-06)
+
+
+### Bug Fixes
+
+* the post path on the requests page for TV ([92d67a8](https://github.com/Ombi-app/Ombi/commit/92d67a876bab414634a4844358b2df91c3e85781))
+
+
+
 ## [4.57.18](https://github.com/Ombi-app/Ombi/compare/v4.57.17...v4.57.18) (2026-04-06)
 
 
@@ -320,15 +329,6 @@
 ### Bug Fixes
 
 * **emby:** :bug: Skip very large multipart episodes ([fb70aa1](https://github.com/Ombi-app/Ombi/commit/fb70aa16dea5e682a27878c0845d2ef2cf3e7b07))
-
-
-
-## [4.51.5](https://github.com/Ombi-app/Ombi/compare/v4.51.4...v4.51.5) (2025-10-14)
-
-
-### Bug Fixes
-
-* **emby:** actually fix the dupes ([4167942](https://github.com/Ombi-app/Ombi/commit/41679427f65cfa6756ab8bb1d89eb37cf8a40b42))
 
 
 
