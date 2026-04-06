@@ -236,6 +236,11 @@
         "RequestCollection": "Zbierka žiadostí",
         "CollectionSuccesfullyAdded": "Kolekcia {{name}} bola úspešne pridaná!",
         "NoRequests": "No requests yet",
+        "SelectAll": "Select All",
+        "Select": "Select {{title}}",
+        "GridSize": "Grid size",
+        "BulkActions": "Bulk actions for {{count}} items",
+        "ManageYourRequests": "Manage your requests",
         "NeedToSelectEpisodes": "Musíte si vybrať nejaké epizódy!",
         "RequestAddedSuccessfully": "Žiadosť o {{title}} bola úspešne pridaná",
         "ErrorCodes": {
