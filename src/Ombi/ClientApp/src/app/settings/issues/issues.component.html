@@ -1,73 +1,88 @@
-﻿<div class="small-middle-container">
-<fieldset>
-    <legend>Issues</legend>
-    <div class="md-form-field" style="margin-top:1em;"></div>
+<div class="settings-page">
+    <div class="settings-page-header">
+        <h1 class="page-title">Issues</h1>
+        <p class="page-description">Configure how issue reporting works, including auto-deletion and categorization.</p>
+    </div>
+
     <form *ngIf="form" novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
-        <div class="col-md-6">
-            <div class="form-group">
-                <div class="checkbox">
-                    <mat-slide-toggle id="enable" formControlName="enabled" ng-checked="form.enabled">
-                    Enable</mat-slide-toggle>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <mat-slide-toggle id="enableInProgress" formControlName="enableInProgress" ng-checked="form.enableInProgress">
-                    Enable In Progress State</mat-slide-toggle>
-                </div>
+        <div class="settings-card">
+            <div class="settings-card-header">
+                <h2 class="card-title">Issue tracking</h2>
+                <p class="card-description">Control the overall behavior of the issue reporting system.</p>
             </div>
 
-            <div class="form-group">
-                <div class="checkbox">
-                    <mat-slide-toggle id="deleteIssues" formControlName="deleteIssues" ng-checked="form.deleteIssues">
-                    Delete issues after they have been resolved</mat-slide-toggle>
+            <div class="settings-toggle-row">
+                <div class="toggle-info">
+                    <p class="toggle-label">Enable issue reporting</p>
+                    <p class="toggle-description">Allow users to report issues with media content.</p>
                 </div>
+                <mat-slide-toggle formControlName="enabled"></mat-slide-toggle>
             </div>
 
-            <div class="form-group" *ngIf="form.controls.deleteIssues.value">
-                <label for="daysAfterResolvedToDelete" class="control-label">Leave the resolved issue for X amount of
-                    days before deletion</label>
-                <input type="number" class="form-control form-control-custom form-small" min="1" max="365" id="daysAfterResolvedToDelete"
-                    formControlName="daysAfterResolvedToDelete" ng-checked="form.daysAfterResolvedToDelete">
-            </div>
-
-
-            <div class="md-form-field">
-                <div>
-                    <button mat-raised-button type="submit" color="primary" [disabled]="form.invalid" class="mat-focus-indicator mat-stroked-button accent mat-accent mat-raised-button mat-button-base" ng-reflect-disabled="false">
-                        <span class="mat-button-wrapper">Submit</span><div matripple="" class="mat-ripple mat-button-ripple" ng-reflect-disabled="false" ng-reflect-centered="false" ng-reflect-trigger="[object HTMLButtonElement]"></div>
-                        <div class="mat-button-focus-overlay"></div></button><div class="md-form-field" style="margin-top:1em;"></div>
+            <div class="settings-toggle-row">
+                <div class="toggle-info">
+                    <p class="toggle-label">Enable "In Progress" state</p>
+                    <p class="toggle-description">Add an intermediate state between open and resolved for tracking active work.</p>
                 </div>
+                <mat-slide-toggle formControlName="enableInProgress"></mat-slide-toggle>
             </div>
+
+            <div class="settings-toggle-row">
+                <div class="toggle-info">
+                    <p class="toggle-label">Auto-delete resolved issues</p>
+                    <p class="toggle-description">Automatically remove issues after they've been resolved for a set number of days.</p>
+                </div>
+                <mat-slide-toggle formControlName="deleteIssues"></mat-slide-toggle>
+            </div>
+
+            <div class="settings-field" *ngIf="form.controls.deleteIssues.value" style="margin-top: 16px;">
+                <mat-form-field appearance="outline">
+                    <mat-label>Days before deletion</mat-label>
+                    <input matInput type="number" formControlName="daysAfterResolvedToDelete" min="1" max="365">
+                </mat-form-field>
+                <p class="field-hint">Number of days to keep resolved issues before they are automatically deleted.</p>
+            </div>
+        </div>
+
+        <div class="settings-actions">
+            <button mat-raised-button color="accent" type="submit" [disabled]="form.invalid" class="save-btn">
+                Save changes
+            </button>
         </div>
     </form>
 
-    <div class="col-md-6">
-        <div *ngIf="categories">
-            <div class="form-group row">
-                <div class="col-md-9">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Add Category</mat-label>
-                        <input matInput type="text" [(ngModel)]="categoryToAdd.value" id="categoryToAdd" name="categoryToAdd" value="{{categoryToAdd.value}}">
-                  </mat-form-field>
-                </div>
-                <div class="col-md-3">
-                    <button mat-raised-button (click)="addCategory()">Add</button>
-                </div>
-            </div>
+    <div class="settings-divider"></div>
 
-            <div class="row categoryResults">
-                <legend>Categories:</legend>
-                <div *ngFor="let cat of categories">
-                    <div class="col-md-9">
-                        {{cat.value}}
-                    </div>
-                    <div class="col-md-3">
-                        <button class="btn btn-sm btn-danger-outline" (click)="deleteCategory(cat.id)">Delete</button>
-                    </div>
+    <div class="settings-card" *ngIf="categories">
+        <div class="settings-card-header">
+            <h2 class="card-title">Categories</h2>
+            <p class="card-description">Manage the categories users can choose when reporting issues.</p>
+        </div>
+
+        <div class="add-item-row">
+            <mat-form-field appearance="outline">
+                <mat-label>New category name</mat-label>
+                <input matInput [(ngModel)]="categoryToAdd.value" (keyup.enter)="addCategory()">
+            </mat-form-field>
+            <button mat-raised-button color="accent" (click)="addCategory()" [disabled]="!categoryToAdd.value">
+                Add
+            </button>
+        </div>
+
+        <div style="margin-top: 16px;" *ngIf="categories.length > 0">
+            <div class="settings-list-item" *ngFor="let cat of categories">
+                <span>{{cat.value}}</span>
+                <div class="list-item-actions">
+                    <button mat-icon-button color="warn" (click)="deleteCategory(cat.id)" matTooltip="Delete category">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
                 </div>
             </div>
         </div>
+
+        <div class="settings-info" *ngIf="categories.length === 0">
+            <i class="fas fa-info-circle"></i>
+            <span>No categories defined yet. Add one above to get started.</span>
+        </div>
     </div>
-</fieldset>
 </div>

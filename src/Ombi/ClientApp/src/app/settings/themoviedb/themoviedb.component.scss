@@ -1,15 +1,20 @@
-@use "./styles/shared.scss" as *;
-.small-middle-container {
-    margin: auto;
-    width: 95%;
-    margin-top: 10px;
+@use "../shared-settings.scss" as *;
+
+.chip-list {
+  margin-top: -8px;
 }
 
-::ng-deep .dark .btn:hover {
-    box-shadow: 0 5px 11px 0 rgba(255, 255, 255, 0.18), 0 4px 15px 0 rgba(255, 255, 255, 0.15);
-    color: inherit;
+.chip-section-label {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 8px;
 }
 
-.example-chip-list {
-    width: 100%;
-  }
+::ng-deep .mat-chip-list-wrapper {
+  gap: 6px;
+}
+
+::ng-deep .mat-chip {
+  font-size: 13px;
+}

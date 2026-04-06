@@ -10,7 +10,7 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslateModule } from "@ngx-translate/core";
 import { ClipboardModule } from "@angular/cdk/clipboard";
-import { WikiComponent } from "../wiki.component";
+import { MatIconModule } from "@angular/material/icon";
 
 import { Branch, ILanguageRefine, IOmbiSettings } from "../../interfaces";
 import { NotificationService } from "../../services";
@@ -32,7 +32,7 @@ import languageData from "./../../../other/iso-lang.json";
         MatTooltipModule,
         TranslateModule,
         ClipboardModule,
-        WikiComponent,
+        MatIconModule,
     ],
     templateUrl: "./ombi.component.html",
     styleUrls: ["./ombi.component.scss"],

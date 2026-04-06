@@ -1,18 +1,31 @@
-<div class="small-middle-container">
-  <legend>Features</legend>
-
-  <div class="row" style="margin-top:3em">
-    <div class="col">
-      <div *ngFor="let feature of features">
-        <div class="row">
-          <div class="col-1">
-            <mat-slide-toggle [checked]="feature.enabled" (change)="updateFeature($event, feature)" id="enable{{feature.name}}"></mat-slide-toggle>
-          </div>
-          <div class="col-2">
-            <h3>{{feature.name}}</h3>
-          </div>
-        </div>
-      </div>
+<div class="settings-page">
+    <div class="settings-page-header">
+        <h1 class="page-title">Features</h1>
+        <p class="page-description">Enable or disable major features in Ombi. Changes take effect immediately.</p>
     </div>
-  </div>
+
+    <div class="settings-card" *ngIf="features">
+        <div class="settings-card-header">
+            <h2 class="card-title">Feature toggles</h2>
+            <p class="card-description">Control which features are available to your users.</p>
+        </div>
+
+        <div *ngFor="let feature of features; let last = last">
+            <div class="settings-toggle-row" [class.last-toggle]="last">
+                <div class="toggle-info">
+                    <p class="toggle-label">{{feature.name}}</p>
+                </div>
+                <mat-slide-toggle
+                    [checked]="feature.enabled"
+                    (change)="updateFeature($event, feature)"
+                    [id]="'enable' + feature.name">
+                </mat-slide-toggle>
+            </div>
+        </div>
+    </div>
+
+    <div class="settings-info" *ngIf="!features">
+        <i class="fas fa-spinner fa-spin"></i>
+        <span>Loading features...</span>
+    </div>
 </div>

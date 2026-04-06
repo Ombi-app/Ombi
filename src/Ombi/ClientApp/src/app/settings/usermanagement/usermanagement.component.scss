@@ -1,48 +1,18 @@
-@use "./styles/shared.scss" as *;
-.small-middle-container {
-    margin: auto;
-    width: 95%;
-    margin-top: 10px;
+@use "../shared-settings.scss" as *;
+
+.field-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 8px;
 }
 
-.col-md-6 {
-    display: contents;
-}
-
-.col-md-5 {
-    display: contents;
-}
-
-.control-label {
-    font-weight: 400;
-}
-
-.form-control {
-    width: auto;
-}
-
-.row {
-    display: block;
-}
-
-.btn-danger-outline {
-    background-color: #E84C3D;
-}
-
-.btn-success-outline {
-    background-color: #1b9d1b;
-}
-
-::ng-deep .dark .btn:hover {
-    box-shadow: 0 5px 11px 0 rgba(255, 255, 255, 0.18), 0 4px 15px 0 rgba(255, 255, 255, 0.15);
-    color: inherit;
-}
-
-@media (min-width:1440px) {
-    .col-md-6 {
-        display: inline-table;
-    }
-    .col-md-5 {
-        display: inline-table;
-    }
+::ng-deep .ui-autocomplete-multiple-container {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  padding: 4px 8px;
+  min-height: 40px;
 }

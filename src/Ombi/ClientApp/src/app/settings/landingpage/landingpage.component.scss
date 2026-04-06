@@ -1,30 +1,22 @@
-@use "./styles/shared.scss" as *;
-.small-middle-container{
-	margin: auto;
-	width: 95%;
-	margin-top:10px;
-}
+@use "../shared-settings.scss" as *;
 
-@media (min-width: 1200px){
-    .container {
-        max-width: inherit; 
-    }
-}
+.notice-preview {
+  margin-top: 4px;
 
-@media (min-width: 992px){
-    .container {
-        max-width: inherit; 
-    }
-}
+  .preview-label {
+    font-size: 12.5px;
+    color: rgba(255, 255, 255, 0.45);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
 
-@media (min-width: 768px){
-    .container {
-        max-width: inherit; 
-    }
-}
-
-@media (min-width: 576px){
-    .container {
-        max-width: inherit; 
-    }
+  .preview-content {
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.6;
+  }
 }

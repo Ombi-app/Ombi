@@ -14,8 +14,6 @@ import { CustomizationFacade } from "../../state/customization";
 import { ICustomizationSettings } from "../../interfaces";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
-import { WikiComponent } from "../wiki.component";
-
 @Component({
     standalone: true,
     imports: [
@@ -30,7 +28,6 @@ import { WikiComponent } from "../wiki.component";
         MatSlideToggleModule,
         MatTooltipModule,
         TranslateModule,
-        WikiComponent
     ],
     templateUrl: "./customization.component.html",
     styleUrls: ["./customization.component.scss"],

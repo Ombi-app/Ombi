@@ -11,8 +11,14 @@ import { SettingsMenuComponent } from "./settingsmenu.component";
         SettingsMenuComponent
     ],
     template: `
-        <settings-menu></settings-menu>
-        <router-outlet></router-outlet>
+        <div class="settings-layout">
+            <div class="settings-sidebar">
+                <settings-menu></settings-menu>
+            </div>
+            <div class="settings-content">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
     `,
     styleUrls: ["./settings.component.scss"]
 })

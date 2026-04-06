@@ -1,91 +1,127 @@
-<div class="small-middle-container">
-<wiki></wiki>
-<fieldset *ngIf="settings">
-    <legend>Customization</legend>
+<div class="settings-page" *ngIf="settings">
+    <div class="settings-page-header">
+        <h1 class="page-title">Customization</h1>
+        <p class="page-description">Personalize the look and feel of your Ombi instance with custom branding, URLs, and styling.</p>
+        <div class="page-header-actions">
+            <a class="doc-link" href="http://docs.ombi.app/settings/customization" target="_blank">
+                <i class="fas fa-external-link-alt"></i> View documentation
+            </a>
+        </div>
+    </div>
 
-    <div class="col-md-12 col-12 col-sm-12">
-        <div class="md-form-field">
+    <div class="settings-card">
+        <div class="settings-card-header">
+            <h2 class="card-title">Branding</h2>
+            <p class="card-description">Customize the application name, logo, and favicon to match your brand.</p>
+        </div>
+
+        <div class="settings-field">
             <mat-form-field appearance="outline">
                 <mat-label>Application Name</mat-label>
                 <input matInput [(ngModel)]="settings.applicationName">
             </mat-form-field>
         </div>
-        <div class="md-form-field">
-            <mat-hint>The application url should be your Externally Accessible URL (the address you use to reach Ombi from outside your system). For example, 'https://example.com/requests'. <br />Please ensure this field is correct as it drives a lot of functionality, including the QR code for the 
-                mobile app, and the way email notifications are sent.
-            </mat-hint>
+
+        <div class="settings-field">
             <mat-form-field appearance="outline">
                 <mat-label>Application URL</mat-label>
-                <input matInput [(ngModel)]="settings.applicationUrl">
+                <input matInput [(ngModel)]="settings.applicationUrl" placeholder="https://example.com/requests">
             </mat-form-field>
+            <p class="field-hint">Your externally accessible URL. This drives many features including the mobile app QR code and email notification links.</p>
         </div>
-        <div class="md-form-field">
-            <mat-form-field appearance="outline" >
-                <mat-label>Custom Logo</mat-label>
-                <input  matInput  type="url"[(ngModel)]="settings.logo">
-            </mat-form-field>
-        </div>
-        <div class="md-form-field">
-            <div *ngIf="settings.logo" class="form-group">
-                <label for="logo" class="control-label">Logo Preview:</label>
-                <div>
-                    <img [src]="settings.logo" style="width: 300px" />
-                </div>
+
+        <div class="inline-field-group">
+            <div class="settings-field">
+                <mat-form-field appearance="outline">
+                    <mat-label>Custom Logo URL</mat-label>
+                    <input matInput type="url" [(ngModel)]="settings.logo">
+                </mat-form-field>
+            </div>
+            <div class="settings-field">
+                <mat-form-field appearance="outline">
+                    <mat-label>Custom Favicon URL</mat-label>
+                    <input matInput type="url" [(ngModel)]="settings.favicon">
+                </mat-form-field>
+                <p class="field-hint">Must be an externally accessible URL. Leave blank for default.</p>
             </div>
         </div>
-        <mat-hint>
-            The favicon url should be an externally accesible URL. Leave blank for default.
-        </mat-hint>
-        <div class="md-form-field">
-            <mat-form-field appearance="outline">
-                <mat-label>Custom Favicon</mat-label>
-                <input matInput type="url" [(ngModel)]="settings.favicon">
-            </mat-form-field>
-        </div>
-        <div class="md-form-field">
-            <mat-slide-toggle [(ngModel)]="settings.hideAvailableFromDiscover" matTooltip="Any media content that is available will now be hidden on the discover page, the user still can search for it">
-                Hide Available Content On The Discover Page
-            </mat-slide-toggle>
-        </div>
-        <div class="md-form-field">
-            <mat-slide-toggle [(ngModel)]="settings.enableCustomDonations" matTooltip="Enable to show a custom donation link in the navigation bar">
-                Enable Custom Donation Link
-            </mat-slide-toggle>
-        </div>
-        <div class="md-form-field">
-            <mat-form-field *ngIf="settings.enableCustomDonations" appearance="outline">
-                <mat-label>Custom Donation URL</mat-label>
-                <input matInput [(ngModel)]="settings.customDonationUrl" matTooltip="A link to a Paypal address, or your custom donation url.">
-            </mat-form-field>
-        </div>
-        <div class="md-form-field">
-            <mat-form-field *ngIf="settings.enableCustomDonations" appearance="outline">
-                <mat-label>Custom Donation Message</mat-label>
-                <input matInput  [(ngModel)]="settings.customDonationMessage" matTooltip="Set a custom message to be displayed in the navigation bar.">
-            </mat-form-field>
-        </div>
-        <div class="md-form-field">
-            <mat-slide-toggle [(ngModel)]="settings.useCustomPage" matTooltip="Enabled a custom page where you can fully edit. You will need the Edit Custom Page role.">
-                Enable Custom Page
-            </mat-slide-toggle>
-        </div>
-        <div class="md-form-field">
-            <mat-form-field appearance="outline"> 
-                <mat-label>Custom CSS</mat-label>
-                <textarea matInput [(ngModel)]="settings.customCss"></textarea>
-            </mat-form-field>
-        </div>
-        <div class="form-group">
-            <button mat-raised-button (click)="save()" type="submit" type="submit" id="save" color="accent">Submit</button>
+
+        <div *ngIf="settings.logo" class="logo-preview">
+            <p class="preview-label">Logo preview</p>
+            <img [src]="settings.logo" alt="Custom logo preview" />
         </div>
     </div>
-    <!-- <div class="col-7"> -->
 
+    <div class="settings-card">
+        <div class="settings-card-header">
+            <h2 class="card-title">Display options</h2>
+            <p class="card-description">Control what content is visible to your users.</p>
+        </div>
 
-    <!-- </div> -->
+        <div class="settings-toggle-row">
+            <div class="toggle-info">
+                <p class="toggle-label">Hide available content on Discover</p>
+                <p class="toggle-description">Available media will be hidden from the Discover page, but users can still search for it.</p>
+            </div>
+            <mat-slide-toggle [(ngModel)]="settings.hideAvailableFromDiscover"></mat-slide-toggle>
+        </div>
 
+        <div class="settings-toggle-row">
+            <div class="toggle-info">
+                <p class="toggle-label">Enable custom page</p>
+                <p class="toggle-description">Enables a fully customizable page. Requires the "Edit Custom Page" role.</p>
+            </div>
+            <mat-slide-toggle [(ngModel)]="settings.useCustomPage"></mat-slide-toggle>
+        </div>
+    </div>
 
+    <div class="settings-card">
+        <div class="settings-card-header">
+            <h2 class="card-title">Donations</h2>
+            <p class="card-description">Show a custom donation link in the navigation bar.</p>
+        </div>
 
+        <div class="settings-toggle-row">
+            <div class="toggle-info">
+                <p class="toggle-label">Enable donation link</p>
+                <p class="toggle-description">Display a custom donation link in the navigation bar.</p>
+            </div>
+            <mat-slide-toggle [(ngModel)]="settings.enableCustomDonations"></mat-slide-toggle>
+        </div>
 
-</fieldset>
+        <div *ngIf="settings.enableCustomDonations" style="margin-top: 16px;">
+            <div class="settings-field">
+                <mat-form-field appearance="outline">
+                    <mat-label>Donation URL</mat-label>
+                    <input matInput [(ngModel)]="settings.customDonationUrl" placeholder="https://paypal.me/...">
+                </mat-form-field>
+            </div>
+            <div class="settings-field">
+                <mat-form-field appearance="outline">
+                    <mat-label>Donation Message</mat-label>
+                    <input matInput [(ngModel)]="settings.customDonationMessage" placeholder="Support this server!">
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+
+    <div class="settings-card">
+        <div class="settings-card-header">
+            <h2 class="card-title">Custom CSS</h2>
+            <p class="card-description">Add custom CSS to further customize the appearance of Ombi.</p>
+        </div>
+
+        <div class="settings-field">
+            <mat-form-field appearance="outline">
+                <mat-label>CSS</mat-label>
+                <textarea matInput [(ngModel)]="settings.customCss" rows="6" placeholder="/* Your custom CSS here */"></textarea>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="settings-actions">
+        <button mat-raised-button color="accent" (click)="save()" class="save-btn">
+            Save changes
+        </button>
+    </div>
 </div>

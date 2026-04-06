@@ -1,56 +1,80 @@
-<div class="small-middle-container">
-<fieldset *ngIf="form">
-    <legend>Authentication</legend>
-    <div class="md-form-field" style="margin-top:1em;"></div>
+<div class="settings-page" *ngIf="form">
+    <div class="settings-page-header">
+        <h1 class="page-title">Authentication</h1>
+        <p class="page-description">Configure how users authenticate with Ombi, including passwordless login, OAuth, and header-based SSO.</p>
+    </div>
+
     <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
-      <div class="form-group">
-        <div class="checkbox">
-          <mat-slide-toggle id="allowNoPassword" name="allowNoPassword" formControlName="allowNoPassword">
-            Allow users to login without a password
-          </mat-slide-toggle>
-        </div>
-      </div>
+        <div class="settings-card">
+            <div class="settings-card-header">
+                <h2 class="card-title">Login methods</h2>
+                <p class="card-description">Control which authentication methods are available to users.</p>
+            </div>
 
-      <div class="form-group">
-        <div class="checkbox">
-          <mat-slide-toggle id="enableOAuth" name="enableOAuth" formControlName="enableOAuth">Enable Plex OAuth</mat-slide-toggle>
-        </div>
-      </div>
+            <div class="settings-toggle-row">
+                <div class="toggle-info">
+                    <p class="toggle-label">Allow passwordless login</p>
+                    <p class="toggle-description">Users can log in without entering a password. Useful for local or trusted networks.</p>
+                </div>
+                <mat-slide-toggle formControlName="allowNoPassword"></mat-slide-toggle>
+            </div>
 
-      <div class="form-group">
-        <div class="checkbox">
-          <mat-slide-toggle id="enableHeaderAuth" name="enableHeaderAuth" formControlName="enableHeaderAuth">Enable Authentication with Header Variable</mat-slide-toggle>
+            <div class="settings-toggle-row">
+                <div class="toggle-info">
+                    <p class="toggle-label">Enable Plex OAuth</p>
+                    <p class="toggle-description">Allow users to authenticate using their Plex account credentials.</p>
+                </div>
+                <mat-slide-toggle formControlName="enableOAuth"></mat-slide-toggle>
+            </div>
         </div>
-        <div class="alert warning-box">
-          Enabling Header Authentication will allow anyone to bypass authentication unless you are using a properly configured reverse proxy. Use with caution!
-        </div>
-      </div>
 
-      <div class="form-group" *ngIf="form.controls.enableHeaderAuth.value">
-        <label for="headerAuthVariable" class="control-label">Header Authentication Variable</label>
-        <div>
-          <input type="text" class="form-control form-control-custom " id="headerAuthVariable" name="headerAuthVariable" formControlName="headerAuthVariable">
-        </div>
-      </div>
+        <div class="settings-card">
+            <div class="settings-card-header">
+                <h2 class="card-title">Header authentication (SSO)</h2>
+                <p class="card-description">Authenticate users via a header variable set by a reverse proxy.</p>
+            </div>
 
-      <div class="form-group" *ngIf="form.controls.enableHeaderAuth.value">
-        <div class="checkbox">
-          <mat-slide-toggle id="headerAuthCreateUser" name="headerAuthCreateUser" formControlName="headerAuthCreateUser">SSO creates new users automatically</mat-slide-toggle>
-        </div>
-        <div class="alert warning-box" *ngIf="form.controls.headerAuthCreateUser.value">
-          If the user in the Header Authentication variable does not exist, a new user will be created. You can configure the default permissions for new users in the <a target="_blank" href="/Settings/UserManagement">User Management settings</a>.
-        </div>
-      </div>
+            <div class="settings-toggle-row">
+                <div class="toggle-info">
+                    <p class="toggle-label">Enable header authentication</p>
+                    <p class="toggle-description">Use a reverse proxy header to authenticate users automatically.</p>
+                </div>
+                <mat-slide-toggle formControlName="enableHeaderAuth"></mat-slide-toggle>
+            </div>
 
+            <div class="settings-warning" *ngIf="form.controls.enableHeaderAuth.value">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>Enabling header authentication will allow anyone to bypass authentication unless you are using a properly configured reverse proxy. Use with caution!</span>
+            </div>
 
-      <div class="form-group">
-        <div>
-          <button mat-raised-button type="submit" color="primary" [disabled]="form.invalid" class="mat-focus-indicator mat-stroked-button accent mat-accent mat-raised-button mat-button-base" ng-reflect-disabled="false">
-            <span class="mat-button-wrapper">Submit</span><div matripple="" class="mat-ripple mat-button-ripple" ng-reflect-disabled="false" ng-reflect-centered="false" ng-reflect-trigger="[object HTMLButtonElement]"></div>
-            <div class="mat-button-focus-overlay"></div>
-          </button><div class="md-form-field" style="margin-top:1em;"></div>
+            <div *ngIf="form.controls.enableHeaderAuth.value" style="margin-top: 16px;">
+                <div class="settings-field">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Header variable name</mat-label>
+                        <input matInput formControlName="headerAuthVariable" placeholder="X-Forwarded-User">
+                    </mat-form-field>
+                    <p class="field-hint">The HTTP header that contains the authenticated username from your reverse proxy.</p>
+                </div>
+
+                <div class="settings-toggle-row">
+                    <div class="toggle-info">
+                        <p class="toggle-label">Auto-create users from SSO</p>
+                        <p class="toggle-description">Automatically create a new Ombi account when an unknown user authenticates via header auth.</p>
+                    </div>
+                    <mat-slide-toggle formControlName="headerAuthCreateUser"></mat-slide-toggle>
+                </div>
+
+                <div class="settings-info" *ngIf="form.controls.headerAuthCreateUser.value">
+                    <i class="fas fa-info-circle"></i>
+                    <span>New users will be created with the default permissions from your <a href="/Settings/UserManagement" target="_blank">User Management</a> settings.</span>
+                </div>
+            </div>
         </div>
-      </div>
+
+        <div class="settings-actions">
+            <button mat-raised-button color="accent" type="submit" [disabled]="form.invalid" class="save-btn">
+                Save changes
+            </button>
+        </div>
     </form>
-</fieldset>
 </div>

@@ -1,132 +1,182 @@
-﻿
-<div class="small-middle-container">
-<fieldset *ngIf="settings">
-    <legend>User Importer Settings</legend>
-    <div class="md-form-field" style="margin-top:1em;"></div>
-    <div class="col-md-6">
+<div class="settings-page" *ngIf="settings">
+    <div class="settings-page-header">
+        <h1 class="page-title">User Management</h1>
+        <p class="page-description">Configure how users are imported from media servers and set default permissions and request limits for new users.</p>
+    </div>
+
+    <!-- User Import Section -->
+    <div class="settings-card">
+        <div class="settings-card-header">
+            <h2 class="card-title">User import</h2>
+            <p class="card-description">Automatically import users from your connected media servers.</p>
+        </div>
+
         <div *ngIf="plexEnabled">
-
-            <div class="form-group">
-                <div>
-                    <mat-slide-toggle id="importPlex" [(ngModel)]="settings.importPlexUsers">
-                    Import Plex Users</mat-slide-toggle>
+            <div class="settings-toggle-row">
+                <div class="toggle-info">
+                    <p class="toggle-label">Import Plex users</p>
+                    <p class="toggle-description">Sync users from your Plex server into Ombi.</p>
                 </div>
+                <mat-slide-toggle [(ngModel)]="settings.importPlexUsers"></mat-slide-toggle>
             </div>
 
-            <div class="form-group">
-                <mat-slide-toggle id="importAdmin" [(ngModel)]="settings.importPlexAdmin">Import Plex Admin</mat-slide-toggle>
+            <div class="settings-toggle-row">
+                <div class="toggle-info">
+                    <p class="toggle-label">Import Plex admin</p>
+                    <p class="toggle-description">Also import the Plex server admin account.</p>
                 </div>
-
-            <div *ngIf="settings.importPlexUsers || settings.importPlexAdmin">
-              <mat-slide-toggle id="cleanupPlexUsers" [(ngModel)]="settings.cleanupPlexUsers">
-                Cleanup Plex Users</mat-slide-toggle>
+                <mat-slide-toggle [(ngModel)]="settings.importPlexAdmin"></mat-slide-toggle>
             </div>
-            <div *ngIf="plexUsers">
-                <p>Plex Users excluded from Import</p>
 
+            <div class="settings-toggle-row" *ngIf="settings.importPlexUsers || settings.importPlexAdmin">
+                <div class="toggle-info">
+                    <p class="toggle-label">Cleanup Plex users</p>
+                    <p class="toggle-description">Remove Ombi users who are no longer shared on Plex.</p>
+                </div>
+                <mat-slide-toggle [(ngModel)]="settings.cleanupPlexUsers"></mat-slide-toggle>
+            </div>
+
+            <div class="settings-field" *ngIf="plexUsers" style="margin-top: 16px;">
+                <label class="field-label">Plex users excluded from import</label>
                 <p-autoComplete [(ngModel)]="bannedPlexUsers" [suggestions]="filteredPlexUsers" [multiple]="true" field="username" (completeMethod)="filterPlexList($event)"></p-autoComplete>
             </div>
         </div>
+
         <div *ngIf="embyEnabled">
-            <div class="form-group">
-                <mat-slide-toggle id="importEmbyUsers" [(ngModel)]="settings.importEmbyUsers">Import Emby Users</mat-slide-toggle>
+            <div class="settings-toggle-row">
+                <div class="toggle-info">
+                    <p class="toggle-label">Import Emby users</p>
+                    <p class="toggle-description">Sync users from your Emby server into Ombi.</p>
+                </div>
+                <mat-slide-toggle [(ngModel)]="settings.importEmbyUsers"></mat-slide-toggle>
             </div>
 
-            <div *ngIf="embyUsers">
-                <p>Emby Users excluded from Import</p>
-
+            <div class="settings-field" *ngIf="embyUsers" style="margin-top: 16px;">
+                <label class="field-label">Emby users excluded from import</label>
                 <p-autoComplete [(ngModel)]="bannedEmbyUsers" [suggestions]="filteredEmbyUsers" [multiple]="true" field="username" (completeMethod)="filterEmbyList($event)"></p-autoComplete>
             </div>
-
         </div>
+
         <div *ngIf="jellyfinEnabled">
-            <div class="form-group">
-                <mat-slide-toggle id="importJellyfinUsers" [(ngModel)]="settings.importJellyfinUsers">Import Jellyfin Users</mat-slide-toggle>
+            <div class="settings-toggle-row">
+                <div class="toggle-info">
+                    <p class="toggle-label">Import Jellyfin users</p>
+                    <p class="toggle-description">Sync users from your Jellyfin server into Ombi.</p>
+                </div>
+                <mat-slide-toggle [(ngModel)]="settings.importJellyfinUsers"></mat-slide-toggle>
             </div>
 
-            <div *ngIf="jellyfinUsers">
-                <p>Jellyfin Users excluded from Import</p>
-
+            <div class="settings-field" *ngIf="jellyfinUsers" style="margin-top: 16px;">
+                <label class="field-label">Jellyfin users excluded from import</label>
                 <p-autoComplete [(ngModel)]="bannedJellyfinUsers" [suggestions]="filteredJellyfinUsers" [multiple]="true" field="username" (completeMethod)="filterJellyfinList($event)"></p-autoComplete>
             </div>
+        </div>
 
+        <div *ngIf="!plexEnabled && !embyEnabled && !jellyfinEnabled" class="settings-info">
+            <i class="fas fa-info-circle"></i>
+            <span>No media servers are configured. Set up a media server first to enable user import.</span>
         </div>
     </div>
-    <div class="col-md-6">
-        <h3>Default Roles</h3>
-        <mat-divider />
+
+    <!-- Default Roles Section -->
+    <div class="settings-card">
+        <div class="settings-card-header">
+            <h2 class="card-title">Default roles</h2>
+            <p class="card-description">Permissions automatically assigned to newly imported or created users.</p>
+        </div>
+
         <div *ngFor="let c of claims">
-            <div class="form-group">
-                <div>
-                    <mat-slide-toggle [(ngModel)]="c.enabled" [value]="c.value" id="create{{c.value}}" [attr.name]="'create' + c.value" ng-checked="c.enabled">
-                    {{c.value | humanize}}</mat-slide-toggle>
+            <div class="settings-toggle-row">
+                <div class="toggle-info">
+                    <p class="toggle-label">{{c.value | humanize}}</p>
                 </div>
+                <mat-slide-toggle [(ngModel)]="c.enabled" [id]="'create' + c.value"></mat-slide-toggle>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Limits Section -->
+    <div class="settings-card">
+        <div class="settings-card-header">
+            <h2 class="card-title">Default request limits</h2>
+            <p class="card-description">Set the default number of requests new users can make within a given time period.</p>
+        </div>
+
+        <div class="inline-field-group">
+            <div class="settings-field">
+                <mat-form-field appearance="outline">
+                    <mat-label>Movie request limit</mat-label>
+                    <input matInput type="number" [(ngModel)]="settings.movieRequestLimit">
+                </mat-form-field>
+            </div>
+            <div class="settings-field">
+                <mat-form-field appearance="outline">
+                    <mat-label>Movie limit period</mat-label>
+                    <mat-select [(value)]="settings.movieRequestLimitType">
+                        <mat-option *ngFor="let value of requestLimitTypes" [value]="value">
+                            {{RequestLimitType[value]}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
             </div>
         </div>
 
-        <h3>Default Request Limits</h3>
-
-        <mat-divider />
-
-        <div class="form-group">
-            <mat-form-field>
-                <mat-label>Movie Request Limit</mat-label>
-                <input matInput type="text" [(ngModel)]="settings.movieRequestLimit" id="movieRequestLimit" name="movieRequestLimit" value="{{settings?.movieRequestLimit}}">
-            </mat-form-field>
+        <div class="inline-field-group">
+            <div class="settings-field">
+                <mat-form-field appearance="outline">
+                    <mat-label>Episode request limit</mat-label>
+                    <input matInput type="number" [(ngModel)]="settings.episodeRequestLimit">
+                </mat-form-field>
+            </div>
+            <div class="settings-field">
+                <mat-form-field appearance="outline">
+                    <mat-label>Episode limit period</mat-label>
+                    <mat-select [(value)]="settings.episodeRequestLimitType">
+                        <mat-option *ngFor="let value of requestLimitTypes" [value]="value">
+                            {{RequestLimitType[value]}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
         </div>
 
-        <mat-label>Movie Request Limit Type</mat-label>
-        <mat-select  id="movieRequestLimitType" [(value)]="settings.movieRequestLimitType">
-        <mat-option *ngFor="let value of requestLimitTypes" [value]="value">
-            {{RequestLimitType[value]}}
-        </mat-option>
-        </mat-select>
-
-        <div class="form-group">
-            <mat-form-field>
-                <mat-label>Episode Request Limit</mat-label>
-                <input matInput type="text" [(ngModel)]="settings.episodeRequestLimit" id="episodeRequestLimit" name="episodeRequestLimit" value="{{settings?.episodeRequestLimit}}">
-            </mat-form-field>
+        <div class="inline-field-group">
+            <div class="settings-field">
+                <mat-form-field appearance="outline">
+                    <mat-label>Music request limit</mat-label>
+                    <input matInput type="number" [(ngModel)]="settings.musicRequestLimit">
+                </mat-form-field>
+            </div>
+            <div class="settings-field">
+                <mat-form-field appearance="outline">
+                    <mat-label>Music limit period</mat-label>
+                    <mat-select [(value)]="settings.musicRequestLimitType">
+                        <mat-option *ngFor="let value of requestLimitTypes" [value]="value">
+                            {{RequestLimitType[value]}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
         </div>
 
-        <mat-label>Episode Request Limit Type</mat-label>
-        <mat-select  id="episodeRequestLimitType" [(value)]="settings.episodeRequestLimitType">
-        <mat-option *ngFor="let value of requestLimitTypes" [value]="value">
-            {{RequestLimitType[value]}}
-        </mat-option>
-        </mat-select>
-
-        <div class="form-group">
-            <mat-form-field>
-                <mat-label>Music Request Limit</mat-label>
-                <input matInput type="text" [(ngModel)]="settings.musicRequestLimit" id="musicRequestLimit" name="musicRequestLimit" value="{{settings?.musicRequestLimit}}">
+        <div class="settings-field">
+            <mat-form-field appearance="outline">
+                <mat-label [translate]="'UserPreferences.StreamingCountry'"></mat-label>
+                <mat-select [(value)]="settings.defaultStreamingCountry">
+                    <mat-option *ngFor="let value of countries" [value]="value">
+                        {{value}}
+                    </mat-option>
+                </mat-select>
             </mat-form-field>
         </div>
-        <mat-label>Music Request Limit Type</mat-label>
-        <mat-select  id="musicRequestLimitType" [(value)]="settings.musicRequestLimitType">
-        <mat-option *ngFor="let value of requestLimitTypes" [value]="value">
-            {{RequestLimitType[value]}}
-        </mat-option>
-        </mat-select>
-
-        <mat-form-field>
-            <mat-label [translate]="'UserPreferences.StreamingCountry'"></mat-label>
-            <mat-select [(value)]="settings.defaultStreamingCountry">
-              <mat-option *ngFor="let value of countries" [value]="value">
-                {{value}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-
     </div>
-        <div class="form-group">
-            <button (click)="submit()" mat-raised-button type="submit" id="save" class="mat-focus-indicator mat-stroked-button accent mat-accent mat-raised-button mat-button-base" ng-reflect-disabled="false">
-            <span class="mat-button-wrapper">Submit</span><div matripple="" class="mat-ripple mat-button-ripple" ng-reflect-disabled="false" ng-reflect-centered="false" ng-reflect-trigger="[object HTMLButtonElement]"></div>
-            <div class="mat-button-focus-overlay"></div></button>
-        </div>
-        <div><button type="button" [disabled]="!enableImportButton" (click)="runImporter()" class="mat-focus-indicator mat-stroked-button mat-raised-button mat-button-base">
-            Run Importer<div matripple class="mat-ripple mat-button-ripple" ng-reflect-disabled="false" ng-reflect-centered="false" ng-reflect-trigger="[object HTMLButtonElement]"></div><div class="mat-button-focus-overlay"></div></button>
-        </div>
-        <div class="md-form-field" style="margin-top:1em;"></div>
-</fieldset>
+
+    <div class="settings-actions">
+        <button mat-raised-button color="accent" (click)="submit()" class="save-btn">
+            Save changes
+        </button>
+        <button mat-stroked-button (click)="runImporter()" [disabled]="!enableImportButton">
+            Run importer now
+        </button>
+    </div>
 </div>

@@ -13,8 +13,6 @@ import { TranslateModule } from "@ngx-translate/core";
 import { ILandingPageSettings } from "../../interfaces";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
-import { WikiComponent } from "../wiki.component";
-
 @Component({
     standalone: true,
     imports: [
@@ -29,7 +27,6 @@ import { WikiComponent } from "../wiki.component";
         MatSlideToggleModule,
         MatTooltipModule,
         TranslateModule,
-        WikiComponent
     ],
     templateUrl: "./landingpage.component.html",
     styleUrls: ["./landingpage.component.scss"],

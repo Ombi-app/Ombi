@@ -1,5 +1,1 @@
-.small-middle-container {
-  margin: auto;
-  width: 95%;
-  margin-top: 10px;
-}
+@use "../shared-settings.scss" as *;

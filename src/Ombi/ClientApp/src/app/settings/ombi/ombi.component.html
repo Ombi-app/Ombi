@@ -1,84 +1,118 @@
-﻿<div class="small-middle-container">
-<wiki></wiki>
-<fieldset *ngIf="form">
-    <legend>Ombi Configuration</legend>
-    <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
-        <div class="col-md-12 col-12 col-sm-12">
-            <div class="md-form-field">
-                <mat-form-field appearance="outline" >
-                    <mat-label>Base URL</mat-label>
-                    <input matInput  formControlName="baseUrl">
-                </mat-form-field>
-            </div>
-            <div class="md-form-field">
-                <mat-form-field appearance="outline">
-                    <mat-label>Api Key</mat-label>
-                    <input matInput id="ApiKey" name="ApiKey"  formControlName="apiKey" readonly="readonly">
-                    <button type="button" matSuffix (click)="refreshApiKey()" style="display:inline-block;">
-                        <i class="fas fa-sync-alt fa-lg"></i>
-                    </button>
+<div class="settings-page" *ngIf="form">
+    <div class="settings-page-header">
+        <h1 class="page-title">General</h1>
+        <p class="page-description">Core Ombi application settings including API access, update channel, and global behavior preferences.</p>
+        <div class="page-header-actions">
+            <a class="doc-link" href="http://docs.ombi.app/settings/ombi" target="_blank">
+                <i class="fas fa-external-link-alt"></i> View documentation
+            </a>
+        </div>
+    </div>
 
+    <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+        <div class="settings-card">
+            <div class="settings-card-header">
+                <h2 class="card-title">Application</h2>
+                <p class="card-description">Configure the base URL and API access for your Ombi instance.</p>
+            </div>
+
+            <div class="settings-field">
+                <mat-form-field appearance="outline">
+                    <mat-label>Base URL</mat-label>
+                    <input matInput formControlName="baseUrl" placeholder="/ombi">
                 </mat-form-field>
+                <p class="field-hint">Set a base URL if Ombi is hosted behind a reverse proxy at a sub-path (e.g. /ombi). Must start with a forward slash.</p>
             </div>
-            <div>
-                <mat-form-field>
-                    <mat-select placeholder="Branch" formControlName="branch" matTooltip="This will not update your current version, but only control the update checks on the About page">
-                        <mat-option [value]="Branch.Stable">
-                            Stable
-                        </mat-option>
-                        <mat-option [value]="Branch.Develop">
-                            Develop
-                        </mat-option>
-                    </mat-select>
+
+            <div class="settings-field">
+                <mat-form-field appearance="outline">
+                    <mat-label>API Key</mat-label>
+                    <input matInput formControlName="apiKey" readonly>
+                    <button type="button" matSuffix mat-icon-button (click)="refreshApiKey()" matTooltip="Regenerate API Key">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
                 </mat-form-field>
+                <p class="field-hint">Used for external API access. Click the refresh icon to regenerate.</p>
             </div>
-            <div>
-                <mat-slide-toggle formControlName="doNotSendNotificationsForAutoApprove">
-                    Do not send Notifications if a User has the Auto Approve permission</mat-slide-toggle>
-            </div>
-            <div>
-                <mat-slide-toggle formControlName="hideRequestsUsers">
-                    Hide requests from other users
-                </mat-slide-toggle>
-            </div>
-            <div>
-                <mat-slide-toggle formControlName="autoDeleteAvailableRequests">
-                    Auto Delete Available Requests
-                </mat-slide-toggle>
-            </div>
-            <div *ngIf="form.get('autoDeleteAvailableRequests').value">
-                <mat-form-field appearance="outline" >
-                    <mat-label>Delete After Days of Availbility</mat-label>
-                    <input matInput formControlName="autoDeleteAfterDays">
-                </mat-form-field>
-            </div>
-            <div>
-                <mat-slide-toggle formControlName="collectAnalyticData" matTooltip="This will allow us to have a better understanding of the userbase so we know what we should be supporting (Uses Google Analytics)">
-                    Allow us to collect anonymous analytical data e.g. browser used
-                </mat-slide-toggle>
-            </div>
-            <!-- <div>
-                <mat-slide-toggle formControlName="disableHealthChecks">
-                    Disable the health checks page
-                    <a href="/healthchecks-ui" target="_blank">/healthchecks-ui</a>
-                </mat-slide-toggle>
-            </div> -->
-            <div>
-                <mat-form-field *ngIf="langauges">
-                    <mat-select matTooltip="This is the default site language for search results, the user can override this in their preferences page" placeholder="Language" formControlName="defaultLanguageCode">
-                        <mat-option>--</mat-option>
-                        <mat-option *ngFor="let lang of langauges" [value]="lang.code">
-                            {{lang.nativeName}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="form-group">
-                <div>
-                    <button mat-raised-button [disabled]="form.invalid" type="submit" id="save" class="mat-stroked-button accent mat-accent">Submit</button>
+
+            <div class="inline-field-group">
+                <div class="settings-field">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Update Branch</mat-label>
+                        <mat-select formControlName="branch">
+                            <mat-option [value]="Branch.Stable">Stable</mat-option>
+                            <mat-option [value]="Branch.Develop">Develop</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <p class="field-hint">Controls update checks on the About page only.</p>
+                </div>
+
+                <div class="settings-field" *ngIf="langauges">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Default Language</mat-label>
+                        <mat-select formControlName="defaultLanguageCode">
+                            <mat-option>--</mat-option>
+                            <mat-option *ngFor="let lang of langauges" [value]="lang.code">
+                                {{lang.nativeName}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <p class="field-hint">Default language for search results. Users can override in their preferences.</p>
                 </div>
             </div>
         </div>
+
+        <div class="settings-card">
+            <div class="settings-card-header">
+                <h2 class="card-title">Behavior</h2>
+                <p class="card-description">Control how Ombi handles notifications, requests, and data collection.</p>
+            </div>
+
+            <div class="settings-toggle-row">
+                <div class="toggle-info">
+                    <p class="toggle-label">Suppress auto-approve notifications</p>
+                    <p class="toggle-description">Don't send notifications when a user with auto-approve permission makes a request.</p>
+                </div>
+                <mat-slide-toggle formControlName="doNotSendNotificationsForAutoApprove"></mat-slide-toggle>
+            </div>
+
+            <div class="settings-toggle-row">
+                <div class="toggle-info">
+                    <p class="toggle-label">Hide requests from other users</p>
+                    <p class="toggle-description">Users will only see their own requests instead of all requests.</p>
+                </div>
+                <mat-slide-toggle formControlName="hideRequestsUsers"></mat-slide-toggle>
+            </div>
+
+            <div class="settings-toggle-row">
+                <div class="toggle-info">
+                    <p class="toggle-label">Auto-delete available requests</p>
+                    <p class="toggle-description">Automatically remove requests once they become available.</p>
+                </div>
+                <mat-slide-toggle formControlName="autoDeleteAvailableRequests"></mat-slide-toggle>
+            </div>
+
+            <div class="settings-field" *ngIf="form.get('autoDeleteAvailableRequests').value" style="margin-top: 16px;">
+                <mat-form-field appearance="outline">
+                    <mat-label>Days before deletion</mat-label>
+                    <input matInput formControlName="autoDeleteAfterDays" type="number">
+                </mat-form-field>
+                <p class="field-hint">Number of days after a request becomes available before it's automatically deleted.</p>
+            </div>
+
+            <div class="settings-toggle-row">
+                <div class="toggle-info">
+                    <p class="toggle-label">Anonymous analytics</p>
+                    <p class="toggle-description">Help improve Ombi by sharing anonymous usage data like browser type (via Google Analytics).</p>
+                </div>
+                <mat-slide-toggle formControlName="collectAnalyticData"></mat-slide-toggle>
+            </div>
+        </div>
+
+        <div class="settings-actions">
+            <button mat-raised-button color="accent" type="submit" [disabled]="form.invalid" class="save-btn">
+                Save changes
+            </button>
+        </div>
     </form>
-</fieldset>
 </div>

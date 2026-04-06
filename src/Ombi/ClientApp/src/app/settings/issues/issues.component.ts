@@ -27,7 +27,7 @@ import { IssuesService, NotificationService, SettingsService } from "../../servi
         MatSlideToggleModule,
         MatTooltipModule,
         TranslateModule,
-        FormsModule
+        FormsModule,
     ],
     templateUrl: "./issues.component.html",
     styleUrls: ["./issues.component.scss"]

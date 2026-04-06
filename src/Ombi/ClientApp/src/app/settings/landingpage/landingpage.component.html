@@ -1,60 +1,51 @@
-﻿<div class="small-middle-container">
-<wiki></wiki>
-<fieldset *ngIf="settings" class="container">
-        <legend>Landing Page Configuration</legend>
-        <div class="md-form-field" style="margin-top:1em;"></div>
-        <div class="col-12">
-                <mat-slide-toggle [(ngModel)]="settings.enabled"> 
-                Enable
-                </mat-slide-toggle>
-            <!--<div class="form-group">
-                <div class="checkbox">
-                    <input type="checkbox" id="enable" name="enable" [(ngModel)]="settings.enabled" ng-checked="settings.enabled">
-                    <label for="enable">Enable</label>
-                </div>
-            </div>-->
-
-            <div class="form-group">
-                <div>
-                    <mat-form-field class="example-full-width">
-                        <mat-label>Notice Message</mat-label>
-                        <textarea matInput  rows="4" type="text" id="NoticeMessage" name="NoticeMessage" placeholder="e.g. The server will be down for maintenance (HTML is allowed)" [(ngModel)]="settings.noticeText">{{settings.noticeText}}</textarea>
-                      </mat-form-field>
-                    </div>
-            </div>
-
-            <p class="form-group">Notice Preview:</p>
-            <div class="form-group">
-                <div [innerHTML]="settings.noticeText"></div>
-            </div>
-
-
-            <!--<div class="form-group">
-                <div class="checkbox">
-                    <input type="checkbox" id="enable" name="enable" [(ngModel)]="settings.timeLimit" ng-checked="settings.timeLimit">
-                    <label for="enable">Only show the notification message between the below times</label>
-                </div>
-            </div>-->
-
-
-
-
-            <!--<p class="form-group">Start Time</p>
-            <div class="form-group">
-                <p-calendar [(ngModel)]="settings.startDateTime" [showTime]="true"></p-calendar>
-            </div>
-            <p class="form-group">End Time</p>
-            <div class="form-group">
-                <p-calendar [(ngModel)]="settings.endDateTime" [showTime]="true"></p-calendar>
-            </div>-->
-
-
-
-            <div class="form-group">
-                <div>
-                    <button mat-raised-button (click)="save()" type="submit" id="save" class="mat-stroked-button accent mat-accent">Submit</button>
-                </div>
-            </div>
+<div class="settings-page" *ngIf="settings">
+    <div class="settings-page-header">
+        <h1 class="page-title">Landing Page</h1>
+        <p class="page-description">Configure the landing page that users see before logging in. Use it to display notices or maintenance messages.</p>
+        <div class="page-header-actions">
+            <a class="doc-link" href="http://docs.ombi.app/settings/landingpage" target="_blank">
+                <i class="fas fa-external-link-alt"></i> View documentation
+            </a>
         </div>
-</fieldset>
+    </div>
+
+    <div class="settings-card">
+        <div class="settings-card-header">
+            <h2 class="card-title">Landing page status</h2>
+            <p class="card-description">Enable or disable the landing page and configure its content.</p>
+        </div>
+
+        <div class="settings-toggle-row">
+            <div class="toggle-info">
+                <p class="toggle-label">Enable landing page</p>
+                <p class="toggle-description">Show the landing page with a notice message when users visit Ombi.</p>
+            </div>
+            <mat-slide-toggle [(ngModel)]="settings.enabled"></mat-slide-toggle>
+        </div>
+    </div>
+
+    <div class="settings-card" *ngIf="settings.enabled">
+        <div class="settings-card-header">
+            <h2 class="card-title">Notice message</h2>
+            <p class="card-description">The message displayed on the landing page. HTML is supported.</p>
+        </div>
+
+        <div class="settings-field">
+            <mat-form-field appearance="outline">
+                <mat-label>Notice message</mat-label>
+                <textarea matInput rows="5" [(ngModel)]="settings.noticeText" placeholder="e.g. The server will be down for maintenance tonight at 10pm"></textarea>
+            </mat-form-field>
+        </div>
+
+        <div class="notice-preview" *ngIf="settings.noticeText">
+            <p class="preview-label">Preview</p>
+            <div class="preview-content" [innerHTML]="settings.noticeText"></div>
+        </div>
+    </div>
+
+    <div class="settings-actions">
+        <button mat-raised-button color="accent" (click)="save()" class="save-btn">
+            Save changes
+        </button>
+    </div>
 </div>

@@ -1,100 +1,120 @@
-﻿<div class="small-middle-container">
-    <fieldset *ngIf="settings">
-        <legend>The Movie Database</legend>
-        <div class="md-form-field" style="margin-top:1em;">
-            <div class="form-group">
-                <div class="checkbox">
-                    <mat-slide-toggle id="showAdultMovies" name="showAdultMovies" [(ngModel)]="settings.showAdultMovies"
-                        matTooltip="Include adult movies (pornography) in results">
-                        Show Adult Movies</mat-slide-toggle>
-                </div>
+<div class="settings-page" *ngIf="settings">
+    <div class="settings-page-header">
+        <h1 class="page-title">The Movie Database</h1>
+        <p class="page-description">Control how Ombi interacts with TMDB, including content filtering by language, keywords, and genres.</p>
+    </div>
+
+    <form [formGroup]="tagForm">
+        <div class="settings-card">
+            <div class="settings-card-header">
+                <h2 class="card-title">Content preferences</h2>
+                <p class="card-description">Filter what types of content are shown in search results and suggestions.</p>
             </div>
 
-            <div class="form-group">
-                <form [formGroup]='tagForm'>
-                  <mat-form-field appearance="outline" >
-                      <mat-label>Original languages</mat-label>
-                      <mat-select multiple formControlName="originalLanguages" [(value)]="settings.originalLanguages" matTooltip="Filter content by original language.">
-                          <mat-option *ngFor="let language of languages" [value]="language.iso_639_1">
-                              {{language.english_name}}
-                          </mat-option>
-                        </mat-select>
-                  </mat-form-field>
-
-                    <mat-form-field class="example-full-width">
-                        <input type="text" placeholder="Excluded Keyword IDs for Movie & TV Suggestions" matInput
-                            formControlName="input" [matAutocomplete]="auto"
-                            matTooltip="Prevent movies with certain keywords from being suggested. May require a restart to take effect.">
-                        <mat-autocomplete (optionSelected)="optionSelected($event.option.value)" autoActiveFirstOption
-                            #auto="matAutocomplete">
-                            <mat-option *ngFor="let option of filteredTags" [value]="option">
-                                {{option.name}}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </mat-form-field>
-
-                    <mat-chip-list #chipList>
-                        <mat-chip *ngFor="let key of excludedKeywords" [selectable]="false" [removable]="true"
-                            (removed)="remove(key, 'keyword')">
-                            {{key.name}}
-                            <i matChipRemove class="fas fa-times fa-lg"></i>
-                        </mat-chip>
-                    </mat-chip-list>
-
-                    <div class="md-form-field" style="margin-top:1em;">
-                        <mat-form-field appearance="outline" >
-                            <mat-label>Movie Genres</mat-label>
-                            <mat-select formControlName="excludedMovieGenres" multiple>
-                                <mat-option *ngFor="let genre of filteredMovieGenres" [value]="genre.id">
-                                    {{genre.name}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-
-                    <mat-chip-list #chipList>
-                        <mat-chip *ngFor="let key of excludedMovieGenres" [selectable]="false" [removable]="true"
-                            (removed)="remove(key, 'movieGenre')">
-                            {{key.name}}
-                            <i matChipRemove class="fas fa-times fa-lg"></i>
-                        </mat-chip>
-                    </mat-chip-list>
-
-                    <div class="md-form-field" style="margin-top:1em;">
-                        <mat-form-field appearance="outline" >
-                            <mat-label>Tv Genres</mat-label>
-                            <mat-select formControlName="excludedTvGenres" multiple>
-                                <mat-option *ngFor="let genre of filteredTvGenres" [value]="genre.id">
-                                    {{genre.name}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-
-                    <mat-chip-list #chipList>
-                        <mat-chip *ngFor="let key of excludedTvGenres" [selectable]="false" [removable]="true"
-                            (removed)="remove(key, 'tvGenre')">
-                            {{key.name}}
-                            <i matChipRemove class="fas fa-times fa-lg"></i>
-                        </mat-chip>
-                    </mat-chip-list>
-
-                </form>
+            <div class="settings-toggle-row">
+                <div class="toggle-info">
+                    <p class="toggle-label">Show adult movies</p>
+                    <p class="toggle-description">Include adult content (pornography) in search results.</p>
+                </div>
+                <mat-slide-toggle [(ngModel)]="settings.showAdultMovies" [ngModelOptions]="{standalone: true}"></mat-slide-toggle>
             </div>
 
-            <div class="form-group">
-                <div>
-                    <button mat-raised-button (click)="save()" type="submit" id="save"
-                        class="mat-focus-indicator mat-stroked-button accent mat-accent mat-raised-button mat-button-base"
-                        ng-reflect-disabled="false">
-                        <span class="mat-button-wrapper">Submit</span>
-                        <div matripple="" class="mat-ripple mat-button-ripple" ng-reflect-disabled="false"
-                            ng-reflect-centered="false" ng-reflect-trigger="[object HTMLButtonElement]"></div>
-                        <div class="mat-button-focus-overlay"></div>
-                    </button>
-                    <div class="md-form-field" style="margin-top:1em;"></div>
-                </div>
+            <div class="settings-field" style="margin-top: 20px;">
+                <mat-form-field appearance="outline">
+                    <mat-label>Original languages</mat-label>
+                    <mat-select multiple formControlName="originalLanguages" [(value)]="settings.originalLanguages">
+                        <mat-option *ngFor="let language of languages" [value]="language.iso_639_1">
+                            {{language.english_name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <p class="field-hint">Only show content originally produced in these languages.</p>
             </div>
         </div>
-    </fieldset>
+
+        <div class="settings-card">
+            <div class="settings-card-header">
+                <h2 class="card-title">Excluded keywords</h2>
+                <p class="card-description">Prevent movies and TV shows with certain keywords from appearing in suggestions. A restart may be required.</p>
+            </div>
+
+            <div class="settings-field">
+                <mat-form-field appearance="outline">
+                    <mat-label>Search for keywords to exclude</mat-label>
+                    <input matInput formControlName="input" [matAutocomplete]="auto">
+                    <mat-autocomplete (optionSelected)="optionSelected($event.option.value)" autoActiveFirstOption #auto="matAutocomplete">
+                        <mat-option *ngFor="let option of filteredTags" [value]="option">
+                            {{option.name}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+
+            <div class="chip-list" *ngIf="excludedKeywords?.length > 0">
+                <mat-chip-list>
+                    <mat-chip *ngFor="let key of excludedKeywords" [removable]="true" (removed)="remove(key, 'keyword')">
+                        {{key.name}}
+                        <i matChipRemove class="fas fa-times"></i>
+                    </mat-chip>
+                </mat-chip-list>
+            </div>
+        </div>
+
+        <div class="settings-card">
+            <div class="settings-card-header">
+                <h2 class="card-title">Excluded genres</h2>
+                <p class="card-description">Hide content from specific genres in suggestions and discovery.</p>
+            </div>
+
+            <div class="inline-field-group">
+                <div class="settings-field">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Movie genres</mat-label>
+                        <mat-select formControlName="excludedMovieGenres" multiple>
+                            <mat-option *ngFor="let genre of filteredMovieGenres" [value]="genre.id">
+                                {{genre.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="settings-field">
+                    <mat-form-field appearance="outline">
+                        <mat-label>TV genres</mat-label>
+                        <mat-select formControlName="excludedTvGenres" multiple>
+                            <mat-option *ngFor="let genre of filteredTvGenres" [value]="genre.id">
+                                {{genre.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div *ngIf="excludedMovieGenres?.length > 0" style="margin-bottom: 12px;">
+                <p class="chip-section-label">Excluded movie genres</p>
+                <mat-chip-list>
+                    <mat-chip *ngFor="let key of excludedMovieGenres" [removable]="true" (removed)="remove(key, 'movieGenre')">
+                        {{key.name}}
+                        <i matChipRemove class="fas fa-times"></i>
+                    </mat-chip>
+                </mat-chip-list>
+            </div>
+
+            <div *ngIf="excludedTvGenres?.length > 0">
+                <p class="chip-section-label">Excluded TV genres</p>
+                <mat-chip-list>
+                    <mat-chip *ngFor="let key of excludedTvGenres" [removable]="true" (removed)="remove(key, 'tvGenre')">
+                        {{key.name}}
+                        <i matChipRemove class="fas fa-times"></i>
+                    </mat-chip>
+                </mat-chip-list>
+            </div>
+        </div>
+    </form>
+
+    <div class="settings-actions">
+        <button mat-raised-button color="accent" (click)="save()" class="save-btn">
+            Save changes
+        </button>
+    </div>
 </div>

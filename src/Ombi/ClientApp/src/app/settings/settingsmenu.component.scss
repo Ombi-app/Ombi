@@ -1,3 +1,105 @@
-﻿.icon-spacing {
-    padding-right: 5%;
+@use "./styles/variables.scss" as *;
+
+.settings-nav {
+  padding: 16px 0;
+}
+
+.nav-section {
+  margin-bottom: 8px;
+}
+
+.nav-section-title {
+  padding: 8px 20px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.4);
+  user-select: none;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 20px;
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border-left: 3px solid transparent;
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.95);
+    background-color: rgba(255, 255, 255, 0.04);
+  }
+
+  &.active {
+    color: $ombi-active;
+    background-color: rgba($ombi-active, 0.08);
+    border-left-color: $ombi-active;
+    font-weight: 500;
+
+    i {
+      color: $ombi-active;
+    }
+  }
+
+  i {
+    width: 18px;
+    text-align: center;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.45);
+    transition: color 0.15s ease;
+  }
+
+  span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+@media (max-width: 768px) {
+  .settings-nav {
+    padding: 12px 0;
+    display: flex;
+    overflow-x: auto;
+    gap: 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .nav-section {
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .nav-section-title {
+    display: none;
+  }
+
+  .nav-item {
+    padding: 8px 14px;
+    border-left: none;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    font-size: 13px;
+
+    &.active {
+      border-left-color: transparent;
+      border-bottom-color: $ombi-active;
+    }
+
+    i {
+      display: none;
+    }
+  }
 }
