@@ -202,6 +202,13 @@ Here are some of the features Ombi has:
     </td></tr>
 <tr>
     <td align="center">
+        <a href="https://github.com/claude">
+            <img src="https://avatars.githubusercontent.com/u/81847?v=4" width="50;" alt="claude"/>
+            <br />
+            <sub><b>Claude</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/GodKratos">
             <img src="https://avatars.githubusercontent.com/u/692616?v=4" width="50;" alt="GodKratos"/>
             <br />
@@ -227,13 +234,6 @@ Here are some of the features Ombi has:
             <img src="https://avatars.githubusercontent.com/u/3277321?v=4" width="50;" alt="kitzin"/>
             <br />
             <sub><b>Emil Kitti</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/claude">
-            <img src="https://avatars.githubusercontent.com/u/81847?v=4" width="50;" alt="claude"/>
-            <br />
-            <sub><b>Claude</b></sub>
         </a>
     </td>
     <td align="center">
