@@ -32,8 +32,8 @@ export default defineConfig({
     apiBaseUrl: 'http://localhost:3577/api/v1'
   },
   
-  // Project configuration
-  projectId: 'o5451s',
+  // Project configuration - can be overridden via CYPRESS_PROJECT_ID env var for multi-db CI
+  projectId: process.env.CYPRESS_PROJECT_ID || 'o5451s',
   
   e2e: {
     // Setup node events
