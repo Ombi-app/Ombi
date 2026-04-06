@@ -235,7 +235,7 @@
         "DeniedRequest": "Demande refusée",
         "RequestCollection": "Demander la collection",
         "CollectionSuccesfullyAdded": "La collection {{name}} a été ajoutée avec succès !",
-        "NoRequests": "No requests yet",
+        "NoRequests": "Aucune demande pour le moment",
         "NeedToSelectEpisodes": "Vous devez sélectionner des épisodes !",
         "RequestAddedSuccessfully": "La demande de {{title}} a été ajoutée avec succès",
         "ErrorCodes": {
@@ -381,11 +381,11 @@
             "LatestSeasonTooltip": "Cette action ne demandera que la Dernière Saison de cette série",
             "NoEpisodes": "Il n'y a malheureusement pas encore d'informations d'épisode pour cette série !",
             "SeasonNumber": "Saison {{number}}",
-            "OrSelectEpisodes": "or select specific episodes",
-            "Episodes": "episodes",
-            "SelectAll": "Select All",
-            "EpisodeSelected": "episode selected",
-            "EpisodesSelected": "episodes selected"
+            "OrSelectEpisodes": "ou sélectionnez des épisodes spécifiques",
+            "Episodes": "épisodes",
+            "SelectAll": "Sélectionner tout",
+            "EpisodeSelected": "épisode sélectionné",
+            "EpisodesSelected": "épisodes sélectionnés"
         },
         "SonarrConfiguration": "Configuration Sonarr",
         "RadarrConfiguration": "Configuration Radarr",
@@ -417,7 +417,7 @@
         "Combined": "Tous",
         "Tv": "Séries",
         "Genres": "Genres",
-        "ViewDetails": "View Details",
+        "ViewDetails": "Voir les détails",
         "CardDetails": {
             "Availability": "Disponibilité",
             "Studio": "Studio",
