@@ -243,6 +243,11 @@ $sidenav-width: 240px;
         background: rgba($ombi-active, 0.12);
         color: #fff;
 
+        &:hover {
+            background: rgba($ombi-active, 0.18);
+            color: #fff;
+        }
+
         .nav-indicator {
             height: 20px;
         }

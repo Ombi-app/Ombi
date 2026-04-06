@@ -102,7 +102,7 @@
             <div class="top-bar-spacer"></div>
 
             <div class="profile-block">
-                <a routerLink="/user-preferences" class="profile-link">
+                <a routerLink="/user-preferences" class="profile-link" [attr.aria-label]="userName">
                     <span class="profile-username" data-test="profile-username">{{userName}}</span>
                     <div class="profile-avatar" data-test="profile-image">
                         <img [src]="userProfileImageUrl" (error)="onProfileImageError()" alt="Profile" width="32" height="32">
