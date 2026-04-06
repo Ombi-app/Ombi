@@ -236,6 +236,11 @@
         "RequestCollection": "Požádat o kolekci",
         "CollectionSuccesfullyAdded": "Kolekce {{name}} byla úspěšně přidána!",
         "NoRequests": "No requests yet",
+        "SelectAll": "Select All",
+        "Select": "Select {{title}}",
+        "GridSize": "Grid size",
+        "BulkActions": "Bulk actions for {{count}} items",
+        "ManageYourRequests": "Manage your requests",
         "NeedToSelectEpisodes": "Musíte vybrat nějaké epizody!",
         "RequestAddedSuccessfully": "Žádost o {{title}} byla úspěšně přidána",
         "ErrorCodes": {
