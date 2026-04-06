@@ -9,19 +9,19 @@
 
   <!-- Tab Navigation -->
   <div class="tab-bar" role="tablist" (keydown)="onTabKeydown($event)">
-    <button class="tab-item" role="tab" type="button"
+    <button class="tab-item" role="tab" type="button" [tabindex]="activeTab === 'movies' ? 0 : -1"
       id="tab-movies" [attr.aria-selected]="activeTab === 'movies'" aria-controls="panel-movies"
       [class.active]="activeTab === 'movies'" (click)="activeTab = 'movies'">
       <i class="fas fa-film tab-icon"></i>
       <span>{{ 'NavigationBar.Filter.Movies' | translate }}</span>
     </button>
-    <button class="tab-item" role="tab" type="button"
+    <button class="tab-item" role="tab" type="button" [tabindex]="activeTab === 'tv' ? 0 : -1"
       id="tab-tv" [attr.aria-selected]="activeTab === 'tv'" aria-controls="panel-tv"
       [class.active]="activeTab === 'tv'" (click)="activeTab = 'tv'">
       <i class="fas fa-tv tab-icon"></i>
       <span>{{ 'NavigationBar.Filter.TvShows' | translate }}</span>
     </button>
-    <button *ngIf="musicEnabled$ | async" class="tab-item" role="tab" type="button"
+    <button *ngIf="musicEnabled$ | async" class="tab-item" role="tab" type="button" [tabindex]="activeTab === 'music' ? 0 : -1"
       id="tab-music" [attr.aria-selected]="activeTab === 'music'" aria-controls="panel-music"
       [class.active]="activeTab === 'music'" (click)="activeTab = 'music'">
       <i class="fas fa-music tab-icon"></i>

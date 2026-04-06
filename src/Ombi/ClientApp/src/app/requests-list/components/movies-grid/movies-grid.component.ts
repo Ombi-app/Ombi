@@ -63,14 +63,14 @@ export class MoviesGridComponent extends BaseGridComponent<IMovieRequests> {
     protected storageKeyCurrentFilter = "Movie_DefaultFilter";
 
     constructor(
-        private requestService: RequestServiceV2,
+        private readonly requestService: RequestServiceV2,
         ref: ChangeDetectorRef,
         auth: AuthService,
         storageService: StorageService,
-        private requestServiceV1: RequestService,
-        private notification: NotificationService,
-        private translateService: TranslateService,
-        private featureFacade: FeaturesFacade
+        private readonly requestServiceV1: RequestService,
+        private readonly notification: NotificationService,
+        private readonly translateService: TranslateService,
+        private readonly featureFacade: FeaturesFacade
     ) {
         super(auth, ref, storageService);
     }
