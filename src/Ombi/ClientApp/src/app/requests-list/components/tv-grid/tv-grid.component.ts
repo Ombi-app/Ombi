@@ -74,6 +74,8 @@ export class TvGridComponent extends BaseGridComponent<IChildRequests> {
                 return this.requestService.getProcessingTvRequests(count, offset, this.sortActive, this.sortDirection);
             case RequestFilterType.Denied:
                 return this.requestService.getDeniedTvRequests(count, offset, this.sortActive, this.sortDirection);
+            default:
+                return this.requestService.getTvRequests(count, offset, this.sortActive, this.sortDirection);
         }
     }
 

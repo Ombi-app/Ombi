@@ -98,6 +98,8 @@ export class MoviesGridComponent extends BaseGridComponent<IMovieRequests> {
                 return this.requestService.getMovieProcessingRequests(count, offset, this.sortActive, this.sortDirection);
             case RequestFilterType.Denied:
                 return this.requestService.getMovieDeniedRequests(count, offset, this.sortActive, this.sortDirection);
+            default:
+                return this.requestService.getMovieRequests(count, offset, this.sortActive, this.sortDirection);
         }
     }
 

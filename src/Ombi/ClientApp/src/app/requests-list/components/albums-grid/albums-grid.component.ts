@@ -65,6 +65,8 @@ export class AlbumsGridComponent extends BaseGridComponent<IAlbumRequest> {
                 return this.requestService.getAlbumProcessingRequests(count, offset, this.sortActive, this.sortDirection);
             case RequestFilterType.Denied:
                 return this.requestService.getAlbumDeniedRequests(count, offset, this.sortActive, this.sortDirection);
+            default:
+                return this.requestService.getAlbumRequests(count, offset, this.sortActive, this.sortDirection);
         }
     }
 
