@@ -355,6 +355,7 @@
         "Availability":"Availability:",
         "RequestStatus":"Request Status:",
         "Quality":"Quality:",
+        "Quality4K":"Quality (4K):",
         "RootFolderOverride":"Root Folder Override:",
         "QualityOverride":"Quality Override:",
         "Network":"Network:",

@@ -30,7 +30,7 @@
 
 					<!-- Meta badges -->
 					<div class="hero-meta">
-						<span *ngIf="tv.rating" class="meta-badge" matTooltip="TMDB Rating">
+						<span *ngIf="tv.rating" class="meta-badge" [matTooltip]="'MediaDetails.TmdbRating' | translate">
 							<i class="fas fa-star" style="color: #f5c518;"></i>
 							{{ tv.rating * 10 | number: '1.0-0' }}%
 						</span>

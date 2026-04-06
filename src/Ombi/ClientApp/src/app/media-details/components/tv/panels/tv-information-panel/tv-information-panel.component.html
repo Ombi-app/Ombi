@@ -26,7 +26,7 @@
 		<div class="info-item" *ngIf="ratings?.score && ratings?.class">
 			<div class="info-label">{{ 'MediaDetails.Critics' | translate }}</div>
 			<div class="info-value">
-				<img class="rating-small" src="{{ baseUrl }}/images/{{ ratings.class === 'rotten' ? 'rotten-rotten.svg' : 'rotten-fresh.svg' }}" />
+				<img class="rating-small" [alt]="ratings.class === 'rotten' ? 'Rotten' : 'Fresh'" src="{{ baseUrl }}/images/{{ ratings.class === 'rotten' ? 'rotten-rotten.svg' : 'rotten-fresh.svg' }}" />
 				{{ ratings.score }}%
 			</div>
 		</div>

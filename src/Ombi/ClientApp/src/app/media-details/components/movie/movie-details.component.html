@@ -4,7 +4,7 @@
 
 <div *ngIf="movie" class="main-content-container">
 	<!-- ============ HERO SECTION ============ -->
-	<top-banner [background]="movie.background" [available]="movie.available" [title]="movie.title" [releaseDate]="movie.releaseDate" [tagline]="movie.tagline">
+	<top-banner [background]="movie.background">
 		<div class="hero-content">
 			<!-- Poster -->
 			<div class="hero-poster">
@@ -146,7 +146,7 @@
 							<button *ngIf="!movie.available4K && movie.has4KRequest" (click)="markAvailable(true)" class="action-btn action-btn--admin">
 								<i class="fas fa-plus"></i> {{ 'Requests.MarkAvailable4K' | translate }}
 							</button>
-							<button *ngIf="movie.available4K" (click)="markUnavailable(true)" class="action-btn action-btn--admin">
+							<button *ngIf="movie.available4K && movie.has4KRequest" (click)="markUnavailable(true)" class="action-btn action-btn--admin">
 								<i class="fas fa-minus"></i> {{ 'Requests.MarkUnavailable4K' | translate }}
 							</button>
 						</span>
@@ -262,7 +262,7 @@
 								<ombi-image
 									[src]="'https://image.tmdb.org/t/p/w300/' + r.poster_path"
 									[matTooltip]="r.title"
-									alt="Poster"
+									[alt]="r.title"
 								></ombi-image>
 							</a>
 							<div class="media-card-title">{{ r.title }}</div>
@@ -281,7 +281,7 @@
 								<ombi-image
 									[src]="'https://image.tmdb.org/t/p/w300/' + r.poster_path"
 									[matTooltip]="r.title"
-									alt="Poster"
+									[alt]="r.title"
 								></ombi-image>
 							</a>
 							<div class="media-card-title">{{ r.title }}</div>
