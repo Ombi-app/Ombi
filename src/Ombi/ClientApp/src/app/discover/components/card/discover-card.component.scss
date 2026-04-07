@@ -202,14 +202,6 @@
     transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.25s ease;
 }
 
-@media (hover: none), (pointer: coarse) {
-    .card-actions {
-        opacity: 1;
-        visibility: visible;
-        transform: none;
-        pointer-events: auto;
-    }
-}
 
 .request-btn {
     width: 100%;
