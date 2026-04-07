@@ -95,6 +95,9 @@ namespace Ombi.Schedule.Jobs.Emby
                         || existingTv.TheMovieDbId != tvShow.ProviderIds?.Tmdb
                         || existingTv.TvDbId != tvShow.ProviderIds?.Tvdb))
                     {
+                        // TODO: Existing TvRequest records referencing the old TheMovieDbId via ExternalProviderId
+                        // will not be updated here. This is a pre-existing limitation (the old delete+reinsert
+                        // also left requests orphaned). Consider migrating TvRequest.ExternalProviderId in future.
                         _logger.LogDebug($"Series '{tvShow.Name}' has different IDs, probably a reidentification. Updating IDs in place.");
                         existingTv.ImdbId = tvShow.ProviderIds?.Imdb;
                         existingTv.TheMovieDbId = tvShow.ProviderIds?.Tmdb;

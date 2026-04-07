@@ -142,7 +142,8 @@ namespace Ombi.Store.Repository
                 .Select(x => new { x.EmbyId, x.EpisodeNumber, x.SeasonNumber })
                 .ToListAsync();
             return episodes
-                .ToDictionary(x => $"{x.EmbyId}:{x.EpisodeNumber}", x => (x.EpisodeNumber, x.SeasonNumber));
+                .GroupBy(x => $"{x.EmbyId}:{x.EpisodeNumber}")
+                .ToDictionary(g => g.Key, g => (g.First().EpisodeNumber, g.First().SeasonNumber));
         }
     }
 }

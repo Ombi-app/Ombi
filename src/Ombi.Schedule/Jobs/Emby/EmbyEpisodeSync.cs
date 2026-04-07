@@ -255,17 +255,13 @@ namespace Ombi.Schedule.Jobs.Emby
                             var matchingUpdate = group.FirstOrDefault(u => u.Value.EpisodeNumber == entity.EpisodeNumber);
                             if (matchingUpdate.Key != null)
                             {
-                                entity.EpisodeNumber = matchingUpdate.Value.EpisodeNumber;
                                 entity.SeasonNumber = matchingUpdate.Value.SeasonNumber;
                                 hasUpserts = true;
                             }
                             else
                             {
-                                // For multi-episode rows that don't have a direct match,
-                                // update the season number from any update in the group
-                                var anyUpdate = group.First();
-                                entity.SeasonNumber = anyUpdate.Value.SeasonNumber;
-                                hasUpserts = true;
+                                _logger.LogDebug("No matching update found for episode {EpisodeNumber} in EmbyId {EmbyId}",
+                                    entity.EpisodeNumber, group.Key);
                             }
                         }
                     }
