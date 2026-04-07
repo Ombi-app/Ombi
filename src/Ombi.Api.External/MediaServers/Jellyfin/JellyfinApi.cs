@@ -174,6 +174,9 @@ namespace Ombi.Api.External.MediaServers.Jellyfin
                 request.AddQueryString("ParentId", parentIdFilder);
             }
 
+            request.AddQueryString("SortBy", "SortName");
+            request.AddQueryString("SortOrder", "Ascending");
+
             request.AddQueryString("isMissing", "False");
 
             AddHeaders(request, apiKey);

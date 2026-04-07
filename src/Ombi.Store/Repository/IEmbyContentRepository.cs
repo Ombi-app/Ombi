@@ -10,6 +10,7 @@ namespace Ombi.Store.Repository
     {
         Task<EmbyContent> GetByEmbyId(string embyId);
         Task<EmbyEpisode> GetEpisodeByEmbyId(string key);
+        Task<List<EmbyEpisode>> GetEpisodesByEmbyId(string key);
 
         // TODO: merge these with IJellyfinContentRepository
         IQueryable<EmbyContent> Get();
