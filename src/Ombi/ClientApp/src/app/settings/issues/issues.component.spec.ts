@@ -24,11 +24,12 @@ function createComponent() {
 
 describe('IssuesComponent', () => {
   it('should load settings and categories on init', () => {
-    const { comp, mockIssuesService } = createComponent();
+    const { comp, mockIssuesService, mockSettingsService } = createComponent();
     comp.ngOnInit();
     expect(comp.form).toBeDefined();
     expect(comp.categories).toHaveLength(2);
     expect(mockIssuesService.getCategories).toHaveBeenCalled();
+    expect(mockSettingsService.getIssueSettings).toHaveBeenCalled();
   });
 
   it('should add category and refresh list', () => {
@@ -48,12 +49,14 @@ describe('IssuesComponent', () => {
     comp.ngOnInit();
     comp.deleteCategory(1);
     expect(mockIssuesService.deleteCategory).toHaveBeenCalledWith(1);
+    expect(mockIssuesService.getCategories.mock.calls.length).toBeGreaterThanOrEqual(2);
   });
 
   it('should save and notify success', () => {
-    const { comp, mockNotify } = createComponent();
+    const { comp, mockNotify, mockSettingsService } = createComponent();
     comp.ngOnInit();
     comp.onSubmit(comp.form);
+    expect(mockSettingsService.saveIssueSettings).toHaveBeenCalled();
     expect(mockNotify.success).toHaveBeenCalledWith('Successfully saved the Issue settings');
   });
 

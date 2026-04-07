@@ -28,9 +28,10 @@ describe('TelegramComponent', () => {
   });
 
   it('should save and notify success', () => {
-    const { comp, mockNotify } = createComponent();
+    const { comp, mockNotify, mockSettingsService } = createComponent();
     comp.ngOnInit();
     comp.onSubmit(comp.form);
+    expect(mockSettingsService.saveTelegramNotificationSettings).toHaveBeenCalled();
     expect(mockNotify.success).toHaveBeenCalledWith('Successfully saved the Telegram settings');
   });
 
@@ -50,10 +51,11 @@ describe('TelegramComponent', () => {
   });
 
   it('should error on invalid form submit', () => {
-    const { comp, mockNotify } = createComponent();
+    const { comp, mockNotify, mockSettingsService } = createComponent();
     comp.ngOnInit();
     comp.form.controls['botApi'].setValue('');
     comp.onSubmit(comp.form);
+    expect(mockSettingsService.saveTelegramNotificationSettings).not.toHaveBeenCalled();
     expect(mockNotify.error).toHaveBeenCalledWith('Please check your entered values');
   });
 });

@@ -99,7 +99,7 @@ describe('PlexComponent', () => {
     });
 
     it('should use last address when multiple local addresses exist', () => {
-      const { comp } = createComponent();
+      const { comp, mockDialog } = createComponent();
       comp.ngOnInit();
 
       const device = {
@@ -112,7 +112,7 @@ describe('PlexComponent', () => {
       };
 
       comp.selectServer(device as any);
-      // newServer dialog is opened
+      expect(mockDialog.open).toHaveBeenCalled();
     });
   });
 

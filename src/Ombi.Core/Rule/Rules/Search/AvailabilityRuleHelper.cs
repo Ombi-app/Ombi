@@ -36,11 +36,16 @@ namespace Ombi.Core.Rule.Rules.Search
                     x.Episodes.Any(c => !c.Available && c.AirDate <= DateTime.Now.Date && c.AirDate != DateTime.MinValue));
                 if (!airedButNotAvailable)
                 {
-                    var hasUnairedEpisodes = search.SeasonRequests.Any(x =>
-                        x.Episodes.Any(c => !c.Available && c.AirDate > DateTime.Now.Date && c.AirDate != DateTime.MinValue));
-                    if (hasUnairedEpisodes || search.PartlyAvailable)
+                    var unknownAirDateUnavailable = search.SeasonRequests.Any(x =>
+                        x.Episodes.Any(c => !c.Available && c.AirDate == DateTime.MinValue));
+                    if (!unknownAirDateUnavailable)
                     {
-                        search.FullyAvailable = true;
+                        var hasUnairedEpisodes = search.SeasonRequests.Any(x =>
+                            x.Episodes.Any(c => !c.Available && c.AirDate > DateTime.Now.Date && c.AirDate != DateTime.MinValue));
+                        if (hasUnairedEpisodes || search.PartlyAvailable)
+                        {
+                            search.FullyAvailable = true;
+                        }
                     }
                 }
             }

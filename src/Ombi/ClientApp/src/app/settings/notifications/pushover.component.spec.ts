@@ -27,16 +27,18 @@ describe('PushoverComponent', () => {
   });
 
   it('should save and notify success', () => {
-    const { comp, mockNotify } = createComponent();
+    const { comp, mockNotify, mockSettingsService } = createComponent();
     comp.ngOnInit();
     comp.onSubmit(comp.form);
+    expect(mockSettingsService.savePushoverNotificationSettings).toHaveBeenCalled();
     expect(mockNotify.success).toHaveBeenCalledWith('Successfully saved the Pushover settings');
   });
 
   it('should test and notify success', () => {
-    const { comp, mockNotify } = createComponent();
+    const { comp, mockNotify, mockTesterService } = createComponent();
     comp.ngOnInit();
     comp.test(comp.form);
+    expect(mockTesterService.pushoverTest).toHaveBeenCalled();
     expect(mockNotify.success).toHaveBeenCalledWith('Successfully sent a Pushover message');
   });
 

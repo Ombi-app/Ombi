@@ -14,11 +14,12 @@ describe('FileDownloadService', () => {
 
     // Mock window.open and URL.createObjectURL
     const mockOpen = vi.spyOn(window, 'open').mockImplementation(() => null);
-    vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:test');
+    const mockCreateObjectURL = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:test');
 
     service.downloadFile('/test/file', 'text/plain');
     expect(mockHttp.get).toHaveBeenCalledWith('/test/file');
 
     mockOpen.mockRestore();
+    mockCreateObjectURL.mockRestore();
   });
 });

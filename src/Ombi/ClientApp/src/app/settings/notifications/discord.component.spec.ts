@@ -37,10 +37,11 @@ describe('DiscordComponent', () => {
   });
 
   it('should show error when form is invalid on submit', () => {
-    const { comp, mockNotify } = createComponent();
+    const { comp, mockNotify, mockSettingsService } = createComponent();
     comp.ngOnInit();
     comp.form.controls['webhookUrl'].setValue('');
     comp.onSubmit(comp.form);
+    expect(mockSettingsService.saveDiscordNotificationSettings).not.toHaveBeenCalled();
     expect(mockNotify.error).toHaveBeenCalledWith('Please check your entered values');
   });
 

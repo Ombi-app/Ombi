@@ -100,7 +100,11 @@ describe('SettingsService', () => {
   it('should POST saveSickRageSettings', () => { service.saveSickRageSettings({} as any); expect(mockHttp.post).toHaveBeenCalledWith('/api/v1/Settings/sickrage', expect.any(String), expect.anything()); });
   it('should GET getJobSettings', () => { service.getJobSettings(); expect(mockHttp.get).toHaveBeenCalledWith('/api/v1/Settings/jobs', expect.anything()); });
   it('should POST saveJobSettings', () => { service.saveJobSettings({} as any); expect(mockHttp.post).toHaveBeenCalledWith('/api/v1/Settings/jobs', expect.any(String), expect.anything()); });
-  it('should POST testCron', () => { service.testCron({ expression: '0 * * * *' }); expect(mockHttp.post).toHaveBeenCalledWith('/api/v1/Settings/testcron', expect.any(String), expect.anything()); });
+  it('should POST testCron', () => {
+    service.testCron({ expression: '0 * * * *' });
+    expect(mockHttp.post).toHaveBeenCalledWith('/api/v1/Settings/testcron', expect.any(String), expect.anything());
+    expect(mockHttp.post.mock.calls[0][1]).toContain('0 * * * *');
+  });
   it('should GET getIssueSettings', () => { service.getIssueSettings(); expect(mockHttp.get).toHaveBeenCalledWith('/api/v1/Settings/issues', expect.anything()); });
   it('should GET issueEnabled', () => { service.issueEnabled(); expect(mockHttp.get).toHaveBeenCalledWith('/api/v1/Settings/issuesenabled', expect.anything()); });
   it('should POST saveIssueSettings', () => { service.saveIssueSettings({} as any); expect(mockHttp.post).toHaveBeenCalledWith('/api/v1/Settings/issues', expect.any(String), expect.anything()); });
@@ -109,5 +113,9 @@ describe('SettingsService', () => {
   it('should POST saveVoteSettings', () => { service.saveVoteSettings({} as any); expect(mockHttp.post).toHaveBeenCalledWith('/api/v1/Settings/vote', expect.any(String), expect.anything()); });
   it('should GET getTheMovieDbSettings', () => { service.getTheMovieDbSettings(); expect(mockHttp.get).toHaveBeenCalledWith('/api/v1/Settings/themoviedb', expect.anything()); });
   it('should POST saveTheMovieDbSettings', () => { service.saveTheMovieDbSettings({} as any); expect(mockHttp.post).toHaveBeenCalledWith('/api/v1/Settings/themoviedb', expect.any(String), expect.anything()); });
-  it('should POST verifyUrl', () => { service.verifyUrl('http://test.com'); expect(mockHttp.post).toHaveBeenCalledWith('/api/v1/Settings/customization/urlverify', expect.any(String), expect.anything()); });
+  it('should POST verifyUrl', () => {
+    service.verifyUrl('http://test.com');
+    expect(mockHttp.post).toHaveBeenCalledWith('/api/v1/Settings/customization/urlverify', expect.any(String), expect.anything());
+    expect(mockHttp.post.mock.calls[0][1]).toContain('http://test.com');
+  });
 });

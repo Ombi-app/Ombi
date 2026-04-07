@@ -147,9 +147,10 @@ describe('JellyfinComponent', () => {
     });
 
     it('should error when server IP is null', () => {
-      const { comp, mockNotify } = createComponent();
+      const { comp, mockNotify, mockJellyfinService } = createComponent();
       comp.loadLibraries({ ip: null } as any);
       expect(mockNotify.error).toHaveBeenCalledWith('Jellyfin is not yet configured correctly');
+      expect(mockJellyfinService.getLibraries).not.toHaveBeenCalled();
     });
 
     it('should error when no libraries found', () => {
