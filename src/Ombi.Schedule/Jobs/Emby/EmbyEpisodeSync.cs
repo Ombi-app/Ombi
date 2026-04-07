@@ -114,7 +114,7 @@ namespace Ombi.Schedule.Jobs.Emby
             var processed = 0;
             var epToAdd = new HashSet<EmbyEpisode>();
             var hasUpserts = false;
-            var pendingUpdates = new Dictionary<string, (int EpisodeNumber, int SeasonNumber)>();
+            var pendingUpdates = new Dictionary<string, (string EmbyId, int EpisodeNumber, int SeasonNumber)>();
             var episodesInCurrentBatch = new HashSet<string>(); // Track episodes in current batch to avoid duplicates
 
             _logger.LogInformation($"Starting episode sync for server {server.Name}");
@@ -159,19 +159,20 @@ namespace Ombi.Schedule.Jobs.Emby
                     var episodeKey = $"{ep.Id}_{ep.IndexNumber}_{ep.ParentIndexNumber}";
 
                     // Check if episode already exists using preloaded metadata (O(1) lookup)
-                    var existingInDatabase = episodeMetadata.ContainsKey(ep.Id);
+                    var metadataKey = $"{ep.Id}:{ep.IndexNumber}";
+                    var existingInDatabase = episodeMetadata.ContainsKey(metadataKey);
                     var existingInCurrentBatch = episodesInCurrentBatch.Contains(episodeKey);
 
                     if (existingInDatabase)
                     {
                         // Check if metadata has changed (e.g. Emby re-identified the file)
-                        var existing = episodeMetadata[ep.Id];
+                        var existing = episodeMetadata[metadataKey];
                         if (existing.EpisodeNumber != ep.IndexNumber || existing.SeasonNumber != ep.ParentIndexNumber)
                         {
                             _logger.LogInformation("Episode {0} metadata changed (S{1}E{2} -> S{3}E{4}), queuing update",
                                 ep.Name, existing.SeasonNumber, existing.EpisodeNumber, ep.ParentIndexNumber, ep.IndexNumber);
-                            pendingUpdates[ep.Id] = (ep.IndexNumber, ep.ParentIndexNumber);
-                            episodeMetadata[ep.Id] = (ep.IndexNumber, ep.ParentIndexNumber);
+                            pendingUpdates[metadataKey] = (ep.Id, ep.IndexNumber, ep.ParentIndexNumber);
+                            episodeMetadata[metadataKey] = (ep.IndexNumber, ep.ParentIndexNumber);
                         }
                     }
                     else if (!existingInCurrentBatch)
@@ -244,14 +245,28 @@ namespace Ombi.Schedule.Jobs.Emby
                 // Apply batched metadata updates
                 if (pendingUpdates.Any())
                 {
-                    foreach (var update in pendingUpdates)
+                    // Group updates by EmbyId so we update all rows for multi-episode files
+                    var updatesByEmbyId = pendingUpdates.GroupBy(u => u.Value.EmbyId);
+                    foreach (var group in updatesByEmbyId)
                     {
-                        var entity = await _repo.GetEpisodeByEmbyId(update.Key);
-                        if (entity != null)
+                        var entities = await _repo.GetEpisodesByEmbyId(group.Key);
+                        foreach (var entity in entities)
                         {
-                            entity.EpisodeNumber = update.Value.EpisodeNumber;
-                            entity.SeasonNumber = update.Value.SeasonNumber;
-                            hasUpserts = true;
+                            var matchingUpdate = group.FirstOrDefault(u => u.Value.EpisodeNumber == entity.EpisodeNumber);
+                            if (matchingUpdate.Key != null)
+                            {
+                                entity.EpisodeNumber = matchingUpdate.Value.EpisodeNumber;
+                                entity.SeasonNumber = matchingUpdate.Value.SeasonNumber;
+                                hasUpserts = true;
+                            }
+                            else
+                            {
+                                // For multi-episode rows that don't have a direct match,
+                                // update the season number from any update in the group
+                                var anyUpdate = group.First();
+                                entity.SeasonNumber = anyUpdate.Value.SeasonNumber;
+                                hasUpserts = true;
+                            }
                         }
                     }
                     pendingUpdates.Clear();
@@ -267,7 +282,7 @@ namespace Ombi.Schedule.Jobs.Emby
                         // Update the episode metadata with newly added episodes to prevent duplicates in subsequent batches
                         foreach (var episode in epToAdd)
                         {
-                            episodeMetadata[episode.EmbyId] = (episode.EpisodeNumber, episode.SeasonNumber);
+                            episodeMetadata[$"{episode.EmbyId}:{episode.EpisodeNumber}"] = (episode.EpisodeNumber, episode.SeasonNumber);
                         }
                     }
                     else if (hasUpserts)

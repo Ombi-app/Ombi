@@ -85,6 +85,11 @@ namespace Ombi.Store.Repository
             return await Db.EmbyEpisode.FirstOrDefaultAsync(x => x.EmbyId == key);
         }
 
+        public async Task<List<EmbyEpisode>> GetEpisodesByEmbyId(string key)
+        {
+            return await Db.EmbyEpisode.Where(x => x.EmbyId == key).ToListAsync();
+        }
+
         public override async Task AddRange(IEnumerable<IMediaServerEpisode> content)
         {
             Db.EmbyEpisode.AddRange((IEnumerable<EmbyEpisode>)content);
@@ -137,8 +142,7 @@ namespace Ombi.Store.Repository
                 .Select(x => new { x.EmbyId, x.EpisodeNumber, x.SeasonNumber })
                 .ToListAsync();
             return episodes
-                .GroupBy(x => x.EmbyId)
-                .ToDictionary(g => g.Key, g => (g.First().EpisodeNumber, g.First().SeasonNumber));
+                .ToDictionary(x => $"{x.EmbyId}:{x.EpisodeNumber}", x => (x.EpisodeNumber, x.SeasonNumber));
         }
     }
 }

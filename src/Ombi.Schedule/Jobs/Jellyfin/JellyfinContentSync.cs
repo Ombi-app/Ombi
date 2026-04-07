@@ -129,13 +129,15 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                         var existingTv = await _repo.GetByJellyfinId(tvShow.Id);
 
                         if (existingTv != null &&
-                            ( existingTv.ImdbId != tvShow.ProviderIds?.Imdb 
+                            ( existingTv.ImdbId != tvShow.ProviderIds?.Imdb
                            || existingTv.TheMovieDbId != tvShow.ProviderIds?.Tmdb
                            || existingTv.TvDbId != tvShow.ProviderIds?.Tvdb))
                         {
-                            _logger.LogDebug($"Series '{tvShow.Name}' has different IDs, probably a reidentification.");
-                            await _repo.DeleteTv(existingTv);
-                            existingTv = null;
+                            _logger.LogDebug($"Series '{tvShow.Name}' has different IDs, probably a reidentification. Updating IDs in place.");
+                            existingTv.ImdbId = tvShow.ProviderIds?.Imdb;
+                            existingTv.TheMovieDbId = tvShow.ProviderIds?.Tmdb;
+                            existingTv.TvDbId = tvShow.ProviderIds?.Tvdb;
+                            _repo.UpdateWithoutSave(existingTv);
                         }
                         
                         if (existingTv == null)
