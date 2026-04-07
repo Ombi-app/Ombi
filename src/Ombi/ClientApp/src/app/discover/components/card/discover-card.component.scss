@@ -30,6 +30,7 @@
     &:hover .card-actions,
     &:focus-within .card-actions {
         opacity: 1;
+        visibility: visible;
         transform: translateY(0);
         pointer-events: auto;
     }
@@ -195,14 +196,16 @@
     padding: 0 10px 10px;
     z-index: 4;
     opacity: 0;
+    visibility: hidden;
     transform: translateY(8px);
     pointer-events: none;
-    transition: opacity 0.25s ease, transform 0.25s ease;
+    transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.25s ease;
 }
 
 @media (hover: none), (pointer: coarse) {
     .card-actions {
         opacity: 1;
+        visibility: visible;
         transform: none;
         pointer-events: auto;
     }
