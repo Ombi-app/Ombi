@@ -113,6 +113,8 @@ describe('PlexComponent', () => {
 
       comp.selectServer(device as any);
       expect(mockDialog.open).toHaveBeenCalled();
+      const dialogServer = mockDialog.open.mock.calls[0][1].data.server;
+      expect(dialogServer.ip).toBe('10.0.0.1');
     });
   });
 
