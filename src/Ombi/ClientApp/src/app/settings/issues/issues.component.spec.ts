@@ -68,4 +68,13 @@ describe('IssuesComponent', () => {
     comp.onSubmit(comp.form);
     expect(mockNotify.error).toHaveBeenCalledWith('You need to enter days greater than 0');
   });
+
+  it('should error when deleteIssues enabled and days is negative', () => {
+    const { comp, mockNotify } = createComponent();
+    comp.ngOnInit();
+    comp.form.controls['deleteIssues'].setValue(true);
+    comp.form.controls['daysAfterResolvedToDelete'].setValue(-1);
+    comp.onSubmit(comp.form);
+    expect(mockNotify.error).toHaveBeenCalledWith('You need to enter days greater than 0');
+  });
 });
