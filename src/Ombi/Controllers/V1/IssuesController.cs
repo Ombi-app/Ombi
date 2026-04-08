@@ -306,6 +306,9 @@ namespace Ombi.Controllers.V1
 
             await _notification.Notify(notificationModel);
 
+            var comments = await _issueComments.GetAll().Where(x => x.IssuesId == id).ToListAsync();
+            await _issueComments.DeleteRange(comments);
+
             await _issues.Delete(issue);
             return true;
         }
