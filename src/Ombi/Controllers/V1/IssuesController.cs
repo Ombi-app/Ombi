@@ -306,6 +306,12 @@ namespace Ombi.Controllers.V1
 
             await _notification.Notify(notificationModel);
 
+            var comments = await _issueComments.GetAll().Where(x => x.IssuesId == id).ToListAsync();
+            foreach (var comment in comments)
+            {
+                await _issueComments.Delete(comment);
+            }
+
             await _issues.Delete(issue);
             return true;
         }
