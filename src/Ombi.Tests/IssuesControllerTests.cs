@@ -130,6 +130,7 @@ namespace Ombi.Tests
 
             _issues.Setup(x => x.GetAll()).Returns(new List<Issues> { issue }.AsQueryable().BuildMock());
             _issues.Setup(x => x.Delete(issue)).Returns(Task.CompletedTask);
+            _comments.Setup(x => x.GetAll()).Returns(new List<IssueComments>().AsQueryable().BuildMock());
             _notification.Setup(x => x.Notify(It.IsAny<NotificationOptions>())).Returns(Task.CompletedTask);
 
             var result = await _subject.DeleteIssue(11);
@@ -141,6 +142,41 @@ namespace Ombi.Tests
                 n.RequestType == RequestType.TvShow &&
                 n.Substitutes[NotificationSubstitues.Title] == "Issue to delete"
             )), Times.Once);
+            _issues.Verify(x => x.Delete(issue), Times.Once);
+        }
+
+        [Test]
+        public async Task DeleteIssue_DeletesAssociatedComments_BeforeDeletingIssue()
+        {
+            var comment1 = new IssueComments { Id = 1, IssuesId = 11, Comment = "First comment", UserId = "reporter-id" };
+            var comment2 = new IssueComments { Id = 2, IssuesId = 11, Comment = "Second comment", UserId = "admin-id" };
+            var unrelatedComment = new IssueComments { Id = 3, IssuesId = 99, Comment = "Other issue", UserId = "admin-id" };
+
+            var issue = new Issues
+            {
+                Id = 11,
+                Title = "Issue with comments",
+                Subject = "Subject",
+                Description = "Description",
+                RequestType = RequestType.Movie,
+                Status = IssueStatus.Pending,
+                UserReportedId = "reporter-id",
+                IssueCategory = new IssueCategory { Id = 1, Value = "Playback" },
+                Comments = new List<IssueComments> { comment1, comment2 }
+            };
+
+            _issues.Setup(x => x.GetAll()).Returns(new List<Issues> { issue }.AsQueryable().BuildMock());
+            _issues.Setup(x => x.Delete(issue)).Returns(Task.CompletedTask);
+            _comments.Setup(x => x.GetAll()).Returns(new List<IssueComments> { comment1, comment2, unrelatedComment }.AsQueryable().BuildMock());
+            _comments.Setup(x => x.Delete(It.IsAny<IssueComments>())).Returns(Task.CompletedTask);
+            _notification.Setup(x => x.Notify(It.IsAny<NotificationOptions>())).Returns(Task.CompletedTask);
+
+            var result = await _subject.DeleteIssue(11);
+
+            Assert.That(result, Is.True);
+            _comments.Verify(x => x.Delete(comment1), Times.Once);
+            _comments.Verify(x => x.Delete(comment2), Times.Once);
+            _comments.Verify(x => x.Delete(unrelatedComment), Times.Never);
             _issues.Verify(x => x.Delete(issue), Times.Once);
         }
 
