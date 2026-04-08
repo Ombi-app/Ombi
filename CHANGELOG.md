@@ -1,3 +1,12 @@
+## [4.58.3](https://github.com/Ombi-app/Ombi/compare/v4.58.2...v4.58.3) (2026-04-08)
+
+
+### Bug Fixes
+
+* issue deletion failing due to foreign key constraint on IssueComments ([#5393](https://github.com/Ombi-app/Ombi/issues/5393)) ([bfd4166](https://github.com/Ombi-app/Ombi/commit/bfd4166578df3589a31b624644f35a74750095ce))
+
+
+
 ## [4.58.2](https://github.com/Ombi-app/Ombi/compare/v4.58.1...v4.58.2) (2026-04-07)
 
 
@@ -357,15 +366,6 @@
 
 
 ## [4.49.4](https://github.com/Ombi-app/Ombi/compare/v4.49.3...v4.49.4) (2025-08-23)
-
-
-
-## [4.49.3](https://github.com/Ombi-app/Ombi/compare/v4.49.2...v4.49.3) (2025-08-17)
-
-
-### Bug Fixes
-
-* **plex-api:** update Plex Watchlist URL ([11fd7a5](https://github.com/Ombi-app/Ombi/commit/11fd7a5fc853da75974a16bf4fdecd72a836f54b))
 
 
 
