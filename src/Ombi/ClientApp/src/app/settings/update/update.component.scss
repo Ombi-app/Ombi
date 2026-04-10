@@ -5,6 +5,12 @@
     margin-top: 10px;
 }
 
+fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
 .description {
     color: #aaa;
     margin-bottom: 1.5rem;
@@ -13,4 +19,16 @@
 mat-form-field {
     max-width: 300px;
     margin-bottom: 0.5rem;
+}
+
+.section-top {
+    margin-top: 1rem;
+}
+
+.section-top-lg {
+    margin-top: 1.5rem;
+}
+
+.field-spacing {
+    padding-bottom: 1.25rem;
 }

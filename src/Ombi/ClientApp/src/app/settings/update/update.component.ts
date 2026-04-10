@@ -9,6 +9,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslateModule } from "@ngx-translate/core";
+import { finalize } from "rxjs/operators";
 
 import { IUpdateSettings, IUpdateModel, IAbout } from "../../interfaces";
 import { NotificationService, SettingsService } from "../../services";
@@ -84,7 +85,9 @@ export class UpdateComponent implements OnInit {
 
     public checkForUpdate() {
         this.checkingForUpdate = true;
-        this.updateService.checkForUpdate().subscribe({
+        this.updateService.checkForUpdate().pipe(
+            finalize(() => this.checkingForUpdate = false)
+        ).subscribe({
             next: x => {
                 this.updateStatus = x;
                 if (x.updateAvailable) {
@@ -95,9 +98,6 @@ export class UpdateComponent implements OnInit {
             },
             error: () => {
                 this.notificationService.error("Unable to check for updates right now.");
-            },
-            complete: () => {
-                this.checkingForUpdate = false;
             }
         });
     }
