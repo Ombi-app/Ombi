@@ -1,0 +1,101 @@
+<div class="small-middle-container">
+<fieldset *ngIf="form">
+    <legend>Update Settings</legend>
+    <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+        <div class="col-md-12 col-12 col-sm-12">
+
+            <div>
+                <mat-slide-toggle formControlName="autoUpdateEnabled"
+                    matTooltip="When enabled, Ombi will automatically download and install updates on the configured schedule.">
+                    Enable Auto-Update
+                </mat-slide-toggle>
+            </div>
+
+            <div *ngIf="form.get('autoUpdateEnabled').value" style="margin-top: 1rem;">
+                <div>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Check Frequency</mat-label>
+                        <mat-select formControlName="updateSchedule"
+                            matTooltip="How often Ombi checks for new versions.">
+                            <mat-option *ngFor="let opt of scheduleOptions" [value]="opt.value">
+                                {{ opt.label }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Process Name</mat-label>
+                        <input matInput formControlName="processName"
+                            matTooltip="The name of the Ombi process (default: Ombi). Change this only if you renamed the executable."
+                            placeholder="Ombi">
+                    </mat-form-field>
+                </div>
+
+                <div *ngIf="form.get('isWindows').value">
+                    <mat-slide-toggle formControlName="windowsService"
+                        matTooltip="Enable this if Ombi is running as a Windows Service.">
+                        Running as a Windows Service
+                    </mat-slide-toggle>
+                </div>
+
+                <div *ngIf="form.get('windowsService').value && form.get('isWindows').value">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Windows Service Name</mat-label>
+                        <input matInput formControlName="windowsServiceName"
+                            placeholder="Ombi">
+                    </mat-form-field>
+                </div>
+
+                <div>
+                    <mat-slide-toggle formControlName="useScript"
+                        matTooltip="Use a custom script to handle the update process instead of the built-in updater.">
+                        Use Custom Update Script
+                    </mat-slide-toggle>
+                </div>
+
+                <div *ngIf="form.get('useScript').value">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Script Location</mat-label>
+                        <input matInput formControlName="scriptLocation"
+                            placeholder="/path/to/update-script.sh">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div style="margin-top: 1.5rem;">
+                <h4>Version Information</h4>
+                <p *ngIf="currentVersion">Current Version: <strong>{{ currentVersion }}</strong></p>
+                <p>
+                    Branch can be configured on the
+                    <a routerLink="/Settings/Ombi">General Settings</a>
+                    page (Stable or Develop).
+                </p>
+                <div *ngIf="updateStatus">
+                    <p *ngIf="updateStatus.updateAvailable">
+                        Latest Version: <strong>v{{ updateStatus.updateVersionString }}</strong>
+                        — <em>Update available!</em>
+                    </p>
+                    <p *ngIf="!updateStatus.updateAvailable">
+                        You are running the latest version.
+                    </p>
+                </div>
+                <button mat-raised-button type="button" (click)="checkForUpdate()"
+                    [disabled]="checkingForUpdate"
+                    class="mat-stroked-button">
+                    <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                    {{ checkingForUpdate ? 'Checking...' : 'Check for Update Now' }}
+                </button>
+            </div>
+
+            <div class="form-group" style="margin-top: 1.5rem;">
+                <div>
+                    <button mat-raised-button [disabled]="form.invalid" type="submit"
+                        class="mat-stroked-button accent mat-accent">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</fieldset>
+</div>

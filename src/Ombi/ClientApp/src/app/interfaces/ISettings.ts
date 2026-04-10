@@ -38,6 +38,7 @@ export interface IUpdateSettings extends ISettings {
   windowsServiceName: string;
   isWindows: boolean;
   testMode: boolean;
+  updateSchedule: string;
 }
 
 export interface IEmbySettings extends ISettings {

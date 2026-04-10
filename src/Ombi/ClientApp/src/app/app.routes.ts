@@ -38,6 +38,7 @@ import { VoteComponent as SettingsVoteComponent } from "./settings/vote/vote.com
 import { TheMovieDbComponent } from "./settings/themoviedb/themoviedb.component";
 import { FailedRequestsComponent } from "./settings/failedrequests/failedrequests.component";
 import { LogsComponent } from "./settings/logs/logs.component";
+import { UpdateComponent } from "./settings/update/update.component";
 import { CloudMobileComponent } from "./settings/notifications/cloudmobile.coponent";
 import { FeaturesComponent } from "./settings/features/features.component";
 import { AuthGuard } from "./auth/auth.guard";
@@ -135,6 +136,7 @@ export const routes: Routes = [
             { path: "Logs", component: LogsComponent },
             { path: "CloudMobile", component: CloudMobileComponent },
             { path: "Features", component: FeaturesComponent },
+            { path: "Update", component: UpdateComponent },
             { path: "", redirectTo: "About", pathMatch: "full" }
         ]
     },
