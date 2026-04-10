@@ -35,7 +35,6 @@ export class UpdateComponent implements OnInit {
 
     public form: UntypedFormGroup;
     public updateStatus: IUpdateModel;
-    public currentVersion: string;
     public checkingForUpdate = false;
 
     public scheduleOptions = [
@@ -65,11 +64,20 @@ export class UpdateComponent implements OnInit {
                 testMode: [x.testMode],
                 isWindows: [{ value: x.isWindows, disabled: true }],
             });
+
+            this.form.get('autoUpdateEnabled').valueChanges.subscribe(() => {
+                this.settingsService.saveUpdateSettings(this.form.value).subscribe(result => {
+                    if (result) {
+                        this.notificationService.success("Successfully saved Update settings");
+                    } else {
+                        this.notificationService.error("There was an error when saving the Update settings");
+                    }
+                });
+            });
         });
 
         this.updateService.checkForUpdate().subscribe(x => {
             this.updateStatus = x;
-            this.currentVersion = x.updateVersionString;
         });
     }
 

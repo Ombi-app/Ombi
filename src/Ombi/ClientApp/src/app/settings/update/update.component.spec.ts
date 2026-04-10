@@ -52,11 +52,12 @@ describe('UpdateComponent', () => {
     expect(comp.form.controls['processName'].value).toBe('Ombi');
   });
 
-  it('should load version from update check', () => {
+  it('should load update status from update check', () => {
     const { comp } = createComponent();
     comp.ngOnInit();
-    expect(comp.currentVersion).toBe('4.58.3');
+    expect(comp.updateStatus).toBeDefined();
     expect(comp.updateStatus.updateAvailable).toBe(true);
+    expect(comp.updateStatus.updateVersionString).toBe('4.58.3');
   });
 
   it('should check for update and notify when available', () => {
