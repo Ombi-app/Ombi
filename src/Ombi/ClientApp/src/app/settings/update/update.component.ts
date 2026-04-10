@@ -37,6 +37,7 @@ export class UpdateComponent implements OnInit {
     public updateStatus: IUpdateModel;
     public about: IAbout;
     public checkingForUpdate = false;
+    private settings: IUpdateSettings;
 
     public scheduleOptions = [
         { label: "Every 6 Hours", value: "0 0 0/6 1/1 * ? *" },
@@ -54,6 +55,7 @@ export class UpdateComponent implements OnInit {
 
     public ngOnInit() {
         this.settingsService.getUpdateSettings().subscribe(x => {
+            this.settings = x;
             this.form = this.fb.group({
                 autoUpdateEnabled: [x.autoUpdateEnabled],
                 updateSchedule: [x.updateSchedule || this.scheduleOptions[0].value],
@@ -64,16 +66,6 @@ export class UpdateComponent implements OnInit {
                 windowsServiceName: [x.windowsServiceName],
                 testMode: [x.testMode],
                 isWindows: [{ value: x.isWindows, disabled: true }],
-            });
-
-            this.form.get('autoUpdateEnabled').valueChanges.subscribe(() => {
-                this.settingsService.saveUpdateSettings(this.form.value).subscribe(result => {
-                    if (result) {
-                        this.notificationService.success("Successfully saved Update settings");
-                    } else {
-                        this.notificationService.error("There was an error when saving the Update settings");
-                    }
-                });
             });
         });
 
@@ -86,15 +78,37 @@ export class UpdateComponent implements OnInit {
         });
     }
 
+    public onAutoUpdateToggle() {
+        this.saveSettings();
+    }
+
     public checkForUpdate() {
         this.checkingForUpdate = true;
-        this.updateService.checkForUpdate().subscribe(x => {
-            this.updateStatus = x;
-            this.checkingForUpdate = false;
-            if (x.updateAvailable) {
-                this.notificationService.success(`Update available: v${x.updateVersionString}`);
+        this.updateService.checkForUpdate().subscribe({
+            next: x => {
+                this.updateStatus = x;
+                if (x.updateAvailable) {
+                    this.notificationService.success(`Update available: v${x.updateVersionString}`);
+                } else {
+                    this.notificationService.success("You are running the latest version.");
+                }
+            },
+            error: () => {
+                this.notificationService.error("Unable to check for updates right now.");
+            },
+            complete: () => {
+                this.checkingForUpdate = false;
+            }
+        });
+    }
+
+    private saveSettings() {
+        const merged = { ...this.settings, ...this.form.value };
+        this.settingsService.saveUpdateSettings(merged).subscribe(result => {
+            if (result) {
+                this.notificationService.success("Successfully saved Update settings");
             } else {
-                this.notificationService.success("You are running the latest version.");
+                this.notificationService.error("There was an error when saving the Update settings");
             }
         });
     }
@@ -105,12 +119,6 @@ export class UpdateComponent implements OnInit {
             return;
         }
 
-        this.settingsService.saveUpdateSettings(form.value).subscribe(x => {
-            if (x) {
-                this.notificationService.success("Successfully saved Update settings");
-            } else {
-                this.notificationService.error("There was an error when saving the Update settings");
-            }
-        });
+        this.saveSettings();
     }
 }

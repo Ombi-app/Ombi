@@ -12,6 +12,7 @@
 
                 <div>
                     <mat-slide-toggle formControlName="autoUpdateEnabled"
+                        (change)="onAutoUpdateToggle()"
                         matTooltip="When enabled, Ombi will automatically download and install updates on the configured schedule.">
                         Enable Auto-Update
                     </mat-slide-toggle>
@@ -62,11 +63,11 @@
                     </p>
                     <div *ngIf="updateStatus">
                         <p *ngIf="updateStatus.updateAvailable">
-                            <i class="fas fa-exclamation-circle" style="color: #df691a;"></i>
+                            <i class="fas fa-exclamation-circle" style="color: #df691a;" aria-hidden="true"></i>
                             Update available: <strong>v{{ updateStatus.updateVersionString }}</strong>
                         </p>
                         <p *ngIf="!updateStatus.updateAvailable">
-                            <i class="far fa-thumbs-up"></i> You are running the latest version.
+                            <i class="far fa-thumbs-up" aria-hidden="true"></i> You are running the latest version.
                         </p>
                     </div>
                     <p>

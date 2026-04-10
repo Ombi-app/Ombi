@@ -103,7 +103,14 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 if (!serverVersion.Equals(version, StringComparison.CurrentCultureIgnoreCase) || settings.TestMode)
                 {
-                    await _notificationHubService.SendNotificationToAdmins($"Ombi update available: v{serverVersion}. Downloading...");
+                    try
+                    {
+                        await _notificationHubService.SendNotificationToAdmins($"Ombi update available: v{serverVersion}. Downloading...");
+                    }
+                    catch (Exception notifyEx)
+                    {
+                        Logger.LogWarning(notifyEx, "Failed to send updater start notification");
+                    }
 
                     // Let's download the correct zip
                     var desc = RuntimeInformation.OSDescription;
@@ -243,7 +250,14 @@ namespace Ombi.Schedule.Jobs.Ombi
             catch (Exception e)
             {
                 Logger.LogError(e, "Exception thrown in the OmbiUpdater, see previous messages");
-                await _notificationHubService.SendNotificationToAdmins("Ombi auto-update failed. Check logs for details.");
+                try
+                {
+                    await _notificationHubService.SendNotificationToAdmins("Ombi auto-update failed. Check logs for details.");
+                }
+                catch (Exception notifyEx)
+                {
+                    Logger.LogWarning(notifyEx, "Failed to send updater failure notification");
+                }
                 throw;
             }
         }

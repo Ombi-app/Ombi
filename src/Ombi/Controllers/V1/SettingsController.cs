@@ -143,7 +143,7 @@ namespace Ombi.Controllers.V1
             var productArray = version.Split('-');
             model.Version = productArray[0];
             var ombiSettings = await Get<OmbiSettings>();
-            model.Branch = ombiSettings.Branch.ToString();
+            model.Branch = ombiSettings?.Branch.ToString() ?? "Stable";
             return model;
         }
 

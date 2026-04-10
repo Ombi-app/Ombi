@@ -19,6 +19,10 @@ function createComponent() {
       updateSchedule: '0 0 0/6 1/1 * ? *',
     })),
     saveUpdateSettings: vi.fn().mockReturnValue(of(true)),
+    about: vi.fn().mockReturnValue(of({
+      version: '4.58.3',
+      branch: 'Stable',
+    })),
   };
   const mockUpdateService = {
     checkForUpdate: vi.fn().mockReturnValue(of({
