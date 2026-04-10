@@ -65,7 +65,7 @@
                         <p *ngIf="about">
                             Current version: <strong>v{{ about.version }}</strong> ({{ about.branch }})
                         </p>
-                        <div *ngIf="updateStatus">
+                        <div *ngIf="updateStatus" role="status" aria-live="polite">
                             <p *ngIf="updateStatus.updateAvailable">
                                 <i class="fas fa-exclamation-circle" style="color: #df691a;" aria-hidden="true"></i>
                                 Update available: <strong>v{{ updateStatus.updateVersionString }}</strong>
@@ -81,6 +81,7 @@
                         </p>
                         <button mat-raised-button type="button" (click)="checkForUpdate()"
                             [disabled]="checkingForUpdate"
+                            [attr.aria-busy]="checkingForUpdate"
                             class="mat-stroked-button">
                             <i class="fas fa-sync-alt" aria-hidden="true"></i>
                             {{ checkingForUpdate ? 'Checking...' : 'Check for Update Now' }}
