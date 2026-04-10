@@ -67,8 +67,9 @@ export class UpdateComponent implements OnInit {
             });
         });
 
-        this.settingsService.about().subscribe(x => {
-            this.currentVersion = x.version;
+        this.updateService.checkForUpdate().subscribe(x => {
+            this.updateStatus = x;
+            this.currentVersion = x.updateVersionString;
         });
     }
 

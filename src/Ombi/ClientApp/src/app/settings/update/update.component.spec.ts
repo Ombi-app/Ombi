@@ -19,7 +19,6 @@ function createComponent() {
       updateSchedule: '0 0 0/6 1/1 * ? *',
     })),
     saveUpdateSettings: vi.fn().mockReturnValue(of(true)),
-    about: vi.fn().mockReturnValue(of({ version: '4.53.4' })),
   };
   const mockUpdateService = {
     checkForUpdate: vi.fn().mockReturnValue(of({
@@ -53,10 +52,11 @@ describe('UpdateComponent', () => {
     expect(comp.form.controls['processName'].value).toBe('Ombi');
   });
 
-  it('should load current version from about', () => {
+  it('should load version from update check', () => {
     const { comp } = createComponent();
     comp.ngOnInit();
-    expect(comp.currentVersion).toBe('4.53.4');
+    expect(comp.currentVersion).toBe('4.58.3');
+    expect(comp.updateStatus.updateAvailable).toBe(true);
   });
 
   it('should check for update and notify when available', () => {

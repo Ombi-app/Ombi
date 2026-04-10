@@ -1,6 +1,6 @@
 <div class="small-middle-container">
-<fieldset *ngIf="form">
-    <legend>Update Settings</legend>
+<legend>Update</legend>
+<div *ngIf="form">
     <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
         <div class="col-md-12 col-12 col-sm-12">
 
@@ -66,21 +66,20 @@
 
             <div style="margin-top: 1.5rem;">
                 <h4>Version Information</h4>
-                <p *ngIf="currentVersion">Current Version: <strong>{{ currentVersion }}</strong></p>
+                <div *ngIf="updateStatus">
+                    <p>Latest Available: <strong>v{{ updateStatus.updateVersionString }}</strong></p>
+                    <p *ngIf="updateStatus.updateAvailable" style="color: #df691a;">
+                        <i class="fas fa-exclamation-circle"></i> An update is available!
+                    </p>
+                    <p *ngIf="!updateStatus.updateAvailable">
+                        <i class="far fa-thumbs-up"></i> You are running the latest version.
+                    </p>
+                </div>
                 <p>
                     Branch can be configured on the
                     <a routerLink="/Settings/Ombi">General Settings</a>
                     page (Stable or Develop).
                 </p>
-                <div *ngIf="updateStatus">
-                    <p *ngIf="updateStatus.updateAvailable">
-                        Latest Version: <strong>v{{ updateStatus.updateVersionString }}</strong>
-                        — <em>Update available!</em>
-                    </p>
-                    <p *ngIf="!updateStatus.updateAvailable">
-                        You are running the latest version.
-                    </p>
-                </div>
                 <button mat-raised-button type="button" (click)="checkForUpdate()"
                     [disabled]="checkingForUpdate"
                     class="mat-stroked-button">
@@ -97,5 +96,5 @@
             </div>
         </div>
     </form>
-</fieldset>
+</div>
 </div>
