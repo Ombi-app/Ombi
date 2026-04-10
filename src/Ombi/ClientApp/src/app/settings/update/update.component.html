@@ -53,6 +53,9 @@
                                 <mat-label>Script Location</mat-label>
                                 <input matInput formControlName="scriptLocation"
                                     [placeholder]="form.get('isWindows').value ? 'C:\\scripts\\update.ps1' : '/path/to/update-script.sh'">
+                                <mat-error *ngIf="form.get('scriptLocation')?.hasError('required')">
+                                    Script location is required when custom script is enabled.
+                                </mat-error>
                             </mat-form-field>
                         </div>
                     </div>

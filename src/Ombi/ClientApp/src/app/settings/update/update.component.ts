@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { UntypedFormBuilder, UntypedFormGroup, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { MatButtonModule } from "@angular/material/button";
@@ -62,11 +62,21 @@ export class UpdateComponent implements OnInit {
                 updateSchedule: [x.updateSchedule || this.scheduleOptions[0].value],
                 processName: [x.processName || 'Ombi'],
                 useScript: [x.useScript],
-                scriptLocation: [x.scriptLocation],
+                scriptLocation: [x.scriptLocation, x.useScript ? Validators.required : []],
                 windowsService: [x.windowsService],
                 windowsServiceName: [x.windowsServiceName],
                 testMode: [x.testMode],
                 isWindows: [{ value: x.isWindows, disabled: true }],
+            });
+
+            this.form.get("useScript").valueChanges.subscribe(useScript => {
+                const scriptLocation = this.form.get("scriptLocation");
+                if (useScript) {
+                    scriptLocation.setValidators(Validators.required);
+                } else {
+                    scriptLocation.clearValidators();
+                }
+                scriptLocation.updateValueAndValidity();
             });
         });
 
@@ -103,6 +113,11 @@ export class UpdateComponent implements OnInit {
     }
 
     private saveSettings() {
+        this.form.get("scriptLocation").markAsTouched();
+        if (this.form.invalid) {
+            this.notificationService.error("Please fix validation errors before saving.");
+            return;
+        }
         const merged = { ...this.settings, ...this.form.value };
         this.settingsService.saveUpdateSettings(merged).subscribe(result => {
             if (result) {
