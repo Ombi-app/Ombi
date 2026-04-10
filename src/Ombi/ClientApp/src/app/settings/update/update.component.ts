@@ -10,7 +10,7 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslateModule } from "@ngx-translate/core";
 
-import { IUpdateSettings, IUpdateModel } from "../../interfaces";
+import { IUpdateSettings, IUpdateModel, IAbout } from "../../interfaces";
 import { NotificationService, SettingsService } from "../../services";
 import { UpdateService } from "../../services/update.service";
 
@@ -35,6 +35,7 @@ export class UpdateComponent implements OnInit {
 
     public form: UntypedFormGroup;
     public updateStatus: IUpdateModel;
+    public about: IAbout;
     public checkingForUpdate = false;
 
     public scheduleOptions = [
@@ -56,7 +57,7 @@ export class UpdateComponent implements OnInit {
             this.form = this.fb.group({
                 autoUpdateEnabled: [x.autoUpdateEnabled],
                 updateSchedule: [x.updateSchedule || this.scheduleOptions[0].value],
-                processName: [x.processName],
+                processName: [x.processName || 'Ombi'],
                 useScript: [x.useScript],
                 scriptLocation: [x.scriptLocation],
                 windowsService: [x.windowsService],
@@ -78,6 +79,10 @@ export class UpdateComponent implements OnInit {
 
         this.updateService.checkForUpdate().subscribe(x => {
             this.updateStatus = x;
+        });
+
+        this.settingsService.about().subscribe(x => {
+            this.about = x;
         });
     }
 

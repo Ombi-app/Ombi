@@ -1,5 +1,11 @@
 <div class="small-middle-container">
     <legend>Update Settings</legend>
+    <p class="description">
+        When auto-update is enabled, Ombi will check for new versions on the configured schedule.
+        If an update is found, it will automatically download the latest release, stop the running
+        Ombi process, replace the application files, and restart. You can also use a custom script
+        to handle the update process if you have a non-standard setup.
+    </p>
     <div *ngIf="form">
         <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
             <div class="col-md-12 col-12 col-sm-12">
@@ -12,39 +18,24 @@
                 </div>
 
                 <div *ngIf="form.get('autoUpdateEnabled').value" style="margin-top: 1rem;">
-                    <div>
+                    <div style="padding-bottom: 1.25rem;">
                         <mat-form-field appearance="outline">
                             <mat-label>Check Frequency</mat-label>
-                            <mat-select formControlName="updateSchedule"
-                                matTooltip="How often Ombi checks for new versions.">
+                            <mat-select formControlName="updateSchedule">
                                 <mat-option *ngFor="let opt of scheduleOptions" [value]="opt.value">
                                     {{ opt.label }}
                                 </mat-option>
                             </mat-select>
+                            <mat-hint>How often Ombi checks for new versions.</mat-hint>
                         </mat-form-field>
                     </div>
 
-                    <div>
+                    <div style="padding-bottom: 1.25rem;">
                         <mat-form-field appearance="outline">
                             <mat-label>Process Name</mat-label>
                             <input matInput formControlName="processName"
-                                matTooltip="The name of the Ombi process (default: Ombi). Change this only if you renamed the executable."
                                 placeholder="Ombi">
-                        </mat-form-field>
-                    </div>
-
-                    <div *ngIf="form.get('isWindows').value">
-                        <mat-slide-toggle formControlName="windowsService"
-                            matTooltip="Enable this if Ombi is running as a Windows Service.">
-                            Running as a Windows Service
-                        </mat-slide-toggle>
-                    </div>
-
-                    <div *ngIf="form.get('windowsService').value && form.get('isWindows').value">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Windows Service Name</mat-label>
-                            <input matInput formControlName="windowsServiceName"
-                                placeholder="Ombi">
+                            <mat-hint>The name of the Ombi process. Change this only if you renamed the executable.</mat-hint>
                         </mat-form-field>
                     </div>
 
@@ -59,13 +50,16 @@
                         <mat-form-field appearance="outline">
                             <mat-label>Script Location</mat-label>
                             <input matInput formControlName="scriptLocation"
-                                placeholder="/path/to/update-script.sh">
+                                [placeholder]="form.get('isWindows').value ? 'C:\\scripts\\update.ps1' : '/path/to/update-script.sh'">
                         </mat-form-field>
                     </div>
                 </div>
 
                 <div style="margin-top: 1.5rem;">
                     <h4>Version Information</h4>
+                    <p *ngIf="about">
+                        Current version: <strong>v{{ about.version }}</strong> ({{ about.branch }})
+                    </p>
                     <div *ngIf="updateStatus">
                         <p *ngIf="updateStatus.updateAvailable">
                             <i class="fas fa-exclamation-circle" style="color: #df691a;"></i>
