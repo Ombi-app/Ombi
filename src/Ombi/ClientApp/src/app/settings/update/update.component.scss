@@ -12,8 +12,12 @@ fieldset {
 }
 
 .description {
-    color: #aaa;
+    color: rgba(255, 255, 255, 0.7);
     margin-bottom: 1.5rem;
+}
+
+.update-warning-icon {
+    color: #df691a;
 }
 
 mat-form-field {

@@ -67,7 +67,7 @@
                         </p>
                         <div *ngIf="updateStatus" role="status" aria-live="polite">
                             <p *ngIf="updateStatus.updateAvailable">
-                                <i class="fas fa-exclamation-circle" style="color: #df691a;" aria-hidden="true"></i>
+                                <i class="fas fa-exclamation-circle update-warning-icon" aria-hidden="true"></i>
                                 Update available: <strong>v{{ updateStatus.updateVersionString }}</strong>
                             </p>
                             <p *ngIf="!updateStatus.updateAvailable">
