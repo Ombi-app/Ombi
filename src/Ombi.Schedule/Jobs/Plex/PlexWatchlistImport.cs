@@ -74,14 +74,24 @@ namespace Ombi.Schedule.Jobs.Plex
             var selectedServer = settings.Servers?.FirstOrDefault(s => !string.IsNullOrWhiteSpace(s.PlexAuthToken));
             if (selectedServer == null)
             {
-                _logger.LogWarning("No admin Plex token configured; skipping watchlist import");
+                _logger.LogWarning("No Plex server configured; skipping watchlist import");
+                return;
+            }
+
+            var ct = context?.CancellationToken ?? CancellationToken.None;
+
+            // Community/plex.tv endpoints only accept a user OAuth token, not a server token.
+            // The server owner's OAuth token is captured in OmbiUser.MediaServerToken when they
+            // sign into Ombi with Plex; fall back to nothing if we can't find one.
+            var adminToken = await ResolveAdminOAuthToken(ct);
+            if (string.IsNullOrWhiteSpace(adminToken))
+            {
+                _logger.LogWarning("Watchlist import requires the server owner to be signed into Ombi via Plex OAuth; skipping");
+                await NotifyClient("Watchlist import skipped — the server owner must sign into Ombi via Plex");
                 return;
             }
 
             _logger.LogInformation($"Watchlist import using server '{selectedServer.Name}' (machine {selectedServer.MachineIdentifier})");
-            var adminToken = selectedServer.PlexAuthToken;
-
-            var ct = context?.CancellationToken ?? CancellationToken.None;
             await NotifyClient("Starting Watchlist Import");
 
             var (targets, friendIds, friendsFetched, adminResolved) = await BuildTargetList(adminToken, ct);
@@ -136,6 +146,23 @@ namespace Ombi.Schedule.Jobs.Plex
             }
 
             await NotifyClient("Finished Watchlist Import");
+        }
+
+        private async Task<string> ResolveAdminOAuthToken(CancellationToken ct)
+        {
+            var candidates = await _ombiUserManager.Users
+                .Where(u => u.UserType == UserType.PlexUser && u.MediaServerToken != null && u.MediaServerToken != string.Empty)
+                .ToListAsync(ct);
+
+            foreach (var candidate in candidates)
+            {
+                if (await _ombiUserManager.IsInRoleAsync(candidate, OmbiRoles.Admin))
+                {
+                    return candidate.MediaServerToken;
+                }
+            }
+
+            return null;
         }
 
         private async Task<(List<PlexCommunityUser> targets, HashSet<string> friendIds, bool friendsFetched, bool adminResolved)> BuildTargetList(string adminToken, CancellationToken ct)

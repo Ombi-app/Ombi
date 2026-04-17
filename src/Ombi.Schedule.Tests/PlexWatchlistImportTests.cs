@@ -5,6 +5,7 @@ using NUnit.Framework;
 using Ombi.Api.External.MediaServers.Plex;
 using Ombi.Api.External.MediaServers.Plex.Models;
 using Ombi.Api.External.MediaServers.Plex.Models.Community;
+using Ombi.Core.Authentication;
 using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models;
@@ -12,6 +13,7 @@ using Ombi.Core.Models.Requests;
 using Ombi.Core.Services;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
+using Ombi.Helpers;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
@@ -44,9 +46,11 @@ namespace Ombi.Schedule.Tests
             _mocker = new AutoMocker();
             var users = new List<OmbiUser>
             {
-                new OmbiUser { Id = AdminOmbiId, UserName = "owner", NormalizedUserName = "OWNER", UserType = UserType.PlexUser, ProviderUserId = AdminUuid },
+                new OmbiUser { Id = AdminOmbiId, UserName = "owner", NormalizedUserName = "OWNER", UserType = UserType.PlexUser, ProviderUserId = AdminUuid, MediaServerToken = AdminToken },
             };
-            _mocker.Use(MockHelper.MockUserManager(users));
+            var userMgr = MockHelper.MockUserManager(users);
+            SetupAdminRole(userMgr, AdminOmbiId);
+            _mocker.Use(userMgr);
             _context = _mocker.GetMock<IJobExecutionContext>();
             _context.Setup(x => x.CancellationToken).Returns(CancellationToken.None);
             _statusStore = _mocker.GetMock<IPlexWatchlistStatusStore>();
@@ -115,6 +119,27 @@ namespace Ombi.Schedule.Tests
             await _subject.Execute(_context.Object);
 
             _mocker.Verify<IPlexApi>(x => x.GetAllFriends(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Test]
+        public async Task TerminatesWhenAdminHasNoOAuthToken()
+        {
+            // Server exists, but no admin Plex user has a MediaServerToken (i.e. the owner
+            // has not signed into Ombi via Plex OAuth). The import must not call plex.tv.
+            var users = new List<OmbiUser>
+            {
+                new OmbiUser { Id = AdminOmbiId, UserName = "owner", NormalizedUserName = "OWNER", UserType = UserType.PlexUser, ProviderUserId = AdminUuid, MediaServerToken = null },
+            };
+            var userMgr = MockHelper.MockUserManager(users);
+            SetupAdminRole(userMgr, AdminOmbiId);
+            _mocker.Use(userMgr);
+            _subject = _mocker.CreateInstance<PlexWatchlistImport>();
+            UseDefaultPlexSettings();
+
+            await _subject.Execute(_context.Object);
+
+            _mocker.Verify<IPlexApi>(x => x.GetAllFriends(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+            _mocker.Verify<IPlexApi>(x => x.GetAccount(It.IsAny<string>()), Times.Never);
         }
 
         [Test]
@@ -274,10 +299,12 @@ namespace Ombi.Schedule.Tests
             // isn't in allFriendsV2 and isn't the admin).
             var extraUsers = new List<OmbiUser>
             {
-                new OmbiUser { Id = AdminOmbiId, UserName = "owner", NormalizedUserName = "OWNER", UserType = UserType.PlexUser, ProviderUserId = AdminUuid },
+                new OmbiUser { Id = AdminOmbiId, UserName = "owner", NormalizedUserName = "OWNER", UserType = UserType.PlexUser, ProviderUserId = AdminUuid, MediaServerToken = AdminToken },
                 new OmbiUser { Id = "orphan-id", UserName = "orphan", NormalizedUserName = "ORPHAN", UserType = UserType.PlexUser, ProviderUserId = "orphan-uuid" },
             };
-            _mocker.Use(MockHelper.MockUserManager(extraUsers));
+            var userMgr = MockHelper.MockUserManager(extraUsers);
+            SetupAdminRole(userMgr, AdminOmbiId);
+            _mocker.Use(userMgr);
             _subject = _mocker.CreateInstance<PlexWatchlistImport>();
             UseDefaultPlexSettings();
 
@@ -310,6 +337,14 @@ namespace Ombi.Schedule.Tests
             await _subject.Execute(_context.Object);
 
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistForUser(AdminToken, AdminUuid, It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        private static void SetupAdminRole(Mock<OmbiUserManager> mgr, string adminUserId)
+        {
+            mgr.Setup(x => x.IsInRoleAsync(It.Is<OmbiUser>(u => u.Id == adminUserId), OmbiRoles.Admin))
+                .ReturnsAsync(true);
+            mgr.Setup(x => x.IsInRoleAsync(It.Is<OmbiUser>(u => u.Id != adminUserId), OmbiRoles.Admin))
+                .ReturnsAsync(false);
         }
 
         private void SetupFriends(params (string id, string username)[] friends)
