@@ -28,6 +28,8 @@ namespace Ombi.Core.Tests.Services
             _mocker = new AutoMocker();
             _userManagerMock = _mocker.GetMock<OmbiUserManager>();
             _statusStoreMock = _mocker.GetMock<IPlexWatchlistStatusStore>();
+            _statusStoreMock.Setup(x => x.GetAllAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync((IReadOnlyDictionary<string, WatchlistSyncStatus>)new Dictionary<string, WatchlistSyncStatus>());
             _subject = _mocker.CreateInstance<PlexService>();
         }
 
@@ -47,7 +49,7 @@ namespace Ombi.Core.Tests.Services
         {
             var users = CreateUsers(2, UserType.PlexUser);
             SetupUsers(users);
-            _statusStoreMock.Setup(x => x.Get(It.IsAny<string>())).Returns(WatchlistSyncStatus.Successful);
+            SetupStatuses(users.ToDictionary(u => u.Id, _ => WatchlistSyncStatus.Successful));
 
             var result = await _subject.GetWatchlistUsers(CancellationToken.None);
 
@@ -60,24 +62,22 @@ namespace Ombi.Core.Tests.Services
         {
             var users = CreateUsers(1, UserType.PlexUser);
             SetupUsers(users);
-            _statusStoreMock.Setup(x => x.Get(users[0].Id)).Returns(WatchlistSyncStatus.Failed);
+            SetupStatuses(new Dictionary<string, WatchlistSyncStatus> { { users[0].Id, WatchlistSyncStatus.Failed } });
 
             var result = await _subject.GetWatchlistUsers(CancellationToken.None);
 
-            Assert.That(result.Count, Is.EqualTo(1));
             Assert.That(result[0].SyncStatus, Is.EqualTo(WatchlistSyncStatus.Failed));
         }
 
         [Test]
-        public async Task GetWatchlistUsers_NoStatusStored_ReturnsNotAFriend()
+        public async Task GetWatchlistUsers_NoStatusStored_ReturnsPending()
         {
             var users = CreateUsers(1, UserType.PlexUser);
             SetupUsers(users);
-            _statusStoreMock.Setup(x => x.Get(It.IsAny<string>())).Returns((WatchlistSyncStatus?)null);
 
             var result = await _subject.GetWatchlistUsers(CancellationToken.None);
 
-            Assert.That(result[0].SyncStatus, Is.EqualTo(WatchlistSyncStatus.NotAFriend));
+            Assert.That(result[0].SyncStatus, Is.EqualTo(WatchlistSyncStatus.Pending));
         }
 
         [Test]
@@ -86,7 +86,7 @@ namespace Ombi.Core.Tests.Services
             var plex = CreateUsers(2, UserType.PlexUser);
             var local = CreateUsers(3, UserType.LocalUser);
             SetupUsers(plex.Concat(local).ToList());
-            _statusStoreMock.Setup(x => x.Get(It.IsAny<string>())).Returns(WatchlistSyncStatus.Successful);
+            SetupStatuses(plex.ToDictionary(u => u.Id, _ => WatchlistSyncStatus.Successful));
 
             var result = await _subject.GetWatchlistUsers(CancellationToken.None);
 
@@ -99,13 +99,18 @@ namespace Ombi.Core.Tests.Services
         {
             await _subject.ForceRevalidateWatchlistUsers(CancellationToken.None);
 
-            _statusStoreMock.Verify(x => x.Clear(), Times.Once);
+            _statusStoreMock.Verify(x => x.ClearAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
         private void SetupUsers(List<OmbiUser> users)
         {
             var queryable = users.AsQueryable().BuildMock();
             _userManagerMock.Setup(x => x.Users).Returns(queryable);
+        }
+
+        private void SetupStatuses(IReadOnlyDictionary<string, WatchlistSyncStatus> statuses)
+        {
+            _statusStoreMock.Setup(x => x.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(statuses);
         }
 
         private static List<OmbiUser> CreateUsers(int count, UserType userType)

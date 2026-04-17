@@ -36,6 +36,7 @@ namespace Ombi.Schedule.Tests
 
         private const string AdminToken = "admin-token";
         private const string AdminUuid = "admin-uuid";
+        private const string AdminOmbiId = "admin-id";
 
         [SetUp]
         public void Setup()
@@ -43,7 +44,7 @@ namespace Ombi.Schedule.Tests
             _mocker = new AutoMocker();
             var users = new List<OmbiUser>
             {
-                new OmbiUser { Id = "admin-id", UserName = "owner", NormalizedUserName = "OWNER", UserType = UserType.PlexUser, ProviderUserId = AdminUuid },
+                new OmbiUser { Id = AdminOmbiId, UserName = "owner", NormalizedUserName = "OWNER", UserType = UserType.PlexUser, ProviderUserId = AdminUuid },
             };
             _mocker.Use(MockHelper.MockUserManager(users));
             _context = _mocker.GetMock<IJobExecutionContext>();
@@ -74,16 +75,17 @@ namespace Ombi.Schedule.Tests
             _subject = _mocker.CreateInstance<PlexWatchlistImport>();
         }
 
-        private void UseDefaultPlexSettings(bool enable = true, bool watchlist = true)
+        private void UseDefaultPlexSettings(bool enable = true, bool watchlist = true, bool monitorAll = false)
         {
             _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync())
                 .ReturnsAsync(new PlexSettings
                 {
                     Enable = enable,
                     EnableWatchlistImport = watchlist,
+                    MonitorAll = monitorAll,
                     Servers = new List<PlexServers>
                     {
-                        new PlexServers { PlexAuthToken = AdminToken }
+                        new PlexServers { Name = "test", MachineIdentifier = "m1", PlexAuthToken = AdminToken }
                     },
                 });
         }
@@ -139,7 +141,7 @@ namespace Ombi.Schedule.Tests
         public async Task MovieInWatchlist_RequestsMovieAndAddsHistory()
         {
             UseDefaultPlexSettings();
-            SetupWatchlistNode("movie", "rk-1");
+            SetupWatchlistNode(AdminUuid, "movie", "rk-1");
             SetupMetadataWithTmdb("rk-1", "tmdb://42");
 
             _mocker.Setup<IMovieRequestEngine, Task<RequestEngineResult>>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()))
@@ -150,14 +152,30 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<IMovieRequestEngine>(x => x.SetUser(It.Is<OmbiUser>(u => u.ProviderUserId == AdminUuid)), Times.Once);
             _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.Is<MovieRequestViewModel>(m => m.TheMovieDbId == 42)), Times.Once);
             _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Add(It.Is<PlexWatchlistHistory>(h => h.TmdbId == "42")), Times.Once);
-            _statusStore.Verify(x => x.Set("admin-id", WatchlistSyncStatus.Successful), Times.Once);
+            _statusStore.Verify(x => x.SetAsync(AdminOmbiId, WatchlistSyncStatus.Successful, It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test]
+        public async Task GraphqlErrorForUser_MarksFailed_NotSuccessful()
+        {
+            UseDefaultPlexSettings();
+            _mocker.Setup<IPlexApi, Task<PlexCommunityWatchlistResponse>>(x => x.GetWatchlistForUser(AdminToken, AdminUuid, It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new PlexCommunityWatchlistResponse
+                {
+                    errors = new List<PlexCommunityError> { new PlexCommunityError { message = "denied" } }
+                });
+
+            await _subject.Execute(_context.Object);
+
+            _statusStore.Verify(x => x.SetAsync(AdminOmbiId, WatchlistSyncStatus.Failed, It.IsAny<CancellationToken>()), Times.Once);
+            _statusStore.Verify(x => x.SetAsync(AdminOmbiId, WatchlistSyncStatus.Successful, It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
         public async Task ShowInWatchlist_RequestsLatestSeason_WhenMonitorAllFalse()
         {
             UseDefaultPlexSettings();
-            SetupWatchlistNode("show", "rk-2");
+            SetupWatchlistNode(AdminUuid, "show", "rk-2");
             SetupMetadataWithTmdb("rk-2", "tmdb://77");
 
             _mocker.Setup<ITvRequestEngine, Task<RequestEngineResult>>(x => x.RequestTvShow(It.IsAny<TvRequestViewModelV2>()))
@@ -171,15 +189,8 @@ namespace Ombi.Schedule.Tests
         [Test]
         public async Task ShowInWatchlist_RequestsAll_WhenMonitorAllTrue()
         {
-            _mocker.Setup<ISettingsService<PlexSettings>, Task<PlexSettings>>(x => x.GetSettingsAsync())
-                .ReturnsAsync(new PlexSettings
-                {
-                    Enable = true,
-                    EnableWatchlistImport = true,
-                    MonitorAll = true,
-                    Servers = new List<PlexServers> { new PlexServers { PlexAuthToken = AdminToken } },
-                });
-            SetupWatchlistNode("show", "rk-3");
+            UseDefaultPlexSettings(monitorAll: true);
+            SetupWatchlistNode(AdminUuid, "show", "rk-3");
             SetupMetadataWithTmdb("rk-3", "tmdb://99");
 
             _mocker.Setup<ITvRequestEngine, Task<RequestEngineResult>>(x => x.RequestTvShow(It.IsAny<TvRequestViewModelV2>()))
@@ -191,20 +202,37 @@ namespace Ombi.Schedule.Tests
         }
 
         [Test]
+        public async Task CaseInsensitiveNodeType_IsAccepted()
+        {
+            UseDefaultPlexSettings();
+            SetupWatchlistNode(AdminUuid, "MOVIE", "rk-case");
+            SetupMetadataWithTmdb("rk-case", "tmdb://1");
+
+            _mocker.Setup<IMovieRequestEngine, Task<RequestEngineResult>>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()))
+                .ReturnsAsync(new RequestEngineResult { Result = true });
+
+            await _subject.Execute(_context.Object);
+
+            _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.Is<MovieRequestViewModel>(m => m.TheMovieDbId == 1)), Times.Once);
+        }
+
+        [Test]
+        public async Task NonNumericTmdbId_IsSkipped()
+        {
+            UseDefaultPlexSettings();
+            SetupWatchlistNode(AdminUuid, "movie", "rk-bad");
+            SetupMetadataWithTmdb("rk-bad", "tmdb://not-a-number");
+
+            await _subject.Execute(_context.Object);
+
+            _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()), Times.Never);
+        }
+
+        [Test]
         public async Task FriendInAllFriendsV2_IsProcessed()
         {
             UseDefaultPlexSettings();
-            _mocker.Setup<IPlexApi, Task<PlexCommunityFriendsResponse>>(x => x.GetAllFriends(AdminToken, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new PlexCommunityFriendsResponse
-                {
-                    data = new PlexCommunityFriendsData
-                    {
-                        allFriendsV2 = new List<PlexCommunityFriend>
-                        {
-                            new PlexCommunityFriend { user = new PlexCommunityUser { id = "friend-uuid", username = "friend" } }
-                        }
-                    }
-                });
+            SetupFriends(("friend-uuid", "friend"));
 
             await _subject.Execute(_context.Object);
 
@@ -212,20 +240,10 @@ namespace Ombi.Schedule.Tests
         }
 
         [Test]
-        public async Task FriendFailure_MarkedAsFailed()
+        public async Task FriendFailure_MarkedAsFailed_OnNewlyCreatedOmbiUser()
         {
             UseDefaultPlexSettings();
-            _mocker.Setup<IPlexApi, Task<PlexCommunityFriendsResponse>>(x => x.GetAllFriends(AdminToken, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new PlexCommunityFriendsResponse
-                {
-                    data = new PlexCommunityFriendsData
-                    {
-                        allFriendsV2 = new List<PlexCommunityFriend>
-                        {
-                            new PlexCommunityFriend { user = new PlexCommunityUser { id = "friend-uuid", username = "some-friend" } }
-                        }
-                    }
-                });
+            SetupFriends(("friend-uuid", "some-friend"));
             _mocker.Setup<IPlexApi, Task<PlexCommunityWatchlistResponse>>(x => x.GetWatchlistForUser(AdminToken, "friend-uuid", It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new PlexCommunityWatchlistResponse
                 {
@@ -234,24 +252,15 @@ namespace Ombi.Schedule.Tests
 
             await _subject.Execute(_context.Object);
 
-            _statusStore.Verify(x => x.Set(It.IsAny<string>(), WatchlistSyncStatus.Failed), Times.Once);
+            _statusStore.Verify(x => x.SetAsync(It.Is<string>(id => id != AdminOmbiId), WatchlistSyncStatus.Failed, It.IsAny<CancellationToken>()), Times.Once);
+            _statusStore.Verify(x => x.SetAsync(AdminOmbiId, WatchlistSyncStatus.Failed, It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
         public async Task NewFriendWithoutOmbiUser_IsCreated()
         {
             UseDefaultPlexSettings();
-            _mocker.Setup<IPlexApi, Task<PlexCommunityFriendsResponse>>(x => x.GetAllFriends(AdminToken, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new PlexCommunityFriendsResponse
-                {
-                    data = new PlexCommunityFriendsData
-                    {
-                        allFriendsV2 = new List<PlexCommunityFriend>
-                        {
-                            new PlexCommunityFriend { user = new PlexCommunityUser { id = "brand-new", username = "newbie" } }
-                        }
-                    }
-                });
+            SetupFriends(("brand-new", "newbie"));
 
             await _subject.Execute(_context.Object);
 
@@ -270,9 +279,24 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistForUser(AdminToken, AdminUuid, It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
-        private void SetupWatchlistNode(string type, string ratingKey)
+        private void SetupFriends(params (string id, string username)[] friends)
         {
-            _mocker.Setup<IPlexApi, Task<PlexCommunityWatchlistResponse>>(x => x.GetWatchlistForUser(AdminToken, AdminUuid, It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            _mocker.Setup<IPlexApi, Task<PlexCommunityFriendsResponse>>(x => x.GetAllFriends(AdminToken, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new PlexCommunityFriendsResponse
+                {
+                    data = new PlexCommunityFriendsData
+                    {
+                        allFriendsV2 = friends.Select(f => new PlexCommunityFriend
+                        {
+                            user = new PlexCommunityUser { id = f.id, username = f.username }
+                        }).ToList()
+                    }
+                });
+        }
+
+        private void SetupWatchlistNode(string ownerId, string type, string ratingKey)
+        {
+            _mocker.Setup<IPlexApi, Task<PlexCommunityWatchlistResponse>>(x => x.GetWatchlistForUser(AdminToken, ownerId, It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new PlexCommunityWatchlistResponse
                 {
                     data = new PlexCommunityWatchlistData

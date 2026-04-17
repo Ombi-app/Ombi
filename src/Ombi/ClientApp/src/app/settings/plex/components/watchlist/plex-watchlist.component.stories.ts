@@ -22,8 +22,13 @@ const mockUsers: IPlexWatchlistUsers[] =
     },
     {
         userName: "Not a Friend",
-        userId: "2",
+        userId: "3",
         syncStatus: WatchlistSyncStatus.NotAFriend
+    },
+    {
+        userName: "Pending First Sync",
+        userId: "4",
+        syncStatus: WatchlistSyncStatus.Pending
     },
 ];
 

@@ -1,13 +1,15 @@
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Ombi.Core.Models;
 
 namespace Ombi.Core.Services
 {
     public interface IPlexWatchlistStatusStore
     {
-        void Set(string ombiUserId, WatchlistSyncStatus status);
-        WatchlistSyncStatus? Get(string ombiUserId);
-        IReadOnlyDictionary<string, WatchlistSyncStatus> Snapshot();
-        void Clear();
+        Task SetAsync(string ombiUserId, WatchlistSyncStatus status, CancellationToken cancellationToken = default);
+        Task<WatchlistSyncStatus?> GetAsync(string ombiUserId, CancellationToken cancellationToken = default);
+        Task<IReadOnlyDictionary<string, WatchlistSyncStatus>> GetAllAsync(CancellationToken cancellationToken = default);
+        Task ClearAsync(CancellationToken cancellationToken = default);
     }
 }

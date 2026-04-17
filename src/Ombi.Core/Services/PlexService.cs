@@ -19,24 +19,24 @@ namespace Ombi.Core.Services
             _statusStore = statusStore;
         }
 
-        public Task<List<PlexUserWatchlistModel>> GetWatchlistUsers(CancellationToken cancellationToken)
+        public async Task<List<PlexUserWatchlistModel>> GetWatchlistUsers(CancellationToken cancellationToken)
         {
-            var plexUsers = _userManager.Users.Where(x => x.UserType == UserType.PlexUser).ToList();
+            cancellationToken.ThrowIfCancellationRequested();
 
-            var model = plexUsers.Select(plexUser => new PlexUserWatchlistModel
+            var plexUsers = _userManager.Users.Where(x => x.UserType == UserType.PlexUser).ToList();
+            var statuses = await _statusStore.GetAllAsync(cancellationToken);
+
+            return plexUsers.Select(plexUser => new PlexUserWatchlistModel
             {
                 UserId = plexUser.Id,
                 UserName = plexUser.UserName,
-                SyncStatus = _statusStore.Get(plexUser.Id) ?? WatchlistSyncStatus.NotAFriend,
+                SyncStatus = statuses.TryGetValue(plexUser.Id, out var status) ? status : WatchlistSyncStatus.Pending,
             }).ToList();
-
-            return Task.FromResult(model);
         }
 
         public Task ForceRevalidateWatchlistUsers(CancellationToken cancellationToken)
         {
-            _statusStore.Clear();
-            return Task.CompletedTask;
+            return _statusStore.ClearAsync(cancellationToken);
         }
     }
 }

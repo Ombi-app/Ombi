@@ -71,17 +71,20 @@ namespace Ombi.Schedule.Jobs.Plex
                 return;
             }
 
-            var adminToken = settings.Servers?.FirstOrDefault(s => !string.IsNullOrWhiteSpace(s.PlexAuthToken))?.PlexAuthToken;
-            if (string.IsNullOrWhiteSpace(adminToken))
+            var selectedServer = settings.Servers?.FirstOrDefault(s => !string.IsNullOrWhiteSpace(s.PlexAuthToken));
+            if (selectedServer == null)
             {
                 _logger.LogWarning("No admin Plex token configured; skipping watchlist import");
                 return;
             }
 
+            _logger.LogInformation($"Watchlist import using server '{selectedServer.Name}' (machine {selectedServer.MachineIdentifier})");
+            var adminToken = selectedServer.PlexAuthToken;
+
             var ct = context?.CancellationToken ?? CancellationToken.None;
             await NotifyClient("Starting Watchlist Import");
 
-            var targets = await BuildTargetList(adminToken, ct);
+            var (targets, friendIds) = await BuildTargetList(adminToken, ct);
             if (targets.Count == 0)
             {
                 _logger.LogInformation("No watchlist targets found (admin + friends)");
@@ -91,52 +94,64 @@ namespace Ombi.Schedule.Jobs.Plex
 
             var userManagement = await _userManagementSettings.GetSettingsAsync();
 
-            // Mark every existing Plex user as NotAFriend first; overwrite below for those we actually see.
-            var existingPlexUsers = await _ombiUserManager.Users.Where(x => x.UserType == UserType.PlexUser).ToListAsync(ct);
-            foreach (var existingPlexUser in existingPlexUsers)
-            {
-                _statusStore.Set(existingPlexUser.Id, WatchlistSyncStatus.NotAFriend);
-            }
-
             foreach (var target in targets)
             {
                 if (ct.IsCancellationRequested) break;
 
+                OmbiUser user = null;
                 try
                 {
-                    var user = await EnsureOmbiUser(target, userManagement);
+                    user = await EnsureOmbiUser(target, userManagement);
                     if (user == null)
                     {
                         continue;
                     }
 
-                    await ImportWatchlistForUser(adminToken, target, user, settings.MonitorAll, ct);
-                    _statusStore.Set(user.Id, WatchlistSyncStatus.Successful);
+                    var succeeded = await ImportWatchlistForUser(adminToken, target, user, settings.MonitorAll, ct);
+                    await _statusStore.SetAsync(user.Id, succeeded ? WatchlistSyncStatus.Successful : WatchlistSyncStatus.Failed, ct);
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, $"Exception thrown when importing watchlist for Plex user {target.username}");
+                    if (user != null)
+                    {
+                        try { await _statusStore.SetAsync(user.Id, WatchlistSyncStatus.Failed, ct); }
+                        catch (Exception statusEx) { _logger.LogWarning(statusEx, "Failed to record watchlist status"); }
+                    }
                 }
+            }
+
+            // For existing Plex users that weren't in allFriendsV2, mark them explicitly as NotAFriend.
+            // (Banned users and users for whom EnsureOmbiUser returned null keep their prior status.)
+            var existingPlexUsers = await _ombiUserManager.Users.Where(x => x.UserType == UserType.PlexUser).ToListAsync(ct);
+            foreach (var existing in existingPlexUsers)
+            {
+                if (string.IsNullOrEmpty(existing.ProviderUserId)) continue;
+                if (friendIds.Contains(existing.ProviderUserId)) continue;
+                await _statusStore.SetAsync(existing.Id, WatchlistSyncStatus.NotAFriend, ct);
             }
 
             await NotifyClient("Finished Watchlist Import");
         }
 
-        private async Task<List<PlexCommunityUser>> BuildTargetList(string adminToken, CancellationToken ct)
+        private async Task<(List<PlexCommunityUser> targets, HashSet<string> friendIds)> BuildTargetList(string adminToken, CancellationToken ct)
         {
             var targets = new List<PlexCommunityUser>();
+            var friendIds = new HashSet<string>();
 
             try
             {
                 var account = await _plexApi.GetAccount(adminToken);
                 if (account?.user != null && !string.IsNullOrWhiteSpace(account.user.uuid))
                 {
-                    targets.Add(new PlexCommunityUser
+                    var adminUser = new PlexCommunityUser
                     {
                         id = account.user.uuid,
                         username = account.user.username ?? account.user.title,
                         displayName = account.user.title,
-                    });
+                    };
+                    targets.Add(adminUser);
+                    friendIds.Add(adminUser.id);
                 }
                 else
                 {
@@ -151,19 +166,13 @@ namespace Ombi.Schedule.Jobs.Plex
             try
             {
                 var friendsResponse = await _plexApi.GetAllFriends(adminToken, ct);
-                if (friendsResponse?.errors?.Any() ?? false)
-                {
-                    _logger.LogWarning($"Plex community API returned errors fetching friends: {string.Join("; ", friendsResponse.errors.Select(e => e.message))}");
-                }
-
                 var friends = friendsResponse?.data?.allFriendsV2 ?? new List<PlexCommunityFriend>();
                 _logger.LogInformation($"Found {friends.Count} Plex friends");
                 foreach (var friend in friends)
                 {
-                    if (friend?.user != null && !string.IsNullOrWhiteSpace(friend.user.id))
-                    {
-                        targets.Add(friend.user);
-                    }
+                    if (friend?.user == null || string.IsNullOrWhiteSpace(friend.user.id)) continue;
+                    targets.Add(friend.user);
+                    friendIds.Add(friend.user.id);
                 }
             }
             catch (Exception ex)
@@ -171,7 +180,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 _logger.LogError(ex, "Failed to fetch Plex friends");
             }
 
-            return targets;
+            return (targets, friendIds);
         }
 
         private async Task<OmbiUser> EnsureOmbiUser(PlexCommunityUser plexUser, UserManagementSettings userManagement)
@@ -182,7 +191,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 return null;
             }
 
-            var existing = await _ombiUserManager.Users.FirstOrDefaultAsync(x => x.ProviderUserId == plexUser.id);
+            var existing = await _ombiUserManager.Users.FirstOrDefaultAsync(x => x.UserType == UserType.PlexUser && x.ProviderUserId == plexUser.id);
             if (existing == null && !string.IsNullOrWhiteSpace(plexUser.username))
             {
                 existing = await _ombiUserManager.Users.FirstOrDefaultAsync(x => x.UserType == UserType.PlexUser && x.UserName == plexUser.username);
@@ -231,18 +240,17 @@ namespace Ombi.Schedule.Jobs.Plex
                 return null;
             }
 
-            var dbUser = await _ombiUserManager.Users.FirstOrDefaultAsync(x => x.UserName == newUser.UserName);
-            if (dbUser != null && userManagement.DefaultRoles != null)
+            if (userManagement.DefaultRoles != null)
             {
                 foreach (var role in userManagement.DefaultRoles)
                 {
-                    await _ombiUserManager.AddToRoleAsync(dbUser, role);
+                    await _ombiUserManager.AddToRoleAsync(newUser, role);
                 }
             }
-            return dbUser ?? newUser;
+            return newUser;
         }
 
-        private async Task ImportWatchlistForUser(string adminToken, PlexCommunityUser plexUser, OmbiUser user, bool monitorAll, CancellationToken ct)
+        private async Task<bool> ImportWatchlistForUser(string adminToken, PlexCommunityUser plexUser, OmbiUser user, bool monitorAll, CancellationToken ct)
         {
             string cursor = null;
             var currentWatchlistTmdbIds = new HashSet<string>();
@@ -251,11 +259,10 @@ namespace Ombi.Schedule.Jobs.Plex
             do
             {
                 var response = await _plexApi.GetWatchlistForUser(adminToken, plexUser.id, cursor, ct);
-                if (response?.errors?.Any() ?? false)
+                if (response?.errors != null && response.errors.Count > 0)
                 {
                     _logger.LogWarning($"Plex community API returned errors for '{plexUser.username}': {string.Join("; ", response.errors.Select(e => e.message))}");
-                    _statusStore.Set(user.Id, WatchlistSyncStatus.Failed);
-                    return;
+                    return false;
                 }
 
                 var watchlist = response?.data?.userV2?.watchlist;
@@ -284,43 +291,49 @@ namespace Ombi.Schedule.Jobs.Plex
             }
             while (!string.IsNullOrEmpty(cursor) && !ct.IsCancellationRequested);
 
-            // Purge history entries that are no longer in the user's Plex watchlist.
-            if (currentWatchlistTmdbIds.Count > 0)
+            // Always purge history for items no longer on the user's Plex watchlist
+            // (including when the watchlist has been fully cleared).
+            var historyEntries = await _watchlistRepo.GetAll().Where(x => x.UserId == user.Id).ToListAsync(ct);
+            var existingTmdbIds = new HashSet<string>(historyEntries.Select(h => h.TmdbId));
+            foreach (var entry in historyEntries)
             {
-                var historyEntries = await _watchlistRepo.GetAll().Where(x => x.UserId == user.Id).ToListAsync(ct);
-                foreach (var entry in historyEntries)
+                if (!currentWatchlistTmdbIds.Contains(entry.TmdbId))
                 {
-                    if (!currentWatchlistTmdbIds.Contains(entry.TmdbId))
-                    {
-                        _logger.LogDebug($"Removing old history entry for TMDB ID {entry.TmdbId} (no longer in Plex watchlist for {user.UserName})");
-                        await _watchlistRepo.Delete(entry);
-                    }
+                    _logger.LogDebug($"Removing old history entry for TMDB ID {entry.TmdbId} (no longer in Plex watchlist for {user.UserName})");
+                    await _watchlistRepo.Delete(entry);
                 }
             }
 
             foreach (var (node, ids) in pendingItems)
             {
-                var alreadyImported = await _watchlistRepo.GetAll().AnyAsync(x => x.TmdbId == ids.TheMovieDb && x.UserId == user.Id, ct);
-                if (alreadyImported)
+                if (existingTmdbIds.Contains(ids.TheMovieDb))
                 {
                     continue;
                 }
 
-                switch (node.type)
+                if (!int.TryParse(ids.TheMovieDb, out var tmdbId))
                 {
-                    case "show":
-                    case "TVSHOW":
-                        await ProcessShow(int.Parse(ids.TheMovieDb), user, monitorAll);
-                        break;
-                    case "movie":
-                    case "MOVIE":
-                        await ProcessMovie(int.Parse(ids.TheMovieDb), user);
-                        break;
-                    default:
-                        _logger.LogDebug($"Skipping unknown watchlist type '{node.type}' for {node.title}");
-                        break;
+                    _logger.LogWarning($"Skipping {node.title} for {user.UserName}: non-numeric TMDB id '{ids.TheMovieDb}'");
+                    continue;
+                }
+
+                var nodeType = node.type ?? string.Empty;
+                if (nodeType.Equals("show", StringComparison.OrdinalIgnoreCase) ||
+                    nodeType.Equals("tvshow", StringComparison.OrdinalIgnoreCase))
+                {
+                    await ProcessShow(tmdbId, user, monitorAll);
+                }
+                else if (nodeType.Equals("movie", StringComparison.OrdinalIgnoreCase))
+                {
+                    await ProcessMovie(tmdbId, user);
+                }
+                else
+                {
+                    _logger.LogDebug($"Skipping unknown watchlist type '{node.type}' for {node.title}");
                 }
             }
+
+            return true;
         }
 
         private async Task<ProviderId> ResolveProviderIds(string adminToken, PlexCommunityWatchlistNode node, CancellationToken ct)
@@ -349,7 +362,7 @@ namespace Ombi.Schedule.Jobs.Plex
         {
             FindResult result = null;
             var hasResult = false;
-            var movie = string.Equals(type, "movie", StringComparison.OrdinalIgnoreCase) || string.Equals(type, "MOVIE", StringComparison.OrdinalIgnoreCase);
+            var movie = string.Equals(type, "movie", StringComparison.OrdinalIgnoreCase);
             if (!string.IsNullOrEmpty(providerId.TheTvDb))
             {
                 result = await _movieDbApi.Find(providerId.TheTvDb, ExternalSource.tvdb_id);

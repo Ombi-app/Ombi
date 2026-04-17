@@ -16,6 +16,7 @@
         <span><mat-icon color="primary">check_circle</mat-icon> Successfully syncing the watchlist</span>
         <span><mat-icon color="warn">cancel</mat-icon> Error returned by the Plex community API</span>
         <span><mat-icon color="accent">person_off</mat-icon> Not a friend of the server owner, or watchlist visibility is not set to Friends</span>
+        <span><mat-icon>schedule</mat-icon> Waiting for the first sync run</span>
       </div>
       <table mat-table *ngIf="dataSource" [dataSource]="dataSource" matSort class="mat-elevation-z8 modern-table">
         <ng-container matColumnDef="userName">
@@ -28,6 +29,7 @@
             <mat-icon *ngIf="element.syncStatus === WatchlistSyncStatus.Successful" color="primary">check_circle</mat-icon>
             <mat-icon *ngIf="element.syncStatus === WatchlistSyncStatus.Failed" color="warn">cancel</mat-icon>
             <mat-icon *ngIf="element.syncStatus === WatchlistSyncStatus.NotAFriend" color="accent">person_off</mat-icon>
+            <mat-icon *ngIf="element.syncStatus === WatchlistSyncStatus.Pending">schedule</mat-icon>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

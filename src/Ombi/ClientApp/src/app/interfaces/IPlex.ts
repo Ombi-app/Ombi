@@ -161,4 +161,5 @@ export enum WatchlistSyncStatus
     Successful = 0,
     Failed = 1,
     NotAFriend = 2,
+    Pending = 3,
 }

@@ -350,6 +350,26 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.PlexWatchlistUserStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("LastSyncedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("SyncStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PlexWatchlistUserStatus");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.RecentlyAddedLog", b =>
                 {
                     b.Property<int>("Id")
