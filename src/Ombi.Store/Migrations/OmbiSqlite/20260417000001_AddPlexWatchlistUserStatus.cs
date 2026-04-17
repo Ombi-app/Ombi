@@ -15,7 +15,7 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<string>(type: "TEXT", nullable: true),
+                    UserId = table.Column<string>(type: "TEXT", maxLength: 128, nullable: true),
                     SyncStatus = table.Column<int>(type: "INTEGER", nullable: false),
                     LastSyncedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
@@ -23,6 +23,12 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                 {
                     table.PrimaryKey("PK_PlexWatchlistUserStatus", x => x.Id);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlexWatchlistUserStatus_UserId",
+                table: "PlexWatchlistUserStatus",
+                column: "UserId",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

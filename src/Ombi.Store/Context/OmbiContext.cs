@@ -47,6 +47,14 @@ namespace Ombi.Store.Context
         public DbSet<Votes> Votes { get; set; }
         public DbSet<PlexWatchlistUserStatus> PlexWatchlistUserStatus { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<PlexWatchlistUserStatus>()
+                .HasIndex(x => x.UserId)
+                .IsUnique();
+        }
+
 
         public DbSet<Audit> Audit { get; set; }
         public DbSet<Tokens> Tokens { get; set; }

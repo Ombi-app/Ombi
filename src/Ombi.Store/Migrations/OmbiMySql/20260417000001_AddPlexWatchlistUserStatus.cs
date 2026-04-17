@@ -15,7 +15,7 @@ namespace Ombi.Store.Migrations.OmbiMySql
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", Microsoft.EntityFrameworkCore.Metadata.MySqlValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<string>(type: "longtext", nullable: true)
+                    UserId = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     SyncStatus = table.Column<int>(type: "int", nullable: false),
                     LastSyncedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
@@ -25,6 +25,12 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     table.PrimaryKey("PK_PlexWatchlistUserStatus", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlexWatchlistUserStatus_UserId",
+                table: "PlexWatchlistUserStatus",
+                column: "UserId",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

@@ -361,9 +361,13 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UserId")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("PlexWatchlistUserStatus");
                 });

@@ -268,6 +268,39 @@ namespace Ombi.Schedule.Tests
         }
 
         [Test]
+        public async Task PreExistingPlexUser_NotInAllFriendsV2_IsMarkedNotAFriend()
+        {
+            // Seed an additional Plex user that no target will match (their ProviderUserId
+            // isn't in allFriendsV2 and isn't the admin).
+            var extraUsers = new List<OmbiUser>
+            {
+                new OmbiUser { Id = AdminOmbiId, UserName = "owner", NormalizedUserName = "OWNER", UserType = UserType.PlexUser, ProviderUserId = AdminUuid },
+                new OmbiUser { Id = "orphan-id", UserName = "orphan", NormalizedUserName = "ORPHAN", UserType = UserType.PlexUser, ProviderUserId = "orphan-uuid" },
+            };
+            _mocker.Use(MockHelper.MockUserManager(extraUsers));
+            _subject = _mocker.CreateInstance<PlexWatchlistImport>();
+            UseDefaultPlexSettings();
+
+            await _subject.Execute(_context.Object);
+
+            _statusStore.Verify(x => x.SetAsync("orphan-id", WatchlistSyncStatus.NotAFriend, It.IsAny<CancellationToken>()), Times.Once);
+            _statusStore.Verify(x => x.SetAsync(AdminOmbiId, WatchlistSyncStatus.NotAFriend, It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Test]
+        public async Task ExceptionDuringImport_MarkedFailed()
+        {
+            UseDefaultPlexSettings();
+            _mocker.Setup<IPlexApi, Task<PlexCommunityWatchlistResponse>>(x => x.GetWatchlistForUser(AdminToken, AdminUuid, It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new System.InvalidOperationException("boom"));
+
+            await _subject.Execute(_context.Object);
+
+            _statusStore.Verify(x => x.SetAsync(AdminOmbiId, WatchlistSyncStatus.Failed, It.IsAny<CancellationToken>()), Times.Once);
+            _statusStore.Verify(x => x.SetAsync(AdminOmbiId, WatchlistSyncStatus.Successful, It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Test]
         public async Task BannedPlexUser_IsSkipped()
         {
             _mocker.Setup<ISettingsService<UserManagementSettings>, Task<UserManagementSettings>>(x => x.GetSettingsAsync())

@@ -363,9 +363,13 @@ namespace Ombi.Store.Migrations.OmbiMySql
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("PlexWatchlistUserStatus");
                 });

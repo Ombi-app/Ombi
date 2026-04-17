@@ -32,25 +32,45 @@ namespace Ombi.Core.Services
                 return;
             }
 
-            await _repo.Add(new PlexWatchlistUserStatus
+            try
             {
-                UserId = ombiUserId,
-                SyncStatus = (int)status,
-                LastSyncedAt = DateTime.UtcNow,
-            });
+                await _repo.Add(new PlexWatchlistUserStatus
+                {
+                    UserId = ombiUserId,
+                    SyncStatus = (int)status,
+                    LastSyncedAt = DateTime.UtcNow,
+                });
+            }
+            catch (DbUpdateException)
+            {
+                // Unique index raced with a concurrent insert — fetch the row we lost to and update it.
+                var row = await _repo.GetAll().FirstOrDefaultAsync(x => x.UserId == ombiUserId, cancellationToken);
+                if (row == null) throw;
+                row.SyncStatus = (int)status;
+                row.LastSyncedAt = DateTime.UtcNow;
+                await _repo.SaveChangesAsync();
+            }
         }
 
         public async Task<WatchlistSyncStatus?> GetAsync(string ombiUserId, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(ombiUserId)) return null;
-            var row = await _repo.GetAll().FirstOrDefaultAsync(x => x.UserId == ombiUserId, cancellationToken);
-            return row == null ? (WatchlistSyncStatus?)null : (WatchlistSyncStatus)row.SyncStatus;
+            var rows = await _repo.GetAll().Where(x => x.UserId == ombiUserId).ToListAsync(cancellationToken);
+            if (rows.Count == 0) return null;
+            return (WatchlistSyncStatus)rows.OrderByDescending(r => r.LastSyncedAt).First().SyncStatus;
         }
 
         public async Task<IReadOnlyDictionary<string, WatchlistSyncStatus>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             var rows = await _repo.GetAll().ToListAsync(cancellationToken);
-            return rows.ToDictionary(r => r.UserId, r => (WatchlistSyncStatus)r.SyncStatus);
+            // Tolerate duplicate rows (shouldn't happen with the unique index, but keeps the admin UI from
+            // throwing if legacy duplicates ever exist).
+            return rows
+                .Where(r => !string.IsNullOrEmpty(r.UserId))
+                .GroupBy(r => r.UserId)
+                .ToDictionary(
+                    g => g.Key,
+                    g => (WatchlistSyncStatus)g.OrderByDescending(r => r.LastSyncedAt).First().SyncStatus);
         }
 
         public async Task ClearAsync(CancellationToken cancellationToken = default)

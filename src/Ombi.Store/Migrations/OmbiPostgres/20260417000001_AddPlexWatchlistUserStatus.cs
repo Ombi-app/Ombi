@@ -16,7 +16,7 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<string>(type: "text", nullable: true),
+                    UserId = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: true),
                     SyncStatus = table.Column<int>(type: "integer", nullable: false),
                     LastSyncedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -24,6 +24,12 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                 {
                     table.PrimaryKey("PK_PlexWatchlistUserStatus", x => x.Id);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlexWatchlistUserStatus_UserId",
+                table: "PlexWatchlistUserStatus",
+                column: "UserId",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

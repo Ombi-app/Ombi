@@ -382,9 +382,13 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                         .HasColumnType("integer");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("text");
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("PlexWatchlistUserStatus");
                 });

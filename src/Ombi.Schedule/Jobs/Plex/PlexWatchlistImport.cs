@@ -101,7 +101,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 OmbiUser user = null;
                 try
                 {
-                    user = await EnsureOmbiUser(target, userManagement);
+                    user = await EnsureOmbiUser(target, userManagement, ct);
                     if (user == null)
                     {
                         continue;
@@ -183,7 +183,7 @@ namespace Ombi.Schedule.Jobs.Plex
             return (targets, friendIds);
         }
 
-        private async Task<OmbiUser> EnsureOmbiUser(PlexCommunityUser plexUser, UserManagementSettings userManagement)
+        private async Task<OmbiUser> EnsureOmbiUser(PlexCommunityUser plexUser, UserManagementSettings userManagement, CancellationToken ct)
         {
             if (userManagement.BannedPlexUserIds != null && userManagement.BannedPlexUserIds.Contains(plexUser.id))
             {
@@ -191,10 +191,10 @@ namespace Ombi.Schedule.Jobs.Plex
                 return null;
             }
 
-            var existing = await _ombiUserManager.Users.FirstOrDefaultAsync(x => x.UserType == UserType.PlexUser && x.ProviderUserId == plexUser.id);
+            var existing = await _ombiUserManager.Users.FirstOrDefaultAsync(x => x.UserType == UserType.PlexUser && x.ProviderUserId == plexUser.id, ct);
             if (existing == null && !string.IsNullOrWhiteSpace(plexUser.username))
             {
-                existing = await _ombiUserManager.Users.FirstOrDefaultAsync(x => x.UserType == UserType.PlexUser && x.UserName == plexUser.username);
+                existing = await _ombiUserManager.Users.FirstOrDefaultAsync(x => x.UserType == UserType.PlexUser && x.UserName == plexUser.username, ct);
                 if (existing != null && existing.ProviderUserId != plexUser.id)
                 {
                     existing.ProviderUserId = plexUser.id;
