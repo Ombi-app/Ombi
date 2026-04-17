@@ -1,3 +1,7 @@
+## [4.58.5](https://github.com/Ombi-app/Ombi/compare/v4.58.4...v4.58.5) (2026-04-17)
+
+
+
 ## [4.58.4](https://github.com/Ombi-app/Ombi/compare/v4.58.3...v4.58.4) (2026-04-17)
 
 
@@ -362,15 +366,6 @@
 
 
 ## [4.49.6](https://github.com/Ombi-app/Ombi/compare/v4.49.5...v4.49.6) (2025-08-24)
-
-
-
-## [4.49.5](https://github.com/Ombi-app/Ombi/compare/v4.49.4...v4.49.5) (2025-08-23)
-
-
-### Bug Fixes
-
-* set MarkedAsApproved on TV requests ([57d3880](https://github.com/Ombi-app/Ombi/commit/57d3880115f8e65e7d7d522aaa725b01878b45fe))
 
 
 
