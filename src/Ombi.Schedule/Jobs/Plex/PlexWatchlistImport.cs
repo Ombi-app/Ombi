@@ -84,7 +84,7 @@ namespace Ombi.Schedule.Jobs.Plex
             var ct = context?.CancellationToken ?? CancellationToken.None;
             await NotifyClient("Starting Watchlist Import");
 
-            var (targets, friendIds, friendsFetched) = await BuildTargetList(adminToken, ct);
+            var (targets, friendIds, friendsFetched, adminResolved) = await BuildTargetList(adminToken, ct);
             if (targets.Count == 0)
             {
                 _logger.LogInformation("No watchlist targets found (admin + friends)");
@@ -122,9 +122,9 @@ namespace Ombi.Schedule.Jobs.Plex
             }
 
             // For existing Plex users that weren't in allFriendsV2, mark them explicitly as NotAFriend.
-            // Only run this sweep when the friends fetch actually succeeded — a transient failure
-            // would otherwise mislabel every Plex user as NotAFriend.
-            if (friendsFetched)
+            // Only run this sweep when both the admin account and the friends list were resolved
+            // cleanly — otherwise a transient failure could mislabel everyone (including the admin).
+            if (friendsFetched && adminResolved)
             {
                 var existingPlexUsers = await _ombiUserManager.Users.Where(x => x.UserType == UserType.PlexUser).ToListAsync(ct);
                 foreach (var existing in existingPlexUsers)
@@ -138,11 +138,12 @@ namespace Ombi.Schedule.Jobs.Plex
             await NotifyClient("Finished Watchlist Import");
         }
 
-        private async Task<(List<PlexCommunityUser> targets, HashSet<string> friendIds, bool friendsFetched)> BuildTargetList(string adminToken, CancellationToken ct)
+        private async Task<(List<PlexCommunityUser> targets, HashSet<string> friendIds, bool friendsFetched, bool adminResolved)> BuildTargetList(string adminToken, CancellationToken ct)
         {
             var targets = new List<PlexCommunityUser>();
             var friendIds = new HashSet<string>();
             var friendsFetched = false;
+            var adminResolved = false;
 
             try
             {
@@ -157,6 +158,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     };
                     targets.Add(adminUser);
                     friendIds.Add(adminUser.id);
+                    adminResolved = true;
                 }
                 else
                 {
@@ -171,12 +173,12 @@ namespace Ombi.Schedule.Jobs.Plex
             try
             {
                 var friendsResponse = await _plexApi.GetAllFriends(adminToken, ct);
-                if (friendsResponse?.errors != null && friendsResponse.errors.Count > 0)
+                var hasErrors = friendsResponse?.errors != null && friendsResponse.errors.Count > 0;
+                if (hasErrors)
                 {
                     _logger.LogWarning("Plex community API returned errors fetching friends: {Errors}",
                         string.Join("; ", friendsResponse.errors.Select(e => e.message)));
                 }
-                var hasErrors = friendsResponse?.errors != null && friendsResponse.errors.Count > 0;
                 var friends = friendsResponse?.data?.allFriendsV2 ?? new List<PlexCommunityFriend>();
                 _logger.LogInformation("Found {Count} Plex friends", friends.Count);
                 foreach (var friend in friends)
@@ -195,7 +197,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 _logger.LogError(ex, "Failed to fetch Plex friends");
             }
 
-            return (targets, friendIds, friendsFetched);
+            return (targets, friendIds, friendsFetched, adminResolved);
         }
 
         private async Task<OmbiUser> EnsureOmbiUser(PlexCommunityUser plexUser, UserManagementSettings userManagement, CancellationToken ct)
@@ -276,14 +278,32 @@ namespace Ombi.Schedule.Jobs.Plex
             return newUser;
         }
 
+        private const int MaxWatchlistPages = 200;
+
         private async Task<bool> ImportWatchlistForUser(string adminToken, PlexCommunityUser plexUser, OmbiUser user, bool monitorAll, CancellationToken ct)
         {
             string cursor = null;
             var currentWatchlistTmdbIds = new HashSet<string>();
             var pendingItems = new List<(PlexCommunityWatchlistNode node, ProviderId ids)>();
+            var seenCursors = new HashSet<string>();
+            var pageCount = 0;
 
             do
             {
+                pageCount++;
+                if (pageCount > MaxWatchlistPages)
+                {
+                    _logger.LogWarning("Watchlist for '{User}' exceeded {Max} pages; stopping to avoid an infinite loop",
+                        plexUser.username, MaxWatchlistPages);
+                    break;
+                }
+                if (!string.IsNullOrEmpty(cursor) && !seenCursors.Add(cursor))
+                {
+                    _logger.LogWarning("Plex community API returned a repeated pagination cursor for '{User}'; stopping",
+                        plexUser.username);
+                    break;
+                }
+
                 var response = await _plexApi.GetWatchlistForUser(adminToken, plexUser.id, cursor, ct);
                 if (response?.errors != null && response.errors.Count > 0)
                 {

@@ -44,12 +44,10 @@ namespace Ombi.Core.Services
             catch (Exception ex) when (ex is DbUpdateException || ex is InvalidOperationException)
             {
                 // Unique index raced with a concurrent insert. BaseRepository wraps DbUpdateException
-                // as InvalidOperationException after detaching the failed Add, so accept both.
-                // Fetch the winning row with AsNoTracking to avoid any leftover tracker state,
-                // then re-query untracked to update it.
-                var winner = await _repo.GetAll().AsNoTracking().FirstOrDefaultAsync(x => x.UserId == ombiUserId, cancellationToken);
-                if (winner == null) throw;
-                var tracked = await _repo.GetAll().FirstOrDefaultAsync(x => x.Id == winner.Id, cancellationToken);
+                // as InvalidOperationException after detaching the failed Add, so accept both and
+                // fetch the winning row to update. The failed Add is already detached, so a plain
+                // tracked lookup is safe here.
+                var tracked = await _repo.GetAll().FirstOrDefaultAsync(x => x.UserId == ombiUserId, cancellationToken);
                 if (tracked == null) throw;
                 tracked.SyncStatus = (int)status;
                 tracked.LastSyncedAt = DateTime.UtcNow;
