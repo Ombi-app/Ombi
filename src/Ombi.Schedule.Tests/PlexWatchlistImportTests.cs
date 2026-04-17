@@ -252,7 +252,7 @@ namespace Ombi.Schedule.Tests
 
             await _subject.Execute(_context.Object);
 
-            _statusStore.Verify(x => x.SetAsync(It.Is<string>(id => id != AdminOmbiId), WatchlistSyncStatus.Failed, It.IsAny<CancellationToken>()), Times.Once);
+            _statusStore.Verify(x => x.SetAsync(It.Is<string>(id => !string.IsNullOrEmpty(id) && id != AdminOmbiId), WatchlistSyncStatus.Failed, It.IsAny<CancellationToken>()), Times.Once);
             _statusStore.Verify(x => x.SetAsync(AdminOmbiId, WatchlistSyncStatus.Failed, It.IsAny<CancellationToken>()), Times.Never);
         }
 

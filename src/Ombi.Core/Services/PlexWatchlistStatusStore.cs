@@ -41,13 +41,18 @@ namespace Ombi.Core.Services
                     LastSyncedAt = DateTime.UtcNow,
                 });
             }
-            catch (DbUpdateException)
+            catch (Exception ex) when (ex is DbUpdateException || ex is InvalidOperationException)
             {
-                // Unique index raced with a concurrent insert — fetch the row we lost to and update it.
-                var row = await _repo.GetAll().FirstOrDefaultAsync(x => x.UserId == ombiUserId, cancellationToken);
-                if (row == null) throw;
-                row.SyncStatus = (int)status;
-                row.LastSyncedAt = DateTime.UtcNow;
+                // Unique index raced with a concurrent insert. BaseRepository wraps DbUpdateException
+                // as InvalidOperationException after detaching the failed Add, so accept both.
+                // Fetch the winning row with AsNoTracking to avoid any leftover tracker state,
+                // then re-query untracked to update it.
+                var winner = await _repo.GetAll().AsNoTracking().FirstOrDefaultAsync(x => x.UserId == ombiUserId, cancellationToken);
+                if (winner == null) throw;
+                var tracked = await _repo.GetAll().FirstOrDefaultAsync(x => x.Id == winner.Id, cancellationToken);
+                if (tracked == null) throw;
+                tracked.SyncStatus = (int)status;
+                tracked.LastSyncedAt = DateTime.UtcNow;
                 await _repo.SaveChangesAsync();
             }
         }

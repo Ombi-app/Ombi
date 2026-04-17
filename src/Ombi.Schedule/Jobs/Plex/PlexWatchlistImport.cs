@@ -84,7 +84,7 @@ namespace Ombi.Schedule.Jobs.Plex
             var ct = context?.CancellationToken ?? CancellationToken.None;
             await NotifyClient("Starting Watchlist Import");
 
-            var (targets, friendIds) = await BuildTargetList(adminToken, ct);
+            var (targets, friendIds, friendsFetched) = await BuildTargetList(adminToken, ct);
             if (targets.Count == 0)
             {
                 _logger.LogInformation("No watchlist targets found (admin + friends)");
@@ -122,22 +122,27 @@ namespace Ombi.Schedule.Jobs.Plex
             }
 
             // For existing Plex users that weren't in allFriendsV2, mark them explicitly as NotAFriend.
-            // (Banned users and users for whom EnsureOmbiUser returned null keep their prior status.)
-            var existingPlexUsers = await _ombiUserManager.Users.Where(x => x.UserType == UserType.PlexUser).ToListAsync(ct);
-            foreach (var existing in existingPlexUsers)
+            // Only run this sweep when the friends fetch actually succeeded — a transient failure
+            // would otherwise mislabel every Plex user as NotAFriend.
+            if (friendsFetched)
             {
-                if (string.IsNullOrEmpty(existing.ProviderUserId)) continue;
-                if (friendIds.Contains(existing.ProviderUserId)) continue;
-                await _statusStore.SetAsync(existing.Id, WatchlistSyncStatus.NotAFriend, ct);
+                var existingPlexUsers = await _ombiUserManager.Users.Where(x => x.UserType == UserType.PlexUser).ToListAsync(ct);
+                foreach (var existing in existingPlexUsers)
+                {
+                    if (string.IsNullOrEmpty(existing.ProviderUserId)) continue;
+                    if (friendIds.Contains(existing.ProviderUserId)) continue;
+                    await _statusStore.SetAsync(existing.Id, WatchlistSyncStatus.NotAFriend, ct);
+                }
             }
 
             await NotifyClient("Finished Watchlist Import");
         }
 
-        private async Task<(List<PlexCommunityUser> targets, HashSet<string> friendIds)> BuildTargetList(string adminToken, CancellationToken ct)
+        private async Task<(List<PlexCommunityUser> targets, HashSet<string> friendIds, bool friendsFetched)> BuildTargetList(string adminToken, CancellationToken ct)
         {
             var targets = new List<PlexCommunityUser>();
             var friendIds = new HashSet<string>();
+            var friendsFetched = false;
 
             try
             {
@@ -166,21 +171,31 @@ namespace Ombi.Schedule.Jobs.Plex
             try
             {
                 var friendsResponse = await _plexApi.GetAllFriends(adminToken, ct);
+                if (friendsResponse?.errors != null && friendsResponse.errors.Count > 0)
+                {
+                    _logger.LogWarning("Plex community API returned errors fetching friends: {Errors}",
+                        string.Join("; ", friendsResponse.errors.Select(e => e.message)));
+                }
+                var hasErrors = friendsResponse?.errors != null && friendsResponse.errors.Count > 0;
                 var friends = friendsResponse?.data?.allFriendsV2 ?? new List<PlexCommunityFriend>();
-                _logger.LogInformation($"Found {friends.Count} Plex friends");
+                _logger.LogInformation("Found {Count} Plex friends", friends.Count);
                 foreach (var friend in friends)
                 {
                     if (friend?.user == null || string.IsNullOrWhiteSpace(friend.user.id)) continue;
                     targets.Add(friend.user);
                     friendIds.Add(friend.user.id);
                 }
+                // Only claim we fetched the friends list if the API returned no errors. A populated
+                // errors collection means the data we got is unreliable, so downstream code must not
+                // treat missing entries as "no longer a friend".
+                friendsFetched = !hasErrors;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to fetch Plex friends");
             }
 
-            return (targets, friendIds);
+            return (targets, friendIds, friendsFetched);
         }
 
         private async Task<OmbiUser> EnsureOmbiUser(PlexCommunityUser plexUser, UserManagementSettings userManagement, CancellationToken ct)
@@ -195,10 +210,21 @@ namespace Ombi.Schedule.Jobs.Plex
             if (existing == null && !string.IsNullOrWhiteSpace(plexUser.username))
             {
                 existing = await _ombiUserManager.Users.FirstOrDefaultAsync(x => x.UserType == UserType.PlexUser && x.UserName == plexUser.username, ct);
-                if (existing != null && existing.ProviderUserId != plexUser.id)
+                if (existing != null)
                 {
-                    existing.ProviderUserId = plexUser.id;
-                    await _ombiUserManager.UpdateAsync(existing);
+                    if (string.IsNullOrWhiteSpace(existing.ProviderUserId))
+                    {
+                        existing.ProviderUserId = plexUser.id;
+                        await _ombiUserManager.UpdateAsync(existing);
+                    }
+                    else if (existing.ProviderUserId != plexUser.id)
+                    {
+                        // Username collision with a different Plex account — don't reassign and
+                        // skip importing for this target to avoid hijacking the existing user.
+                        _logger.LogWarning("Plex user '{Username}' ({NewId}) collides with existing Ombi user bound to {ExistingId}; skipping",
+                            plexUser.username, plexUser.id, existing.ProviderUserId);
+                        return null;
+                    }
                 }
             }
 
