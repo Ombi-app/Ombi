@@ -1,4 +1,4 @@
-﻿namespace Ombi.Core.Models
+namespace Ombi.Core.Models
 {
     public class PlexUserWatchlistModel
     {
@@ -9,8 +9,8 @@
 
     public enum WatchlistSyncStatus
     {
-        Successful,
-        Failed,
-        NotEnabled
+        Successful = 0,
+        Failed = 1,
+        NotAFriend = 2,
     }
 }

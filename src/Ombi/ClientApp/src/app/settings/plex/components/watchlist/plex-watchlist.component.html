@@ -1,21 +1,21 @@
 ﻿<div class="watchlist-dialog-container">
   <mat-card class="watchlist-dialog-card">
     <mat-card-header>
-      <mat-card-title>Watchlist User Errors</mat-card-title>
+      <mat-card-title>Watchlist Users</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div class="watchlist-info-section">
-        <mat-icon color="warn" class="info-icon">error_outline</mat-icon>
+        <mat-icon color="primary" class="info-icon">info</mat-icon>
         <span>
-          If there is an authentication error, this is because of an authentication issue with Plex (Token has expired). 
-          If this happens the user needs to re-login to Ombi.
+          Ombi now syncs watchlists using the server owner's Plex token &mdash; users never need to log in.
+          A user shows "Not a friend" if the server owner isn't a Plex friend of theirs, or they haven't set their watchlist visibility to "Friends" in Plex.
         </span>
       </div>
       <mat-progress-bar *ngIf="isReloading" mode="indeterminate"></mat-progress-bar>
       <div class="watchlist-legend">
         <span><mat-icon color="primary">check_circle</mat-icon> Successfully syncing the watchlist</span>
-        <span><mat-icon color="warn">cancel</mat-icon> Authentication error syncing the watchlist</span>
-        <span><mat-icon color="accent">person_off</mat-icon> Not enabled for user (They need to log into Ombi via Plex)</span>
+        <span><mat-icon color="warn">cancel</mat-icon> Error returned by the Plex community API</span>
+        <span><mat-icon color="accent">person_off</mat-icon> Not a friend of the server owner, or watchlist visibility is not set to Friends</span>
       </div>
       <table mat-table *ngIf="dataSource" [dataSource]="dataSource" matSort class="mat-elevation-z8 modern-table">
         <ng-container matColumnDef="userName">
@@ -27,7 +27,7 @@
           <td mat-cell *matCellDef="let element">
             <mat-icon *ngIf="element.syncStatus === WatchlistSyncStatus.Successful" color="primary">check_circle</mat-icon>
             <mat-icon *ngIf="element.syncStatus === WatchlistSyncStatus.Failed" color="warn">cancel</mat-icon>
-            <mat-icon *ngIf="element.syncStatus === WatchlistSyncStatus.NotEnabled" color="accent">person_off</mat-icon>
+            <mat-icon *ngIf="element.syncStatus === WatchlistSyncStatus.NotAFriend" color="accent">person_off</mat-icon>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

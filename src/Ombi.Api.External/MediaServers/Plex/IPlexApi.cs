@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Ombi.Api.External.MediaServers.Plex.Models;
+using Ombi.Api.External.MediaServers.Plex.Models.Community;
 using Ombi.Api.External.MediaServers.Plex.Models.Friends;
 using Ombi.Api.External.MediaServers.Plex.Models.OAuth;
 using Ombi.Api.External.MediaServers.Plex.Models.Server;
@@ -30,5 +31,7 @@ namespace Ombi.Api.External.MediaServers.Plex
         Task<PlexWatchlistContainer> GetWatchlist(string plexToken, CancellationToken cancellationToken);
         Task<PlexWatchlistMetadataContainer> GetWatchlistMetadata(string ratingKey, string plexToken, CancellationToken cancellationToken);
         Task<bool> Ping(string authToken, CancellationToken cancellationToken = default);
+        Task<PlexCommunityFriendsResponse> GetAllFriends(string adminToken, CancellationToken cancellationToken);
+        Task<PlexCommunityWatchlistResponse> GetWatchlistForUser(string adminToken, string plexUserId, string afterCursor, CancellationToken cancellationToken);
     }
 }

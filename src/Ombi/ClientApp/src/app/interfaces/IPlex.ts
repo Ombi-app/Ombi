@@ -158,7 +158,7 @@ export interface IPlexWatchlistUsers {
 
 export enum WatchlistSyncStatus
 {
-    Successful,
-    Failed,
-    NotEnabled
+    Successful = 0,
+    Failed = 1,
+    NotAFriend = 2,
 }
