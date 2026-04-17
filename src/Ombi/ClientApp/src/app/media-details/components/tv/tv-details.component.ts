@@ -134,6 +134,13 @@ export class TvDetailsComponent implements OnInit {
         }
     }
 
+    public request() {
+        const grid = document.getElementById("requests-grid");
+        if (grid) {
+            grid.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+    }
+
     public async issue() {
         const dialogRef = this.dialog.open(NewIssueComponent, {
             width: '500px',
