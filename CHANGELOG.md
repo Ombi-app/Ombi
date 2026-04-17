@@ -1,3 +1,12 @@
+## [4.58.4](https://github.com/Ombi-app/Ombi/compare/v4.58.3...v4.58.4) (2026-04-17)
+
+
+### Bug Fixes
+
+* restore TV details hero Request button behavior ([#5396](https://github.com/Ombi-app/Ombi/issues/5396)) ([0804e2b](https://github.com/Ombi-app/Ombi/commit/0804e2b8556e190f70b7d8f48dcdf9c9a49827c0))
+
+
+
 ## [4.58.3](https://github.com/Ombi-app/Ombi/compare/v4.58.2...v4.58.3) (2026-04-08)
 
 
@@ -362,10 +371,6 @@
 ### Bug Fixes
 
 * set MarkedAsApproved on TV requests ([57d3880](https://github.com/Ombi-app/Ombi/commit/57d3880115f8e65e7d7d522aaa725b01878b45fe))
-
-
-
-## [4.49.4](https://github.com/Ombi-app/Ombi/compare/v4.49.3...v4.49.4) (2025-08-23)
 
 
 
