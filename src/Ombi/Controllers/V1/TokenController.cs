@@ -36,13 +36,12 @@ namespace Ombi.Controllers.V1
     [ApiController]
     public class TokenController : BaseController
     {
-        public TokenController(OmbiUserManager um, ITokenRepository token, IRepository<PlexWatchlistUserError> watchlistUserErrors,
+        public TokenController(OmbiUserManager um, ITokenRepository token,
             IPlexOAuthManager oAuthManager, ILogger<TokenController> logger, ISettingsService<AuthenticationSettings> auth,
             ISettingsService<UserManagementSettings> userManagement)
         {
             _userManager = um;
             _token = token;
-            _watchlistUserErrors = watchlistUserErrors;
             _plexOAuthManager = oAuthManager;
             _log = logger;
             _authSettings = auth;
@@ -51,7 +50,6 @@ namespace Ombi.Controllers.V1
 
         private readonly ITokenRepository _token;
         private readonly OmbiUserManager _userManager;
-        private readonly IRepository<PlexWatchlistUserError> _watchlistUserErrors;
         private readonly IPlexOAuthManager _plexOAuthManager;
         private readonly ILogger<TokenController> _log;
         private readonly ISettingsService<AuthenticationSettings> _authSettings;
@@ -138,18 +136,6 @@ namespace Ombi.Controllers.V1
 
         private async Task<IActionResult> CreateToken(bool rememberMe, OmbiUser user)
         {
-            if (user?.UserType == UserType.PlexUser)
-            {
-                var existingErrors = await _watchlistUserErrors.GetAll()
-                    .Where(x => x.UserId == user.Id)
-                    .ToListAsync();
-
-                if (existingErrors.Count > 0)
-                {
-                    await _watchlistUserErrors.DeleteRange(existingErrors);
-                }
-            }
-
             var roles = await _userManager.GetRolesAsync(user);
 
             if (roles.Contains(OmbiRoles.Disabled))

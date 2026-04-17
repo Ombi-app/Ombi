@@ -48,18 +48,6 @@
                         </mat-card-content>
                     </mat-card>
 
-                    <mat-card class="setting-card" [class.disabled]="!settings.enableWatchlistImport">
-                        <mat-card-content>
-                            <div class="setting-header">
-                                <h3>Notify on Token Expiration</h3>
-                                <mat-slide-toggle [id]="'notifyOnWatchlistTokenExpiration'" [(ngModel)]="settings.notifyOnWatchlistTokenExpiration" [disabled]="!settings.enableWatchlistImport"></mat-slide-toggle>
-                            </div>
-                            <p class="setting-description">
-                                When enabled, users will receive a notification if their Plex watchlist token expires and they need to log into Ombi again to continue using the watchlist feature.
-                                <br><strong>Note:</strong> This requires email notifications to be configured in the notification settings, and users must have an email address set on their account to receive these notifications.
-                            </p>
-                        </mat-card-content>
-                    </mat-card>
                 </div>
                 <mat-card class="info-banner">
                     <mat-icon color="primary" style="margin-right: 12px;">info</mat-icon>

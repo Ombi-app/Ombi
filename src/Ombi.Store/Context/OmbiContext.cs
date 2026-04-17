@@ -45,7 +45,15 @@ namespace Ombi.Store.Context
         public DbSet<RequestLog> RequestLogs { get; set; }
         public DbSet<RecentlyAddedLog> RecentlyAddedLogs { get; set; }
         public DbSet<Votes> Votes { get; set; }
-        public DbSet<PlexWatchlistUserError> PlexWatchListUserError { get; set; }
+        public DbSet<PlexWatchlistUserStatus> PlexWatchlistUserStatus { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<PlexWatchlistUserStatus>()
+                .HasIndex(x => x.UserId)
+                .IsUnique();
+        }
 
 
         public DbSet<Audit> Audit { get; set; }
@@ -248,15 +256,8 @@ namespace Ombi.Store.Context
                             };
                             break;
                         case NotificationType.PlexWatchlistTokenExpired:
-                            notificationToAdd = new NotificationTemplates
-                            {
-                                NotificationType = notificationType,
-                                Message = "Hello {UserName}! Your Plex watchlist token has expired. Please re-authenticate with Ombi to continue using the watchlist feature.",
-                                Subject = "Plex Watchlist Token Expired",
-                                Agent = agent,
-                                Enabled = true,
-                            };
-                            break;
+                            // Deprecated: watchlist sync now uses the admin token, so user tokens never expire.
+                            continue;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }

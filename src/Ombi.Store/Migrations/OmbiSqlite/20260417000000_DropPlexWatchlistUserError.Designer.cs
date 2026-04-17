@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Ombi.Store.Context.Sqlite;
 
@@ -10,9 +11,10 @@ using Ombi.Store.Context.Sqlite;
 namespace Ombi.Store.Migrations.OmbiSqlite
 {
     [DbContext(typeof(OmbiSqliteContext))]
-    partial class OmbiSqliteContextModelSnapshot : ModelSnapshot
+    [Migration("20260417000000_DropPlexWatchlistUserError")]
+    partial class DropPlexWatchlistUserError
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.9");
@@ -346,30 +348,6 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("Ombi.Store.Entities.PlexWatchlistUserStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("LastSyncedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("SyncStatus")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("UserId")
-                        .HasMaxLength(128)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("PlexWatchlistUserStatus");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.RecentlyAddedLog", b =>

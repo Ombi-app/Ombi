@@ -27,7 +27,6 @@ namespace Ombi.Core.Engine
         private readonly IMusicRequestRepository _musicRepository;
         private readonly IRepository<Votes> _voteRepository;
         private readonly IRepository<MobileDevices> _mobileDevicesRepository;
-        private readonly IRepository<PlexWatchlistUserError> _watchlistUserError;
 
         public UserDeletionEngine(IMovieRequestRepository movieRepository,
                                     OmbiUserManager userManager,
@@ -41,8 +40,7 @@ namespace Ombi.Core.Engine
                                     IRepository<UserNotificationPreferences> notificationPreferencesRepo,
                                     IRepository<UserQualityProfiles> qualityProfilesRepo,
                                     IRepository<Votes> voteRepository,
-                                    IRepository<MobileDevices> mobileDevicesRepository,
-                                    IRepository<PlexWatchlistUserError> watchlistUserError
+                                    IRepository<MobileDevices> mobileDevicesRepository
                                     )
         {
             _movieRepository = movieRepository;
@@ -59,7 +57,6 @@ namespace Ombi.Core.Engine
             _userQualityProfiles = qualityProfilesRepo;
             _voteRepository = voteRepository;
             _mobileDevicesRepository = mobileDevicesRepository;
-            _watchlistUserError = watchlistUserError;
         }
 
 
@@ -72,7 +69,6 @@ namespace Ombi.Core.Engine
             var musicRequested = _musicRepository.GetAll().Where(x => x.RequestedUserId == userId);
             var notificationPreferences = _userNotificationPreferences.GetAll().Where(x => x.UserId == userId);
             var userQuality = await _userQualityProfiles.GetAll().FirstOrDefaultAsync(x => x.UserId == userId);
-            var watchlistError = await _watchlistUserError.GetAll().FirstOrDefaultAsync(x => x.UserId == userId);
 
             if (moviesUserRequested.Any())
             {
@@ -93,10 +89,6 @@ namespace Ombi.Core.Engine
             if (userQuality != null)
             {
                 await _userQualityProfiles.Delete(userQuality);
-            }
-            if (watchlistError != null)
-            {
-                await _watchlistUserError.Delete(watchlistError);
             }
 
             // Delete any issues and request logs

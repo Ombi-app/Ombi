@@ -365,7 +365,7 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Ombi.Store.Entities.PlexWatchlistUserError", b =>
+            modelBuilder.Entity("Ombi.Store.Entities.PlexWatchlistUserStatus", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -373,15 +373,22 @@ namespace Ombi.Store.Migrations.OmbiPostgres
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("MediaServerToken")
-                        .HasColumnType("text");
+                    b.Property<DateTime>("LastSyncedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("SyncStatus")
+                        .HasColumnType("integer");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("text");
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("PlexWatchlistUserError");
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("PlexWatchlistUserStatus");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.RecentlyAddedLog", b =>
