@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using UserType = Ombi.Store.Entities.UserType;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
