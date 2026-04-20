@@ -11,5 +11,9 @@
         public string WindowsServiceName { get; set; }
         public bool WindowsService { get; set; }
         public bool TestMode { get; set; }
+        /// <summary>
+        /// Cron expression controlling how often the auto-updater checks for new versions.
+        /// </summary>
+        public string UpdateSchedule { get; set; }
     }
 }

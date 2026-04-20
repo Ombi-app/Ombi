@@ -120,7 +120,7 @@ namespace Ombi.Controllers.V1
         }
 
         [HttpGet("about")]
-        public AboutViewModel About()
+        public async Task<AboutViewModel> About()
         {
             var dbConfiguration = DatabaseExtensions.GetDatabaseConfiguration();
             var storage = StartupSingleton.Instance;
@@ -142,7 +142,8 @@ namespace Ombi.Controllers.V1
             var version = AssemblyHelper.GetRuntimeVersion();
             var productArray = version.Split('-');
             model.Version = productArray[0];
-            //model.Branch = productArray[1];
+            var ombiSettings = await Get<OmbiSettings>();
+            model.Branch = ombiSettings?.Branch.ToString() ?? "Stable";
             return model;
         }
 

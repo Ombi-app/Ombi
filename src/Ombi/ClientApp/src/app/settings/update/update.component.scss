@@ -1,0 +1,38 @@
+@use "./styles/shared.scss" as *;
+.small-middle-container {
+    margin: auto;
+    width: 95%;
+    margin-top: 10px;
+}
+
+fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.description {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 1.5rem;
+}
+
+.update-warning-icon {
+    color: #df691a;
+}
+
+mat-form-field {
+    max-width: 300px;
+    margin-bottom: 0.5rem;
+}
+
+.section-top {
+    margin-top: 1rem;
+}
+
+.section-top-lg {
+    margin-top: 1.5rem;
+}
+
+.field-spacing {
+    padding-bottom: 1.25rem;
+}

@@ -1,0 +1,101 @@
+<div class="small-middle-container">
+    <fieldset>
+        <legend>Update Settings</legend>
+        <p class="description">
+            When auto-update is enabled, Ombi will check for new versions on the configured schedule.
+            If an update is found, it will automatically download the latest release, stop the running
+            Ombi process, replace the application files, and restart. You can also use a custom script
+            to handle the update process if you have a non-standard setup.
+        </p>
+        <div *ngIf="form">
+            <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+                <div class="col-md-12 col-12 col-sm-12">
+
+                    <div>
+                        <mat-slide-toggle formControlName="autoUpdateEnabled"
+                            (change)="onAutoUpdateToggle()"
+                            matTooltip="When enabled, Ombi will automatically download and install updates on the configured schedule.">
+                            Enable Auto-Update
+                        </mat-slide-toggle>
+                    </div>
+
+                    <div *ngIf="form.get('autoUpdateEnabled').value" class="section-top">
+                        <div class="field-spacing">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Check Frequency</mat-label>
+                                <mat-select formControlName="updateSchedule">
+                                    <mat-option *ngFor="let opt of scheduleOptions" [value]="opt.value">
+                                        {{ opt.label }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-hint>How often Ombi checks for new versions.</mat-hint>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="field-spacing">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Process Name</mat-label>
+                                <input matInput formControlName="processName"
+                                    placeholder="Ombi">
+                                <mat-hint>The name of the Ombi process. Change this only if you renamed the executable.</mat-hint>
+                            </mat-form-field>
+                        </div>
+
+                        <div>
+                            <mat-slide-toggle formControlName="useScript"
+                                matTooltip="Use a custom script to handle the update process instead of the built-in updater.">
+                                Use Custom Update Script
+                            </mat-slide-toggle>
+                        </div>
+
+                        <div *ngIf="form.get('useScript').value">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Script Location</mat-label>
+                                <input matInput formControlName="scriptLocation"
+                                    [placeholder]="form.get('isWindows').value ? 'C:\\scripts\\update.ps1' : '/path/to/update-script.sh'">
+                                <mat-error *ngIf="form.get('scriptLocation')?.hasError('required')">
+                                    Script location is required when custom script is enabled.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="section-top-lg">
+                        <h4>Version Information</h4>
+                        <p *ngIf="about">
+                            Current version: <strong>v{{ about.version }}</strong> ({{ about.branch }})
+                        </p>
+                        <div *ngIf="updateStatus" role="status" aria-live="polite">
+                            <p *ngIf="updateStatus.updateAvailable">
+                                <i class="fas fa-exclamation-circle update-warning-icon" aria-hidden="true"></i>
+                                Update available: <strong>v{{ updateStatus.updateVersionString }}</strong>
+                            </p>
+                            <p *ngIf="!updateStatus.updateAvailable">
+                                <i class="far fa-thumbs-up" aria-hidden="true"></i> You are running the latest version.
+                            </p>
+                        </div>
+                        <p>
+                            Branch can be configured on the
+                            <a routerLink="/Settings/Ombi">General Settings</a>
+                            page (Stable or Develop).
+                        </p>
+                        <button mat-raised-button type="button" (click)="checkForUpdate()"
+                            [disabled]="checkingForUpdate"
+                            [attr.aria-busy]="checkingForUpdate"
+                            class="mat-stroked-button">
+                            <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                            {{ checkingForUpdate ? 'Checking...' : 'Check for Update Now' }}
+                        </button>
+                    </div>
+
+                    <div class="form-group section-top-lg" *ngIf="form.get('autoUpdateEnabled').value">
+                        <div>
+                            <button mat-raised-button [disabled]="form.invalid" type="submit"
+                                class="mat-stroked-button accent mat-accent">Save Settings</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </fieldset>
+</div>

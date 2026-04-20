@@ -121,4 +121,9 @@
     </ItemGroup>
   </Target>
 
+  <!-- Include version.json in build and publish output -->
+  <ItemGroup>
+    <None Include="..\..\version.json" CopyToOutputDirectory="PreserveNewest" Link="version.json" />
+  </ItemGroup>
+
 </Project>
