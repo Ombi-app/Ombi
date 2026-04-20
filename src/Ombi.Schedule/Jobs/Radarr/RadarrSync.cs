@@ -43,6 +43,8 @@ namespace Ombi.Schedule.Jobs.Radarr
                 // Let's remove the old cached data
                 using var tran = await _ctx.Database.BeginTransactionAsync();
                 await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM RadarrCache");
+                // Reset auto-increment to prevent Int32 overflow (see #5224)
+                await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM sqlite_sequence WHERE name = 'RadarrCache'");
                 await tran.CommitAsync();
 
                 var radarrSettings = _radarrSettings.GetSettingsAsync();
