@@ -1,3 +1,12 @@
+## [4.53.5](https://github.com/Ombi-app/Ombi/compare/v4.53.4...v4.53.5) (2026-04-20)
+
+
+### Bug Fixes
+
+* reset sqlite_sequence after cache table deletes to prevent Int32 overflow ([#5398](https://github.com/Ombi-app/Ombi/issues/5398)) ([02e7c8e](https://github.com/Ombi-app/Ombi/commit/02e7c8e3c013b9c4620c381e143ecbded25f694d)), closes [#5224](https://github.com/Ombi-app/Ombi/issues/5224)
+
+
+
 ## [4.53.4](https://github.com/Ombi-app/Ombi/compare/v4.53.2...v4.53.4) (2026-01-08)
 
 
@@ -319,15 +328,6 @@
 
 
 ## [4.46.6](https://github.com/Ombi-app/Ombi/compare/v4.46.5...v4.46.6) (2024-11-24)
-
-
-
-## [4.46.5](https://github.com/Ombi-app/Ombi/compare/v4.46.4...v4.46.5) (2024-11-23)
-
-
-### Bug Fixes
-
-* **Fixed the UI not applying the correct timezone settings:** :bug: ([029ea79](https://github.com/Ombi-app/Ombi/commit/029ea7919220fbc506898733caeb4370053051a7))
 
 
 
