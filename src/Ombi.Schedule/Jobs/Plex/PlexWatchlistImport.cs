@@ -300,10 +300,16 @@ namespace Ombi.Schedule.Jobs.Plex
             }
 
             // Resolve the numeric plex.tv id for this username up-front (if /api/users gave
-            // us one) so we can match an existing row by either the community UUID or the
-            // numeric id. Without the numeric leg, a friend who renamed their plex.tv
-            // account would slip past both lookups and produce a duplicate Ombi row pointing
-            // at the same numeric id.
+            // us one) and use it as the primary lookup. New rows only ever get the numeric
+            // id (community-only friends are skipped below), so there's no reason to query
+            // by the community UUID here.
+            //
+            // Rows created by Ombi 4.59 with the community UUID in ProviderUserId still
+            // exist in users' databases. Those are picked up by the username fallback: the
+            // stored UUID will equal plexUser.id for the non-renamed common case, so the
+            // adoption path accepts it. If a user renamed their plex.tv account AND has a
+            // 4.59-era UUID row, the fallback won't find them and a duplicate row will be
+            // created — acknowledged edge case, not worth a migration to fix.
             string resolvedNumericId = null;
             if (legacyIdsByUsername != null
                 && !string.IsNullOrWhiteSpace(plexUser.username)
@@ -315,10 +321,8 @@ namespace Ombi.Schedule.Jobs.Plex
 
             var existing = resolvedNumericId != null
                 ? await _ombiUserManager.Users.FirstOrDefaultAsync(x =>
-                    x.UserType == UserType.PlexUser
-                    && (x.ProviderUserId == plexUser.id || x.ProviderUserId == resolvedNumericId), ct)
-                : await _ombiUserManager.Users.FirstOrDefaultAsync(x =>
-                    x.UserType == UserType.PlexUser && x.ProviderUserId == plexUser.id, ct);
+                    x.UserType == UserType.PlexUser && x.ProviderUserId == resolvedNumericId, ct)
+                : null;
             if (existing == null && !string.IsNullOrWhiteSpace(plexUser.username))
             {
                 // Fall back to a username match. Pre-existing users imported via the legacy

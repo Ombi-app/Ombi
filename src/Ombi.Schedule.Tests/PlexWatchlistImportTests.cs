@@ -377,6 +377,39 @@ namespace Ombi.Schedule.Tests
         }
 
         [Test]
+        public async Task ExistingFriendWithCommunityUuidProviderId_IsAdoptedViaUsernameFallback()
+        {
+            // Regression for the 4.59 -> 4.60 upgrade path. Ombi 4.59's watchlist importer
+            // auto-created friends with the community UUID in ProviderUserId. After this PR
+            // we never store UUIDs again, but those rows are still in users' databases.
+            // The username fallback must adopt them (the stored UUID equals the target's id,
+            // so the collision check passes), so the existing row keeps being used and we
+            // don't produce a duplicate via the create path.
+            const string communityUuid = "old-friend-uuid";
+            var users = new List<OmbiUser>
+            {
+                new OmbiUser { Id = AdminOmbiId, UserName = "owner", NormalizedUserName = "OWNER", UserType = UserType.PlexUser, ProviderUserId = AdminUuid, MediaServerToken = AdminToken },
+                new OmbiUser { Id = "uuid-row-id", UserName = "uuidfriend", NormalizedUserName = "UUIDFRIEND", UserType = UserType.PlexUser, ProviderUserId = communityUuid },
+            };
+            var userMgr = MockHelper.MockUserManager(users);
+            SetupAdminRole(userMgr, AdminOmbiId);
+            _mocker.Use(userMgr);
+            _subject = _mocker.CreateInstance<PlexWatchlistImport>();
+            UseDefaultPlexSettings();
+            SetupFriends((communityUuid, "uuidfriend"));
+            SetupLegacyUsers(("44556677", "uuidfriend"));
+
+            await _subject.Execute(_context.Object);
+
+            _mocker.Verify<Core.Authentication.OmbiUserManager>(x => x.CreateAsync(It.IsAny<OmbiUser>()), Times.Never);
+            _mocker.Verify<Core.Authentication.OmbiUserManager>(x => x.UpdateAsync(It.Is<OmbiUser>(u => u.Id == "uuid-row-id")), Times.Never);
+            _mocker.Verify<IPlexApi>(x => x.GetWatchlistForUser(AdminToken, communityUuid, It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
+            _statusStore.Verify(x => x.SetAsync("uuid-row-id", WatchlistSyncStatus.Successful, It.IsAny<CancellationToken>()), Times.Once);
+            // The 4.59-era UUID stays put — we don't rewrite it.
+            Assert.That(users.Single(u => u.Id == "uuid-row-id").ProviderUserId, Is.EqualTo(communityUuid));
+        }
+
+        [Test]
         public async Task ExistingFriendWithLegacyNumericProviderId_IsAdoptedWithoutRewritingProviderUserId()
         {
             // Regression for https://github.com/Ombi-app/Ombi/issues/5399.
