@@ -577,6 +577,25 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistForUser(AdminToken, AdminUuid, It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
+        [Test]
+        public async Task BannedByLegacyNumericId_IsSkipped()
+        {
+            // PlexUserImporter stores the numeric plex.tv id in BannedPlexUserIds when an admin
+            // bans a user. The watchlist importer sees UUIDs from the community API, so the ban
+            // check has to accept either id shape or numeric bans silently let the user through.
+            const string numericId = "555444";
+            _mocker.Setup<ISettingsService<UserManagementSettings>, Task<UserManagementSettings>>(x => x.GetSettingsAsync())
+                .ReturnsAsync(new UserManagementSettings { BannedPlexUserIds = new List<string> { numericId } });
+            UseDefaultPlexSettings();
+            SetupFriends(("banned-uuid", "bannedbyname"));
+            SetupLegacyUsers((numericId, "bannedbyname"));
+
+            await _subject.Execute(_context.Object);
+
+            _mocker.Verify<IPlexApi>(x => x.GetWatchlistForUser(AdminToken, "banned-uuid", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+            _mocker.Verify<Core.Authentication.OmbiUserManager>(x => x.CreateAsync(It.IsAny<OmbiUser>()), Times.Never);
+        }
+
         private static void SetupAdminRole(Mock<OmbiUserManager> mgr, string adminUserId)
         {
             mgr.Setup(x => x.IsInRoleAsync(It.Is<OmbiUser>(u => u.Id == adminUserId), OmbiRoles.Admin))
