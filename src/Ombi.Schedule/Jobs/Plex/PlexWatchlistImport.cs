@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Ombi.Api.External.MediaServers.Plex;
 using Ombi.Api.External.MediaServers.Plex.Models;
 using Ombi.Api.External.MediaServers.Plex.Models.Community;
+using Ombi.Api.External.MediaServers.Plex.Models.Friends;
 using Ombi.Api.External.ExternalApis.TheMovieDb;
 using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
 using Ombi.Core.Authentication;
@@ -94,7 +95,7 @@ namespace Ombi.Schedule.Jobs.Plex
             _logger.LogInformation($"Watchlist import using server '{selectedServer.Name}' (machine {selectedServer.MachineIdentifier})");
             await NotifyClient("Starting Watchlist Import");
 
-            var (targets, friendsFetched, adminResolved) = await BuildTargetList(adminToken, ct);
+            var (targets, legacyIdsByUsername, friendsFetched, adminResolved) = await BuildTargetList(adminToken, ct);
             if (targets.Count == 0)
             {
                 _logger.LogInformation("No watchlist targets found (admin + friends)");
@@ -112,7 +113,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 OmbiUser user = null;
                 try
                 {
-                    user = await EnsureOmbiUser(target, userManagement, ct);
+                    user = await EnsureOmbiUser(target, userManagement, legacyIdsByUsername, ct);
                     if (user == null)
                     {
                         continue;
@@ -135,20 +136,23 @@ namespace Ombi.Schedule.Jobs.Plex
             }
 
             // For existing Plex users that didn't match a target this run, mark them as NotAFriend.
-            // The sweep skips a row if any of these are true:
+            // The sweep skips a row when:
             //   * we successfully matched it to a target (matchedUserIds), OR
-            //   * its UserName matches a target's username, OR
-            //   * its ProviderUserId matches a target's community id.
-            // The latter two cover edge cases where matchedUserIds is incomplete:
-            // banned users (EnsureOmbiUser returns null), transient EnsureOmbiUser failures,
-            // and legacy-numeric ProviderUserId rows. Only run the sweep when both admin and
-            // friends resolved cleanly AND the run wasn't cancelled — otherwise matched data
-            // may be incomplete and we'd mislabel valid friends.
+            //   * its ProviderUserId matches a target's community id, OR
+            //   * its UserName matches a target's username AND the stored ProviderUserId is
+            //     either blank, legacy-numeric, or matches one of those username-targets' ids.
+            // The username-AND-id-aware skip is important: a stale row whose username has been
+            // reused by a different Plex account is still a stale row and should be flipped.
+            // The legacy/blank/match exemption preserves the #5399 fix for legacy-imported
+            // friends and protects banned/transient-failure rows where EnsureOmbiUser didn't
+            // successfully match. Only run the sweep when both admin and friends resolved
+            // cleanly AND the run wasn't cancelled — otherwise matched data may be incomplete.
             if (!ct.IsCancellationRequested && friendsFetched && adminResolved)
             {
-                var targetUsernames = new HashSet<string>(
-                    targets.Where(t => !string.IsNullOrWhiteSpace(t.username)).Select(t => t.username),
-                    StringComparer.OrdinalIgnoreCase);
+                var targetsByUsername = targets
+                    .Where(t => !string.IsNullOrWhiteSpace(t.username))
+                    .GroupBy(t => t.username, StringComparer.OrdinalIgnoreCase)
+                    .ToDictionary(g => g.Key, g => g.ToList(), StringComparer.OrdinalIgnoreCase);
                 var targetIds = new HashSet<string>(
                     targets.Where(t => !string.IsNullOrWhiteSpace(t.id)).Select(t => t.id),
                     StringComparer.Ordinal);
@@ -157,8 +161,18 @@ namespace Ombi.Schedule.Jobs.Plex
                 foreach (var existing in existingPlexUsers)
                 {
                     if (matchedUserIds.Contains(existing.Id)) continue;
-                    if (!string.IsNullOrWhiteSpace(existing.UserName) && targetUsernames.Contains(existing.UserName)) continue;
                     if (!string.IsNullOrWhiteSpace(existing.ProviderUserId) && targetIds.Contains(existing.ProviderUserId)) continue;
+                    if (!string.IsNullOrWhiteSpace(existing.UserName)
+                        && targetsByUsername.TryGetValue(existing.UserName, out var usernameTargets))
+                    {
+                        var stored = existing.ProviderUserId;
+                        if (string.IsNullOrWhiteSpace(stored)
+                            || IsLegacyNumericPlexId(stored)
+                            || usernameTargets.Any(t => string.Equals(stored, t.id, StringComparison.Ordinal)))
+                        {
+                            continue;
+                        }
+                    }
                     await _statusStore.SetAsync(existing.Id, WatchlistSyncStatus.NotAFriend, ct);
                 }
             }
@@ -183,9 +197,14 @@ namespace Ombi.Schedule.Jobs.Plex
             return null;
         }
 
-        private async Task<(List<PlexCommunityUser> targets, bool friendsFetched, bool adminResolved)> BuildTargetList(string adminToken, CancellationToken ct)
+        private async Task<(List<PlexCommunityUser> targets, Dictionary<string, string> legacyIdsByUsername, bool friendsFetched, bool adminResolved)> BuildTargetList(string adminToken, CancellationToken ct)
         {
             var targets = new List<PlexCommunityUser>();
+            // Maps Plex username -> numeric plex.tv account id. The community API only returns
+            // UUIDs, but the rest of Ombi (PlexUserImporter, GetOmbiUserFromPlexToken, the wizard)
+            // keys on the numeric id, so we resolve it here so newly-created friend rows are
+            // consistent with everything else.
+            var legacyIdsByUsername = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             var friendsFetched = false;
             var adminResolved = false;
 
@@ -201,6 +220,10 @@ namespace Ombi.Schedule.Jobs.Plex
                         displayName = account.user.title,
                     };
                     targets.Add(adminUser);
+                    if (!string.IsNullOrWhiteSpace(adminUser.username) && !string.IsNullOrWhiteSpace(account.user.id))
+                    {
+                        legacyIdsByUsername[adminUser.username] = account.user.id;
+                    }
                     adminResolved = true;
                 }
                 else
@@ -222,27 +245,53 @@ namespace Ombi.Schedule.Jobs.Plex
                     _logger.LogWarning("Plex community API returned errors fetching friends: {Errors}",
                         string.Join("; ", friendsResponse.errors.Select(e => e.message)));
                 }
-                var friends = friendsResponse?.data?.allFriendsV2 ?? new List<PlexCommunityFriend>();
+                var friends = friendsResponse?.data?.allFriendsV2;
+                if (friends == null)
+                {
+                    _logger.LogWarning("Plex community API returned no friends payload; the NotAFriend sweep will be skipped");
+                    friends = new List<PlexCommunityFriend>();
+                }
                 _logger.LogInformation("Found {Count} Plex friends", friends.Count);
                 foreach (var friend in friends)
                 {
                     if (friend?.user == null || string.IsNullOrWhiteSpace(friend.user.id)) continue;
                     targets.Add(friend.user);
                 }
-                // Only claim we fetched the friends list if the API returned no errors. A populated
-                // errors collection means the data we got is unreliable, so downstream code must not
-                // treat missing entries as "no longer a friend".
-                friendsFetched = !hasErrors;
+                // Only claim we fetched the friends list if the API returned no errors AND we
+                // actually got a payload. A populated errors collection or a null payload means
+                // the data is unreliable, so downstream code must not treat missing entries as
+                // "no longer a friend".
+                friendsFetched = !hasErrors && friendsResponse?.data?.allFriendsV2 != null;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to fetch Plex friends");
             }
 
-            return (targets, friendsFetched, adminResolved);
+            // Pull the legacy /api/users list to map friend usernames -> numeric plex.tv ids.
+            // Friends without server-share access aren't in this list; for those we fall back
+            // to the community UUID when creating their Ombi row.
+            try
+            {
+                var legacyUsers = await _plexApi.GetUsers(adminToken);
+                if (legacyUsers?.User != null)
+                {
+                    foreach (var u in legacyUsers.User)
+                    {
+                        if (string.IsNullOrWhiteSpace(u?.Username) || string.IsNullOrWhiteSpace(u.Id)) continue;
+                        legacyIdsByUsername[u.Username] = u.Id;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to fetch legacy Plex user list; new friends will fall back to community UUIDs for ProviderUserId");
+            }
+
+            return (targets, legacyIdsByUsername, friendsFetched, adminResolved);
         }
 
-        private async Task<OmbiUser> EnsureOmbiUser(PlexCommunityUser plexUser, UserManagementSettings userManagement, CancellationToken ct)
+        private async Task<OmbiUser> EnsureOmbiUser(PlexCommunityUser plexUser, UserManagementSettings userManagement, IReadOnlyDictionary<string, string> legacyIdsByUsername, CancellationToken ct)
         {
             if (userManagement.BannedPlexUserIds != null && userManagement.BannedPlexUserIds.Contains(plexUser.id))
             {
@@ -296,11 +345,25 @@ namespace Ombi.Schedule.Jobs.Plex
                 return null;
             }
 
+            // Prefer the numeric plex.tv account id so the new row is consistent with rows
+            // created by PlexUserImporter / IdentityController, and so /Token/plextoken
+            // (OmbiUserManager.GetOmbiUserFromPlexToken) can authenticate this user. Fall
+            // back to the community UUID only when we couldn't resolve a numeric id (e.g.
+            // a friend without server-share access who isn't in /api/users).
+            var providerUserId = plexUser.id;
+            if (legacyIdsByUsername != null
+                && !string.IsNullOrWhiteSpace(plexUser.username)
+                && legacyIdsByUsername.TryGetValue(plexUser.username, out var legacyId)
+                && !string.IsNullOrWhiteSpace(legacyId))
+            {
+                providerUserId = legacyId;
+            }
+
             var newUser = new OmbiUser
             {
                 UserType = UserType.PlexUser,
                 UserName = plexUser.username,
-                ProviderUserId = plexUser.id,
+                ProviderUserId = providerUserId,
                 Email = string.Empty,
                 Alias = plexUser.displayName ?? string.Empty,
                 MovieRequestLimit = userManagement.MovieRequestLimit,

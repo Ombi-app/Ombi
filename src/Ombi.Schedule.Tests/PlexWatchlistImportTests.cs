@@ -5,6 +5,7 @@ using NUnit.Framework;
 using Ombi.Api.External.MediaServers.Plex;
 using Ombi.Api.External.MediaServers.Plex.Models;
 using Ombi.Api.External.MediaServers.Plex.Models.Community;
+using Ombi.Api.External.MediaServers.Plex.Models.Friends;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
@@ -282,14 +283,61 @@ namespace Ombi.Schedule.Tests
         }
 
         [Test]
-        public async Task NewFriendWithoutOmbiUser_IsCreated()
+        public async Task NewFriendNotInLegacyUsersList_IsCreatedWithCommunityUuidFallback()
         {
+            // /api/users only contains friends with server-share access. A community-only
+            // friend won't be in there, so we have no numeric id to use; fall back to the
+            // community UUID rather than skip the user.
             UseDefaultPlexSettings();
             SetupFriends(("brand-new", "newbie"));
+            // Default _plexApi.GetUsers mock returns null — friend not in legacy list.
 
             await _subject.Execute(_context.Object);
 
             _mocker.Verify<Core.Authentication.OmbiUserManager>(x => x.CreateAsync(It.Is<OmbiUser>(u => u.UserName == "newbie" && u.ProviderUserId == "brand-new" && u.UserType == UserType.PlexUser)), Times.Once);
+        }
+
+        [Test]
+        public async Task NewFriendInLegacyUsersList_IsCreatedWithNumericPlexId()
+        {
+            // The community API returns a UUID for friends, but the rest of Ombi
+            // (PlexUserImporter, GetOmbiUserFromPlexToken, the wizard) keys on the numeric
+            // plex.tv id. When /api/users gives us the numeric id for this username we use
+            // it, so the new row stays consistent with everything else.
+            UseDefaultPlexSettings();
+            SetupFriends(("community-uuid", "newbie"));
+            SetupLegacyUsers(("99887766", "newbie"));
+
+            await _subject.Execute(_context.Object);
+
+            _mocker.Verify<Core.Authentication.OmbiUserManager>(x => x.CreateAsync(It.Is<OmbiUser>(u => u.UserName == "newbie" && u.ProviderUserId == "99887766" && u.UserType == UserType.PlexUser)), Times.Once);
+            // The watchlist call still uses the community UUID — that's the API's id space.
+            _mocker.Verify<IPlexApi>(x => x.GetWatchlistForUser(AdminToken, "community-uuid", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test]
+        public async Task AdminWithoutPriorOmbiRow_IsCreatedWithNumericPlexId()
+        {
+            // GetAccount returns both the UUID and the numeric id for the admin. The new
+            // admin row should be created with the numeric id so /Token/plextoken works
+            // for them on first login.
+            var users = new List<OmbiUser>
+            {
+                // Some other admin sourced the OAuth token, but the plex.tv account being
+                // resolved doesn't yet have an Ombi row by username.
+                new OmbiUser { Id = AdminOmbiId, UserName = "tokenholder", NormalizedUserName = "TOKENHOLDER", UserType = UserType.PlexUser, ProviderUserId = "tokenholder-uuid", MediaServerToken = AdminToken },
+            };
+            var userMgr = MockHelper.MockUserManager(users);
+            SetupAdminRole(userMgr, AdminOmbiId);
+            _mocker.Use(userMgr);
+            _mocker.Setup<IPlexApi, Task<PlexAccount>>(x => x.GetAccount(AdminToken))
+                .ReturnsAsync(new PlexAccount { user = new User { uuid = "owner-uuid", id = "11223344", username = "owner-account", title = "Owner Account" } });
+            _subject = _mocker.CreateInstance<PlexWatchlistImport>();
+            UseDefaultPlexSettings();
+
+            await _subject.Execute(_context.Object);
+
+            _mocker.Verify<Core.Authentication.OmbiUserManager>(x => x.CreateAsync(It.Is<OmbiUser>(u => u.UserName == "owner-account" && u.ProviderUserId == "11223344" && u.UserType == UserType.PlexUser)), Times.Once);
         }
 
         [Test]
@@ -340,10 +388,8 @@ namespace Ombi.Schedule.Tests
             // doesn't match the incoming community id is a real collision (e.g. a Plex
             // username was reused after the original account was deleted). We must not
             // hijack the existing row, and we must not sync against the new uuid.
-            // The sweep should also leave the row alone: the username does appear in the
-            // target list (a different Plex account happens to have it), so flipping the
-            // existing row to NotAFriend would be incorrect — it's a different question
-            // from "is this exact account still a friend".
+            // The sweep should ALSO flip the existing row to NotAFriend — it's a stale
+            // ghost: the original Plex account it was bound to is no longer a friend.
             var users = new List<OmbiUser>
             {
                 new OmbiUser { Id = AdminOmbiId, UserName = "owner", NormalizedUserName = "OWNER", UserType = UserType.PlexUser, ProviderUserId = AdminUuid, MediaServerToken = AdminToken },
@@ -360,7 +406,7 @@ namespace Ombi.Schedule.Tests
 
             _mocker.Verify<Core.Authentication.OmbiUserManager>(x => x.UpdateAsync(It.IsAny<OmbiUser>()), Times.Never);
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistForUser(AdminToken, "different-uuid", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
-            _statusStore.Verify(x => x.SetAsync("other-id", WatchlistSyncStatus.NotAFriend, It.IsAny<CancellationToken>()), Times.Never);
+            _statusStore.Verify(x => x.SetAsync("other-id", WatchlistSyncStatus.NotAFriend, It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test]
@@ -468,6 +514,15 @@ namespace Ombi.Schedule.Tests
                 .ReturnsAsync(true);
             mgr.Setup(x => x.IsInRoleAsync(It.Is<OmbiUser>(u => u.Id != adminUserId), OmbiRoles.Admin))
                 .ReturnsAsync(false);
+        }
+
+        private void SetupLegacyUsers(params (string id, string username)[] users)
+        {
+            _mocker.Setup<IPlexApi, Task<PlexUsers>>(x => x.GetUsers(AdminToken))
+                .ReturnsAsync(new PlexUsers
+                {
+                    User = users.Select(u => new UserFriends { Id = u.id, Username = u.username }).ToArray()
+                });
         }
 
         private void SetupFriends(params (string id, string username)[] friends)
