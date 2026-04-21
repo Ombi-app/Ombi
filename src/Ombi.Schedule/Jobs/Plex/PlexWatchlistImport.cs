@@ -94,7 +94,7 @@ namespace Ombi.Schedule.Jobs.Plex
             _logger.LogInformation($"Watchlist import using server '{selectedServer.Name}' (machine {selectedServer.MachineIdentifier})");
             await NotifyClient("Starting Watchlist Import");
 
-            var (targets, friendIds, friendsFetched, adminResolved) = await BuildTargetList(adminToken, ct);
+            var (targets, friendsFetched, adminResolved) = await BuildTargetList(adminToken, ct);
             if (targets.Count == 0)
             {
                 _logger.LogInformation("No watchlist targets found (admin + friends)");
@@ -103,6 +103,7 @@ namespace Ombi.Schedule.Jobs.Plex
             }
 
             var userManagement = await _userManagementSettings.GetSettingsAsync();
+            var matchedUserIds = new HashSet<string>();
 
             foreach (var target in targets)
             {
@@ -116,6 +117,8 @@ namespace Ombi.Schedule.Jobs.Plex
                     {
                         continue;
                     }
+
+                    matchedUserIds.Add(user.Id);
 
                     var succeeded = await ImportWatchlistForUser(adminToken, target, user, settings.MonitorAll, ct);
                     await _statusStore.SetAsync(user.Id, succeeded ? WatchlistSyncStatus.Successful : WatchlistSyncStatus.Failed, ct);
@@ -131,16 +134,18 @@ namespace Ombi.Schedule.Jobs.Plex
                 }
             }
 
-            // For existing Plex users that weren't in allFriendsV2, mark them explicitly as NotAFriend.
-            // Only run this sweep when both the admin account and the friends list were resolved
-            // cleanly — otherwise a transient failure could mislabel everyone (including the admin).
+            // For existing Plex users that didn't match a target this run, mark them as NotAFriend.
+            // We compare against Ombi user ids (not ProviderUserId) because pre-existing users
+            // imported via the legacy /api/users path store the numeric plex.tv id while the
+            // community API returns UUIDs — the two won't match even for the same user.
+            // Only run the sweep when both admin and friends resolved cleanly, otherwise a
+            // transient failure could mislabel everyone.
             if (friendsFetched && adminResolved)
             {
                 var existingPlexUsers = await _ombiUserManager.Users.Where(x => x.UserType == UserType.PlexUser).ToListAsync(ct);
                 foreach (var existing in existingPlexUsers)
                 {
-                    if (string.IsNullOrEmpty(existing.ProviderUserId)) continue;
-                    if (friendIds.Contains(existing.ProviderUserId)) continue;
+                    if (matchedUserIds.Contains(existing.Id)) continue;
                     await _statusStore.SetAsync(existing.Id, WatchlistSyncStatus.NotAFriend, ct);
                 }
             }
@@ -165,10 +170,9 @@ namespace Ombi.Schedule.Jobs.Plex
             return null;
         }
 
-        private async Task<(List<PlexCommunityUser> targets, HashSet<string> friendIds, bool friendsFetched, bool adminResolved)> BuildTargetList(string adminToken, CancellationToken ct)
+        private async Task<(List<PlexCommunityUser> targets, bool friendsFetched, bool adminResolved)> BuildTargetList(string adminToken, CancellationToken ct)
         {
             var targets = new List<PlexCommunityUser>();
-            var friendIds = new HashSet<string>();
             var friendsFetched = false;
             var adminResolved = false;
 
@@ -184,7 +188,6 @@ namespace Ombi.Schedule.Jobs.Plex
                         displayName = account.user.title,
                     };
                     targets.Add(adminUser);
-                    friendIds.Add(adminUser.id);
                     adminResolved = true;
                 }
                 else
@@ -212,7 +215,6 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     if (friend?.user == null || string.IsNullOrWhiteSpace(friend.user.id)) continue;
                     targets.Add(friend.user);
-                    friendIds.Add(friend.user.id);
                 }
                 // Only claim we fetched the friends list if the API returned no errors. A populated
                 // errors collection means the data we got is unreliable, so downstream code must not
@@ -224,7 +226,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 _logger.LogError(ex, "Failed to fetch Plex friends");
             }
 
-            return (targets, friendIds, friendsFetched, adminResolved);
+            return (targets, friendsFetched, adminResolved);
         }
 
         private async Task<OmbiUser> EnsureOmbiUser(PlexCommunityUser plexUser, UserManagementSettings userManagement, CancellationToken ct)
@@ -238,27 +240,16 @@ namespace Ombi.Schedule.Jobs.Plex
             var existing = await _ombiUserManager.Users.FirstOrDefaultAsync(x => x.UserType == UserType.PlexUser && x.ProviderUserId == plexUser.id, ct);
             if (existing == null && !string.IsNullOrWhiteSpace(plexUser.username))
             {
+                // Fall back to a username match. We deliberately don't overwrite a populated
+                // ProviderUserId here — pre-existing users imported via the legacy /api/users
+                // path store the numeric plex.tv account id, while the community API we use for
+                // watchlist returns the account UUID. They're the same person, but other auth
+                // paths (notably /api/v1/Token/plextoken via OmbiUserManager.GetOmbiUserFromPlexToken)
+                // still match on the numeric id, so we leave it intact and use the in-memory
+                // matchedUserIds set to drive the NotAFriend sweep.
+                // Plex usernames are globally unique within UserType.PlexUser, so a username
+                // hit here is the same account.
                 existing = await _ombiUserManager.Users.FirstOrDefaultAsync(x => x.UserType == UserType.PlexUser && x.UserName == plexUser.username, ct);
-                if (existing != null)
-                {
-                    if (string.IsNullOrWhiteSpace(existing.ProviderUserId) || IsLegacyPlexAccountId(existing.ProviderUserId))
-                    {
-                        // Pre-existing users imported by the legacy Plex User Importer have the
-                        // numeric plex.tv account id in ProviderUserId, but the community API we
-                        // use for watchlist returns the account UUID. Upgrade the stored id so
-                        // future runs match on the first lookup.
-                        existing.ProviderUserId = plexUser.id;
-                        await _ombiUserManager.UpdateAsync(existing);
-                    }
-                    else if (existing.ProviderUserId != plexUser.id)
-                    {
-                        // Username collision with a different Plex account — don't reassign and
-                        // skip importing for this target to avoid hijacking the existing user.
-                        _logger.LogWarning("Plex user '{Username}' ({NewId}) collides with existing Ombi user bound to {ExistingId}; skipping",
-                            plexUser.username, plexUser.id, existing.ProviderUserId);
-                        return null;
-                    }
-                }
             }
 
             if (existing != null)
@@ -307,19 +298,6 @@ namespace Ombi.Schedule.Jobs.Plex
                 }
             }
             return newUser;
-        }
-
-        // Legacy /api/users returns a numeric plex.tv account id; the community GraphQL API
-        // returns a UUID. We use this to recognise records created by the old importer so we
-        // can transparently upgrade them to the community id.
-        private static bool IsLegacyPlexAccountId(string providerUserId)
-        {
-            if (string.IsNullOrWhiteSpace(providerUserId)) return false;
-            for (var i = 0; i < providerUserId.Length; i++)
-            {
-                if (!char.IsDigit(providerUserId[i])) return false;
-            }
-            return true;
         }
 
         private const int MaxWatchlistPages = 200;

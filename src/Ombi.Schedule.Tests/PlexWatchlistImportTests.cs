@@ -293,12 +293,17 @@ namespace Ombi.Schedule.Tests
         }
 
         [Test]
-        public async Task ExistingFriendWithLegacyNumericProviderId_IsMigratedAndImported()
+        public async Task ExistingFriendWithLegacyNumericProviderId_IsAdoptedWithoutRewritingProviderUserId()
         {
+            // Regression for https://github.com/Ombi-app/Ombi/issues/5399.
             // User was previously imported via the legacy /api/users path, which stores the
-            // numeric plex.tv account id in ProviderUserId. The community API now returns a
-            // UUID for the same user — the import must adopt that record, not skip it as a
-            // collision (https://github.com/Ombi-app/Ombi/issues/5399).
+            // numeric plex.tv account id in ProviderUserId. The community API returns a UUID
+            // for the same user. The import must:
+            //   * adopt the existing row by username (no duplicate, no skip),
+            //   * leave ProviderUserId untouched so /Token/plextoken (which matches on the
+            //     numeric id) keeps working,
+            //   * sync the watchlist against the community UUID,
+            //   * not mark the user as NotAFriend in the post-run sweep.
             const string legacyNumericId = "12345678";
             const string communityUuid = "friend-uuid";
             var users = new List<OmbiUser>
@@ -315,36 +320,17 @@ namespace Ombi.Schedule.Tests
 
             await _subject.Execute(_context.Object);
 
-            // The existing user should be updated to carry the community UUID, not duplicated.
             _mocker.Verify<Core.Authentication.OmbiUserManager>(x => x.CreateAsync(It.IsAny<OmbiUser>()), Times.Never);
-            _mocker.Verify<Core.Authentication.OmbiUserManager>(x => x.UpdateAsync(It.Is<OmbiUser>(u => u.Id == "legacy-id" && u.ProviderUserId == communityUuid)), Times.Once);
+            // Crucially: do not rewrite ProviderUserId on the legacy row — that would break
+            // /api/v1/Token/plextoken which still resolves users by numeric plex.tv id.
+            _mocker.Verify<Core.Authentication.OmbiUserManager>(x => x.UpdateAsync(It.Is<OmbiUser>(u => u.Id == "legacy-id")), Times.Never);
+            Assert.That(users.Single(u => u.Id == "legacy-id").ProviderUserId, Is.EqualTo(legacyNumericId));
 
-            // And the watchlist should actually sync for them, against the community UUID.
+            // Watchlist syncs against the community UUID, not the stored numeric id.
             _mocker.Verify<IPlexApi>(x => x.GetWatchlistForUser(AdminToken, communityUuid, It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
             _statusStore.Verify(x => x.SetAsync("legacy-id", WatchlistSyncStatus.Successful, It.IsAny<CancellationToken>()), Times.Once);
-        }
-
-        [Test]
-        public async Task ExistingFriendUsernameCollisionWithDifferentUuid_IsSkipped()
-        {
-            // If a username collides with an existing user that already has a proper
-            // community UUID stored, we must NOT hijack that user — we skip the new one.
-            var users = new List<OmbiUser>
-            {
-                new OmbiUser { Id = AdminOmbiId, UserName = "owner", NormalizedUserName = "OWNER", UserType = UserType.PlexUser, ProviderUserId = AdminUuid, MediaServerToken = AdminToken },
-                new OmbiUser { Id = "other-id", UserName = "duplicate", NormalizedUserName = "DUPLICATE", UserType = UserType.PlexUser, ProviderUserId = "real-uuid-for-other" },
-            };
-            var userMgr = MockHelper.MockUserManager(users);
-            SetupAdminRole(userMgr, AdminOmbiId);
-            _mocker.Use(userMgr);
-            _subject = _mocker.CreateInstance<PlexWatchlistImport>();
-            UseDefaultPlexSettings();
-            SetupFriends(("different-uuid", "duplicate"));
-
-            await _subject.Execute(_context.Object);
-
-            _mocker.Verify<Core.Authentication.OmbiUserManager>(x => x.UpdateAsync(It.IsAny<OmbiUser>()), Times.Never);
-            _mocker.Verify<IPlexApi>(x => x.GetWatchlistForUser(AdminToken, "different-uuid", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+            // And the post-run sweep must not mislabel a user we just synced.
+            _statusStore.Verify(x => x.SetAsync("legacy-id", WatchlistSyncStatus.NotAFriend, It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
