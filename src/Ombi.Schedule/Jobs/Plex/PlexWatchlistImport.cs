@@ -241,8 +241,12 @@ namespace Ombi.Schedule.Jobs.Plex
                 existing = await _ombiUserManager.Users.FirstOrDefaultAsync(x => x.UserType == UserType.PlexUser && x.UserName == plexUser.username, ct);
                 if (existing != null)
                 {
-                    if (string.IsNullOrWhiteSpace(existing.ProviderUserId))
+                    if (string.IsNullOrWhiteSpace(existing.ProviderUserId) || IsLegacyPlexAccountId(existing.ProviderUserId))
                     {
+                        // Pre-existing users imported by the legacy Plex User Importer have the
+                        // numeric plex.tv account id in ProviderUserId, but the community API we
+                        // use for watchlist returns the account UUID. Upgrade the stored id so
+                        // future runs match on the first lookup.
                         existing.ProviderUserId = plexUser.id;
                         await _ombiUserManager.UpdateAsync(existing);
                     }
@@ -303,6 +307,19 @@ namespace Ombi.Schedule.Jobs.Plex
                 }
             }
             return newUser;
+        }
+
+        // Legacy /api/users returns a numeric plex.tv account id; the community GraphQL API
+        // returns a UUID. We use this to recognise records created by the old importer so we
+        // can transparently upgrade them to the community id.
+        private static bool IsLegacyPlexAccountId(string providerUserId)
+        {
+            if (string.IsNullOrWhiteSpace(providerUserId)) return false;
+            for (var i = 0; i < providerUserId.Length; i++)
+            {
+                if (!char.IsDigit(providerUserId[i])) return false;
+            }
+            return true;
         }
 
         private const int MaxWatchlistPages = 200;
