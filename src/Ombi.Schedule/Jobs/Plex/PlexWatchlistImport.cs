@@ -299,7 +299,26 @@ namespace Ombi.Schedule.Jobs.Plex
                 return null;
             }
 
-            var existing = await _ombiUserManager.Users.FirstOrDefaultAsync(x => x.UserType == UserType.PlexUser && x.ProviderUserId == plexUser.id, ct);
+            // Resolve the numeric plex.tv id for this username up-front (if /api/users gave
+            // us one) so we can match an existing row by either the community UUID or the
+            // numeric id. Without the numeric leg, a friend who renamed their plex.tv
+            // account would slip past both lookups and produce a duplicate Ombi row pointing
+            // at the same numeric id.
+            string resolvedNumericId = null;
+            if (legacyIdsByUsername != null
+                && !string.IsNullOrWhiteSpace(plexUser.username)
+                && legacyIdsByUsername.TryGetValue(plexUser.username, out var legacyId)
+                && !string.IsNullOrWhiteSpace(legacyId))
+            {
+                resolvedNumericId = legacyId;
+            }
+
+            var existing = resolvedNumericId != null
+                ? await _ombiUserManager.Users.FirstOrDefaultAsync(x =>
+                    x.UserType == UserType.PlexUser
+                    && (x.ProviderUserId == plexUser.id || x.ProviderUserId == resolvedNumericId), ct)
+                : await _ombiUserManager.Users.FirstOrDefaultAsync(x =>
+                    x.UserType == UserType.PlexUser && x.ProviderUserId == plexUser.id, ct);
             if (existing == null && !string.IsNullOrWhiteSpace(plexUser.username))
             {
                 // Fall back to a username match. Pre-existing users imported via the legacy
@@ -345,25 +364,28 @@ namespace Ombi.Schedule.Jobs.Plex
                 return null;
             }
 
-            // Prefer the numeric plex.tv account id so the new row is consistent with rows
-            // created by PlexUserImporter / IdentityController, and so /Token/plextoken
-            // (OmbiUserManager.GetOmbiUserFromPlexToken) can authenticate this user. Fall
-            // back to the community UUID only when we couldn't resolve a numeric id (e.g.
-            // a friend without server-share access who isn't in /api/users).
-            var providerUserId = plexUser.id;
-            if (legacyIdsByUsername != null
-                && !string.IsNullOrWhiteSpace(plexUser.username)
-                && legacyIdsByUsername.TryGetValue(plexUser.username, out var legacyId)
-                && !string.IsNullOrWhiteSpace(legacyId))
+            // Only auto-create rows for friends Ombi can treat as first-class PlexUsers — ones
+            // with a numeric plex.tv account id from /api/users. That's the same identifier
+            // PlexUserImporter, GetOmbiUserFromPlexToken and IdentityController already key on,
+            // so the new row participates in cleanup, login, and reconciliation cleanly.
+            //
+            // Community-only friends (no server-share access, so not in /api/users) are
+            // intentionally skipped: we have no numeric id for them, they can't authenticate
+            // via /Token/plextoken, and PlexUserImporter.CleanupPlexUsers would delete them
+            // on its next run anyway. To sync their watchlist, share your server with them.
+            if (string.IsNullOrWhiteSpace(resolvedNumericId))
             {
-                providerUserId = legacyId;
+                _logger.LogInformation(
+                    "Skipping Plex community friend '{Username}' ({PlexUserId}): not in the server's /api/users list. Share the Plex server with them to enable watchlist sync.",
+                    plexUser.username, plexUser.id);
+                return null;
             }
 
             var newUser = new OmbiUser
             {
                 UserType = UserType.PlexUser,
                 UserName = plexUser.username,
-                ProviderUserId = providerUserId,
+                ProviderUserId = resolvedNumericId,
                 Email = string.Empty,
                 Alias = plexUser.displayName ?? string.Empty,
                 MovieRequestLimit = userManagement.MovieRequestLimit,

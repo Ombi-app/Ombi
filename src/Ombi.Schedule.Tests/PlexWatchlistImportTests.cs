@@ -259,6 +259,7 @@ namespace Ombi.Schedule.Tests
         {
             UseDefaultPlexSettings();
             SetupFriends(("friend-uuid", "friend"));
+            SetupLegacyUsers(("12345", "friend"));
 
             await _subject.Execute(_context.Object);
 
@@ -270,6 +271,7 @@ namespace Ombi.Schedule.Tests
         {
             UseDefaultPlexSettings();
             SetupFriends(("friend-uuid", "some-friend"));
+            SetupLegacyUsers(("54321", "some-friend"));
             _mocker.Setup<IPlexApi, Task<PlexCommunityWatchlistResponse>>(x => x.GetWatchlistForUser(AdminToken, "friend-uuid", It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new PlexCommunityWatchlistResponse
                 {
@@ -283,18 +285,22 @@ namespace Ombi.Schedule.Tests
         }
 
         [Test]
-        public async Task NewFriendNotInLegacyUsersList_IsCreatedWithCommunityUuidFallback()
+        public async Task CommunityOnlyFriendNotInLegacyUsersList_IsSkipped()
         {
             // /api/users only contains friends with server-share access. A community-only
-            // friend won't be in there, so we have no numeric id to use; fall back to the
-            // community UUID rather than skip the user.
+            // friend isn't there, so we have no numeric plex.tv id and no way to make their
+            // row participate in PlexUserImporter cleanup, /Token/plextoken auth, etc.
+            // Auto-creating them would lead to PlexUserImporter.CleanupPlexUsers deleting
+            // them on its next run. Skip them entirely; ask the operator to share the server
+            // with the friend if they want their watchlist synced.
             UseDefaultPlexSettings();
             SetupFriends(("brand-new", "newbie"));
             // Default _plexApi.GetUsers mock returns null — friend not in legacy list.
 
             await _subject.Execute(_context.Object);
 
-            _mocker.Verify<Core.Authentication.OmbiUserManager>(x => x.CreateAsync(It.Is<OmbiUser>(u => u.UserName == "newbie" && u.ProviderUserId == "brand-new" && u.UserType == UserType.PlexUser)), Times.Once);
+            _mocker.Verify<Core.Authentication.OmbiUserManager>(x => x.CreateAsync(It.IsAny<OmbiUser>()), Times.Never);
+            _mocker.Verify<IPlexApi>(x => x.GetWatchlistForUser(AdminToken, "brand-new", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
@@ -338,6 +344,36 @@ namespace Ombi.Schedule.Tests
             await _subject.Execute(_context.Object);
 
             _mocker.Verify<Core.Authentication.OmbiUserManager>(x => x.CreateAsync(It.Is<OmbiUser>(u => u.UserName == "owner-account" && u.ProviderUserId == "11223344" && u.UserType == UserType.PlexUser)), Times.Once);
+        }
+
+        [Test]
+        public async Task ExistingFriendWhoRenamedPlexAccount_IsAdoptedNotDuplicated()
+        {
+            // A Plex user previously imported with ProviderUserId = "12345" and UserName
+            // = "oldname" later changes their plex.tv username to "newname". The community
+            // API now reports them with the new username, and /api/users still maps newname
+            // -> "12345". Without resolving the numeric id up-front and matching on either
+            // the UUID or the numeric id, we'd miss the existing row (no UUID match, no
+            // username match) and create a second row pointing at the same "12345".
+            const string numericId = "12345";
+            var users = new List<OmbiUser>
+            {
+                new OmbiUser { Id = AdminOmbiId, UserName = "owner", NormalizedUserName = "OWNER", UserType = UserType.PlexUser, ProviderUserId = AdminUuid, MediaServerToken = AdminToken },
+                new OmbiUser { Id = "renamed-id", UserName = "oldname", NormalizedUserName = "OLDNAME", UserType = UserType.PlexUser, ProviderUserId = numericId },
+            };
+            var userMgr = MockHelper.MockUserManager(users);
+            SetupAdminRole(userMgr, AdminOmbiId);
+            _mocker.Use(userMgr);
+            _subject = _mocker.CreateInstance<PlexWatchlistImport>();
+            UseDefaultPlexSettings();
+            SetupFriends(("renamed-uuid", "newname"));
+            SetupLegacyUsers((numericId, "newname"));
+
+            await _subject.Execute(_context.Object);
+
+            _mocker.Verify<Core.Authentication.OmbiUserManager>(x => x.CreateAsync(It.IsAny<OmbiUser>()), Times.Never);
+            _mocker.Verify<IPlexApi>(x => x.GetWatchlistForUser(AdminToken, "renamed-uuid", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
+            _statusStore.Verify(x => x.SetAsync("renamed-id", WatchlistSyncStatus.Successful, It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test]
