@@ -135,17 +135,30 @@ namespace Ombi.Schedule.Jobs.Plex
             }
 
             // For existing Plex users that didn't match a target this run, mark them as NotAFriend.
-            // We compare against Ombi user ids (not ProviderUserId) because pre-existing users
-            // imported via the legacy /api/users path store the numeric plex.tv id while the
-            // community API returns UUIDs — the two won't match even for the same user.
-            // Only run the sweep when both admin and friends resolved cleanly, otherwise a
-            // transient failure could mislabel everyone.
-            if (friendsFetched && adminResolved)
+            // The sweep skips a row if any of these are true:
+            //   * we successfully matched it to a target (matchedUserIds), OR
+            //   * its UserName matches a target's username, OR
+            //   * its ProviderUserId matches a target's community id.
+            // The latter two cover edge cases where matchedUserIds is incomplete:
+            // banned users (EnsureOmbiUser returns null), transient EnsureOmbiUser failures,
+            // and legacy-numeric ProviderUserId rows. Only run the sweep when both admin and
+            // friends resolved cleanly AND the run wasn't cancelled — otherwise matched data
+            // may be incomplete and we'd mislabel valid friends.
+            if (!ct.IsCancellationRequested && friendsFetched && adminResolved)
             {
+                var targetUsernames = new HashSet<string>(
+                    targets.Where(t => !string.IsNullOrWhiteSpace(t.username)).Select(t => t.username),
+                    StringComparer.OrdinalIgnoreCase);
+                var targetIds = new HashSet<string>(
+                    targets.Where(t => !string.IsNullOrWhiteSpace(t.id)).Select(t => t.id),
+                    StringComparer.Ordinal);
+
                 var existingPlexUsers = await _ombiUserManager.Users.Where(x => x.UserType == UserType.PlexUser).ToListAsync(ct);
                 foreach (var existing in existingPlexUsers)
                 {
                     if (matchedUserIds.Contains(existing.Id)) continue;
+                    if (!string.IsNullOrWhiteSpace(existing.UserName) && targetUsernames.Contains(existing.UserName)) continue;
+                    if (!string.IsNullOrWhiteSpace(existing.ProviderUserId) && targetIds.Contains(existing.ProviderUserId)) continue;
                     await _statusStore.SetAsync(existing.Id, WatchlistSyncStatus.NotAFriend, ct);
                 }
             }
@@ -240,16 +253,36 @@ namespace Ombi.Schedule.Jobs.Plex
             var existing = await _ombiUserManager.Users.FirstOrDefaultAsync(x => x.UserType == UserType.PlexUser && x.ProviderUserId == plexUser.id, ct);
             if (existing == null && !string.IsNullOrWhiteSpace(plexUser.username))
             {
-                // Fall back to a username match. We deliberately don't overwrite a populated
-                // ProviderUserId here — pre-existing users imported via the legacy /api/users
-                // path store the numeric plex.tv account id, while the community API we use for
-                // watchlist returns the account UUID. They're the same person, but other auth
-                // paths (notably /api/v1/Token/plextoken via OmbiUserManager.GetOmbiUserFromPlexToken)
-                // still match on the numeric id, so we leave it intact and use the in-memory
-                // matchedUserIds set to drive the NotAFriend sweep.
-                // Plex usernames are globally unique within UserType.PlexUser, so a username
-                // hit here is the same account.
-                existing = await _ombiUserManager.Users.FirstOrDefaultAsync(x => x.UserType == UserType.PlexUser && x.UserName == plexUser.username, ct);
+                // Fall back to a username match. Pre-existing users imported via the legacy
+                // /api/users path store the numeric plex.tv account id, while the community API
+                // returns the account UUID — same user, different identifier. We adopt that row
+                // without rewriting ProviderUserId so /api/v1/Token/plextoken
+                // (OmbiUserManager.GetOmbiUserFromPlexToken matches on the numeric id) keeps
+                // working; the in-memory matchedUserIds set drives the NotAFriend sweep instead.
+                //
+                // If the existing row already has a non-numeric ProviderUserId that doesn't
+                // match the community id, treat it as a real collision and skip — Plex usernames
+                // can be reused after an account is deleted, and we don't want to hijack the
+                // existing row.
+                var usernameMatch = await _ombiUserManager.Users.FirstOrDefaultAsync(x => x.UserType == UserType.PlexUser && x.UserName == plexUser.username, ct);
+                if (usernameMatch != null)
+                {
+                    var stored = usernameMatch.ProviderUserId;
+                    var conflict =
+                        !string.IsNullOrWhiteSpace(stored)
+                        && !string.Equals(stored, plexUser.id, StringComparison.Ordinal)
+                        && !IsLegacyNumericPlexId(stored);
+
+                    if (conflict)
+                    {
+                        _logger.LogWarning(
+                            "Plex user '{Username}' ({PlexUserId}) collides with existing Ombi user bound to {ProviderUserId}; skipping",
+                            plexUser.username, plexUser.id, stored);
+                        return null;
+                    }
+
+                    existing = usernameMatch;
+                }
             }
 
             if (existing != null)
@@ -298,6 +331,19 @@ namespace Ombi.Schedule.Jobs.Plex
                 }
             }
             return newUser;
+        }
+
+        // The legacy /api/users path stores a numeric plex.tv account id. The community API
+        // returns a UUID-shaped string. We use this to recognise legacy-imported rows that
+        // are safe to adopt during a username fallback without tripping the hijack guard.
+        private static bool IsLegacyNumericPlexId(string providerUserId)
+        {
+            if (string.IsNullOrWhiteSpace(providerUserId)) return false;
+            for (var i = 0; i < providerUserId.Length; i++)
+            {
+                if (!char.IsDigit(providerUserId[i])) return false;
+            }
+            return true;
         }
 
         private const int MaxWatchlistPages = 200;

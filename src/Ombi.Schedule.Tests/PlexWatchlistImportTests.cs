@@ -334,6 +334,88 @@ namespace Ombi.Schedule.Tests
         }
 
         [Test]
+        public async Task ExistingFriendUsernameCollisionWithDifferentUuid_IsSkipped()
+        {
+            // A row already bound to a non-numeric (community-style) ProviderUserId that
+            // doesn't match the incoming community id is a real collision (e.g. a Plex
+            // username was reused after the original account was deleted). We must not
+            // hijack the existing row, and we must not sync against the new uuid.
+            // The sweep should also leave the row alone: the username does appear in the
+            // target list (a different Plex account happens to have it), so flipping the
+            // existing row to NotAFriend would be incorrect — it's a different question
+            // from "is this exact account still a friend".
+            var users = new List<OmbiUser>
+            {
+                new OmbiUser { Id = AdminOmbiId, UserName = "owner", NormalizedUserName = "OWNER", UserType = UserType.PlexUser, ProviderUserId = AdminUuid, MediaServerToken = AdminToken },
+                new OmbiUser { Id = "other-id", UserName = "duplicate", NormalizedUserName = "DUPLICATE", UserType = UserType.PlexUser, ProviderUserId = "real-uuid-for-other" },
+            };
+            var userMgr = MockHelper.MockUserManager(users);
+            SetupAdminRole(userMgr, AdminOmbiId);
+            _mocker.Use(userMgr);
+            _subject = _mocker.CreateInstance<PlexWatchlistImport>();
+            UseDefaultPlexSettings();
+            SetupFriends(("different-uuid", "duplicate"));
+
+            await _subject.Execute(_context.Object);
+
+            _mocker.Verify<Core.Authentication.OmbiUserManager>(x => x.UpdateAsync(It.IsAny<OmbiUser>()), Times.Never);
+            _mocker.Verify<IPlexApi>(x => x.GetWatchlistForUser(AdminToken, "different-uuid", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+            _statusStore.Verify(x => x.SetAsync("other-id", WatchlistSyncStatus.NotAFriend, It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Test]
+        public async Task BannedFriendWithExistingOmbiRow_IsNotMarkedNotAFriend()
+        {
+            // EnsureOmbiUser returns null for banned ids, so the row never lands in
+            // matchedUserIds. The sweep must still recognise the user as a current friend
+            // via the target list and leave the row alone — banned ≠ unfriended.
+            const string bannedUuid = "banned-uuid";
+            var users = new List<OmbiUser>
+            {
+                new OmbiUser { Id = AdminOmbiId, UserName = "owner", NormalizedUserName = "OWNER", UserType = UserType.PlexUser, ProviderUserId = AdminUuid, MediaServerToken = AdminToken },
+                new OmbiUser { Id = "banned-id", UserName = "bannedfriend", NormalizedUserName = "BANNEDFRIEND", UserType = UserType.PlexUser, ProviderUserId = bannedUuid },
+            };
+            var userMgr = MockHelper.MockUserManager(users);
+            SetupAdminRole(userMgr, AdminOmbiId);
+            _mocker.Use(userMgr);
+            _mocker.Setup<ISettingsService<UserManagementSettings>, Task<UserManagementSettings>>(x => x.GetSettingsAsync())
+                .ReturnsAsync(new UserManagementSettings { BannedPlexUserIds = new List<string> { bannedUuid } });
+            _subject = _mocker.CreateInstance<PlexWatchlistImport>();
+            UseDefaultPlexSettings();
+            SetupFriends((bannedUuid, "bannedfriend"));
+
+            await _subject.Execute(_context.Object);
+
+            _statusStore.Verify(x => x.SetAsync("banned-id", WatchlistSyncStatus.NotAFriend, It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Test]
+        public async Task CancelledRun_DoesNotSweepNotAFriend()
+        {
+            // If the run is cancelled mid-loop, matchedUserIds may be incomplete. The sweep
+            // must not run, otherwise valid friends that weren't yet processed get mislabelled.
+            var users = new List<OmbiUser>
+            {
+                new OmbiUser { Id = AdminOmbiId, UserName = "owner", NormalizedUserName = "OWNER", UserType = UserType.PlexUser, ProviderUserId = AdminUuid, MediaServerToken = AdminToken },
+                new OmbiUser { Id = "friend-id", UserName = "friend", NormalizedUserName = "FRIEND", UserType = UserType.PlexUser, ProviderUserId = "friend-uuid" },
+            };
+            var userMgr = MockHelper.MockUserManager(users);
+            SetupAdminRole(userMgr, AdminOmbiId);
+            _mocker.Use(userMgr);
+            _subject = _mocker.CreateInstance<PlexWatchlistImport>();
+            UseDefaultPlexSettings();
+            SetupFriends(("friend-uuid", "friend"));
+
+            using var cts = new CancellationTokenSource();
+            cts.Cancel();
+            _context.Setup(x => x.CancellationToken).Returns(cts.Token);
+
+            await _subject.Execute(_context.Object);
+
+            _statusStore.Verify(x => x.SetAsync(It.IsAny<string>(), WatchlistSyncStatus.NotAFriend, It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Test]
         public async Task PreExistingPlexUser_NotInAllFriendsV2_IsMarkedNotAFriend()
         {
             // Seed an additional Plex user that no target will match (their ProviderUserId
