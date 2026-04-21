@@ -1,3 +1,13 @@
+## [4.59.1](https://github.com/Ombi-app/Ombi/compare/v4.59.0...v4.59.1) (2026-04-21)
+
+
+### Bug Fixes
+
+* **plex:** migrate legacy numeric provider ids during watchlist import ([#5400](https://github.com/Ombi-app/Ombi/issues/5400)) ([fa6d304](https://github.com/Ombi-app/Ombi/commit/fa6d304a0329d7e3493aee9078046a6a87737241))
+* **plex:** skip watchlist target when username collision is detected ([#5403](https://github.com/Ombi-app/Ombi/issues/5403)) ([90b386a](https://github.com/Ombi-app/Ombi/commit/90b386a38360b16b97da59fc1f50bf613d866b93))
+
+
+
 # [4.59.0](https://github.com/Ombi-app/Ombi/compare/v4.58.5...v4.59.0) (2026-04-20)
 
 
@@ -362,15 +372,6 @@
 
 
 ## [4.49.8](https://github.com/Ombi-app/Ombi/compare/v4.49.7...v4.49.8) (2025-09-13)
-
-
-
-## [4.49.7](https://github.com/Ombi-app/Ombi/compare/v4.49.6...v4.49.7) (2025-09-11)
-
-
-### Bug Fixes
-
-* Use new server discovery url [#5260](https://github.com/Ombi-app/Ombi/issues/5260) ([56a91d6](https://github.com/Ombi-app/Ombi/commit/56a91d6240f53a4306fcd0648575976f9d459048))
 
 
 
