@@ -269,8 +269,9 @@ namespace Ombi.Schedule.Jobs.Plex
             }
 
             // Pull the legacy /api/users list to map friend usernames -> numeric plex.tv ids.
-            // Friends without server-share access aren't in this list; for those we fall back
-            // to the community UUID when creating their Ombi row.
+            // Friends without server-share access aren't in this list; EnsureOmbiUser skips
+            // creating rows for them because we have no numeric id to key on and
+            // PlexUserImporter.CleanupPlexUsers would prune them anyway.
             try
             {
                 var legacyUsers = await _plexApi.GetUsers(adminToken);
@@ -285,7 +286,7 @@ namespace Ombi.Schedule.Jobs.Plex
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Failed to fetch legacy Plex user list; new friends will fall back to community UUIDs for ProviderUserId");
+                _logger.LogWarning(ex, "Failed to fetch legacy Plex user list; new friends will be skipped this run (need /api/users to resolve their numeric plex.tv id)");
             }
 
             return (targets, legacyIdsByUsername, friendsFetched, adminResolved);
