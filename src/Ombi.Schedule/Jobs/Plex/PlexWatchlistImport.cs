@@ -341,7 +341,11 @@ namespace Ombi.Schedule.Jobs.Plex
             if (string.IsNullOrWhiteSpace(providerUserId)) return false;
             for (var i = 0; i < providerUserId.Length; i++)
             {
-                if (!char.IsDigit(providerUserId[i])) return false;
+                // Restrict to ASCII digits — char.IsDigit accepts all Unicode digit
+                // categories (Arabic-Indic, fullwidth, etc.), which would let a contrived
+                // ProviderUserId bypass the collision guard during the username fallback.
+                var c = providerUserId[i];
+                if (c < '0' || c > '9') return false;
             }
             return true;
         }
