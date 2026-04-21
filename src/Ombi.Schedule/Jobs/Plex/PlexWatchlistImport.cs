@@ -312,8 +312,13 @@ namespace Ombi.Schedule.Jobs.Plex
                 return null;
             }
 
-            var existing = await ResolveExistingUser(plexUser, resolvedNumericId, ct);
+            var (existing, usernameCollision) = await ResolveExistingUser(plexUser, resolvedNumericId, ct);
             if (existing != null) return existing;
+            // A username collision means another Ombi row already owns this username but we
+            // refuse to adopt it (e.g. a stale ghost bound to a different numeric id). Creating
+            // a new row would either trip the unique-username constraint or produce a duplicate
+            // — skip the target and let the sweep handle the ghost.
+            if (usernameCollision) return null;
 
             return await CreateOmbiUserIfEligible(plexUser, resolvedNumericId, userManagement);
         }
@@ -345,7 +350,7 @@ namespace Ombi.Schedule.Jobs.Plex
             return false;
         }
 
-        private async Task<OmbiUser> ResolveExistingUser(PlexCommunityUser plexUser, string resolvedNumericId, CancellationToken ct)
+        private async Task<(OmbiUser user, bool usernameCollision)> ResolveExistingUser(PlexCommunityUser plexUser, string resolvedNumericId, CancellationToken ct)
         {
             // Primary lookup: numeric plex.tv id (the canonical identifier). New rows only
             // ever get the numeric id, and existing legacy rows have it too.
@@ -357,7 +362,7 @@ namespace Ombi.Schedule.Jobs.Plex
             }
             if (existing != null || string.IsNullOrWhiteSpace(plexUser.username))
             {
-                return existing;
+                return (existing, false);
             }
 
             // Username fallback: picks up rows whose ProviderUserId is stale / UUID-shaped
@@ -368,16 +373,16 @@ namespace Ombi.Schedule.Jobs.Plex
             // drives the NotAFriend sweep instead.
             var usernameMatch = await _ombiUserManager.Users.FirstOrDefaultAsync(
                 x => x.UserType == UserType.PlexUser && x.UserName == plexUser.username, ct);
-            if (usernameMatch == null) return null;
+            if (usernameMatch == null) return (null, false);
 
             if (!IsUsernameAdoptionSafe(usernameMatch.ProviderUserId, plexUser.id, resolvedNumericId))
             {
                 _logger.LogWarning(
                     "Plex user '{Username}' ({PlexUserId}) collides with existing Ombi user bound to {ProviderUserId}; skipping",
                     plexUser.username, plexUser.id, usernameMatch.ProviderUserId);
-                return null;
+                return (null, true);
             }
-            return usernameMatch;
+            return (usernameMatch, false);
         }
 
         // A username match is only safe to adopt when we can convince ourselves it's the same
