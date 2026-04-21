@@ -370,7 +370,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 x => x.UserType == UserType.PlexUser && x.UserName == plexUser.username, ct);
             if (usernameMatch == null) return null;
 
-            if (!IsUsernameAdoptionSafe(usernameMatch.ProviderUserId, plexUser.id))
+            if (!IsUsernameAdoptionSafe(usernameMatch.ProviderUserId, plexUser.id, resolvedNumericId))
             {
                 _logger.LogWarning(
                     "Plex user '{Username}' ({PlexUserId}) collides with existing Ombi user bound to {ProviderUserId}; skipping",
@@ -383,12 +383,23 @@ namespace Ombi.Schedule.Jobs.Plex
         // A username match is only safe to adopt when we can convince ourselves it's the same
         // Plex account: the stored ProviderUserId is blank (pre-link row), a legacy numeric
         // plex.tv id (the #5399 migration case), or already equals the incoming community id.
-        // Anything else (a different community UUID) is treated as a hijack/ghost row —
-        // Plex usernames can be reused after an account is deleted, so we refuse to adopt.
-        private static bool IsUsernameAdoptionSafe(string storedProviderId, string communityId)
+        // If /api/users gave us a fresh numeric id for this username AND the stored numeric id
+        // doesn't match it, we're looking at a stale ghost row from a different plex.tv
+        // account (username reuse after deletion) — refuse to adopt.
+        // Plex usernames can be reused after an account is deleted, so we refuse to adopt
+        // anything that doesn't fit one of those shapes.
+        private static bool IsUsernameAdoptionSafe(string storedProviderId, string communityId, string resolvedNumericId)
         {
             if (string.IsNullOrWhiteSpace(storedProviderId)) return true;
-            if (IsLegacyNumericPlexId(storedProviderId)) return true;
+            if (IsLegacyNumericPlexId(storedProviderId))
+            {
+                if (!string.IsNullOrWhiteSpace(resolvedNumericId)
+                    && !string.Equals(storedProviderId, resolvedNumericId, StringComparison.Ordinal))
+                {
+                    return false;
+                }
+                return true;
+            }
             return string.Equals(storedProviderId, communityId, StringComparison.Ordinal);
         }
 
@@ -405,10 +416,14 @@ namespace Ombi.Schedule.Jobs.Plex
             // server-share access) are intentionally skipped: they can't authenticate via
             // /Token/plextoken, and PlexUserImporter.CleanupPlexUsers would delete them on its
             // next run anyway. To sync their watchlist, share your server with them.
+            //
+            // Logged at Warning because if an admin ever slipped through here (an existing
+            // admin row is a hard prerequisite for this job to run at all, so in practice the
+            // adoption path will always catch them) it's a misconfiguration worth surfacing.
             if (string.IsNullOrWhiteSpace(resolvedNumericId))
             {
-                _logger.LogInformation(
-                    "Skipping Plex community friend '{Username}' ({PlexUserId}): not in the server's /api/users list. Share the Plex server with them to enable watchlist sync.",
+                _logger.LogWarning(
+                    "Skipping Plex friend '{Username}' ({PlexUserId}): not in the server's /api/users list, so Ombi has no numeric plex.tv id to key on. Share the Plex server with them to enable watchlist sync.",
                     plexUser.username, plexUser.id);
                 return null;
             }

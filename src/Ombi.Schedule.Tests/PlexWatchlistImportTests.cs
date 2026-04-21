@@ -410,6 +410,35 @@ namespace Ombi.Schedule.Tests
         }
 
         [Test]
+        public async Task StaleGhostWithDifferentNumericId_IsNotAdopted()
+        {
+            // Plex username was reused after the original account was deleted. The existing
+            // Ombi row is bound to the OLD numeric id; /api/users now maps that same username
+            // to a DIFFERENT numeric id for the new account. Adopting the stale row would
+            // corrupt its identity. Skip the target, don't sync its watchlist, and let the
+            // post-run sweep flag the ghost as NotAFriend.
+            const string oldNumericId = "11111";
+            const string newNumericId = "22222";
+            var users = new List<OmbiUser>
+            {
+                new OmbiUser { Id = AdminOmbiId, UserName = "owner", NormalizedUserName = "OWNER", UserType = UserType.PlexUser, ProviderUserId = AdminUuid, MediaServerToken = AdminToken },
+                new OmbiUser { Id = "ghost-id", UserName = "recycled", NormalizedUserName = "RECYCLED", UserType = UserType.PlexUser, ProviderUserId = oldNumericId },
+            };
+            var userMgr = MockHelper.MockUserManager(users);
+            SetupAdminRole(userMgr, AdminOmbiId);
+            _mocker.Use(userMgr);
+            _subject = _mocker.CreateInstance<PlexWatchlistImport>();
+            UseDefaultPlexSettings();
+            SetupFriends(("new-uuid", "recycled"));
+            SetupLegacyUsers((newNumericId, "recycled"));
+
+            await _subject.Execute(_context.Object);
+
+            _mocker.Verify<Core.Authentication.OmbiUserManager>(x => x.UpdateAsync(It.IsAny<OmbiUser>()), Times.Never);
+            _mocker.Verify<IPlexApi>(x => x.GetWatchlistForUser(AdminToken, "new-uuid", It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Test]
         public async Task ExistingFriendWithLegacyNumericProviderId_IsAdoptedWithoutRewritingProviderUserId()
         {
             // Regression for https://github.com/Ombi-app/Ombi/issues/5399.
