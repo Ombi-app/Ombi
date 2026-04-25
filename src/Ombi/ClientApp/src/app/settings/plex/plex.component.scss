@@ -1,300 +1,692 @@
 @use "./styles/shared.scss" as *;
-.small-middle-container {
-    margin: auto;
-    width: 95%;
-    margin-top: 10px;
-}
 
-.col-8 {
-    display: inline-table;
-}
-.col-md-5 {
-    display: inline-table;
-}
+/* ----------------------------------------------------------------------------
+   Plex settings page
+   Design tokens are defined locally so the component is self-contained while
+   still feeling at home in the Ombi dark theme.
+---------------------------------------------------------------------------- */
 
+$plex-bg:           #0b1220;
+$plex-surface:      #131b29;
+$plex-surface-2:    #1a2333;
+$plex-border:       #232c3f;
+$plex-border-soft:  #1d2536;
+$plex-text:         #e6ebf5;
+$plex-text-muted:   #9aa6bd;
+$plex-text-faint:   #6e7a92;
+$plex-accent:       #62d2fa;
+$plex-accent-soft:  rgba(98, 210, 250, 0.14);
+$plex-success:      #4ade80;
+$plex-warn:         #f59e0b;
+$plex-danger:       #ef4444;
+$plex-violet:       #a78bfa;
+$plex-teal:         #2dd4bf;
 
-.align-right {
-    float: right;
-    width:100%;
-    text-align:right;
-}
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
 
-::ng-deep div .mat-tab-body-content {
-    overflow: hidden;
-}
-.server-card {
-    margin: 0em 1em 1em 0;
-    width: 13em;
-    min-height: 8em;
-  
-    button {
-      text-align: center;
-      align-content: center;
-      white-space: normal;
-      overflow-wrap: anywhere;
-      height: 100%;
-      width: 100%;
-    }
-  
-    i {
-      margin-top: 0.25em;
-    }
-  
-    h3 {
-      margin: 0;
-    }
-  }
+/* ---------------------------------- Page ---------------------------------- */
 
-.plex-settings-container {
-    padding: 20px;
-    max-width: 1400px;
+.plex-page {
+    max-width: 1200px;
     margin: 0 auto;
-}
-
-.settings-card {
-    margin-bottom: 20px;
-    background: transparent;
-    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.25);
-    border-radius: 12px;
-    border: 1px solid #353a45;
-}
-
-.section-header {
+    padding: 32px 28px 140px;
+    color: $plex-text;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.settings-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    flex-direction: column;
     gap: 24px;
-    margin-bottom: 30px;
 }
 
-.setting-card {
-    height: 100%;
-    background: transparent;
-    border-radius: 10px;
-    border: 1px solid #353a45;
-    box-shadow: 0 1px 6px 0 rgba(0,0,0,0.18);
-    color: #f1f3f6;
-}
+/* --------------------------------- Header --------------------------------- */
 
-.setting-card.disabled {
-    opacity: 0.6;
-}
-
-.setting-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    font-weight: 600;
-    color: #fff;
-}
-
-.setting-description {
-    color: #e0e3ea;
-    font-size: 15px;
-    margin: 0;
-    font-weight: 400;
-    line-height: 1.6;
-}
-
-.main-content {
+.page-header {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 36px;
-    margin-top: 36px;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 24px;
+    padding: 28px 32px;
+    border-radius: $radius-lg;
+    background:
+        radial-gradient(120% 140% at 0% 0%, rgba(98, 210, 250, 0.10) 0%, transparent 60%),
+        linear-gradient(180deg, $plex-surface-2 0%, $plex-surface 100%);
+    border: 1px solid $plex-border;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.02) inset, 0 8px 30px rgba(0, 0, 0, 0.25);
+
+    &__icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        background: $plex-accent-soft;
+        color: $plex-accent;
+        display: grid;
+        place-items: center;
+
+        mat-icon {
+            font-size: 32px;
+            height: 32px;
+            width: 32px;
+        }
+    }
+
+    &__eyebrow {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: $plex-text-faint;
+    }
+
+    &__title {
+        margin: 4px 0 6px;
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+        color: #ffffff;
+    }
+
+    &__subtitle {
+        margin: 0;
+        font-size: 14px;
+        color: $plex-text-muted;
+        line-height: 1.5;
+        max-width: 60ch;
+    }
+
+    &__status {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px;
+    }
 }
 
-.servers-grid {
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    border: 1px solid transparent;
+    background: rgba(255, 255, 255, 0.04);
+
+    &__dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: currentColor;
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.04);
+    }
+
+    &--on {
+        color: $plex-success;
+        background: rgba(74, 222, 128, 0.12);
+        border-color: rgba(74, 222, 128, 0.30);
+    }
+
+    &--off {
+        color: $plex-text-faint;
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+}
+
+.server-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: $plex-text-muted;
+
+    mat-icon {
+        font-size: 14px;
+        height: 14px;
+        width: 14px;
+    }
+}
+
+/* --------------------------------- Surface -------------------------------- */
+
+.surface {
+    background: $plex-surface;
+    border: 1px solid $plex-border;
+    border-radius: $radius-lg;
+    padding: 24px 28px;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.02) inset;
+
+    &--hero {
+        padding: 20px 24px;
+    }
+}
+
+.section-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+
+    &__title {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        color: #ffffff;
+    }
+
+    &__desc {
+        margin: 4px 0 0;
+        font-size: 13px;
+        color: $plex-text-muted;
+        line-height: 1.5;
+    }
+}
+
+/* --------------------------------- Layout --------------------------------- */
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 24px;
+}
+
+@media (max-width: 1024px) {
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --------------------------- Toggle / setting row ------------------------- */
+
+.row-toggle {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 18px;
+
+    &__media {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: $plex-accent-soft;
+        color: $plex-accent;
+        display: grid;
+        place-items: center;
+    }
+
+    &__title {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #ffffff;
+    }
+
+    &__desc {
+        margin: 4px 0 0;
+        font-size: 13px;
+        color: $plex-text-muted;
+        line-height: 1.5;
+        max-width: 70ch;
+    }
+}
+
+.setting-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-top: 1px solid $plex-border-soft;
+}
+
+.setting-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 18px;
+    padding: 18px 4px;
+    border-bottom: 1px solid $plex-border-soft;
+    transition: opacity 0.15s ease;
+
+    &:last-child {
+        border-bottom: 0;
+    }
+
+    &--disabled {
+        opacity: 0.55;
+    }
+
+    &__media {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.04);
+        color: $plex-text-muted;
+        display: grid;
+        place-items: center;
+
+        mat-icon {
+            font-size: 22px;
+            height: 22px;
+            width: 22px;
+        }
+    }
+
+    &__title {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 600;
+        color: #ffffff;
+    }
+
+    &__desc {
+        margin: 4px 0 0;
+        font-size: 13px;
+        color: $plex-text-muted;
+        line-height: 1.5;
+        max-width: 70ch;
+    }
+}
+
+/* --------------------------------- Servers -------------------------------- */
+
+.server-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 18px;
+    gap: 14px;
 }
 
-.server-card {
-    text-align: center;
-    background: transparent;
-    border-radius: 10px;
-    border: 1px solid #353a45;
-    box-shadow: 0 1px 6px 0 rgba(0,0,0,0.18);
-    color: #f1f3f6;
-}
-
-.server-card button {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    color: #f1f3f6;
-    font-weight: 500;
-}
-
-.server-card mat-icon {
-    font-size: 32px;
-    height: 32px;
-    width: 32px;
-    margin-bottom: 10px;
-    color: #90caf9;
-}
-
-.sync-actions-grid {
+.server-tile {
+    position: relative;
+    appearance: none;
+    text-align: left;
+    background: $plex-surface-2;
+    border: 1px solid $plex-border;
+    border-radius: $radius-md;
+    padding: 18px 16px 16px;
+    color: $plex-text;
+    cursor: pointer;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 18px;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+        "icon name edit"
+        "icon meta meta";
+    column-gap: 12px;
+    row-gap: 4px;
+    transition: transform 0.12s ease, border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover {
+        border-color: rgba(98, 210, 250, 0.45);
+        background: lighten($plex-surface-2, 2%);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+
+        .server-tile__edit {
+            opacity: 1;
+        }
+    }
+
+    &:focus-visible {
+        outline: 2px solid $plex-accent;
+        outline-offset: 2px;
+    }
+
+    &__icon {
+        grid-area: icon;
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: $plex-accent-soft;
+        color: $plex-accent;
+        display: grid;
+        place-items: center;
+
+        mat-icon {
+            font-size: 22px;
+            height: 22px;
+            width: 22px;
+        }
+
+        &--add {
+            background: rgba(255, 255, 255, 0.05);
+            color: $plex-text-muted;
+        }
+    }
+
+    &__name {
+        grid-area: name;
+        font-size: 15px;
+        font-weight: 600;
+        color: #ffffff;
+        line-height: 1.2;
+        word-break: break-word;
+    }
+
+    &__meta {
+        grid-area: meta;
+        font-size: 12px;
+        color: $plex-text-faint;
+        line-height: 1.3;
+        word-break: break-all;
+    }
+
+    &__edit {
+        grid-area: edit;
+        color: $plex-text-faint;
+        opacity: 0;
+        transition: opacity 0.15s ease;
+
+        mat-icon {
+            font-size: 18px;
+            height: 18px;
+            width: 18px;
+        }
+    }
+
+    &--add {
+        border-style: dashed;
+        background: transparent;
+
+        &:hover {
+            border-color: $plex-accent;
+            background: rgba(98, 210, 250, 0.04);
+        }
+    }
 }
 
-.sync-actions-grid button {
+/* ------------------------------- Action grid ------------------------------ */
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+}
+
+.action-tile {
+    appearance: none;
+    text-align: left;
+    background: $plex-surface-2;
+    border: 1px solid $plex-border;
+    border-radius: $radius-md;
+    padding: 16px 18px;
+    color: $plex-text;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: transform 0.12s ease, border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover:not([disabled]) {
+        border-color: rgba(98, 210, 250, 0.45);
+        background: lighten($plex-surface-2, 2%);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+    }
+
+    &:focus-visible {
+        outline: 2px solid $plex-accent;
+        outline-offset: 2px;
+    }
+
+    &--disabled,
+    &[disabled] {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &__icon {
+        flex: 0 0 auto;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        background: $plex-accent-soft;
+        color: $plex-accent;
+
+        mat-icon {
+            font-size: 22px;
+            height: 22px;
+            width: 22px;
+        }
+
+        &--blue   { background: rgba(98,  210, 250, 0.15); color: $plex-accent; }
+        &--teal   { background: rgba(45,  212, 191, 0.15); color: $plex-teal; }
+        &--amber  { background: rgba(245, 158,  11, 0.15); color: $plex-warn; }
+        &--violet { background: rgba(167, 139, 250, 0.15); color: $plex-violet; }
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+    }
+
+    &__title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #ffffff;
+        line-height: 1.2;
+    }
+
+    &__desc {
+        margin-top: 4px;
+        font-size: 12px;
+        color: $plex-text-muted;
+        line-height: 1.4;
+    }
+}
+
+/* --------------------------------- Forms ---------------------------------- */
+
+.form-stack {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 24px;
-    color: #f1f3f6;
-    background: transparent;
-    border: 1px solid #353a45;
-    border-radius: 10px;
-    font-weight: 500;
-    box-shadow: 0 1px 6px 0 rgba(0,0,0,0.18);
-}
+    gap: 6px;
+    margin-top: 16px;
 
-.sync-actions-grid mat-icon {
-    font-size: 32px;
-    height: 32px;
-    width: 32px;
-    margin-bottom: 10px;
-    color: #90caf9;
-}
-
-.credentials-card {
-    padding: 24px;
-    background: transparent;
-    border-radius: 10px;
-    border: 1px solid #353a45;
-    box-shadow: 0 1px 6px 0 rgba(0,0,0,0.18);
-    color: #f1f3f6;
-}
-
-.credentials-description {
-    color: #e0e3ea;
-    margin-bottom: 20px;
-    font-size: 15px;
-    font-weight: 400;
-}
-
-mat-card-title, h2, h3 {
-    color: #fff !important;
-    font-weight: 700 !important;
-    letter-spacing: 0.5px;
-}
-
-mat-card-header {
-    border-bottom: 1px solid #353a45;
-    margin-bottom: 16px;
-}
-
-mat-form-field {
-    color: #f1f3f6 !important;
-}
-
-mat-label, .mat-form-field-label {
-    color: #b0b6c3 !important;
-    font-weight: 500;
-}
-
-input[matInput], .mat-input-element {
-    color: #f1f3f6 !important;
-    background: transparent !important;
-}
-
-mat-select {
-    color: #f1f3f6 !important;
-    background: transparent !important;
+    .full-width {
+        width: 100%;
+    }
 }
 
 .full-width {
     width: 100%;
 }
 
-.mt-3 {
-    margin-top: 1rem;
-}
+/* --------------------------------- Callout -------------------------------- */
 
-.mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
-    background-color: #90caf9 !important;
-}
-
-.mat-slide-toggle-thumb {
-    background-color: #2196f3 !important;
-}
-
-button[mat-flat-button], button[mat-raised-button], button[mat-stroked-button], button[mat-button] {
-    font-weight: 600;
-    letter-spacing: 0.2px;
-    color: #f1f3f6;
-    background: #2196f3;
-    border-radius: 6px;
-    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.12);
-    transition: background 0.2s;
-}
-button[mat-flat-button]:hover, button[mat-raised-button]:hover, button[mat-stroked-button]:hover, button[mat-button]:hover {
-    background: #42a5f5;
-}
-
-@media (max-width: 1200px) {
-    .main-content {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 768px) {
-    .settings-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .servers-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .sync-actions-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-.watchlist-errors-btn-row {
-    display: flex;
-    justify-content: center;
-    margin-top: 18px;
-}
-
-.info-banner {
+.callout {
     display: flex;
     align-items: center;
-    background: #23272f;
-    color: #e0e3ea;
-    border: 1px solid #1976d2;
-    box-shadow: 0 1px 6px 0 rgba(0,0,0,0.12);
-    border-radius: 8px;
-    padding: 16px 20px;
-    margin-top: 18px;
-    margin-bottom: 0;
-    font-size: 16px;
-    font-weight: 500;
     gap: 12px;
+    padding: 14px 16px;
+    border-radius: $radius-md;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 16px;
+
+    &__text {
+        flex: 1;
+    }
+
+    &__action {
+        flex: 0 0 auto;
+    }
+
+    mat-icon {
+        flex: 0 0 auto;
+        font-size: 20px;
+        height: 20px;
+        width: 20px;
+    }
+
+    &--info {
+        background: rgba(98, 210, 250, 0.08);
+        border: 1px solid rgba(98, 210, 250, 0.25);
+        color: $plex-text;
+
+        mat-icon {
+            color: $plex-accent;
+        }
+    }
+
+    &--muted {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid $plex-border-soft;
+        color: $plex-text-muted;
+
+        mat-icon {
+            color: $plex-text-faint;
+        }
+    }
 }
 
-.info-banner mat-icon {
-    font-size: 28px;
-    color: #42a5f5;
+/* -------------------------------- Save bar -------------------------------- */
+
+.save-bar {
+    position: sticky;
+    bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 18px 14px 22px;
+    margin-top: 8px;
+    background: rgba(19, 27, 41, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid $plex-border;
+    border-radius: $radius-md;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    z-index: 5;
+
+    &__hint {
+        font-size: 13px;
+        color: $plex-text-muted;
+    }
+
+    &__btn {
+        min-width: 160px;
+    }
 }
 
-.info-banner button[mat-button] {
-    margin-left: 16px;
+/* --------------------------------- Buttons -------------------------------- */
+
+.btn-primary.mat-mdc-raised-button,
+.btn-primary.mat-mdc-unelevated-button,
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 42px;
+    border-radius: 10px;
     font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+/* ------------------------- Material form-field tweaks --------------------- */
+
+::ng-deep .plex-page {
+    .mat-mdc-form-field {
+        width: 100%;
+    }
+
+    .mat-mdc-text-field-wrapper {
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 10px;
+    }
+
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+        border-color: $plex-border !important;
+    }
+
+    .mat-mdc-form-field:hover .mdc-notched-outline__leading,
+    .mat-mdc-form-field:hover .mdc-notched-outline__notch,
+    .mat-mdc-form-field:hover .mdc-notched-outline__trailing {
+        border-color: lighten($plex-border, 10%) !important;
+    }
+
+    .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+    .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+    .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+        border-color: $plex-accent !important;
+    }
+
+    .mat-mdc-form-field-label,
+    .mdc-floating-label {
+        color: $plex-text-muted !important;
+    }
+
+    .mat-mdc-input-element,
+    input.mat-mdc-input-element {
+        color: $plex-text !important;
+        caret-color: $plex-accent;
+    }
+
+    .mat-mdc-select-value,
+    .mat-mdc-select-arrow {
+        color: $plex-text !important;
+    }
+}
+
+/* ------------------------------ Responsiveness ---------------------------- */
+
+@media (max-width: 720px) {
+    .plex-page {
+        padding: 20px 16px 140px;
+    }
+
+    .page-header {
+        grid-template-columns: auto 1fr;
+        padding: 20px;
+
+        &__status {
+            grid-column: 1 / -1;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        &__title {
+            font-size: 24px;
+        }
+    }
+
+    .surface {
+        padding: 18px 16px;
+    }
+
+    .row-toggle {
+        grid-template-columns: auto 1fr;
+
+        mat-slide-toggle {
+            grid-column: 1 / -1;
+            justify-self: end;
+        }
+    }
+
+    .setting-row {
+        grid-template-columns: auto 1fr;
+
+        mat-slide-toggle {
+            grid-column: 1 / -1;
+            justify-self: end;
+        }
+    }
+
+    .save-bar {
+        flex-direction: column;
+        align-items: stretch;
+
+        &__btn {
+            width: 100%;
+        }
+    }
 }
