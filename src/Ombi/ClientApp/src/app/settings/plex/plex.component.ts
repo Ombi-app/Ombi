@@ -108,7 +108,7 @@ export class PlexComponent implements OnInit {
         this.newServer(server);
     }
 
-    public save(): void {
+    public save(successMessage = "Successfully saved Plex settings"): void {
         const settings = this.settings();
         if (!settings) {
             return;
@@ -129,7 +129,7 @@ export class PlexComponent implements OnInit {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((x) => {
                 if (x) {
-                    this.notificationService.success("Successfully saved Plex settings");
+                    this.notificationService.success(successMessage);
                 } else {
                     this.notificationService.error("There was an error when saving the Plex settings");
                 }
@@ -178,10 +178,11 @@ export class PlexComponent implements OnInit {
                     const idx = settings.servers.findIndex((s) => s.id === x.server.id);
                     if (idx >= 0) {
                         settings.servers[idx] = x.server;
+                        this.save("Server updated");
                     } else {
                         settings.servers.push(x.server);
+                        this.save("Server added");
                     }
-                    this.save();
                 }
             });
     }
@@ -215,7 +216,7 @@ export class PlexComponent implements OnInit {
                         return;
                     }
                     current.servers.push(x.server);
-                    this.save();
+                    this.save("Server added");
                 }
             });
     }
@@ -233,7 +234,7 @@ export class PlexComponent implements OnInit {
         if (index > -1) {
             settings.servers.splice(index, 1);
         }
-        this.save();
+        this.save("Server removed");
     }
 
     private runJob(job$: Observable<boolean>, message: string): void {
