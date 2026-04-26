@@ -7,7 +7,7 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslateModule } from "@ngx-translate/core";
 import { Observable, Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { startWith, takeUntil } from "rxjs/operators";
 
 import { IEmailNotificationSettings } from "../../interfaces";
 import { NotificationService, SettingsService, TesterService, ValidationService } from "../../services";
@@ -82,13 +82,14 @@ export class EmailNotificationComponent extends NotificationBaseComponent<IEmail
         };
     }
 
-    protected override onFormReady(form: UntypedFormGroup, settings: IEmailNotificationSettings): void {
-        if (settings.authentication) {
-            this.applyAuthValidators(true);
-        }
-        form.controls.authentication.valueChanges
-            .pipe(takeUntil(this.authChanges$))
-            .subscribe((auth: boolean) => this.applyAuthValidators(auth));
+    protected override onFormReady(form: UntypedFormGroup, _settings: IEmailNotificationSettings): void {
+        const authControl = form.controls.authentication;
+        authControl.valueChanges
+            .pipe(
+                startWith(authControl.value),
+                takeUntil(this.authChanges$),
+            )
+            .subscribe((auth: boolean) => this.applyAuthValidators(!!auth));
     }
 
     public override ngOnDestroy(): void {

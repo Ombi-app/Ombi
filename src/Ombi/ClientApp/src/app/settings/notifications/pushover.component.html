@@ -28,10 +28,10 @@
         <mat-label>Priority</mat-label>
         <mat-select formControlName="priority"
                     matTooltip="Higher priority surfaces messages more aggressively on the device.">
-            <mat-option value="-2">Lowest</mat-option>
-            <mat-option value="-1">Low</mat-option>
-            <mat-option value="0">Normal</mat-option>
-            <mat-option value="1">High</mat-option>
+            <mat-option [value]="-2">Lowest</mat-option>
+            <mat-option [value]="-1">Low</mat-option>
+            <mat-option [value]="0">Normal</mat-option>
+            <mat-option [value]="1">High</mat-option>
         </mat-select>
     </mat-form-field>
 

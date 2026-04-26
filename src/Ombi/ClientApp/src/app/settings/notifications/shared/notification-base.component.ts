@@ -85,7 +85,7 @@ export abstract class NotificationBaseComponent<T extends INotificationSettings>
                 if (ok) {
                     this.notificationService.success(this.savedMessage);
                 } else {
-                    this.notificationService.success(this.saveErrorMessage);
+                    this.notificationService.error(this.saveErrorMessage);
                 }
             });
     }

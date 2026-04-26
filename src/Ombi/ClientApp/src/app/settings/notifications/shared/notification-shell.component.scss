@@ -26,7 +26,7 @@
     &__card {
         border-radius: 16px;
         overflow: hidden;
-        transition: box-shadow 200ms ease, transform 200ms ease;
+        transition: box-shadow 200ms ease;
 
         &:hover {
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
@@ -69,11 +69,13 @@
         padding: 4px 10px;
         border-radius: 999px;
         background: rgba(158, 158, 158, 0.18);
-        color: rgba(255, 255, 255, 0.78);
+        color: var(--mdc-theme-on-surface, currentColor);
+        opacity: 0.7;
 
         &--on {
             background: rgba(46, 204, 113, 0.18);
             color: #2ecc71;
+            opacity: 1;
         }
     }
 

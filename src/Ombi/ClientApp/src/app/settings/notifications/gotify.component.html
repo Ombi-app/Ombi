@@ -32,10 +32,10 @@
         <mat-label>Priority</mat-label>
         <mat-select formControlName="priority"
                     matTooltip="Higher priority surfaces messages more aggressively on the client.">
-            <mat-option value="0">Lowest</mat-option>
-            <mat-option value="2">Low</mat-option>
-            <mat-option value="4">Normal</mat-option>
-            <mat-option value="8">High</mat-option>
+            <mat-option [value]="0">Lowest</mat-option>
+            <mat-option [value]="2">Low</mat-option>
+            <mat-option [value]="4">Normal</mat-option>
+            <mat-option [value]="8">High</mat-option>
         </mat-select>
     </mat-form-field>
 </ombi-notification-shell>

@@ -67,7 +67,7 @@ export class SlackComponent extends NotificationBaseComponent<ISlackNotification
 
     protected override validate(settings: ISlackNotificationSettings): string | null {
         if (settings.iconEmoji && settings.iconUrl) {
-            return "You cannot have a Emoji icon and a URL icon";
+            return "You cannot set both an emoji icon and a URL icon";
         }
         return null;
     }
