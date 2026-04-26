@@ -1,7 +1,10 @@
 name: First Time Contributor Welcome
 
+# pull_request_target runs in the base repo context so the token has
+# write access even when the PR originates from a fork.
+# Safe here because we never checkout or execute code from the fork.
 on:
-  pull_request:
+  pull_request_target:
     types: [opened]
     branches: [develop]
 
