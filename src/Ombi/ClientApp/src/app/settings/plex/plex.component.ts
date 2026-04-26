@@ -251,6 +251,8 @@ export class PlexComponent implements OnInit {
         job$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((x) => {
             if (x) {
                 this.notificationService.success(message);
+            } else {
+                this.notificationService.error("Could not trigger the job. Please try again.");
             }
         });
     }
