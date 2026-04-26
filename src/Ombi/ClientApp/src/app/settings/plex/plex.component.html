@@ -156,6 +156,8 @@
 
         <div class="action-grid">
             <button type="button" class="action-tile"
+                    [class.action-tile--disabled]="!s.enable"
+                    [disabled]="!s.enable"
                     (click)="runSync(PlexSyncType.Full)" id="fullSync">
                 <span class="action-tile__icon action-tile__icon--blue">
                     <mat-icon>sync</mat-icon>
@@ -167,6 +169,8 @@
             </button>
 
             <button type="button" class="action-tile"
+                    [class.action-tile--disabled]="!s.enable"
+                    [disabled]="!s.enable"
                     (click)="runSync(PlexSyncType.RecentlyAdded)" id="recentlyAddedSync">
                 <span class="action-tile__icon action-tile__icon--teal">
                     <mat-icon>update</mat-icon>
@@ -178,6 +182,8 @@
             </button>
 
             <button type="button" class="action-tile"
+                    [class.action-tile--disabled]="!s.enable"
+                    [disabled]="!s.enable"
                     (click)="runSync(PlexSyncType.ClearAndReSync)" id="clearData">
                 <span class="action-tile__icon action-tile__icon--amber">
                     <mat-icon>cleaning_services</mat-icon>
@@ -189,8 +195,8 @@
             </button>
 
             <button type="button" class="action-tile"
-                    [class.action-tile--disabled]="!s.enableWatchlistImport"
-                    [disabled]="!s.enableWatchlistImport"
+                    [class.action-tile--disabled]="!s.enable || !s.enableWatchlistImport"
+                    [disabled]="!s.enable || !s.enableWatchlistImport"
                     (click)="runSync(PlexSyncType.WatchlistImport)" id="watchlistImport">
                 <span class="action-tile__icon action-tile__icon--violet">
                     <mat-icon>playlist_add</mat-icon>

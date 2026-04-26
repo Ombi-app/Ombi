@@ -174,6 +174,7 @@ export class PlexComponent implements OnInit {
                 }
                 if (x.deleted) {
                     this.removeServer(server);
+                    return;
                 }
                 if (x.server) {
                     const settings = this.settings();
