@@ -67,6 +67,10 @@ export class PlexComponent implements OnInit {
         return ++this.nextServerId;
     }
 
+    private notifySettingsChanged(): void {
+        this.settings.update((s) => (s ? { ...s } : s));
+    }
+
     public requestServers(): void {
         this.plexService.getServers(this.username, this.password).pipe(
             takeUntilDestroyed(this.destroyRef),
@@ -115,6 +119,7 @@ export class PlexComponent implements OnInit {
         }
 
         settings.servers = settings.servers.filter((x) => x.name !== "");
+        this.notifySettingsChanged();
 
         const invalid = settings.servers.some(
             (server) => server.serverHostname && server.serverHostname.length > 0 && !server.serverHostname.startsWith("http"),
@@ -178,9 +183,11 @@ export class PlexComponent implements OnInit {
                     const idx = settings.servers.findIndex((s) => s.id === x.server.id);
                     if (idx >= 0) {
                         settings.servers[idx] = x.server;
+                        this.notifySettingsChanged();
                         this.save("Server updated");
                     } else {
                         settings.servers.push(x.server);
+                        this.notifySettingsChanged();
                         this.save("Server added");
                     }
                 }
@@ -216,6 +223,7 @@ export class PlexComponent implements OnInit {
                         return;
                     }
                     current.servers.push(x.server);
+                    this.notifySettingsChanged();
                     this.save("Server added");
                 }
             });
@@ -233,6 +241,7 @@ export class PlexComponent implements OnInit {
         const index = settings.servers.indexOf(server, 0);
         if (index > -1) {
             settings.servers.splice(index, 1);
+            this.notifySettingsChanged();
         }
         this.save("Server removed");
     }
