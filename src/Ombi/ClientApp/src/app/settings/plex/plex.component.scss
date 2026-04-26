@@ -1,11 +1,5 @@
 @use "./styles/shared.scss" as *;
 
-/* ----------------------------------------------------------------------------
-   Plex settings page
-   Design tokens are defined locally so the component is self-contained while
-   still feeling at home in the Ombi dark theme.
----------------------------------------------------------------------------- */
-
 $plex-bg:           #0b1220;
 $plex-surface:      #131b29;
 $plex-surface-2:    #1a2333;
@@ -16,17 +10,6 @@ $plex-text-muted:   #9aa6bd;
 $plex-text-faint:   #6e7a92;
 $plex-accent:       #62d2fa;
 $plex-accent-soft:  rgba(98, 210, 250, 0.14);
-$plex-success:      #4ade80;
-$plex-warn:         #f59e0b;
-$plex-danger:       #ef4444;
-$plex-violet:       #a78bfa;
-$plex-teal:         #2dd4bf;
-
-$radius-sm: 8px;
-$radius-md: 12px;
-$radius-lg: 16px;
-
-/* ---------------------------------- Page ---------------------------------- */
 
 .plex-page {
     max-width: 1200px;
@@ -38,15 +21,13 @@ $radius-lg: 16px;
     gap: 24px;
 }
 
-/* --------------------------------- Header --------------------------------- */
-
 .page-header {
     display: grid;
     grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 24px;
     padding: 28px 32px;
-    border-radius: $radius-lg;
+    border-radius: 16px;
     background:
         radial-gradient(120% 140% at 0% 0%, rgba(98, 210, 250, 0.10) 0%, transparent 60%),
         linear-gradient(180deg, $plex-surface-2 0%, $plex-surface 100%);
@@ -62,11 +43,7 @@ $radius-lg: 16px;
         display: grid;
         place-items: center;
 
-        mat-icon {
-            font-size: 32px;
-            height: 32px;
-            width: 32px;
-        }
+        mat-icon { font-size: 32px; height: 32px; width: 32px; }
     }
 
     &__eyebrow {
@@ -83,7 +60,7 @@ $radius-lg: 16px;
         font-weight: 700;
         letter-spacing: -0.02em;
         line-height: 1.1;
-        color: #ffffff;
+        color: #fff;
     }
 
     &__subtitle {
@@ -110,7 +87,6 @@ $radius-lg: 16px;
     border-radius: 999px;
     font-size: 12px;
     font-weight: 600;
-    letter-spacing: 0.02em;
     border: 1px solid transparent;
     background: rgba(255, 255, 255, 0.04);
 
@@ -123,15 +99,13 @@ $radius-lg: 16px;
     }
 
     &--on {
-        color: $plex-success;
+        color: #4ade80;
         background: rgba(74, 222, 128, 0.12);
         border-color: rgba(74, 222, 128, 0.30);
     }
 
     &--off {
         color: $plex-text-faint;
-        background: rgba(255, 255, 255, 0.04);
-        border-color: rgba(255, 255, 255, 0.08);
     }
 }
 
@@ -142,25 +116,17 @@ $radius-lg: 16px;
     font-size: 12px;
     color: $plex-text-muted;
 
-    mat-icon {
-        font-size: 14px;
-        height: 14px;
-        width: 14px;
-    }
+    mat-icon { font-size: 14px; height: 14px; width: 14px; }
 }
-
-/* --------------------------------- Surface -------------------------------- */
 
 .surface {
     background: $plex-surface;
     border: 1px solid $plex-border;
-    border-radius: $radius-lg;
+    border-radius: 16px;
     padding: 24px 28px;
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.02) inset;
 
-    &--hero {
-        padding: 20px 24px;
-    }
+    &--hero { padding: 20px 24px; }
 }
 
 .section-head {
@@ -174,8 +140,7 @@ $radius-lg: 16px;
         margin: 0;
         font-size: 18px;
         font-weight: 600;
-        letter-spacing: -0.01em;
-        color: #ffffff;
+        color: #fff;
     }
 
     &__desc {
@@ -186,21 +151,11 @@ $radius-lg: 16px;
     }
 }
 
-/* --------------------------------- Layout --------------------------------- */
-
 .grid-2 {
     display: grid;
     grid-template-columns: 1.15fr 1fr;
     gap: 24px;
 }
-
-@media (max-width: 1024px) {
-    .grid-2 {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* --------------------------- Toggle / setting row ------------------------- */
 
 .row-toggle {
     display: grid;
@@ -222,7 +177,7 @@ $radius-lg: 16px;
         margin: 0;
         font-size: 16px;
         font-weight: 600;
-        color: #ffffff;
+        color: #fff;
     }
 
     &__desc {
@@ -230,14 +185,12 @@ $radius-lg: 16px;
         font-size: 13px;
         color: $plex-text-muted;
         line-height: 1.5;
-        max-width: 70ch;
     }
 }
 
 .setting-list {
     display: flex;
     flex-direction: column;
-    gap: 4px;
     border-top: 1px solid $plex-border-soft;
 }
 
@@ -248,15 +201,9 @@ $radius-lg: 16px;
     gap: 18px;
     padding: 18px 4px;
     border-bottom: 1px solid $plex-border-soft;
-    transition: opacity 0.15s ease;
 
-    &:last-child {
-        border-bottom: 0;
-    }
-
-    &--disabled {
-        opacity: 0.55;
-    }
+    &:last-child { border-bottom: 0; }
+    &--disabled { opacity: 0.55; }
 
     &__media {
         width: 40px;
@@ -267,18 +214,14 @@ $radius-lg: 16px;
         display: grid;
         place-items: center;
 
-        mat-icon {
-            font-size: 22px;
-            height: 22px;
-            width: 22px;
-        }
+        mat-icon { font-size: 22px; height: 22px; width: 22px; }
     }
 
     &__title {
         margin: 0;
         font-size: 15px;
         font-weight: 600;
-        color: #ffffff;
+        color: #fff;
     }
 
     &__desc {
@@ -286,53 +229,44 @@ $radius-lg: 16px;
         font-size: 13px;
         color: $plex-text-muted;
         line-height: 1.5;
-        max-width: 70ch;
     }
 }
 
-/* --------------------------------- Servers -------------------------------- */
-
-.server-grid {
+.server-grid,
+.action-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 14px;
 }
 
+.action-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+
 .server-tile {
-    position: relative;
     appearance: none;
     text-align: left;
     background: $plex-surface-2;
     border: 1px solid $plex-border;
-    border-radius: $radius-md;
+    border-radius: 12px;
     padding: 18px 16px 16px;
     color: $plex-text;
     cursor: pointer;
     display: grid;
     grid-template-columns: auto 1fr auto;
-    grid-template-rows: auto auto;
-    grid-template-areas:
-        "icon name edit"
-        "icon meta meta";
+    grid-template-areas: "icon name edit" "icon meta meta";
     column-gap: 12px;
     row-gap: 4px;
-    transition: transform 0.12s ease, border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+    transition: transform .12s ease, border-color .15s, background .15s, box-shadow .15s;
 
     &:hover {
-        border-color: rgba(98, 210, 250, 0.45);
+        border-color: rgba(98, 210, 250, .45);
         background: lighten($plex-surface-2, 2%);
         transform: translateY(-1px);
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, .25);
 
-        .server-tile__edit {
-            opacity: 1;
-        }
+        .server-tile__edit { opacity: 1; }
     }
 
-    &:focus-visible {
-        outline: 2px solid $plex-accent;
-        outline-offset: 2px;
-    }
+    &:focus-visible { outline: 2px solid $plex-accent; outline-offset: 2px; }
 
     &__icon {
         grid-area: icon;
@@ -344,14 +278,10 @@ $radius-lg: 16px;
         display: grid;
         place-items: center;
 
-        mat-icon {
-            font-size: 22px;
-            height: 22px;
-            width: 22px;
-        }
+        mat-icon { font-size: 22px; height: 22px; width: 22px; }
 
         &--add {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, .05);
             color: $plex-text-muted;
         }
     }
@@ -360,7 +290,7 @@ $radius-lg: 16px;
         grid-area: name;
         font-size: 15px;
         font-weight: 600;
-        color: #ffffff;
+        color: #fff;
         line-height: 1.2;
         word-break: break-word;
     }
@@ -377,13 +307,9 @@ $radius-lg: 16px;
         grid-area: edit;
         color: $plex-text-faint;
         opacity: 0;
-        transition: opacity 0.15s ease;
+        transition: opacity .15s;
 
-        mat-icon {
-            font-size: 18px;
-            height: 18px;
-            width: 18px;
-        }
+        mat-icon { font-size: 18px; height: 18px; width: 18px; }
     }
 
     &--add {
@@ -392,17 +318,9 @@ $radius-lg: 16px;
 
         &:hover {
             border-color: $plex-accent;
-            background: rgba(98, 210, 250, 0.04);
+            background: rgba(98, 210, 250, .04);
         }
     }
-}
-
-/* ------------------------------- Action grid ------------------------------ */
-
-.action-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 14px;
 }
 
 .action-tile {
@@ -410,32 +328,26 @@ $radius-lg: 16px;
     text-align: left;
     background: $plex-surface-2;
     border: 1px solid $plex-border;
-    border-radius: $radius-md;
+    border-radius: 12px;
     padding: 16px 18px;
     color: $plex-text;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 14px;
-    transition: transform 0.12s ease, border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+    transition: transform .12s ease, border-color .15s, background .15s, box-shadow .15s;
 
     &:hover:not([disabled]) {
-        border-color: rgba(98, 210, 250, 0.45);
+        border-color: rgba(98, 210, 250, .45);
         background: lighten($plex-surface-2, 2%);
         transform: translateY(-1px);
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, .25);
     }
 
-    &:focus-visible {
-        outline: 2px solid $plex-accent;
-        outline-offset: 2px;
-    }
+    &:focus-visible { outline: 2px solid $plex-accent; outline-offset: 2px; }
 
     &--disabled,
-    &[disabled] {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
+    &[disabled] { opacity: .5; cursor: not-allowed; }
 
     &__icon {
         flex: 0 0 auto;
@@ -447,28 +359,20 @@ $radius-lg: 16px;
         background: $plex-accent-soft;
         color: $plex-accent;
 
-        mat-icon {
-            font-size: 22px;
-            height: 22px;
-            width: 22px;
-        }
+        mat-icon { font-size: 22px; height: 22px; width: 22px; }
 
-        &--blue   { background: rgba(98,  210, 250, 0.15); color: $plex-accent; }
-        &--teal   { background: rgba(45,  212, 191, 0.15); color: $plex-teal; }
-        &--amber  { background: rgba(245, 158,  11, 0.15); color: $plex-warn; }
-        &--violet { background: rgba(167, 139, 250, 0.15); color: $plex-violet; }
+        &--blue   { background: rgba(98, 210, 250, .15); color: $plex-accent; }
+        &--teal   { background: rgba(45, 212, 191, .15); color: #2dd4bf; }
+        &--amber  { background: rgba(245, 158,  11, .15); color: #f59e0b; }
+        &--violet { background: rgba(167, 139, 250, .15); color: #a78bfa; }
     }
 
-    &__body {
-        display: flex;
-        flex-direction: column;
-        min-width: 0;
-    }
+    &__body { display: flex; flex-direction: column; min-width: 0; }
 
     &__title {
         font-size: 14px;
         font-weight: 600;
-        color: #ffffff;
+        color: #fff;
         line-height: 1.2;
     }
 
@@ -480,72 +384,44 @@ $radius-lg: 16px;
     }
 }
 
-/* --------------------------------- Forms ---------------------------------- */
-
 .form-stack {
     display: flex;
     flex-direction: column;
     gap: 6px;
     margin-top: 16px;
-
-    .full-width {
-        width: 100%;
-    }
 }
 
-.full-width {
-    width: 100%;
-}
-
-/* --------------------------------- Callout -------------------------------- */
+.full-width { width: 100%; }
 
 .callout {
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 14px 16px;
-    border-radius: $radius-md;
+    border-radius: 12px;
     font-size: 13px;
     line-height: 1.5;
     margin-top: 16px;
 
-    &__text {
-        flex: 1;
-    }
-
-    &__action {
-        flex: 0 0 auto;
-    }
-
-    mat-icon {
-        flex: 0 0 auto;
-        font-size: 20px;
-        height: 20px;
-        width: 20px;
-    }
+    &__text { flex: 1; }
+    mat-icon { flex: 0 0 auto; font-size: 20px; height: 20px; width: 20px; }
 
     &--info {
-        background: rgba(98, 210, 250, 0.08);
-        border: 1px solid rgba(98, 210, 250, 0.25);
+        background: rgba(98, 210, 250, .08);
+        border: 1px solid rgba(98, 210, 250, .25);
         color: $plex-text;
 
-        mat-icon {
-            color: $plex-accent;
-        }
+        mat-icon { color: $plex-accent; }
     }
 
     &--muted {
-        background: rgba(255, 255, 255, 0.03);
+        background: rgba(255, 255, 255, .03);
         border: 1px solid $plex-border-soft;
         color: $plex-text-muted;
 
-        mat-icon {
-            color: $plex-text-faint;
-        }
+        mat-icon { color: $plex-text-faint; }
     }
 }
-
-/* -------------------------------- Save bar -------------------------------- */
 
 .save-bar {
     position: sticky;
@@ -556,28 +432,17 @@ $radius-lg: 16px;
     gap: 16px;
     padding: 14px 18px 14px 22px;
     margin-top: 8px;
-    background: rgba(19, 27, 41, 0.92);
+    background: rgba(19, 27, 41, .92);
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
     border: 1px solid $plex-border;
-    border-radius: $radius-md;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, .45);
     z-index: 5;
 
-    &__hint {
-        font-size: 13px;
-        color: $plex-text-muted;
-    }
-
-    &__btn {
-        min-width: 160px;
-    }
+    &__hint { font-size: 13px; color: $plex-text-muted; }
+    &__btn { min-width: 160px; }
 }
 
-/* --------------------------------- Buttons -------------------------------- */
-
-.btn-primary.mat-mdc-raised-button,
-.btn-primary.mat-mdc-unelevated-button,
 .btn-primary {
     display: inline-flex;
     align-items: center;
@@ -586,62 +451,43 @@ $radius-lg: 16px;
     height: 42px;
     border-radius: 10px;
     font-weight: 600;
-    letter-spacing: 0.01em;
 }
 
-/* ------------------------- Material form-field tweaks --------------------- */
-
 ::ng-deep .plex-page {
-    .mat-mdc-form-field {
-        width: 100%;
-    }
+    .mat-mdc-form-field { width: 100%; }
 
     .mat-mdc-text-field-wrapper {
-        background: rgba(255, 255, 255, 0.03);
+        background: rgba(255, 255, 255, .03);
         border-radius: 10px;
     }
 
-    .mdc-notched-outline__leading,
-    .mdc-notched-outline__notch,
-    .mdc-notched-outline__trailing {
-        border-color: $plex-border !important;
-    }
+    .mdc-notched-outline > * { border-color: $plex-border !important; }
 
-    .mat-mdc-form-field:hover .mdc-notched-outline__leading,
-    .mat-mdc-form-field:hover .mdc-notched-outline__notch,
-    .mat-mdc-form-field:hover .mdc-notched-outline__trailing {
+    .mat-mdc-form-field:hover .mdc-notched-outline > * {
         border-color: lighten($plex-border, 10%) !important;
     }
 
-    .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
-    .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
-    .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+    .mat-mdc-form-field.mat-focused .mdc-notched-outline > * {
         border-color: $plex-accent !important;
     }
 
-    .mat-mdc-form-field-label,
-    .mdc-floating-label {
-        color: $plex-text-muted !important;
-    }
+    .mdc-floating-label { color: $plex-text-muted !important; }
 
-    .mat-mdc-input-element,
-    input.mat-mdc-input-element {
+    .mat-mdc-input-element {
         color: $plex-text !important;
         caret-color: $plex-accent;
     }
 
     .mat-mdc-select-value,
-    .mat-mdc-select-arrow {
-        color: $plex-text !important;
-    }
+    .mat-mdc-select-arrow { color: $plex-text !important; }
 }
 
-/* ------------------------------ Responsiveness ---------------------------- */
+@media (max-width: 1024px) {
+    .grid-2 { grid-template-columns: 1fr; }
+}
 
 @media (max-width: 720px) {
-    .plex-page {
-        padding: 20px 16px 140px;
-    }
+    .plex-page { padding: 20px 16px 140px; }
 
     .page-header {
         grid-template-columns: auto 1fr;
@@ -650,28 +496,15 @@ $radius-lg: 16px;
         &__status {
             grid-column: 1 / -1;
             flex-direction: row;
-            align-items: center;
             justify-content: flex-start;
         }
 
-        &__title {
-            font-size: 24px;
-        }
+        &__title { font-size: 24px; }
     }
 
-    .surface {
-        padding: 18px 16px;
-    }
+    .surface { padding: 18px 16px; }
 
-    .row-toggle {
-        grid-template-columns: auto 1fr;
-
-        mat-slide-toggle {
-            grid-column: 1 / -1;
-            justify-self: end;
-        }
-    }
-
+    .row-toggle,
     .setting-row {
         grid-template-columns: auto 1fr;
 
@@ -685,8 +518,6 @@ $radius-lg: 16px;
         flex-direction: column;
         align-items: stretch;
 
-        &__btn {
-            width: 100%;
-        }
+        &__btn { width: 100%; }
     }
 }
