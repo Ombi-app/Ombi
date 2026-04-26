@@ -292,7 +292,7 @@ $plex-accent-soft:  rgba(98, 210, 250, 0.14);
         font-weight: 600;
         color: #fff;
         line-height: 1.2;
-        word-break: break-word;
+        overflow-wrap: anywhere;
     }
 
     &__meta {

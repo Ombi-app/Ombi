@@ -129,9 +129,10 @@
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Select a discovered server</mat-label>
                     @if (loadedServers(); as discovered) {
-                        <mat-select [id]="'servers'">
+                        <mat-select [id]="'servers'"
+                                    (selectionChange)="selectServer($event.value)">
                             @for (device of discovered.servers.devices; track device.machineIdentifier) {
-                                <mat-option (click)="selectServer(device)" [value]="device.device">
+                                <mat-option [value]="device">
                                     {{ device.name }}
                                 </mat-option>
                             }

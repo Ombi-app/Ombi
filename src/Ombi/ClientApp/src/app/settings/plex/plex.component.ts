@@ -49,6 +49,8 @@ export class PlexComponent implements OnInit {
 
     public readonly PlexSyncType = PlexSyncType;
 
+    private nextServerId = 0;
+
     public ngOnInit(): void {
         this.settingsService.getPlex()
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -56,8 +58,13 @@ export class PlexComponent implements OnInit {
                 if (!x.servers) {
                     x.servers = [];
                 }
+                this.nextServerId = x.servers.reduce((max, s) => Math.max(max, s.id ?? 0), 0);
                 this.settings.set(x);
             });
+    }
+
+    private generateServerId(): number {
+        return ++this.nextServerId;
     }
 
     public requestServers(): void {
@@ -85,7 +92,7 @@ export class PlexComponent implements OnInit {
 
         const server = <IPlexServer>{
             name: "New" + settings.servers.length + "*",
-            id: Math.floor(Math.random() * (99999 - 0 + 1) + 1),
+            id: this.generateServerId(),
         };
 
         const splitServers = selectedDevice.localAddresses.split(",");
@@ -124,7 +131,7 @@ export class PlexComponent implements OnInit {
                 if (x) {
                     this.notificationService.success("Successfully saved Plex settings");
                 } else {
-                    this.notificationService.success("There was an error when saving the Plex settings");
+                    this.notificationService.error("There was an error when saving the Plex settings");
                 }
             });
     }
@@ -187,7 +194,7 @@ export class PlexComponent implements OnInit {
 
         const initial = server ?? <IPlexServer>{
             name: "New" + settings.servers.length + "*",
-            id: Math.floor(Math.random() * (99999 - 0 + 1) + 1),
+            id: this.generateServerId(),
         };
 
         const dialogRef = this.dialog.open(PlexServerDialogComponent, {
