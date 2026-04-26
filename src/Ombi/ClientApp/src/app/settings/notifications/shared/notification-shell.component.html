@@ -1,0 +1,99 @@
+<section class="notification-shell">
+    <div class="notification-shell__layout" [class.notification-shell__layout--single]="!showTemplates">
+        <mat-card appearance="outlined" class="notification-shell__card notification-shell__card--main">
+            <mat-card-header class="notification-shell__header">
+                <div mat-card-avatar class="notification-shell__avatar" aria-hidden="true">
+                    <mat-icon>{{ icon }}</mat-icon>
+                </div>
+                <mat-card-title class="notification-shell__title">
+                    {{ providerName }} notifications
+                    @if (form && showEnabledToggle) {
+                        <span class="notification-shell__status"
+                              [class.notification-shell__status--on]="isEnabled"
+                              [attr.aria-label]="isEnabled ? 'Enabled' : 'Disabled'">
+                            {{ isEnabled ? 'Enabled' : 'Disabled' }}
+                        </span>
+                    }
+                </mat-card-title>
+                @if (description) {
+                    <mat-card-subtitle>{{ description }}</mat-card-subtitle>
+                }
+            </mat-card-header>
+
+            @if (loading) {
+                <mat-progress-bar mode="indeterminate" class="notification-shell__progress" aria-label="Loading settings"></mat-progress-bar>
+            }
+
+            <mat-card-content class="notification-shell__content">
+                @if (form) {
+                    <form novalidate [formGroup]="form" (ngSubmit)="onSubmit()" class="notification-shell__form">
+                        @if (showEnabledToggle) {
+                            <div class="notification-shell__enable-row">
+                                <mat-slide-toggle color="primary"
+                                                  [formControlName]="enabledControlName"
+                                                  id="enable">
+                                    Enable {{ providerName }} notifications
+                                </mat-slide-toggle>
+                                @if (docsUrl) {
+                                    <a class="notification-shell__docs" mat-stroked-button color="primary"
+                                       [href]="docsUrl" target="_blank" rel="noopener noreferrer">
+                                        <mat-icon>menu_book</mat-icon>
+                                        {{ docsLabel }}
+                                    </a>
+                                }
+                            </div>
+
+                            <mat-divider class="notification-shell__divider"></mat-divider>
+                        }
+
+                        <div class="notification-shell__fields">
+                            <ng-content></ng-content>
+                        </div>
+
+                        <ng-content select="[notificationFooter]"></ng-content>
+
+                        <div class="notification-shell__actions">
+                            @if (showTest) {
+                                <button mat-stroked-button color="accent" type="button"
+                                        [disabled]="form.invalid"
+                                        (click)="onTest()">
+                                    <mat-icon>send</mat-icon>
+                                    {{ testLabel }}
+                                </button>
+                            }
+                            <button mat-flat-button color="primary" type="submit"
+                                    [disabled]="form.invalid || form.pristine">
+                                <mat-icon>save</mat-icon>
+                                {{ submitLabel }}
+                            </button>
+                        </div>
+                    </form>
+                } @else if (!loading) {
+                    <p class="notification-shell__empty">Settings are unavailable.</p>
+                }
+            </mat-card-content>
+        </mat-card>
+
+        @if (showTemplates) {
+            <mat-card appearance="outlined" class="notification-shell__card notification-shell__card--templates">
+                <mat-card-header>
+                    <div mat-card-avatar class="notification-shell__avatar" aria-hidden="true">
+                        <mat-icon>description</mat-icon>
+                    </div>
+                    <mat-card-title>Message templates</mat-card-title>
+                    <mat-card-subtitle>Customise how each notification reads.</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    @if (templates && templates.length) {
+                        <notification-templates
+                            [templates]="templates"
+                            [showSubject]="showSubject">
+                        </notification-templates>
+                    } @else {
+                        <p class="notification-shell__empty">No templates available.</p>
+                    }
+                </mat-card-content>
+            </mat-card>
+        }
+    </div>
+</section>

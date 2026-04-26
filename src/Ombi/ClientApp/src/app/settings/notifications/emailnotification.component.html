@@ -1,103 +1,79 @@
-﻿<div *ngIf="emailForm" class="small-middle-container">
-    <fieldset>
-        <legend>Email Notifications</legend>
-        <div class="row">
-            <div class="col-md-8">
-                <form novalidate [formGroup]="emailForm" style="padding-top:2%;" (ngSubmit)="onSubmit(emailForm)">
-                    <div class="row">
-                        <div>
-                            <div class="md-form-field">
-                                <mat-slide-toggle formControlName="enabled">Enable</mat-slide-toggle>
-                            </div>
-                            <div class="md-form-field">
-                                <mat-slide-toggle formControlName="authentication">Enable SMTP Authentication
-                                </mat-slide-toggle>
-                            </div>
-                            <div class="md-form-field">
-                                <mat-slide-toggle formControlName="disableTLS">Disable TLS/SSL</mat-slide-toggle>
-                            </div>
-                            <div class="md-form-field">
-                                <mat-slide-toggle formControlName="disableCertificateChecking">Disable Certificate
-                                    Checking</mat-slide-toggle>
-                            </div>
-                        </div>
-                    </div>
+<ombi-notification-shell
+    providerName="Email"
+    icon="mail"
+    description="Send transactional and newsletter emails via your own SMTP server."
+    [form]="form"
+    [loading]="loading"
+    [templates]="templates"
+    [showSubject]="true"
+    (submitted)="onSubmit($event)"
+    (tested)="test($event)">
 
-                    <div class="row">
-                        <div class="md-form-field">
-                            <mat-form-field appearance="outline">
-                                <mat-label>SMTP Host</mat-label>
-                                <input matInput formControlName="host">
-                                <mat-error *ngIf="emailForm.get('host').hasError('required')">
-                                    Host is <strong>required</strong>
-                                  </mat-error>
-                            </mat-form-field>
-                            <mat-form-field appearance="outline">
-                                <mat-label>SMTP Port</mat-label>
-                                <input matInput formControlName="port">
-                                <mat-error *ngIf="emailForm.get('port').hasError('required')">
-                                    Port is <strong>required</strong>
-                                  </mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="md-form-field">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Email Sender</mat-label>
-                                <input matInput formControlName="senderAddress" matTooltip="The email address that the emails will be sent from">
-                                <mat-error *ngIf="emailForm.get('senderAddress').hasError('required')">
-                                    Email Sender Address is <strong>required</strong>
-                                  </mat-error>
-                                  <mat-error *ngIf="emailForm.get('senderAddress').hasError('email')">
-                                    Email Sender Address needs to be a valid email address
-                                  </mat-error>
-                            </mat-form-field>
-                            <mat-form-field appearance="outline">
-                                <mat-label>Sender Name</mat-label>
-                                <input matInput formControlName="senderName" matTooltip="The 'Friendly' name that will appear in the 'FROM:' part of the email">
-                            </mat-form-field>
-                        </div>
-                        <div class="md-form-field" *ngIf="emailForm.controls['username'].validator">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Username</mat-label>
-                                <input matInput formControlName="username" matTooltip="The username if authentication is enabled">
-                                <mat-error *ngIf="emailForm.get('username').hasError('required')">
-                                    Username is <strong>required</strong>
-                                  </mat-error>
-                            </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>SMTP host</mat-label>
+        <input matInput formControlName="host" autocomplete="off"
+               placeholder="smtp.example.com">
+        @if (form?.get('host')?.hasError('required')) {
+            <mat-error>Host is <strong>required</strong></mat-error>
+        }
+    </mat-form-field>
 
-                            <mat-form-field appearance="outline">
-                                <mat-label>Password</mat-label>
-                                <input type="password" matInput formControlName="password" matTooltip="The password if authentication is enabled">
-                                <mat-error *ngIf="emailForm.get('password').hasError('required')">
-                                    Password is <strong>required</strong>
-                                  </mat-error>
-                            </mat-form-field>
-                        </div>
+    <mat-form-field appearance="outline">
+        <mat-label>SMTP port</mat-label>
+        <input matInput type="number" formControlName="port" autocomplete="off">
+        @if (form?.get('port')?.hasError('required')) {
+            <mat-error>Port is <strong>required</strong></mat-error>
+        }
+    </mat-form-field>
 
-                </div>
-                <div class="row top-space">
-                    <div class="form-group">
-                        <div>
-                            <button mat-raised-button type="button" class="btn-spacing" color="accent"
-                            (click)="test(emailForm)" [disabled]="emailForm.invalid">Test <div id="spinner"></div>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div>
-                            <button mat-raised-button type="submit" class="btn-spacing" color="primary"
-                                [disabled]="emailForm.invalid">Submit</button>
-                        </div>
-                    </div>
-                </div>
-                </form>
-            </div>
+    <mat-form-field appearance="outline">
+        <mat-label>Sender address</mat-label>
+        <input matInput type="email" formControlName="senderAddress" autocomplete="off"
+               matTooltip="The email address that the emails will be sent from.">
+        @if (form?.get('senderAddress')?.hasError('required')) {
+            <mat-error>Sender address is <strong>required</strong></mat-error>
+        }
+        @if (form?.get('senderAddress')?.hasError('email')) {
+            <mat-error>Sender address must be a valid email address.</mat-error>
+        }
+    </mat-form-field>
 
+    <mat-form-field appearance="outline">
+        <mat-label>Sender name</mat-label>
+        <input matInput formControlName="senderName" autocomplete="off"
+               matTooltip="The friendly name shown in the FROM field of the email.">
+    </mat-form-field>
 
-        <div class="col-md-4">
-            <notification-templates [templates]="templates"></notification-templates>
-        </div>
-        
+    @if (form?.controls?.['username']?.validator) {
+        <mat-form-field appearance="outline">
+            <mat-label>Username</mat-label>
+            <input matInput formControlName="username" autocomplete="username"
+                   matTooltip="SMTP username when authentication is enabled.">
+            @if (form?.get('username')?.hasError('required')) {
+                <mat-error>Username is <strong>required</strong></mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" formControlName="password" autocomplete="current-password"
+                   matTooltip="SMTP password when authentication is enabled.">
+            @if (form?.get('password')?.hasError('required')) {
+                <mat-error>Password is <strong>required</strong></mat-error>
+            }
+        </mat-form-field>
+    }
+
+    <div class="notification-field--full"
+         style="display:flex; flex-direction:column; gap:12px; padding-top:4px;">
+        <mat-slide-toggle color="primary" formControlName="authentication">
+            Enable SMTP authentication
+        </mat-slide-toggle>
+        <mat-slide-toggle color="primary" formControlName="disableTLS">
+            Disable TLS / SSL
+        </mat-slide-toggle>
+        <mat-slide-toggle color="primary" formControlName="disableCertificateChecking">
+            Disable certificate checking
+        </mat-slide-toggle>
     </div>
-    </fieldset>
-</div>
+</ombi-notification-shell>

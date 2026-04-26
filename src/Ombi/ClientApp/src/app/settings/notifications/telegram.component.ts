@@ -1,23 +1,18 @@
-import { Component, OnInit } from "@angular/core";
-import { ReactiveFormsModule, FormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
-
-import { INotificationTemplates, ITelegramNotifcationSettings, NotificationType } from "../../interfaces";
-import { TesterService } from "../../services";
-import { NotificationService } from "../../services";
-import { SettingsService } from "../../services";
+import { Component } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { MatButtonModule } from "@angular/material/button";
-import { MatCheckboxModule } from "@angular/material/checkbox";
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, Validators } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
-import { MatSelectModule } from "@angular/material/select";
+import { MatRadioModule } from "@angular/material/radio";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslateModule } from "@ngx-translate/core";
-import { RadioButtonModule } from "primeng/radiobutton";
-import { NotificationTemplate } from "./notificationtemplate.component";
-import { SettingsMenuComponent } from "../settingsmenu.component";
-import { WikiComponent } from "../wiki.component";
+import { Observable } from "rxjs";
+
+import { ITelegramNotifcationSettings } from "../../interfaces";
+import { NotificationService, SettingsService, TesterService } from "../../services";
+import { NotificationBaseComponent } from "./shared/notification-base.component";
+import { NotificationShellComponent } from "./shared/notification-shell.component";
 
 @Component({
     standalone: true,
@@ -25,77 +20,49 @@ import { WikiComponent } from "../wiki.component";
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        MatButtonModule,
-        MatCheckboxModule,
         MatFormFieldModule,
         MatInputModule,
-        MatSelectModule,
+        MatRadioModule,
         MatSlideToggleModule,
         MatTooltipModule,
         TranslateModule,
-        RadioButtonModule,
-        NotificationTemplate
+        NotificationShellComponent,
     ],
     templateUrl: "./telegram.component.html",
-    styleUrls: ["./notificationtemplate.component.scss"]
 })
-export class TelegramComponent implements OnInit {
+export class TelegramComponent extends NotificationBaseComponent<ITelegramNotifcationSettings> {
 
-    public NotificationType = NotificationType;
-    public templates: INotificationTemplates[];
-    public form: UntypedFormGroup;
+    protected readonly providerName = "Telegram";
 
-    constructor(private settingsService: SettingsService,
-                private notificationService: NotificationService,
-                private fb: UntypedFormBuilder,
-                private testerService: TesterService) { }
-
-    public ngOnInit() {
-        this.settingsService.getTelegramNotificationSettings().subscribe(x => {
-            this.templates = x.notificationTemplates;
-
-            this.form = this.fb.group({
-                enabled: [x.enabled],
-                botApi: [x.botApi, [Validators.required]],
-                chatId: [x.chatId, [Validators.required]],
-                parseMode: [x.parseMode, [Validators.required]],
-
-            });
-        });
+    constructor(settingsService: SettingsService,
+                notificationService: NotificationService,
+                fb: UntypedFormBuilder,
+                testerService: TesterService) {
+        super(settingsService, notificationService, fb, testerService);
     }
 
-    public onSubmit(form: UntypedFormGroup) {
-        if (form.invalid) {
-            this.notificationService.error("Please check your entered values");
-            return;
-        }
-
-        const settings = <ITelegramNotifcationSettings> form.value;
-        settings.notificationTemplates = this.templates;
-
-        this.settingsService.saveTelegramNotificationSettings(settings).subscribe(x => {
-            if (x) {
-                this.notificationService.success("Successfully saved the Telegram settings");
-            } else {
-                this.notificationService.success("There was an error when saving the Telegram settings");
-            }
-        });
-
+    protected override get testSuccessMessage(): string {
+        return "Successfully sent a Telegram message, please check the Telegram channel";
     }
 
-    public test(form: UntypedFormGroup) {
-        if (form.invalid) {
-            this.notificationService.error("Please check your entered values");
-            return;
-        }
+    protected loadSettings(): Observable<ITelegramNotifcationSettings> {
+        return this.settingsService.getTelegramNotificationSettings();
+    }
 
-        this.testerService.telegramTest(form.value).subscribe(x => {
-            if (x) {
-                this.notificationService.success("Successfully sent a Telegram message, please check the Telegram channel");
-            } else {
-                this.notificationService.error("There was an error when sending the Telegram message. Please check your settings");
-            }
-        });
+    protected saveSettings(settings: ITelegramNotifcationSettings): Observable<boolean> {
+        return this.settingsService.saveTelegramNotificationSettings(settings);
+    }
 
+    protected testSettings(settings: ITelegramNotifcationSettings): Observable<boolean> {
+        return this.testerService.telegramTest(settings);
+    }
+
+    protected buildForm(x: ITelegramNotifcationSettings) {
+        return {
+            enabled: [x.enabled],
+            botApi: [x.botApi, [Validators.required]],
+            chatId: [x.chatId, [Validators.required]],
+            parseMode: [x.parseMode, [Validators.required]],
+        };
     }
 }

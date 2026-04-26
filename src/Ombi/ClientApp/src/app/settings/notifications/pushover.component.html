@@ -1,95 +1,47 @@
-﻿
-<div *ngIf="form" class="small-middle-container">
-    <fieldset>
-        <legend>Pushover Notifications</legend>
-        <div class="col-md-6">
-            <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+<ombi-notification-shell
+    providerName="Pushover"
+    icon="phonelink_ring"
+    description="Send native push notifications to your phone, tablet or desktop."
+    docsUrl="https://pushover.net/api"
+    [form]="form"
+    [loading]="loading"
+    [templates]="templates"
+    (submitted)="onSubmit($event)"
+    (tested)="test($event)">
 
-                <div class="form-group">
-                    <mat-checkbox id="enable" formControlName="enabled">Enabled</mat-checkbox>
-                </div>
+    <mat-form-field appearance="outline">
+        <mat-label>Application token</mat-label>
+        <input matInput formControlName="accessToken" autocomplete="off"
+               matTooltip="Your application's API token from Pushover.">
+        @if (form?.get('accessToken')?.hasError('required')) {
+            <mat-error>Application token is <strong>required</strong></mat-error>
+        }
+    </mat-form-field>
 
+    <mat-form-field appearance="outline">
+        <mat-label>User or group key</mat-label>
+        <input matInput formControlName="userToken" autocomplete="off"
+               matTooltip="Your user key, or a delivery group key.">
+    </mat-form-field>
 
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-label>Access Token</mat-label>
-                        <input matInput type="text" id="accessToken" name="accessToken" [ngClass]="{'form-error': form.get('accessToken').hasError('required')}" formControlName="accessToken" pTooltip="Enter your API Key from Pushover.">
-                    </mat-form-field>
-                </div>
+    <mat-form-field appearance="outline">
+        <mat-label>Priority</mat-label>
+        <mat-select formControlName="priority"
+                    matTooltip="Higher priority surfaces messages more aggressively on the device.">
+            <mat-option value="-2">Lowest</mat-option>
+            <mat-option value="-1">Low</mat-option>
+            <mat-option value="0">Normal</mat-option>
+            <mat-option value="1">High</mat-option>
+        </mat-select>
+    </mat-form-field>
 
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-label>User Token</mat-label>
-                        <input matInput type="text" id="userToken" name="userToken" formControlName="userToken" pTooltip="Your user or group key from Pushover.">
-                    </mat-form-field>
-                </div>
-
-                <div class="form-group">
-                    <mat-form-field>
-                      <mat-label>Priority</mat-label>
-                      <mat-select id="priority" name="priority" formControlName="priority" pTooltip="The priority you want your pushover notifications sent as.">
-                        <mat-option value="0">Normal</mat-option>
-                        <mat-option value="1">High</mat-option>
-                        <mat-option value="-1">Low</mat-option>
-                        <mat-option value="-2">Lowest</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                </div>
-
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-label>Sound</mat-label>
-                        <mat-select id="sound" name="sound" formControlName="sound" pTooltip="The sound you want your pushover notifications sent with.">
-                            <mat-option value="pushover">Pushover</mat-option>
-                            <mat-option value="bike">Bike</mat-option>
-                            <mat-option value="bugle">Bugle</mat-option>
-                            <mat-option value="cashregister">Cash Register</mat-option>
-                            <mat-option value="classical">Classical</mat-option>
-                            <mat-option value="cosmic">Cosmic</mat-option>
-                            <mat-option value="falling">Falling</mat-option>
-                            <mat-option value="gamelan">Gamelan</mat-option>
-                            <mat-option value="incoming">Incoming</mat-option>
-                            <mat-option value="intermission">Intermission</mat-option>
-                            <mat-option value="magic">Magic</mat-option>
-                            <mat-option value="mechanical">Mechanical</mat-option>
-                            <mat-option value="pianobar">Piano Bar</mat-option>
-                            <mat-option value="siren">Siren</mat-option>
-                            <mat-option value="spacealarm">Space Alarm</mat-option>
-                            <mat-option value="tugboat">Tug Boat</mat-option>
-                            <mat-option value="alien">Alien Alarm (long)</mat-option>
-                            <mat-option value="climb">Climb (long)</mat-option>
-                            <mat-option value="persistent">Persistent (long)</mat-option>
-                            <mat-option value="echo">Pushover Echo (long)</mat-option>
-                            <mat-option value="updown">Up Down (long)</mat-option>
-                            <mat-option value="none">None</mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                  </div>
-
-
-
-                <div class="form-group">
-                    <div>
-                        <button [disabled]="form.invalid" mat-raised-button type="button" (click)="test(form)">
-                            Test
-                            <div id="spinner"></div>
-                        </button>
-                    </div>
-                </div>
-
-
-
-                <div class="form-group">
-                    <div>
-                        <button [disabled]="form.invalid" mat-raised-button type="submit" id="save">Submit</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-
-        <div class="col-md-6">
-            <notification-templates [templates]="templates" [showSubject]="false"></notification-templates>
-        </div>
-    </fieldset>
-</div>
+    <mat-form-field appearance="outline">
+        <mat-label>Sound</mat-label>
+        <mat-select formControlName="sound"
+                    matTooltip="The notification sound played on the device.">
+            @for (sound of sounds; track sound.value) {
+                <mat-option [value]="sound.value">{{ sound.label }}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+</ombi-notification-shell>

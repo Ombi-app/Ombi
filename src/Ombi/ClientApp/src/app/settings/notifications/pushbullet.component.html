@@ -1,48 +1,26 @@
-﻿
-<div *ngIf="form" class="small-middle-container">
-    <fieldset>
-        <legend>Pushbullet Notifications</legend>
-        <div class="col-md-6">
-            <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+<ombi-notification-shell
+    providerName="Pushbullet"
+    icon="phone_iphone"
+    description="Send notifications to all of your devices via Pushbullet."
+    docsUrl="https://www.pushbullet.com/#settings/account"
+    [form]="form"
+    [loading]="loading"
+    [templates]="templates"
+    (submitted)="onSubmit($event)"
+    (tested)="test($event)">
 
-                <div class="form-group">
-                    <mat-checkbox id="enable" formControlName="enabled">Enabled</mat-checkbox>
-                </div>
+    <mat-form-field appearance="outline" class="notification-field--full">
+        <mat-label>Access token</mat-label>
+        <input matInput formControlName="accessToken" autocomplete="off">
+        @if (form?.get('accessToken')?.hasError('required')) {
+            <mat-error>Access token is <strong>required</strong></mat-error>
+        }
+        <mat-hint>Found under Account in your Pushbullet settings.</mat-hint>
+    </mat-form-field>
 
-                <small>You can find this here: <a href="https://www.pushbullet.com/#settings/account" target="_blank">https://www.pushbullet.com/#settings/account </a></small>
-
-                <mat-form-field>
-                    <mat-label>Access Token</mat-label>
-                    <input matInput type="text" id="accessToken" name="accessToken" formControlName="accessToken" [ngClass]="{'form-error': form.get('accessToken').hasError('required')}">
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-label>Channel Tag</mat-label>
-                    <input matInput type="text" id="channelTag" name="channelTag" formControlName="channelTag" pTooltip="Optional, this is if you want to send a message to everyone subscribed to a channel">
-                </mat-form-field>
-
-                <div class="form-group">
-                    <div>
-                        <button [disabled]="form.invalid" mat-raised-button type="button" (click)="test(form)">
-                            Test
-                            <div id="spinner"></div>
-                        </button>
-                    </div>
-                </div>
-
-
-
-                <div class="form-group">
-                    <div>
-                        <button [disabled]="form.invalid" mat-raised-button type="submit" id="save">Submit</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-
-        <div class="col-md-6">
-            <notification-templates [templates]="templates" [showSubject]="false"></notification-templates>
-        </div>
-    </fieldset>
-</div>
+    <mat-form-field appearance="outline" class="notification-field--full">
+        <mat-label>Channel tag</mat-label>
+        <input matInput formControlName="channelTag" autocomplete="off"
+               matTooltip="Optional. Broadcast to everyone subscribed to this channel.">
+    </mat-form-field>
+</ombi-notification-shell>
