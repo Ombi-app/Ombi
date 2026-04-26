@@ -1,4 +1,5 @@
-<div class="plex-page" *ngIf="settings">
+@if (settings(); as s) {
+<div class="plex-page">
 
     <!-- Page header -->
     <header class="page-header">
@@ -14,15 +15,17 @@
         </div>
         <div class="page-header__status">
             <span class="status-pill"
-                  [class.status-pill--on]="settings.enable"
-                  [class.status-pill--off]="!settings.enable">
+                  [class.status-pill--on]="s.enable"
+                  [class.status-pill--off]="!s.enable">
                 <span class="status-pill__dot"></span>
-                {{ settings.enable ? 'Enabled' : 'Disabled' }}
+                {{ s.enable ? 'Enabled' : 'Disabled' }}
             </span>
-            <span class="server-count" *ngIf="settings.servers?.length">
-                <mat-icon>dns</mat-icon>
-                {{ settings.servers.length }} server{{ settings.servers.length === 1 ? '' : 's' }}
-            </span>
+            @if (s.servers?.length) {
+                <span class="server-count">
+                    <mat-icon>dns</mat-icon>
+                    {{ s.servers.length }} server{{ s.servers.length === 1 ? '' : 's' }}
+                </span>
+            }
         </div>
     </header>
 
@@ -38,7 +41,7 @@
                     Master switch for the Plex media server connection. Disabling pauses sync and watchlist import.
                 </p>
             </div>
-            <mat-slide-toggle [id]="'enable'" [(ngModel)]="settings.enable" aria-label="Enable Plex"></mat-slide-toggle>
+            <mat-slide-toggle [id]="'enable'" [(ngModel)]="s.enable" aria-label="Enable Plex"></mat-slide-toggle>
         </div>
     </section>
 
@@ -55,20 +58,23 @@
             </div>
 
             <div class="server-grid">
-                <button class="server-tile"
-                        type="button"
-                        *ngFor="let server of settings.servers"
-                        (click)="edit(server)"
-                        [id]="server.name + '-button'">
-                    <span class="server-tile__icon"><mat-icon>dns</mat-icon></span>
-                    <span class="server-tile__name">{{ server.name }}</span>
-                    <span class="server-tile__meta" *ngIf="server.ip">
-                        {{ server.ssl ? 'https' : 'http' }}://{{ server.ip }}<ng-container *ngIf="server.port">:{{ server.port }}</ng-container>
-                    </span>
-                    <span class="server-tile__edit">
-                        <mat-icon>edit</mat-icon>
-                    </span>
-                </button>
+                @for (server of s.servers; track server.id) {
+                    <button class="server-tile"
+                            type="button"
+                            (click)="edit(server)"
+                            [id]="server.name + '-button'">
+                        <span class="server-tile__icon"><mat-icon>dns</mat-icon></span>
+                        <span class="server-tile__name">{{ server.name }}</span>
+                        @if (server.ip) {
+                            <span class="server-tile__meta">
+                                {{ server.ssl ? 'https' : 'http' }}://{{ server.ip }}@if (server.port) {<span>:{{ server.port }}</span>}
+                            </span>
+                        }
+                        <span class="server-tile__edit">
+                            <mat-icon>edit</mat-icon>
+                        </span>
+                    </button>
+                }
 
                 <button class="server-tile server-tile--add"
                         type="button"
@@ -122,14 +128,17 @@
 
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Select a discovered server</mat-label>
-                    <mat-select [id]="'servers'" *ngIf="loadedServers">
-                        <mat-option (click)="selectServer(s)"
-                                    *ngFor="let s of loadedServers.servers.devices"
-                                    [value]="s.device">
-                            {{ s.name }}
-                        </mat-option>
-                    </mat-select>
-                    <input matInput disabled placeholder="No servers loaded" *ngIf="!loadedServers">
+                    @if (loadedServers(); as discovered) {
+                        <mat-select [id]="'servers'">
+                            @for (device of discovered.servers.devices; track device.machineIdentifier) {
+                                <mat-option (click)="selectServer(device)" [value]="device.device">
+                                    {{ device.name }}
+                                </mat-option>
+                            }
+                        </mat-select>
+                    } @else {
+                        <input matInput disabled placeholder="No servers loaded">
+                    }
                 </mat-form-field>
             </div>
         </section>
@@ -179,8 +188,8 @@
             </button>
 
             <button type="button" class="action-tile"
-                    [class.action-tile--disabled]="!settings.enableWatchlistImport"
-                    [disabled]="!settings.enableWatchlistImport"
+                    [class.action-tile--disabled]="!s.enableWatchlistImport"
+                    [disabled]="!s.enableWatchlistImport"
                     (click)="runSync(PlexSyncType.WatchlistImport)" id="watchlistImport">
                 <span class="action-tile__icon action-tile__icon--violet">
                     <mat-icon>playlist_add</mat-icon>
@@ -217,13 +226,13 @@
                     </p>
                 </div>
                 <mat-slide-toggle [id]="'enableWatchlistImport'"
-                                  [(ngModel)]="settings.enableWatchlistImport"
+                                  [(ngModel)]="s.enableWatchlistImport"
                                   aria-label="Enable watchlist requests">
                 </mat-slide-toggle>
             </div>
 
             <div class="setting-row"
-                 [class.setting-row--disabled]="!settings.enableWatchlistImport">
+                 [class.setting-row--disabled]="!s.enableWatchlistImport">
                 <div class="setting-row__media">
                     <mat-icon>tv</mat-icon>
                 </div>
@@ -234,8 +243,8 @@
                     </p>
                 </div>
                 <mat-slide-toggle [id]="'monitorAll'"
-                                  [(ngModel)]="settings.monitorAll"
-                                  [disabled]="!settings.enableWatchlistImport"
+                                  [(ngModel)]="s.monitorAll"
+                                  [disabled]="!s.enableWatchlistImport"
                                   aria-label="Request whole show">
                 </mat-slide-toggle>
             </div>
@@ -265,3 +274,4 @@
         </button>
     </div>
 </div>
+}
