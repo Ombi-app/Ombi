@@ -6,6 +6,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from "@angular/material/button";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatIconModule } from "@angular/material/icon";
 
 import {
   PlexService,
@@ -25,7 +26,8 @@ import { PlexServerDialogData } from "../models";
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatIconModule
   ],
   selector: "plex-server-dialog-component",
   templateUrl: "plex-server-dialog.component.html",

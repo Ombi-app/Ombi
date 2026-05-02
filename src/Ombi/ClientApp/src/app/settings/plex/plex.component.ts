@@ -163,7 +163,7 @@ export class PlexComponent implements OnInit {
         const dialogRef = this.dialog.open(PlexServerDialogComponent, {
             width: "700px",
             data,
-            panelClass: "modal-panel",
+            panelClass: ["modal-panel", "plex-dialog-panel"],
         });
 
         dialogRef.afterClosed()
@@ -209,7 +209,7 @@ export class PlexComponent implements OnInit {
         const dialogRef = this.dialog.open(PlexServerDialogComponent, {
             width: "700px",
             data: { server: initial },
-            panelClass: "modal-panel",
+            panelClass: ["modal-panel", "plex-dialog-panel"],
         });
 
         dialogRef.afterClosed()
@@ -231,7 +231,7 @@ export class PlexComponent implements OnInit {
     }
 
     public openWatchlistUserLog(): void {
-        this.dialog.open(PlexWatchlistComponent, { width: "700px", panelClass: "modal-panel" });
+        this.dialog.open(PlexWatchlistComponent, { width: "700px", panelClass: ["modal-panel", "plex-dialog-panel"] });
     }
 
     private removeServer(server: IPlexServer): void {
