@@ -9,18 +9,22 @@
     (submitted)="onSubmit($event)"
     (tested)="test($event)">
 
-    <mat-form-field appearance="outline" class="notification-field--full">
-        <mat-label>Access token</mat-label>
-        <input matInput formControlName="accessToken" autocomplete="off">
-        @if (form?.get('accessToken')?.hasError('required')) {
-            <mat-error>Access token is <strong>required</strong></mat-error>
-        }
-        <mat-hint>Found under Account in your Pushbullet settings.</mat-hint>
-    </mat-form-field>
+    @if (form) {
+        <ng-container [formGroup]="form">
+            <mat-form-field appearance="outline" class="notification-field--full">
+                <mat-label>Access token</mat-label>
+                <input matInput formControlName="accessToken" autocomplete="off">
+                @if (form.get('accessToken')?.hasError('required')) {
+                    <mat-error>Access token is <strong>required</strong></mat-error>
+                }
+                <mat-hint>Found under Account in your Pushbullet settings.</mat-hint>
+            </mat-form-field>
 
-    <mat-form-field appearance="outline" class="notification-field--full">
-        <mat-label>Channel tag</mat-label>
-        <input matInput formControlName="channelTag" autocomplete="off"
-               matTooltip="Optional. Broadcast to everyone subscribed to this channel.">
-    </mat-form-field>
+            <mat-form-field appearance="outline" class="notification-field--full">
+                <mat-label>Channel tag</mat-label>
+                <input matInput formControlName="channelTag" autocomplete="off"
+                       matTooltip="Optional. Broadcast to everyone subscribed to this channel.">
+            </mat-form-field>
+        </ng-container>
+    }
 </ombi-notification-shell>

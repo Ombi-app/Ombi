@@ -9,71 +9,75 @@
     (submitted)="onSubmit($event)"
     (tested)="test($event)">
 
-    <mat-form-field appearance="outline">
-        <mat-label>SMTP host</mat-label>
-        <input matInput formControlName="host" autocomplete="off"
-               placeholder="smtp.example.com">
-        @if (form?.get('host')?.hasError('required')) {
-            <mat-error>Host is <strong>required</strong></mat-error>
-        }
-    </mat-form-field>
+    @if (form) {
+        <ng-container [formGroup]="form">
+            <mat-form-field appearance="outline">
+                <mat-label>SMTP host</mat-label>
+                <input matInput formControlName="host" autocomplete="off"
+                       placeholder="smtp.example.com">
+                @if (form.get('host')?.hasError('required')) {
+                    <mat-error>Host is <strong>required</strong></mat-error>
+                }
+            </mat-form-field>
 
-    <mat-form-field appearance="outline">
-        <mat-label>SMTP port</mat-label>
-        <input matInput type="number" formControlName="port" autocomplete="off">
-        @if (form?.get('port')?.hasError('required')) {
-            <mat-error>Port is <strong>required</strong></mat-error>
-        }
-    </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>SMTP port</mat-label>
+                <input matInput type="number" formControlName="port" autocomplete="off">
+                @if (form.get('port')?.hasError('required')) {
+                    <mat-error>Port is <strong>required</strong></mat-error>
+                }
+            </mat-form-field>
 
-    <mat-form-field appearance="outline">
-        <mat-label>Sender address</mat-label>
-        <input matInput type="email" formControlName="senderAddress" autocomplete="off"
-               matTooltip="The email address that the emails will be sent from.">
-        @if (form?.get('senderAddress')?.hasError('required')) {
-            <mat-error>Sender address is <strong>required</strong></mat-error>
-        }
-        @if (form?.get('senderAddress')?.hasError('email')) {
-            <mat-error>Sender address must be a valid email address.</mat-error>
-        }
-    </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Sender address</mat-label>
+                <input matInput type="email" formControlName="senderAddress" autocomplete="off"
+                       matTooltip="The email address that the emails will be sent from.">
+                @if (form.get('senderAddress')?.hasError('required')) {
+                    <mat-error>Sender address is <strong>required</strong></mat-error>
+                }
+                @if (form.get('senderAddress')?.hasError('email')) {
+                    <mat-error>Sender address must be a valid email address.</mat-error>
+                }
+            </mat-form-field>
 
-    <mat-form-field appearance="outline">
-        <mat-label>Sender name</mat-label>
-        <input matInput formControlName="senderName" autocomplete="off"
-               matTooltip="The friendly name shown in the FROM field of the email.">
-    </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Sender name</mat-label>
+                <input matInput formControlName="senderName" autocomplete="off"
+                       matTooltip="The friendly name shown in the FROM field of the email.">
+            </mat-form-field>
 
-    @if (form?.controls?.['username']?.validator) {
-        <mat-form-field appearance="outline">
-            <mat-label>Username</mat-label>
-            <input matInput formControlName="username" autocomplete="username"
-                   matTooltip="SMTP username when authentication is enabled.">
-            @if (form?.get('username')?.hasError('required')) {
-                <mat-error>Username is <strong>required</strong></mat-error>
+            @if (form.controls['username']?.validator) {
+                <mat-form-field appearance="outline">
+                    <mat-label>Username</mat-label>
+                    <input matInput formControlName="username" autocomplete="username"
+                           matTooltip="SMTP username when authentication is enabled.">
+                    @if (form.get('username')?.hasError('required')) {
+                        <mat-error>Username is <strong>required</strong></mat-error>
+                    }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Password</mat-label>
+                    <input matInput type="password" formControlName="password" autocomplete="current-password"
+                           matTooltip="SMTP password when authentication is enabled.">
+                    @if (form.get('password')?.hasError('required')) {
+                        <mat-error>Password is <strong>required</strong></mat-error>
+                    }
+                </mat-form-field>
             }
-        </mat-form-field>
 
-        <mat-form-field appearance="outline">
-            <mat-label>Password</mat-label>
-            <input matInput type="password" formControlName="password" autocomplete="current-password"
-                   matTooltip="SMTP password when authentication is enabled.">
-            @if (form?.get('password')?.hasError('required')) {
-                <mat-error>Password is <strong>required</strong></mat-error>
-            }
-        </mat-form-field>
+            <div class="notification-field--full"
+                 style="display:flex; flex-direction:column; gap:12px; padding-top:4px;">
+                <mat-slide-toggle color="primary" formControlName="authentication">
+                    Enable SMTP authentication
+                </mat-slide-toggle>
+                <mat-slide-toggle color="primary" formControlName="disableTLS">
+                    Disable TLS / SSL
+                </mat-slide-toggle>
+                <mat-slide-toggle color="primary" formControlName="disableCertificateChecking">
+                    Disable certificate checking
+                </mat-slide-toggle>
+            </div>
+        </ng-container>
     }
-
-    <div class="notification-field--full"
-         style="display:flex; flex-direction:column; gap:12px; padding-top:4px;">
-        <mat-slide-toggle color="primary" formControlName="authentication">
-            Enable SMTP authentication
-        </mat-slide-toggle>
-        <mat-slide-toggle color="primary" formControlName="disableTLS">
-            Disable TLS / SSL
-        </mat-slide-toggle>
-        <mat-slide-toggle color="primary" formControlName="disableCertificateChecking">
-            Disable certificate checking
-        </mat-slide-toggle>
-    </div>
 </ombi-notification-shell>

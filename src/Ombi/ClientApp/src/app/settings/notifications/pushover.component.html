@@ -9,39 +9,43 @@
     (submitted)="onSubmit($event)"
     (tested)="test($event)">
 
-    <mat-form-field appearance="outline">
-        <mat-label>Application token</mat-label>
-        <input matInput formControlName="accessToken" autocomplete="off"
-               matTooltip="Your application's API token from Pushover.">
-        @if (form?.get('accessToken')?.hasError('required')) {
-            <mat-error>Application token is <strong>required</strong></mat-error>
-        }
-    </mat-form-field>
+    @if (form) {
+        <ng-container [formGroup]="form">
+            <mat-form-field appearance="outline">
+                <mat-label>Application token</mat-label>
+                <input matInput formControlName="accessToken" autocomplete="off"
+                       matTooltip="Your application's API token from Pushover.">
+                @if (form.get('accessToken')?.hasError('required')) {
+                    <mat-error>Application token is <strong>required</strong></mat-error>
+                }
+            </mat-form-field>
 
-    <mat-form-field appearance="outline">
-        <mat-label>User or group key</mat-label>
-        <input matInput formControlName="userToken" autocomplete="off"
-               matTooltip="Your user key, or a delivery group key.">
-    </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>User or group key</mat-label>
+                <input matInput formControlName="userToken" autocomplete="off"
+                       matTooltip="Your user key, or a delivery group key.">
+            </mat-form-field>
 
-    <mat-form-field appearance="outline">
-        <mat-label>Priority</mat-label>
-        <mat-select formControlName="priority"
-                    matTooltip="Higher priority surfaces messages more aggressively on the device.">
-            <mat-option [value]="-2">Lowest</mat-option>
-            <mat-option [value]="-1">Low</mat-option>
-            <mat-option [value]="0">Normal</mat-option>
-            <mat-option [value]="1">High</mat-option>
-        </mat-select>
-    </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Priority</mat-label>
+                <mat-select formControlName="priority"
+                            matTooltip="Higher priority surfaces messages more aggressively on the device.">
+                    <mat-option [value]="-2">Lowest</mat-option>
+                    <mat-option [value]="-1">Low</mat-option>
+                    <mat-option [value]="0">Normal</mat-option>
+                    <mat-option [value]="1">High</mat-option>
+                </mat-select>
+            </mat-form-field>
 
-    <mat-form-field appearance="outline">
-        <mat-label>Sound</mat-label>
-        <mat-select formControlName="sound"
-                    matTooltip="The notification sound played on the device.">
-            @for (sound of sounds; track sound.value) {
-                <mat-option [value]="sound.value">{{ sound.label }}</mat-option>
-            }
-        </mat-select>
-    </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Sound</mat-label>
+                <mat-select formControlName="sound"
+                            matTooltip="The notification sound played on the device.">
+                    @for (sound of sounds; track sound.value) {
+                        <mat-option [value]="sound.value">{{ sound.label }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </ng-container>
+    }
 </ombi-notification-shell>

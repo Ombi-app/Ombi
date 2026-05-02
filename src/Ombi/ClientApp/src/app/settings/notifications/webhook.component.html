@@ -8,19 +8,23 @@
     (submitted)="onSubmit($event)"
     (tested)="test($event)">
 
-    <mat-form-field appearance="outline" class="notification-field--full">
-        <mat-label>Endpoint URL</mat-label>
-        <input matInput formControlName="webhookUrl" autocomplete="off"
-               placeholder="https://example.com/ombi-webhook"
-               matTooltip="The URL Ombi will POST notifications to.">
-        @if (form?.get('webhookUrl')?.hasError('required')) {
-            <mat-error>Endpoint URL is <strong>required</strong></mat-error>
-        }
-    </mat-form-field>
+    @if (form) {
+        <ng-container [formGroup]="form">
+            <mat-form-field appearance="outline" class="notification-field--full">
+                <mat-label>Endpoint URL</mat-label>
+                <input matInput formControlName="webhookUrl" autocomplete="off"
+                       placeholder="https://example.com/ombi-webhook"
+                       matTooltip="The URL Ombi will POST notifications to.">
+                @if (form.get('webhookUrl')?.hasError('required')) {
+                    <mat-error>Endpoint URL is <strong>required</strong></mat-error>
+                }
+            </mat-form-field>
 
-    <mat-form-field appearance="outline" class="notification-field--full">
-        <mat-label>Application token</mat-label>
-        <input matInput formControlName="applicationToken" autocomplete="off"
-               matTooltip="Optional. Sent as the Access-Token header on every request.">
-    </mat-form-field>
+            <mat-form-field appearance="outline" class="notification-field--full">
+                <mat-label>Application token</mat-label>
+                <input matInput formControlName="applicationToken" autocomplete="off"
+                       matTooltip="Optional. Sent as the Access-Token header on every request.">
+            </mat-form-field>
+        </ng-container>
+    }
 </ombi-notification-shell>

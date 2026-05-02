@@ -9,33 +9,37 @@
     (submitted)="onSubmit($event)"
     (tested)="test($event)">
 
-    <mat-form-field appearance="outline">
-        <mat-label>Server URL</mat-label>
-        <input matInput formControlName="baseUrl" autocomplete="off"
-               placeholder="https://gotify.example.com"
-               matTooltip="The base URL of your Gotify server.">
-        @if (form?.get('baseUrl')?.hasError('required')) {
-            <mat-error>Server URL is <strong>required</strong></mat-error>
-        }
-    </mat-form-field>
+    @if (form) {
+        <ng-container [formGroup]="form">
+            <mat-form-field appearance="outline">
+                <mat-label>Server URL</mat-label>
+                <input matInput formControlName="baseUrl" autocomplete="off"
+                       placeholder="https://gotify.example.com"
+                       matTooltip="The base URL of your Gotify server.">
+                @if (form.get('baseUrl')?.hasError('required')) {
+                    <mat-error>Server URL is <strong>required</strong></mat-error>
+                }
+            </mat-form-field>
 
-    <mat-form-field appearance="outline">
-        <mat-label>Application token</mat-label>
-        <input matInput formControlName="applicationToken" autocomplete="off"
-               matTooltip="Generated under Apps in your Gotify server.">
-        @if (form?.get('applicationToken')?.hasError('required')) {
-            <mat-error>Application token is <strong>required</strong></mat-error>
-        }
-    </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Application token</mat-label>
+                <input matInput formControlName="applicationToken" autocomplete="off"
+                       matTooltip="Generated under Apps in your Gotify server.">
+                @if (form.get('applicationToken')?.hasError('required')) {
+                    <mat-error>Application token is <strong>required</strong></mat-error>
+                }
+            </mat-form-field>
 
-    <mat-form-field appearance="outline" class="notification-field--full">
-        <mat-label>Priority</mat-label>
-        <mat-select formControlName="priority"
-                    matTooltip="Higher priority surfaces messages more aggressively on the client.">
-            <mat-option [value]="0">Lowest</mat-option>
-            <mat-option [value]="2">Low</mat-option>
-            <mat-option [value]="4">Normal</mat-option>
-            <mat-option [value]="8">High</mat-option>
-        </mat-select>
-    </mat-form-field>
+            <mat-form-field appearance="outline" class="notification-field--full">
+                <mat-label>Priority</mat-label>
+                <mat-select formControlName="priority"
+                            matTooltip="Higher priority surfaces messages more aggressively on the client.">
+                    <mat-option [value]="0">Lowest</mat-option>
+                    <mat-option [value]="2">Low</mat-option>
+                    <mat-option [value]="4">Normal</mat-option>
+                    <mat-option [value]="8">High</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </ng-container>
+    }
 </ombi-notification-shell>

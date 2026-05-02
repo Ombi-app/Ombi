@@ -9,38 +9,42 @@
     (submitted)="onSubmit($event)"
     (tested)="test($event)">
 
-    <mat-form-field appearance="outline" class="notification-field--full">
-        <mat-label>Webhook URL</mat-label>
-        <input matInput formControlName="webhookUrl" autocomplete="off"
-               placeholder="https://hooks.slack.com/services/...">
-        @if (form?.get('webhookUrl')?.hasError('required')) {
-            <mat-error>Webhook URL is <strong>required</strong></mat-error>
-        }
-        <mat-hint>Create one at api.slack.com &rarr; Incoming Webhooks.</mat-hint>
-    </mat-form-field>
+    @if (form) {
+        <ng-container [formGroup]="form">
+            <mat-form-field appearance="outline" class="notification-field--full">
+                <mat-label>Webhook URL</mat-label>
+                <input matInput formControlName="webhookUrl" autocomplete="off"
+                       placeholder="https://hooks.slack.com/services/...">
+                @if (form.get('webhookUrl')?.hasError('required')) {
+                    <mat-error>Webhook URL is <strong>required</strong></mat-error>
+                }
+                <mat-hint>Create one at api.slack.com &rarr; Incoming Webhooks.</mat-hint>
+            </mat-form-field>
 
-    <mat-form-field appearance="outline">
-        <mat-label>Username override</mat-label>
-        <input matInput formControlName="username" autocomplete="off"
-               matTooltip="Optional. Defaults to the username configured for the webhook.">
-    </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Username override</mat-label>
+                <input matInput formControlName="username" autocomplete="off"
+                       matTooltip="Optional. Defaults to the username configured for the webhook.">
+            </mat-form-field>
 
-    <mat-form-field appearance="outline">
-        <mat-label>Channel override</mat-label>
-        <input matInput formControlName="channel" autocomplete="off"
-               matTooltip="Optional. Routes messages to a different channel than the webhook default.">
-    </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Channel override</mat-label>
+                <input matInput formControlName="channel" autocomplete="off"
+                       matTooltip="Optional. Routes messages to a different channel than the webhook default.">
+            </mat-form-field>
 
-    <mat-form-field appearance="outline">
-        <mat-label>Emoji icon</mat-label>
-        <input matInput formControlName="iconEmoji" autocomplete="off"
-               placeholder=":robot_face:"
-               matTooltip="Optional. Cannot be combined with a URL icon.">
-    </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Emoji icon</mat-label>
+                <input matInput formControlName="iconEmoji" autocomplete="off"
+                       placeholder=":robot_face:"
+                       matTooltip="Optional. Cannot be combined with a URL icon.">
+            </mat-form-field>
 
-    <mat-form-field appearance="outline">
-        <mat-label>Icon URL</mat-label>
-        <input matInput formControlName="iconUrl" autocomplete="off"
-               matTooltip="Optional. Cannot be combined with an emoji icon.">
-    </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Icon URL</mat-label>
+                <input matInput formControlName="iconUrl" autocomplete="off"
+                       matTooltip="Optional. Cannot be combined with an emoji icon.">
+            </mat-form-field>
+        </ng-container>
+    }
 </ombi-notification-shell>

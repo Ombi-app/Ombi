@@ -9,32 +9,36 @@
     (submitted)="onSubmit($event)"
     (tested)="test($event)">
 
-    <mat-form-field appearance="outline" class="notification-field--full">
-        <mat-label>Webhook URL</mat-label>
-        <input matInput formControlName="webhookUrl" autocomplete="off"
-               placeholder="https://discord.com/api/webhooks/...">
-        @if (form?.get('webhookUrl')?.hasError('required')) {
-            <mat-error>Webhook URL is <strong>required</strong></mat-error>
-        }
-        <mat-hint>Server settings &rarr; Integrations &rarr; Webhooks</mat-hint>
-    </mat-form-field>
+    @if (form) {
+        <ng-container [formGroup]="form">
+            <mat-form-field appearance="outline" class="notification-field--full">
+                <mat-label>Webhook URL</mat-label>
+                <input matInput formControlName="webhookUrl" autocomplete="off"
+                       placeholder="https://discord.com/api/webhooks/...">
+                @if (form.get('webhookUrl')?.hasError('required')) {
+                    <mat-error>Webhook URL is <strong>required</strong></mat-error>
+                }
+                <mat-hint>Server settings &rarr; Integrations &rarr; Webhooks</mat-hint>
+            </mat-form-field>
 
-    <mat-form-field appearance="outline">
-        <mat-label>Username override</mat-label>
-        <input matInput formControlName="username" autocomplete="off">
-        <mat-hint>Optional. Defaults to the webhook's username.</mat-hint>
-    </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Username override</mat-label>
+                <input matInput formControlName="username" autocomplete="off">
+                <mat-hint>Optional. Defaults to the webhook's username.</mat-hint>
+            </mat-form-field>
 
-    <mat-form-field appearance="outline">
-        <mat-label>Avatar URL</mat-label>
-        <input matInput formControlName="icon" autocomplete="off">
-        <mat-hint>Optional. Square image, served over HTTPS.</mat-hint>
-    </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Avatar URL</mat-label>
+                <input matInput formControlName="icon" autocomplete="off">
+                <mat-hint>Optional. Square image, served over HTTPS.</mat-hint>
+            </mat-form-field>
 
-    <div class="notification-field--full">
-        <mat-slide-toggle color="primary" formControlName="hideUser"
-                          matTooltip="When enabled, the user who triggered the action is omitted from the message.">
-            Hide users in notifications
-        </mat-slide-toggle>
-    </div>
+            <div class="notification-field--full">
+                <mat-slide-toggle color="primary" formControlName="hideUser"
+                                  matTooltip="When enabled, the user who triggered the action is omitted from the message.">
+                    Hide users in notifications
+                </mat-slide-toggle>
+            </div>
+        </ng-container>
+    }
 </ombi-notification-shell>
