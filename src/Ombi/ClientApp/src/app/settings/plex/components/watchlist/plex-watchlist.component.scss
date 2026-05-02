@@ -1,105 +1,363 @@
-@use "./styles/shared.scss" as *;
-.small-middle-container {
-    margin: auto;
-    width: 95%;
-    margin-top: 10px;
-}
-.fieldset {
+$plex-bg:           #0b1220;
+$plex-surface:      #131b29;
+$plex-surface-2:    #1a2333;
+$plex-border:       #232c3f;
+$plex-border-soft:  #1d2536;
+$plex-text:         #e6ebf5;
+$plex-text-muted:   #9aa6bd;
+$plex-text-faint:   #6e7a92;
+$plex-accent:       #62d2fa;
+$plex-accent-soft:  rgba(98, 210, 250, 0.14);
+$plex-success:      #4ade80;
+$plex-warn:         #f59e0b;
+$plex-danger:       #f87171;
+
+:host {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
     width: 100%;
+    color: $plex-text;
+    background: $plex-surface;
 }
 
-.key {
-    width: 40px;
+.plex-dialog {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    background: $plex-surface;
+    color: $plex-text;
+
+    &__head {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 18px;
+        padding: 28px 28px 20px;
+        background: radial-gradient(120% 140% at 0% 0%, rgba(98, 210, 250, 0.08) 0%, transparent 55%);
+    }
+
+    &__icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: $plex-accent-soft;
+        color: $plex-accent;
+        display: grid;
+        place-items: center;
+
+        mat-icon { font-size: 26px; height: 26px; width: 26px; }
+    }
+
+    &__heading { min-width: 0; }
+
+    &__eyebrow {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: $plex-text-faint;
+    }
+
+    &__title {
+        margin: 4px 0 4px;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: #fff;
+    }
+
+    &__subtitle {
+        margin: 0;
+        font-size: 13px;
+        color: $plex-text-muted;
+        line-height: 1.45;
+    }
+
+    &__close {
+        appearance: none;
+        background: transparent;
+        border: 1px solid transparent;
+        color: $plex-text-faint;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        transition: background .15s, border-color .15s, color .15s;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: $plex-border-soft;
+            color: $plex-text;
+        }
+
+        &:focus-visible { outline: 2px solid $plex-accent; outline-offset: 2px; }
+    }
+
+    &__progress {
+        flex: 0 0 auto;
+        --mdc-linear-progress-active-indicator-color: #{$plex-accent};
+        --mdc-linear-progress-track-color: #{$plex-border};
+    }
+
+    &__body {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        min-height: 0;
+        padding: 8px 24px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        padding: 18px 28px 24px;
+        margin: 0;
+        background: transparent;
+        min-height: unset;
+    }
+
+    &__actions-spacer { flex: 1 1 auto; }
 }
 
-.watchlist-dialog-container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  margin: 0 auto;
+.callout {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+
+    mat-icon { flex: 0 0 auto; font-size: 20px; height: 20px; width: 20px; }
+
+    &__text {
+        flex: 1;
+        strong { color: #fff; font-weight: 600; }
+    }
+
+    &--info {
+        background: rgba(98, 210, 250, 0.08);
+        border: 1px solid rgba(98, 210, 250, 0.25);
+        color: $plex-text;
+
+        mat-icon { color: $plex-accent; }
+    }
 }
 
-.watchlist-dialog-card {
-  background: #23272f;
-  color: #f1f3f6;
-  border-radius: 12px;
-  border: 1px solid #353a45;
-  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.25);
-  min-width: 420px;
-  max-width: 600px;
-  width: 100%;
-  max-height: 70vh;
-  display: flex;
-  flex-direction: column;
+.legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 8px;
+
+    &__item {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 10px;
+        font-size: 12.5px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid $plex-border-soft;
+        color: $plex-text-muted;
+
+        mat-icon { font-size: 16px; height: 16px; width: 16px; }
+
+        &--success mat-icon { color: $plex-success; }
+        &--danger  mat-icon { color: $plex-danger; }
+        &--warn    mat-icon { color: $plex-warn; }
+        &--muted   mat-icon { color: $plex-text-faint; }
+    }
 }
 
-mat-card-content {
-  flex: 1 1 auto;
-  overflow-y: auto;
-  min-height: 0;
+.users-table {
+    border: 1px solid $plex-border;
+    border-radius: 12px;
+    overflow: hidden;
+
+    &__head {
+        display: grid;
+        grid-template-columns: 1fr 180px;
+        gap: 12px;
+        padding: 12px 16px;
+        background: rgba(255, 255, 255, 0.02);
+        border-bottom: 1px solid $plex-border;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: $plex-text-faint;
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__row {
+        display: grid;
+        grid-template-columns: 1fr 180px;
+        gap: 12px;
+        align-items: center;
+        padding: 12px 16px;
+        border-bottom: 1px solid $plex-border-soft;
+
+        &:last-child { border-bottom: 0; }
+        &:hover { background: rgba(255, 255, 255, 0.02); }
+    }
+
+    &__user {
+        font-size: 14px;
+        font-weight: 500;
+        color: #fff;
+        overflow-wrap: anywhere;
+    }
 }
 
-mat-card-header {
-  border-bottom: 1px solid #353a45;
-  margin-bottom: 12px;
-  flex: 0 0 auto;
+.status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid transparent;
+    background: rgba(255, 255, 255, 0.04);
+    color: $plex-text-muted;
+    width: fit-content;
+
+    mat-icon { font-size: 14px; height: 14px; width: 14px; }
+
+    &--success { color: $plex-success; background: rgba(74, 222, 128, 0.10); border-color: rgba(74, 222, 128, 0.30); }
+    &--danger  { color: $plex-danger;  background: rgba(248, 113, 113, 0.10); border-color: rgba(248, 113, 113, 0.30); }
+    &--warn    { color: $plex-warn;    background: rgba(245, 158, 11, 0.10);  border-color: rgba(245, 158, 11, 0.30); }
+    &--muted   { color: $plex-text-faint; }
 }
 
-mat-card-title {
-  color: #fff !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.5px;
+::ng-deep .plex-dialog-panel {
+    .mat-dialog-container {
+        padding: 0 !important;
+        border-radius: 16px !important;
+        background: $plex-surface !important;
+        color: $plex-text !important;
+        border: 1px solid $plex-border !important;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55) !important;
+        overflow: hidden !important;
+        max-height: 90vh !important;
+        height: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .mat-dialog-content {
+        padding: 0 !important;
+        margin: 0 !important;
+        max-height: none !important;
+        color: $plex-text !important;
+    }
+
+    .mat-dialog-actions {
+        padding: 0 !important;
+        margin: 0 !important;
+        min-height: 0 !important;
+    }
+
+    .mat-dialog-title {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .mat-dialog-container > * {
+        margin: 0 !important;
+    }
 }
 
-.watchlist-info-section {
-  display: flex;
-  align-items: center;
-  background: #23272f;
-  color: #e0e3ea;
-  padding: 12px 0 8px 0;
-  font-size: 15px;
-  gap: 12px;
+.empty-state {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 24px;
+    border: 1px dashed $plex-border;
+    border-radius: 12px;
+    color: $plex-text-muted;
+    font-size: 13px;
+    line-height: 1.5;
+
+    mat-icon { color: $plex-text-faint; font-size: 32px; height: 32px; width: 32px; flex: 0 0 auto; }
+    p { margin: 0; }
 }
 
-.info-icon {
-  font-size: 28px;
-  color: #ffb300;
+.dialog-btn {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 38px;
+    padding: 0 14px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s, transform .12s;
+
+    mat-icon { font-size: 18px; height: 18px; width: 18px; }
+
+    &:focus-visible { outline: 2px solid $plex-accent; outline-offset: 2px; }
+    &:hover:not([disabled]) { transform: translateY(-1px); }
+    &[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+    &--neutral {
+        background: transparent;
+        border-color: $plex-border;
+        color: $plex-text;
+
+        &:hover:not([disabled]) { background: rgba(255, 255, 255, 0.04); border-color: lighten($plex-border, 8%); }
+    }
+
+    &--ghost {
+        background: rgba(255, 255, 255, 0.03);
+        border-color: $plex-border-soft;
+        color: $plex-text;
+
+        &:hover:not([disabled]) {
+            background: rgba(98, 210, 250, 0.08);
+            border-color: rgba(98, 210, 250, 0.45);
+            color: #fff;
+        }
+    }
 }
 
-.watchlist-legend {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-bottom: 18px;
-  margin-top: 8px;
-  font-size: 14px;
-  color: #b0b6c3;
-}
+@media (max-width: 720px) {
+    .plex-dialog {
+        margin: 0;
+        max-height: 100vh;
+        height: 100%;
+        border-radius: 0;
+    }
 
-.watchlist-legend mat-icon {
-  vertical-align: middle;
-  margin-right: 6px;
-}
+    .plex-dialog__head { padding: 18px; }
+    .plex-dialog__body { padding: 16px; }
 
-.modern-table {
-  background: transparent;
-  color: #f1f3f6;
-  border-radius: 8px;
-  margin-top: 10px;
-}
+    .users-table__head,
+    .users-table__row {
+        grid-template-columns: 1fr auto;
+    }
 
-.modern-table th, .modern-table td {
-  color: #f1f3f6;
-  font-size: 15px;
-}
-
-mat-card-actions {
-  padding-top: 16px;
-  flex: 0 0 auto;
-  background: #23272f;
-}
-
-button[mat-stroked-button] {
-  font-weight: 600;
-  border-radius: 6px;
+    .plex-dialog__actions {
+        padding: 12px 14px;
+        .dialog-btn { flex: 1 1 auto; }
+        .plex-dialog__actions-spacer { display: none; }
+    }
 }

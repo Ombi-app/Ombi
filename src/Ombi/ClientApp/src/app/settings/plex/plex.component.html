@@ -1,165 +1,284 @@
-﻿<div class="plex-settings-container" *ngIf="settings">
-    <mat-card class="settings-card">
-        <mat-card-header>
-            <mat-card-title>Plex Configuration</mat-card-title>
-        </mat-card-header>
+@if (settings(); as s) {
+<div class="plex-page">
 
-        <mat-card-content>
-            <!-- Watchlist Settings Section -->
-            <div class="settings-section">
-                <div class="section-header">
-                    <h2>Watchlist Settings</h2>
+    <!-- Page header -->
+    <header class="page-header">
+        <div class="page-header__icon" aria-hidden="true">
+            <mat-icon>play_circle</mat-icon>
+        </div>
+        <div class="page-header__text">
+            <div class="page-header__eyebrow">Media Server</div>
+            <h1 class="page-header__title">Plex</h1>
+            <p class="page-header__subtitle">
+                Connect Ombi to your Plex servers, sync your libraries, and import user watchlists.
+            </p>
+        </div>
+        <div class="page-header__status">
+            <span class="status-pill"
+                  [class.status-pill--on]="s.enable"
+                  [class.status-pill--off]="!s.enable">
+                <span class="status-pill__dot"></span>
+                {{ s.enable ? 'Enabled' : 'Disabled' }}
+            </span>
+            @if (s.servers?.length) {
+                <span class="server-count">
+                    <mat-icon>dns</mat-icon>
+                    {{ s.servers.length }} server{{ s.servers.length === 1 ? '' : 's' }}
+                </span>
+            }
+        </div>
+    </header>
+
+    <!-- Master enable -->
+    <section class="surface surface--hero" aria-labelledby="enable-plex-label">
+        <div class="row-toggle">
+            <div class="row-toggle__media">
+                <mat-icon>power_settings_new</mat-icon>
+            </div>
+            <div class="row-toggle__text">
+                <h2 class="row-toggle__title" id="enable-plex-label">Enable Plex integration</h2>
+                <p class="row-toggle__desc">
+                    Master switch for the Plex media server connection. Disabling pauses sync and watchlist import.
+                </p>
+            </div>
+            <mat-slide-toggle [id]="'enable'" [(ngModel)]="s.enable" aria-label="Enable Plex"></mat-slide-toggle>
+        </div>
+    </section>
+
+    <!-- Servers + Discover -->
+    <div class="grid-2">
+
+        <!-- Servers -->
+        <section class="surface" aria-labelledby="servers-heading">
+            <div class="section-head">
+                <div>
+                    <h2 class="section-head__title" id="servers-heading">Servers</h2>
+                    <p class="section-head__desc">Manage the Plex servers Ombi will read from.</p>
                 </div>
+            </div>
 
-                <div class="settings-grid">
-                    <mat-card class="setting-card">
-                        <mat-card-content>
-                            <div class="setting-header">
-                                <h3>Enable Plex</h3>
-                                <mat-slide-toggle [id]="'enable'" [(ngModel)]="settings.enable"></mat-slide-toggle>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
-
-                    <mat-card class="setting-card">
-                        <mat-card-content>
-                            <div class="setting-header">
-                                <h3>Enable User Watchlist Requests</h3>
-                                <mat-slide-toggle [id]="'enableWatchlistImport'" [(ngModel)]="settings.enableWatchlistImport"></mat-slide-toggle>
-                            </div>
-                            <p class="setting-description">
-                                When a Plex User adds something to their watchlist in Plex, it will turn up in Ombi as a Request if enabled. 
-                                This <strong>only</strong> applies to users that are logging in with their Plex Account.
-                                <br>Request limits if set are all still applied
-                            </p>
-                        </mat-card-content>
-                    </mat-card>
-
-                    <mat-card class="setting-card" [class.disabled]="!settings.enableWatchlistImport">
-                        <mat-card-content>
-                            <div class="setting-header">
-                                <h3>Request Whole Show</h3>
-                                <mat-slide-toggle [id]="'monitorAll'" [(ngModel)]="settings.monitorAll" [disabled]="!settings.enableWatchlistImport"></mat-slide-toggle>
-                            </div>
-                            <p class="setting-description">
-                                If enabled then watchlist requests for TV Shows will request the <strong>whole</strong> show. 
-                                If not enabled it will only request the latest season.
-                            </p>
-                        </mat-card-content>
-                    </mat-card>
-
-                </div>
-                <mat-card class="info-banner">
-                    <mat-icon color="primary" style="margin-right: 12px;">info</mat-icon>
-                    <span style="flex:1;">
-                        Some users may need to re-log in to use the watchlist feature.
-                    </span>
-                    <button mat-button color="accent" (click)="openWatchlistUserLog()">
-                        View Users
+            <div class="server-grid">
+                @for (server of s.servers; track server.id) {
+                    <button class="server-tile"
+                            type="button"
+                            (click)="edit(server)"
+                            [id]="server.name + '-button'">
+                        <span class="server-tile__icon"><mat-icon>dns</mat-icon></span>
+                        <span class="server-tile__name">{{ server.name }}</span>
+                        @if (server.ip) {
+                            <span class="server-tile__meta">
+                                {{ server.ssl ? 'https' : 'http' }}://{{ server.ip }}@if (server.port) {<span>:{{ server.port }}</span>}
+                            </span>
+                        }
+                        <span class="server-tile__edit">
+                            <mat-icon>edit</mat-icon>
+                        </span>
                     </button>
-                </mat-card>
+                }
+
+                <button class="server-tile server-tile--add"
+                        type="button"
+                        (click)="newServer()"
+                        id="newServer">
+                    <span class="server-tile__icon server-tile__icon--add">
+                        <mat-icon>add</mat-icon>
+                    </span>
+                    <span class="server-tile__name">Add server</span>
+                    <span class="server-tile__meta">Configure a new Plex connection</span>
+                </button>
             </div>
+        </section>
 
-            <!-- Main Content Area -->
-            <div class="main-content">
-                <!-- Left Column - Servers and Actions -->
-                <div class="content-column">
-                    <!-- Servers Section -->
-                    <div class="settings-section">
-                        <h2>Plex Servers</h2>
-                        <div class="servers-grid">
-                            <mat-card class="server-card" *ngFor="let server of settings.servers">
-                                <mat-card-content>
-                                    <button mat-button (click)="edit(server)" [id]="server.name + '-button'">
-                                        <mat-icon>dns</mat-icon>
-                                        <span>{{server.name}}</span>
-                                    </button>
-                                </mat-card-content>
-                            </mat-card>
-
-                            <mat-card class="server-card new-server">
-                                <mat-card-content>
-                                    <button mat-button (click)="newServer()" id="newServer">
-                                        <mat-icon>add_circle</mat-icon>
-                                        <span>Add Server</span>
-                                    </button>
-                                </mat-card-content>
-                            </mat-card>
-                        </div>
-                    </div>
-
-                    <!-- Sync Actions Section -->
-                    <div class="settings-section">
-                        <h2>Sync Actions</h2>
-                        <div class="sync-actions-grid">
-                            <button mat-stroked-button (click)="runSync(PlexSyncType.Full)" id="fullSync">
-                                <mat-icon>sync</mat-icon>
-                                Full Sync
-                            </button>
-                            <button mat-stroked-button (click)="runSync(PlexSyncType.RecentlyAdded)" id="recentlyAddedSync">
-                                <mat-icon>update</mat-icon>
-                                Partial Sync
-                            </button>
-                            <button mat-stroked-button (click)="runSync(PlexSyncType.ClearAndReSync)" id="clearData">
-                                <mat-icon>cleaning_services</mat-icon>
-                                Clear & Resync
-                            </button>
-                            <button mat-stroked-button (click)="runSync(PlexSyncType.WatchlistImport)" id="watchlistImport">
-                                <mat-icon>playlist_add</mat-icon>
-                                Run Watchlist Import
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right Column - Plex Credentials -->
-                <div class="content-column">
-                    <div class="settings-section">
-                        <h2>Plex Credentials</h2>
-                        <mat-card class="credentials-card">
-                            <mat-card-content>
-                                <p class="credentials-description">
-                                    These fields are optional to automatically fill in your Plex server settings.
-                                    <br>This will pass your username and password to the Plex.tv API to grab the servers associated with this user.
-                                    <br>If you have 2FA enabled on your account, you need to append the 2FA code to the end of your password.
-                                </p>
-
-                                <mat-form-field appearance="outline" class="full-width">
-                                    <mat-label>Username</mat-label>
-                                    <input matInput [id]="'username'" [(ngModel)]="username">
-                                </mat-form-field>
-
-                                <mat-form-field appearance="outline" class="full-width">
-                                    <mat-label>Password</mat-label>
-                                    <input matInput [id]="'password'" type="password" [(ngModel)]="password">
-                                </mat-form-field>
-
-                                <button mat-raised-button color="primary" id="loadServers" (click)="requestServers()" class="full-width">
-                                    <mat-icon>key</mat-icon>
-                                    Load Servers
-                                </button>
-
-                                <mat-form-field appearance="outline" class="full-width mt-3">
-                                    <mat-label>Select Server</mat-label>
-                                    <mat-select [id]="'servers'" *ngIf="loadedServers">
-                                        <mat-option (click)="selectServer(s)" *ngFor="let s of loadedServers.servers.devices" [value]="s.device">
-                                            {{s.name}}
-                                        </mat-option>
-                                    </mat-select>
-                                    <input matInput disabled placeholder="No Servers Loaded" *ngIf="!loadedServers">
-                                </mat-form-field>
-                            </mat-card-content>
-                        </mat-card>
-                    </div>
+        <!-- Plex.tv credentials / discover -->
+        <section class="surface" aria-labelledby="discover-heading">
+            <div class="section-head">
+                <div>
+                    <h2 class="section-head__title" id="discover-heading">Discover with Plex.tv</h2>
+                    <p class="section-head__desc">
+                        Optional. Sign in with your Plex.tv account to auto-fill server details.
+                    </p>
                 </div>
             </div>
-        </mat-card-content>
 
-        <mat-card-actions align="end">
-            <button mat-raised-button color="accent" (click)="save()" id="save">
-                <mat-icon>save</mat-icon>
-                Save Changes
+            <div class="callout callout--muted">
+                <mat-icon>shield</mat-icon>
+                <span>
+                    Credentials are sent to the Plex.tv API to fetch your servers.
+                    If 2FA is enabled, append your code to the password.
+                </span>
+            </div>
+
+            <div class="form-stack">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Plex.tv username</mat-label>
+                    <input matInput [id]="'username'" [(ngModel)]="username" autocomplete="off">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Password</mat-label>
+                    <input matInput [id]="'password'" type="password" [(ngModel)]="password" autocomplete="off">
+                </mat-form-field>
+
+                <button mat-flat-button color="primary" id="loadServers"
+                        (click)="requestServers()"
+                        class="full-width btn-primary">
+                    <mat-icon>vpn_key</mat-icon>
+                    Load servers
+                </button>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Select a discovered server</mat-label>
+                    @if (loadedServers(); as discovered) {
+                        <mat-select [id]="'servers'"
+                                    (selectionChange)="selectServer($event.value)">
+                            @for (device of discovered.servers.devices; track device.machineIdentifier) {
+                                <mat-option [value]="device">
+                                    {{ device.name }}
+                                </mat-option>
+                            }
+                        </mat-select>
+                    } @else {
+                        <input matInput disabled placeholder="No servers loaded">
+                    }
+                </mat-form-field>
+            </div>
+        </section>
+    </div>
+
+    <!-- Sync actions -->
+    <section class="surface" aria-labelledby="sync-heading">
+        <div class="section-head">
+            <div>
+                <h2 class="section-head__title" id="sync-heading">Sync actions</h2>
+                <p class="section-head__desc">Trigger background jobs on demand.</p>
+            </div>
+        </div>
+
+        <div class="action-grid">
+            <button type="button" class="action-tile"
+                    [class.action-tile--disabled]="!s.enable"
+                    [disabled]="!s.enable"
+                    (click)="runSync(PlexSyncType.Full)" id="fullSync">
+                <span class="action-tile__icon action-tile__icon--blue">
+                    <mat-icon>sync</mat-icon>
+                </span>
+                <span class="action-tile__body">
+                    <span class="action-tile__title">Full sync</span>
+                    <span class="action-tile__desc">Re-scan every library on every server.</span>
+                </span>
             </button>
-        </mat-card-actions>
-    </mat-card>
+
+            <button type="button" class="action-tile"
+                    [class.action-tile--disabled]="!s.enable"
+                    [disabled]="!s.enable"
+                    (click)="runSync(PlexSyncType.RecentlyAdded)" id="recentlyAddedSync">
+                <span class="action-tile__icon action-tile__icon--teal">
+                    <mat-icon>update</mat-icon>
+                </span>
+                <span class="action-tile__body">
+                    <span class="action-tile__title">Partial sync</span>
+                    <span class="action-tile__desc">Pick up only recently added items.</span>
+                </span>
+            </button>
+
+            <button type="button" class="action-tile"
+                    [class.action-tile--disabled]="!s.enable"
+                    [disabled]="!s.enable"
+                    (click)="runSync(PlexSyncType.ClearAndReSync)" id="clearData">
+                <span class="action-tile__icon action-tile__icon--amber">
+                    <mat-icon>cleaning_services</mat-icon>
+                </span>
+                <span class="action-tile__body">
+                    <span class="action-tile__title">Clear &amp; re-sync</span>
+                    <span class="action-tile__desc">Drop cached media and rebuild from scratch.</span>
+                </span>
+            </button>
+
+            <button type="button" class="action-tile"
+                    [class.action-tile--disabled]="!s.enable || !s.enableWatchlistImport"
+                    [disabled]="!s.enable || !s.enableWatchlistImport"
+                    (click)="runSync(PlexSyncType.WatchlistImport)" id="watchlistImport">
+                <span class="action-tile__icon action-tile__icon--violet">
+                    <mat-icon>playlist_add</mat-icon>
+                </span>
+                <span class="action-tile__body">
+                    <span class="action-tile__title">Watchlist import</span>
+                    <span class="action-tile__desc">Pull in user watchlists from Plex now.</span>
+                </span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Watchlist -->
+    <section class="surface" aria-labelledby="watchlist-heading">
+        <div class="section-head">
+            <div>
+                <h2 class="section-head__title" id="watchlist-heading">Watchlist</h2>
+                <p class="section-head__desc">
+                    Turn Plex watchlist additions into Ombi requests for users signed in with their Plex account.
+                </p>
+            </div>
+        </div>
+
+        <div class="setting-list">
+            <div class="setting-row">
+                <div class="setting-row__media">
+                    <mat-icon>bookmark_added</mat-icon>
+                </div>
+                <div class="setting-row__text">
+                    <h3 class="setting-row__title">Enable user watchlist requests</h3>
+                    <p class="setting-row__desc">
+                        When a Plex user adds something to their watchlist it will appear in Ombi as a request.
+                        Existing request limits still apply.
+                    </p>
+                </div>
+                <mat-slide-toggle [id]="'enableWatchlistImport'"
+                                  [(ngModel)]="s.enableWatchlistImport"
+                                  aria-label="Enable watchlist requests">
+                </mat-slide-toggle>
+            </div>
+
+            <div class="setting-row"
+                 [class.setting-row--disabled]="!s.enableWatchlistImport">
+                <div class="setting-row__media">
+                    <mat-icon>tv</mat-icon>
+                </div>
+                <div class="setting-row__text">
+                    <h3 class="setting-row__title">Request whole show</h3>
+                    <p class="setting-row__desc">
+                        If on, watchlisted TV shows are requested in full. Otherwise only the latest season is requested.
+                    </p>
+                </div>
+                <mat-slide-toggle [id]="'monitorAll'"
+                                  [(ngModel)]="s.monitorAll"
+                                  [disabled]="!s.enableWatchlistImport"
+                                  aria-label="Request whole show">
+                </mat-slide-toggle>
+            </div>
+        </div>
+
+        <div class="callout callout--info">
+            <mat-icon>info</mat-icon>
+            <span class="callout__text">
+                Some users may need to re-log in to use the watchlist feature.
+            </span>
+            <button mat-stroked-button (click)="openWatchlistUserLog()" class="callout__action">
+                View users
+            </button>
+        </div>
+    </section>
+
+    <!-- Sticky save bar -->
+    <div class="save-bar">
+        <div class="save-bar__hint">
+            Changes are applied after saving.
+        </div>
+        <button mat-flat-button color="primary"
+                class="btn-primary save-bar__btn"
+                (click)="save()" id="save">
+            <mat-icon>check</mat-icon>
+            Save changes
+        </button>
+    </div>
 </div>
+}
