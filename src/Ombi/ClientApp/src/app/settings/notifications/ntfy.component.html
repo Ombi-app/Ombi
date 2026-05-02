@@ -1,75 +1,52 @@
+<ombi-notification-shell
+    providerName="ntfy"
+    icon="notifications_active"
+    description="Publish notifications to a public or self-hosted ntfy.sh topic."
+    docsUrl="https://docs.ntfy.sh/publish/"
+    [form]="form"
+    [loading]="loading"
+    [templates]="templates"
+    (submitted)="onSubmit($event)"
+    (tested)="test($event)">
 
-<div *ngIf="form" class="small-middle-container">
-    <fieldset>
-        <legend>Ntfy Notifications</legend>
-        <div class="row">
-            <div class="col-md-8">
-                <form novalidate [formGroup]="form" style="padding-top:2%;" (ngSubmit)="onSubmit(form)">
-                    <div class="row">
-                        <div>
-                            <div class="md-form-field">
-                                <mat-slide-toggle formControlName="enabled">Enable</mat-slide-toggle>
-                            </div>
-                        </div>
-                    </div>
+    @if (form) {
+        <ng-container [formGroup]="form">
+            <mat-form-field appearance="outline">
+                <mat-label>Server URL</mat-label>
+                <input matInput formControlName="baseUrl" autocomplete="off"
+                       placeholder="https://ntfy.sh"
+                       matTooltip="The base URL of your ntfy server.">
+                @if (form.get('baseUrl')?.hasError('required')) {
+                    <mat-error>Server URL is <strong>required</strong></mat-error>
+                }
+            </mat-form-field>
 
-                    <div class="row">
-                        <div class="md-form-field">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Base URL</mat-label>
-                                <input matInput formControlName="baseUrl" matTooltip="Enter the URL of your ntfy server">
-                                <mat-error *ngIf="form.get('baseUrl').hasError('required')">
-                                    Base URL is <strong>required</strong>
-                                </mat-error>
-                            </mat-form-field>
-                            <mat-form-field appearance="outline">
-                                <mat-label>Topic</mat-label>
-                                <input matInput formControlName="topic" matTooltip="Enter the topic to publish to">
-                                <mat-error *ngIf="form.get('topic').hasError('required')">
-                                    Topic is <strong>required</strong>
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="md-form-field">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Authorization Header</mat-label>
-                                <input matInput formControlName="authorizationHeader" matTooltip="Optional: Bearer token or Basic auth for secured servers">
-                            </mat-form-field>
-                            <mat-form-field appearance="outline">
-                                <mat-label>Priority</mat-label>
-                                <mat-select formControlName="priority" matTooltip="The priority you want your ntfy notifications sent as">
-                                    <mat-option [value]="5">Max</mat-option>
-                                    <mat-option [value]="4">High</mat-option>
-                                    <mat-option [value]="3">Default</mat-option>
-                                    <mat-option [value]="2">Low</mat-option>
-                                    <mat-option [value]="1">Min</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </div>
+            <mat-form-field appearance="outline">
+                <mat-label>Topic</mat-label>
+                <input matInput formControlName="topic" autocomplete="off"
+                       matTooltip="Subscribers receive messages published to this topic.">
+                @if (form.get('topic')?.hasError('required')) {
+                    <mat-error>Topic is <strong>required</strong></mat-error>
+                }
+            </mat-form-field>
 
-                    <div class="row top-space">
-                        <div class="form-group">
-                            <div>
-                                <button mat-raised-button type="button" class="btn-spacing" color="accent"
-                                    (click)="test(form)" [disabled]="form.invalid">Test <div id="spinner"></div>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div>
-                                <button mat-raised-button type="submit" class="btn-spacing" color="primary"
-                                    [disabled]="form.invalid">Submit</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
+            <mat-form-field appearance="outline">
+                <mat-label>Authorization header</mat-label>
+                <input matInput formControlName="authorizationHeader" autocomplete="off"
+                       matTooltip="Optional. Bearer token or Basic auth value for protected servers.">
+            </mat-form-field>
 
-            <div class="col-md-4">
-                <notification-templates [templates]="templates" [showSubject]="false"></notification-templates>
-            </div>
-
-        </div>
-    </fieldset>
-</div>
+            <mat-form-field appearance="outline">
+                <mat-label>Priority</mat-label>
+                <mat-select formControlName="priority"
+                            matTooltip="Higher priorities trigger more aggressive notifications on the client.">
+                    <mat-option [value]="1">Min</mat-option>
+                    <mat-option [value]="2">Low</mat-option>
+                    <mat-option [value]="3">Default</mat-option>
+                    <mat-option [value]="4">High</mat-option>
+                    <mat-option [value]="5">Max</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </ng-container>
+    }
+</ombi-notification-shell>

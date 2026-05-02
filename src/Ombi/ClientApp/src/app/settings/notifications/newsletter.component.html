@@ -1,92 +1,109 @@
-﻿<settings-menu></settings-menu>
+<ombi-notification-shell
+    providerName="Newsletter"
+    icon="newspaper"
+    description="Send a recurring digest of newly added Movies, TV and Music to your users."
+    [form]="form"
+    [loading]="loading"
+    [templates]="templates"
+    [showTemplates]="false"
+    (submitted)="onSubmit($event)"
+    (tested)="test($event)">
 
-<wiki></wiki>
-<div *ngIf="settings" class="small-middle-container">
-    <fieldset>
-        <legend>Newsletter</legend>
-        <div class="col-md-6">
-
-                <div class="form-group">
-                    <div class="checkbox">
-                        <mat-slide-toggle  type="checkbox" id="enabled" [(ngModel)]="settings.enabled"  ng-checked="settings.enabled">Enable</mat-slide-toggle>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="checkbox">
-                        <mat-slide-toggle  type="checkbox" id="disableTv" [(ngModel)]="settings.disableTv"  ng-checked="settings.disableTv">Disable TV</mat-slide-toggle>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="checkbox">
-                        <mat-slide-toggle  type="checkbox" id="disableMovies" [(ngModel)]="settings.disableMovies"  ng-checked="settings.disableMovies">Disable Movies</mat-slide-toggle>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="checkbox">
-                        <mat-slide-toggle  type="checkbox" id="disableMusic" [(ngModel)]="settings.disableMusic"  ng-checked="settings.disableMusic">Disable Music</mat-slide-toggle>
-                    </div>
-                </div>
-                 <div class="form-group">
-                    <mat-form-field appearance="outline" floatLabel=auto>
-                        <mat-label>Subject</mat-label>
-                        <input matInput id="subject" name="subject"
-                        [(ngModel)]="settings.notificationTemplate.subject" value="{{settings.notificationTemplate.subject}}">
-                    </mat-form-field>
-                </div>
-
-                <div class="form-group">
-                    <mat-form-field appearance="outline" floatLabel=auto>
-                        <mat-label>Message</mat-label>
-                        <textarea matInput id="message" name="message"
-                        [(ngModel)]="settings.notificationTemplate.message" value="{{settings.notificationTemplate.message}}"> </textarea>
-                    </mat-form-field>
-                </div>
-
-                <div class="form-group">
-                    <div>
-                        <button mat-raised-button type="submit" id="save" (click)="onSubmit()">Submit</button>
-                        <button mat-raised-button type="button" (click)="test()">Test</button>
-                        <button mat-raised-button type="button" (click)="updateDatabase()"tooltipPosition="top" matTooltip="I recommend running this with a fresh Ombi install, this will set all the current *found* content to have been sent via Newsletter,
-                        if you do not do this then everything that Ombi has found in your libraries will go out on the first email!">Update Database</button>
-                        <button mat-raised-button type="button" (click)="trigger()">Trigger now</button>
-                    </div>
-                                 </div>
-        </div>
-
-
-        <div class="col-md-6">
-            <small>NOTE: Please see the tooltip on the Update Database button - Please see the wiki for more information</small>
-            <br/>
-            <br/>
-            <small>When testing, the test newsletter will go to all users that have the Admin role, please ensure that there are valid email addresses for this. The test will also only grab the latest 10 movies and 10 shows just to give you an example.</small>
-
-            <br/>
-            <br/>
-            <div class="form-group row">
-                <div class="col-md-9">
-                    <mat-form-field appearance="outline" floatLabel=auto>
-                        <mat-label>Add External Email (For users that are not in Ombi)</mat-label>
-                        <input matInput id="emailToAdd" name="emailToAdd"
-                        [(ngModel)]="emailToAdd" value="{{emailToAdd}}">
-                    </mat-form-field>
-                </div>
-                <div class="col-md-3">
-                    <button mat-raised-button (click)="addEmail()" matTooltip="Don't forget to press the Submit button!">Add</button>
-                </div>
+    @if (form) {
+        <ng-container [formGroup]="form">
+            <div class="notification-field--full newsletter__toggles">
+                <mat-slide-toggle color="primary" formControlName="disableMovies">
+                    Disable movies
+                </mat-slide-toggle>
+                <mat-slide-toggle color="primary" formControlName="disableTv">
+                    Disable TV
+                </mat-slide-toggle>
+                <mat-slide-toggle color="primary" formControlName="disableMusic">
+                    Disable music
+                </mat-slide-toggle>
             </div>
 
-            <div class="row">
-                <div *ngFor="let email of settings.externalEmails">
-                    <div class="col-md-9">
-                        {{email}}
-                    </div>
-                    <div class="col-md-3">
-                        <button mat-raised-button (click)="deleteEmail(email)">Delete</button>
-                    </div>
-                </div>
+            <div class="notification-field--full" formGroupName="notificationTemplate">
+                <mat-form-field appearance="outline" class="newsletter__field">
+                    <mat-label>Subject</mat-label>
+                    <input matInput formControlName="subject" autocomplete="off">
+                    @if (form.get('notificationTemplate.subject')?.hasError('required')) {
+                        <mat-error>Subject is <strong>required</strong></mat-error>
+                    }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="newsletter__field">
+                    <mat-label>Message</mat-label>
+                    <textarea matInput rows="6" formControlName="message"></textarea>
+                    <mat-hint>HTML is supported. Newsletter-specific placeholders are documented in the wiki.</mat-hint>
+                    @if (form.get('notificationTemplate.message')?.hasError('required')) {
+                        <mat-error>Message is <strong>required</strong></mat-error>
+                    }
+                </mat-form-field>
             </div>
+        </ng-container>
+    }
+
+    <div notificationFooter class="newsletter__admin">
+        <span class="newsletter__admin-label">Admin actions</span>
+        <div class="newsletter__admin-buttons">
+            <button mat-stroked-button type="button"
+                    matTooltip="Run this on a fresh install. Marks all currently-found content as already sent so the first newsletter doesn't include everything in your library."
+                    (click)="updateDatabase()">
+                <mat-icon>storage</mat-icon>
+                Update database
+            </button>
+            <button mat-stroked-button type="button"
+                    matTooltip="Run the newsletter job immediately."
+                    (click)="triggerNow()">
+                <mat-icon>play_arrow</mat-icon>
+                Trigger now
+            </button>
         </div>
-    </fieldset>
-</div>
+    </div>
+</ombi-notification-shell>
+
+<section class="newsletter-recipients">
+    <mat-card appearance="outlined" class="newsletter-recipients__card">
+        <mat-card-header>
+            <div mat-card-avatar class="newsletter-recipients__avatar" aria-hidden="true">
+                <mat-icon>alternate_email</mat-icon>
+            </div>
+            <mat-card-title>External recipients</mat-card-title>
+            <mat-card-subtitle>Add email addresses for people who don't have an Ombi account.</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <form class="newsletter-recipients__form"
+                  (ngSubmit)="addEmail()" #emailForm="ngForm">
+                <mat-form-field appearance="outline" class="newsletter-recipients__input">
+                    <mat-label>Email address</mat-label>
+                    <input matInput name="emailToAdd"
+                           [(ngModel)]="emailToAdd"
+                           placeholder="someone@example.com"
+                           autocomplete="off">
+                </mat-form-field>
+                <button mat-stroked-button color="primary" type="submit"
+                        [disabled]="!emailToAdd?.trim()"
+                        matTooltip="Don't forget to save your changes!">
+                    <mat-icon>add</mat-icon>
+                    Add
+                </button>
+            </form>
+
+            @if (externalEmails.length) {
+                <mat-chip-set class="newsletter-recipients__chips" aria-label="External recipients">
+                    @for (email of externalEmails; track email) {
+                        <mat-chip (removed)="removeEmail(email)">
+                            {{ email }}
+                            <button matChipRemove [attr.aria-label]="'Remove ' + email">
+                                <mat-icon>cancel</mat-icon>
+                            </button>
+                        </mat-chip>
+                    }
+                </mat-chip-set>
+            } @else {
+                <p class="newsletter-recipients__empty">No external recipients yet.</p>
+            }
+        </mat-card-content>
+    </mat-card>
+</section>

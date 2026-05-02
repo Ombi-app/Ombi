@@ -1,44 +1,30 @@
-﻿
+<ombi-notification-shell
+    providerName="Webhook"
+    icon="webhook"
+    description="POST request payloads to a custom HTTP endpoint."
+    [form]="form"
+    [loading]="loading"
+    [showTemplates]="false"
+    (submitted)="onSubmit($event)"
+    (tested)="test($event)">
 
-<div *ngIf="form" class="small-middle-container">
-    <fieldset>
-        <legend>Webhook Notifications</legend>
-        <div class="col-md-6">
-            <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+    @if (form) {
+        <ng-container [formGroup]="form">
+            <mat-form-field appearance="outline" class="notification-field--full">
+                <mat-label>Endpoint URL</mat-label>
+                <input matInput formControlName="webhookUrl" autocomplete="off"
+                       placeholder="https://example.com/ombi-webhook"
+                       matTooltip="The URL Ombi will POST notifications to.">
+                @if (form.get('webhookUrl')?.hasError('required')) {
+                    <mat-error>Endpoint URL is <strong>required</strong></mat-error>
+                }
+            </mat-form-field>
 
-                <div class="form-group">
-                    <mat-checkbox id="enable" formControlName="enabled">Enabled</mat-checkbox>
-                </div>
-
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-label>Base URL</mat-label>
-                        <input matInput type="text" id="webhookUrl" name="webhookUrl" [ngClass]="{'form-error': form.get('webhookUrl').hasError('required')}" formControlName="webhookUrl" pTooltip="Enter the URL of your webhook server.">
-                    </mat-form-field>
-                </div>
-
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-label>Application Token</mat-label>
-                          <input matInput type="text" id="applicationToken" name="applicationToken" [ngClass]="{'form-error': form.get('applicationToken').hasError('required')}" formControlName="applicationToken" pTooltip="Optional authentication token. Will be sent as 'Access-Token' header.">
-                    </mat-form-field>
-                </div>
-
-                <div class="form-group">
-                    <div>
-                        <button [disabled]="form.invalid" mat-raised-button type="button" (click)="test(form)">
-                            Test
-                            <div id="spinner"></div>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div>
-                        <button [disabled]="form.invalid" mat-raised-button type="submit" id="save">Submit</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </fieldset>
-</div>
+            <mat-form-field appearance="outline" class="notification-field--full">
+                <mat-label>Application token</mat-label>
+                <input matInput formControlName="applicationToken" autocomplete="off"
+                       matTooltip="Optional. Sent as the Access-Token header on every request.">
+            </mat-form-field>
+        </ng-container>
+    }
+</ombi-notification-shell>

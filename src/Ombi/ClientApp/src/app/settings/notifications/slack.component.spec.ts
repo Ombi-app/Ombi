@@ -41,7 +41,7 @@ describe('SlackComponent', () => {
     comp.form.controls['iconEmoji'].setValue(':robot:');
     comp.form.controls['iconUrl'].setValue('https://example.com/icon.png');
     comp.onSubmit(comp.form);
-    expect(mockNotify.error).toHaveBeenCalledWith('You cannot have a Emoji icon and a URL icon');
+    expect(mockNotify.error).toHaveBeenCalledWith('You cannot set both an emoji icon and a URL icon');
   });
 
   it('should error when both iconEmoji and iconUrl are set on test', () => {
@@ -50,7 +50,7 @@ describe('SlackComponent', () => {
     comp.form.controls['iconEmoji'].setValue(':robot:');
     comp.form.controls['iconUrl'].setValue('https://example.com/icon.png');
     comp.test(comp.form);
-    expect(mockNotify.error).toHaveBeenCalledWith('You cannot have a Emoji icon and a URL icon');
+    expect(mockNotify.error).toHaveBeenCalledWith('You cannot set both an emoji icon and a URL icon');
   });
 
   it('should test and notify success', () => {
