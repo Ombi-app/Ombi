@@ -55,6 +55,7 @@ export class NotificationShellComponent {
     @Input() submitLabel: string = "Save changes";
     @Input() testLabel: string = "Send test";
     @Input() showTest: boolean = true;
+    @Input() requireDirtyToSave: boolean = true;
 
     @Output() readonly submitted = new EventEmitter<UntypedFormGroup>();
     @Output() readonly tested = new EventEmitter<UntypedFormGroup>();

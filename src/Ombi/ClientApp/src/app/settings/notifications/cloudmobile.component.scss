@@ -1,0 +1,57 @@
+.cloudmobile {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 4px;
+
+    &__header {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+
+        mat-icon {
+            font-size: 22px;
+            width: 22px;
+            height: 22px;
+            color: var(--mdc-theme-primary, #3f51b5);
+        }
+
+        h3 {
+            margin: 0 0 2px 0;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        p {
+            margin: 0;
+            opacity: 0.75;
+            font-size: 0.85rem;
+        }
+    }
+
+    &__table {
+        width: 100%;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    &__message {
+        width: 100%;
+    }
+
+    &__actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+
+        mat-icon {
+            margin-right: 6px;
+        }
+    }
+
+    &__empty {
+        margin: 0;
+        opacity: 0.7;
+        font-style: italic;
+    }
+}

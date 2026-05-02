@@ -1,21 +1,17 @@
-﻿
-<div *ngIf="form" class="container">
-    <fieldset>
-        <legend>Twilio</legend>
-        <span>Below are the supported integrations with Twilio</span>
-        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+<section class="twilio">
+    <header class="twilio__header">
+        <div class="twilio__avatar" aria-hidden="true">
+            <mat-icon>contactless</mat-icon>
+        </div>
+        <div>
+            <h2 class="twilio__title">Twilio</h2>
+            <p class="twilio__subtitle">Configure the Twilio integrations available in Ombi.</p>
+        </div>
+    </header>
 
-            <mat-tab-group>
-                <mat-tab label="WhatsApp">
-                    <app-whatsapp [form]="form" [templates]="templates"></app-whatsapp>
-                </mat-tab>
-            </mat-tab-group>
-
-            <div class=" md-form-field ">
-                <div>
-                    <button mat-raised-button type="submit " color="primary" [disabled]="form.invalid ">Submit</button>
-                </div>
-            </div>
-        </form>
-    </fieldset>
-</div>
+    <mat-tab-group class="twilio__tabs" mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="150ms">
+        <mat-tab label="WhatsApp">
+            <app-whatsapp></app-whatsapp>
+        </mat-tab>
+    </mat-tab-group>
+</section>

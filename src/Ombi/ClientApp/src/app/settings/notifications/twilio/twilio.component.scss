@@ -1,0 +1,47 @@
+.twilio {
+    display: block;
+    margin: 24px auto 0;
+    width: min(1280px, 95%);
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 12px;
+    }
+
+    &__avatar {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(63, 81, 181, 0.12);
+        color: var(--mdc-theme-primary, #3f51b5);
+
+        mat-icon {
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+        }
+    }
+
+    &__title {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 500;
+    }
+
+    &__subtitle {
+        margin: 0;
+        opacity: 0.75;
+        font-size: 0.9rem;
+    }
+
+    &__tabs {
+        ::ng-deep .mat-mdc-tab-body-content {
+            padding-top: 0;
+        }
+    }
+}

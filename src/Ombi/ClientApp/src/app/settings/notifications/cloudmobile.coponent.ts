@@ -1,113 +1,127 @@
-﻿import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder } from "@angular/forms";
+import { SelectionModel } from "@angular/cdk/collections";
 import { MatButtonModule } from "@angular/material/button";
+import { MatCardModule } from "@angular/material/card";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslateModule } from "@ngx-translate/core";
-import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
+import { Observable } from "rxjs";
 
-import { IMobileNotifcationSettings, IMobileUsersViewModel, INotificationTemplates, NotificationType, ICloudMobileDevices, ICloudMobileModel } from "../../interfaces";
-import { TesterService } from "../../services";
-import { NotificationService } from "../../services";
-import { MobileService, SettingsService } from "../../services";
+import { ICloudMobileModel, IMobileNotifcationSettings } from "../../interfaces";
+import { NotificationService, SettingsService, TesterService } from "../../services";
 import { CloudMobileService } from "../../services/cloudmobile.service";
-import { SelectionModel } from "@angular/cdk/collections";
-import { MatTableDataSource, MatTableModule } from "@angular/material/table";
-import { NotificationTemplate } from "./notificationtemplate.component";
+import { NotificationBaseComponent } from "./shared/notification-base.component";
+import { NotificationShellComponent } from "./shared/notification-shell.component";
 
 @Component({
     standalone: true,
     imports: [
         CommonModule,
-        ReactiveFormsModule,
         FormsModule,
-        NotificationTemplate,
+        ReactiveFormsModule,
         MatButtonModule,
+        MatCardModule,
         MatCheckboxModule,
         MatFormFieldModule,
+        MatIconModule,
         MatInputModule,
         MatSelectModule,
         MatSlideToggleModule,
+        MatTableModule,
         MatTooltipModule,
         TranslateModule,
-        MatTableModule
+        NotificationShellComponent,
     ],
-    providers: [
-        CloudMobileService
-    ],
+    providers: [CloudMobileService],
     templateUrl: "./cloudmobile.component.html",
-    styleUrls: ["./notificationtemplate.component.scss"]
+    styleUrls: ["./cloudmobile.component.scss"],
 })
-export class CloudMobileComponent implements OnInit {
+export class CloudMobileComponent extends NotificationBaseComponent<IMobileNotifcationSettings> {
 
-    public NotificationType = NotificationType;
-    public templates: INotificationTemplates[];
-    public form: UntypedFormGroup;
-    public devices: MatTableDataSource<ICloudMobileModel>;
+    protected readonly providerName = "Mobile";
+
+    public devices = new MatTableDataSource<ICloudMobileModel>([]);
     public selection = new SelectionModel<ICloudMobileModel>(true, []);
-    displayedColumns: string[] = ['select', 'username'];
-    public message: string;
+    public displayedColumns: string[] = ["select", "username", "deviceCount"];
+    public message = "";
+    public sending = false;
 
-    constructor(private settingsService: SettingsService,
-                private notificationService: NotificationService,
-                private fb: UntypedFormBuilder,
-                private mobileService: CloudMobileService) { }
-
-    public async ngOnInit() {
-        this.settingsService.getMobileNotificationSettings().subscribe(x => {
-            this.templates = x.notificationTemplates;
-
-            this.form = this.fb.group({
-            });
+    constructor(settingsService: SettingsService,
+                notificationService: NotificationService,
+                fb: UntypedFormBuilder,
+                testerService: TesterService,
+                private readonly mobileService: CloudMobileService) {
+        super(settingsService, notificationService, fb, testerService);
+        this.mobileService.getDevices().subscribe(result => {
+            this.devices.data = result ?? [];
         });
-
-        var result = await this.mobileService.getDevices().toPromise();
-            if (result.length > 0) {
-                this.devices = new MatTableDataSource(result);
-            }
     }
 
-    public onSubmit(form: UntypedFormGroup) {
-        if (form.invalid) {
-            this.notificationService.error("Please check your entered values");
-            return;
-        }
-
-        const settings = <IMobileNotifcationSettings> form.value;
-        settings.notificationTemplates = this.templates;
-
-        this.settingsService.saveMobileNotificationSettings(settings).subscribe(x => {
-            if (x) {
-                this.notificationService.success("Successfully saved the Mobile settings");
-            } else {
-                this.notificationService.success("There was an error when saving the Mobile settings");
-            }
-        });
-
+    protected loadSettings(): Observable<IMobileNotifcationSettings> {
+        return this.settingsService.getMobileNotificationSettings();
     }
 
-    public async sendMessage(form: UntypedFormGroup) {
-        if (form.invalid) {
-            this.notificationService.error("Please check your entered values");
+    protected saveSettings(settings: IMobileNotifcationSettings): Observable<boolean> {
+        return this.settingsService.saveMobileNotificationSettings(settings);
+    }
+
+    protected testSettings(_settings: IMobileNotifcationSettings): Observable<boolean> {
+        return new Observable<boolean>(sub => { sub.next(false); sub.complete(); });
+    }
+
+    protected buildForm(x: IMobileNotifcationSettings) {
+        return {
+            enabled: [x.enabled],
+        };
+    }
+
+    public toggleAll(): void {
+        if (this.allSelected()) {
+            this.selection.clear();
+        } else {
+            this.devices.data.forEach(row => this.selection.select(row));
+        }
+    }
+
+    public allSelected(): boolean {
+        return this.devices.data.length > 0
+            && this.selection.selected.length === this.devices.data.length;
+    }
+
+    public someSelected(): boolean {
+        return this.selection.selected.length > 0 && !this.allSelected();
+    }
+
+    public deviceCount(row: ICloudMobileModel): number {
+        return row.devices?.length ?? 0;
+    }
+
+    public async sendBroadcast(): Promise<void> {
+        if (!this.selection.selected.length) {
+            this.notificationService.warning("Warning", "Please select at least one user to send the notification");
             return;
         }
-        if (this.selection.selected.length <= 0) {
-            this.notificationService.warning("Warning", "Please select a user to send the test notification");
+        if (!this.message?.trim()) {
+            this.notificationService.error("Please enter a message before sending");
             return;
         }
 
-        await this.selection.selected.forEach(async (u) => {
-            await this.mobileService.send(u.userId, this.message);
-           
-            this.notificationService.success(
-                "Successfully sent a Mobile message");
-            
-            
-        });
+        this.sending = true;
+        try {
+            await Promise.all(
+                this.selection.selected.map(user => this.mobileService.send(user.userId, this.message)),
+            );
+            this.notificationService.success("Mobile notification sent to the selected users");
+        } finally {
+            this.sending = false;
+        }
     }
 }

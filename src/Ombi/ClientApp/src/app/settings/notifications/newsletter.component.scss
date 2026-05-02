@@ -1,0 +1,107 @@
+.newsletter {
+    &__toggles {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px 24px;
+        padding-top: 4px;
+    }
+
+    &__field {
+        width: 100%;
+        margin-bottom: 12px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    &__admin {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px;
+        justify-content: flex-end;
+        padding: 12px 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        margin-top: 8px;
+    }
+
+    &__admin-label {
+        margin-right: auto;
+        font-size: 0.85rem;
+        opacity: 0.75;
+    }
+
+    &__admin-buttons {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+
+        button mat-icon {
+            margin-right: 4px;
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+        }
+    }
+}
+
+.newsletter-recipients {
+    display: block;
+    margin: 0 auto 24px;
+    width: min(1280px, 95%);
+
+    &__card {
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    &__avatar {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(63, 81, 181, 0.12);
+        color: var(--mdc-theme-primary, #3f51b5);
+
+        mat-icon {
+            font-size: 22px;
+            width: 22px;
+            height: 22px;
+        }
+    }
+
+    &__form {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+
+        button {
+            min-width: 120px;
+
+            mat-icon {
+                margin-right: 4px;
+            }
+        }
+    }
+
+    &__input {
+        flex: 1 1 320px;
+    }
+
+    &__chips {
+        ::ng-deep mat-chip {
+            font-size: 0.85rem;
+        }
+    }
+
+    &__empty {
+        margin: 0;
+        opacity: 0.7;
+        font-style: italic;
+    }
+}

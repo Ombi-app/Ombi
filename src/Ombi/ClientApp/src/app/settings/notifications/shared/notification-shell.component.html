@@ -62,7 +62,7 @@
                                 </button>
                             }
                             <button mat-flat-button color="primary" type="submit"
-                                    [disabled]="form.invalid || form.pristine">
+                                    [disabled]="form.invalid || (requireDirtyToSave && form.pristine)">
                                 <mat-icon>save</mat-icon>
                                 {{ submitLabel }}
                             </button>
