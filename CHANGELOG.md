@@ -1,3 +1,7 @@
+## [4.59.4](https://github.com/Ombi-app/Ombi/compare/v4.59.3...v4.59.4) (2026-05-14)
+
+
+
 ## [4.59.3](https://github.com/Ombi-app/Ombi/compare/v4.59.2...v4.59.3) (2026-05-02)
 
 
@@ -368,10 +372,6 @@
 ### Features
 
 * pipes ([1ac20e8](https://github.com/Ombi-app/Ombi/commit/1ac20e84dbf9b90e6797cb49cf3fd4e863f7352d))
-
-
-
-## [4.49.10](https://github.com/Ombi-app/Ombi/compare/v4.49.9...v4.49.10) (2025-09-19)
 
 
 
