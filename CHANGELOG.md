@@ -1,4 +1,27 @@
-## [4.59.5](https://github.com/Ombi-app/Ombi/compare/v4.59.4...v4.59.5) (2026-05-20)
+
+## [4.53.5](https://github.com/Ombi-app/Ombi/compare/v4.53.4...v4.53.5) (2026-04-20)
+
+
+### Bug Fixes
+
+* reset sqlite_sequence after cache table deletes to prevent Int32 overflow ([#5398](https://github.com/Ombi-app/Ombi/issues/5398)) ([02e7c8e](https://github.com/Ombi-app/Ombi/commit/02e7c8e3c013b9c4620c381e143ecbded25f694d)), closes [#5224](https://github.com/Ombi-app/Ombi/issues/5224)
+
+
+
+## [4.53.4](https://github.com/Ombi-app/Ombi/compare/v4.53.2...v4.53.4) (2026-01-08)
+
+
+### Bug Fixes
+
+* small fix to search by decade ([7da1721](https://github.com/Ombi-app/Ombi/commit/7da1721a557e7aa2e92e760a7672b2dd2c88b060))
+
+
+
+## [4.47.1](https://github.com/Ombi-app/Ombi/compare/v4.47.0...v4.47.1) (2025-01-05)
+
+
+
+## [4.53.2](https://github.com/Ombi-app/Ombi/compare/v4.53.1...v4.53.2) (2026-01-08)
 
 
 ### Bug Fixes
@@ -313,6 +336,11 @@
 
 ## [4.51.4](https://github.com/Ombi-app/Ombi/compare/v4.51.3...v4.51.4) (2025-10-14)
 
+## [4.47.1](https://github.com/Ombi-app/Ombi/compare/v4.47.0...v4.47.1) (2025-01-05)
+
+
+# [4.47.0](https://github.com/Ombi-app/Ombi/compare/v4.46.8...v4.47.0) (2025-01-03)
+
 
 ### Bug Fixes
 
@@ -348,30 +376,5 @@
 ### Bug Fixes
 
 * **translations:** 🌐 New translations from Crowdin [skip ci] ([102c84e](https://github.com/Ombi-app/Ombi/commit/102c84edb0df41f2f9ca27fd9d76f1e9cb22e755))
-
-
-### Features
-
-* improve contributor guidance ([d045f32](https://github.com/Ombi-app/Ombi/commit/d045f32b85fd4c019239e13a6a0eefb842ed1b31))
-* **TvSender:** add logging for missing seasons in Sonarr during monitoring updates ([0d219e4](https://github.com/Ombi-app/Ombi/commit/0d219e4612ce047d7a507c2447ed6d76d616768e))
-
-
-### Reverts
-
-* Revert "Update src/Ombi/Controllers/V1/TokenController.cs" ([0294dba](https://github.com/Ombi-app/Ombi/commit/0294dba4cc8d27ace0503fd2518b4419c3f0f08f))
-
-
-
-## [4.50.2](https://github.com/Ombi-app/Ombi/compare/v4.50.1...v4.50.2) (2025-10-04)
-
-
-
-## [4.50.1](https://github.com/Ombi-app/Ombi/compare/v4.50.0...v4.50.1) (2025-09-26)
-
-
-### Bug Fixes
-
-* **sonarr:** :bug: Ensure we are monitoring shows that already exist in Sonarr [#5257](https://github.com/Ombi-app/Ombi/issues/5257) ([bf83c95](https://github.com/Ombi-app/Ombi/commit/bf83c95da05feefa956ea73a3959304af94483dd))
-
 
 
