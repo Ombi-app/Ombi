@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using System.Security.Principal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -138,7 +139,16 @@ namespace Ombi.DependencyInjection
                 client.DefaultRequestHeaders.Add("User-Agent", $"Ombi/{runtimeVersion} (https://ombi.io/)");
             }).ConfigurePrimaryHttpMessageHandler(() =>
             {
-                var httpClientHandler = new HttpClientHandler();
+                var httpClientHandler = new HttpClientHandler
+                {
+                    // Some upstream APIs (notably TheMovieDb behind its CDN) may return
+                    // gzip/brotli-encoded responses even when no Accept-Encoding header is
+                    // sent. Without automatic decompression the raw compressed bytes are
+                    // handed to ReadAsStringAsync, producing UTF-8 replacement characters
+                    // (U+FFFD) and a Newtonsoft.Json "Unexpected character ... line 0,
+                    // position 0" failure (intermittent, often seen under Docker on Linux).
+                    AutomaticDecompression = DecompressionMethods.All,
+                };
                 httpClientHandler.ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true;
 
                 return httpClientHandler;
