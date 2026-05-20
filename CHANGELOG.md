@@ -1,3 +1,12 @@
+## [4.59.5](https://github.com/Ombi-app/Ombi/compare/v4.59.4...v4.59.5) (2026-05-20)
+
+
+### Bug Fixes
+
+* **http:** enable automatic decompression on OmbiClient ([#5410](https://github.com/Ombi-app/Ombi/issues/5410)) ([a002528](https://github.com/Ombi-app/Ombi/commit/a0025284926ebe41ca9ed730216969396f4978bc))
+
+
+
 ## [4.59.4](https://github.com/Ombi-app/Ombi/compare/v4.59.3...v4.59.4) (2026-05-14)
 
 
@@ -363,15 +372,6 @@
 ### Bug Fixes
 
 * **sonarr:** :bug: Ensure we are monitoring shows that already exist in Sonarr [#5257](https://github.com/Ombi-app/Ombi/issues/5257) ([bf83c95](https://github.com/Ombi-app/Ombi/commit/bf83c95da05feefa956ea73a3959304af94483dd))
-
-
-
-# [4.50.0](https://github.com/Ombi-app/Ombi/compare/v4.49.10...v4.50.0) (2025-09-21)
-
-
-### Features
-
-* pipes ([1ac20e8](https://github.com/Ombi-app/Ombi/commit/1ac20e84dbf9b90e6797cb49cf3fd4e863f7352d))
 
 
 
