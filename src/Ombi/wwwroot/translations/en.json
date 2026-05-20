@@ -7,8 +7,13 @@
         "SignInWith": "Sign in with {{appName}}",
         "SignInWithPlex": "Sign in with Plex",
         "ForgottenPassword": "Forgot your password?",
+        "Or": "or",
+        "BackToSignInOptions": "Back to sign in options",
+        "ShowPassword": "Show password",
+        "HidePassword": "Hide password",
         "Errors": {
-            "IncorrectCredentials": "Incorrect username or password"
+            "IncorrectCredentials": "Incorrect username or password",
+            "UsernameRequired": "Username is required"
         }
     },
     "Common": {
@@ -235,6 +240,12 @@
         "DeniedRequest": "Denied Request",
         "RequestCollection": "Request Collection",
         "CollectionSuccesfullyAdded": "The collection {{name}} has been successfully added!",
+        "NoRequests": "No requests yet",
+        "SelectAll": "Select All",
+        "Select": "Select {{title}}",
+        "GridSize": "Grid size",
+        "BulkActions": "Bulk actions for {{count}} items",
+        "ManageYourRequests": "Manage your requests",
         "NeedToSelectEpisodes": "You need to select some episodes!",
         "RequestAddedSuccessfully": "Request for {{title}} has been added successfully",
         "ErrorCodes": {
@@ -354,6 +365,7 @@
         "Availability":"Availability:",
         "RequestStatus":"Request Status:",
         "Quality":"Quality:",
+        "Quality4K":"Quality (4K):",
         "RootFolderOverride":"Root Folder Override:",
         "QualityOverride":"Quality Override:",
         "Network":"Network:",
@@ -374,12 +386,22 @@
         "Crews": {
             "CrewTitle": "Crew"
         },
+        "OverviewTitle": "Overview",
+        "TmdbRating": "TMDB Rating",
+        "Critics": "Critics",
+        "Audience": "Audience",
+        "TrailerFor": "Trailer for",
         "EpisodeSelector": {
             "AllSeasonsTooltip": "This will request every season for this show",
             "FirstSeasonTooltip": "This will only request the First Season for this show",
             "LatestSeasonTooltip": "This will only request the Latest Season for this show",
             "NoEpisodes": "There unfortunately is no episode data for this show yet!",
-            "SeasonNumber": "Season {{number}}"
+            "SeasonNumber": "Season {{number}}",
+            "OrSelectEpisodes": "or select specific episodes",
+            "Episodes": "episodes",
+            "SelectAll": "Select All",
+            "EpisodeSelected": "episode selected",
+            "EpisodesSelected": "episodes selected"
         },
         "SonarrConfiguration": "Sonarr Configuration",
         "RadarrConfiguration": "Radarr Configuration",
@@ -411,6 +433,7 @@
         "Combined": "Combined",
         "Tv": "TV",
         "Genres": "Genres",
+        "ViewDetails": "View Details",
         "CardDetails": {
             "Availability": "Availability",
             "Studio": "Studio",

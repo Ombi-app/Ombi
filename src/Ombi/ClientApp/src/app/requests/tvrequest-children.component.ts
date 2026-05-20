@@ -1,10 +1,10 @@
-﻿// import { Component, EventEmitter, Input, Output } from "@angular/core";
+// import { Component, EventEmitter, Input, Output } from "@angular/core";
 // import { IChildRequests } from "../interfaces";
 
 // import { NotificationService, RequestService } from "../services";
 
 // @Component({
-        standalone: false,
+//         standalone: false,
 //     selector: "tvrequests-children",
 //     templateUrl: "./tvrequest-children.component.html",
 // })

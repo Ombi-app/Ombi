@@ -1,5 +1,6 @@
-﻿@use "@angular/material/theming" as *;
+@use "@angular/material/theming" as *;
 @use "./variables.scss" as *;
+@use "sass:map";
 // Plus imports for other components in your app.
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
@@ -12,7 +13,7 @@
 // Create the theme object (a Sass map containing all of the palettes).
 
 
-    $mat-light-theme-background: map_merge($mat-light-theme-background, (background: $ombi-background-primary));
+    $mat-light-theme-background: map.merge($mat-light-theme-background, (background: $ombi-background-primary));
 
     $theme: mat-dark-theme((
         color: (

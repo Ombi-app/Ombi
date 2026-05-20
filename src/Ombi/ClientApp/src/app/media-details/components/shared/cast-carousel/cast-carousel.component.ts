@@ -1,7 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { CarouselModule } from "primeng/carousel";
-import { MatCardModule } from "@angular/material/card";
 import { TranslateModule } from "@ngx-translate/core";
 import { RouterModule } from "@angular/router";
 import { ImageComponent } from "../../../../components";
@@ -15,7 +14,6 @@ import { FormsModule } from "@angular/forms";
     imports: [
         CommonModule,
         CarouselModule,
-        MatCardModule,
         TranslateModule,
         RouterModule,
         ImageComponent,
@@ -27,9 +25,14 @@ export class CastCarouselComponent {
     constructor() {
         this.responsiveOptions = [
             {
-                breakpoint: '1024px',
+                breakpoint: '1200px',
                 numVisible: 5,
                 numScroll: 5
+            },
+            {
+                breakpoint: '1024px',
+                numVisible: 4,
+                numScroll: 4
             },
             {
                 breakpoint: '768px',
@@ -38,8 +41,8 @@ export class CastCarouselComponent {
             },
             {
                 breakpoint: '560px',
-                numVisible: 1,
-                numScroll: 1
+                numVisible: 2,
+                numScroll: 2
             }
         ];
     }

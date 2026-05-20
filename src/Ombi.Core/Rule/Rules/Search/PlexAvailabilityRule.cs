@@ -1,162 +1,107 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Models.Search;
-using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Services;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
-using Ombi.Settings.Settings.Models;
+using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 
 namespace Ombi.Core.Rule.Rules.Search
 {
-    public class PlexAvailabilityRule : BaseSearchRule, IRules<SearchViewModel>
+    public class PlexAvailabilityRule : MediaServerAvailabilityRule
     {
+        private readonly IPlexContentRepository _repo;
         private readonly ISettingsService<PlexSettings> _plexSettings;
-        private readonly IFeatureService _featureService;
 
-        public PlexAvailabilityRule(IPlexContentRepository repo, ILogger<PlexAvailabilityRule> log, ISettingsService<PlexSettings> plexSettings,
-            IFeatureService featureService)
+        public PlexAvailabilityRule(
+            IPlexContentRepository repo,
+            ILogger<PlexAvailabilityRule> log,
+            ISettingsService<PlexSettings> plexSettings,
+            IFeatureService featureService,
+            ISettingsService<RadarrSettings> radarrSettings = null,
+            ISettingsService<SonarrSettings> sonarrSettings = null)
+            : base(log, featureService, radarrSettings, sonarrSettings)
         {
-            PlexContentRepository = repo;
-            Log = log;
+            _repo = repo;
             _plexSettings = plexSettings;
-            _featureService = featureService;
         }
 
-        private IPlexContentRepository PlexContentRepository { get; }
-        private ILogger Log { get; }
-
-        public async Task<RuleResult> Execute(SearchViewModel obj)
+        protected override async Task<ContentLookupResult> FindContent(SearchViewModel obj)
         {
+            var result = new ContentLookupResult();
             PlexServerContent item = null;
-            var useImdb = false;
-            var useTheMovieDb = false;
-            var useId = false;
-            var useTvDb = false;
-
-            MediaType type = ConvertType(obj.Type);
-
-            if (obj.ImdbId.HasValue())
-            {
-                item = await PlexContentRepository.GetByType(obj.ImdbId, ProviderType.ImdbId, type);
-                if (item != null)
-                {
-                    useImdb = true;
-                }
-            }
-            if (item == null)
-            {
-                if (obj.Id > 0)
-                {
-                    item = await PlexContentRepository.GetByType(obj.Id.ToString(), ProviderType.TheMovieDbId, type);
-                    if (item != null)
-                    {
-                        useId = true;
-                    }
-                }
-                if (obj.TheMovieDbId.HasValue())
-                {
-                    item = await PlexContentRepository.GetByType(obj.TheMovieDbId, ProviderType.TheMovieDbId, type);
-                    if (item != null)
-                    {
-                        useTheMovieDb = true;
-                    }
-                }
-
-                if (item == null)
-                {
-                    if (obj.TheTvDbId.HasValue())
-                    {
-                        item = await PlexContentRepository.GetByType(obj.TheTvDbId, ProviderType.TvDbId, type);
-                        if (item != null)
-                        {
-                            useTvDb = true;
-                        }
-                    }
-                }
-            }
-
-            if (item != null)
-            {
-                var settings = await _plexSettings.GetSettingsAsync();
-                var firstServer = settings.Servers.FirstOrDefault();
-                var host = string.Empty;
-                if (firstServer != null)
-                {
-                    host = firstServer.ServerHostname;
-                }
-                if (useId)
-                {
-                    obj.TheMovieDbId = obj.Id.ToString();
-                    useTheMovieDb = true;
-                }
-
-                if (obj is SearchMovieViewModel movie)
-                {
-                    var is4kEnabled = await _featureService.FeatureEnabled(FeatureNames.Movie4KRequests);
-
-                    if (item.Has4K && is4kEnabled)
-                    {
-                        movie.Available4K = true;
-                    }
-                    else
-                    {
-                        obj.Available = true;
-                        obj.Quality = item.Quality;
-                    }
-
-                    if (item.Quality.HasValue())
-                    {
-                        obj.Available = true;
-                        obj.Quality = item.Quality;
-                    }
-                }
-                else
-                {
-                    obj.Available = true;
-                }
-
-                if (item.Url.StartsWith("http"))
-                {
-                    obj.PlexUrl = item.Url;
-                }
-                else
-                {
-                    // legacy content
-                    obj.PlexUrl = PlexHelper.BuildPlexMediaUrl(item.Url, host);
-                }
-
-                if (obj is SearchTvShowViewModel search)
-                {
-                    // Let's go through the episodes now
-                    if (search.SeasonRequests.Any())
-                    {
-                        var allEpisodes = PlexContentRepository.GetAllEpisodes();
-                        foreach (var season in search.SeasonRequests.ToList())
-                        {
-                            foreach (var episode in season.Episodes.ToList())
-                            {
-                                await AvailabilityRuleHelper.SingleEpisodeCheck(useImdb, allEpisodes, episode, season, item, useTheMovieDb, useTvDb, Log);
-                            }
-                        }
-
-                        AvailabilityRuleHelper.CheckForUnairedEpisodes(search);
-                    }
-                }
-            }
-            return Success();
-        }
-
-        private MediaType ConvertType(RequestType type) =>
-            type switch
+            MediaType type = obj.Type switch
             {
                 RequestType.Movie => MediaType.Movie,
                 RequestType.TvShow => MediaType.Series,
                 _ => MediaType.Movie,
             };
+
+            if (obj.ImdbId.HasValue())
+            {
+                item = await _repo.GetByType(obj.ImdbId, ProviderType.ImdbId, type);
+                if (item != null)
+                {
+                    result.UseImdb = true;
+                }
+            }
+
+            if (item == null)
+            {
+                if (obj.Id > 0)
+                {
+                    item = await _repo.GetByType(obj.Id.ToString(), ProviderType.TheMovieDbId, type);
+                    if (item != null)
+                    {
+                        obj.TheMovieDbId = obj.Id.ToString();
+                        result.UseTheMovieDb = true;
+                    }
+                }
+
+                if (item == null && obj.TheMovieDbId.HasValue())
+                {
+                    item = await _repo.GetByType(obj.TheMovieDbId, ProviderType.TheMovieDbId, type);
+                    if (item != null)
+                    {
+                        result.UseTheMovieDb = true;
+                    }
+                }
+
+                if (item == null && obj.TheTvDbId.HasValue())
+                {
+                    item = await _repo.GetByType(obj.TheTvDbId, ProviderType.TvDbId, type);
+                    if (item != null)
+                    {
+                        result.UseTvDb = true;
+                    }
+                }
+            }
+
+            result.Content = item;
+            return result;
+        }
+
+        protected override IQueryable<IMediaServerEpisode> GetAllEpisodes()
+        {
+            return _repo.GetAllEpisodes();
+        }
+
+        protected override async Task SetMediaServerUrl(SearchViewModel obj, string url)
+        {
+            if (url.StartsWith("http"))
+            {
+                obj.PlexUrl = url;
+            }
+            else
+            {
+                var settings = await _plexSettings.GetSettingsAsync();
+                var host = settings?.Servers?.FirstOrDefault()?.ServerHostname ?? string.Empty;
+                obj.PlexUrl = PlexHelper.BuildPlexMediaUrl(url, host);
+            }
+        }
     }
 }

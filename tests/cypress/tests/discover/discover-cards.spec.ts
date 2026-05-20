@@ -36,7 +36,7 @@ describe("Discover Cards Tests", () => {
     Page.visit();
     Page.popularCarousel.movieButton
       .parent()
-      .should("have.class", "button-active");
+      .should("have.class", "filter-active");
 
     cy.wait("@moviePopular");
   });
@@ -47,7 +47,7 @@ describe("Discover Cards Tests", () => {
     Page.visit();
     Page.popularCarousel.tvButton
       .parent()
-      .should("have.class", "button-active");
+      .should("have.class", "filter-active");
 
     cy.wait("@tvPopular");
   });
@@ -59,7 +59,7 @@ describe("Discover Cards Tests", () => {
     Page.visit();
     Page.popularCarousel.combinedButton
       .parent()
-      .should("have.class", "button-active");
+      .should("have.class", "filter-active");
 
     cy.wait("@moviePopular");
     cy.wait("@tvPopular");

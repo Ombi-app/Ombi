@@ -1,93 +1,60 @@
-﻿import { Component, OnInit } from "@angular/core";
-import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
-
-import { INotificationTemplates, IPushbulletNotificationSettings, NotificationType } from "../../interfaces";
-import { TesterService } from "../../services";
-import { NotificationService } from "../../services";
-import { SettingsService } from "../../services";
+import { Component } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { MatButtonModule } from "@angular/material/button";
-import { MatCheckboxModule } from "@angular/material/checkbox";
+import { ReactiveFormsModule, UntypedFormBuilder, Validators } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
-import { MatSelectModule } from "@angular/material/select";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslateModule } from "@ngx-translate/core";
-import { NotificationTemplate } from "./notificationtemplate.component";
+import { Observable } from "rxjs";
+
+import { IPushbulletNotificationSettings } from "../../interfaces";
+import { NotificationService, SettingsService, TesterService } from "../../services";
+import { NotificationBaseComponent } from "./shared/notification-base.component";
+import { NotificationShellComponent } from "./shared/notification-shell.component";
 
 @Component({
     standalone: true,
     imports: [
         CommonModule,
         ReactiveFormsModule,
-        MatButtonModule,
-        MatCheckboxModule,
         MatFormFieldModule,
         MatInputModule,
-        MatSelectModule,
         MatSlideToggleModule,
         MatTooltipModule,
         TranslateModule,
-        NotificationTemplate
+        NotificationShellComponent,
     ],
     templateUrl: "./pushbullet.component.html",
-    styleUrls: ["./notificationtemplate.component.scss"]
 })
-export class PushbulletComponent implements OnInit {
-    public NotificationType = NotificationType;
-    public templates: INotificationTemplates[];
-    public form: UntypedFormGroup;
+export class PushbulletComponent extends NotificationBaseComponent<IPushbulletNotificationSettings> {
 
-    constructor(private settingsService: SettingsService,
-                private notificationService: NotificationService,
-                private fb: UntypedFormBuilder,
-                private testerService: TesterService) { }
+    protected readonly providerName = "Pushbullet";
 
-    public ngOnInit() {
-        this.settingsService.getPushbulletNotificationSettings().subscribe(x => {
-            this.templates = x.notificationTemplates;
-
-            this.form = this.fb.group({
-                enabled: [x.enabled],
-                channelTag: [x.channelTag],
-                accessToken: [x.accessToken, [Validators.required]],
-            });
-        });
+    constructor(settingsService: SettingsService,
+                notificationService: NotificationService,
+                fb: UntypedFormBuilder,
+                testerService: TesterService) {
+        super(settingsService, notificationService, fb, testerService);
     }
 
-    public onSubmit(form: UntypedFormGroup) {
-        if (form.invalid) {
-            this.notificationService.error("Please check your entered values");
-            return;
-        }
-
-        const settings = <IPushbulletNotificationSettings> form.value;
-        settings.notificationTemplates = this.templates;
-
-        this.settingsService.savePushbulletNotificationSettings(settings).subscribe(x => {
-            if (x) {
-                this.notificationService.success("Successfully saved the Pushbullet settings");
-            } else {
-                this.notificationService.success("There was an error when saving the Pushbullet settings");
-            }
-        });
-
+    protected loadSettings(): Observable<IPushbulletNotificationSettings> {
+        return this.settingsService.getPushbulletNotificationSettings();
     }
 
-    public test(form: UntypedFormGroup) {
-        if (form.invalid) {
-            this.notificationService.error("Please check your entered values");
-            return;
-        }
+    protected saveSettings(settings: IPushbulletNotificationSettings): Observable<boolean> {
+        return this.settingsService.savePushbulletNotificationSettings(settings);
+    }
 
-        this.testerService.pushbulletTest(form.value).subscribe(x => {
-            if (x) {
-                this.notificationService.success("Successfully sent a Pushbullet message");
-            } else {
-                this.notificationService.error("There was an error when sending the Pushbullet message. Please check your settings");
-            }
-        });
+    protected testSettings(settings: IPushbulletNotificationSettings): Observable<boolean> {
+        return this.testerService.pushbulletTest(settings);
+    }
 
+    protected buildForm(x: IPushbulletNotificationSettings) {
+        return {
+            enabled: [x.enabled],
+            channelTag: [x.channelTag],
+            accessToken: [x.accessToken, [Validators.required]],
+        };
     }
 }

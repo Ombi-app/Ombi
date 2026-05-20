@@ -348,21 +348,28 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Ombi.Store.Entities.PlexWatchlistUserError", b =>
+            modelBuilder.Entity("Ombi.Store.Entities.PlexWatchlistUserStatus", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("MediaServerToken")
+                    b.Property<DateTime>("LastSyncedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("SyncStatus")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("UserId")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("PlexWatchlistUserError");
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("PlexWatchlistUserStatus");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.RecentlyAddedLog", b =>

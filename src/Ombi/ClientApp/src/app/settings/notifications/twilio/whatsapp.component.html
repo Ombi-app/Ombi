@@ -1,37 +1,44 @@
-<div class="container" style="padding-top: 3%;">
-    <div [formGroup]="form" class="col">
-        <div formGroupName="whatsAppSettings" class="row">
-            <div class="col">
-                <div>
-                    <mat-slide-toggle formControlName="enabled">Enable</mat-slide-toggle>
-                </div>
+<ombi-notification-shell
+    providerName="WhatsApp"
+    icon="chat"
+    description="Send notifications via WhatsApp using a Twilio Programmable Messaging account."
+    docsUrl="https://www.twilio.com/docs/whatsapp"
+    [form]="form"
+    [loading]="loading"
+    [templates]="templates"
+    (submitted)="onSubmit($event)"
+    (tested)="test($event)">
 
-                <div class="md-form-field">
-                    <mat-form-field>
-                        <input matInput placeholder="From Number" formControlName="from" matTooltip="The mobile number that the WhatsApp message is from, with the international prefix">
-                    </mat-form-field>
-                </div>
-                <div class="md-form-field">
-                    <mat-form-field>
-                        <input matInput placeholder="Account SID" formControlName="accountSid" matTooltip="The Account SID that you can find from the Programmable SMS Dashboard">
-                    </mat-form-field>
-                </div>
-                <div class="md-form-field">
-                    <mat-form-field>
-                        <input matInput placeholder="Authentication Token" formControlName="authToken" matTooltip="The Auth Token that you can find from the Programmable SMS Dashboard">
-                    </mat-form-field>
-                </div>
-                <div class="md-form-field">
-                    <div>
-                        <button mat-raised-button type="button" color="accent" (click)="test(form)">Test</button>
-                    </div>
-                </div>
-            </div>
+    @if (form) {
+        <ng-container [formGroup]="form">
+            <mat-form-field appearance="outline">
+                <mat-label>From number</mat-label>
+                <input matInput formControlName="from" autocomplete="off"
+                       placeholder="+14155238886"
+                       matTooltip="The mobile number that the WhatsApp message is from, with the international prefix.">
+                @if (form.get('from')?.hasError('required')) {
+                    <mat-error>From number is <strong>required</strong></mat-error>
+                }
+                <mat-hint>Use the international format including the country code.</mat-hint>
+            </mat-form-field>
 
-            <div class="col">
-                <notification-templates [templates]="templates" [showSubject]="false"></notification-templates>
-            </div>
-      
-        </div>
-    </div>
-</div>
+            <mat-form-field appearance="outline">
+                <mat-label>Account SID</mat-label>
+                <input matInput formControlName="accountSid" autocomplete="off"
+                       matTooltip="The Account SID from the Twilio Programmable Messaging dashboard.">
+                @if (form.get('accountSid')?.hasError('required')) {
+                    <mat-error>Account SID is <strong>required</strong></mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="notification-field--full">
+                <mat-label>Authentication token</mat-label>
+                <input matInput type="password" formControlName="authToken" autocomplete="new-password"
+                       matTooltip="The Auth Token from the Twilio Programmable Messaging dashboard.">
+                @if (form.get('authToken')?.hasError('required')) {
+                    <mat-error>Auth token is <strong>required</strong></mat-error>
+                }
+            </mat-form-field>
+        </ng-container>
+    }
+</ombi-notification-shell>

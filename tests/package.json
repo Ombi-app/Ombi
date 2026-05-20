@@ -24,6 +24,7 @@
     "cypress:run": "cypress run",
     "types": "tsc --noEmit",
     "e2e": "cypress run",
+    "smoke": "cypress run --spec 'cypress/features/01-wizard/wizard.feature,cypress/features/login/login.feature,cypress/tests/login/login.spec.ts'",
     "regression": "cypress run --config-file cypress/config/regression.json",
     "demo:open": "cypress open --config-file cypress/config/demo.json"
   },

@@ -11,6 +11,9 @@ namespace Ombi.Updater
 {
     public class Installer : IInstaller
     {
+        private const int MaxRetries = 3;
+        private const int RetryDelayMs = 1000;
+
         public Installer(ILogger<Installer> log)
         {
             _log = log;
@@ -20,31 +23,29 @@ namespace Ombi.Updater
 
         public void Start(StartupOptions opt)
         {
-            // Kill Ombi Process
             var p = new ProcessProvider();
             bool killed = false;
             try
             {
-
-
                 killed = p.Kill(opt);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _log.LogError(e, "Error killing Ombi process");
             }
 
             if (!killed)
             {
-
-                _log.LogDebug("Couldn't kill the ombi process");
+                _log.LogError("Couldn't kill the Ombi process, aborting update");
                 return;
             }
 
-            _log.LogDebug("Starting to move the files");
+            // Brief pause to ensure file handles are released
+            Thread.Sleep(2000);
+
+            _log.LogInformation("Starting to move the files");
             MoveFiles(opt);
-            _log.LogDebug("Files replaced");
-            // Start Ombi
+            _log.LogInformation("Files replaced successfully");
             StartOmbi(opt);
         }
 
@@ -125,8 +126,25 @@ namespace Ombi.Updater
                 SearchOption.AllDirectories))
             {
                 var newFile = currentPath.Replace(updatedLocation, options.ApplicationPath);
-                File.Copy(currentPath, newFile, true);
+                CopyFileWithRetry(currentPath, newFile);
                 _log.LogDebug("Replaced file {0}", newFile);
+            }
+        }
+
+        private void CopyFileWithRetry(string source, string destination)
+        {
+            for (int attempt = 1; attempt <= MaxRetries; attempt++)
+            {
+                try
+                {
+                    File.Copy(source, destination, true);
+                    return;
+                }
+                catch (IOException) when (attempt < MaxRetries)
+                {
+                    _log.LogWarning("File copy failed for {0}, attempt {1}/{2}. Retrying...", destination, attempt, MaxRetries);
+                    Thread.Sleep(RetryDelayMs * attempt);
+                }
             }
         }
     }

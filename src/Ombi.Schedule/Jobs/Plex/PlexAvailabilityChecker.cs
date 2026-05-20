@@ -57,6 +57,12 @@ namespace Ombi.Schedule.Jobs.Plex
 
         private async Task ProcessTv()
         {
+            // If Sonarr is configured to scan with priority, skip Plex checking entirely
+            if (await ShouldSkipTvAvailabilityCheck())
+            {
+                return;
+            }
+
             var tv = await _tvRepo.GetChild().Where(x => !x.Available).ToListAsync();
             await ProcessTv(tv);
         }
@@ -108,13 +114,6 @@ namespace Ombi.Schedule.Jobs.Plex
                         x.Series.Title == child.Title);
                 }
 
-                // Check if we should defer to Sonarr for this TV show
-                if (await ShouldDeferToSonarr(tvDbId))
-                {
-                    _log.LogInformation($"[PAC] - TV request {child.Title} - {child.Id} found in Plex but deferring to Sonarr availability");
-                    continue;
-                }
-
                 await ProcessTvShow(seriesEpisodes, child);
             }
 
@@ -123,6 +122,12 @@ namespace Ombi.Schedule.Jobs.Plex
 
         private async Task ProcessMovies()
         {
+            // If Radarr is configured to scan with priority, skip Plex checking entirely
+            if (await ShouldSkipMovieAvailabilityCheck())
+            {
+                return;
+            }
+
             var feature4kEnabled = await _featureService.FeatureEnabled(FeatureNames.Movie4KRequests);
             // Get all non available
             var movies = _movieRepo.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available || (!x.Available4K && x.Has4KRequest));
@@ -146,18 +151,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 if (item == null)
                 {
                     // We don't yet have this
-                    continue;
-                }
-
-                // Check if we should defer to Radarr for 4K availability
-                var shouldDeferRadarr4K = await ShouldDeferToRadarr(movie.TheMovieDbId, true);
-                // Check if we should defer to Radarr for regular availability
-                var shouldDeferRadarrRegular = await ShouldDeferToRadarr(movie.TheMovieDbId, false);
-
-                // Skip if we should defer for any type of availability (not just both)
-                if (shouldDeferRadarr4K || shouldDeferRadarrRegular)
-                {
-                    _log.LogInformation($"[PAC] - Movie request {movie.Title} - {movie.Id} found in Plex but deferring to Radarr availability");
+                    _log.LogDebug($"[PAC] Movie '{movie.Title}' (TMDB:{movie.TheMovieDbId}) NOT found in Plex, skipping");
                     continue;
                 }
 
@@ -165,7 +159,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
                 var notify = false;
 
-                if (has4kRequest && item.Has4K && !movie.Available4K && feature4kEnabled && !shouldDeferRadarr4K)
+                if (has4kRequest && item.Has4K && !movie.Available4K && feature4kEnabled)
                 {
                     movie.Available4K = true;
                     movie.Approved4K = true;
@@ -174,7 +168,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     notify = true;
                 }
 
-                if (!feature4kEnabled && !movie.Available && !shouldDeferRadarrRegular)
+                if (!feature4kEnabled && !movie.Available)
                 {
                     movie.Available = true;
                     movie.MarkedAsAvailable = DateTime.Now;
@@ -183,7 +177,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 }
 
                 // If we have a non-4k versison then mark as available
-                if (item.Quality != null && !movie.Available && !shouldDeferRadarrRegular)
+                if (item.Quality != null && !movie.Available)
                 {
                     movie.Available = true;
                     movie.Approved = true;

@@ -38,6 +38,7 @@ import { VoteComponent as SettingsVoteComponent } from "./settings/vote/vote.com
 import { TheMovieDbComponent } from "./settings/themoviedb/themoviedb.component";
 import { FailedRequestsComponent } from "./settings/failedrequests/failedrequests.component";
 import { LogsComponent } from "./settings/logs/logs.component";
+import { UpdateComponent } from "./settings/update/update.component";
 import { CloudMobileComponent } from "./settings/notifications/cloudmobile.coponent";
 import { FeaturesComponent } from "./settings/features/features.component";
 import { AuthGuard } from "./auth/auth.guard";
@@ -49,6 +50,7 @@ import { PushoverComponent } from "./settings/notifications/pushover.component";
 import { MattermostComponent } from "./settings/notifications/mattermost.component";
 import { TelegramComponent } from "./settings/notifications/telegram.component";
 import { GotifyComponent } from "./settings/notifications/gotify.component";
+import { NtfyComponent } from "./settings/notifications/ntfy.component";
 import { TwilioComponent } from "./settings/notifications/twilio/twilio.component";
 import { WebhookComponent } from "./settings/notifications/webhook.component";
 import { IssuesComponent } from "./issues/issues.component";
@@ -109,6 +111,7 @@ export const routes: Routes = [
             { path: "Mattermost", component: MattermostComponent },
             { path: "Telegram", component: TelegramComponent },
             { path: "Gotify", component: GotifyComponent },
+            { path: "Ntfy", component: NtfyComponent },
             { path: "Twilio", component: TwilioComponent },
             { path: "Webhook", component: WebhookComponent },
             { path: "Plex", component: PlexComponent },
@@ -133,6 +136,7 @@ export const routes: Routes = [
             { path: "Logs", component: LogsComponent },
             { path: "CloudMobile", component: CloudMobileComponent },
             { path: "Features", component: FeaturesComponent },
+            { path: "Update", component: UpdateComponent },
             { path: "", redirectTo: "About", pathMatch: "full" }
         ]
     },

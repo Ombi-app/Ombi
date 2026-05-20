@@ -1,49 +1,26 @@
-@use "./styles/variables.scss" as *;
-
-.dark .mat-header-cell {
-	background: $accent-dark !important;
-	font-size: 1em;
-	font-weight: bold;
-	color: #303030;
+// Album-specific: square cover art
+:host {
+  --request-skeleton-media-ratio: 1 / 1;
+  --request-skeleton-media-max-height: none;
 }
 
-.mat-form-field {
-	float:right;
-	margin-right:20px;
+.card-poster {
+  aspect-ratio: 1;
+  max-height: 220px;
 }
 
-/*::ng-deep .dark .mat-form-field-label{
-	font-size: 1.2em;
-}*/
-
-::ng-deep .mat-form-field-infix {
-	width: 8em;
-	margin-top:1em;
+.card-grid {
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
 }
 
-::ng-deep .dark .mat-tab-label-active{
-	background: $accent-dark !important;
-	color: #303030 !important;
-	font-weight:bold;
+.card-artist {
+  font-size: 0.85rem;
+  color: #aaa;
+  font-weight: 500;
 }
 
-::ng-deep .mat-tab-label{
-	opacity: 1;
-}
-
-::ng-deep .row {
-	margin-right:0;
-	margin-left:0;
-}
-
-@media (min-width: 500px) {
-	.justify-content-md-center {
-    	justify-content: normal !important;
-	}
-}
-
-@media (min-width: 1170px){
-	.justify-content-md-center {
-    	justify-content: center !important;
-	}
+@media (max-width: 640px) {
+  .card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
 }

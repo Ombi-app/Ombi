@@ -1,11 +1,11 @@
-﻿// import { IRemainingRequests } from "../interfaces/IRemainingRequests";
+// import { IRemainingRequests } from "../interfaces/IRemainingRequests";
 // import { RequestService } from "../services";
 
 // import { Component, Input, OnInit } from "@angular/core";
 // import { Observable } from "rxjs";
 
 // @Component({
-        standalone: false,
+//         standalone: false,
 //     selector: "remaining-requests",
 //     templateUrl: "./remainingrequests.component.html",
 // })

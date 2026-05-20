@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { IChildRequests, RequestSource, RequestType } from "../../../../../interfaces";
+import { IChildRequests, IEpisodesRequests, INewSeasonRequests, RequestSource, RequestType } from "../../../../../interfaces";
 
 import { DenyDialogComponent } from "../../../shared/deny-dialog/deny-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
@@ -8,11 +8,8 @@ import { MessageService } from "../../../../../services";
 import { RequestService } from "../../../../../services/request.service";
 import { RequestServiceV2 } from "../../../../../services/requestV2.service";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { MatExpansionModule } from "@angular/material/expansion";
 import { OmbiDatePipe } from "../../../../../pipes/OmbiDatePipe";
-import { MatTabsModule } from "@angular/material/tabs";
 import { MatButtonModule } from "@angular/material/button";
-import { MatTableModule } from "@angular/material/table";
 
 @Component({
     templateUrl: "./tv-requests-panel.component.html",
@@ -20,12 +17,9 @@ import { MatTableModule } from "@angular/material/table";
     selector: "tv-requests-panel",
     imports: [
         CommonModule,
-        MatExpansionModule,
         TranslateModule,
         OmbiDatePipe,
-        MatTabsModule,
         MatButtonModule,
-        MatTableModule,
     ]
 })
 export class TvRequestsPanelComponent {
@@ -34,15 +28,54 @@ export class TvRequestsPanelComponent {
     @Input() public manageOwnRequests: boolean;
 
     public RequestSource = RequestSource;
+    public expandedRequests = new Set<number>();
+    public selectedSeasons: Record<number, number> = {};
 
-    public displayedColumns: string[] = ['number', 'title', 'airDate', 'status'];
+    constructor(
+        private readonly requestService: RequestService,
+        private readonly requestService2: RequestServiceV2,
+        private readonly messageService: MessageService,
+        public dialog: MatDialog,
+        private readonly translateService: TranslateService
+    ) {}
 
-    constructor(private requestService: RequestService,
-        private requestService2: RequestServiceV2,
-        private messageService: MessageService,
-        public dialog: MatDialog, 
-        private translateService: TranslateService) {
+    public isExpanded(request: IChildRequests): boolean {
+        return this.expandedRequests.has(request.id);
+    }
 
+    public toggleExpanded(request: IChildRequests): void {
+        if (this.expandedRequests.has(request.id)) {
+            this.expandedRequests.delete(request.id);
+        } else {
+            this.expandedRequests.add(request.id);
+        }
+    }
+
+    public getSelectedSeasonIndex(request: IChildRequests): number {
+        return this.selectedSeasons[request.id] ?? 0;
+    }
+
+    public setSelectedSeason(request: IChildRequests, index: number): void {
+        this.selectedSeasons[request.id] = index;
+    }
+
+    public getSelectedSeason(request: IChildRequests): INewSeasonRequests | null {
+        const index = this.getSelectedSeasonIndex(request);
+        return request.seasonRequests?.[index] || null;
+    }
+
+    public getRequestStatusClass(request: IChildRequests): string {
+        if (request.available) return "available";
+        if (request.denied) return "denied";
+        if (request.approved) return "approved";
+        return "requested";
+    }
+
+    public getEpisodeStatusClass(ep: IEpisodesRequests, request: IChildRequests): string {
+        if (ep.available) return "available";
+        if (ep.denied || request.denied) return "denied";
+        if (request.approved || ep.approved) return "approved";
+        return "requested";
     }
 
     public async approve(request: IChildRequests) {
@@ -50,16 +83,17 @@ export class TvRequestsPanelComponent {
             id: request.id
         }).toPromise();
 
-        if (result.result) {
+        if (result?.result) {
             request.approved = true;
             request.denied = false;
             request.seasonRequests.forEach((season) => {
                 season.episodes.forEach((ep) => {
                     ep.approved = true;
+                    ep.denied = false;
                 });
             });
             this.messageService.send(this.translateService.instant("Requests.SuccessfullyApproved"));
-        } else {
+        } else if (result) {
             this.messageService.sendRequestEngineResultError(result);
         }
     }
@@ -68,54 +102,61 @@ export class TvRequestsPanelComponent {
         const result = await this.requestService.deleteChild(request.id).toPromise();
 
         if (result) {
-            this.tvRequest.splice(this.tvRequest.indexOf(request),1);
+            const index = this.tvRequest.findIndex((r) => r.id === request.id);
+            if (index !== -1) {
+                this.tvRequest.splice(index, 1);
+            }
             this.messageService.send(this.translateService.instant("Requests.SuccessfullyDeleted"));
         }
     }
 
     public changeAvailability(request: IChildRequests, available: boolean) {
-        request.available = available;
-        request.seasonRequests.forEach((season) => {
-            season.episodes.forEach((ep) => {
-                ep.available = available;
+        const updateAvailability = (value: boolean) => {
+            request.available = value;
+            request.seasonRequests.forEach((season) => {
+                season.episodes.forEach((ep) => {
+                    ep.available = value;
+                });
             });
-        });
+        };
+
         if (available) {
             this.requestService.markTvAvailable({ id: request.id }).subscribe(x => {
                 if (x.result) {
-                    this.messageService.send(
-                        this.translateService.instant("Requests.NowAvailable"));
+                    updateAvailability(true);
+                    this.messageService.send(this.translateService.instant("Requests.NowAvailable"));
                 } else {
                     this.messageService.sendRequestEngineResultError(x);
-                    request.approved = false;
                 }
             });
         } else {
             this.requestService.markTvUnavailable({ id: request.id }).subscribe(x => {
                 if (x.result) {
-                    this.messageService.send(
-                        this.translateService.instant("Requests.NowUnavailable"));
+                    updateAvailability(false);
+                    this.messageService.send(this.translateService.instant("Requests.NowUnavailable"));
                 } else {
                     this.messageService.sendRequestEngineResultError(x);
-                    request.approved = false;
                 }
             });
         }
     }
+
     public async deny(request: IChildRequests) {
         const dialogRef = this.dialog.open(DenyDialogComponent, {
             width: '250px',
-            data: {requestId: request.id,  requestType: RequestType.tvShow}
-          });
+            data: { requestId: request.id, requestType: RequestType.tvShow }
+        });
 
-          dialogRef.afterClosed().subscribe(result => {
-            request.denied = true;
-            request.seasonRequests.forEach((season) => {
-                season.episodes.forEach((ep) => {
-                    ep.approved = false;
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                request.denied = true;
+                request.seasonRequests.forEach((season) => {
+                    season.episodes.forEach((ep) => {
+                        ep.approved = false;
+                    });
                 });
-            });
-          });
+            }
+        });
     }
 
     public reProcessRequest(request: IChildRequests) {

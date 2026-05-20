@@ -13,10 +13,14 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
+    <PackageReference Include="Moq" Version="4.18.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
+    <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
+    <ProjectReference Include="..\Ombi.Helpers\Ombi.Helpers.csproj" />
+    <ProjectReference Include="..\Ombi.Store\Ombi.Store.csproj" />
   </ItemGroup>
 
 </Project>

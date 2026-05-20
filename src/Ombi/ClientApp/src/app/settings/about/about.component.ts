@@ -9,7 +9,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslateModule } from "@ngx-translate/core";
-import { HubService, SettingsService, SystemService } from "../../services";
+import { HubService, SettingsService } from "../../services";
 import { IAbout, IUpdateModel } from "../../interfaces/ISettings";
 
 import { IConnectedUser } from "../../interfaces";
@@ -41,7 +41,7 @@ export class AboutComponent implements OnInit {
     public about: IAbout;
     public newUpdate: boolean;
     public connectedUsers: IConnectedUser[];
-    public newsHtml: string;
+
     public appstoreImage: string;
 
     public get usingSqliteDatabase() {
@@ -58,7 +58,6 @@ export class AboutComponent implements OnInit {
     constructor(private readonly settingsService: SettingsService,
         private readonly jobService: UpdateService,
         private readonly hubService: HubService,
-        private readonly systemService: SystemService,
         private readonly dialog: MatDialog,
         @Inject(APP_BASE_HREF) private readonly href:string) { }
 
@@ -69,8 +68,6 @@ export class AboutComponent implements OnInit {
             this.appstoreImage = "../../.." + base + "/images/appstore.svg";
         }
         this.settingsService.about().subscribe(x => this.about = x);
-        this.newsHtml = await this.systemService.getNews().toPromise();
-
         this.jobService.checkForUpdate().subscribe(x => {
             this.update = x;
             if (x.updateAvailable) {

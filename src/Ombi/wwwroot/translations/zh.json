@@ -93,7 +93,9 @@
             "Movies": "电影",
             "TvShows": "电视节目",
             "Music": "音乐",
-            "People": "人员"
+            "People": "人员",
+            "Decade": "Decade",
+            "None": "None"
         },
         "MorningWelcome": "早上好！",
         "AfternoonWelcome": "下午好!",
@@ -253,7 +255,8 @@
         "RemoveNotification": "删除通知",
         "SuccessfulNotify": "您将收到标题为 {{title}} 的通知",
         "SuccessfulUnNotify": "您将不再收到标题为 {{title}} 的通知",
-        "CouldntNotify": "无法通知标题 {{title}}"
+        "CouldntNotify": "无法通知标题 {{title}}",
+        "NoRequests": "No Requests"
     },
     "Issues": {
         "Title": "问题",
@@ -377,7 +380,12 @@
             "FirstSeasonTooltip": "请求这个节目的第一季",
             "LatestSeasonTooltip": "只请求这个节目的最新季",
             "NoEpisodes": "很遗憾，目前还没有该节目的剧集数据！",
-            "SeasonNumber": "第{{number}} 季"
+            "SeasonNumber": "第{{number}} 季",
+            "OrSelectEpisodes": "or select episodes",
+            "Episodes": "Episodes",
+            "SelectAll": "Select All",
+            "EpisodeSelected": "episode selected",
+            "EpisodesSelected": "episodes selected"
         },
         "SonarrConfiguration": "Sonarr 配置",
         "RadarrConfiguration": "Radarr 配置",

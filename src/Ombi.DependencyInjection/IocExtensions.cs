@@ -1,7 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using System.Security.Principal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 using Ombi.Api.External.NotificationServices.Discord;
 using Ombi.Api.External.MediaServers.Emby;
@@ -32,6 +34,7 @@ using Ombi.Api.External.ExternalApis.DogNzb;
 using Ombi.Api.External.ExternalApis.FanartTv;
 using Ombi.Api.External.ExternalApis.Github;
 using Ombi.Api.External.NotificationServices.Gotify;
+using Ombi.Api.External.NotificationServices.Ntfy;
 using Ombi.Api.External.NotificationServices.GroupMe;
 using Ombi.Api.External.NotificationServices.Webhook;
 using Ombi.Api.External.ExternalApis.Lidarr;
@@ -136,7 +139,16 @@ namespace Ombi.DependencyInjection
                 client.DefaultRequestHeaders.Add("User-Agent", $"Ombi/{runtimeVersion} (https://ombi.io/)");
             }).ConfigurePrimaryHttpMessageHandler(() =>
             {
-                var httpClientHandler = new HttpClientHandler();
+                var httpClientHandler = new HttpClientHandler
+                {
+                    // Some upstream APIs (notably TheMovieDb behind its CDN) may return
+                    // gzip/brotli-encoded responses even when no Accept-Encoding header is
+                    // sent. Without automatic decompression the raw compressed bytes are
+                    // handed to ReadAsStringAsync, producing UTF-8 replacement characters
+                    // (U+FFFD) and a Newtonsoft.Json "Unexpected character ... line 0,
+                    // position 0" failure (intermittent, often seen under Docker on Linux).
+                    AutomaticDecompression = DecompressionMethods.All,
+                };
                 httpClientHandler.ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true;
 
                 return httpClientHandler;
@@ -145,7 +157,11 @@ namespace Ombi.DependencyInjection
 
         public static void RegisterApi(this IServiceCollection services)
         {
-            services.AddScoped<IApi, Api.Api>(s => new Api.Api(s.GetRequiredService<ILogger<Api.Api>>(), s.GetRequiredService<IHttpClientFactory>().CreateClient("OmbiClient")));
+            services.AddScoped<IApi, Api.Api>(s => new Api.Api(
+                s.GetRequiredService<ILogger<Api.Api>>(),
+                s.GetRequiredService<IHttpClientFactory>().CreateClient("OmbiClient"),
+                s.GetRequiredService<ICacheService>(),
+                s.GetRequiredService<IHostEnvironment>()));
             services.AddTransient<IMovieDbApi, Ombi.Api.External.ExternalApis.TheMovieDb.TheMovieDbApi>();
             services.AddTransient<IPlexApi, PlexApi>();
             services.AddTransient<IEmbyApi, EmbyApi>();
@@ -163,6 +179,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IFanartTvApi, FanartTvApi>();
             services.AddTransient<IPushoverApi, PushoverApi>();
             services.AddTransient<IGotifyApi, GotifyApi>();
+            services.AddTransient<INtfyApi, NtfyApi>();
             services.AddTransient<IWebhookApi, WebhookApi>();
             services.AddTransient<IMattermostApi, MattermostApi>();
             services.AddTransient<ICouchPotatoApi, CouchPotatoApi>();
@@ -230,6 +247,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMattermostNotification, MattermostNotification>();
             services.AddTransient<IPushoverNotification, PushoverNotification>();
             services.AddTransient<IGotifyNotification, GotifyNotification>();
+            services.AddTransient<INtfyNotification, NtfyNotification>();
             services.AddTransient<IWebhookNotification, WebhookNotification>();
             services.AddTransient<ITelegramNotification, TelegramNotification>();
             services.AddTransient<ILegacyMobileNotification, LegacyMobileNotification>();
@@ -237,6 +255,7 @@ namespace Ombi.DependencyInjection
             services.AddScoped<IFeatureService, FeatureService>();
             services.AddTransient<IRecentlyRequestedService, RecentlyRequestedService>();
             services.AddTransient<IPlexService, PlexService>();
+            services.AddScoped<IPlexWatchlistStatusStore, PlexWatchlistStatusStore>();
             services.AddSingleton<IFileSystem, FileSystem>();
             services.AddSingleton<IDatabaseConfigurationService, DatabaseConfigurationService>();
         }

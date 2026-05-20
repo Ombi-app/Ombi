@@ -16,6 +16,7 @@ import {
     IEmbySettings,
     IJellyfinSettings,
     IGotifyNotificationSettings,
+    INtfyNotificationSettings,
     IIssueSettings,
     IJobSettings,
     IJobSettingsViewModel,
@@ -202,6 +203,14 @@ export class SettingsService extends ServiceHelpers {
     public saveGotifyNotificationSettings(settings: IGotifyNotificationSettings): Observable<boolean> {
         return this.http
             .post<boolean>(`${this.url}/notifications/gotify`, JSON.stringify(settings), { headers: this.headers });
+    }
+
+    public getNtfyNotificationSettings(): Observable<INtfyNotificationSettings> {
+        return this.http.get<INtfyNotificationSettings>(`${this.url}/notifications/ntfy`, { headers: this.headers });
+    }
+    public saveNtfyNotificationSettings(settings: INtfyNotificationSettings): Observable<boolean> {
+        return this.http
+            .post<boolean>(`${this.url}/notifications/ntfy`, JSON.stringify(settings), { headers: this.headers });
     }
 
     public getWebhookNotificationSettings(): Observable<IWebhookNotificationSettings> {

@@ -25,8 +25,8 @@ namespace Ombi.Notifications.Tests
         [Test]
         public void PopulateAgentsTests()
         {
-            Assert.That(_subject.Agents, Has.Count.EqualTo(12));
-            Assert.That(_subject.Agents.DistinctBy(x => x.NotificationName).ToList(), Has.Count.EqualTo(12));
+            Assert.That(_subject.Agents, Has.Count.EqualTo(13));
+            Assert.That(_subject.Agents.DistinctBy(x => x.NotificationName).ToList(), Has.Count.EqualTo(13));
         }
     }
 

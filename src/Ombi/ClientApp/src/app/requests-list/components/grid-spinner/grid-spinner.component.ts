@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { TranslateModule } from "@ngx-translate/core";
 
 
 @Component({
@@ -10,9 +10,9 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
     styleUrls: ["./grid-spinner.component.scss"],
     imports: [
         CommonModule,
-        MatProgressSpinnerModule
+        TranslateModule
     ]
 })
 export class GridSpinnerComponent{
-    @Input() public loading = false;   
+    @Input() public loading = false;
 }

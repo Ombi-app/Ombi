@@ -35,7 +35,8 @@ export enum NotificationAgent {
     Mattermost = 6,
     Mobile = 7,
     Gotify = 8,
-    WhatsApp = 9
+    WhatsApp = 9,
+    Ntfy = 11
 }
 
 export enum NotificationType {
@@ -52,7 +53,10 @@ export enum NotificationType {
     IssueComment = 10,
     Newsletter = 11,
     PartiallyAvailable = 12,
-    PlexWatchlistTokenExpired = 13
+    PlexWatchlistTokenExpired = 13,
+    RequestDeleted = 14,
+    IssueInProgress = 15,
+    IssueDeleted = 16
 }
 
 export interface IDiscordNotifcationSettings extends INotificationSettings {
@@ -119,6 +123,15 @@ export interface IGotifyNotificationSettings extends INotificationSettings {
     baseUrl: string;
     applicationToken: string;
     priority: number;
+}
+
+export interface INtfyNotificationSettings extends INotificationSettings {
+    enabled: boolean;
+    baseUrl: string;
+    topic: string;
+    authorizationHeader: string;
+    priority: number;
+    notificationTemplates: INotificationTemplates[];
 }
 
 export interface IWebhookNotificationSettings extends INotificationSettings {

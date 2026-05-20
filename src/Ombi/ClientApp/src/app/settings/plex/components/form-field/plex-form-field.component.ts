@@ -1,7 +1,19 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 @Component({
-        standalone: false,
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSlideToggleModule,
+    ],
     selector: "settings-plex-form-field",
     styles: [`
         .margin {

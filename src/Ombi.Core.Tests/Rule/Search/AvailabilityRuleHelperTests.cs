@@ -37,7 +37,7 @@ namespace Ombi.Core.Tests.Rule.Search
         }
 
         [Test]
-        public void Is_Available_When_All_We_Have_All_Aired_Episodes_With_Unknown_Dates()
+        public void Is_NotFullyAvailable_When_Episode_Has_Unknown_AirDate_And_Is_Unavailable()
         {
             var episodes = new List<EpisodeRequests>
             {
@@ -58,7 +58,8 @@ namespace Ombi.Core.Tests.Rule.Search
                 SeasonRequests = new List<SeasonRequests> { new SeasonRequests { Episodes = episodes } }
             };
             AvailabilityRuleHelper.CheckForUnairedEpisodes(model);
-            Assert.That(model.FullyAvailable, Is.True);
+            Assert.That(model.FullyAvailable, Is.False);
+            Assert.That(model.PartlyAvailable, Is.True);
         }
 
         [Test]

@@ -1,4 +1,5 @@
-/***************************************************************************************************
- * Load `$localize` onto the global scope - used if i18n tags appear in Angular templates.
+/**
+ * Polyfills loaded before the application. The application builder
+ * handles zone.js via angular.json "polyfills": ["zone.js"].
+ * Add any additional polyfills here if needed.
  */
-import 'core-js/es7/reflect';

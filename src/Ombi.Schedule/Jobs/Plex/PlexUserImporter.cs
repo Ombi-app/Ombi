@@ -206,7 +206,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
             // Check if the admin is already in the DB
             var adminUserFromDb = allUsers.FirstOrDefault(x =>
-                x.ProviderUserId.Equals(plexAdmin.id, StringComparison.CurrentCultureIgnoreCase));
+                string.Equals(x.ProviderUserId, plexAdmin.id, StringComparison.CurrentCultureIgnoreCase));
 
             if (adminUserFromDb != null)
             {

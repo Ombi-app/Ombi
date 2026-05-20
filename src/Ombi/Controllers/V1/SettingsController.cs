@@ -120,7 +120,7 @@ namespace Ombi.Controllers.V1
         }
 
         [HttpGet("about")]
-        public AboutViewModel About()
+        public async Task<AboutViewModel> About()
         {
             var dbConfiguration = DatabaseExtensions.GetDatabaseConfiguration();
             var storage = StartupSingleton.Instance;
@@ -142,7 +142,8 @@ namespace Ombi.Controllers.V1
             var version = AssemblyHelper.GetRuntimeVersion();
             var productArray = version.Split('-');
             model.Version = productArray[0];
-            //model.Branch = productArray[1];
+            var ombiSettings = await Get<OmbiSettings>();
+            model.Branch = ombiSettings?.Branch.ToString() ?? "Stable";
             return model;
         }
 
@@ -1195,6 +1196,41 @@ namespace Ombi.Controllers.V1
 
             // Lookup to see if we have any templates saved
             model.NotificationTemplates = BuildTemplates(NotificationAgent.Gotify);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Saves the ntfy notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [Admin]
+        [HttpPost("notifications/ntfy")]
+        public async Task<bool> NtfyNotificationSettings([FromBody] NtfyNotificationViewModel model)
+        {
+            var settings = Mapper.Map<NtfySettings>(model);
+            var result = await Save(settings);
+
+            // Save the templates
+            await TemplateRepository.UpdateRange(model.NotificationTemplates);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the ntfy Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [Admin]
+        [HttpGet("notifications/ntfy")]
+        public async Task<NtfyNotificationViewModel> NtfyNotificationSettings()
+        {
+            var settings = await Get<NtfySettings>();
+            var model = Mapper.Map<NtfyNotificationViewModel>(settings);
+
+            // Lookup to see if we have any templates saved
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Ntfy);
 
             return model;
         }

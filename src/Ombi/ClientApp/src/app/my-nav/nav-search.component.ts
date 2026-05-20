@@ -1,19 +1,15 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef, DestroyRef, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder } from "@angular/forms";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatInputModule } from "@angular/material/input";
-import { MatIconModule } from "@angular/material/icon";
+import { ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder } from "@angular/forms";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Router } from "@angular/router";
 import { TranslateModule } from "@ngx-translate/core";
 import {
   debounceTime,
   switchMap,
-  tap,
-  finalize,
 } from "rxjs/operators";
 
-import { empty} from "rxjs";
+import { EMPTY } from "rxjs";
 
 @Component({
     standalone: true,
@@ -22,39 +18,63 @@ import { empty} from "rxjs";
     styleUrls: ["./nav-search.component.scss"],
     imports: [
         CommonModule,
-        FormsModule,
         ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatIconModule,
         TranslateModule
     ]
 })
 export class NavSearchComponent implements OnInit {
 
+  @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
+
   public searchForm: UntypedFormGroup;
+  public isExpanded = false;
+
+  private readonly destroyRef = inject(DestroyRef);
 
   constructor(
     private router: Router,
     private fb: UntypedFormBuilder
   ) {}
 
-  public async ngOnInit() {
+  public ngOnInit() {
     this.searchForm = this.fb.group({
       input: null,
     });
 
-    this.searchForm
-      .get("input")
-      .valueChanges.pipe(
-        debounceTime(1300),
+    const inputControl = this.searchForm.get("input");
+    if (inputControl) {
+      inputControl.valueChanges.pipe(
+        debounceTime(600),
         switchMap((value: string) => {
-          if (value) {
-            this.router.navigate([`discover`, value]);
+          const term = (value ?? '').trim();
+          if (term) {
+            this.router.navigate([`discover`, term]);
           }
-          return empty();;
-        })
+          return EMPTY;
+        }),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
+    }
+  }
+
+  public toggleSearch(): void {
+    if (this.isExpanded && !this.searchForm.get('input')?.value) {
+      this.isExpanded = false;
+    } else if (!this.isExpanded) {
+      this.isExpanded = true;
+      requestAnimationFrame(() => this.searchInput?.nativeElement?.focus());
+    }
+  }
+
+  public onBlur(): void {
+    if (!this.searchForm.get('input')?.value) {
+      this.isExpanded = false;
+    }
+  }
+
+  public clearSearch(): void {
+    this.searchForm.get('input')?.setValue('');
+    this.searchInput?.nativeElement?.focus();
   }
 }

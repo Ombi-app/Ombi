@@ -1,7 +1,13 @@
-.login-gradient-bar{
-  background: linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.6) 20.0%, rgba(0,0,0,0.6) 80.0%, transparent 60%),transparent;
-  height:100%;
-  width:100%;
+.login-gradient-bar {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0.3) 40%,
+    rgba(0, 0, 0, 0.4) 70%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  height: 100%;
+  width: 100%;
   position: absolute;
 }
 
@@ -16,8 +22,11 @@
 }
 
 .poster-desc {
-  padding-left: 1%;
-  color: white;
+  padding: 0 24px 16px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
   height: 100vh;
   width: 100vw;
   display: flex;

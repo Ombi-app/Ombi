@@ -13,6 +13,7 @@ import { RequestServiceV2 } from "../../services/requestV2.service";
 import { Routes } from "@angular/router";
 import { DetailedCardComponent } from "app/components";
 import { GenreButtonSelectComponent } from "./genre/genre-button-select.component";
+import { HeroBannerComponent } from "./hero-banner/hero-banner.component";
 
 export const components: any[] = [
     DiscoverComponent,
@@ -23,7 +24,8 @@ export const components: any[] = [
     CarouselListComponent,
     RecentlyRequestedListComponent,
     DetailedCardComponent,
-    GenreButtonSelectComponent
+    GenreButtonSelectComponent,
+    HeroBannerComponent
 ];
 
 export const providers: any[] = [

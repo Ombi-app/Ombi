@@ -1,6 +1,10 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { MatDialogRef } from "@angular/material/dialog";
+import { MatDialogRef, MatDialogModule } from "@angular/material/dialog";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
+import { ReactiveFormsModule } from "@angular/forms";
+import { TranslateModule } from "@ngx-translate/core";
 import { IdentityService } from "../../../../services";
 import { IUserDropdown } from "../../../../interfaces";
 import { UntypedFormControl } from "@angular/forms";
@@ -11,9 +15,13 @@ import { map, startWith } from "rxjs/operators";
         standalone: true,
     selector: "request-behalf",
     templateUrl: "./request-behalf.component.html",
-,
     imports: [
-        CommonModule
+        CommonModule,
+        MatFormFieldModule,
+        MatAutocompleteModule,
+        MatDialogModule,
+        ReactiveFormsModule,
+        TranslateModule,
     ]
 })
 export class RequestBehalfComponent implements OnInit {

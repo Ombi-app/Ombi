@@ -23,6 +23,7 @@ namespace Ombi.Test.Common
             mgr.Setup(x => x.Users).Returns(userMock);
             mgr.Setup(x => x.DeleteAsync(It.IsAny<OmbiUser>())).ReturnsAsync(IdentityResult.Success);
             mgr.Setup(x => x.CreateAsync(It.IsAny<OmbiUser>(), It.IsAny<string>())).ReturnsAsync(IdentityResult.Success).Callback<OmbiUser, string>((x, y) => ls.Add(x));
+            mgr.Setup(x => x.CreateAsync(It.IsAny<OmbiUser>())).ReturnsAsync(IdentityResult.Success).Callback<OmbiUser>(ls.Add);
             mgr.Setup(x => x.UpdateAsync(It.IsAny<OmbiUser>())).ReturnsAsync(IdentityResult.Success);
 
             return mgr;

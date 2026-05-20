@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Ombi.Api.External.MediaServers.Plex.Models;
+using Ombi.Api.External.MediaServers.Plex.Models.Community;
 using Ombi.Api.External.MediaServers.Plex.Models.Friends;
 using Ombi.Api.External.MediaServers.Plex.Models.OAuth;
 using Ombi.Api.External.MediaServers.Plex.Models.Server;
@@ -70,6 +71,10 @@ namespace Ombi.Api.External.MediaServers.Plex
         private const string GetAccountUri = "https://plex.tv/users/account.json";
         private const string ServerUri = "https://plex.tv/api/resources";
         private const string WatchlistUri = "https://discover.provider.plex.tv/";
+        private const string CommunityApiUri = "https://community.plex.tv/api";
+
+        private const string AllFriendsQuery = @"query GetAllFriends { allFriendsV2 { user { id username displayName avatar } createdAt } }";
+        private const string UserWatchlistQuery = @"query GetWatchlistHub($user: UserInput!, $first: PaginationInt!, $after: String) { userV2(user: $user) { ... on User { watchlist(first: $first, after: $after) { nodes { id title type } pageInfo { hasNextPage endCursor } } } } }";
 
         /// <summary>
         /// Sign into the Plex API
@@ -344,6 +349,36 @@ namespace Ombi.Api.External.MediaServers.Plex
             var result = await Api.Request<PlexWatchlistMetadataContainer>(request, cancellationToken);
 
             return result;
+        }
+
+        public async Task<PlexCommunityFriendsResponse> GetAllFriends(string adminToken, CancellationToken cancellationToken)
+        {
+            var request = new Request(string.Empty, CommunityApiUri, HttpMethod.Post);
+            request.IgnoreBaseUrlAppend = true;
+            await AddHeaders(request, adminToken);
+            request.AddJsonBody(new { query = AllFriendsQuery, operationName = "GetAllFriends" });
+
+            return await Api.Request<PlexCommunityFriendsResponse>(request, cancellationToken);
+        }
+
+        public async Task<PlexCommunityWatchlistResponse> GetWatchlistForUser(string adminToken, string plexUserId, string afterCursor, CancellationToken cancellationToken)
+        {
+            var request = new Request(string.Empty, CommunityApiUri, HttpMethod.Post);
+            request.IgnoreBaseUrlAppend = true;
+            await AddHeaders(request, adminToken);
+            request.AddJsonBody(new
+            {
+                query = UserWatchlistQuery,
+                operationName = "GetWatchlistHub",
+                variables = new
+                {
+                    user = new { id = plexUserId },
+                    first = 100,
+                    after = afterCursor
+                }
+            });
+
+            return await Api.Request<PlexCommunityWatchlistResponse>(request, cancellationToken);
         }
 
         /// <summary>

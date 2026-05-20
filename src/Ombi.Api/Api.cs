@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting;
 using Ombi.Helpers;
 using Polly;
 
@@ -16,14 +17,18 @@ namespace Ombi.Api
 {
     public class Api : IApi
     {
-        public Api(ILogger<Api> log, HttpClient client)
+        public Api(ILogger<Api> log, HttpClient client, ICacheService cacheService, IHostEnvironment hostEnvironment)
         {
             Logger = log;
             _client = client;
+            _cacheService = cacheService;
+            _hostEnvironment = hostEnvironment;
         }
 
         private ILogger<Api> Logger { get; }
         private readonly HttpClient _client;
+        private readonly ICacheService _cacheService;
+        private readonly IHostEnvironment _hostEnvironment;
 
         public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
@@ -33,10 +38,47 @@ namespace Ombi.Api
 
         public async Task<T> Request<T>(Request request, CancellationToken cancellationToken = default(CancellationToken))
         {
+            // Check if caching should be used
+            var shouldCache = ShouldCacheRequest(request);
+
+            if (shouldCache)
+            {
+                var cacheKey = GenerateCacheKey(request);
+                Logger.LogDebug($"ApiCache: Checking cache for {request.HttpMethod.Method} {request.FullUri}");
+
+                try
+                {
+                    return await _cacheService.GetOrAddAsync(cacheKey, async () =>
+                    {
+                        Logger.LogDebug($"ApiCache: MISS for {request.HttpMethod.Method} {request.FullUri}");
+                        return await ExecuteRequest<T>(request, cancellationToken);
+                    }, DateTimeOffset.UtcNow.Add(request.CacheDuration.Value));
+                }
+                catch (JsonException ex)
+                {
+                    // Deserialization failed - evict cache and retry
+                    Logger.LogWarning(ex, $"ApiCache: Deserialization failed for {request.FullUri}, evicting and retrying");
+                    _cacheService.Remove(cacheKey);
+                    return await ExecuteRequest<T>(request, cancellationToken);
+                }
+                catch (Exception ex)
+                {
+                    // Cache service failed - log and proceed without cache
+                    Logger.LogWarning(ex, $"ApiCache: Cache read failed for {request.FullUri}, proceeding without cache");
+                    return await ExecuteRequest<T>(request, cancellationToken);
+                }
+            }
+
+            // No caching - execute request directly
+            return await ExecuteRequest<T>(request, cancellationToken);
+        }
+
+        private async Task<T> ExecuteRequest<T>(Request request, CancellationToken cancellationToken)
+        {
             using (var httpRequestMessage = new HttpRequestMessage(request.HttpMethod, request.FullUri))
             {
                 AddHeadersBody(request, httpRequestMessage);
-                
+
                 var httpResponseMessage = await _client.SendAsync(httpRequestMessage, cancellationToken);
 
                 if (!httpResponseMessage.IsSuccessStatusCode)
@@ -72,6 +114,23 @@ namespace Ombi.Api
                     }
                 }
 
+                // Only cache successful responses
+                if (!httpResponseMessage.IsSuccessStatusCode)
+                {
+                    // For failed responses, don't cache - just deserialize and return
+                    var errorString = await httpResponseMessage.Content.ReadAsStringAsync(cancellationToken);
+                    LogDebugContent(errorString);
+                    if (request.ContentType == ContentType.Json)
+                    {
+                        request.OnBeforeDeserialization?.Invoke(errorString);
+                        return JsonConvert.DeserializeObject<T>(errorString, Settings);
+                    }
+                    else
+                    {
+                        return DeserializeXml<T>(errorString);
+                    }
+                }
+
                 // do something with the response
                 var receivedString = await httpResponseMessage.Content.ReadAsStringAsync(cancellationToken);
                 LogDebugContent(receivedString);
@@ -86,7 +145,40 @@ namespace Ombi.Api
                     return DeserializeXml<T>(receivedString);
                 }
             }
+        }
 
+        private bool ShouldCacheRequest(Request request)
+        {
+            // Only cache GET requests
+            if (request.HttpMethod != HttpMethod.Get)
+            {
+                return false;
+            }
+
+            // Don't cache in Development environment
+            if (_hostEnvironment.IsDevelopment())
+            {
+                return false;
+            }
+
+            // Don't cache if CacheDuration is not set
+            if (!request.CacheDuration.HasValue || request.CacheDuration.Value <= TimeSpan.Zero)
+            {
+                return false;
+            }
+
+            // Don't cache if explicitly bypassed
+            if (request.BypassCache)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private string GenerateCacheKey(Request request)
+        {
+            return $"ApiCache:{request.HttpMethod.Method}:{request.FullUri}";
         }
 
         public T DeserializeXml<T>(string receivedString)

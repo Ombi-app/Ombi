@@ -74,7 +74,7 @@ export class CarouselListComponent {
         return "DiscoverOptions" + this.discoverType().toString();
     };
     
-    private amountToLoad = 10;
+    private amountToLoad = 20;
     private currentlyLoaded = 0;
     public responsiveOptions: any;
 
@@ -186,7 +186,7 @@ export class CarouselListComponent {
         await this.loadData(false);
         
         // If we don't have enough results to fill the carousel, load one more batch
-        if (this.discoverResults().length < 10) {
+        if (this.discoverResults().length < 20) {
             await this.loadData(false);
         }
     }
@@ -204,44 +204,46 @@ export class CarouselListComponent {
 
         var end = this.carousel.page >= (this.carousel.totalDots() - 2) || this.carousel.totalDots() === 1;
         if (end) {
+            var offset = this.currentlyLoaded;
             var moviePromise: Promise<void>;
             var tvPromise: Promise<void>;
             switch (+this.discoverOptions()) {
                 case DiscoverOption.Combined:
-                    moviePromise = this.loadMovies();
-                    tvPromise = this.loadTv();
+                    moviePromise = this.loadMovies(offset);
+                    tvPromise = this.loadTv(offset);
                     break;
                 case DiscoverOption.Movie:
-                    moviePromise = this.loadMovies();
+                    moviePromise = this.loadMovies(offset);
                     break;
                 case DiscoverOption.Tv:
-                    tvPromise = this.loadTv();
+                    tvPromise = this.loadTv(offset);
                     break;
             }
-            await moviePromise;
-            await tvPromise;
+            await Promise.all([moviePromise, tvPromise].filter(Boolean));
+            this.currentlyLoaded += this.amountToLoad;
 
             this.createModel();
         }
     }
 
     private async loadData(clearExisting: boolean = true) {
+        var offset = this.currentlyLoaded;
         var moviePromise: Promise<void>;
         var tvPromise: Promise<void>;
         switch (+this.discoverOptions()) {
             case DiscoverOption.Combined:
-                moviePromise = this.loadMovies();
-                tvPromise = this.loadTv();
+                moviePromise = this.loadMovies(offset);
+                tvPromise = this.loadTv(offset);
                 break;
             case DiscoverOption.Movie:
-                moviePromise = this.loadMovies();
+                moviePromise = this.loadMovies(offset);
                 break;
             case DiscoverOption.Tv:
-                tvPromise = this.loadTv();
+                tvPromise = this.loadTv(offset);
                 break;
         }
-        await moviePromise;
-        await tvPromise;
+        await Promise.all([moviePromise, tvPromise].filter(Boolean));
+        this.currentlyLoaded += this.amountToLoad;
         this.createInitialModel(clearExisting);
     }
 
@@ -257,44 +259,44 @@ export class CarouselListComponent {
         this.finishLoading();
     }
 
-    private async loadMovies() {
+    private async loadMovies(offset?: number) {
+        var loadOffset = offset ?? this.currentlyLoaded;
         switch (this.discoverType()) {
             case DiscoverType.Popular:
-                this.movies.set(await this.searchService.popularMoviesByPage(this.currentlyLoaded, this.amountToLoad));
+                this.movies.set(await this.searchService.popularMoviesByPage(loadOffset, this.amountToLoad));
                 break;
             case DiscoverType.Trending:
-                this.movies.set(await this.searchService.nowPlayingMoviesByPage(this.currentlyLoaded, this.amountToLoad));
+                this.movies.set(await this.searchService.nowPlayingMoviesByPage(loadOffset, this.amountToLoad));
                 break;
             case DiscoverType.Upcoming:
-                this.movies.set(await this.searchService.upcomingMoviesByPage(this.currentlyLoaded, this.amountToLoad));
+                this.movies.set(await this.searchService.upcomingMoviesByPage(loadOffset, this.amountToLoad));
                 break;
             case DiscoverType.RecentlyRequested:
-                this.movies.set(await this.searchService.recentlyRequestedMoviesByPage(this.currentlyLoaded, this.amountToLoad));
+                this.movies.set(await this.searchService.recentlyRequestedMoviesByPage(loadOffset, this.amountToLoad));
                 break;
             case DiscoverType.Seasonal:
-                this.movies.set(await this.searchService.seasonalMoviesByPage(this.currentlyLoaded, this.amountToLoad));
+                this.movies.set(await this.searchService.seasonalMoviesByPage(loadOffset, this.amountToLoad));
                 break;
         }
         this.movieCount.emit(this.movies().length);
-        this.currentlyLoaded += this.amountToLoad;
     }
 
-    private async loadTv() {
+    private async loadTv(offset?: number) {
+        var loadOffset = offset ?? this.currentlyLoaded;
         switch (this.discoverType()) {
             case DiscoverType.Popular:
-                this.tvShows.set(await this.searchService.popularTvByPage(this.currentlyLoaded, this.amountToLoad));
+                this.tvShows.set(await this.searchService.popularTvByPage(loadOffset, this.amountToLoad));
                 break;
             case DiscoverType.Trending:
-                this.tvShows.set(await this.searchService.trendingTvByPage(this.currentlyLoaded, this.amountToLoad));
+                this.tvShows.set(await this.searchService.trendingTvByPage(loadOffset, this.amountToLoad));
                 break;
             case DiscoverType.Upcoming:
-                this.tvShows.set(await this.searchService.anticipatedTvByPage(this.currentlyLoaded, this.amountToLoad));
+                this.tvShows.set(await this.searchService.anticipatedTvByPage(loadOffset, this.amountToLoad));
                 break;
             case DiscoverType.RecentlyRequested:
-                // this.tvShows = await this.searchService.recentlyRequestedMoviesByPage(this.currentlyLoaded, this.amountToLoad); // TODO need to do some more mapping
+                // this.tvShows = await this.searchService.recentlyRequestedMoviesByPage(loadOffset, this.amountToLoad); // TODO need to do some more mapping
                 break;
         }
-        this.currentlyLoaded += this.amountToLoad;
     }
 
     private createInitialModel(clearExisting: boolean = true) {
@@ -331,7 +333,7 @@ export class CarouselListComponent {
         this.movies().forEach(m => {
             tempResults.push({
                 available: m.available,
-                posterPath: m.posterPath ? `https://image.tmdb.org/t/p/w500/${m.posterPath}` : this.baseUrl + "/images/default_movie_poster.png",
+                posterPath: m.posterPath ? `https://image.tmdb.org/t/p/w500${m.posterPath}` : this.baseUrl + "/images/default_movie_poster.png",
                 requested: m.requested,
                 title: m.title,
                 type: RequestType.movie,
@@ -351,9 +353,10 @@ export class CarouselListComponent {
     private mapTvModel(): IDiscoverCardResult[] {
         const tempResults = <IDiscoverCardResult[]>[];
         this.tvShows().forEach(m => {
+            const poster = m.posterPath || m.backdropPath;
             tempResults.push({
-                available: m.fullyAvailable,
-                posterPath: m.backdropPath ? `https://image.tmdb.org/t/p/w500/${m.backdropPath}` :  this.baseUrl + "/images/default_tv_poster.png",
+                available: m.fullyAvailable || m.partlyAvailable,
+                posterPath: poster ? `https://image.tmdb.org/t/p/w500${poster}` :  this.baseUrl + "/images/default_tv_poster.png",
                 requested: m.requested,
                 title: m.title,
                 type: RequestType.tvShow,
@@ -364,7 +367,7 @@ export class CarouselListComponent {
                 approved: m.approved || m.partlyAvailable,
                 imdbid: m.imdbId,
                 denied: false,
-                background: m.background
+                background: m.backdropPath
             });
         });
         return tempResults;

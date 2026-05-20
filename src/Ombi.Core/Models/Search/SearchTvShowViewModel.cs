@@ -59,5 +59,6 @@ namespace Ombi.Core.Models.Search
         public override RequestType Type => RequestType.TvShow;
 
         public string BackdropPath { get; set; }
+        public string PosterPath { get; set; }
     }
 }

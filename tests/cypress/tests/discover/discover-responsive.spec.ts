@@ -17,10 +17,10 @@ describe("Discover Responsive Tests", () => {
       Page.visit();
 
       cy.wait("@moviePopular").then((intecept) => {
-        const id = intecept.response.body[0].id;
+        const id = intecept.response!.body[0].id;
         const card = Page.popularCarousel.getCard(id, true, DiscoverType.Popular);
         card.title.realHover();
-        card.verifyTitle(intecept.response.body[0].title);
+        card.verifyTitle(intecept.response!.body[0].title);
       })
     })
   })

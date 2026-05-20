@@ -1,62 +1,117 @@
-<div class="small-middle-container">
-<fieldset>
-    <legend>Mass Email</legend>
-<div class="row">
-    <div class="col-md-6">
-
-        <div class="form-group">
-            <mat-form-field>
-                <mat-label>Subject</mat-label>
-                <input matInput type="text" id="subject" name="subject" placeholder="Subject" [(ngModel)]="subject" [ngClass]="{'form-error': missingSubject}">
-                <small *ngIf="missingSubject" class="error-text">Hey! We need a subject!</small>
-            </mat-form-field>
-        </div>
-
-        <div class="form-group">
-            <mat-form-field appearance="outline">
-              <mat-label>Content</mat-label>
-              <textarea matInput rows="10" type="text" id="themeContent" name="themeContent" [(ngModel)]="message" placeholder="This supports HTML"></textarea>
-            </mat-form-field>
-        </div>
-
-        <div class="form-group">
-            <label for="logo" class="control-label">Message Preview</label>
-            <br/>
-            <small>May appear differently on email clients</small>
-            <mat-divider></mat-divider>
-            <div [innerHTML]="message"></div>
-            <mat-divider></mat-divider>
-        </div>
-
-        <small>This will send out the Mass email BCC'ing all of the selected users rather than sending individual messages</small>
-        <div class="md-form-field">
-            <mat-slide-toggle [(ngModel)]="bcc">BCC</mat-slide-toggle>
-        </div>
-        <br>
-        <br>
-        <div class="form-group">
-            <div>
-                <button type="submit" id="save" (click)="send()" class="mat-focus-indicator btn-spacing mat-raised-button mat-button-base mat-accent">Send</button>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <!--Users Section-->
-         <label class="control-label">Recipients with Email Addresses</label>
-        <div class="form-group">
-            <div class="md-form-field">
-                <mat-slide-toggle (change)="selectAllUsers($event)">Select All</mat-slide-toggle>
-              </div>
-            </div>
-
-            <div class="form-group" *ngFor="let u of users">
-                <div class="md-form-field">
-                    <mat-slide-toggle id="user{{u.user.id}}" [(ngModel)]="u.selected">{{u.user.userName}} ({{u.user.emailAddress}})</mat-slide-toggle>
-                  </div>
+<section class="mass-email">
+    <div class="mass-email__layout">
+        <mat-card appearance="outlined" class="mass-email__card mass-email__card--main">
+            <mat-card-header>
+                <div mat-card-avatar class="mass-email__avatar" aria-hidden="true">
+                    <mat-icon>forward_to_inbox</mat-icon>
                 </div>
+                <mat-card-title>Mass email</mat-card-title>
+                <mat-card-subtitle>Send a one-off email to any subset of your Ombi users.</mat-card-subtitle>
+            </mat-card-header>
+
+            @if (sending) {
+                <mat-progress-bar mode="indeterminate" aria-label="Sending mass email"></mat-progress-bar>
+            }
+
+            <mat-card-content class="mass-email__content">
+                @if (!emailEnabled) {
+                    <div class="mass-email__warning" role="status">
+                        <mat-icon aria-hidden="true">warning</mat-icon>
+                        <span>Email notifications are not configured yet. Configure SMTP under
+                            <strong>Notifications &rarr; Email</strong> before sending.</span>
+                    </div>
+                }
+
+                <mat-form-field appearance="outline" class="mass-email__field">
+                    <mat-label>Subject</mat-label>
+                    <input matInput name="subject"
+                           [(ngModel)]="subject"
+                           [class.mass-email__error]="missingSubject"
+                           autocomplete="off">
+                    @if (missingSubject) {
+                        <mat-error>Hey! We need a subject!</mat-error>
+                    }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="mass-email__field">
+                    <mat-label>Content</mat-label>
+                    <textarea matInput rows="10" name="content"
+                              [(ngModel)]="message"
+                              placeholder="HTML is supported."></textarea>
+                    <mat-hint>HTML is supported. Preview is shown below.</mat-hint>
+                </mat-form-field>
+
+                <div class="mass-email__preview">
+                    <div class="mass-email__preview-header">
+                        <mat-icon aria-hidden="true">visibility</mat-icon>
+                        <span>Message preview</span>
+                        <small>Appearance varies between email clients.</small>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <div class="mass-email__preview-body" [innerHTML]="message"></div>
+                    <mat-divider></mat-divider>
+                </div>
+
+                <div class="mass-email__bcc">
+                    <mat-slide-toggle color="primary" [(ngModel)]="bcc"
+                                      matTooltip="When enabled, recipients are BCC'd into a single email instead of receiving individual messages.">
+                        BCC recipients
+                    </mat-slide-toggle>
+                </div>
+
+                <div class="mass-email__actions">
+                    <button mat-flat-button color="primary" type="button"
+                            [disabled]="sending || selectedCount === 0"
+                            (click)="send()">
+                        <mat-icon>send</mat-icon>
+                        {{ sending ? 'Sending…' : 'Send to ' + selectedCount + ' user' + (selectedCount === 1 ? '' : 's') }}
+                    </button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card appearance="outlined" class="mass-email__card mass-email__card--recipients">
+            <mat-card-header>
+                <div mat-card-avatar class="mass-email__avatar" aria-hidden="true">
+                    <mat-icon>group</mat-icon>
+                </div>
+                <mat-card-title>Recipients</mat-card-title>
+                <mat-card-subtitle>
+                    @if (loadingUsers) {
+                        Loading users…
+                    } @else {
+                        {{ selectedCount }} of {{ users.length }} selected
+                    }
+                </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                @if (!loadingUsers) {
+                    @if (users.length) {
+                        <div class="mass-email__select-all">
+                            <mat-slide-toggle color="primary"
+                                              [checked]="allSelected"
+                                              (change)="selectAllUsers($event)">
+                                Select all
+                            </mat-slide-toggle>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <ul class="mass-email__user-list">
+                            @for (u of users; track u.user.id) {
+                                <li>
+                                    <mat-slide-toggle color="primary"
+                                                      [id]="'user' + u.user.id"
+                                                      [(ngModel)]="u.selected">
+                                        <span class="mass-email__user-name">{{ u.user.userName }}</span>
+                                        <span class="mass-email__user-email">{{ u.user.emailAddress }}</span>
+                                    </mat-slide-toggle>
+                                </li>
+                            }
+                        </ul>
+                    } @else {
+                        <p class="mass-email__empty">No users with email addresses found.</p>
+                    }
+                }
+            </mat-card-content>
+        </mat-card>
     </div>
-</div>
-
-
-</fieldset>
-</div>
+</section>

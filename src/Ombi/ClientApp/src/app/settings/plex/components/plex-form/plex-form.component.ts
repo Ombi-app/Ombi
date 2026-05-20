@@ -1,9 +1,25 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatSelectModule } from "@angular/material/select";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { IPlexServer, IPlexDeviceResponse, IPlexServerViewModel } from "app/interfaces";
 import { PlexCreds, PlexSyncType } from "../models";
+import { PlexFormFieldComponent } from "../form-field/plex-form-field.component";
 
 @Component({
-        standalone: false,
+        standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatSlideToggleModule,
+        PlexFormFieldComponent,
+    ],
     templateUrl: "./plex-form.component.html",
     styleUrls: ["./plex-form.component.scss"],
     selector: "settings-plex-form"

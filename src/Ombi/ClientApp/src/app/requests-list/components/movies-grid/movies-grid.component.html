@@ -1,198 +1,150 @@
-<div class="mat-elevation-z8">
-	<grid-spinner [loading]="isLoadingResults"></grid-spinner>
+<!-- Filter Bar -->
+<div class="filter-bar">
+  <div class="filter-chips">
+    <button *ngFor="let filter of filterOptions" type="button" class="chip"
+      [id]="filter.id" [class.active]="currentFilter === filter.type"
+      [attr.aria-pressed]="currentFilter === filter.type"
+      (click)="switchFilter(filter.type)">
+      {{ filter.label | translate }}
+    </button>
+  </div>
 
-	<!-- <div class="row"> -->
-	<div class="row justify-content-md-center top-spacing">
-		<div class="btn-group" role="group">
-			<button
-				type="button"
-				id="filterAll"
-				(click)="switchFilter(RequestFilter.All)"
-				[attr.color]="currentFilter === RequestFilter.All ? 'accent' : 'primary'"
-				[ngClass]="currentFilter === RequestFilter.All ? 'mat-accent' : 'mat-primary'"
-				mat-raised-button
-				class="grow"
-			>
-				{{ 'Requests.AllRequests' | translate }}
-			</button>
-			<button
-				type="button"
-				id="filterPending"
-				(click)="switchFilter(RequestFilter.Pending)"
-				[attr.color]="currentFilter === RequestFilter.Pending ? 'accent' : 'primary'"
-				[ngClass]="currentFilter === RequestFilter.Pending ? 'mat-accent' : 'mat-primary'"
-				mat-raised-button
-				class="grow"
-			>
-				{{ 'Requests.PendingRequests' | translate }}
-			</button>
-			<button
-				type="button"
-				id="filterProcessing"
-				(click)="switchFilter(RequestFilter.Processing)"
-				[attr.color]="currentFilter === RequestFilter.Processing ? 'accent' : 'primary'"
-				[ngClass]="currentFilter === RequestFilter.Processing ? 'mat-accent' : 'mat-primary'"
-				mat-raised-button
-				class="grow"
-			>
-				{{ 'Requests.ProcessingRequests' | translate }}
-			</button>
-			<button
-				type="button"
-				id="filterAvailable"
-				(click)="switchFilter(RequestFilter.Available)"
-				[attr.color]="currentFilter === RequestFilter.Available ? 'accent' : 'primary'"
-				[ngClass]="currentFilter === RequestFilter.Available ? 'mat-accent' : 'mat-primary'"
-				mat-raised-button
-				class="grow"
-			>
-				{{ 'Requests.AvailableRequests' | translate }}
-			</button>
-			<button
-				type="button"
-				id="filterDenied"
-				(click)="switchFilter(RequestFilter.Denied)"
-				[attr.color]="currentFilter === RequestFilter.Denied ? 'accent' : 'primary'"
-				[ngClass]="currentFilter === RequestFilter.Denied ? 'mat-accent' : 'mat-primary'"
-				mat-raised-button
-				class="grow"
-			>
-				{{ 'Requests.DeniedRequests' | translate }}
-			</button>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col-md-2 offset-md-10">
-			<mat-form-field>
-				<mat-select
-					id="requestsToDisplayDropdown"
-					placeholder="{{ 'Requests.RequestsToDisplay' | translate }}"
-					[(value)]="gridCount"
-					(selectionChange)="ngAfterViewInit()"
-				>
-					<mat-option value="10">10</mat-option>
-					<mat-option value="15">15</mat-option>
-					<mat-option value="30">30</mat-option>
-					<mat-option value="100">100</mat-option>
-				</mat-select>
-			</mat-form-field>
-		</div>
-	</div>
-	<!-- </div> -->
-	<table
-		mat-table
-		[dataSource]="dataSource"
-		class="requests table"
-		matSort
-		[matSortActive]="defaultSort"
-		matSortDisableClear
-		[matSortDirection]="defaultOrder"
-	>
-		<ng-container matColumnDef="select" *ngIf="isAdmin">
-			<th mat-header-cell *matHeaderCellDef>
-				<mat-checkbox
-					id="adminMasterCheckbox"
-					(change)="$event ? masterToggle() : null"
-					[checked]="selection.hasValue() && isAllSelected()"
-					[indeterminate]="selection.hasValue() && !isAllSelected()"
-				>
-				</mat-checkbox>
-			</th>
-			<td mat-cell *matCellDef="let row">
-				<mat-checkbox
-					id="adminMasterCheckbox{{ row.id }}"
-					(click)="$event.stopPropagation()"
-					(change)="$event ? selection.toggle(row) : null"
-					[checked]="selection.isSelected(row)"
-				>
-				</mat-checkbox>
-			</td>
-		</ng-container>
-
-		<ng-container matColumnDef="title">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>{{ 'Requests.RequestsTitle' | translate }}</th>
-			<td mat-cell id="title{{ element.id }}" *matCellDef="let element">{{ element.title }} ({{ element.releaseDate | ombiDate: 'P' }})</td>
-		</ng-container>
-
-		<ng-container matColumnDef="requestedUser.requestedBy">
-			<th mat-header-cell *matHeaderCellDef>{{ 'Requests.RequestedBy' | translate }}</th>
-			<td mat-cell id="requestedBy{{ element.id }}" *matCellDef="let element">
-				{{ element.requestedByAlias ? element.requestedByAlias : element.requestedUser?.userAlias }}
-			</td>
-		</ng-container>
-
-		<ng-container matColumnDef="requestedDate">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>{{ 'Requests.RequestDate' | translate }}</th>
-			<td mat-cell id="requestedDate{{ element.id }}" *matCellDef="let element">{{ getRequestDate(element) | ombiDate: 'PP' }}</td>
-		</ng-container>
-
-		<ng-container matColumnDef="status">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>{{ 'Requests.Status' | translate }}</th>
-			<td mat-cell id="status{{ element.id }}" *matCellDef="let element">{{ element.status | translateStatus }}</td>
-		</ng-container>
-
-		<ng-container matColumnDef="has4kRequest">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>{{ 'Requests.Has4KRequest' | translate }}</th>
-			<td mat-cell id="has4kRequest{{ element.id }}" *matCellDef="let element">
-				<i *ngIf="element.has4KRequest" class="fas fa-check"></i>
-				<i *ngIf="!element.has4KRequest" class="fas fa-times"></i>
-			</td>
-		</ng-container>
-
-		<ng-container matColumnDef="requestStatus">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>{{ 'Requests.RequestStatus' | translate }}</th>
-			<td mat-cell id="requestedStatus{{ element.id }}" *matCellDef="let element">{{ element.requestStatus | translate }}</td>
-		</ng-container>
-
-		<ng-container matColumnDef="watchedByRequestedUser">
-			<th mat-header-cell *matHeaderCellDef disableClear matTooltip="{{ 'Requests.WatchedTooltip' | translate }}">
-				{{ 'Requests.Watched' | translate }}
-			</th>
-			<td mat-cell id="watchedByRequestedUser{{ element.id }}" *matCellDef="let element">
-				<mat-checkbox
-					[checked]="element.watchedByRequestedUser"
-					disabled="true"
-					matTooltip="{{ 'Requests.WatchedByUsersCount' | translate: { count: element.playedByUsersCount } }}"
-				>
-				</mat-checkbox>
-			</td>
-		</ng-container>
-
-		<ng-container matColumnDef="actions">
-			<th mat-header-cell *matHeaderCellDef></th>
-			<td mat-cell *matCellDef="let element">
-				<a id="detailsButton{{ element.id }}" mat-raised-button color="accent" [routerLink]="'/details/movie/' + element.theMovieDbId">{{
-					'Requests.Details' | translate
-				}}</a>
-				<a
-					id="optionsButton{{ element.id }}"
-					mat-raised-button
-					color="warn"
-					(click)="openOptions(element)"
-					*ngIf="isAdmin || (manageOwnRequests && element.requestedUser?.userName == userName)"
-				>
-					{{ 'Requests.Options' | translate }}</a
-				>
-			</td>
-		</ng-container>
-
-		<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-		<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-	</table>
-
-	<mat-paginator [length]="resultsLength" [pageSize]="gridCount"></mat-paginator>
+  <div class="filter-actions">
+    <div class="sort-control" *ngIf="isAdmin">
+      <mat-checkbox
+        id="adminMasterCheckbox"
+        [attr.aria-label]="'Requests.SelectAll' | translate"
+        (change)="$event ? masterToggle() : null"
+        [checked]="selection.hasValue() && isAllSelected()"
+        [indeterminate]="selection.hasValue() && !isAllSelected()"
+      ></mat-checkbox>
+      <span class="select-label">{{ 'Requests.SelectAll' | translate }}</span>
+    </div>
+    <mat-form-field class="display-count" appearance="outline">
+      <mat-select
+        [(value)]="gridCount"
+        (selectionChange)="onGridCountChange()"
+        [aria-label]="'Requests.GridSize' | translate"
+      >
+        <mat-option *ngFor="let count of gridCountOptions" [value]="count">{{ count }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 </div>
 
-<button id="bulkFab" *ngIf="selection.hasValue() && isAdmin" mat-fab color="accent" class="floating-fab" [matMenuTriggerFor]="aboveMenu">
-	<i class="fas fa-bars"></i>
+<!-- Loading State -->
+<grid-spinner [loading]="isLoadingResults"></grid-spinner>
+
+<!-- Card Grid -->
+<div class="card-grid" *ngIf="dataSource && dataSource.data.length > 0">
+  <div class="request-card" *ngFor="let item of dataSource.data" [class.selected]="selection.isSelected(item)">
+    <!-- Selection Checkbox -->
+    <div class="card-select" *ngIf="isAdmin" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+      <mat-checkbox
+        [id]="'adminSelectCheckbox' + item.theMovieDbId"
+        [attr.aria-label]="('Requests.Select' | translate: { title: item.title })"
+        (change)="$event ? selection.toggle(item) : null"
+        [checked]="selection.isSelected(item)"
+      ></mat-checkbox>
+    </div>
+
+    <!-- Poster -->
+    <a class="card-poster" [routerLink]="'/details/movie/' + item.theMovieDbId">
+      <img *ngIf="item.posterPath" [src]="'https://image.tmdb.org/t/p/w300' + item.posterPath" [alt]="item.title" loading="lazy" />
+      <div *ngIf="!item.posterPath" class="no-poster">
+        <i class="fas fa-film"></i>
+      </div>
+      <div class="poster-overlay">
+        <span class="view-details">{{ 'Requests.Details' | translate }}</span>
+      </div>
+    </a>
+
+    <!-- Card Body -->
+    <div class="card-body">
+      <div class="card-header">
+        <h3 class="card-title" [id]="'title' + item.theMovieDbId"><a [routerLink]="'/details/movie/' + item.theMovieDbId">{{ item.title }}</a></h3>
+        <span class="card-year">{{ item.releaseDate | ombiDate: 'P' }}</span>
+      </div>
+
+      <!-- Status Badge -->
+      <div class="status-row">
+        <span class="status-badge" [id]="'requestedStatus' + item.theMovieDbId" [ngClass]="getStatusClass(item)">
+          {{ item.requestStatus | translate }}
+        </span>
+        <span *ngIf="item.has4KRequest" class="badge-4k">4K</span>
+      </div>
+
+      <!-- Meta Info -->
+      <div class="card-meta">
+        <div class="meta-item">
+          <i class="fas fa-user"></i>
+          <span [id]="'requestedBy' + item.theMovieDbId">{{ item.requestedByAlias || item.requestedUser?.userAlias }}</span>
+        </div>
+        <div class="meta-item">
+          <i class="fas fa-calendar-alt"></i>
+          <span [id]="'requestedDate' + item.theMovieDbId">{{ getRequestDate(item) | ombiDate: 'PP' }}</span>
+        </div>
+        <div class="meta-item" *ngIf="item.status">
+          <i class="fas fa-info-circle"></i>
+          <span [id]="'status' + item.theMovieDbId">{{ item.status | translateStatus }}</span>
+        </div>
+        <div class="meta-item watched" *ngIf="isPlayedSyncEnabled && item.watchedByRequestedUser">
+          <i class="fas fa-eye"></i>
+          <span>{{ 'Requests.Watched' | translate }}</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="card-actions">
+        <button class="btn-detail" type="button" [id]="'detailsButton' + item.theMovieDbId" [routerLink]="'/details/movie/' + item.theMovieDbId">
+          {{ 'Requests.Details' | translate }}
+        </button>
+        <button class="btn-options" type="button"
+          [id]="'optionsButton' + item.theMovieDbId"
+          [attr.aria-label]="'Requests.Options' | translate"
+          (click)="openOptions(item)"
+          *ngIf="isAdmin || (manageOwnRequests && item.requestedUser?.userName === userName)">
+          <i class="fas fa-ellipsis-h"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Empty State -->
+<div class="empty-state" *ngIf="dataSource && dataSource.data.length === 0 && !isLoadingResults">
+  <i class="fas fa-film empty-icon"></i>
+  <h3>{{ 'Requests.NoRequests' | translate }}</h3>
+</div>
+
+<!-- Paginator -->
+<mat-paginator [length]="resultsLength" [pageSize]="gridCount" showFirstLastButtons></mat-paginator>
+
+<!-- Bulk Action FAB -->
+<button *ngIf="selection.hasValue() && isAdmin" id="bulkFab" class="fab-button" [matMenuTriggerFor]="aboveMenu"
+  [attr.aria-label]="'Requests.BulkActions' | translate: { count: selection.selected.length }">
+  <i class="fas fa-bolt"></i>
+  <span class="fab-count">{{ selection.selected.length }}</span>
 </button>
 <mat-menu #aboveMenu="matMenu" yPosition="above">
-	<button id="approveFabButton" mat-menu-item (click)="bulkApprove()">{{ 'Requests.RequestPanel.Approve' | translate }}</button>
-	<button *ngIf="is4kEnabled" id="approve4kFabButton" mat-menu-item (click)="bulkApprove4K()">
-		{{ 'Requests.RequestPanel.Approve4K' | translate }}
-	</button>
-	<button id="denyFabButton" mat-menu-item (click)="bulkDeny()">{{ 'Requests.RequestPanel.Deny' | translate }}</button>
-	<button *ngIf="is4kEnabled" id="deny4kFabButton" mat-menu-item (click)="bulkDeny4K()">{{ 'Requests.RequestPanel.Deny4K' | translate }}</button>
-	<button id="deleteFabButton" mat-menu-item (click)="bulkDelete()">{{ 'Requests.RequestPanel.Delete' | translate }}</button>
+  <button mat-menu-item id="approveFabButton" (click)="bulkApprove()">
+    <i class="fas fa-check menu-icon approve"></i>
+    {{ 'Requests.RequestPanel.Approve' | translate }}
+  </button>
+  <button *ngIf="is4kEnabled" mat-menu-item (click)="bulkApprove4K()">
+    <i class="fas fa-check-double menu-icon approve"></i>
+    {{ 'Requests.RequestPanel.Approve4K' | translate }}
+  </button>
+  <button mat-menu-item (click)="bulkDeny()">
+    <i class="fas fa-ban menu-icon deny"></i>
+    {{ 'Requests.RequestPanel.Deny' | translate }}
+  </button>
+  <button *ngIf="is4kEnabled" mat-menu-item (click)="bulkDeny4K()">
+    <i class="fas fa-times-circle menu-icon deny"></i>
+    {{ 'Requests.RequestPanel.Deny4K' | translate }}
+  </button>
+  <button mat-menu-item id="deleteFabButton" (click)="bulkDelete()">
+    <i class="fas fa-trash menu-icon delete"></i>
+    {{ 'Requests.RequestPanel.Delete' | translate }}
+  </button>
 </mat-menu>

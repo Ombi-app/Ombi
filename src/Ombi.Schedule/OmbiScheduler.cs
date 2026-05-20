@@ -45,7 +45,9 @@ namespace Ombi.Schedule
             // Job Factory through IOC container
             var jobFactory = (IJobFactory)app.GetService(typeof(IJobFactory));
             var service = (ISettingsService<JobSettings>)app.GetService(typeof(ISettingsService<JobSettings>));
+            var updateService = (ISettingsService<UpdateSettings>)app.GetService(typeof(ISettingsService<UpdateSettings>));
             var s = service.GetSettings();
+            var updateSettings = updateService.GetSettings();
             // Set job factory
             OmbiQuartz.Instance.UseJobFactory(jobFactory);
 
@@ -54,18 +56,21 @@ namespace Ombi.Schedule
             await AddEmby(s);
             await AddJellyfin(s);
             await AddDvrApps(s);
-            await AddSystem(s);
+            await AddSystem(s, updateSettings);
             await AddNotifications(s);
 
             // Run Quartz
             await OmbiQuartz.Start();
         }
 
-        private static async Task AddSystem(JobSettings s)
+        private static async Task AddSystem(JobSettings s, UpdateSettings updateSettings)
         {
             await OmbiQuartz.Instance.AddJob<IRefreshMetadata>(nameof(IRefreshMetadata), "System", null);
             await OmbiQuartz.Instance.AddJob<IIssuesPurge>(nameof(IIssuesPurge), "System", JobSettingsHelper.IssuePurge(s));
-            //OmbiQuartz.Instance.AddJob<IOmbiAutomaticUpdater>(nameof(IOmbiAutomaticUpdater), "System", JobSettingsHelper.Updater(s));
+            var updaterCron = string.IsNullOrWhiteSpace(updateSettings?.UpdateSchedule)
+                ? JobSettingsHelper.Updater(s)
+                : updateSettings.UpdateSchedule;
+            await OmbiQuartz.Instance.AddJob<IOmbiAutomaticUpdater>(nameof(IOmbiAutomaticUpdater), "System", updaterCron);
             await OmbiQuartz.Instance.AddJob<INewsletterJob>(nameof(INewsletterJob), "System", JobSettingsHelper.Newsletter(s));
             await OmbiQuartz.Instance.AddJob<IResendFailedRequests>(nameof(IResendFailedRequests), "System", JobSettingsHelper.ResendFailedRequests(s));
             await OmbiQuartz.Instance.AddJob<IMediaDatabaseRefresh>(nameof(IMediaDatabaseRefresh), "System", JobSettingsHelper.MediaDatabaseRefresh(s));

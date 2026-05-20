@@ -8,7 +8,7 @@ import { MatButtonModule } from "@angular/material/button";
     imports: [...OmbiCommonModules, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-    <button [id]="id" [type]="type" [class]="class" [data-toggle]="dataToggle" mat-raised-button [data-target]="dataTarget">{{text}}</button>
+    <button [id]="id" [type]="type" [class]="class" [attr.data-toggle]="dataToggle" mat-raised-button [attr.data-target]="dataTarget">{{text}}</button>
     `
   })
   export class ButtonComponent {

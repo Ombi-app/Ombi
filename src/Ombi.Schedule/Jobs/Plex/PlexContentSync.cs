@@ -52,6 +52,25 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly IMovieDbApi _movieApi;
         private readonly IMediaCacheService _mediaCacheService;
 
+        /// <summary>
+        /// Custom equality comparer for PlexServerContent based on the Key property
+        /// This prevents duplicate entries in HashSet based on the Plex rating key
+        /// </summary>
+        private class PlexServerContentKeyComparer : IEqualityComparer<PlexServerContent>
+        {
+            public bool Equals(PlexServerContent x, PlexServerContent y)
+            {
+                if (x == null && y == null) return true;
+                if (x == null || y == null) return false;
+                return x.Key == y.Key;
+            }
+
+            public int GetHashCode(PlexServerContent obj)
+            {
+                return obj?.Key?.GetHashCode() ?? 0;
+            }
+        }
+
         public PlexContentSync(ISettingsService<PlexSettings> plex, IPlexApi plexApi, ILogger<PlexContentSync> logger, IPlexContentRepository repo,
             IPlexEpisodeSync epsiodeSync, INotificationHubService notificationHubService, IMovieDbApi movieDbApi, IMediaCacheService mediaCacheService)
         {
@@ -173,7 +192,8 @@ namespace Ombi.Schedule.Jobs.Plex
 
 
             // Let's now process this.
-            var contentToAdd = new HashSet<PlexServerContent>();
+            // Use custom comparer to prevent duplicate entries based on Key property
+            var contentToAdd = new HashSet<PlexServerContent>(new PlexServerContentKeyComparer());
 
             var allEps = Repo.GetAllEpisodes();
 
@@ -199,16 +219,33 @@ namespace Ombi.Schedule.Jobs.Plex
                         await ProcessTvShow(servers, show, contentToAdd, contentProcessed);
                         if (contentToAdd.Any())
                         {
-                            await Repo.AddRange(contentToAdd, recentlyAddedSearch ? true : false);
-                            if (recentlyAddedSearch)
+                            // DEFENSIVE CHECK: Remove any items that already exist in the database
+                            var keysToAdd = contentToAdd.Select(x => x.Key).ToList();
+                            var existingKeys = await Repo.GetAll()
+                                .Where(x => keysToAdd.Contains(x.Key))
+                                .Select(x => x.Key)
+                                .ToListAsync();
+
+                            if (existingKeys.Any())
                             {
-                                foreach (var plexServerContent in contentToAdd)
+                                Logger.LogWarning("Found {0} items already in database during episode processing, removing from batch: {1}",
+                                    existingKeys.Count, string.Join(", ", existingKeys));
+                                contentToAdd.RemoveWhere(x => existingKeys.Contains(x.Key));
+                            }
+
+                            if (contentToAdd.Any())
+                            {
+                                await Repo.AddRange(contentToAdd, recentlyAddedSearch ? true : false);
+                                if (recentlyAddedSearch)
                                 {
-                                    if (plexServerContent.Id <= 0)
+                                    foreach (var plexServerContent in contentToAdd)
                                     {
-                                        Logger.LogInformation($"Item '{plexServerContent.Title}' has an Plex ID of {plexServerContent.Id} and a Plex Key of {plexServerContent.Key}");
+                                        if (plexServerContent.Id <= 0)
+                                        {
+                                            Logger.LogInformation($"Item '{plexServerContent.Title}' has an Plex ID of {plexServerContent.Id} and a Plex Key of {plexServerContent.Key}");
+                                        }
+                                        contentProcessed.Add(plexServerContent.Id, plexServerContent.Key);
                                     }
-                                    contentProcessed.Add(plexServerContent.Id, plexServerContent.Key);
                                 }
                             }
                             contentToAdd.Clear();
@@ -240,12 +277,29 @@ namespace Ombi.Schedule.Jobs.Plex
 
                         if (contentToAdd.Any())
                         {
-                            await Repo.AddRange(contentToAdd, false);
-                            if (recentlyAddedSearch)
+                            // DEFENSIVE CHECK: Remove any items that already exist in the database
+                            var keysToAdd = contentToAdd.Select(x => x.Key).ToList();
+                            var existingKeys = await Repo.GetAll()
+                                .Where(x => keysToAdd.Contains(x.Key))
+                                .Select(x => x.Key)
+                                .ToListAsync();
+
+                            if (existingKeys.Any())
                             {
-                                foreach (var plexServerContent in contentToAdd)
+                                Logger.LogWarning("Found {0} items already in database during TV show processing, removing from batch: {1}",
+                                    existingKeys.Count, string.Join(", ", existingKeys));
+                                contentToAdd.RemoveWhere(x => existingKeys.Contains(x.Key));
+                            }
+
+                            if (contentToAdd.Any())
+                            {
+                                await Repo.AddRange(contentToAdd, false);
+                                if (recentlyAddedSearch)
                                 {
-                                    contentProcessed.Add(plexServerContent.Id, plexServerContent.Key);
+                                    foreach (var plexServerContent in contentToAdd)
+                                    {
+                                        contentProcessed.Add(plexServerContent.Id, plexServerContent.Key);
+                                    }
                                 }
                             }
                             contentToAdd.Clear();
@@ -264,10 +318,27 @@ namespace Ombi.Schedule.Jobs.Plex
                 }
                 if (contentToAdd.Count > 500)
                 {
-                    await Repo.AddRange(contentToAdd);
-                    foreach (var c in contentToAdd)
+                    // DEFENSIVE CHECK: Remove any items that already exist in the database
+                    var keysToAdd = contentToAdd.Select(x => x.Key).ToList();
+                    var existingKeys = await Repo.GetAll()
+                        .Where(x => keysToAdd.Contains(x.Key))
+                        .Select(x => x.Key)
+                        .ToListAsync();
+
+                    if (existingKeys.Any())
                     {
-                        contentProcessed.Add(c.Id, c.Key);
+                        Logger.LogWarning("Found {0} items already in database (500+ batch), removing from batch: {1}",
+                            existingKeys.Count, string.Join(", ", existingKeys.Take(10)));
+                        contentToAdd.RemoveWhere(x => existingKeys.Contains(x.Key));
+                    }
+
+                    if (contentToAdd.Any())
+                    {
+                        await Repo.AddRange(contentToAdd);
+                        foreach (var c in contentToAdd)
+                        {
+                            contentProcessed.Add(c.Id, c.Key);
+                        }
                     }
                     contentToAdd.Clear();
                 }
@@ -275,14 +346,31 @@ namespace Ombi.Schedule.Jobs.Plex
 
             if (contentToAdd.Any())
             {
-                await Repo.AddRange(contentToAdd);
-                foreach (var c in contentToAdd)
-                {
-                    if (contentProcessed.ContainsKey(c.Id)) {
-                        continue;
-                    }
+                // DEFENSIVE CHECK: Remove any items that already exist in the database
+                var keysToAdd = contentToAdd.Select(x => x.Key).ToList();
+                var existingKeys = await Repo.GetAll()
+                    .Where(x => keysToAdd.Contains(x.Key))
+                    .Select(x => x.Key)
+                    .ToListAsync();
 
-                    contentProcessed.Add(c.Id, c.Key);
+                if (existingKeys.Any())
+                {
+                    Logger.LogWarning("Found {0} items already in database (final batch), removing from batch: {1}",
+                        existingKeys.Count, string.Join(", ", existingKeys.Take(10)));
+                    contentToAdd.RemoveWhere(x => existingKeys.Contains(x.Key));
+                }
+
+                if (contentToAdd.Any())
+                {
+                    await Repo.AddRange(contentToAdd);
+                    foreach (var c in contentToAdd)
+                    {
+                        if (contentProcessed.ContainsKey(c.Id)) {
+                            continue;
+                        }
+
+                        contentProcessed.Add(c.Id, c.Key);
+                    }
                 }
             }
 
@@ -429,10 +517,27 @@ namespace Ombi.Schedule.Jobs.Plex
 
                 if (contentToAdd.Count > 500)
                 {
-                    await Repo.AddRange(contentToAdd);
-                    foreach (var c in contentToAdd)
+                    // DEFENSIVE CHECK: Remove any items that already exist in the database
+                    var keysToAdd = contentToAdd.Select(x => x.Key).ToList();
+                    var existingKeys = await Repo.GetAll()
+                        .Where(x => keysToAdd.Contains(x.Key))
+                        .Select(x => x.Key)
+                        .ToListAsync();
+
+                    if (existingKeys.Any())
                     {
-                        contentProcessed.Add(c.Id, c.Key);
+                        Logger.LogWarning("Found {0} items already in database during movie loop, removing from batch: {1}",
+                            existingKeys.Count, string.Join(", ", existingKeys.Take(10)));
+                        contentToAdd.RemoveWhere(x => existingKeys.Contains(x.Key));
+                    }
+
+                    if (contentToAdd.Any())
+                    {
+                        await Repo.AddRange(contentToAdd);
+                        foreach (var c in contentToAdd)
+                        {
+                            contentProcessed.Add(c.Id, c.Key);
+                        }
                     }
 
                     contentToAdd.Clear();
@@ -442,6 +547,21 @@ namespace Ombi.Schedule.Jobs.Plex
 
         private async Task ProcessTvShow(PlexServers servers, Metadata show, HashSet<PlexServerContent> contentToAdd, Dictionary<int, string> contentProcessed)
         {
+            // EARLY DUPLICATE CHECK: Check if this show is already being processed in this batch FIRST
+            // This prevents duplicate processing before any database queries are made
+            if (contentProcessed.ContainsValue(show.ratingKey))
+            {
+                Logger.LogDebug("Show {0} with key {1} already processed in this batch", show.title, show.ratingKey);
+                return;
+            }
+
+            // Also check the contentToAdd HashSet (though the custom comparer should prevent this)
+            if (contentToAdd.Any(x => x.Key == show.ratingKey))
+            {
+                Logger.LogDebug("Show {0} with key {1} already in batch to be added", show.title, show.ratingKey);
+                return;
+            }
+
             var seasonList = await PlexApi.GetSeasons(servers.PlexAuthToken, servers.FullUri,
                 show.ratingKey);
             var seasonsContent = new List<PlexSeasonsContent>();

@@ -1,35 +1,71 @@
-
-h2{
-    margin-top:40px;
-    margin-left:40px;
-    font-size: 24px;
+:host {
+    display: block;
 }
 
-.discover-filter-buttons-group {
-    border: 1px solid #293a4c;
-    border-radius: 15px;
-    color:#fff;
-    margin-bottom:5px;
-    margin-right: 5px;
-  
-    .discover-filter-button{
-      
-     transform: scale(0.9);
-      background:inherit;
-      color:inherit;
-      padding:0 0px;
-      border-radius: 30px;
-      padding-left: 10px;
-      padding-right: 10px;
-      border-left:none;
+.genre-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.genre-label {
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: rgba(255, 255, 255, 0.45);
+    min-width: 56px;
+}
+
+.genre-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 4px 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+        display: none;
     }
 }
 
-.button-active{
-    background:#293a4c;
-  }
+.genre-chip-group {
+    background: transparent;
+    border: none;
+    flex-shrink: 0;
 
-.genre-container {
-    margin-left: 35px;
+    .genre-chip {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        color: rgba(255, 255, 255, 0.8);
+        padding: 0;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+    }
+
+    ::ng-deep .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+        line-height: 32px;
+        padding: 0 16px;
+        font-size: 0.85rem;
+        font-weight: 400;
+    }
+
+    ::ng-deep .mat-button-toggle-button:focus {
+        outline: none;
+    }
+
+    ::ng-deep .mat-button-toggle-button:focus-visible {
+        outline: 2px solid rgba(255, 255, 255, 0.7);
+        outline-offset: -2px;
+        border-radius: 20px;
+    }
 }
-  

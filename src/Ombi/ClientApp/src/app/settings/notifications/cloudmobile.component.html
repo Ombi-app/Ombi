@@ -1,54 +1,79 @@
-﻿
-<div *ngIf="form" class="small-middle-container">
-    <fieldset>
-        <legend>Mobile Notifications</legend>
+<ombi-notification-shell
+    providerName="Mobile"
+    icon="smartphone"
+    description="Send push notifications to the Ombi mobile apps. Devices register themselves once a user signs in."
+    [form]="form"
+    [loading]="loading"
+    [templates]="templates"
+    [showTest]="false"
+    [requireDirtyToSave]="false"
+    (submitted)="onSubmit($event)">
 
-        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
-            <div class="row">
-                <div class="col">
-
-                    <table *ngIf="devices" mat-table [dataSource]="devices" class="mat-elevation-z8">
-
-                        <ng-container matColumnDef="select">
-                            <th mat-header-cell *matHeaderCellDef>
-
-                            </th>
-                            <td mat-cell *matCellDef="let row">
-                                <mat-slide-toggle (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
-                                </mat-slide-toggle>
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="username">
-                            <th mat-header-cell *matHeaderCellDef> Username </th>
-                            <td mat-cell *matCellDef="let element"> {{element.username}} </td>
-                        </ng-container>
-
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                    </table>
-
-
-                    <div class="md-form-field">
-                        <mat-form-field>
-                            <mat-label>Message</mat-label>
-                            <textarea matInput [(ngModel)]="message" [ngModelOptions]="{standalone: true}"></textarea>
-                        </mat-form-field>
-                    </div>
-                    <div class="md-form-field">
-                        <button mat-raised-button type="button" color="primary" (click)="sendMessage(form)" [disabled]="selection.selected.length === 0">Send Notification</button>
-                    </div>
-                </div>
-                <div class="col">
-                    <notification-templates [templates]="templates" [showSubject]="false"></notification-templates>
-                </div>
-
+    <div class="notification-field--full cloudmobile">
+        <header class="cloudmobile__header">
+            <mat-icon aria-hidden="true">campaign</mat-icon>
+            <div>
+                <h3>Broadcast a notification</h3>
+                <p>Send a one-off push to the selected users. Useful for announcements or testing devices.</p>
             </div>
+        </header>
 
-            <div class="md-form-field ">
-                <div>
-                    <button mat-raised-button type="submit " color="accent" [disabled]="form.invalid ">Submit</button>
-                </div>
+        @if (devices.data.length) {
+            <table mat-table [dataSource]="devices" class="cloudmobile__table mat-elevation-z1">
+                <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox color="primary"
+                                      [checked]="allSelected()"
+                                      [indeterminate]="someSelected()"
+                                      (change)="toggleAll()"
+                                      aria-label="Select all users">
+                        </mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                        <mat-checkbox color="primary"
+                                      (click)="$event.stopPropagation()"
+                                      (change)="$event ? selection.toggle(row) : null"
+                                      [checked]="selection.isSelected(row)"
+                                      [aria-label]="'Select ' + row.username">
+                        </mat-checkbox>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="username">
+                    <th mat-header-cell *matHeaderCellDef>User</th>
+                    <td mat-cell *matCellDef="let row">{{ row.username }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="deviceCount">
+                    <th mat-header-cell *matHeaderCellDef>Devices</th>
+                    <td mat-cell *matCellDef="let row">{{ deviceCount(row) }}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+
+            <mat-form-field appearance="outline" class="cloudmobile__message">
+                <mat-label>Message</mat-label>
+                <textarea matInput rows="4"
+                          [(ngModel)]="message"
+                          [ngModelOptions]="{ standalone: true }"
+                          placeholder="What would you like to say?"></textarea>
+            </mat-form-field>
+
+            <div class="cloudmobile__actions">
+                <button mat-stroked-button color="accent" type="button"
+                        [disabled]="sending || !selection.selected.length"
+                        (click)="sendBroadcast()">
+                    <mat-icon>send</mat-icon>
+                    {{ sending ? 'Sending…' : 'Send notification' }}
+                </button>
             </div>
-        </form>
-    </fieldset>
-</div>
+        } @else {
+            <p class="cloudmobile__empty">
+                No devices have registered with this Ombi instance yet. Once a user signs into the
+                mobile app their device will appear here.
+            </p>
+        }
+    </div>
+</ombi-notification-shell>

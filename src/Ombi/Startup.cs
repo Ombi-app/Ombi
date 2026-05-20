@@ -110,7 +110,7 @@ namespace Ombi
 
             services.AddMvc();
             services.AddSignalR();
-            services.AddSpaStaticFiles(configuration => configuration.RootPath = "ClientApp/dist");
+            services.AddSpaStaticFiles(configuration => configuration.RootPath = "ClientApp/dist/browser");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -41,7 +41,7 @@ export class DetailedCardComponent implements OnInit, OnDestroy {
   @Output() public onDeny: EventEmitter<void> = new EventEmitter<void>();
 
   public RequestType = RequestType;
-  public loading: false;
+  public loading = false;
 
   private $imageSub = new Subject<void>();
 
@@ -84,6 +84,21 @@ export class DetailedCardComponent implements OnInit, OnDestroy {
 
   public deny() {
     this.onDeny.emit();
+  }
+
+  public onApproveClick(event: MouseEvent) {
+    event.stopPropagation();
+    this.onApprove.emit();
+  }
+
+  public onDenyClick(event: MouseEvent) {
+    event.stopPropagation();
+    this.onDeny.emit();
+  }
+
+  public onSpaceKey(event: KeyboardEvent) {
+    event.preventDefault();
+    this.click();
   }
 
   public getClass(request: IRecentlyRequested) {

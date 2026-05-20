@@ -134,7 +134,10 @@ namespace Ombi
 
             await SortOutBaseUrl(baseUrl, settingsDb, ombiSettingsContent);
             var httpClient = new HttpClient();
-                var api = new Ombi.Api.Api(new Logger<Api.Api>(NullLoggerFactory.Instance), httpClient);
+            // Create minimal dependencies for migration code (no caching needed during migration)
+            var nullCache = new NullCacheService();
+            var stubEnvironment = new StubHostEnvironment();
+            var api = new Ombi.Api.Api(new Logger<Api.Api>(NullLoggerFactory.Instance), httpClient, nullCache, stubEnvironment);
             await MigrateOldTvDbIds(ombiDb, ombiSettingsContent, settingsDb, new Ombi.Api.External.ExternalApis.TheMovieDb.TheMovieDbApi(null, (Api.IApi)api, null));
 
             Console.WriteLine($"We are running on {urlValue}");
@@ -262,7 +265,7 @@ namespace Ombi
                 var trimmedBaseUrl = baseUrl.EndsWith('/') ? baseUrl.TrimEnd('/') : baseUrl;
                 var process = AppContext.BaseDirectory;
                 var ombiInstalledDir = Path.GetDirectoryName(process);
-                var indexPath = Path.Combine(ombiInstalledDir, "ClientApp", "dist", "index.html");
+                var indexPath = Path.Combine(ombiInstalledDir, "ClientApp", "dist", "browser", "index.html");
                 if (!File.Exists(indexPath))
                 {
                     var error = $"Can't set the base URL because we cannot find the file at '{indexPath}', if you are trying to set a base url please report this on Github!";
@@ -359,6 +362,40 @@ namespace Ombi
             return;
 
         }
+    }
+
+    /// <summary>
+    /// Null implementation of ICacheService for startup/migration code
+    /// </summary>
+    internal class NullCacheService : ICacheService
+    {
+        public Task<T> GetOrAddAsync<T>(string cacheKey, Func<Task<T>> factory, DateTimeOffset absoluteExpiration = default)
+        {
+            // No caching - always execute the factory
+            return factory();
+        }
+
+        public T GetOrAdd<T>(string cacheKey, Func<T> factory, DateTimeOffset absoluteExpiration)
+        {
+            // No caching - always execute the factory
+            return factory();
+        }
+
+        public void Remove(string key)
+        {
+            // No-op
+        }
+    }
+
+    /// <summary>
+    /// Stub implementation of IHostEnvironment for startup/migration code
+    /// </summary>
+    internal class StubHostEnvironment : IHostEnvironment
+    {
+        public string EnvironmentName { get; set; } = "Production";
+        public string ApplicationName { get; set; } = "Ombi";
+        public string ContentRootPath { get; set; } = AppContext.BaseDirectory;
+        public Microsoft.Extensions.FileProviders.IFileProvider ContentRootFileProvider { get; set; }
     }
 
     public class Options

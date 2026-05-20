@@ -50,10 +50,12 @@ namespace Ombi.Core.Engine
 
         private bool _demo = DemoSingleton.Instance.Demo;
 
+        private const long CacheExpiryTicks = 30 * TimeSpan.TicksPerSecond; // 30 seconds
+
         protected async Task<Dictionary<int, MovieRequests>> GetMovieRequests()
         {
             var now = DateTime.Now.Ticks;
-            if (_dbMovies == null || now - _cacheTime > 10000)
+            if (_dbMovies == null || now - _cacheTime > CacheExpiryTicks)
             {
                 var allResults = await MovieRepository.GetAll().ToListAsync();
 
@@ -67,7 +69,7 @@ namespace Ombi.Core.Engine
         protected async Task<Dictionary<int, TvRequests>> GetTvRequests()
         {
             var now = DateTime.Now.Ticks;
-            if (_dbTv == null || now - _cacheTime > 10000)
+            if (_dbTv == null || now - _cacheTime > CacheExpiryTicks)
             {
                 var allResults = await TvRepository.Get().ToListAsync();
 
@@ -109,18 +111,20 @@ namespace Ombi.Core.Engine
             var movieQuery = MovieRepository.GetAll();
             var tvQuery = TvRepository.Get();
 
-            var pendingMovies = movieQuery.Count(x => !x.Approved && !x.Available);
+            var pendingMovies = movieQuery.Count(x => !x.Approved && !x.Available && !(x.Denied ?? false));
             var approvedMovies = movieQuery.Count(x => x.Approved && !x.Available);
             var availableMovies = movieQuery.Count(x => x.Available);
+            var deniedMovies = movieQuery.Count(x => x.Denied ?? false);
 
             var pendingTv = 0;
             var approvedTv = 0;
             var availableTv = 0;
+            var deniedTv = 0;
             foreach (var tv in tvQuery)
             {
                 foreach (var child in tv.ChildRequests)
                 {
-                    if (!child.Approved && !child.Available)
+                    if (!child.Approved && !child.Available && !(child.Denied ?? false))
                     {
                         pendingTv++;
                     }
@@ -132,6 +136,10 @@ namespace Ombi.Core.Engine
                     {
                         availableTv++;
                     }
+                    if (child.Denied ?? false)
+                    {
+                        deniedTv++;
+                    }
                 }
             }
 
@@ -139,7 +147,8 @@ namespace Ombi.Core.Engine
             {
                 Approved = approvedTv + approvedMovies,
                 Available = availableTv + availableMovies,
-                Pending = pendingMovies + pendingTv
+                Pending = pendingMovies + pendingTv,
+                Denied = deniedMovies + deniedTv
             };
         }
 

@@ -32,8 +32,8 @@ export default defineConfig({
     apiBaseUrl: 'http://localhost:3577/api/v1'
   },
   
-  // Project configuration
-  projectId: 'o5451s',
+  // Project configuration - can be overridden via CYPRESS_PROJECT_ID env var for multi-db CI
+  projectId: process.env.CYPRESS_PROJECT_ID || 'o5451s',
   
   e2e: {
     // Setup node events
@@ -46,7 +46,7 @@ export default defineConfig({
       on(
         "file:preprocessor",
         createBundler({
-          plugins: [createEsbuildPlugin(config)],
+          plugins: [createEsbuildPlugin(config) as any],
         })
       );
 
@@ -68,8 +68,8 @@ export default defineConfig({
     // Base configuration
     baseUrl: 'http://localhost:3577',
     specPattern: [
-      'cypress/tests/**/*.spec.ts*', 
-      'cypress/features/**/*.feature'
+      'cypress/features/**/*.feature',
+      'cypress/tests/**/*.spec.ts*'
     ],
     excludeSpecPattern: [
       '**/snapshots/*',

@@ -27,8 +27,7 @@ import { ThousandShortPipe } from "../../../../../pipes/ThousandShortPipe";
         MatChipsModule,
         MatTooltipModule,
         TranslateStatusPipe,
-        OmbiDatePipe,
-        ThousandShortPipe
+        OmbiDatePipe
     ]
 })
 export class TvInformationPanelComponent implements OnInit {

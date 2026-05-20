@@ -1,11 +1,11 @@
-﻿
+
 // import { Component, OnInit } from "@angular/core";
 
 // import { IIssueCategory } from "../interfaces";
 // import { IssuesService, SettingsService } from "../services";
 
 // @Component({
-        standalone: false,
+//         standalone: false,
 //     templateUrl: "./request.component.html",
 // })
 // export class RequestComponent implements OnInit  {

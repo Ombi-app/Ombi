@@ -93,7 +93,9 @@
             "Movies": "Pel·lícules",
             "TvShows": "Sèries de TV",
             "Music": "Música",
-            "People": "Persones"
+            "People": "Persones",
+            "Decade": "Decade",
+            "None": "None"
         },
         "MorningWelcome": "Bon dia!",
         "AfternoonWelcome": "Bon vespre!",
@@ -253,7 +255,8 @@
         "RemoveNotification": "Elimina les notificacions",
         "SuccessfulNotify": "Ara se us notificarà pel títol {{title}}",
         "SuccessfulUnNotify": "Ja no se us notificarà pel títol {{title}}",
-        "CouldntNotify": "No s'ha pogut notificar pel títol {{title}}"
+        "CouldntNotify": "No s'ha pogut notificar pel títol {{title}}",
+        "NoRequests": "No Requests"
     },
     "Issues": {
         "Title": "Incidències",
@@ -377,7 +380,12 @@
             "FirstSeasonTooltip": "Això sols demanarà la primera temporada per a aquesta sèrie",
             "LatestSeasonTooltip": "Això sols demanarà l'última temporada per a aquesta sèrie",
             "NoEpisodes": "Malauradament, encara no hi ha dades d'episodi per a aquesta sèrie!",
-            "SeasonNumber": "Temporada {{number}}"
+            "SeasonNumber": "Temporada {{number}}",
+            "OrSelectEpisodes": "or select episodes",
+            "Episodes": "Episodes",
+            "SelectAll": "Select All",
+            "EpisodeSelected": "episode selected",
+            "EpisodesSelected": "episodes selected"
         },
         "SonarrConfiguration": "Configuració de Sonarr",
         "RadarrConfiguration": "Configuració de Radarr",

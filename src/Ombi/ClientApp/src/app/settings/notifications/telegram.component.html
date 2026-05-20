@@ -1,64 +1,44 @@
-﻿
-<div *ngIf="form" class="small-middle-container">
-    <fieldset>
-        <legend>Telegram Notifications</legend>
-        <div class="col-md-6">
-            <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+<ombi-notification-shell
+    providerName="Telegram"
+    icon="send"
+    description="Notify a user, group or channel via a Telegram bot."
+    docsUrl="https://core.telegram.org/bots#6-botfather"
+    [form]="form"
+    [loading]="loading"
+    [templates]="templates"
+    (submitted)="onSubmit($event)"
+    (tested)="test($event)">
 
-                <div class="form-group">
-                    <mat-checkbox id="enable" formControlName="enabled">Enabled</mat-checkbox>
-                </div>
+    @if (form) {
+        <ng-container [formGroup]="form">
+            <mat-form-field appearance="outline">
+                <mat-label>Bot API token</mat-label>
+                <input matInput formControlName="botApi" autocomplete="off">
+                @if (form.get('botApi')?.hasError('required')) {
+                    <mat-error>Bot API token is <strong>required</strong></mat-error>
+                }
+                <mat-hint>Created via <a href="https://core.telegram.org/bots#6-botfather" target="_blank" rel="noopener noreferrer">@BotFather</a>.</mat-hint>
+            </mat-form-field>
 
+            <mat-form-field appearance="outline">
+                <mat-label>Chat ID</mat-label>
+                <input matInput formControlName="chatId" autocomplete="off">
+                @if (form.get('chatId')?.hasError('required')) {
+                    <mat-error>Chat ID is <strong>required</strong></mat-error>
+                }
+                <mat-hint>User, group or channel ID. Look it up via <a href="https://telegram.me/get_id_bot" target="_blank" rel="noopener noreferrer">@get_id_bot</a>.</mat-hint>
+            </mat-form-field>
 
-
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-label>Bot API</mat-label>
-                        <input matInput type="text" id="botApi" name="botApi" formControlName="botApi" [ngClass]="{'form-error': form.get('botApi').hasError('required')}">
-                    </mat-form-field>
-                    <small>You need a bot for Telegram notifications, You can find out how to create a bot
-                        <a href="https://core.telegram.org/bots#6-botfather">here</a>.</small>
-
-                </div>
-
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-label>Chat Id</mat-label>
-                        <input matInput type="text" id="chatId" name="chatId" formControlName="chatId" [ngClass]="{'form-error': form.get('chatId').hasError('required')}">
-                    </mat-form-field>
-                    <small>This is the Chat ID from Telegram. You can get the Chat Id from
-                        <a href="https://telegram.me/get_id_bot">here</a>. This also supports Group Chat Id's.</small>
-                </div>
-
-                <div class="form-group">
-                    <p-radioButton name="parseMode" value="markdown" formControlName="parseMode" label="Markdown Formatting"></p-radioButton>
-                </div>
-                <div class="form-group">
-                    <p-radioButton name="parseMode" value="html" formControlName="parseMode" label="Html Formatting"></p-radioButton>
-                </div>
-                <small>Select a formatting option for the messages, you can view the supported formatting <a href="https://core.telegram.org/bots/api#formatting-options">here</a>.</small>
-
-
-                <div class="form-group">
-                    <div>
-                        <button [disabled]="form.invalid" mat-raised-button type="button" (click)="test(form)">
-                            Test
-                            <div id="spinner"></div>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div>
-                        <button [disabled]="form.invalid" mat-raised-button type="submit" id="save">Submit</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-
-        <div class="col-md-6">
-            <notification-templates [templates]="templates" [showSubject]="false"></notification-templates>
-        </div>
-    </fieldset>
-</div>
+            <div class="notification-field--full"
+                 style="display:flex; flex-direction:column; gap:8px;">
+                <label id="parse-mode-label"
+                       style="font-size:0.875rem; opacity:0.8;">Message formatting</label>
+                <mat-radio-group formControlName="parseMode" aria-labelledby="parse-mode-label"
+                                 style="display:flex; gap:24px;">
+                    <mat-radio-button value="markdown" color="primary">Markdown</mat-radio-button>
+                    <mat-radio-button value="html" color="primary">HTML</mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </ng-container>
+    }
+</ombi-notification-shell>

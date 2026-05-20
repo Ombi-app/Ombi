@@ -1,0 +1,327 @@
+@use "./styles/variables.scss" as *;
+
+// Filter Bar
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.filter-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  padding: 7px 16px;
+  border-radius: 20px;
+  border: 1px solid #222;
+  background: #111;
+  color: #999;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  &:hover {
+    border-color: #444;
+    color: #d9d9d9;
+    background: #141414;
+  }
+
+  &.active {
+    background: $accent-dark;
+    border-color: $accent-dark;
+    color: #111;
+    font-weight: 600;
+  }
+}
+
+.filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.display-count {
+  width: 72px;
+
+}
+
+// Card Grid
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  animation: fade-up 0.3s ease;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// Request Card
+.request-card {
+  background: #111;
+  border: 1px solid #1a1a1a;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.25s ease;
+
+  &:hover {
+    border-color: #2a2a2a;
+    background: #141414;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+    .poster-overlay { opacity: 1; }
+  }
+
+  &.selected {
+    border-color: $accent-dark;
+    background: #0d1a1f;
+  }
+}
+
+// Poster
+.card-poster {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background: #0e0e0e;
+  text-decoration: none;
+  color: inherit;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  &:hover img { transform: scale(1.05); }
+
+  .no-poster {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #111 0%, #141414 100%);
+
+    i {
+      font-size: 2.5rem;
+      color: #333;
+    }
+  }
+}
+
+.poster-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, #0a0a0a 0%, #111 60%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 16px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+
+  .view-details {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: $accent-dark;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+// Card Body
+.card-body {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover { color: $accent-dark; }
+  }
+}
+
+.card-year {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+// Status
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+
+  &.status-available { background: #0d3d2d; color: #34d399; }
+  &.status-pending { background: #3d3010; color: #fbbf24; }
+  &.status-processing { background: #132644; color: #60a5fa; }
+  &.status-denied { background: #3d1515; color: #f87171; }
+  &.status-default { background: #1a1a1a; color: #a3a3a3; }
+}
+
+// Meta
+.card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #808080;
+
+  i {
+    width: 14px;
+    text-align: center;
+    font-size: 0.75rem;
+  }
+}
+
+// Actions
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid #1a1a1a;
+}
+
+.btn-detail {
+  flex: 1;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background: #1a1a1a;
+  color: #ccc;
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    background: $accent-dark;
+    color: #111;
+  }
+}
+
+.btn-options {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid #222;
+  background: #111;
+  color: #808080;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #444;
+    color: #fff;
+    background: #1a1a1a;
+  }
+}
+
+// Empty State
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  text-align: center;
+
+  .empty-icon {
+    font-size: 3rem;
+    color: #333;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #777;
+    margin: 0;
+  }
+}
+
+// Paginator - ViewEncapsulation requires ng-deep to style child component
+/* stylelint-disable-next-line selector-pseudo-element-no-unknown */
+:host ::ng-deep .mat-paginator { /* NOSONAR */
+  background: #111 !important;
+  color: #999;
+  margin-top: 24px;
+}
+
+// Responsive
+@media (max-width: 640px) {
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-chips {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+
+  .card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+  }
+}

@@ -36,13 +36,27 @@ namespace Ombi.Core.Rule.Rules.Search
                     x.Episodes.Any(c => !c.Available && c.AirDate <= DateTime.Now.Date && c.AirDate != DateTime.MinValue));
                 if (!airedButNotAvailable)
                 {
-                    var unairedEpisodes = search.SeasonRequests.Any(x =>
-                        x.Episodes.Any(c => !c.Available && c.AirDate > DateTime.Now.Date || c.AirDate != DateTime.MinValue));
-                    if (unairedEpisodes)
+                    var unknownAirDateUnavailable = search.SeasonRequests.Any(x =>
+                        x.Episodes.Any(c => !c.Available && c.AirDate == DateTime.MinValue));
+                    if (!unknownAirDateUnavailable)
                     {
-                        search.FullyAvailable = true;
+                        var hasUnairedEpisodes = search.SeasonRequests.Any(x =>
+                            x.Episodes.Any(c => !c.Available && c.AirDate > DateTime.Now.Date && c.AirDate != DateTime.MinValue));
+                        if (hasUnairedEpisodes || search.PartlyAvailable)
+                        {
+                            search.FullyAvailable = true;
+                        }
                     }
                 }
+            }
+
+            if (search.FullyAvailable)
+            {
+                // If fully available but some episodes have future air dates, also mark as partly available
+                // so the UI can indicate there are upcoming episodes
+                var hasUnairedEpisodes = search.SeasonRequests.Any(x =>
+                    x.Episodes.Any(e => e.AirDate != DateTime.MinValue && e.AirDate > DateTime.Now.Date));
+                search.PartlyAvailable = hasUnairedEpisodes;
             }
         }
 

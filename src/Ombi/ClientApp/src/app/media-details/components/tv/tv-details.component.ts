@@ -17,7 +17,6 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
 import { MatDialog } from "@angular/material/dialog";
 import { YoutubeTrailerComponent } from "../shared/youtube-trailer.component";
-import { EpisodeRequestComponent, EpisodeRequestData } from "../../../shared/episode-request/episode-request.component";
 import { IAdvancedData, IChildRequests, ITvRequests, RequestType } from "../../../interfaces";
 import { AuthService } from "../../../auth/auth.service";
 import { NewIssueComponent } from "../shared/new-issue/new-issue.component";
@@ -35,6 +34,8 @@ import { TvRequestsPanelComponent } from "./panels/tv-requests/tv-requests-panel
 import { TvRequestGridComponent } from "./panels/tv-request-grid/tv-request-grid.component";
 import { IssuesPanelComponent } from "../shared/issues-panel/issues-panel.component";
 import { ImageComponent } from "../../../components";
+import { OmbiDatePipe } from "../../../pipes/OmbiDatePipe";
+import { TranslateStatusPipe } from "../../../pipes/TranslateStatus";
 
 @Component({
     standalone: true,
@@ -54,20 +55,16 @@ import { ImageComponent } from "../../../components";
         TranslateModule,
         CarouselModule,
         SkeletonModule,
-        YoutubeTrailerComponent,
-        EpisodeRequestComponent,
-        NewIssueComponent,
-        TvAdvancedOptionsComponent,
         TopBannerComponent,
         SocialIconsComponent,
         MediaPosterComponent,
         CastCarouselComponent,
-        CrewCarouselComponent,
         TvInformationPanelComponent,
         TvRequestsPanelComponent,
         TvRequestGridComponent,
         IssuesPanelComponent,
-        ImageComponent
+        OmbiDatePipe,
+        TranslateStatusPipe
     ]
 })
 export class TvDetailsComponent implements OnInit {
@@ -137,8 +134,11 @@ export class TvDetailsComponent implements OnInit {
         }
     }
 
-    public async request(userId: string) {
-        this.dialog.open(EpisodeRequestComponent, { width: "800px", data: <EpisodeRequestData> { series: this.tv, requestOnBehalf: userId, isAdmin: this.isAdmin }, panelClass: 'modal-panel' })
+    public request() {
+        const grid = document.getElementById("requests-grid");
+        if (grid) {
+            grid.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
     }
 
     public async issue() {

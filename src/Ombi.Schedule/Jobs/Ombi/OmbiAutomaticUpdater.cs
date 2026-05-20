@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Ombi.Core.Processor;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
+using Ombi.Hubs;
 using Ombi.Schedule.Processor;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
@@ -28,13 +29,15 @@ namespace Ombi.Schedule.Jobs.Ombi
     public class OmbiAutomaticUpdater : IOmbiAutomaticUpdater
     {
         public OmbiAutomaticUpdater(ILogger<OmbiAutomaticUpdater> log, IChangeLogProcessor service,
-            ISettingsService<UpdateSettings> s, IProcessProvider proc, IApplicationConfigRepository appConfig)
+            ISettingsService<UpdateSettings> s, IProcessProvider proc, IApplicationConfigRepository appConfig,
+            INotificationHubService notificationHubService)
         {
             Logger = log;
             Processor = service;
             Settings = s;
             _processProvider = proc;
             _appConfig = appConfig;
+            _notificationHubService = notificationHubService;
         }
 
         private ILogger<OmbiAutomaticUpdater> Logger { get; }
@@ -42,6 +45,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private ISettingsService<UpdateSettings> Settings { get; }
         private readonly IProcessProvider _processProvider;
         private readonly IApplicationConfigRepository _appConfig;
+        private readonly INotificationHubService _notificationHubService;
 
         public string[] GetVersion()
         {
@@ -99,6 +103,15 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 if (!serverVersion.Equals(version, StringComparison.CurrentCultureIgnoreCase) || settings.TestMode)
                 {
+                    try
+                    {
+                        await _notificationHubService.SendNotificationToAdmins($"Ombi update available: v{serverVersion}. Downloading...");
+                    }
+                    catch (Exception notifyEx)
+                    {
+                        Logger.LogWarning(notifyEx, "Failed to send updater start notification");
+                    }
+
                     // Let's download the correct zip
                     var desc = RuntimeInformation.OSDescription;
                     var process = RuntimeInformation.ProcessArchitecture;
@@ -237,6 +250,14 @@ namespace Ombi.Schedule.Jobs.Ombi
             catch (Exception e)
             {
                 Logger.LogError(e, "Exception thrown in the OmbiUpdater, see previous messages");
+                try
+                {
+                    await _notificationHubService.SendNotificationToAdmins("Ombi auto-update failed. Check logs for details.");
+                }
+                catch (Exception notifyEx)
+                {
+                    Logger.LogWarning(notifyEx, "Failed to send updater failure notification");
+                }
                 throw;
             }
         }

@@ -3,12 +3,12 @@ import { AdminRequestDialog } from "../../shared/AdminRequestDialog";
 
 class TvRequestPanel {
 
-    seasonTab(seasonNumber: number): Cypress.Chainable<any> {
-        return cy.getByData("classStatus"+seasonNumber);
+    seasonChip(seasonNumber: number): Cypress.Chainable<any> {
+        return cy.getByData("seasonChip"+seasonNumber);
     }
 
-    getSeasonMasterCheckbox(seasonNumber: number): Cypress.Chainable<any> {
-        return cy.getByData("masterCheckbox"+seasonNumber);
+    getSelectAllToggle(seasonNumber: number): Cypress.Chainable<any> {
+        return cy.getByData("selectAll"+seasonNumber);
     }
 
     getEpisodeSeasonCheckbox(seasonNumber: number, episodeNumber?: number): Cypress.Chainable<any> {
@@ -25,9 +25,16 @@ class TvRequestPanel {
         }
         return cy.getByDataLike('episodeStatus'+seasonNumber);
     }
+
+    getEpisodeRow(seasonNumber: number, episodeNumber?: number): Cypress.Chainable<any> {
+        if (episodeNumber) {
+            return cy.getByData('episodeRow'+seasonNumber+episodeNumber);
+        }
+        return cy.getByDataLike('episodeRow'+seasonNumber);
+    }
 }
 
-class RequestFabButton {
+class RequestButtons {
 
     get requestSelected(): Cypress.Chainable<any> {
         return cy.get('#requestSelected');
@@ -41,8 +48,8 @@ class RequestFabButton {
         return cy.get('#requestFirst');
     }
 
-    get fab(): Cypress.Chainable<any> {
-        return cy.get('#addFabBtn');
+    get requestAll(): Cypress.Chainable<any> {
+        return cy.get('#requestAll');
     }
 }
 
@@ -67,10 +74,6 @@ class TvDetailsPage extends BasePage {
         return cy.get('#availableBtn');
     }
 
-    get requestButton(): Cypress.Chainable<any> {
-        return cy.get('#requestBtn');
-    }
-
     get partiallyAvailableButton(): Cypress.Chainable<any> {
         return cy.get('#partiallyAvailableBtn');
     }
@@ -81,7 +84,7 @@ class TvDetailsPage extends BasePage {
 
 
     informationPanel = new TvDetailsInformationPanel();
-    requestFabButton = new RequestFabButton();
+    requestButtons = new RequestButtons();
     requestPanel = new TvRequestPanel();
     adminOptionsDialog = new AdminRequestDialog();
 

@@ -27,6 +27,7 @@ using Ombi.Store.Repository;
 using Ombi.Core.Models;
 using System.Threading;
 using Microsoft.Extensions.Logging;
+using Ombi.Notifications.Models;
 
 namespace Ombi.Core.Engine
 {
@@ -766,6 +767,21 @@ namespace Ombi.Core.Engine
             if (result.IsError)
                 return result;
 
+            await NotificationHelper.Notify(new NotificationOptions
+            {
+                RequestId = 0,
+                DateTime = DateTime.Now,
+                NotificationType = NotificationType.RequestDeleted,
+                RequestType = RequestType.TvShow,
+                Recipient = request.RequestedUser?.Email ?? string.Empty,
+                UserId = request.RequestedUserId,
+                Substitutes = new Dictionary<string, string>
+                {
+                    { NotificationSubstitues.Title, request.ParentRequest?.Title ?? string.Empty },
+                    { NotificationSubstitues.RequestType, RequestType.TvShow.ToString() },
+                }
+            });
+
             TvRepository.Db.ChildRequests.Remove(request);
             var all = TvRepository.Db.TvRequests.Include(x => x.ChildRequests);
             var parent = all.FirstOrDefault(x => x.Id == request.ParentRequestId);
@@ -789,6 +805,29 @@ namespace Ombi.Core.Engine
         public async Task RemoveTvRequest(int requestId)
         {
             var request = await TvRepository.Get().FirstOrDefaultAsync(x => x.Id == requestId);
+
+            var usersToNotify = request.ChildRequests
+                .Where(x => !string.IsNullOrEmpty(x.RequestedUserId))
+                .GroupBy(x => x.RequestedUserId)
+                .Select(x => x.First());
+            foreach (var userRequest in usersToNotify)
+            {
+                await NotificationHelper.Notify(new NotificationOptions
+                {
+                    RequestId = 0,
+                    DateTime = DateTime.Now,
+                    NotificationType = NotificationType.RequestDeleted,
+                    RequestType = RequestType.TvShow,
+                    Recipient = userRequest.RequestedUser?.Email ?? string.Empty,
+                    UserId = userRequest.RequestedUserId,
+                    Substitutes = new Dictionary<string, string>
+                    {
+                        { NotificationSubstitues.Title, request.Title },
+                        { NotificationSubstitues.RequestType, RequestType.TvShow.ToString() },
+                    }
+                });
+            }
+
             await TvRepository.Delete(request);
             await _mediaCacheService.Purge();
         }

@@ -5,6 +5,8 @@ using NUnit.Framework;
 using Ombi.Core.Engine;
 using Ombi.Core.Helpers;
 using Ombi.Core.Models.Requests;
+using Ombi.Helpers;
+using Ombi.Notifications.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
@@ -24,13 +26,14 @@ namespace Ombi.Core.Tests.Engine
         private MovieRequestEngine _subject;
         private Mock<IMovieRequestRepository> _repoMock;
         private AutoMocker _mocker;
+        private Mock<Ombi.Core.Authentication.OmbiUserManager> _userManager;
 
         [SetUp]
         public void Setup()
         {
             _mocker = new AutoMocker();
-            var userManager = MockHelper.MockUserManager(new List<OmbiUser> { new OmbiUser { NormalizedUserName = "TEST", Id = "a" } });
-            userManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), It.IsAny<string>())).ReturnsAsync(true);
+            _userManager = MockHelper.MockUserManager(new List<OmbiUser> { new OmbiUser { NormalizedUserName = "TEST", Id = "a" } });
+            _userManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), It.IsAny<string>())).ReturnsAsync(true);
             var principle = new Mock<IPrincipal>();
             var identity = new Mock<IIdentity>();
             identity.Setup(x => x.Name).Returns("Test");
@@ -46,13 +49,75 @@ namespace Ombi.Core.Tests.Engine
 
             _mocker.Use(principle.Object);
             _mocker.Use(currentUser.Object);
-            _mocker.Use(userManager.Object);
+            _mocker.Use(_userManager.Object);
             _mocker.Use(requestServiceMock);
 
             _subject = _mocker.CreateInstance<MovieRequestEngine>();
             var list = DbHelper.GetQueryableMockDbSet(new RequestSubscription());
             _mocker.Setup<IRepository<RequestSubscription>, IQueryable<RequestSubscription>>(x => x.GetAll()).Returns(new List<RequestSubscription>().AsQueryable().BuildMock());
             _mocker.Setup<IUserPlayedMovieRepository, IQueryable<UserPlayedMovie>>(x => x.GetAll()).Returns(new List<UserPlayedMovie>().AsQueryable().BuildMock());
+        }
+
+        [Test]
+        public async Task RemoveMovieRequest_TriggersRequestDeletedNotification()
+        {
+            var request = new MovieRequests
+            {
+                Id = 123,
+                RequestType = RequestType.Movie,
+                RequestedUserId = "a",
+                RequestedUser = new OmbiUser
+                {
+                    Id = "a",
+                    Email = "user@test.local"
+                },
+                Title = "Movie Title"
+            };
+
+            _repoMock.Setup(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable().BuildMock());
+            _repoMock.Setup(x => x.Delete(request)).Returns(Task.CompletedTask);
+            _mocker.GetMock<IMediaCacheService>().Setup(x => x.Purge()).Returns(Task.CompletedTask);
+            _mocker.GetMock<INotificationHelper>().Setup(x => x.Notify(It.IsAny<NotificationOptions>())).Returns(Task.CompletedTask);
+
+            var result = await _subject.RemoveMovieRequest(123);
+
+            Assert.That(result.Result, Is.True);
+            _repoMock.Verify(x => x.Delete(request), Times.Once);
+            _mocker.GetMock<INotificationHelper>().Verify(x => x.Notify(It.Is<NotificationOptions>(n =>
+                n.NotificationType == NotificationType.RequestDeleted &&
+                n.RequestType == RequestType.Movie &&
+                n.UserId == "a" &&
+                n.RequestId == 0 &&
+                n.Substitutes[NotificationSubstitues.Title] == "Movie Title" &&
+                n.Substitutes[NotificationSubstitues.RequestType] == RequestType.Movie.ToString()
+            )), Times.Once);
+        }
+
+        [Test]
+        public async Task RemoveMovieRequest_DoesNotNotify_WhenUserCannotManageRequest()
+        {
+            var request = new MovieRequests
+            {
+                Id = 123,
+                RequestType = RequestType.Movie,
+                RequestedUserId = "different-user",
+                RequestedUser = new OmbiUser
+                {
+                    Id = "different-user",
+                    Email = "user@test.local"
+                },
+                Title = "Movie Title"
+            };
+
+            _userManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), It.IsAny<string>())).ReturnsAsync(false);
+            _repoMock.Setup(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable().BuildMock());
+            _mocker.GetMock<INotificationHelper>().Setup(x => x.Notify(It.IsAny<NotificationOptions>())).Returns(Task.CompletedTask);
+
+            var result = await _subject.RemoveMovieRequest(123);
+
+            Assert.That(result.Result, Is.False);
+            _repoMock.Verify(x => x.Delete(It.IsAny<MovieRequests>()), Times.Never);
+            _mocker.GetMock<INotificationHelper>().Verify(x => x.Notify(It.IsAny<NotificationOptions>()), Times.Never);
         }
 
         [Test]

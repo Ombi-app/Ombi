@@ -31,9 +31,7 @@ import { SettingsService } from "../../services";
         MatSelectModule,
         MatSlideToggleModule,
         MatTooltipModule,
-        TranslateModule,
-        SettingsMenuComponent,
-        WikiComponent
+        TranslateModule
     ],
     templateUrl: "./lidarr.component.html",
     styleUrls: ["./lidarr.component.scss"]

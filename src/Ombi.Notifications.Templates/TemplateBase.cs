@@ -3,6 +3,6 @@
     public abstract class TemplateBase
     {
         public abstract string TemplateLocation { get; }
-        public virtual string OmbiLogo => "http://i.imgur.com/7pqVq7W.png";
+        public virtual string OmbiLogo => "https://ombi.io/img/logo-orange-small.png";
     }
 }

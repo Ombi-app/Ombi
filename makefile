@@ -1,7 +1,7 @@
-backend:
+run-backend:
 	cd src/Ombi && dotnet watch run -- --host http://*:3577
 
-frontend: 
+run-frontend: 
 	cd src/Ombi/ClientApp && yarn start
 
 install-frontend: 
@@ -10,8 +10,8 @@ install-frontend:
 install-frontend-tests: 
 	cd tests && yarn
 
-frontend-tests: 
+run-frontend-tests: 
 	cd tests && npx cypress run
 
-backend-tests:
+run-backend-tests:
 	cd src/Ombi.Core.Tests && dotnet test

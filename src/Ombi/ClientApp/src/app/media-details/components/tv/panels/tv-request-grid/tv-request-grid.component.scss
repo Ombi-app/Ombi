@@ -1,49 +1,446 @@
-.floating-fab {
-    position: fixed;
-    right: 3%;
-    bottom: 6%;
-    z-index: 10;
+@use "styles/variables.scss" as *;
+
+// --- Request Section Container ---
+.request-section {
+    padding-bottom: 80px; // space for sticky bar
 }
 
+// --- Quick Action Buttons ---
+.quick-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
 
-.top-right span:before{
-    content: '';
-    width: 10px;
-    height: 10px;
-    -moz-border-radius: 7.5px;
-    -webkit-border-radius: 7.5px;
-    border-radius: 7.5px;
-    margin-right:5px;
-  }
-  
-  .top-right.available span{
-    display:block;
-  }
-  
-  .top-right.available span:before{
-    display: inline-block;
-    background-color: #1DE9B6;
-  }
-  
-  .top-right.approved span {
-    display: block;
-  }
-  
-  .top-right.approved span:before{
-    display: inline-block;
-    background-color: #ffd740;
-  }
-  
-  .top-right.requested span {
-    display: block;
-  }
-  
-  .top-right.requested span:before{
-    display: inline-block;
-    background-color: #ff5722;
-  }
+.quick-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    padding: 6px 20px;
+    border-radius: 8px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
 
-  .top-right.denied span:before{
-    display: inline-block;
-    background-color: #660202;
-  }
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    &.primary-action {
+        font-weight: 600;
+        font-size: 15px;
+        padding: 8px 28px;
+    }
+
+    i {
+        font-size: 14px;
+    }
+}
+
+// --- Section Divider ---
+.section-divider {
+    display: flex;
+    align-items: center;
+    margin: 20px 0 16px;
+
+    &::before,
+    &::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    .divider-text {
+        padding: 0 16px;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.5);
+        white-space: nowrap;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+}
+
+// --- Season Selector Pills ---
+.season-selector {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 4px 0 12px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+        height: 4px;
+    }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 2px;
+    }
+}
+
+.season-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.25);
+        color: #fff;
+    }
+
+    &.active {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.4);
+        color: #fff;
+        font-weight: 500;
+    }
+
+    .season-status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.25);
+        flex-shrink: 0;
+    }
+
+    &.available .season-status-dot {
+        background: #1DE9B6;
+    }
+    &.partial .season-status-dot {
+        background: #ffd740;
+    }
+    &.denied .season-status-dot {
+        background: #660202;
+    }
+
+    .season-chip-label {
+        flex-shrink: 0;
+    }
+
+    .season-chip-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 6px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        font-size: 11px;
+        font-weight: 500;
+    }
+}
+
+// --- Season Panel ---
+.season-panel {
+    margin-top: 4px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.season-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.season-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.season-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.episode-count-badge {
+    padding: 2px 10px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.season-header-right {
+    display: flex;
+    align-items: center;
+}
+
+// --- Season Progress Bar ---
+.season-progress-container {
+    padding: 0 20px 12px;
+}
+
+.season-progress-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.08);
+    display: flex;
+    overflow: hidden;
+}
+
+.progress-segment {
+    height: 100%;
+    transition: width 0.4s ease;
+
+    &.available {
+        background: #1DE9B6;
+    }
+    &.requested {
+        background: #ffd740;
+    }
+}
+
+.progress-legend {
+    display: flex;
+    gap: 16px;
+    margin-top: 6px;
+}
+
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.legend-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+
+    &.available {
+        background: #1DE9B6;
+    }
+    &.requested {
+        background: #ffd740;
+    }
+}
+
+// --- Season Overview ---
+.season-overview {
+    padding: 0 20px 12px;
+    margin: 0;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.5;
+}
+
+// --- Episode List ---
+.episode-list {
+    padding: 0 8px 8px;
+}
+
+.episode-header-row {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.4);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.episode-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+
+    &:hover:not(.disabled) {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    &.selected {
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    &.disabled {
+        cursor: default;
+        opacity: 0.55;
+    }
+}
+
+// Episode column widths
+.ep-col-select {
+    width: 48px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+.ep-col-number {
+    width: 40px;
+    flex-shrink: 0;
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.ep-col-title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+}
+
+.ep-col-date {
+    width: 110px;
+    flex-shrink: 0;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.5);
+    text-align: right;
+    padding-right: 12px;
+}
+
+.ep-col-status {
+    width: 130px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+// --- Status Chips ---
+.status-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+
+    &.available {
+        background: rgba(29, 233, 182, 0.15);
+        color: #1DE9B6;
+    }
+    &.approved {
+        background: rgba(255, 215, 64, 0.15);
+        color: #ffd740;
+    }
+    &.requested {
+        background: rgba(255, 87, 34, 0.15);
+        color: #ff5722;
+    }
+    &.denied {
+        background: rgba(102, 2, 2, 0.25);
+        color: #ef5350;
+    }
+}
+
+// --- Sticky Bottom Bar ---
+.sticky-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(15, 23, 31, 0.95);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px 24px;
+    animation: slide-up 0.25s ease;
+}
+
+@keyframes slide-up {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.sticky-bar-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.selection-count {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.request-selected-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 6px 24px;
+
+    i {
+        font-size: 13px;
+    }
+}
+
+// --- Responsive ---
+@media (max-width: 600px) {
+    .quick-actions {
+        flex-direction: column;
+
+        .quick-action-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    .ep-col-date {
+        display: none;
+    }
+
+    .ep-col-status {
+        width: 90px;
+    }
+
+    .season-header {
+        padding: 12px 16px;
+    }
+
+    .episode-list {
+        padding: 0 4px 4px;
+    }
+
+    .episode-row {
+        padding: 8px;
+    }
+
+    .sticky-bar {
+        padding: 10px 16px;
+    }
+}

@@ -38,6 +38,7 @@ export interface IUpdateSettings extends ISettings {
   windowsServiceName: string;
   isWindows: boolean;
   testMode: boolean;
+  updateSchedule: string;
 }
 
 export interface IEmbySettings extends ISettings {
@@ -114,7 +115,6 @@ export interface IPlexSettings extends ISettings {
   enable: boolean;
   enableWatchlistImport: boolean;
   monitorAll: boolean;
-  notifyOnWatchlistTokenExpiration: boolean;
   servers: IPlexServer[];
 }
 
