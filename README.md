@@ -678,7 +678,7 @@ Here are some of the features Ombi has:
         <a href="https://github.com/bwittgen">
             <img src="https://avatars.githubusercontent.com/u/26683380?v=4" width="50;" alt="bwittgen"/>
             <br />
-            <sub><b>bwittgen</b></sub>
+            <sub><b>Bwittgen</b></sub>
         </a>
     </td>
     <td align="center">
