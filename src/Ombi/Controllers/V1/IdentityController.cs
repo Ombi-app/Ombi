@@ -797,12 +797,6 @@ namespace Ombi.Controllers.V1
             var emailSettings = await EmailSettings.GetSettingsAsync();
 
             var appUrl = customizationSettings.AddToUrl("/token?token=");
-            if (string.IsNullOrEmpty(appUrl))
-            {
-                _log.LogWarning("Password reset requested but ApplicationUrl is not configured; cannot build reset link.");
-                return defaultMessage;
-            }
-            var url = appUrl;
 
             if (user.UserType == UserType.PlexUser)
             {
@@ -828,6 +822,12 @@ namespace Ombi.Controllers.V1
             }
             else
             {
+                if (string.IsNullOrEmpty(appUrl))
+                {
+                    _log.LogWarning("Password reset requested but ApplicationUrl is not configured; cannot build reset link.");
+                    return defaultMessage;
+                }
+
                 // We have the user
                 var token = await UserManager.GeneratePasswordResetTokenAsync(user);
                 var encodedToken = WebUtility.UrlEncode(token);
@@ -838,7 +838,7 @@ namespace Ombi.Controllers.V1
                     Subject = $"{appName} Password Reset",
                     Message =
                         $"You recently made a request to reset your {appName} account. Please click the link below to complete the process.<br/><br/>" +
-                        $"<a href=\"{url}{encodedToken}\"> Reset </a>"
+                        $"<a href=\"{appUrl}{encodedToken}\"> Reset </a>"
                 }, emailSettings);
             }
 
