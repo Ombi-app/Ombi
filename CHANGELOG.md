@@ -1,3 +1,7 @@
+## [4.53.7](https://github.com/Ombi-app/Ombi/compare/v4.53.6...v4.53.7) (2026-05-30)
+
+
+
 ## [4.53.6](https://github.com/Ombi-app/Ombi/compare/v4.59.5...v4.53.6) (2026-05-20)
 
 
@@ -611,15 +615,6 @@
 ### Bug Fixes
 
 * **emby:** :bug: Fixed where we didn't scan episodes for mixed content libraries ([b815853](https://github.com/Ombi-app/Ombi/commit/b81585363ff5fd8eb06a814f36f20692077cdb27))
-
-
-
-## [4.51.1](https://github.com/Ombi-app/Ombi/compare/v4.51.0...v4.51.1) (2025-10-09)
-
-
-### Bug Fixes
-
-* **user-management:** Put back the user filter ([cb63060](https://github.com/Ombi-app/Ombi/commit/cb63060c778011927dc280f47f8b1836b6739150))
 
 
 
