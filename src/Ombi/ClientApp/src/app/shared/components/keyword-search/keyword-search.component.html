@@ -1,20 +1,19 @@
 <mat-form-field class="example-chip-list"  appearance="outline" floatLabel=auto>
   <mat-label>{{ "Filter.Keywords" | translate }}</mat-label>
-  <mat-chip-list #chipList aria-label="Fruit selection">
-    <mat-chip
+  <mat-chip-grid #chipList aria-label="Fruit selection">
+    <mat-chip-row
       *ngFor="let word of form.controls.keywordIds.value"
-      [removable]="true"
       (removed)="remove(word)">
       {{word.name}}
       <mat-icon matChipRemove>cancel</mat-icon>
-    </mat-chip>
-    <input
+    </mat-chip-row>
+  </mat-chip-grid>
+  <input
     [placeholder]="'Search.SearchKeyword' | translate"
-      #keywordInput
-      [formControl]="control"
-      [matAutocomplete]="auto"
-      [matChipInputFor]="chipList"/>
-  </mat-chip-list>
+    #keywordInput
+    [formControl]="control"
+    [matAutocomplete]="auto"
+    [matChipInputFor]="chipList"/>
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
     <mat-option *ngFor="let word of filteredKeywords | async" [value]="word">
       {{word.name}}

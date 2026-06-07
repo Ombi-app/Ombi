@@ -1,21 +1,20 @@
 <mat-form-field class="example-chip-list"  appearance="outline" floatLabel=auto>
     <mat-label>{{ 'Filter.WatchProviders' | translate }}</mat-label>
-  <mat-chip-list #chipList aria-label="Fruit selection">
+  <mat-chip-grid #chipList aria-label="Fruit selection">
     @for (word of form.controls.watchProviders.value; track word.provider_id) {
-      <mat-chip
-        [removable]="true"
+      <mat-chip-row
         (removed)="remove(word)">
         {{word.provider_name}}
         <mat-icon matChipRemove>cancel</mat-icon>
-      </mat-chip>
+      </mat-chip-row>
     }
-    <input
-      [placeholder]="'Search.SearchProvider' | translate"
-      #keywordInput
-      [formControl]="control"
-      [matAutocomplete]="auto"
-      [matChipInputFor]="chipList"/>
-  </mat-chip-list>
+  </mat-chip-grid>
+  <input
+    [placeholder]="'Search.SearchProvider' | translate"
+    #keywordInput
+    [formControl]="control"
+    [matAutocomplete]="auto"
+    [matChipInputFor]="chipList"/>
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
     @for (word of filteredList | async; track word.provider_id) {
       <mat-option [value]="word">

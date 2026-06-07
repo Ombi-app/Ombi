@@ -1,5 +1,5 @@
 ﻿// @use "./mat-palette.scss" as *;
-@use "@angular/material/theming" as *;
+@use "./mat-theming-shim" as *;
 @use "./new-mat-palette.scss" as *;
 // BASE
 // Define the palettes for your theme using the Material Design palettes available in palette.scss

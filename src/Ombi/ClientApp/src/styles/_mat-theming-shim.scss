@@ -1,0 +1,23 @@
+// Lightweight replacement for the legacy `@angular/material/theming` Sass API,
+// which was removed in Angular Material 13+. Ombi only relies on the
+// `mat-palette` and `mat-color` helpers to derive a handful of colour variables
+// from the palette maps in `new-mat-palette.scss`, so we re-implement just those
+// two functions here to keep the existing variable definitions working.
+@use "sass:map";
+
+@function mat-palette($base-palette, $default: 500, $lighter: 100, $darker: 700, $text: $default) {
+    @return map.merge($base-palette, (
+        default: map.get($base-palette, $default),
+        lighter: map.get($base-palette, $lighter),
+        darker: map.get($base-palette, $darker),
+        text: map.get($base-palette, $text),
+    ));
+}
+
+@function mat-color($palette, $hue: default, $opacity: null) {
+    $color: map.get($palette, $hue);
+    @if $opacity == null {
+        @return $color;
+    }
+    @return rgba($color, $opacity);
+}

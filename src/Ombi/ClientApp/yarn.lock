@@ -537,20 +537,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/cdk@npm:^16.2.14":
-  version: 16.2.14
-  resolution: "@angular/cdk@npm:16.2.14"
+"@angular/cdk@npm:^22.0.0":
+  version: 22.0.0
+  resolution: "@angular/cdk@npm:22.0.0"
   dependencies:
-    parse5: "npm:^7.1.2"
+    parse5: "npm:^8.0.0"
     tslib: "npm:^2.3.0"
   peerDependencies:
-    "@angular/common": ^16.0.0 || ^17.0.0
-    "@angular/core": ^16.0.0 || ^17.0.0
+    "@angular/common": ^22.0.0 || ^23.0.0
+    "@angular/core": ^22.0.0 || ^23.0.0
+    "@angular/platform-browser": ^22.0.0 || ^23.0.0
     rxjs: ^6.5.3 || ^7.4.0
-  dependenciesMeta:
-    parse5:
-      optional: true
-  checksum: 10c0/b68260f24bb25b53149a4b176245aad28611c761949fd4a9978fd592969336b0f251a9baf7741c0e6530e9f434e014a716a6d1c3b897580a0227361c9b6cf24e
+  checksum: 10c0/67f9ee6add9be9aa8de2a8b59fb292d7ca1e97773c3b6e76f8ce7d7d38b2d038a62378755607da0b152172f8dd0aed16b149ba27f09e254c3345a10755410976
   languageName: node
   linkType: hard
 
@@ -662,20 +660,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/material@npm:^14.2.7":
-  version: 14.2.7
-  resolution: "@angular/material@npm:14.2.7"
+"@angular/material@npm:^22.0.0":
+  version: 22.0.0
+  resolution: "@angular/material@npm:22.0.0"
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
-    "@angular/animations": ^14.0.0 || ^15.0.0
-    "@angular/cdk": 14.2.7
-    "@angular/common": ^14.0.0 || ^15.0.0
-    "@angular/core": ^14.0.0 || ^15.0.0
-    "@angular/forms": ^14.0.0 || ^15.0.0
-    "@angular/platform-browser": ^14.0.0 || ^15.0.0
+    "@angular/cdk": 22.0.0
+    "@angular/common": ^22.0.0 || ^23.0.0
+    "@angular/core": ^22.0.0 || ^23.0.0
+    "@angular/forms": ^22.0.0 || ^23.0.0
+    "@angular/platform-browser": ^22.0.0 || ^23.0.0
     rxjs: ^6.5.3 || ^7.4.0
-  checksum: 10c0/12197f30fe754e46d007c46a752668cc587a0f9982ec7d5ec245f5c29662292ac0ece178e7163db5aa1db170d078aa827e68edbe01e0fef06eb85c5ce0358ffa
+  checksum: 10c0/035b6c97ae163c45337fc7187027167ab42f2d3917957d8631f64111fb35b10bc8ff4b3e6efa0fff4980bee825f759b7ea429b5a5ed793e98be44cda36499a47
   languageName: node
   linkType: hard
 
@@ -14902,14 +14899,14 @@ __metadata:
     "@angular-eslint/eslint-plugin-template": "npm:^22.0.0"
     "@angular-eslint/template-parser": "npm:^22.0.0"
     "@angular/animations": "npm:^22.0.0"
-    "@angular/cdk": "npm:^16.2.14"
+    "@angular/cdk": "npm:^22.0.0"
     "@angular/cli": "npm:^22.0.0"
     "@angular/common": "npm:^22.0.0"
     "@angular/compiler": "npm:^22.0.0"
     "@angular/compiler-cli": "npm:^22.0.0"
     "@angular/core": "npm:^22.0.0"
     "@angular/forms": "npm:^22.0.0"
-    "@angular/material": "npm:^14.2.7"
+    "@angular/material": "npm:^22.0.0"
     "@angular/platform-browser": "npm:^22.0.0"
     "@angular/platform-browser-dynamic": "npm:^22.0.0"
     "@angular/platform-server": "npm:^22.0.0"
@@ -15355,7 +15352,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"parse5@npm:^7.0.0, parse5@npm:^7.1.2":
+"parse5@npm:^7.0.0":
   version: 7.3.0
   resolution: "parse5@npm:7.3.0"
   dependencies:
