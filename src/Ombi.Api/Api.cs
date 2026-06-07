@@ -117,17 +117,27 @@ namespace Ombi.Api
                 // Only cache successful responses
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
-                    // For failed responses, don't cache - just deserialize and return
+                    // For failed responses, don't cache. The body is usually an error payload
+                    // (e.g. Plex returns an <errors> document on a 401) that does not match the
+                    // expected success type, so attempt to deserialize it but fall back to the
+                    // default value rather than throwing a misleading deserialization exception.
                     var errorString = await httpResponseMessage.Content.ReadAsStringAsync(cancellationToken);
                     LogDebugContent(errorString);
-                    if (request.ContentType == ContentType.Json)
+                    try
                     {
-                        request.OnBeforeDeserialization?.Invoke(errorString);
-                        return JsonConvert.DeserializeObject<T>(errorString, Settings);
-                    }
-                    else
-                    {
+                        if (request.ContentType == ContentType.Json)
+                        {
+                            request.OnBeforeDeserialization?.Invoke(errorString);
+                            return JsonConvert.DeserializeObject<T>(errorString, Settings);
+                        }
+
                         return DeserializeXml<T>(errorString);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogWarning(ex,
+                            $"Could not deserialize the error response from {request.FullUri} (Status Code: {httpResponseMessage.StatusCode}) into {typeof(T).Name}, returning default");
+                        return default;
                     }
                 }
 

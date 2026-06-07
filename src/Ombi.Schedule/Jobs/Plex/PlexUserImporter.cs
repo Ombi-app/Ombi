@@ -202,7 +202,14 @@ namespace Ombi.Schedule.Jobs.Plex
         private async Task<OmbiUser> ImportAdmin(UserManagementSettings settings, PlexServers server, 
             List<OmbiUser> allUsers)
         {
-            var plexAdmin = (await _api.GetAccount(server.PlexAuthToken)).user;
+            var plexAdmin = (await _api.GetAccount(server.PlexAuthToken))?.user;
+
+            if (plexAdmin == null)
+            {
+                // We could not retrieve the Plex account, most likely the auth token is invalid or expired.
+                _log.LogWarning("Could not import the Plex admin, the Plex account could not be retrieved. The Plex auth token may be invalid or expired.");
+                return null;
+            }
 
             // Check if the admin is already in the DB
             var adminUserFromDb = allUsers.FirstOrDefault(x =>
