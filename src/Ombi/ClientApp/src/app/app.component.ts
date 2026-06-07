@@ -124,7 +124,7 @@ export class AppComponent implements OnInit {
         });
         this.settingsService.voteEnabled().subscribe(x => this.voteEnabled = x);
 
-        this.router.events.subscribe((event: NavigationStart) => {
+        this.router.events.subscribe((event: any) => {
             this.currentUrl = event.url;
             if (event instanceof NavigationStart) {
                 this.isAdmin = this.authService.hasRole("admin");
