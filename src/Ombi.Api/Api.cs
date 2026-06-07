@@ -48,32 +48,45 @@ namespace Ombi.Api
 
                 try
                 {
-                    return await _cacheService.GetOrAddAsync(cacheKey, async () =>
+                    var wasSuccessful = true;
+                    var cachedResult = await _cacheService.GetOrAddAsync(cacheKey, async () =>
                     {
                         Logger.LogDebug($"ApiCache: MISS for {request.HttpMethod.Method} {request.FullUri}");
-                        return await ExecuteRequest<T>(request, cancellationToken);
+                        var (value, requestSucceeded) = await ExecuteRequest<T>(request, cancellationToken);
+                        wasSuccessful = requestSucceeded;
+                        return value;
                     }, DateTimeOffset.UtcNow.Add(request.CacheDuration.Value));
+
+                    // Don't keep unsuccessful responses in the cache, otherwise a transient
+                    // failure (e.g. an expired token returning a 401) would be served from the
+                    // cache for the entire cache duration.
+                    if (!wasSuccessful)
+                    {
+                        _cacheService.Remove(cacheKey);
+                    }
+
+                    return cachedResult;
                 }
                 catch (JsonException ex)
                 {
                     // Deserialization failed - evict cache and retry
                     Logger.LogWarning(ex, $"ApiCache: Deserialization failed for {request.FullUri}, evicting and retrying");
                     _cacheService.Remove(cacheKey);
-                    return await ExecuteRequest<T>(request, cancellationToken);
+                    return (await ExecuteRequest<T>(request, cancellationToken)).value;
                 }
                 catch (Exception ex)
                 {
                     // Cache service failed - log and proceed without cache
                     Logger.LogWarning(ex, $"ApiCache: Cache read failed for {request.FullUri}, proceeding without cache");
-                    return await ExecuteRequest<T>(request, cancellationToken);
+                    return (await ExecuteRequest<T>(request, cancellationToken)).value;
                 }
             }
 
             // No caching - execute request directly
-            return await ExecuteRequest<T>(request, cancellationToken);
+            return (await ExecuteRequest<T>(request, cancellationToken)).value;
         }
 
-        private async Task<T> ExecuteRequest<T>(Request request, CancellationToken cancellationToken)
+        private async Task<(T value, bool wasSuccessful)> ExecuteRequest<T>(Request request, CancellationToken cancellationToken)
         {
             using (var httpRequestMessage = new HttpRequestMessage(request.HttpMethod, request.FullUri))
             {
@@ -128,16 +141,16 @@ namespace Ombi.Api
                         if (request.ContentType == ContentType.Json)
                         {
                             request.OnBeforeDeserialization?.Invoke(errorString);
-                            return JsonConvert.DeserializeObject<T>(errorString, Settings);
+                            return (JsonConvert.DeserializeObject<T>(errorString, Settings), false);
                         }
 
-                        return DeserializeXml<T>(errorString);
+                        return (DeserializeXml<T>(errorString), false);
                     }
                     catch (Exception ex)
                     {
                         Logger.LogWarning(ex,
                             $"Could not deserialize the error response from {request.FullUri} (Status Code: {httpResponseMessage.StatusCode}) into {typeof(T).Name}, returning default");
-                        return default;
+                        return (default, false);
                     }
                 }
 
@@ -147,13 +160,11 @@ namespace Ombi.Api
                 if (request.ContentType == ContentType.Json)
                 {
                     request.OnBeforeDeserialization?.Invoke(receivedString);
-                    return JsonConvert.DeserializeObject<T>(receivedString, Settings);
+                    return (JsonConvert.DeserializeObject<T>(receivedString, Settings), true);
                 }
-                else
-                {
-                    // XML
-                    return DeserializeXml<T>(receivedString);
-                }
+
+                // XML
+                return (DeserializeXml<T>(receivedString), true);
             }
         }
 
