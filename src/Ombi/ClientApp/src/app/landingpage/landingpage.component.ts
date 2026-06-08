@@ -1,5 +1,5 @@
 import { APP_BASE_HREF, CommonModule } from "@angular/common";
-import { Component, OnInit, Inject, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, Inject } from "@angular/core";
 
 import { IMediaServerStatus } from "../interfaces";
 import { ICustomizationSettings, ILandingPageSettings } from "../interfaces";
@@ -51,16 +51,11 @@ export class LandingPageComponent implements OnInit {
     constructor(private settingsService: SettingsService,
                 private landingPageService: LandingPageService,
                 private customizationFacade: CustomizationFacade,
-                private cdRef: ChangeDetectorRef,
                 @Inject(APP_BASE_HREF) href :string) { this.href = href }
 
     public ngOnInit() {
-        // The customization settings are served from the NGXS store, whose
-        // emissions do not reliably trigger change detection under Angular 22,
-        // leaving this view (which is gated on the settings being present) blank.
-        // Trigger change detection explicitly once each piece of data arrives.
-        this.customizationFacade.settings$().subscribe(x => { this.customizationSettings = x; this.cdRef.detectChanges(); });
-        this.settingsService.getLandingPage().subscribe(x => { this.landingPageSettings = x; this.cdRef.detectChanges(); });
+        this.customizationFacade.settings$().subscribe(x => this.customizationSettings = x);
+        this.settingsService.getLandingPage().subscribe(x => this.landingPageSettings = x);
 
         const base = this.href;
         if (base.length > 1) {
@@ -69,7 +64,6 @@ export class LandingPageComponent implements OnInit {
 
         this.landingPageService.getServerStatus().subscribe(x => {
             this.mediaServerStatus = x;
-            this.cdRef.detectChanges();
         });
     }
 }

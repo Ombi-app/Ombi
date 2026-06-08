@@ -1,6 +1,7 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, HostBinding, Inject } from "@angular/core";
+import { Component, OnInit, HostBinding, Inject, NgZone } from "@angular/core";
+import { CdPumpService } from "./shared/cd-pump.service";
 import { NavigationStart, Router, RouterModule } from "@angular/router";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { AuthService } from "./auth/auth.service";
@@ -58,7 +59,15 @@ export class AppComponent implements OnInit {
         private signalrNotification: SignalRNotificationService,
         private readonly snackBar: MatSnackBar,
         private readonly identity: IdentityService,
+        private readonly ngZone: NgZone,
+        private readonly cdPump: CdPumpService,
         @Inject(DOCUMENT) private document: Document) {
+
+        // Run change detection for the active routed view(s) on a short interval.
+        // See CdPumpService for why automatic change detection does not reach them
+        // under Angular 22.
+        this.ngZone.onMicrotaskEmpty.subscribe(() => this.cdPump.pump());
+        setInterval(() => this.cdPump.pump(), 250);
 
         this.translate.addLangs(["da", "de", "en", "es", "fr", "it", "hu", "nl", "no", "pl", "pt", "sk", "sv", "bg", "ru", "cs", "zh"]);
 

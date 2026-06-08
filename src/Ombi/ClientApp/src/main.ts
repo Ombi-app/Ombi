@@ -10,7 +10,7 @@ import "./polyfills";
 
 import { bootstrapApplication } from "@angular/platform-browser";
 import { AppComponent } from "./app/app.component";
-import { ErrorHandler, importProvidersFrom } from "@angular/core";
+import { ErrorHandler, importProvidersFrom, provideZoneChangeDetection } from "@angular/core";
 import { GlobalErrorHandler } from "./app/shared/global-error-handler";
 import { RouterModule } from "@angular/router";
 import { withInterceptorsFromDi } from "@angular/common/http";
@@ -150,6 +150,7 @@ window.addEventListener("error", (event) => {
 
 bootstrapApplication(AppComponent, {
     providers: [
+        provideZoneChangeDetection(),
         // Core Angular providers
         importProvidersFrom(
             RouterModule.forRoot(routes),
