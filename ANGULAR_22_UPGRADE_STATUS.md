@@ -20,28 +20,58 @@ Pages that populate their view from plain async subscriptions render **blank
 content** (e.g. the Settings pages: the nav and settings menu render, but the
 content panel is empty). The data loads, but the view never re-renders.
 
-### Confirmed diagnostics
+### Confirmed root cause: TWO `ApplicationRef` instances
+There are **two `ApplicationRef` instances** in the running app:
+- Injecting `ApplicationRef` from a **component context** (`AppComponent`) reports
+  `components.length === 1` / `viewCount === 1` — this is the one the views live in.
+- Injecting `ApplicationRef` from the **HTTP interceptor** (and, by extension, the
+  zone change-detection scheduler `NgZoneChangeDetectionScheduler`) reports
+  `components.length === 0` / `viewCount === 0` — an **empty** ApplicationRef.
+
+So Angular's automatic change detection (zone- or scheduler-driven) runs
+`tick()` / `_tick()` on the **empty** ApplicationRef and never refreshes the real
+view tree. That is why nothing re-renders on its own, while
+`ChangeDetectorRef.detectChanges()` (which acts directly on the component's own
+view) always works.
+
+### Other confirmed diagnostics
 - By default the app boots in the `<root>` zone (effectively zoneless) even though
   zone.js is bundled and active (`setTimeout` is patched).
-- Adding `provideZoneChangeDetection()` puts the app in the real `angular` NgZone
-  (`NgZone` is `_NgZone`, not Noop) and `NgZone.onMicrotaskEmpty` fires (~30×),
-  **but the change-detection scheduler still never ticks** — pages stay blank.
-- `ApplicationRef` has the bootstrapped `AppComponent` attached
-  (`components.length === 1`), yet `ApplicationRef.tick()` (called manually, via an
-  HTTP interceptor `finalize`, and via `onMicrotaskEmpty`) does **not** re-render
-  routed components.
-- `ChangeDetectorRef.detectChanges()` on an individual component **does** render it.
-- No component in the routing chain (AppComponent → router-outlet → page) is
-  `OnPush`; no dependency enables zoneless change detection.
+- `provideZoneChangeDetection()` puts the app in the real `angular` NgZone and
+  `NgZone.onMicrotaskEmpty` fires (~30×), but the scheduler ticks the empty
+  ApplicationRef, so pages stay blank.
+- A forced *global* pass (`applicationRef.dirtyFlags |= 1; applicationRef._tick()`)
+  from both the interceptor (empty ref) and a component context (`AppComponent`)
+  still did not refresh routed pages.
+- There is a single copy of `@angular/core` in `node_modules` (no duplicate-version
+  issue) and no second `bootstrapApplication` / `createApplication` call in the app
+  or its dependencies — so the duplicate `ApplicationRef` comes from the injector /
+  provider structure, which still needs to be pinned down.
 
 ### Fixes that were tried and did NOT resolve it
 `provideZoneChangeDetection()`, `provideAnimations()` (instead of
 `BrowserAnimationsModule`), `provideRouter()` (instead of
 `importProvidersFrom(RouterModule.forRoot())`), switching from `withFetch()` to the
 XHR backend, NGXS `NoopNgxsExecutionStrategy`, a manual
-`NgZone.onMicrotaskEmpty → ApplicationRef.tick()` loop, and an HTTP interceptor that
-ticks after each response. None made automatic change detection propagate to routed
+`NgZone.onMicrotaskEmpty → ApplicationRef.tick()` loop (from both the interceptor
+and `AppComponent`), an HTTP interceptor that runs a global tick after each
+response, moving the `<router-outlet>` out of the OnPush `mat-sidenav-content`,
+removing the `ngTemplateOutlet` indirection around the outlet, a `router-outlet`
+directive that re-attaches each activated view via `ApplicationRef.attachView`, and
+bisecting the `importProvidersFrom(...)` NgModules (PrimeNG and Material globals
+removed — ruled out). None made automatic change detection propagate to routed
 components.
+
+### Recommended next step for the root cause
+Find what creates the **second `ApplicationRef`** (the empty one the scheduler/
+interceptor receive). Likely candidates: a provider in `importProvidersFrom(...)`
+(NGXS 3.8, `@auth0/angular-jwt`, `@ngx-translate`) introducing a separate
+environment injector, or an Angular 22 interaction with `provideHttpClient(... ,
+withInterceptorsFromDi())`. A minimal reproduction (bootstrap `AppComponent` with
+providers added back one group at a time, logging `inject(ApplicationRef)` identity
+from a component vs. an HTTP interceptor) should isolate it quickly. Once a single
+`ApplicationRef` is restored, `provideZoneChangeDetection()` should make automatic
+change detection work again.
 
 ### Current workaround (partial)
 `login.component.ts` and `landingpage.component.ts` call
