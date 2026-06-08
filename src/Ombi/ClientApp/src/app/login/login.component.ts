@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Inject } from "@angular/core";
+import { Component, OnDestroy, OnInit, Inject, ChangeDetectorRef } from "@angular/core";
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -91,7 +91,8 @@ export class LoginComponent implements OnDestroy, OnInit {
     private store: StorageService,
     private sonarrFacade: SonarrFacade,
     private radarrFacade: RadarrFacade,
-    private readonly notify: MatSnackBar
+    private readonly notify: MatSnackBar,
+    private readonly cdRef: ChangeDetectorRef
   ) {
     this.href = href;
     this.route.params.subscribe((params: any) => {
@@ -126,15 +127,19 @@ export class LoginComponent implements OnDestroy, OnInit {
 
   public ngOnInit() {
 
-    this.customziationFacade.settings$().subscribe(x => this.customizationSettings = x);
+    // Angular 22 does not run change detection for these plain async
+    // subscriptions automatically in this app; trigger it explicitly so the
+    // login form (gated on these settings) actually renders.
+    this.customziationFacade.settings$().subscribe(x => { this.customizationSettings = x; this.cdRef.detectChanges(); });
 
     this.settingsService
       .getAuthentication()
       .subscribe((x) => {
         this.authenticationSettings = x;
         this.headerAuth();
+        this.cdRef.detectChanges();
       });
-    this.settingsService.getClientId().subscribe((x) => (this.clientId = x));
+    this.settingsService.getClientId().subscribe((x) => { this.clientId = x; this.cdRef.detectChanges(); });
 
     const base = this.href;
     if (base.length > 1) {
