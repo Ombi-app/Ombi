@@ -50,6 +50,8 @@ Then("I should get a notification {string}", (string: string) => {
 
 Then("I should be on the User tab", () => {
   Page.matStepsHeader.then((_) => {
-    cy.get('#cdk-step-label-0-3').should('have.attr', 'aria-selected', 'true');
+    // The 4th step header ("Create a local admin"). The element id format changed
+    // with the Angular Material/CDK upgrade, so select by the step header itself.
+    cy.get('mat-step-header').eq(3).should('have.attr', 'aria-selected', 'true');
   });
 });

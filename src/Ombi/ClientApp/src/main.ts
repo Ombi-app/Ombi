@@ -10,7 +10,8 @@ import "./polyfills";
 
 import { bootstrapApplication } from "@angular/platform-browser";
 import { AppComponent } from "./app/app.component";
-import { importProvidersFrom } from "@angular/core";
+import { ErrorHandler, importProvidersFrom } from "@angular/core";
+import { GlobalErrorHandler } from "./app/shared/global-error-handler";
 import { RouterModule } from "@angular/router";
 import { withInterceptorsFromDi } from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -25,8 +26,9 @@ import { MatPaginatorIntl } from "@angular/material/paginator";
 import { MatPaginatorI18n } from "./app/localization/MatPaginatorI18n";
 import { TranslateService } from "@ngx-translate/core";
 import { APP_BASE_HREF, PlatformLocation } from "@angular/common";
-import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withFetch } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClient, HttpErrorResponse, provideHttpClient, withFetch } from "@angular/common/http";
 import { UnauthorizedInterceptor } from "./app/auth/unauthorized.interceptor";
+import { config as rxjsConfig } from "rxjs";
 
 // Angular Material modules
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -119,6 +121,33 @@ if (environment.production) {
     // enableProdMode() is a no-op in Angular 15+ — production mode is handled automatically.
   }
 
+// HTTP failures are already handled by the HTTP services and the
+// UnauthorizedInterceptor (which logs the user out and redirects to login on a
+// 401). Some components fire requests without an error handler (most visibly the
+// discover page on first run, before the redirect to the wizard happens). Without
+// the guards below those rejected requests bubble up as "uncaught" browser
+// errors. We swallow only HttpErrorResponse here and let every other error keep
+// its default behaviour.
+rxjsConfig.onUnhandledError = (error: any) => {
+    if (error instanceof HttpErrorResponse) {
+        console.error(error);
+        return;
+    }
+    setTimeout(() => { throw error; });
+};
+window.addEventListener("unhandledrejection", (event) => {
+    if (event.reason instanceof HttpErrorResponse) {
+        event.preventDefault();
+        console.error(event.reason);
+    }
+});
+window.addEventListener("error", (event) => {
+    if (event.error instanceof HttpErrorResponse) {
+        event.preventDefault();
+        console.error(event.error);
+    }
+});
+
 bootstrapApplication(AppComponent, {
     providers: [
         // Core Angular providers
@@ -178,6 +207,9 @@ bootstrapApplication(AppComponent, {
         
         // HTTP Client with Fetch API support and DI interceptors
         provideHttpClient(withFetch(), withInterceptorsFromDi()),
+
+        // Prevent already-handled HTTP errors from surfacing as uncaught errors
+        { provide: ErrorHandler, useClass: GlobalErrorHandler },
         
         // Services
         NotificationService,
