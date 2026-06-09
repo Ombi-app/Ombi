@@ -645,7 +645,9 @@ namespace Ombi.Core.Engine
             {
                 allRequests = TvRepository.Get();
             }
-            var results = await allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase)).ToListAsync();
+            var results = (await allRequests.ToListAsync())
+                .Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase))
+                .ToList();
 
             await FillAdditionalFields(shouldHide, results);
             return results;
