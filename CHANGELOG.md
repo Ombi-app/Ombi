@@ -1,3 +1,12 @@
+## [4.53.9](https://github.com/Ombi-app/Ombi/compare/v4.53.8...v4.53.9) (2026-06-09)
+
+
+### Bug Fixes
+
+* **tv:** materialize TV request search before filtering to avoid EF Core 500 ([#5421](https://github.com/Ombi-app/Ombi/issues/5421)) ([2f5cdd1](https://github.com/Ombi-app/Ombi/commit/2f5cdd160e02f399ba8a63db20e4ac2988291bd5)), closes [#5420](https://github.com/Ombi-app/Ombi/issues/5420)
+
+
+
 ## [4.53.8](https://github.com/Ombi-app/Ombi/compare/v4.53.7...v4.53.8) (2026-05-30)
 
 
@@ -606,10 +615,6 @@
 ### Bug Fixes
 
 * **emby:** fixed duplicate episodes ([a1d3755](https://github.com/Ombi-app/Ombi/commit/a1d37554bdb9167dc82df121caa194e7641142df))
-
-
-
-## [4.51.3](https://github.com/Ombi-app/Ombi/compare/v4.51.2...v4.51.3) (2025-10-14)
 
 
 
