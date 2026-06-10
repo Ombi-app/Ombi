@@ -54,9 +54,13 @@ describe("Discover Cards Requests Tests", () => {
 
       cy.verifyNotification("has been added successfully");
 
-      card.requestButton.should("not.exist");
+      // Assert the positive "requested" state first: these retry until the card
+      // has re-rendered, which is also what removes the request button. Checking
+      // button removal last avoids a race where the just-clicked (still focused)
+      // button lingers in the DOM for a beat after the state change.
       card.availabilityText.should("have.text", "Pending");
       card.statusClass.should("have.class", "requested");
+      card.requestButton.should("not.exist");
     });
   });
 
@@ -113,9 +117,12 @@ describe("Discover Cards Requests Tests", () => {
 
           cy.verifyNotification("has been added successfully");
 
-          card.requestButton.should("not.exist");
+          // Assert the positive "requested" state first (these retry until the
+          // card re-renders, which is what removes the button); check button
+          // removal last to avoid a race with the just-clicked focused button.
           card.availabilityText.should("have.text", "Pending");
           card.statusClass.should("have.class", "requested");
+          card.requestButton.should("not.exist");
         });
       });
     });
