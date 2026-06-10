@@ -124,7 +124,7 @@ namespace Ombi.Core.Tests.Engine
         public async Task GetRequestByStatus_PendingRequests_Non4K()
         {
             var movies = RegularRequestData();
-            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable());
+            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable().BuildMock());
 
             var result = await _subject.GetRequestsByStatus(10, 0, "id", "asc", Models.Requests.RequestStatus.PendingApproval);
 
@@ -169,7 +169,7 @@ namespace Ombi.Core.Tests.Engine
                     RequestedDate = DateTime.MinValue
                 }
             };
-            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable());
+            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable().BuildMock());
 
             var result = await _subject.GetRequestsByStatus(10, 0, "id", "asc", RequestStatus.PendingApproval);
 
@@ -216,7 +216,7 @@ namespace Ombi.Core.Tests.Engine
                     RequestedDate = DateTime.MinValue
                 }
             };
-            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable());
+            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable().BuildMock());
 
             var result = await _subject.GetRequestsByStatus(10, 0, "id", "asc", RequestStatus.PendingApproval);
 
@@ -230,7 +230,7 @@ namespace Ombi.Core.Tests.Engine
         public async Task GetRequestByStatus_ProcessingRequests_Non4K()
         {
             var movies = RegularRequestData();
-            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable());
+            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable().BuildMock());
 
             var result = await _subject.GetRequestsByStatus(10, 0, "id", "asc", Models.Requests.RequestStatus.ProcessingRequest);
 
@@ -275,7 +275,7 @@ namespace Ombi.Core.Tests.Engine
                     RequestedDate = DateTime.MinValue
                 }
             };
-            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable());
+            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable().BuildMock());
 
             var result = await _subject.GetRequestsByStatus(10, 0, "id", "asc", RequestStatus.ProcessingRequest);
 
@@ -323,7 +323,7 @@ namespace Ombi.Core.Tests.Engine
                     RequestedDate = DateTime.Now
                 }
             };
-            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable());
+            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable().BuildMock());
 
             var result = await _subject.GetRequestsByStatus(10, 0, "id", "asc", RequestStatus.ProcessingRequest);
 
@@ -337,7 +337,7 @@ namespace Ombi.Core.Tests.Engine
         public async Task GetRequestByStatus_AvailableRequests_Non4K()
         {
             List<MovieRequests> movies = RegularRequestData();
-            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable());
+            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable().BuildMock());
 
             var result = await _subject.GetRequestsByStatus(10, 0, "id", "asc", Models.Requests.RequestStatus.Available);
 
@@ -384,7 +384,7 @@ namespace Ombi.Core.Tests.Engine
                     RequestedDate = DateTime.MinValue
                 }
             };
-            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable());
+            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable().BuildMock());
 
             var result = await _subject.GetRequestsByStatus(10, 0, "id", "asc", RequestStatus.Available);
 
@@ -433,7 +433,7 @@ namespace Ombi.Core.Tests.Engine
                     RequestedDate = DateTime.Now
                 }
             };
-            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable());
+            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable().BuildMock());
 
             var result = await _subject.GetRequestsByStatus(10, 0, "id", "asc", RequestStatus.Available);
 
@@ -446,7 +446,7 @@ namespace Ombi.Core.Tests.Engine
         public async Task GetRequestByStatus_DeniedRequests_Non4K()
         {
             List<MovieRequests> movies = RegularRequestData();
-            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable());
+            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable().BuildMock());
 
             var result = await _subject.GetRequestsByStatus(10, 0, "id", "asc", Models.Requests.RequestStatus.Denied);
 
@@ -491,7 +491,7 @@ namespace Ombi.Core.Tests.Engine
                     RequestedDate = DateTime.MinValue
                 }
             };
-            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable());
+            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable().BuildMock());
 
             var result = await _subject.GetRequestsByStatus(10, 0, "id", "asc", RequestStatus.Denied);
 
@@ -541,7 +541,7 @@ namespace Ombi.Core.Tests.Engine
                     RequestedDate = DateTime.Now
                 }
             };
-            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable());
+            _repoMock.Setup(x => x.GetWithUser()).Returns(movies.AsQueryable().BuildMock());
 
             var result = await _subject.GetRequestsByStatus(10, 0, "id", "asc", RequestStatus.Denied);
 

@@ -545,6 +545,7 @@ namespace Ombi.Core.Engine
             var asc = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase);
             return sortProperty.ToLowerInvariant() switch
             {
+                "id" => asc ? requests.OrderBy(x => x.Id).ToList() : requests.OrderByDescending(x => x.Id).ToList(),
                 "title" => asc ? requests.OrderBy(x => x.Title).ToList() : requests.OrderByDescending(x => x.Title).ToList(),
                 _ => asc ? requests.OrderBy(x => x.RequestedDate).ToList() : requests.OrderByDescending(x => x.RequestedDate).ToList()
             };
