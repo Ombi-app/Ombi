@@ -60,9 +60,9 @@ Cypress.Commands.add('ensureSetup', () => {
     //                       which is the idempotent re-run case. Any other
     //                       failure (e.g. bad credentials) must fail loudly here
     //                       rather than letting every later test time out.
-    const result = resp.body && resp.body.result;
+    const result = resp.body?.result;
     if (result !== true) {
-      const errors: string[] = (resp.body && resp.body.errors) || [];
+      const errors: string[] = resp.body?.errors ?? [];
       const alreadySetUp = errors.some((e) => /existing user/i.test(e));
       expect(
         alreadySetUp,
