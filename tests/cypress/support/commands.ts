@@ -39,17 +39,36 @@ declare global {
 // so calling it repeatedly is safe: once the admin is created it simply returns
 // "existing user" which we deliberately ignore.
 Cypress.Commands.add('ensureSetup', () => {
+  const username = Cypress.env('username');
+  const password = Cypress.env('password');
+  expect(username, 'Cypress env "username" must be set for ensureSetup')
+    .to.be.a('string').and.not.be.empty;
+  expect(password, 'Cypress env "password" must be set for ensureSetup')
+    .to.be.a('string').and.not.be.empty;
+
   cy.request({
     method: 'POST',
     url: '/api/v1/Identity/Wizard',
-    body: {
-      username: Cypress.env('username'),
-      password: Cypress.env('password'),
-      usePlexAdminAccount: false,
-    },
+    body: { username, password, usePlexAdminAccount: false },
     failOnStatusCode: false,
   }).then((resp) => {
-    cy.log(`ensureSetup: wizard API responded ${resp.status}`);
+    expect(resp.status, 'wizard endpoint should respond 200').to.equal(200);
+
+    // SaveWizardResult => { result: boolean, errors: string[] }.
+    //  - result === true  : admin was created (first run).
+    //  - result === false : only acceptable when the admin already exists,
+    //                       which is the idempotent re-run case. Any other
+    //                       failure (e.g. bad credentials) must fail loudly here
+    //                       rather than letting every later test time out.
+    const result = resp.body && resp.body.result;
+    if (result !== true) {
+      const errors: string[] = (resp.body && resp.body.errors) || [];
+      const alreadySetUp = errors.some((e) => /existing user/i.test(e));
+      expect(
+        alreadySetUp,
+        `unexpected wizard setup failure: ${JSON.stringify(errors)}`
+      ).to.be.true;
+    }
   });
 });
 

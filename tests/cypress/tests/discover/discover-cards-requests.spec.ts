@@ -327,7 +327,9 @@ describe("Discover Cards Requests Tests", () => {
 
       const card = Page.popularCarousel.getCard(expectedId, false, DiscoverType.Popular);
       // The card resolves its availability via an async detail lookup and only
-      // then renders the request button; give that a beat before hovering.
+      // then renders the request button; a deterministic wait is not reliable
+      // here (the button only renders once the carousel settles and the card is
+      // hovered), so allow that async work a beat before hovering.
       cy.wait(3000);
       card.title.realHover();
 
@@ -390,8 +392,9 @@ describe("Discover Cards Requests Tests", () => {
 
           const card = Page.popularCarousel.getCard(expectedId, false, DiscoverType.Popular);
           // The card resolves its availability via an async detail lookup and
-          // only then renders the request button; give that a beat before
-          // hovering.
+          // only then renders the request button; a deterministic wait is not
+          // reliable here (the button only renders once the carousel settles and
+          // the card is hovered), so allow that async work a beat before hovering.
           cy.wait(3000);
           card.title.realHover();
 
