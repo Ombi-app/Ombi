@@ -10,41 +10,56 @@
   </div>
 
   <div class="filter-actions">
-    <mat-form-field class="user-filter" appearance="outline" *ngIf="isAdmin && users.length > 0">
-      <mat-select
-        id="userFilterSelect"
-        [(value)]="selectedUserId"
-        (selectionChange)="onUserFilterChange()"
-        [aria-label]="'Requests.RequestedBy' | translate"
-      >
-        <mat-option value="">{{ 'Requests.AllUsers' | translate }}</mat-option>
-        <mat-option *ngFor="let user of users" [value]="user.id">{{ user.username }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field class="sort-select" appearance="outline">
-      <mat-select
-        id="sortBySelect"
-        [(value)]="sortActive"
-        (selectionChange)="onSortChange()"
-        [aria-label]="'Requests.SortBy' | translate"
-      >
-        <mat-option *ngFor="let option of sortOptions" [value]="option.value">{{ option.label | translate }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <button class="icon-button" type="button" id="sortDirectionButton"
-      (click)="toggleSortDirection()"
-      [attr.aria-label]="(sortDirection === 'asc' ? 'Requests.SortAscending' : 'Requests.SortDescending') | translate">
-      <i class="fas" [ngClass]="sortDirection === 'asc' ? 'fa-sort-amount-up' : 'fa-sort-amount-down'"></i>
+    <button class="control-pill" type="button" id="userFilterButton" *ngIf="isAdmin && users.length > 0"
+      [class.active]="selectedUserId" [matMenuTriggerFor]="userMenu"
+      [attr.aria-label]="'Requests.RequestedBy' | translate">
+      <i class="fas fa-user pill-icon"></i>
+      <span class="pill-value">{{ selectedUserId ? selectedUserName : ('Requests.AllUsers' | translate) }}</span>
+      <i class="fas fa-chevron-down pill-caret"></i>
     </button>
-    <mat-form-field class="display-count" appearance="outline">
-      <mat-select
-        [(value)]="gridCount"
-        (selectionChange)="onGridCountChange()"
-        [aria-label]="'Requests.GridSize' | translate"
-      >
-        <mat-option *ngFor="let count of gridCountOptions" [value]="count">{{ count }}</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <mat-menu #userMenu="matMenu" class="filter-menu">
+      <button mat-menu-item id="userFilterAll" (click)="selectUserFilter('')">
+        <i class="fas fa-check menu-check" [class.visible]="!selectedUserId"></i>
+        {{ 'Requests.AllUsers' | translate }}
+      </button>
+      <button mat-menu-item *ngFor="let user of users" (click)="selectUserFilter(user.id)">
+        <i class="fas fa-check menu-check" [class.visible]="selectedUserId === user.id"></i>
+        {{ user.username }}
+      </button>
+    </mat-menu>
+
+    <div class="pill-group" role="group" [attr.aria-label]="'Requests.SortBy' | translate">
+      <button class="control-pill grouped" type="button" id="sortByButton" [matMenuTriggerFor]="sortMenu">
+        <i class="fas fa-sort-amount-down pill-icon"></i>
+        <span class="pill-value">{{ activeSortLabel | translate }}</span>
+        <i class="fas fa-chevron-down pill-caret"></i>
+      </button>
+      <button class="control-pill grouped pill-direction" type="button" id="sortDirectionButton"
+        (click)="toggleSortDirection()"
+        [attr.aria-label]="(sortDirection === 'asc' ? 'Requests.SortAscending' : 'Requests.SortDescending') | translate">
+        <i class="fas" [ngClass]="sortDirection === 'asc' ? 'fa-arrow-up' : 'fa-arrow-down'"></i>
+      </button>
+    </div>
+    <mat-menu #sortMenu="matMenu" class="filter-menu">
+      <button mat-menu-item *ngFor="let option of sortOptions" (click)="selectSort(option.value)">
+        <i class="fas fa-check menu-check" [class.visible]="sortActive === option.value"></i>
+        {{ option.label | translate }}
+      </button>
+    </mat-menu>
+
+    <button class="control-pill" type="button" id="gridCountButton" [matMenuTriggerFor]="countMenu"
+      [attr.aria-label]="'Requests.GridSize' | translate">
+      <i class="fas fa-list-ol pill-icon"></i>
+      <span class="pill-value">{{ gridCount }}</span>
+      <i class="fas fa-chevron-down pill-caret"></i>
+    </button>
+    <mat-menu #countMenu="matMenu" class="filter-menu">
+      <button mat-menu-item *ngFor="let count of gridCountOptions" (click)="selectGridCount(count)">
+        <i class="fas fa-check menu-check" [class.visible]="gridCount === count"></i>
+        {{ count }}
+      </button>
+    </mat-menu>
+
     <div class="view-toggle" role="group" [attr.aria-label]="'Requests.ViewMode' | translate">
       <button type="button" id="viewModeCards" [class.active]="viewMode === 'cards'"
         [attr.aria-pressed]="viewMode === 'cards'"

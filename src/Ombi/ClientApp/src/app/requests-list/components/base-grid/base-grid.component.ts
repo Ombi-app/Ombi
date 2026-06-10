@@ -150,6 +150,40 @@ export abstract class BaseGridComponent<T> implements OnInit, AfterViewInit {
         this.storageService.save(this.storageKeyViewMode, mode);
     }
 
+    public get selectedUserName(): string {
+        const user = this.users.find(x => x.id === this.selectedUserId);
+        return user ? user.username : "";
+    }
+
+    public get activeSortLabel(): string {
+        const option = this.sortOptions.find(x => x.value === this.sortActive);
+        return option ? option.label : "";
+    }
+
+    public selectSort(value: string) {
+        if (this.sortActive === value) {
+            return;
+        }
+        this.sortActive = value;
+        this.refresh(true);
+    }
+
+    public selectUserFilter(id: string) {
+        if (this.selectedUserId === id) {
+            return;
+        }
+        this.selectedUserId = id;
+        this.refresh(true);
+    }
+
+    public selectGridCount(count: number) {
+        if (this.gridCount === count) {
+            return;
+        }
+        this.gridCount = count;
+        this.refresh(true);
+    }
+
     public onSortChange() {
         this.refresh(true);
     }

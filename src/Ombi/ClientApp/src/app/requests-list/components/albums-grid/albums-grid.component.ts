@@ -11,8 +11,7 @@ import { StorageService } from "../../../shared/storage/storage-service";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { MatButtonModule } from "@angular/material/button";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatSelectModule } from "@angular/material/select";
+import { MatMenuModule } from "@angular/material/menu";
 import { TranslateModule } from "@ngx-translate/core";
 import { OmbiDatePipe } from "../../../pipes/OmbiDatePipe";
 import { GridSpinnerComponent } from "../grid-spinner/grid-spinner.component";
@@ -28,8 +27,7 @@ import { BaseGridComponent } from "../base-grid/base-grid.component";
         RouterModule,
         MatPaginatorModule,
         MatButtonModule,
-        MatFormFieldModule,
-        MatSelectModule,
+        MatMenuModule,
         TranslateModule,
         OmbiDatePipe,
         GridSpinnerComponent

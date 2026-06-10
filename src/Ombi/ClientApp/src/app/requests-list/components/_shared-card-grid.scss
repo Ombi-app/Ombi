@@ -45,40 +45,106 @@
 .filter-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
-.display-count {
-  width: 72px;
-
-}
-
-.sort-select {
-  width: 150px;
-}
-
-.user-filter {
-  width: 150px;
-}
-
-.icon-button {
-  width: 36px;
-  height: 36px;
-  display: flex;
+// Select-all (movies, admin only)
+.select-all-pill {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  border-radius: 8px;
+  gap: 2px;
+  height: 34px;
+  padding: 0 12px 0 4px;
+  margin: 0;
+  border-radius: 20px;
   border: 1px solid #222;
   background: #111;
-  color: #808080;
   cursor: pointer;
   transition: all 0.2s ease;
 
+  .select-label {
+    color: #999;
+    font-size: 0.82rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
   &:hover {
     border-color: #444;
-    color: #fff;
-    background: #1a1a1a;
+
+    .select-label { color: #d9d9d9; }
+  }
+}
+
+// Toolbar control pills (user filter / sort / page size)
+.control-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 20px;
+  border: 1px solid #222;
+  background: #111;
+  color: #999;
+  font-size: 0.82rem;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  .pill-icon {
+    font-size: 0.72rem;
+    color: #5a5a5a;
+    transition: color 0.2s ease;
+  }
+
+  .pill-caret {
+    font-size: 0.55rem;
+    color: #5a5a5a;
+    transition: color 0.2s ease;
+  }
+
+  &:hover {
+    border-color: #444;
+    background: #141414;
+    color: #d9d9d9;
+
+    .pill-icon,
+    .pill-caret { color: #999; }
+  }
+
+  &.active {
+    border-color: $accent-dark;
+    color: $accent-dark;
+
+    .pill-icon,
+    .pill-caret { color: $accent-dark; }
+  }
+}
+
+// Joined pill pair (sort field + direction)
+.pill-group {
+  display: inline-flex;
+
+  .control-pill.grouped {
+    &:first-child {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-right: none;
+    }
+
+    &:last-child {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+
+  .pill-direction {
+    padding: 0 12px;
+
+    i { font-size: 0.72rem; }
   }
 }
 
@@ -86,18 +152,22 @@
 .view-toggle {
   display: flex;
   border: 1px solid #222;
-  border-radius: 8px;
-  overflow: hidden;
+  border-radius: 20px;
+  background: #111;
+  padding: 3px;
+  gap: 2px;
 
   button {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 26px;
     display: flex;
     align-items: center;
     justify-content: center;
     border: none;
-    background: #111;
-    color: #808080;
+    border-radius: 14px;
+    background: transparent;
+    color: #5a5a5a;
+    font-size: 0.72rem;
     cursor: pointer;
     transition: all 0.2s ease;
 
@@ -110,6 +180,38 @@
       background: $accent-dark;
       color: #111;
     }
+  }
+}
+
+// Dropdown menus for the toolbar pills - rendered in the CDK overlay,
+// so this cannot be scoped to :host
+/* stylelint-disable-next-line selector-pseudo-element-no-unknown */
+::ng-deep .filter-menu.mat-mdc-menu-panel, /* NOSONAR */
+::ng-deep .filter-menu.mat-menu-panel { /* NOSONAR */
+  background: #161616;
+  border: 1px solid #222;
+  border-radius: 10px;
+  min-width: 160px;
+
+  .mat-mdc-menu-item,
+  .mat-menu-item {
+    font-size: 0.85rem;
+    min-height: 38px;
+    color: #ccc;
+
+    &:hover {
+      background: #1f1f1f;
+    }
+  }
+
+  .menu-check {
+    width: 14px;
+    margin-right: 10px;
+    font-size: 0.7rem;
+    color: $accent-dark;
+    visibility: hidden;
+
+    &.visible { visibility: visible; }
   }
 }
 

@@ -17,9 +17,6 @@ import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { GridSpinnerComponent } from "../grid-spinner/grid-spinner.component";
 import { TranslateModule } from "@ngx-translate/core";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatOptionModule } from "@angular/material/core";
-import { MatSelectModule } from "@angular/material/select";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
@@ -39,10 +36,7 @@ import { BaseGridComponent } from "../base-grid/base-grid.component";
         RouterModule,
         GridSpinnerComponent,
         TranslateModule,
-        MatFormFieldModule,
-        MatOptionModule,
         MatPaginatorModule,
-        MatSelectModule,
         MatMenuModule,
         MatButtonModule,
         MatIconModule,
