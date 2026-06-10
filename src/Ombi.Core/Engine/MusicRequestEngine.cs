@@ -547,24 +547,9 @@ namespace Ombi.Core.Engine
                     break;
             }
 
-            var prop = TypeDescriptor.GetProperties(typeof(AlbumRequest)).Find(sortProperty, true);
-
-            if (prop == null || sortProperty.Contains('.'))
-            {
-                // Navigation properties and unknown names are not supported; fall back to RequestedDate
-                prop = TypeDescriptor.GetProperties(typeof(AlbumRequest)).Find("RequestedDate", true);
-                //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
-                //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
-                //var propType = firstProp.PropertyType;
-                //var secondProp = TypeDescriptor.GetProperties(propType).Find(properties[1], true);
-            }
-
-            // TODO fix this so we execute this on the server
-            var requests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
-                ? allRequests.ToList().OrderBy(x => prop.GetValue(x)).ToList()
-                : allRequests.ToList().OrderByDescending(x => prop.GetValue(x)).ToList();
-            var total = requests.Count();
-            requests = requests.Skip(position).Take(count).ToList();
+            var total = await allRequests.CountAsync();
+            var requests = await ApplySortAlbums(allRequests, sortProperty, sortOrder)
+                .Skip(position).Take(count).ToListAsync();
 
             await CheckForSubscription(shouldHide, requests);
             return new RequestsViewModel<AlbumRequest>
@@ -593,30 +578,27 @@ namespace Ombi.Core.Engine
 
             allRequests = FilterByRequestedUser(allRequests, requestedByUserId, shouldHide.IsAdmin);
 
-            var prop = TypeDescriptor.GetProperties(typeof(AlbumRequest)).Find(sortProperty, true);
-
-            if (prop == null || sortProperty.Contains('.'))
-            {
-                // Navigation properties and unknown names are not supported; fall back to RequestedDate
-                prop = TypeDescriptor.GetProperties(typeof(AlbumRequest)).Find("RequestedDate", true);
-                //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
-                //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
-                //var propType = firstProp.PropertyType;
-                //var secondProp = TypeDescriptor.GetProperties(propType).Find(properties[1], true);
-            }
-
-            // TODO fix this so we execute this on the server
-            var requests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
-                ? allRequests.ToList().OrderBy(x => prop.GetValue(x)).ToList()
-                : allRequests.ToList().OrderByDescending(x => prop.GetValue(x)).ToList();
-            var total = requests.Count();
-            requests = requests.Skip(position).Take(count).ToList();
+            var total = await allRequests.CountAsync();
+            var requests = await ApplySortAlbums(allRequests, sortProperty, sortOrder)
+                .Skip(position).Take(count).ToListAsync();
 
             await CheckForSubscription(shouldHide, requests);
             return new RequestsViewModel<AlbumRequest>
             {
                 Collection = requests,
                 Total = total
+            };
+        }
+
+        private static IQueryable<AlbumRequest> ApplySortAlbums(IQueryable<AlbumRequest> query, string sortProperty, string sortOrder)
+        {
+            var asc = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase);
+            return sortProperty.ToLowerInvariant() switch
+            {
+                "title" => asc ? query.OrderBy(x => x.Title) : query.OrderByDescending(x => x.Title),
+                "releasedate" => asc ? query.OrderBy(x => x.ReleaseDate) : query.OrderByDescending(x => x.ReleaseDate),
+                "artistname" => asc ? query.OrderBy(x => x.ArtistName) : query.OrderByDescending(x => x.ArtistName),
+                _ => asc ? query.OrderBy(x => x.RequestedDate) : query.OrderByDescending(x => x.RequestedDate)
             };
         }
     }

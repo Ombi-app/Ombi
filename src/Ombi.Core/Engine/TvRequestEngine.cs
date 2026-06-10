@@ -7,7 +7,6 @@ using Ombi.Core.Models.Search;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
@@ -384,29 +383,14 @@ namespace Ombi.Core.Engine
 
             allRequests = FilterByRequestedUser(allRequests.AsQueryable(), requestedByUserId, shouldHide.IsAdmin).ToList();
 
-            var total = allRequests.Count;
+            allRequests = ApplySortTv(allRequests, sortProperty, sortOrder);
 
-
-            var prop = TypeDescriptor.GetProperties(typeof(ChildRequests)).Find(sortProperty, true);
-
-            if (prop == null || sortProperty.Contains('.'))
-            {
-                // Navigation properties and unknown names are not supported; fall back to Title
-                prop = TypeDescriptor.GetProperties(typeof(ChildRequests)).Find("Title", true);
-                //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
-                //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
-                //var propType = firstProp.PropertyType;
-                //var secondProp = TypeDescriptor.GetProperties(propType).Find(properties[1], true);
-            }
-            allRequests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
-                ? allRequests.OrderBy(x => prop.GetValue(x)).ToList()
-                : allRequests.OrderByDescending(x => prop.GetValue(x)).ToList();
-            
             await FillAdditionalFields(shouldHide, allRequests);
 
             // Make sure we do not show duplicate child requests
             allRequests = allRequests.DistinctBy(x => x.ParentRequest.Title).ToList();
 
+            var total = allRequests.Count;
             allRequests = allRequests.Skip(position).Take(count).ToList();
 
             return new RequestsViewModel<ChildRequests>
@@ -459,29 +443,14 @@ namespace Ombi.Core.Engine
                 return new RequestsViewModel<ChildRequests>();
             }
 
-            var total = allRequests.Count;
+            allRequests = ApplySortTv(allRequests, sortProperty, sortOrder);
 
-
-            var prop = TypeDescriptor.GetProperties(typeof(ChildRequests)).Find(sortProperty, true);
-
-            if (prop == null || sortProperty.Contains('.'))
-            {
-                // Navigation properties and unknown names are not supported; fall back to Title
-                prop = TypeDescriptor.GetProperties(typeof(ChildRequests)).Find("Title", true);
-                //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
-                //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
-                //var propType = firstProp.PropertyType;
-                //var secondProp = TypeDescriptor.GetProperties(propType).Find(properties[1], true);
-            }
-            allRequests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
-                ? allRequests.OrderBy(x => prop.GetValue(x)).ToList()
-                : allRequests.OrderByDescending(x => prop.GetValue(x)).ToList();
-            
             await FillAdditionalFields(shouldHide, allRequests);
 
             // Make sure we do not show duplicate child requests
             allRequests = allRequests.DistinctBy(x => x.ParentRequest.Title).ToList();
 
+            var total = allRequests.Count;
             allRequests = allRequests.Skip(position).Take(count).ToList();
 
             return new RequestsViewModel<ChildRequests>
@@ -516,27 +485,14 @@ namespace Ombi.Core.Engine
 
             allRequests = FilterByRequestedUser(allRequests.AsQueryable(), requestedByUserId, shouldHide.IsAdmin).ToList();
 
-            var total = allRequests.Count;
+            allRequests = ApplySortTv(allRequests, sortProperty, sortOrder);
 
-
-            var prop = TypeDescriptor.GetProperties(typeof(ChildRequests)).Find(sortProperty, true);
-
-            if (prop == null || sortProperty.Contains('.'))
-            {
-                // Navigation properties and unknown names are not supported; fall back to Title
-                prop = TypeDescriptor.GetProperties(typeof(ChildRequests)).Find("Title", true);
-                //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
-                //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
-                //var propType = firstProp.PropertyType;
-                //var secondProp = TypeDescriptor.GetProperties(propType).Find(properties[1], true);
-            }
-            allRequests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
-                ? allRequests.OrderBy(x => prop.GetValue(x)).ToList()
-                : allRequests.OrderByDescending(x => prop.GetValue(x)).ToList();
             await FillAdditionalFields(shouldHide, allRequests);
 
             // Make sure we do not show duplicate child requests
             allRequests = allRequests.DistinctBy(x => x.ParentRequest.Title).ToList();
+
+            var total = allRequests.Count;
             allRequests = allRequests.Skip(position).Take(count).ToList();
 
             return new RequestsViewModel<ChildRequests>
@@ -582,6 +538,16 @@ namespace Ombi.Core.Engine
 
             await FillAdditionalFields(shouldHide, new List<TvRequests>{request});
             return request;
+        }
+
+        private static List<ChildRequests> ApplySortTv(List<ChildRequests> requests, string sortProperty, string sortOrder)
+        {
+            var asc = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase);
+            return sortProperty.ToLowerInvariant() switch
+            {
+                "title" => asc ? requests.OrderBy(x => x.Title).ToList() : requests.OrderByDescending(x => x.Title).ToList(),
+                _ => asc ? requests.OrderBy(x => x.RequestedDate).ToList() : requests.OrderByDescending(x => x.RequestedDate).ToList()
+            };
         }
 
         private static void FilterChildren(IEnumerable<TvRequests> allRequests, HideResult shouldHide)
