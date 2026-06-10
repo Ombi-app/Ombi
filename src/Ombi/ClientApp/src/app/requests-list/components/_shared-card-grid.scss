@@ -162,7 +162,7 @@
 
 // Dropdown menus for the toolbar pills - rendered in the CDK overlay,
 // so this cannot be scoped to :host
-/* stylelint-disable-next-line selector-pseudo-element-no-unknown */
+/* stylelint-disable selector-pseudo-element-no-unknown */
 ::ng-deep .filter-menu.mat-mdc-menu-panel, /* NOSONAR */
 ::ng-deep .filter-menu.mat-menu-panel { /* NOSONAR */
   background: #161616;
@@ -191,6 +191,7 @@
     &.visible { visibility: visible; }
   }
 }
+/* stylelint-enable selector-pseudo-element-no-unknown */
 
 // Card Grid
 .card-grid {
