@@ -42,7 +42,6 @@ describe("Discover Cards Requests Tests", () => {
       card.requestButton.should("exist");
       // Not visible until hover
       card.requestButton.should("not.be.visible");
-      cy.wait(500);
       card.topLevelCard.realHover();
 
       card.requestButton.should("be.visible");
@@ -55,9 +54,13 @@ describe("Discover Cards Requests Tests", () => {
 
       cy.verifyNotification("has been added successfully");
 
-      card.requestButton.should("not.exist");
+      // Assert the positive "requested" state first: these retry until the card
+      // has re-rendered, which is also what removes the request button. Checking
+      // button removal last avoids a race where the just-clicked (still focused)
+      // button lingers in the DOM for a beat after the state change.
       card.availabilityText.should("have.text", "Pending");
       card.statusClass.should("have.class", "requested");
+      card.requestButton.should("not.exist");
     });
   });
 
@@ -105,7 +108,6 @@ describe("Discover Cards Requests Tests", () => {
           card.requestButton.should("exist");
           // Not visible until hover
           card.requestButton.should("not.be.visible");
-          cy.wait(500);
           card.topLevelCard.realHover();
 
           card.requestButton.should("be.visible");
@@ -115,9 +117,12 @@ describe("Discover Cards Requests Tests", () => {
 
           cy.verifyNotification("has been added successfully");
 
-          card.requestButton.should("not.exist");
+          // Assert the positive "requested" state first (these retry until the
+          // card re-renders, which is what removes the button); check button
+          // removal last to avoid a race with the just-clicked focused button.
           card.availabilityText.should("have.text", "Pending");
           card.statusClass.should("have.class", "requested");
+          card.requestButton.should("not.exist");
         });
       });
     });
@@ -327,9 +332,12 @@ describe("Discover Cards Requests Tests", () => {
       var expectedId = body[3].id;
       var title = body[3].title;
 
-      cy.wait(3000);
-
       const card = Page.popularCarousel.getCard(expectedId, false, DiscoverType.Popular);
+      // The card resolves its availability via an async detail lookup and only
+      // then renders the request button; a deterministic wait is not reliable
+      // here (the button only renders once the carousel settles and the card is
+      // hovered), so allow that async work a beat before hovering.
+      cy.wait(3000);
       card.title.realHover();
 
       cy.waitUntil(() => {
@@ -389,9 +397,12 @@ describe("Discover Cards Requests Tests", () => {
           var expectedId = body[5].id;
           var title = body[5].title;
 
-          cy.wait(3000);
-
           const card = Page.popularCarousel.getCard(expectedId, false, DiscoverType.Popular);
+          // The card resolves its availability via an async detail lookup and
+          // only then renders the request button; a deterministic wait is not
+          // reliable here (the button only renders once the carousel settles and
+          // the card is hovered), so allow that async work a beat before hovering.
+          cy.wait(3000);
           card.title.realHover();
 
           cy.waitUntil(() => {

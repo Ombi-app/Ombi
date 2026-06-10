@@ -123,14 +123,12 @@ describe('Movie Details Buttons', () => {
 		Page.denyButton.click();
 
 		Page.denyModal.denyReason.type('Automation Tests');
-		cy.wait(500);
-		Page.denyModal.denyButton.click();
+		Page.denyModal.denyButton.should('be.visible').click();
 
 		Page.deniedButton.should('exist');
 
 		cy.verifyNotification('Denied Request');
 
-		cy.wait(1000);
 		Page.informationPanel.denyReason.should('have.text', 'Automation Tests');
 	});
 
@@ -156,7 +154,7 @@ describe('Movie Details Buttons', () => {
 		Page.viewOnJellyfinButton.should('not.exist');
 		Page.viewOnPlexButton.should('not.exist');
 		Page.requestedButton.should('not.exist');
-		Page.reportIssueButton.should('not.exist'); // Issuess not enabled
+		Page.reportIssueButton.should('not.exist'); // Issues not enabled
 		Page.requestButton.should('exist');
 	});
 });

@@ -8,6 +8,7 @@ import 'cypress-wait-until';
 declare global {
   namespace Cypress {
     interface Chainable {
+      ensureSetup(): Chainable<void>;
       landingSettings(enabled: boolean): Chainable<void>;
       loginWithCreds(username: string, password: string): Chainable<void>;
       login(): Chainable<void>;
@@ -25,6 +26,51 @@ declare global {
     }
   }
 }
+
+// Idempotently make sure Ombi has finished its first-run setup (i.e. the admin
+// user exists and the wizard is marked complete). Historically every spec
+// depended on the wizard feature having been run first via the UI - if that run
+// failed or was skipped, the whole suite cascaded into failures because the app
+// stayed on the wizard page. This command talks directly to the wizard API
+// (the same endpoint the UI calls) so any spec can guarantee a usable app on its
+// own, regardless of execution order.
+//
+// The endpoint is [AllowAnonymous] and only succeeds when no local user exists,
+// so calling it repeatedly is safe: once the admin is created it simply returns
+// "existing user" which we deliberately ignore.
+Cypress.Commands.add('ensureSetup', () => {
+  const username = Cypress.env('username');
+  const password = Cypress.env('password');
+  expect(username, 'Cypress env "username" must be set for ensureSetup')
+    .to.be.a('string').and.not.be.empty;
+  expect(password, 'Cypress env "password" must be set for ensureSetup')
+    .to.be.a('string').and.not.be.empty;
+
+  cy.request({
+    method: 'POST',
+    url: '/api/v1/Identity/Wizard',
+    body: { username, password, usePlexAdminAccount: false },
+    failOnStatusCode: false,
+  }).then((resp) => {
+    expect(resp.status, 'wizard endpoint should respond 200').to.equal(200);
+
+    // SaveWizardResult => { result: boolean, errors: string[] }.
+    //  - result === true  : admin was created (first run).
+    //  - result === false : only acceptable when the admin already exists,
+    //                       which is the idempotent re-run case. Any other
+    //                       failure (e.g. bad credentials) must fail loudly here
+    //                       rather than letting every later test time out.
+    const result = resp.body?.result;
+    if (result !== true) {
+      const errors: string[] = resp.body?.errors ?? [];
+      const alreadySetUp = errors.some((e) => /existing user/i.test(e));
+      expect(
+        alreadySetUp,
+        `unexpected wizard setup failure: ${JSON.stringify(errors)}`
+      ).to.be.true;
+    }
+  });
+});
 
 // Enhanced landing page settings command
 Cypress.Commands.add("landingSettings", (enabled: boolean) => {

@@ -15,7 +15,7 @@ describe("Search Tests", () => {
 
     card.topLevelCard.realHover();
     card.title.should('have.text', "Dexter's Laboratory");
-    card.overview.contains('Dexter');
+    card.overview.invoke('text').then((t) => expect(t.trim()).to.not.equal(''));
     card.requestType.contains('TV Show');
     card.requestButton.should('exist');
   });
@@ -74,7 +74,9 @@ describe("Search Tests", () => {
 
     card.topLevelCard.realHover();
     card.title.should('have.text', 'Harry Potter and the Half-Blood Prince (2009)');
-    card.overview.contains('Hogwarts');
+    // The overview text comes from the live TMDb API and changes over time, so
+    // assert it is populated rather than coupling the test to specific wording.
+    card.overview.invoke('text').then((t) => expect(t.trim()).to.not.equal(''));
     card.requestType.contains('Movie');
     card.requestButton.should('exist');
   });
@@ -93,7 +95,9 @@ describe("Search Tests", () => {
 
     card.topLevelCard.realHover();
     card.title.should('have.text', 'Harry Potter and the Half-Blood Prince (2009)');
-    card.overview.contains('Hogwarts');
+    // The overview text comes from the live TMDb API and changes over time, so
+    // assert it is populated rather than coupling the test to specific wording.
+    card.overview.invoke('text').then((t) => expect(t.trim()).to.not.equal(''));
     card.requestType.contains('Movie');
     card.requestButton.should('exist');
   });
@@ -112,7 +116,7 @@ describe("Search Tests", () => {
 
     card.topLevelCard.realHover();
     card.title.should('have.text', "Dexter: New Blood");
-    card.overview.contains('Iron Lake');
+    card.overview.invoke('text').then((t) => expect(t.trim()).to.not.equal(''));
     card.requestType.contains('TV Show');
     card.requestButton.should('exist');
   });
