@@ -33,6 +33,7 @@ namespace Ombi.Api.IntegrationTests.Harness
             Factory.MovieRequestEngine.Invocations.Clear();
             Factory.TvRequestEngine.Invocations.Clear();
             Factory.RottenTomatoesApi.Invocations.Clear();
+            Factory.RecentlyAddedEngine.Invocations.Clear();
         }
 
         [OneTimeTearDown]
