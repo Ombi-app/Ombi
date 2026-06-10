@@ -95,7 +95,13 @@ namespace Ombi.Schedule.Jobs.Ombi
                 await _embyRepo.ExecuteSql(episodeSQL);
                 await _embyRepo.ExecuteSql(mainSql);
 
-                await OmbiQuartz.TriggerJob(nameof(IEmbyContentSync), "Emby");
+                var triggered = await OmbiQuartz.TriggerJobIfNotRunning(nameof(IEmbyContentSync), "Emby",
+                    new Dictionary<string, object> { { JobDataKeys.EmbyRecentlyAddedSearch, "false" } });
+                if (!triggered)
+                {
+                    _log.LogWarning(LoggingEvents.MediaReferesh,
+                        "Emby data was cleared but the resync was not triggered because a sync is already running. Trigger the Emby content sync manually once it finishes.");
+                }
             }
             catch (Exception e)
             {
@@ -117,7 +123,12 @@ namespace Ombi.Schedule.Jobs.Ombi
                 await _jellyfinRepo.ExecuteSql(episodeSQL);
                 await _jellyfinRepo.ExecuteSql(mainSql);
 
-                await OmbiQuartz.TriggerJob(nameof(IJellyfinContentSync), "Jellyfin");
+                var triggered = await OmbiQuartz.TriggerJobIfNotRunning(nameof(IJellyfinContentSync), "Jellyfin");
+                if (!triggered)
+                {
+                    _log.LogWarning(LoggingEvents.MediaReferesh,
+                        "Jellyfin data was cleared but the resync was not triggered because a sync is already running. Trigger the Jellyfin content sync manually once it finishes.");
+                }
             }
             catch (Exception e)
             {
