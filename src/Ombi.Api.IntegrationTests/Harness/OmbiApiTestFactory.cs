@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Moq;
+using Ombi.Api.External.ExternalApis.RottenTomatoes;
 using Ombi.Core;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Engine.V2;
@@ -29,6 +30,7 @@ namespace Ombi.Api.IntegrationTests.Harness
         public Mock<IMultiSearchEngine> MultiSearchEngine { get; } = new Mock<IMultiSearchEngine>();
         public Mock<IMovieRequestEngine> MovieRequestEngine { get; } = new Mock<IMovieRequestEngine>();
         public Mock<ITvRequestEngine> TvRequestEngine { get; } = new Mock<ITvRequestEngine>();
+        public Mock<IRottenTomatoesApi> RottenTomatoesApi { get; } = new Mock<IRottenTomatoesApi>();
 
         public OmbiApiTestFactory()
         {
@@ -82,6 +84,7 @@ namespace Ombi.Api.IntegrationTests.Harness
                 services.AddTransient(_ => MultiSearchEngine.Object);
                 services.AddTransient(_ => MovieRequestEngine.Object);
                 services.AddTransient(_ => TvRequestEngine.Object);
+                services.AddTransient(_ => RottenTomatoesApi.Object);
             });
         }
 

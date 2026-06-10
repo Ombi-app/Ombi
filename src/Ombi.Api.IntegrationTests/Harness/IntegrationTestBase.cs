@@ -32,6 +32,7 @@ namespace Ombi.Api.IntegrationTests.Harness
             Factory.MultiSearchEngine.Invocations.Clear();
             Factory.MovieRequestEngine.Invocations.Clear();
             Factory.TvRequestEngine.Invocations.Clear();
+            Factory.RottenTomatoesApi.Invocations.Clear();
         }
 
         [OneTimeTearDown]
@@ -51,6 +52,14 @@ namespace Ombi.Api.IntegrationTests.Harness
         {
             var content = new StringContent(JsonConvert.SerializeObject(payload), System.Text.Encoding.UTF8, "application/json");
             using var resp = await Client.PostAsync(url, content);
+            var body = await resp.Content.ReadAsStringAsync();
+            return (resp.StatusCode, body);
+        }
+
+        protected async Task<(HttpStatusCode status, string body)> PutJsonAsync(string url, object payload)
+        {
+            var content = new StringContent(JsonConvert.SerializeObject(payload), System.Text.Encoding.UTF8, "application/json");
+            using var resp = await Client.PutAsync(url, content);
             var body = await resp.Content.ReadAsStringAsync();
             return (resp.StatusCode, body);
         }

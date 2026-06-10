@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Moq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using Ombi.Api.External.ExternalApis.RottenTomatoes.Models;
+using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
 using Ombi.Api.IntegrationTests.Harness;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Models.Search.V2;
@@ -130,6 +132,141 @@ namespace Ombi.Api.IntegrationTests.Tests
             Assert.That(array.Count, Is.EqualTo(1));
             var item = (JObject)array[0];
             AssertHasProperties(item, "id", "mediaType", "title", "poster", "overview");
+        }
+
+        private static readonly string[] MovieListProps =
+        {
+            "id", "title", "overview", "posterPath", "backdropPath", "releaseDate",
+            "voteAverage", "voteCount", "available", "approved", "requested", "type"
+        };
+
+        private static readonly string[] TvListProps =
+        {
+            "id", "title", "status", "firstAired", "banner", "available",
+            "approved", "requested", "type"
+        };
+
+        private static List<SearchMovieViewModel> OneMovie() => new List<SearchMovieViewModel>
+        {
+            new SearchMovieViewModel { Id = 1, Title = "M", Overview = "o", PosterPath = "/p", BackdropPath = "/b", VoteAverage = 5 }
+        };
+
+        private static List<SearchTvShowViewModel> OneShow() => new List<SearchTvShowViewModel>
+        {
+            new SearchTvShowViewModel { Id = 1, Title = "S", Status = "Continuing", FirstAired = "2020", Banner = "/banner" }
+        };
+
+        [Test]
+        public async Task TopRatedMovies_ReturnsExpectedShape()
+        {
+            Factory.MovieEngineV2.Setup(x => x.TopRatedMovies(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(OneMovie());
+            var (status, body) = await GetAsync("/api/v2/search/movie/toprated/0/10");
+            Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
+            AssertHasProperties((JObject)AsArray(body)[0], MovieListProps);
+        }
+
+        [Test]
+        public async Task UpcomingMovies_ReturnsExpectedShape()
+        {
+            Factory.MovieEngineV2.Setup(x => x.UpcomingMovies(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(OneMovie());
+            var (status, body) = await GetAsync("/api/v2/search/movie/upcoming/0/10");
+            Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
+            AssertHasProperties((JObject)AsArray(body)[0], MovieListProps);
+        }
+
+        [Test]
+        public async Task NowPlayingMovies_ReturnsExpectedShape()
+        {
+            Factory.MovieEngineV2.Setup(x => x.NowPlayingMovies(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(OneMovie());
+            var (status, body) = await GetAsync("/api/v2/search/movie/nowplaying/0/10");
+            Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
+            AssertHasProperties((JObject)AsArray(body)[0], MovieListProps);
+        }
+
+        [Test]
+        public async Task PopularTv_ReturnsExpectedShape()
+        {
+            Factory.TvSearchEngineV2.Setup(x => x.Popular(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(OneShow());
+            var (status, body) = await GetAsync("/api/v2/search/tv/popular/0/10");
+            Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
+            AssertHasProperties((JObject)AsArray(body)[0], TvListProps);
+        }
+
+        [Test]
+        public async Task TrendingTv_ReturnsExpectedShape()
+        {
+            Factory.TvSearchEngineV2.Setup(x => x.Trending(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(OneShow());
+            var (status, body) = await GetAsync("/api/v2/search/tv/trending/0/10");
+            Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
+            AssertHasProperties((JObject)AsArray(body)[0], TvListProps);
+        }
+
+        [Test]
+        public async Task AnticipatedTv_ReturnsExpectedShape()
+        {
+            Factory.TvSearchEngineV2.Setup(x => x.Anticipated(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(OneShow());
+            var (status, body) = await GetAsync("/api/v2/search/tv/anticipated/0/10");
+            Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
+            AssertHasProperties((JObject)AsArray(body)[0], TvListProps);
+        }
+
+        [Test]
+        public async Task MovieStreams_ReturnsExpectedShape()
+        {
+            Factory.MovieEngineV2.Setup(x => x.GetStreamInformation(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<StreamingData> { new StreamingData { Order = 1, StreamingProvider = "Netflix", Logo = "/logo" } });
+            var (status, body) = await GetAsync("/api/v2/search/stream/movie/123");
+            Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
+            AssertHasProperties((JObject)AsArray(body)[0], "order", "streamingProvider", "logo");
+        }
+
+        [Test]
+        public async Task TvStreams_ReturnsExpectedShape()
+        {
+            Factory.TvSearchEngineV2.Setup(x => x.GetStreamInformation(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<StreamingData> { new StreamingData { Order = 1, StreamingProvider = "Hulu", Logo = "/logo" } });
+            var (status, body) = await GetAsync("/api/v2/search/stream/tv/123");
+            Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
+            AssertHasProperties((JObject)AsArray(body)[0], "order", "streamingProvider", "logo");
+        }
+
+        [Test]
+        public async Task ActorMovieCredits_ReturnsExpectedShape()
+        {
+            Factory.MovieEngineV2.Setup(x => x.GetMoviesByActor(It.IsAny<int>(), It.IsAny<string>()))
+                .ReturnsAsync(new ActorCredits { id = 1, cast = new[] { new Cast { id = 2, character = "Hero", poster_path = "/p" } } });
+            var (status, body) = await GetAsync("/api/v2/search/actor/1/movie");
+            Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
+            AssertHasProperties(AsObject(body), "id", "cast", "crew");
+        }
+
+        [Test]
+        public async Task ActorTvCredits_ReturnsExpectedShape()
+        {
+            Factory.TvSearchEngineV2.Setup(x => x.GetTvByActor(It.IsAny<int>(), It.IsAny<string>()))
+                .ReturnsAsync(new ActorCredits { id = 1, cast = new[] { new Cast { id = 2, character = "Hero", poster_path = "/p" } } });
+            var (status, body) = await GetAsync("/api/v2/search/actor/1/tv");
+            Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
+            AssertHasProperties(AsObject(body), "id", "cast", "crew");
+        }
+
+        [Test]
+        public async Task MovieRatings_ReturnsOk()
+        {
+            Factory.RottenTomatoesApi.Setup(x => x.GetMovieRatings(It.IsAny<string>(), It.IsAny<int>()))
+                .ReturnsAsync(new MovieRatings());
+            var (status, _) = await GetAsync("/api/v2/search/ratings/movie/Up/2009");
+            Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
+        }
+
+        [Test]
+        public async Task TvRatings_ReturnsExpectedShape()
+        {
+            Factory.RottenTomatoesApi.Setup(x => x.GetTvRatings(It.IsAny<string>(), It.IsAny<int>()))
+                .ReturnsAsync(new TvRatings { Class = "fresh", Score = 90 });
+            var (status, body) = await GetAsync("/api/v2/search/ratings/tv/Lost/2004");
+            Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
+            AssertHasProperties(AsObject(body), "class", "score");
         }
     }
 }
