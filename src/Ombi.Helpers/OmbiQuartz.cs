@@ -26,9 +26,20 @@ namespace Ombi.Helpers
         /// </summary>
         public static OmbiQuartz Instance => _instance ?? (_instance = new OmbiQuartz());
 
-        protected OmbiQuartz()
+        protected OmbiQuartz() : this(true)
         {
-            Init();
+        }
+
+        /// <summary>
+        /// Allows tests to skip the async scheduler initialisation and supply their own scheduler,
+        /// since Init() runs async void and would otherwise race with (and overwrite) a test scheduler.
+        /// </summary>
+        protected OmbiQuartz(bool init)
+        {
+            if (init)
+            {
+                Init();
+            }
         }
 
         private async void Init()
