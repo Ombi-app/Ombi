@@ -510,7 +510,7 @@ namespace Ombi.Core.Engine
             return new RequestEngineResult { Result = true, Message = $"{model.Title} has been successfully added!", RequestId = model.Id };
         }
 
-        public async Task<RequestsViewModel<AlbumRequest>> GetRequestsByStatus(int count, int position, string sortProperty, string sortOrder, RequestStatus status)
+        public async Task<RequestsViewModel<AlbumRequest>> GetRequestsByStatus(int count, int position, string sortProperty, string sortOrder, RequestStatus status, string requestedByUserId = null)
         {
              var shouldHide = await HideFromOtherUsers();
             IQueryable<AlbumRequest> allRequests;
@@ -526,6 +526,8 @@ namespace Ombi.Core.Engine
                     MusicRepository
                         .GetWithUser();
             }
+
+            allRequests = FilterByRequestedUser(allRequests, requestedByUserId, shouldHide.IsAdmin);
 
             switch (status)
             {
@@ -545,24 +547,9 @@ namespace Ombi.Core.Engine
                     break;
             }
 
-            var prop = TypeDescriptor.GetProperties(typeof(AlbumRequest)).Find(sortProperty, true);
-
-            if (sortProperty.Contains('.'))
-            {
-                // This is a navigation property currently not supported
-                prop = TypeDescriptor.GetProperties(typeof(AlbumRequest)).Find("RequestedDate", true);
-                //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
-                //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
-                //var propType = firstProp.PropertyType;
-                //var secondProp = TypeDescriptor.GetProperties(propType).Find(properties[1], true);
-            }
-
-            // TODO fix this so we execute this on the server
-            var requests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
-                ? allRequests.ToList().OrderBy(x => x.RequestedDate).ToList()
-                : allRequests.ToList().OrderByDescending(x => prop.GetValue(x)).ToList();
-            var total = requests.Count();
-            requests = requests.Skip(position).Take(count).ToList();
+            var total = await allRequests.CountAsync();
+            var requests = await ApplySortAlbums(allRequests, sortProperty, sortOrder)
+                .Skip(position).Take(count).ToListAsync();
 
             await CheckForSubscription(shouldHide, requests);
             return new RequestsViewModel<AlbumRequest>
@@ -572,8 +559,8 @@ namespace Ombi.Core.Engine
             };
         }
 
-        public async Task<RequestsViewModel<AlbumRequest>> GetRequests(int count, int position, string sortProperty, string sortOrder)
-        { 
+        public async Task<RequestsViewModel<AlbumRequest>> GetRequests(int count, int position, string sortProperty, string sortOrder, string requestedByUserId = null)
+        {
             var shouldHide = await HideFromOtherUsers();
             IQueryable<AlbumRequest> allRequests;
             if (shouldHide.Hide)
@@ -589,30 +576,30 @@ namespace Ombi.Core.Engine
                         .GetWithUser();
             }
 
-            var prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(sortProperty, true);
+            allRequests = FilterByRequestedUser(allRequests, requestedByUserId, shouldHide.IsAdmin);
 
-            if (sortProperty.Contains('.'))
-            {
-                // This is a navigation property currently not supported
-                prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find("RequestedDate", true);
-                //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
-                //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
-                //var propType = firstProp.PropertyType;
-                //var secondProp = TypeDescriptor.GetProperties(propType).Find(properties[1], true);
-            }
-
-            // TODO fix this so we execute this on the server
-            var requests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
-                ? allRequests.ToList().OrderBy(x => x.RequestedDate).ToList()
-                : allRequests.ToList().OrderByDescending(x => prop.GetValue(x)).ToList();
-            var total = requests.Count();
-            requests = requests.Skip(position).Take(count).ToList();
+            var total = await allRequests.CountAsync();
+            var requests = await ApplySortAlbums(allRequests, sortProperty, sortOrder)
+                .Skip(position).Take(count).ToListAsync();
 
             await CheckForSubscription(shouldHide, requests);
             return new RequestsViewModel<AlbumRequest>
             {
                 Collection = requests,
                 Total = total
+            };
+        }
+
+        private static IQueryable<AlbumRequest> ApplySortAlbums(IQueryable<AlbumRequest> query, string sortProperty, string sortOrder)
+        {
+            var asc = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase);
+            return sortProperty.ToLowerInvariant() switch
+            {
+                "id" => asc ? query.OrderBy(x => x.Id) : query.OrderByDescending(x => x.Id),
+                "title" => asc ? query.OrderBy(x => x.Title) : query.OrderByDescending(x => x.Title),
+                "releasedate" => asc ? query.OrderBy(x => x.ReleaseDate) : query.OrderByDescending(x => x.ReleaseDate),
+                "artistname" => asc ? query.OrderBy(x => x.ArtistName) : query.OrderByDescending(x => x.ArtistName),
+                _ => asc ? query.OrderBy(x => x.RequestedDate) : query.OrderByDescending(x => x.RequestedDate)
             };
         }
     }

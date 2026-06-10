@@ -46,35 +46,36 @@ namespace Ombi.Controllers.V2
         /// <param name="position">The position. e.g. position 60 for a 2nd page (since we have already got the first 30 items)</param>
         /// <param name="sort">The item to sort on e.g. "requestDate"</param>
         /// <param name="sortOrder">asc or desc</param>
+        /// <param name="requestedBy">Optional. Only return requests made by this user id</param>
         [HttpGet("movie/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<MovieRequests>> GetRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<MovieRequests>> GetRequests(int count, int position, string sort, string sortOrder, [FromQuery] string requestedBy = null)
         {
-            return await _movieRequestEngine.GetRequests(count, position, sort, sortOrder);
+            return await _movieRequestEngine.GetRequests(count, position, sort, sortOrder, requestedBy);
         }
         
         [HttpGet("movie/availble/{count:int}/{position:int}/{sort}/{sortOrder}")]
         [HttpGet("movie/available/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<MovieRequests>> GetAvailableRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<MovieRequests>> GetAvailableRequests(int count, int position, string sort, string sortOrder, [FromQuery] string requestedBy = null)
         {
-            return await _movieRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.Available);
+            return await _movieRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.Available, requestedBy);
         }
         
         [HttpGet("movie/processing/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<MovieRequests>> GetProcessingRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<MovieRequests>> GetProcessingRequests(int count, int position, string sort, string sortOrder, [FromQuery] string requestedBy = null)
         {
-            return await _movieRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.ProcessingRequest);
+            return await _movieRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.ProcessingRequest, requestedBy);
         }
         
         [HttpGet("movie/pending/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<MovieRequests>> GetPendingRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<MovieRequests>> GetPendingRequests(int count, int position, string sort, string sortOrder, [FromQuery] string requestedBy = null)
         {
-            return await _movieRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.PendingApproval);
+            return await _movieRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.PendingApproval, requestedBy);
         }
         
         [HttpGet("movie/denied/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<MovieRequests>> GetDeniedRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<MovieRequests>> GetDeniedRequests(int count, int position, string sort, string sortOrder, [FromQuery] string requestedBy = null)
         {
-            return await _movieRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.Denied);
+            return await _movieRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.Denied, requestedBy);
         }
 
         /// <summary>
@@ -84,10 +85,11 @@ namespace Ombi.Controllers.V2
         /// <param name="position">The position. e.g. position 60 for a 2nd page (since we have already got the first 30 items)</param>
         /// <param name="sort">The item to sort on e.g. "requestDate"</param>
         /// <param name="sortOrder">asc or desc</param>
+        /// <param name="requestedBy">Optional. Only return requests made by this user id</param>
         [HttpGet("movie/unavailable/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<MovieRequests>> GetNotAvailableRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<MovieRequests>> GetNotAvailableRequests(int count, int position, string sort, string sortOrder, [FromQuery] string requestedBy = null)
         {
-            return await _movieRequestEngine.GetUnavailableRequests(count, position, sort, sortOrder);
+            return await _movieRequestEngine.GetUnavailableRequests(count, position, sort, sortOrder, requestedBy);
         }
 
         /// <summary>
@@ -97,34 +99,35 @@ namespace Ombi.Controllers.V2
         /// <param name="position">The position. e.g. position 60 for a 2nd page (since we have already got the first 30 items)</param>
         /// <param name="sort">The item to sort on e.g. "requestDate"</param>
         /// <param name="sortOrder">asc or desc</param>
+        /// <param name="requestedBy">Optional. Only return requests made by this user id</param>
         [HttpGet("tv/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<ChildRequests>> GetTvRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<ChildRequests>> GetTvRequests(int count, int position, string sort, string sortOrder, [FromQuery] string requestedBy = null)
         {
-            return await _tvRequestEngine.GetRequests(count, position, sort, sortOrder);
+            return await _tvRequestEngine.GetRequests(count, position, sort, sortOrder, requestedBy);
         }
 
         [HttpGet("tv/pending/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<ChildRequests>> GetPendingTvRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<ChildRequests>> GetPendingTvRequests(int count, int position, string sort, string sortOrder, [FromQuery] string requestedBy = null)
         {
-            return await _tvRequestEngine.GetRequests(count, position, sort, sortOrder, RequestStatus.PendingApproval);
+            return await _tvRequestEngine.GetRequests(count, position, sort, sortOrder, RequestStatus.PendingApproval, requestedBy);
         }
 
         [HttpGet("tv/processing/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<ChildRequests>> GetProcessingTvRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<ChildRequests>> GetProcessingTvRequests(int count, int position, string sort, string sortOrder, [FromQuery] string requestedBy = null)
         {
-            return await _tvRequestEngine.GetRequests(count, position, sort, sortOrder, RequestStatus.ProcessingRequest);
+            return await _tvRequestEngine.GetRequests(count, position, sort, sortOrder, RequestStatus.ProcessingRequest, requestedBy);
         }
 
         [HttpGet("tv/available/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<ChildRequests>> GetAvailableTvRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<ChildRequests>> GetAvailableTvRequests(int count, int position, string sort, string sortOrder, [FromQuery] string requestedBy = null)
         {
-            return await _tvRequestEngine.GetRequests(count, position, sort, sortOrder, RequestStatus.Available);
+            return await _tvRequestEngine.GetRequests(count, position, sort, sortOrder, RequestStatus.Available, requestedBy);
         }
 
         [HttpGet("tv/denied/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<ChildRequests>> GetDeniedTvRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<ChildRequests>> GetDeniedTvRequests(int count, int position, string sort, string sortOrder, [FromQuery] string requestedBy = null)
         {
-            return await _tvRequestEngine.GetRequests(count, position, sort, sortOrder, RequestStatus.Denied);
+            return await _tvRequestEngine.GetRequests(count, position, sort, sortOrder, RequestStatus.Denied, requestedBy);
         }
 
         /// <summary>
@@ -134,10 +137,11 @@ namespace Ombi.Controllers.V2
         /// <param name="position">The position. e.g. position 60 for a 2nd page (since we have already got the first 30 items)</param>
         /// <param name="sort">The item to sort on e.g. "requestDate"</param>
         /// <param name="sortOrder">asc or desc</param>
+        /// <param name="requestedBy">Optional. Only return requests made by this user id</param>
         [HttpGet("tv/unavailable/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<ChildRequests>> GetNotAvailableTvRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<ChildRequests>> GetNotAvailableTvRequests(int count, int position, string sort, string sortOrder, [FromQuery] string requestedBy = null)
         {
-            return await _tvRequestEngine.GetUnavailableRequests(count, position, sort, sortOrder);
+            return await _tvRequestEngine.GetUnavailableRequests(count, position, sort, sortOrder, requestedBy);
         }
 
         [PowerUser]
@@ -155,33 +159,33 @@ namespace Ombi.Controllers.V2
         }
 
         [HttpGet("album/available/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<AlbumRequest>> GetAvailableAlbumRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<AlbumRequest>> GetAvailableAlbumRequests(int count, int position, string sort, string sortOrder, [FromQuery] string requestedBy = null)
         {
-            return await _musicRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.Available);
+            return await _musicRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.Available, requestedBy);
         }
         
         [HttpGet("album/processing/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<AlbumRequest>> GetProcessingAlbumRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<AlbumRequest>> GetProcessingAlbumRequests(int count, int position, string sort, string sortOrder, [FromQuery] string requestedBy = null)
         {
-            return await _musicRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.ProcessingRequest);
+            return await _musicRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.ProcessingRequest, requestedBy);
         }
         
         [HttpGet("album/pending/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<AlbumRequest>> GetPendingAlbumRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<AlbumRequest>> GetPendingAlbumRequests(int count, int position, string sort, string sortOrder, [FromQuery] string requestedBy = null)
         {
-            return await _musicRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.PendingApproval);
+            return await _musicRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.PendingApproval, requestedBy);
         }
         
         [HttpGet("album/denied/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<AlbumRequest>> GetDeniedAlbumRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<AlbumRequest>> GetDeniedAlbumRequests(int count, int position, string sort, string sortOrder, [FromQuery] string requestedBy = null)
         {
-            return await _musicRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.Denied);
+            return await _musicRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.Denied, requestedBy);
         }
 
         [HttpGet("album/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<AlbumRequest>> GetAlbumRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<AlbumRequest>> GetAlbumRequests(int count, int position, string sort, string sortOrder, [FromQuery] string requestedBy = null)
         {
-            return await _musicRequestEngine.GetRequests(count, position, sort, sortOrder);
+            return await _musicRequestEngine.GetRequests(count, position, sort, sortOrder, requestedBy);
         }
 
         /// <summary>

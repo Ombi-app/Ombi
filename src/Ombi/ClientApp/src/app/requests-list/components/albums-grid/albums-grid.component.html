@@ -10,15 +10,70 @@
   </div>
 
   <div class="filter-actions">
-    <mat-form-field class="display-count" appearance="outline">
-      <mat-select
-        [(value)]="gridCount"
-        (selectionChange)="onGridCountChange()"
-        [aria-label]="'Requests.GridSize' | translate"
-      >
-        <mat-option *ngFor="let count of gridCountOptions" [value]="count">{{ count }}</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <button class="control-pill" type="button" id="userFilterButton" *ngIf="isAdmin && users.length > 0"
+      [class.active]="selectedUserId" [matMenuTriggerFor]="userMenu"
+      [attr.aria-label]="'Requests.RequestedBy' | translate">
+      <i class="fas fa-user pill-icon"></i>
+      <span class="pill-value">{{ selectedUserId ? selectedUserName : ('Requests.AllUsers' | translate) }}</span>
+      <i class="fas fa-chevron-down pill-caret"></i>
+    </button>
+    <mat-menu #userMenu="matMenu" class="filter-menu">
+      <button mat-menu-item id="userFilterAll" (click)="selectUserFilter('')">
+        <i class="fas fa-check menu-check" [class.visible]="!selectedUserId"></i>
+        {{ 'Requests.AllUsers' | translate }}
+      </button>
+      <button mat-menu-item *ngFor="let user of users" (click)="selectUserFilter(user.id)">
+        <i class="fas fa-check menu-check" [class.visible]="selectedUserId === user.id"></i>
+        {{ user.username }}
+      </button>
+    </mat-menu>
+
+    <div class="pill-group" role="group" [attr.aria-label]="'Requests.SortBy' | translate">
+      <button class="control-pill grouped" type="button" id="sortByButton" [matMenuTriggerFor]="sortMenu">
+        <i class="fas fa-sort-amount-down pill-icon"></i>
+        <span class="pill-value">{{ activeSortLabel | translate }}</span>
+        <i class="fas fa-chevron-down pill-caret"></i>
+      </button>
+      <button class="control-pill grouped pill-direction" type="button" id="sortDirectionButton"
+        (click)="toggleSortDirection()"
+        [attr.aria-label]="(sortDirection === 'asc' ? 'Requests.SortAscending' : 'Requests.SortDescending') | translate">
+        <i class="fas" [ngClass]="sortDirection === 'asc' ? 'fa-arrow-up' : 'fa-arrow-down'"></i>
+      </button>
+    </div>
+    <mat-menu #sortMenu="matMenu" class="filter-menu">
+      <button mat-menu-item *ngFor="let option of sortOptions" (click)="selectSort(option.value)">
+        <i class="fas fa-check menu-check" [class.visible]="sortActive === option.value"></i>
+        {{ option.label | translate }}
+      </button>
+    </mat-menu>
+
+    <button class="control-pill" type="button" id="gridCountButton" [matMenuTriggerFor]="countMenu"
+      [attr.aria-label]="'Requests.GridSize' | translate">
+      <i class="fas fa-list-ol pill-icon"></i>
+      <span class="pill-value">{{ gridCount }}</span>
+      <i class="fas fa-chevron-down pill-caret"></i>
+    </button>
+    <mat-menu #countMenu="matMenu" class="filter-menu">
+      <button mat-menu-item *ngFor="let count of gridCountOptions" (click)="selectGridCount(count)">
+        <i class="fas fa-check menu-check" [class.visible]="gridCount === count"></i>
+        {{ count }}
+      </button>
+    </mat-menu>
+
+    <div class="view-toggle" role="group" [attr.aria-label]="'Requests.ViewMode' | translate">
+      <button type="button" id="viewModeCards" [class.active]="viewMode === 'cards'"
+        [attr.aria-pressed]="viewMode === 'cards'"
+        [attr.aria-label]="'Requests.CardView' | translate"
+        (click)="switchView('cards')">
+        <i class="fas fa-th-large"></i>
+      </button>
+      <button type="button" id="viewModeCompact" [class.active]="viewMode === 'compact'"
+        [attr.aria-pressed]="viewMode === 'compact'"
+        [attr.aria-label]="'Requests.CompactView' | translate"
+        (click)="switchView('compact')">
+        <i class="fas fa-list"></i>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -26,7 +81,7 @@
 <grid-spinner [loading]="isLoadingResults"></grid-spinner>
 
 <!-- Card Grid -->
-<div class="card-grid" *ngIf="dataSource.length > 0">
+<div class="card-grid" *ngIf="viewMode === 'cards' && dataSource.length > 0">
   <div class="request-card" *ngFor="let item of dataSource">
     <!-- Cover Art -->
     <a class="card-poster" [routerLink]="'/details/artist/' + item.foreignArtistId">
@@ -80,6 +135,57 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- Compact Table -->
+<div class="compact-table-wrapper" *ngIf="viewMode === 'compact' && dataSource.length > 0">
+  <table class="compact-table">
+    <thead>
+      <tr>
+        <th class="sortable" (click)="setSort('title')" [attr.aria-sort]="sortActive === 'title' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : null">
+          {{ 'Requests.RequestsTitle' | translate }}
+          <i class="fas" [ngClass]="sortActive === 'title' ? (sortDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'"></i>
+        </th>
+        <th class="sortable" (click)="setSort('artistName')" [attr.aria-sort]="sortActive === 'artistName' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : null">
+          {{ 'Requests.ArtistName' | translate }}
+          <i class="fas" [ngClass]="sortActive === 'artistName' ? (sortDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'"></i>
+        </th>
+        <th class="sortable" (click)="setSort('releaseDate')" [attr.aria-sort]="sortActive === 'releaseDate' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : null">
+          {{ 'Requests.ReleaseDateSort' | translate }}
+          <i class="fas" [ngClass]="sortActive === 'releaseDate' ? (sortDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'"></i>
+        </th>
+        <th>{{ 'Requests.RequestedBy' | translate }}</th>
+        <th class="sortable" (click)="setSort('requestedDate')" [attr.aria-sort]="sortActive === 'requestedDate' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : null">
+          {{ 'Requests.RequestDate' | translate }}
+          <i class="fas" [ngClass]="sortActive === 'requestedDate' ? (sortDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'"></i>
+        </th>
+        <th>{{ 'Requests.Status' | translate }}</th>
+        <th class="col-actions"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of dataSource">
+        <td class="cell-title">
+          <a [routerLink]="'/details/artist/' + item.foreignArtistId">{{ item.title }}</a>
+        </td>
+        <td>{{ item.artistName }}</td>
+        <td>{{ item.releaseDate | ombiDate: 'P' }}</td>
+        <td>{{ item.requestedUser?.userAlias || item.requestedUser?.userName }}</td>
+        <td>{{ item.requestedDate | ombiDate: 'PP' }}</td>
+        <td>
+          <span class="status-badge" [ngClass]="getStatusClass(item)">{{ item.requestStatus | translate }}</span>
+        </td>
+        <td class="cell-actions">
+          <button class="btn-options" type="button"
+            [attr.aria-label]="'Requests.Options' | translate"
+            (click)="openOptions(item)"
+            *ngIf="isAdmin || (manageOwnRequests && item.requestedUser?.userName === userName)">
+            <i class="fas fa-ellipsis-h"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 <!-- Empty State -->

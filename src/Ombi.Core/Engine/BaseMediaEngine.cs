@@ -152,6 +152,16 @@ namespace Ombi.Core.Engine
             };
         }
 
+        protected static IQueryable<T> FilterByRequestedUser<T>(IQueryable<T> requests, string requestedByUserId, bool isAdmin) where T : BaseRequest
+        {
+            if (!isAdmin || string.IsNullOrEmpty(requestedByUserId))
+            {
+                return requests;
+            }
+
+            return requests.Where(x => x.RequestedUserId == requestedByUserId);
+        }
+
         protected async Task<HideResult> HideFromOtherUsers()
         {
             var user = await GetUser();
@@ -159,7 +169,8 @@ namespace Ombi.Core.Engine
             {
                 return new HideResult
                 {
-                    UserId = user.Id
+                    UserId = user.Id,
+                    IsAdmin = true
                 };
             }
             var settings = await Cache.GetOrAddAsync(CacheKeys.OmbiSettings, () => OmbiSettings.GetSettingsAsync());
@@ -255,6 +266,7 @@ namespace Ombi.Core.Engine
         {
             public bool Hide { get; set; }
             public string UserId { get; set; }
+            public bool IsAdmin { get; set; }
         }
     }
 }

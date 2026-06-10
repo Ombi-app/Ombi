@@ -21,11 +21,11 @@ namespace Ombi.Core.Engine.Interfaces
         Task<RequestEngineResult> ApproveMovie(MovieRequests request, bool is4K);
         Task<RequestEngineResult> ApproveMovieById(int requestId, bool is4K);
         Task<RequestEngineResult> DenyMovieById(int modelId, string denyReason, bool is4K);
-        Task<RequestsViewModel<MovieRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder);
+        Task<RequestsViewModel<MovieRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder, string requestedByUserId = null);
 
         Task<RequestsViewModel<MovieRequests>> GetUnavailableRequests(int count, int position, string sortProperty,
-            string sortOrder);
-        Task<RequestsViewModel<MovieRequests>> GetRequestsByStatus(int count, int position, string sortProperty, string sortOrder, RequestStatus status);
+            string sortOrder, string requestedByUserId = null);
+        Task<RequestsViewModel<MovieRequests>> GetRequestsByStatus(int count, int position, string sortProperty, string sortOrder, RequestStatus status, string requestedByUserId = null);
         Task<RequestEngineResult> UpdateAdvancedOptions(MediaAdvancedOptions options);
     }
 }
