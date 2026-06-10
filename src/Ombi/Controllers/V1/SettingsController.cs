@@ -814,7 +814,7 @@ namespace Ombi.Controllers.V1
         /// <summary>
         /// Get The Movie DB settings.
         /// </summary>
-        [Admin]
+        [PowerUser]
         [HttpGet("themoviedb")]
         public async Task<TheMovieDbSettings> TheMovieDbSettings()
         {
