@@ -22,7 +22,7 @@ class MediaBaseTab {
     }
 
     get requestsToDisplayDropdown(): Cypress.Chainable<any> {
-        return cy.get('#requestsToDisplayDropdown');
+        return cy.get('#gridCountButton');
     }
 
     getGridRow(requestId: number): GridRow {
@@ -97,7 +97,7 @@ class MoviesTab extends MediaBaseTab {
     }
 
     getRowCheckbox(rowId: number): Cypress.Chainable<any> {
-        return cy.get('#adminMasterCheckbox' + rowId);
+        return cy.get('#adminSelectCheckbox' + rowId);
     }
 }
 
