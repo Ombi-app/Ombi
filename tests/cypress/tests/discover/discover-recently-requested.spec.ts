@@ -44,6 +44,7 @@ describe("Discover Recently Requested Tests", () => {
       const card = Page.recentlyRequested.getRequest("626735");
       card.verifyTitle("Dog");
       card.status.should('contain.text', 'Pending');
+      card.reveal();
       card.approveButton.should('be.visible');
     });
   });
@@ -147,6 +148,7 @@ describe("Discover Recently Requested Tests", () => {
       const card = Page.recentlyRequested.getRequest("60574");
       card.verifyTitle("Peaky Blinders");
       card.status.should('contain.text', 'Pending');
+      card.reveal();
       card.approveButton.should('be.visible');
     });
   });
@@ -189,6 +191,7 @@ describe("Discover Recently Requested Tests", () => {
     cy.wait("@response").then((_) => {
 
       const card = Page.recentlyRequested.getRequest("55341");
+      card.reveal();
       card.approveButton.should('be.visible');
       card.approveButton.click();
 
@@ -222,6 +225,7 @@ describe("Discover Recently Requested Tests", () => {
     cy.wait("@response").then((_) => {
 
       const card = Page.recentlyRequested.getRequest("71712");
+      card.reveal();
       card.approveButton.should('be.visible');
       card.approveButton.click();
 

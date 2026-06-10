@@ -18,7 +18,7 @@ langs.forEach((l) => {
 
     Page.profile.languageSelectBox.click();
     Page.profile.languageSelectBoxOption(l.code).click();
-    cy.wait(2000); // wait for UI to update
+    // contains() retries until the UI re-renders in the new language.
     Page.navbar.discover.contains(l.discover);
 
     cy.wait('@langSave').then((intercept) => {
@@ -37,8 +37,8 @@ const streamingCountries = [
 streamingCountries.forEach((country) => {
     // derive test name from data
     it(`Change streaming to ${country} UI should update`, () => {
-      cy.intercept('GET','streamingcountry').as('countryApi');
-      cy.intercept('POST','streamingcountry').as('countryApiSave');
+      cy.intercept('GET','**/streamingcountry').as('countryApi');
+      cy.intercept('POST','**/streamingcountry').as('countryApiSave');
       Page.visit();
       cy.wait('@countryApi');
 

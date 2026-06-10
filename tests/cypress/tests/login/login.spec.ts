@@ -25,7 +25,7 @@ cy.wait("@authSettings");
     cy.landingSettings(false);
     cy.fixture("login/authenticationSettngs").then((settings) => {
       settings.enableOAuth = false;
-      cy.intercept("GET", "api/v1//Settings/Authentication", settings).as(
+      cy.intercept("GET", "**/Settings/Authentication", settings).as(
         "authSettings"
       );
     });
