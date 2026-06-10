@@ -49,35 +49,7 @@
   flex-wrap: wrap;
 }
 
-// Select-all (movies, admin only)
-.select-all-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  height: 34px;
-  padding: 0 12px 0 4px;
-  margin: 0;
-  border-radius: 20px;
-  border: 1px solid #222;
-  background: #111;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  .select-label {
-    color: #999;
-    font-size: 0.82rem;
-    font-weight: 500;
-    white-space: nowrap;
-  }
-
-  &:hover {
-    border-color: #444;
-
-    .select-label { color: #d9d9d9; }
-  }
-}
-
-// Toolbar control pills (user filter / sort / page size)
+// Toolbar control pills (select all / user filter / sort / page size)
 .control-pill {
   display: inline-flex;
   align-items: center;
@@ -122,6 +94,11 @@
     .pill-icon,
     .pill-caret { color: $accent-dark; }
   }
+}
+
+// Select-all pill needs a slightly larger icon so the checkbox state reads clearly
+#adminMasterCheckbox .pill-icon {
+  font-size: 0.85rem;
 }
 
 // Joined pill pair (sort field + direction)

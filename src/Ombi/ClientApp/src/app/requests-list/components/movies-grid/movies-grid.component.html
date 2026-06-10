@@ -10,16 +10,14 @@
   </div>
 
   <div class="filter-actions">
-    <div class="select-all-pill" *ngIf="isAdmin">
-      <mat-checkbox
-        id="adminMasterCheckbox"
-        [attr.aria-label]="'Requests.SelectAll' | translate"
-        (change)="$event ? masterToggle() : null"
-        [checked]="selection.hasValue() && isAllSelected()"
-        [indeterminate]="selection.hasValue() && !isAllSelected()"
-      ></mat-checkbox>
-      <span class="select-label">{{ 'Requests.SelectAll' | translate }}</span>
-    </div>
+    <button class="control-pill" type="button" id="adminMasterCheckbox" *ngIf="isAdmin"
+      [class.active]="selection.hasValue()"
+      [attr.aria-pressed]="selection.hasValue() && isAllSelected()"
+      (click)="masterToggle()">
+      <i class="pill-icon"
+        [ngClass]="selection.hasValue() ? (isAllSelected() ? 'fas fa-check-square' : 'fas fa-minus-square') : 'far fa-square'"></i>
+      <span class="pill-value">{{ 'Requests.SelectAll' | translate }}</span>
+    </button>
 
     <button class="control-pill" type="button" id="userFilterButton" *ngIf="isAdmin && users.length > 0"
       [class.active]="selectedUserId" [matMenuTriggerFor]="userMenu"
