@@ -527,7 +527,7 @@ namespace Ombi.Core.Engine
                         .GetWithUser();
             }
 
-            allRequests = FilterByRequestedUser(allRequests, requestedByUserId);
+            allRequests = FilterByRequestedUser(allRequests, requestedByUserId, shouldHide.IsAdmin);
 
             switch (status)
             {
@@ -549,9 +549,9 @@ namespace Ombi.Core.Engine
 
             var prop = TypeDescriptor.GetProperties(typeof(AlbumRequest)).Find(sortProperty, true);
 
-            if (sortProperty.Contains('.'))
+            if (prop == null || sortProperty.Contains('.'))
             {
-                // This is a navigation property currently not supported
+                // Navigation properties and unknown names are not supported; fall back to RequestedDate
                 prop = TypeDescriptor.GetProperties(typeof(AlbumRequest)).Find("RequestedDate", true);
                 //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
                 //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
@@ -591,13 +591,13 @@ namespace Ombi.Core.Engine
                         .GetWithUser();
             }
 
-            allRequests = FilterByRequestedUser(allRequests, requestedByUserId);
+            allRequests = FilterByRequestedUser(allRequests, requestedByUserId, shouldHide.IsAdmin);
 
             var prop = TypeDescriptor.GetProperties(typeof(AlbumRequest)).Find(sortProperty, true);
 
-            if (sortProperty.Contains('.'))
+            if (prop == null || sortProperty.Contains('.'))
             {
-                // This is a navigation property currently not supported
+                // Navigation properties and unknown names are not supported; fall back to RequestedDate
                 prop = TypeDescriptor.GetProperties(typeof(AlbumRequest)).Find("RequestedDate", true);
                 //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
                 //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);

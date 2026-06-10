@@ -282,13 +282,13 @@ namespace Ombi.Core.Engine
                         .GetWithUser();
             }
 
-            allRequests = FilterByRequestedUser(allRequests, requestedByUserId);
+            allRequests = FilterByRequestedUser(allRequests, requestedByUserId, shouldHide.IsAdmin);
 
             var prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(sortProperty, true);
 
-            if (sortProperty.Contains('.'))
+            if (prop == null || sortProperty.Contains('.'))
             {
-                // This is a navigation property currently not supported
+                // Navigation properties and unknown names are not supported; fall back to RequestedDate
                 prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find("RequestedDate", true);
                 //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
                 //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
@@ -328,7 +328,7 @@ namespace Ombi.Core.Engine
                         .GetWithUser();
             }
 
-            allRequests = FilterByRequestedUser(allRequests, requestedByUserId);
+            allRequests = FilterByRequestedUser(allRequests, requestedByUserId, shouldHide.IsAdmin);
 
             switch (status)
             {
@@ -373,9 +373,9 @@ namespace Ombi.Core.Engine
 
             var prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(sortProperty, true);
 
-            if (sortProperty.Contains('.'))
+            if (prop == null || sortProperty.Contains('.'))
             {
-                // This is a navigation property currently not supported
+                // Navigation properties and unknown names are not supported; fall back to RequestedDate
                 prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find("RequestedDate", true);
                 //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
                 //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
@@ -384,8 +384,8 @@ namespace Ombi.Core.Engine
             }
 
             requests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
-                ? allRequests.ToList().OrderBy(x => prop.GetValue(x)).ToList()
-                : allRequests.ToList().OrderByDescending(x => prop.GetValue(x)).ToList();
+                ? requests.OrderBy(x => prop.GetValue(x)).ToList()
+                : requests.OrderByDescending(x => prop.GetValue(x)).ToList();
 
             // TODO fix this so we execute this on the server
             requests = requests.Skip(position).Take(count).ToList();
@@ -415,13 +415,13 @@ namespace Ombi.Core.Engine
                         .GetWithUser().Where(x => !x.Available && x.Approved);
             }
 
-            allRequests = FilterByRequestedUser(allRequests, requestedByUserId);
+            allRequests = FilterByRequestedUser(allRequests, requestedByUserId, shouldHide.IsAdmin);
 
             var prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(sortProperty, true);
 
-            if (sortProperty.Contains('.'))
+            if (prop == null || sortProperty.Contains('.'))
             {
-                // This is a navigation property currently not supported
+                // Navigation properties and unknown names are not supported; fall back to RequestedDate
                 prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find("RequestedDate", true);
                 //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
                 //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);

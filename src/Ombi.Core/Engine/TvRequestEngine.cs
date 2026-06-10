@@ -382,16 +382,16 @@ namespace Ombi.Core.Engine
                 return new RequestsViewModel<ChildRequests>();
             }
 
-            allRequests = FilterByRequestedUser(allRequests.AsQueryable(), requestedByUserId).ToList();
+            allRequests = FilterByRequestedUser(allRequests.AsQueryable(), requestedByUserId, shouldHide.IsAdmin).ToList();
 
             var total = allRequests.Count;
 
 
             var prop = TypeDescriptor.GetProperties(typeof(ChildRequests)).Find(sortProperty, true);
 
-            if (sortProperty.Contains('.'))
+            if (prop == null || sortProperty.Contains('.'))
             {
-                // This is a navigation property currently not supported
+                // Navigation properties and unknown names are not supported; fall back to Title
                 prop = TypeDescriptor.GetProperties(typeof(ChildRequests)).Find("Title", true);
                 //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
                 //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
@@ -434,7 +434,7 @@ namespace Ombi.Core.Engine
 
             }
 
-            allRequests = FilterByRequestedUser(allRequests.AsQueryable(), requestedByUserId).ToList();
+            allRequests = FilterByRequestedUser(allRequests.AsQueryable(), requestedByUserId, shouldHide.IsAdmin).ToList();
 
             switch (status)
             {
@@ -464,9 +464,9 @@ namespace Ombi.Core.Engine
 
             var prop = TypeDescriptor.GetProperties(typeof(ChildRequests)).Find(sortProperty, true);
 
-            if (sortProperty.Contains('.'))
+            if (prop == null || sortProperty.Contains('.'))
             {
-                // This is a navigation property currently not supported
+                // Navigation properties and unknown names are not supported; fall back to Title
                 prop = TypeDescriptor.GetProperties(typeof(ChildRequests)).Find("Title", true);
                 //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
                 //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
@@ -514,16 +514,16 @@ namespace Ombi.Core.Engine
                 return new RequestsViewModel<ChildRequests>();
             }
 
-            allRequests = FilterByRequestedUser(allRequests.AsQueryable(), requestedByUserId).ToList();
+            allRequests = FilterByRequestedUser(allRequests.AsQueryable(), requestedByUserId, shouldHide.IsAdmin).ToList();
 
             var total = allRequests.Count;
 
 
             var prop = TypeDescriptor.GetProperties(typeof(ChildRequests)).Find(sortProperty, true);
 
-            if (sortProperty.Contains('.'))
+            if (prop == null || sortProperty.Contains('.'))
             {
-                // This is a navigation property currently not supported
+                // Navigation properties and unknown names are not supported; fall back to Title
                 prop = TypeDescriptor.GetProperties(typeof(ChildRequests)).Find("Title", true);
                 //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
                 //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
