@@ -10,6 +10,32 @@
   </div>
 
   <div class="filter-actions">
+    <mat-form-field class="user-filter" appearance="outline" *ngIf="isAdmin && users.length > 0">
+      <mat-select
+        id="userFilterSelect"
+        [(value)]="selectedUserId"
+        (selectionChange)="onUserFilterChange()"
+        [aria-label]="'Requests.RequestedBy' | translate"
+      >
+        <mat-option value="">{{ 'Requests.AllUsers' | translate }}</mat-option>
+        <mat-option *ngFor="let user of users" [value]="user.id">{{ user.username }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="sort-select" appearance="outline">
+      <mat-select
+        id="sortBySelect"
+        [(value)]="sortActive"
+        (selectionChange)="onSortChange()"
+        [aria-label]="'Requests.SortBy' | translate"
+      >
+        <mat-option *ngFor="let option of sortOptions" [value]="option.value">{{ option.label | translate }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button class="icon-button" type="button" id="sortDirectionButton"
+      (click)="toggleSortDirection()"
+      [attr.aria-label]="(sortDirection === 'asc' ? 'Requests.SortAscending' : 'Requests.SortDescending') | translate">
+      <i class="fas" [ngClass]="sortDirection === 'asc' ? 'fa-sort-amount-up' : 'fa-sort-amount-down'"></i>
+    </button>
     <mat-form-field class="display-count" appearance="outline">
       <mat-select
         [(value)]="gridCount"
@@ -19,6 +45,20 @@
         <mat-option *ngFor="let count of gridCountOptions" [value]="count">{{ count }}</mat-option>
       </mat-select>
     </mat-form-field>
+    <div class="view-toggle" role="group" [attr.aria-label]="'Requests.ViewMode' | translate">
+      <button type="button" id="viewModeCards" [class.active]="viewMode === 'cards'"
+        [attr.aria-pressed]="viewMode === 'cards'"
+        [attr.aria-label]="'Requests.CardView' | translate"
+        (click)="switchView('cards')">
+        <i class="fas fa-th-large"></i>
+      </button>
+      <button type="button" id="viewModeCompact" [class.active]="viewMode === 'compact'"
+        [attr.aria-pressed]="viewMode === 'compact'"
+        [attr.aria-label]="'Requests.CompactView' | translate"
+        (click)="switchView('compact')">
+        <i class="fas fa-list"></i>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -26,7 +66,7 @@
 <grid-spinner [loading]="isLoadingResults"></grid-spinner>
 
 <!-- Card Grid -->
-<div class="card-grid" *ngIf="dataSource.length > 0">
+<div class="card-grid" *ngIf="viewMode === 'cards' && dataSource.length > 0">
   <div class="request-card" *ngFor="let item of dataSource">
     <!-- Poster -->
     <a class="card-poster" [routerLink]="'/details/tv/' + item.parentRequest.externalProviderId">
@@ -93,6 +133,47 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- Compact Table -->
+<div class="compact-table-wrapper" *ngIf="viewMode === 'compact' && dataSource.length > 0">
+  <table class="compact-table">
+    <thead>
+      <tr>
+        <th class="sortable" (click)="setSort('title')" [attr.aria-sort]="sortActive === 'title' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : null">
+          {{ 'Requests.RequestsTitle' | translate }}
+          <i class="fas" [ngClass]="sortActive === 'title' ? (sortDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'"></i>
+        </th>
+        <th>{{ 'Requests.RequestedBy' | translate }}</th>
+        <th class="sortable" (click)="setSort('requestedDate')" [attr.aria-sort]="sortActive === 'requestedDate' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : null">
+          {{ 'Requests.RequestDate' | translate }}
+          <i class="fas" [ngClass]="sortActive === 'requestedDate' ? (sortDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'"></i>
+        </th>
+        <th>{{ 'Requests.Status' | translate }}</th>
+        <th class="col-actions"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of dataSource">
+        <td class="cell-title">
+          <a [routerLink]="'/details/tv/' + item.parentRequest.externalProviderId">{{ item.parentRequest.title }}</a>
+        </td>
+        <td>{{ item.requestedByAlias || item.requestedUser?.userAlias }}</td>
+        <td>{{ item.requestedDate | ombiDate: 'PP' }}</td>
+        <td>
+          <span class="status-badge" [ngClass]="getStatusClass(item)">{{ item.requestStatus | translate }}</span>
+        </td>
+        <td class="cell-actions">
+          <button class="btn-options" type="button"
+            [attr.aria-label]="'Requests.Options' | translate"
+            (click)="openOptions(item)"
+            *ngIf="isAdmin || (manageOwnRequests && item.requestedUser?.userName === userName)">
+            <i class="fas fa-ellipsis-h"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 <!-- Empty State -->

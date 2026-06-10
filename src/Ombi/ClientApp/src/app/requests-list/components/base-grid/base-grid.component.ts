@@ -1,12 +1,20 @@
 import { AfterViewInit, ChangeDetectorRef, Directive, EventEmitter, OnInit, Output, ViewChild } from "@angular/core";
-import { IRequestsViewModel } from "../../../interfaces";
+import { IRequestsViewModel, IUserDropdown } from "../../../interfaces";
 import { Observable, Subject, merge, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 import { AuthService } from "../../../auth/auth.service";
+import { IdentityService } from "../../../services/identity.service";
 import { MatPaginator } from "@angular/material/paginator";
 import { RequestFilterType } from "../../models/RequestFilterType";
 import { StorageService } from "../../../shared/storage/storage-service";
+
+export type RequestsViewMode = "cards" | "compact";
+
+export interface GridSortOption {
+    value: string;
+    label: string;
+}
 
 @Directive()
 export abstract class BaseGridComponent<T> implements OnInit, AfterViewInit {
@@ -18,6 +26,9 @@ export abstract class BaseGridComponent<T> implements OnInit, AfterViewInit {
     public userName: string;
     public currentFilter: RequestFilterType = RequestFilterType.All;
     public RequestFilter = RequestFilterType;
+    public viewMode: RequestsViewMode = "cards";
+    public users: IUserDropdown[] = [];
+    public selectedUserId: string = "";
 
     public readonly filterOptions = [
         { type: RequestFilterType.All, label: 'Requests.AllRequests', id: 'filterAll' },
@@ -27,16 +38,22 @@ export abstract class BaseGridComponent<T> implements OnInit, AfterViewInit {
         { type: RequestFilterType.Denied, label: 'Requests.DeniedRequests', id: 'filterDenied' },
     ];
 
+    public sortOptions: GridSortOption[] = [
+        { value: "requestedDate", label: "Requests.RequestDate" },
+        { value: "title", label: "Requests.RequestsTitle" },
+    ];
+
     public readonly gridCountOptions = [10, 15, 30, 100];
 
-    protected sortActive: string = "requestedDate";
-    protected sortDirection: string = "desc";
+    public sortActive: string = "requestedDate";
+    public sortDirection: string = "desc";
     private readonly reload$ = new Subject<void>();
 
     protected abstract storageKeySort: string;
     protected abstract storageKeySortOrder: string;
     protected abstract storageKeyGridCount: string;
     protected abstract storageKeyCurrentFilter: string;
+    protected abstract storageKeyViewMode: string;
 
     @Output() public openOptionsEvent = new EventEmitter<any>();
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -44,7 +61,8 @@ export abstract class BaseGridComponent<T> implements OnInit, AfterViewInit {
     constructor(
         protected auth: AuthService,
         protected ref: ChangeDetectorRef,
-        protected storageService: StorageService
+        protected storageService: StorageService,
+        protected identityService: IdentityService
     ) {
         this.userName = auth.claims().name;
     }
@@ -57,10 +75,19 @@ export abstract class BaseGridComponent<T> implements OnInit, AfterViewInit {
         const defaultSort = this.storageService.get(this.storageKeySort);
         const defaultOrder = this.storageService.get(this.storageKeySortOrder);
         const defaultFilter = +this.storageService.get(this.storageKeyCurrentFilter);
+        const defaultViewMode = this.storageService.get(this.storageKeyViewMode);
         if (defaultSort) this.sortActive = defaultSort;
         if (defaultOrder) this.sortDirection = defaultOrder;
         if (defaultCount) this.gridCount = +defaultCount;
         if (defaultFilter) this.currentFilter = defaultFilter;
+        if (defaultViewMode === "cards" || defaultViewMode === "compact") this.viewMode = defaultViewMode;
+
+        if (this.isAdmin) {
+            this.identityService.getUsersDropdown().subscribe(users => {
+                this.users = users;
+                this.ref.detectChanges();
+            });
+        }
 
         this.initFeatures();
     }
@@ -78,6 +105,8 @@ export abstract class BaseGridComponent<T> implements OnInit, AfterViewInit {
                 switchMap(() => {
                     this.storageService.save(this.storageKeyGridCount, String(this.gridCount));
                     this.storageService.save(this.storageKeyCurrentFilter, (+this.currentFilter).toString());
+                    this.storageService.save(this.storageKeySort, this.sortActive);
+                    this.storageService.save(this.storageKeySortOrder, this.sortDirection);
                     this.isLoadingResults = true;
                     return this.loadData().pipe(
                         map((data: IRequestsViewModel<T>) => {
@@ -110,6 +139,37 @@ export abstract class BaseGridComponent<T> implements OnInit, AfterViewInit {
 
     public switchFilter(type: RequestFilterType) {
         this.currentFilter = type;
+        this.refresh(true);
+    }
+
+    public switchView(mode: RequestsViewMode) {
+        if (this.viewMode === mode) {
+            return;
+        }
+        this.viewMode = mode;
+        this.storageService.save(this.storageKeyViewMode, mode);
+    }
+
+    public onSortChange() {
+        this.refresh(true);
+    }
+
+    public toggleSortDirection() {
+        this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
+        this.refresh(true);
+    }
+
+    public setSort(field: string) {
+        if (this.sortActive === field) {
+            this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
+        } else {
+            this.sortActive = field;
+            this.sortDirection = "asc";
+        }
+        this.refresh(true);
+    }
+
+    public onUserFilterChange() {
         this.refresh(true);
     }
 

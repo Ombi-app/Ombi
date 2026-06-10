@@ -46,11 +46,71 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 .display-count {
   width: 72px;
 
+}
+
+.sort-select {
+  width: 150px;
+}
+
+.user-filter {
+  width: 150px;
+}
+
+.icon-button {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid #222;
+  background: #111;
+  color: #808080;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #444;
+    color: #fff;
+    background: #1a1a1a;
+  }
+}
+
+// View Toggle (cards / compact)
+.view-toggle {
+  display: flex;
+  border: 1px solid #222;
+  border-radius: 8px;
+  overflow: hidden;
+
+  button {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: #111;
+    color: #808080;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: #d9d9d9;
+      background: #1a1a1a;
+    }
+
+    &.active {
+      background: $accent-dark;
+      color: #111;
+    }
+  }
 }
 
 // Card Grid
@@ -273,6 +333,104 @@
     border-color: #444;
     color: #fff;
     background: #1a1a1a;
+  }
+}
+
+// Compact Table View
+.compact-table-wrapper {
+  overflow-x: auto;
+  background: #111;
+  border: 1px solid #1a1a1a;
+  border-radius: 12px;
+  animation: fade-up 0.3s ease;
+}
+
+.compact-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+
+  th,
+  td {
+    padding: 10px 14px;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  thead th {
+    color: #999;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid #222;
+    user-select: none;
+
+    i {
+      margin-left: 6px;
+      font-size: 0.7rem;
+      color: #555;
+    }
+
+    &.sortable {
+      cursor: pointer;
+
+      &:hover {
+        color: #d9d9d9;
+
+        i { color: #999; }
+      }
+
+      &[aria-sort] {
+        color: $accent-dark;
+
+        i { color: $accent-dark; }
+      }
+    }
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #1a1a1a;
+    transition: background 0.15s ease;
+
+    &:last-child { border-bottom: none; }
+
+    &:hover { background: #161616; }
+
+    &.selected { background: #0d1a1f; }
+  }
+
+  tbody td {
+    color: #999;
+  }
+
+  .cell-title {
+    max-width: 360px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    a {
+      color: #fff;
+      font-weight: 600;
+      text-decoration: none;
+
+      &:hover { color: $accent-dark; }
+    }
+  }
+
+  .col-select {
+    width: 36px;
+    padding-right: 0;
+  }
+
+  .col-actions,
+  .cell-actions {
+    width: 48px;
+    text-align: right;
+  }
+
+  .badge-4k {
+    margin-left: 8px;
   }
 }
 

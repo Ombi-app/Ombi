@@ -265,7 +265,7 @@ namespace Ombi.Core.Engine
             };
         }
 
-        public async Task<RequestsViewModel<MovieRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder)
+        public async Task<RequestsViewModel<MovieRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder, string requestedByUserId = null)
         {
             var shouldHide = await HideFromOtherUsers();
             IQueryable<MovieRequests> allRequests;
@@ -281,6 +281,8 @@ namespace Ombi.Core.Engine
                     MovieRepository
                         .GetWithUser();
             }
+
+            allRequests = FilterByRequestedUser(allRequests, requestedByUserId);
 
             var prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(sortProperty, true);
 
@@ -309,7 +311,7 @@ namespace Ombi.Core.Engine
             };
         }
 
-        public async Task<RequestsViewModel<MovieRequests>> GetRequestsByStatus(int count, int position, string sortProperty, string sortOrder, RequestStatus status)
+        public async Task<RequestsViewModel<MovieRequests>> GetRequestsByStatus(int count, int position, string sortProperty, string sortOrder, RequestStatus status, string requestedByUserId = null)
         {
             var shouldHide = await HideFromOtherUsers();
             IQueryable<MovieRequests> allRequests;
@@ -325,6 +327,8 @@ namespace Ombi.Core.Engine
                     MovieRepository
                         .GetWithUser();
             }
+
+            allRequests = FilterByRequestedUser(allRequests, requestedByUserId);
 
             switch (status)
             {
@@ -394,7 +398,7 @@ namespace Ombi.Core.Engine
             };
         }
 
-        public async Task<RequestsViewModel<MovieRequests>> GetUnavailableRequests(int count, int position, string sortProperty, string sortOrder)
+        public async Task<RequestsViewModel<MovieRequests>> GetUnavailableRequests(int count, int position, string sortProperty, string sortOrder, string requestedByUserId = null)
         {
             var shouldHide = await HideFromOtherUsers();
             IQueryable<MovieRequests> allRequests;
@@ -410,6 +414,8 @@ namespace Ombi.Core.Engine
                     MovieRepository
                         .GetWithUser().Where(x => !x.Available && x.Approved);
             }
+
+            allRequests = FilterByRequestedUser(allRequests, requestedByUserId);
 
             var prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(sortProperty, true);
 

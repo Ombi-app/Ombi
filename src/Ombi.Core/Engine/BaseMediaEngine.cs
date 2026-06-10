@@ -152,6 +152,16 @@ namespace Ombi.Core.Engine
             };
         }
 
+        protected static IQueryable<T> FilterByRequestedUser<T>(IQueryable<T> requests, string requestedByUserId) where T : BaseRequest
+        {
+            if (string.IsNullOrEmpty(requestedByUserId))
+            {
+                return requests;
+            }
+
+            return requests.Where(x => x.RequestedUserId == requestedByUserId);
+        }
+
         protected async Task<HideResult> HideFromOtherUsers()
         {
             var user = await GetUser();

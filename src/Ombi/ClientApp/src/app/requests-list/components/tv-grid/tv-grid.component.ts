@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { AuthService } from "../../../auth/auth.service";
 import { FeaturesFacade } from "../../../state/features/features.facade";
+import { IdentityService } from "../../../services/identity.service";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { RequestFilterType } from "../../models/RequestFilterType";
 import { RequestServiceV2 } from "../../../services/requestV2.service";
@@ -45,15 +46,22 @@ export class TvGridComponent extends BaseGridComponent<IChildRequests> {
     protected storageKeySortOrder = "Tv_DefaultRequestListSortOrder";
     protected storageKeyGridCount = "Tv_DefaultGridCount";
     protected storageKeyCurrentFilter = "Tv_DefaultFilter";
+    protected storageKeyViewMode = "Tv_DefaultViewMode";
+
+    public override sortOptions = [
+        { value: "requestedDate", label: "Requests.RequestDate" },
+        { value: "title", label: "Requests.RequestsTitle" },
+    ];
 
     constructor(
         private readonly requestService: RequestServiceV2,
         auth: AuthService,
         ref: ChangeDetectorRef,
         storageService: StorageService,
+        identityService: IdentityService,
         private readonly featureFacade: FeaturesFacade
     ) {
-        super(auth, ref, storageService);
+        super(auth, ref, storageService, identityService);
     }
 
     protected override initFeatures() {
@@ -63,19 +71,19 @@ export class TvGridComponent extends BaseGridComponent<IChildRequests> {
     protected loadData(): Observable<IRequestsViewModel<IChildRequests>> {
         const count = this.gridCount;
         const offset = this.paginator.pageIndex * count;
+        const requestedBy = this.selectedUserId || undefined;
         switch(this.currentFilter) {
-            case RequestFilterType.All:
-                return this.requestService.getTvRequests(count, offset, this.sortActive, this.sortDirection);
             case RequestFilterType.Pending:
-                return this.requestService.getPendingTvRequests(count, offset, this.sortActive, this.sortDirection);
+                return this.requestService.getPendingTvRequests(count, offset, this.sortActive, this.sortDirection, requestedBy);
             case RequestFilterType.Available:
-                return this.requestService.getAvailableTvRequests(count, offset, this.sortActive, this.sortDirection);
+                return this.requestService.getAvailableTvRequests(count, offset, this.sortActive, this.sortDirection, requestedBy);
             case RequestFilterType.Processing:
-                return this.requestService.getProcessingTvRequests(count, offset, this.sortActive, this.sortDirection);
+                return this.requestService.getProcessingTvRequests(count, offset, this.sortActive, this.sortDirection, requestedBy);
             case RequestFilterType.Denied:
-                return this.requestService.getDeniedTvRequests(count, offset, this.sortActive, this.sortDirection);
+                return this.requestService.getDeniedTvRequests(count, offset, this.sortActive, this.sortDirection, requestedBy);
+            case RequestFilterType.All:
             default:
-                return this.requestService.getTvRequests(count, offset, this.sortActive, this.sortDirection);
+                return this.requestService.getTvRequests(count, offset, this.sortActive, this.sortDirection, requestedBy);
         }
     }
 

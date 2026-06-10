@@ -359,7 +359,7 @@ namespace Ombi.Core.Engine
             return allRequests;
         }
 
-        public async Task<RequestsViewModel<ChildRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder)
+        public async Task<RequestsViewModel<ChildRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder, string requestedByUserId = null)
         {
             var shouldHide = await HideFromOtherUsers();
             List<ChildRequests> allRequests;
@@ -381,6 +381,8 @@ namespace Ombi.Core.Engine
             {
                 return new RequestsViewModel<ChildRequests>();
             }
+
+            allRequests = FilterByRequestedUser(allRequests.AsQueryable(), requestedByUserId).ToList();
 
             var total = allRequests.Count;
 
@@ -414,7 +416,7 @@ namespace Ombi.Core.Engine
             };
         }
 
-        public async Task<RequestsViewModel<ChildRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder, RequestStatus status)
+        public async Task<RequestsViewModel<ChildRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder, RequestStatus status, string requestedByUserId = null)
         {
             var shouldHide = await HideFromOtherUsers();
             List<ChildRequests> allRequests;
@@ -431,6 +433,8 @@ namespace Ombi.Core.Engine
                 allRequests = await TvRepository.GetChild().ToListAsync();
 
             }
+
+            allRequests = FilterByRequestedUser(allRequests.AsQueryable(), requestedByUserId).ToList();
 
             switch (status)
             {
@@ -487,7 +491,7 @@ namespace Ombi.Core.Engine
             };
         }
 
-        public async Task<RequestsViewModel<ChildRequests>> GetUnavailableRequests(int count, int position, string sortProperty, string sortOrder)
+        public async Task<RequestsViewModel<ChildRequests>> GetUnavailableRequests(int count, int position, string sortProperty, string sortOrder, string requestedByUserId = null)
         {
             var shouldHide = await HideFromOtherUsers();
             List<ChildRequests> allRequests;
@@ -509,6 +513,8 @@ namespace Ombi.Core.Engine
             {
                 return new RequestsViewModel<ChildRequests>();
             }
+
+            allRequests = FilterByRequestedUser(allRequests.AsQueryable(), requestedByUserId).ToList();
 
             var total = allRequests.Count;
 

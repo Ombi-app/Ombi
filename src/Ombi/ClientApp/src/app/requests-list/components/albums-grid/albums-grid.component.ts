@@ -3,6 +3,7 @@ import { IAlbumRequest, IRequestsViewModel } from "../../../interfaces";
 import { Observable } from 'rxjs';
 
 import { AuthService } from "../../../auth/auth.service";
+import { IdentityService } from "../../../services/identity.service";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { RequestFilterType } from "../../models/RequestFilterType";
 import { RequestServiceV2 } from "../../../services/requestV2.service";
@@ -41,32 +42,41 @@ export class AlbumsGridComponent extends BaseGridComponent<IAlbumRequest> {
     protected storageKeySortOrder = "Albums_DefaultRequestListSortOrder";
     protected storageKeyGridCount = "Albums_DefaultGridCount";
     protected storageKeyCurrentFilter = "Albums_DefaultFilter";
+    protected storageKeyViewMode = "Albums_DefaultViewMode";
+
+    public override sortOptions = [
+        { value: "requestedDate", label: "Requests.RequestDate" },
+        { value: "releaseDate", label: "Requests.ReleaseDateSort" },
+        { value: "title", label: "Requests.RequestsTitle" },
+        { value: "artistName", label: "Requests.ArtistName" },
+    ];
 
     constructor(
         private readonly requestService: RequestServiceV2,
         ref: ChangeDetectorRef,
         auth: AuthService,
-        storageService: StorageService
+        storageService: StorageService,
+        identityService: IdentityService
     ) {
-        super(auth, ref, storageService);
+        super(auth, ref, storageService, identityService);
     }
 
     public loadData(): Observable<IRequestsViewModel<IAlbumRequest>> {
         const count = this.gridCount;
         const offset = this.paginator.pageIndex * count;
+        const requestedBy = this.selectedUserId || undefined;
         switch(this.currentFilter) {
-            case RequestFilterType.All:
-                return this.requestService.getAlbumRequests(count, offset, this.sortActive, this.sortDirection);
             case RequestFilterType.Pending:
-                return this.requestService.getAlbumPendingRequests(count, offset, this.sortActive, this.sortDirection);
+                return this.requestService.getAlbumPendingRequests(count, offset, this.sortActive, this.sortDirection, requestedBy);
             case RequestFilterType.Available:
-                return this.requestService.getAlbumAvailableRequests(count, offset, this.sortActive, this.sortDirection);
+                return this.requestService.getAlbumAvailableRequests(count, offset, this.sortActive, this.sortDirection, requestedBy);
             case RequestFilterType.Processing:
-                return this.requestService.getAlbumProcessingRequests(count, offset, this.sortActive, this.sortDirection);
+                return this.requestService.getAlbumProcessingRequests(count, offset, this.sortActive, this.sortDirection, requestedBy);
             case RequestFilterType.Denied:
-                return this.requestService.getAlbumDeniedRequests(count, offset, this.sortActive, this.sortDirection);
+                return this.requestService.getAlbumDeniedRequests(count, offset, this.sortActive, this.sortDirection, requestedBy);
+            case RequestFilterType.All:
             default:
-                return this.requestService.getAlbumRequests(count, offset, this.sortActive, this.sortDirection);
+                return this.requestService.getAlbumRequests(count, offset, this.sortActive, this.sortDirection, requestedBy);
         }
     }
 

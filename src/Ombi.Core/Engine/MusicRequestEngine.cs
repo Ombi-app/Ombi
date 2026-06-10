@@ -510,7 +510,7 @@ namespace Ombi.Core.Engine
             return new RequestEngineResult { Result = true, Message = $"{model.Title} has been successfully added!", RequestId = model.Id };
         }
 
-        public async Task<RequestsViewModel<AlbumRequest>> GetRequestsByStatus(int count, int position, string sortProperty, string sortOrder, RequestStatus status)
+        public async Task<RequestsViewModel<AlbumRequest>> GetRequestsByStatus(int count, int position, string sortProperty, string sortOrder, RequestStatus status, string requestedByUserId = null)
         {
              var shouldHide = await HideFromOtherUsers();
             IQueryable<AlbumRequest> allRequests;
@@ -526,6 +526,8 @@ namespace Ombi.Core.Engine
                     MusicRepository
                         .GetWithUser();
             }
+
+            allRequests = FilterByRequestedUser(allRequests, requestedByUserId);
 
             switch (status)
             {
@@ -559,7 +561,7 @@ namespace Ombi.Core.Engine
 
             // TODO fix this so we execute this on the server
             var requests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
-                ? allRequests.ToList().OrderBy(x => x.RequestedDate).ToList()
+                ? allRequests.ToList().OrderBy(x => prop.GetValue(x)).ToList()
                 : allRequests.ToList().OrderByDescending(x => prop.GetValue(x)).ToList();
             var total = requests.Count();
             requests = requests.Skip(position).Take(count).ToList();
@@ -572,8 +574,8 @@ namespace Ombi.Core.Engine
             };
         }
 
-        public async Task<RequestsViewModel<AlbumRequest>> GetRequests(int count, int position, string sortProperty, string sortOrder)
-        { 
+        public async Task<RequestsViewModel<AlbumRequest>> GetRequests(int count, int position, string sortProperty, string sortOrder, string requestedByUserId = null)
+        {
             var shouldHide = await HideFromOtherUsers();
             IQueryable<AlbumRequest> allRequests;
             if (shouldHide.Hide)
@@ -589,12 +591,14 @@ namespace Ombi.Core.Engine
                         .GetWithUser();
             }
 
-            var prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(sortProperty, true);
+            allRequests = FilterByRequestedUser(allRequests, requestedByUserId);
+
+            var prop = TypeDescriptor.GetProperties(typeof(AlbumRequest)).Find(sortProperty, true);
 
             if (sortProperty.Contains('.'))
             {
                 // This is a navigation property currently not supported
-                prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find("RequestedDate", true);
+                prop = TypeDescriptor.GetProperties(typeof(AlbumRequest)).Find("RequestedDate", true);
                 //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
                 //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
                 //var propType = firstProp.PropertyType;
@@ -603,7 +607,7 @@ namespace Ombi.Core.Engine
 
             // TODO fix this so we execute this on the server
             var requests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
-                ? allRequests.ToList().OrderBy(x => x.RequestedDate).ToList()
+                ? allRequests.ToList().OrderBy(x => prop.GetValue(x)).ToList()
                 : allRequests.ToList().OrderByDescending(x => prop.GetValue(x)).ToList();
             var total = requests.Count();
             requests = requests.Skip(position).Take(count).ToList();

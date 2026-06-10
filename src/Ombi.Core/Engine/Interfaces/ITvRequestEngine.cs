@@ -9,7 +9,7 @@ namespace Ombi.Core.Engine.Interfaces
     public interface ITvRequestEngine : IRequestEngine<TvRequests>
     {
         Task<RequestsViewModel<ChildRequests>> GetUnavailableRequests(int count, int position, string sortProperty,
-            string sortOrder);
+            string sortOrder, string requestedByUserId = null);
         Task RemoveTvRequest(int requestId);
         Task<TvRequests> GetTvRequest(int requestId);
         Task<RequestEngineResult> RequestTvShow(TvRequestViewModel tv);
@@ -25,8 +25,8 @@ namespace Ombi.Core.Engine.Interfaces
         Task<IEnumerable<TvRequests>> GetRequestsLite();
         Task UpdateQualityProfile(int requestId, int profileId);
         Task UpdateRootPath(int requestId, int rootPath);
-        Task<RequestsViewModel<ChildRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder);
-         Task<RequestsViewModel<ChildRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder, RequestStatus status);
+        Task<RequestsViewModel<ChildRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder, string requestedByUserId = null);
+         Task<RequestsViewModel<ChildRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder, RequestStatus status, string requestedByUserId = null);
         Task<RequestEngineResult> UpdateAdvancedOptions(MediaAdvancedOptions options);
     }
 }

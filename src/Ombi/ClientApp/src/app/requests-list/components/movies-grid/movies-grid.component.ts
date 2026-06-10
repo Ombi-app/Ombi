@@ -5,6 +5,7 @@ import { Observable, combineLatest, forkJoin } from 'rxjs';
 
 import { AuthService } from "../../../auth/auth.service";
 import { FeaturesFacade } from "../../../state/features/features.facade";
+import { IdentityService } from "../../../services/identity.service";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
 import { RequestFilterType } from "../../models/RequestFilterType";
@@ -61,18 +62,26 @@ export class MoviesGridComponent extends BaseGridComponent<IMovieRequests> {
     protected storageKeySortOrder = "Movie_DefaultRequestListSortOrder";
     protected storageKeyGridCount = "Movie_DefaultGridCount";
     protected storageKeyCurrentFilter = "Movie_DefaultFilter";
+    protected storageKeyViewMode = "Movie_DefaultViewMode";
+
+    public override sortOptions = [
+        { value: "requestedDate", label: "Requests.RequestDate" },
+        { value: "releaseDate", label: "Requests.ReleaseDateSort" },
+        { value: "title", label: "Requests.RequestsTitle" },
+    ];
 
     constructor(
         private readonly requestService: RequestServiceV2,
         ref: ChangeDetectorRef,
         auth: AuthService,
         storageService: StorageService,
+        identityService: IdentityService,
         private readonly requestServiceV1: RequestService,
         private readonly notification: NotificationService,
         private readonly translateService: TranslateService,
         private readonly featureFacade: FeaturesFacade
     ) {
-        super(auth, ref, storageService);
+        super(auth, ref, storageService, identityService);
     }
 
     protected override initFeatures() {
@@ -88,19 +97,19 @@ export class MoviesGridComponent extends BaseGridComponent<IMovieRequests> {
     public loadData(): Observable<IRequestsViewModel<IMovieRequests>> {
         const count = this.gridCount;
         const offset = this.paginator.pageIndex * count;
+        const requestedBy = this.selectedUserId || undefined;
         switch(this.currentFilter) {
-            case RequestFilterType.All:
-                return this.requestService.getMovieRequests(count, offset, this.sortActive, this.sortDirection);
             case RequestFilterType.Pending:
-                return this.requestService.getMoviePendingRequests(count, offset, this.sortActive, this.sortDirection);
+                return this.requestService.getMoviePendingRequests(count, offset, this.sortActive, this.sortDirection, requestedBy);
             case RequestFilterType.Available:
-                return this.requestService.getMovieAvailableRequests(count, offset, this.sortActive, this.sortDirection);
+                return this.requestService.getMovieAvailableRequests(count, offset, this.sortActive, this.sortDirection, requestedBy);
             case RequestFilterType.Processing:
-                return this.requestService.getMovieProcessingRequests(count, offset, this.sortActive, this.sortDirection);
+                return this.requestService.getMovieProcessingRequests(count, offset, this.sortActive, this.sortDirection, requestedBy);
             case RequestFilterType.Denied:
-                return this.requestService.getMovieDeniedRequests(count, offset, this.sortActive, this.sortDirection);
+                return this.requestService.getMovieDeniedRequests(count, offset, this.sortActive, this.sortDirection, requestedBy);
+            case RequestFilterType.All:
             default:
-                return this.requestService.getMovieRequests(count, offset, this.sortActive, this.sortDirection);
+                return this.requestService.getMovieRequests(count, offset, this.sortActive, this.sortDirection, requestedBy);
         }
     }
 

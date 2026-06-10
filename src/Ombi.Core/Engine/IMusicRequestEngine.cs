@@ -22,7 +22,7 @@ namespace Ombi.Core.Engine
         Task<RequestEngineResult> RequestAlbum(MusicAlbumRequestViewModel model);
         Task<IEnumerable<AlbumRequest>> SearchAlbumRequest(string search);
         Task<bool> UserHasRequest(string userId);
-        Task<RequestsViewModel<AlbumRequest>> GetRequestsByStatus(int count, int position, string sort, string sortOrder, RequestStatus available);
-        Task<RequestsViewModel<AlbumRequest>> GetRequests(int count, int position, string sort, string sortOrder);
+        Task<RequestsViewModel<AlbumRequest>> GetRequestsByStatus(int count, int position, string sort, string sortOrder, RequestStatus available, string requestedByUserId = null);
+        Task<RequestsViewModel<AlbumRequest>> GetRequests(int count, int position, string sort, string sortOrder, string requestedByUserId = null);
     }
 }
