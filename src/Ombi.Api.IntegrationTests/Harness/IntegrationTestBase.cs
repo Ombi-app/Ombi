@@ -34,6 +34,7 @@ namespace Ombi.Api.IntegrationTests.Harness
             Factory.TvRequestEngine.Invocations.Clear();
             Factory.RottenTomatoesApi.Invocations.Clear();
             Factory.RecentlyAddedEngine.Invocations.Clear();
+            Factory.PlexApi.Invocations.Clear();
         }
 
         [OneTimeTearDown]

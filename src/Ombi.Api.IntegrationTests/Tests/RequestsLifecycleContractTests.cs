@@ -2,9 +2,14 @@ using System.Net;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using System;
+using Newtonsoft.Json.Linq;
 using Ombi.Api.IntegrationTests.Harness;
 using Ombi.Core.Engine;
 using Ombi.Core.Models.Requests;
+using Ombi.Core.Models.UI;
+using Ombi.Store.Entities;
+using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Api.IntegrationTests.Tests
 {
@@ -98,6 +103,103 @@ namespace Ombi.Api.IntegrationTests.Tests
 
             Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
             Assert.That(AsArray(body), Is.Not.Null);
+        }
+
+        [Test]
+        public async Task GetMovieRequestInfo_ReturnsMovieRequestShape()
+        {
+            Factory.MovieRequestEngine.Setup(x => x.GetRequest(It.IsAny<int>()))
+                .ReturnsAsync(new MovieRequests
+                {
+                    Id = 5, Title = "M", TheMovieDbId = 99, Approved = true, Available = false, RequestedDate = DateTime.UtcNow
+                });
+
+            var (status, body) = await GetAsync("/api/v1/request/movie/info/5");
+
+            Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
+            AssertHasProperties(AsObject(body), "id", "title", "theMovieDbId", "approved", "available", "requestedDate");
+        }
+
+        [Test]
+        public async Task DeleteMovieRequest_ReturnsEngineResultShape()
+        {
+            Factory.MovieRequestEngine.Setup(x => x.RemoveMovieRequest(It.IsAny<int>())).ReturnsAsync(OkResult());
+
+            using var resp = await Client.DeleteAsync("/api/v1/request/Movie/5");
+            var body = await resp.Content.ReadAsStringAsync();
+
+            Assert.That(resp.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            AssertHasProperties(AsObject(body), EngineResultProps);
+        }
+
+        [Test]
+        public async Task SubscribeToMovie_ReturnsTrue()
+        {
+            Factory.MovieRequestEngine.Setup(x => x.SubscribeToRequest(It.IsAny<int>(), It.IsAny<RequestType>())).Returns(Task.CompletedTask);
+
+            var (status, body) = await PostJsonAsync("/api/v1/request/movie/subscribe/5", new { });
+
+            Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
+            Assert.That(body.Trim(), Is.EqualTo("true"));
+        }
+
+        [Test]
+        public async Task UnsubscribeFromMovie_ReturnsTrue()
+        {
+            Factory.MovieRequestEngine.Setup(x => x.UnSubscribeRequest(It.IsAny<int>(), It.IsAny<RequestType>())).Returns(Task.CompletedTask);
+
+            var (status, body) = await PostJsonAsync("/api/v1/request/movie/unsubscribe/5", new { });
+
+            Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
+            Assert.That(body.Trim(), Is.EqualTo("true"));
+        }
+
+        [Test]
+        public async Task ApproveTvChild_ReturnsEngineResultShape()
+        {
+            Factory.TvRequestEngine.Setup(x => x.ApproveChildRequest(It.IsAny<int>())).ReturnsAsync(OkResult());
+
+            var (status, body) = await PostJsonAsync("/api/v1/request/tv/approve", new { id = 1 });
+
+            Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
+            AssertHasProperties(AsObject(body), EngineResultProps);
+        }
+
+        [Test]
+        public async Task DenyTvChild_ReturnsEngineResultShape()
+        {
+            Factory.TvRequestEngine.Setup(x => x.DenyChildRequest(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(OkResult());
+
+            var (status, body) = await PutJsonAsync("/api/v1/request/tv/deny", new { id = 1, reason = "no" });
+
+            Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
+            AssertHasProperties(AsObject(body), EngineResultProps);
+        }
+
+        [Test]
+        public async Task MarkTvAvailable_ReturnsEngineResultShape()
+        {
+            Factory.TvRequestEngine.Setup(x => x.MarkAvailable(It.IsAny<int>(), It.IsAny<bool>())).ReturnsAsync(OkResult());
+
+            var (status, body) = await PostJsonAsync("/api/v1/request/tv/available", new { id = 1 });
+
+            Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
+            AssertHasProperties(AsObject(body), EngineResultProps);
+        }
+
+        [Test]
+        public async Task GetTvChildren_ReturnsChildRequestShape()
+        {
+            Factory.TvRequestEngine.Setup(x => x.GetAllChldren(It.IsAny<int>()))
+                .ReturnsAsync(new[]
+                {
+                    new ChildRequests { Id = 1, Title = "S", Approved = true, Available = false, RequestedDate = DateTime.UtcNow }
+                });
+
+            var (status, body) = await GetAsync("/api/v1/request/tv/1/child");
+
+            Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
+            AssertHasProperties((JObject)AsArray(body)[0], "id", "title", "approved", "available", "requestedDate");
         }
     }
 }

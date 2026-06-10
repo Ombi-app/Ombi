@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Moq;
 using Ombi.Api.External.ExternalApis.RottenTomatoes;
+using Ombi.Api.External.MediaServers.Plex;
 using Ombi.Core;
 using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
@@ -33,6 +34,7 @@ namespace Ombi.Api.IntegrationTests.Harness
         public Mock<ITvRequestEngine> TvRequestEngine { get; } = new Mock<ITvRequestEngine>();
         public Mock<IRottenTomatoesApi> RottenTomatoesApi { get; } = new Mock<IRottenTomatoesApi>();
         public Mock<IRecentlyAddedEngine> RecentlyAddedEngine { get; } = new Mock<IRecentlyAddedEngine>();
+        public Mock<IPlexApi> PlexApi { get; } = new Mock<IPlexApi>();
 
         public OmbiApiTestFactory()
         {
@@ -88,6 +90,7 @@ namespace Ombi.Api.IntegrationTests.Harness
                 services.AddTransient(_ => TvRequestEngine.Object);
                 services.AddTransient(_ => RottenTomatoesApi.Object);
                 services.AddTransient(_ => RecentlyAddedEngine.Object);
+                services.AddTransient(_ => PlexApi.Object);
             });
         }
 
