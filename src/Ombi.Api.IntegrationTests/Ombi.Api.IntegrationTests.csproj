@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<IsPackable>false</IsPackable>
+		<Nullable>disable</Nullable>
+		<Configurations>Debug;Release;NonUiBuild</Configurations>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.5" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
+		<PackageReference Include="Moq" Version="4.18.2" />
+		<PackageReference Include="Nunit" Version="3.13.3" />
+		<PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Ombi\Ombi.csproj" />
+		<ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
+		<ProjectReference Include="..\Ombi.Store\Ombi.Store.csproj" />
+		<ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
+		<ProjectReference Include="..\Ombi.Helpers\Ombi.Helpers.csproj" />
+	</ItemGroup>
+
+	<!-- The test host needs appsettings.json on its content root (read by Ombi.Startup). -->
+	<ItemGroup>
+		<None Include="..\Ombi\appsettings.json" Link="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+
+</Project>
