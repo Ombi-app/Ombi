@@ -79,6 +79,13 @@ namespace Ombi.Schedule.Jobs.Emby
             var processed = 0;
             while (processed < totalTv)
             {
+                if (tv.Items == null || !tv.Items.Any())
+                {
+                    _logger.LogWarning("Emby returned no TV shows at offset {0} but reported {1} total records. Stopping the sync for this library to avoid an infinite loop.",
+                        processed, totalTv);
+                    break;
+                }
+
                 foreach (var tvShow in tv.Items)
                 {
                     processed++;
@@ -161,6 +168,13 @@ namespace Ombi.Schedule.Jobs.Emby
             var mediaToUpdate = new HashSet<EmbyContent>();
             while (processed < totalCount)
             {
+                if (movies.Items == null || !movies.Items.Any())
+                {
+                    _logger.LogWarning("Emby returned no movies at offset {0} but reported {1} total records. Stopping the sync for this library to avoid an infinite loop.",
+                        processed, totalCount);
+                    break;
+                }
+
                 foreach (var movie in movies.Items)
                 {
                     if (movie.Type.Equals("boxset", StringComparison.InvariantCultureIgnoreCase))

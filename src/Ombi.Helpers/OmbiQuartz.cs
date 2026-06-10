@@ -87,20 +87,39 @@ namespace Ombi.Helpers
 
         public static async Task TriggerJob(string jobName, string group)
         {
+            await TriggerJobIfNotRunning(jobName, group);
+        }
+
+        /// <summary>
+        /// Triggers the job unless it is already running. Returns whether the job was triggered,
+        /// so callers that depend on the job running (e.g. a resync after wiping data) can react.
+        /// </summary>
+        public static async Task<bool> TriggerJobIfNotRunning(string jobName, string group, IDictionary<string, object> data = null)
+        {
             await _semaphore.WaitAsync();
 
             try
             {
-                if (!(await IsJobRunning(jobName)))
+                if (await IsJobRunning(jobName))
+                {
+                    return false;
+                }
+
+                if (data != null)
+                {
+                    await Scheduler.TriggerJob(new JobKey(jobName, group), new JobDataMap(data));
+                }
+                else
                 {
                     await Scheduler.TriggerJob(new JobKey(jobName, group));
                 }
+
+                return true;
             }
             finally
             {
                 _semaphore.Release();
             }
-
         }
 
 

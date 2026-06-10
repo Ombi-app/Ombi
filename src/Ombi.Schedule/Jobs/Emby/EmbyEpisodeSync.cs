@@ -84,18 +84,26 @@ namespace Ombi.Schedule.Jobs.Emby
             await _notification.SendNotificationToAdmins("Emby Episode Sync Started");
             foreach (var server in settings.Servers)
             {
-                if (server.EmbySelectedLibraries.Any() && server.EmbySelectedLibraries.Any(x => x.Enabled))
+                try
                 {
-                    var tvLibsToFilter = server.EmbySelectedLibraries.Where(x => x.Enabled && x.CollectionType is "tvshows" or "mixed");
-                    foreach (var tvParentIdFilter in tvLibsToFilter)
+                    if (server.EmbySelectedLibraries.Any() && server.EmbySelectedLibraries.Any(x => x.Enabled))
                     {
-                        _logger.LogInformation($"Scanning Lib for episodes '{tvParentIdFilter.Title}'");
-                        await CacheEpisodes(server, recentlyAddedSearch, tvParentIdFilter.Key);
+                        var tvLibsToFilter = server.EmbySelectedLibraries.Where(x => x.Enabled && x.CollectionType is "tvshows" or "mixed");
+                        foreach (var tvParentIdFilter in tvLibsToFilter)
+                        {
+                            _logger.LogInformation($"Scanning Lib for episodes '{tvParentIdFilter.Title}'");
+                            await CacheEpisodes(server, recentlyAddedSearch, tvParentIdFilter.Key);
+                        }
+                    }
+                    else
+                    {
+                        await CacheEpisodes(server, recentlyAddedSearch, string.Empty);
                     }
                 }
-                else
+                catch (Exception e)
                 {
-                    await CacheEpisodes(server, recentlyAddedSearch, string.Empty);
+                    await _notification.SendNotificationToAdmins("Emby Episode Sync Failed");
+                    _logger.LogError(e, "Exception when syncing Emby episodes for server {0}", server.Name);
                 }
             }
 
@@ -141,103 +149,26 @@ namespace Ombi.Schedule.Jobs.Emby
 
             while (processed < total)
             {
+                if (allEpisodes.Items == null || !allEpisodes.Items.Any())
+                {
+                    _logger.LogWarning("Emby returned no episodes at offset {0} but reported {1} total records. Stopping the sync for this library to avoid an infinite loop.",
+                        processed, total);
+                    break;
+                }
+
                 _logger.LogInformation($"Processing chunk {processed}/{total}");
                 // Process episodes in current chunk
                 foreach (var ep in allEpisodes.Items)
                 {
                     processed++;
 
-                    // Check if parent series exists using preloaded HashSet (O(1) lookup)
-                    if (!seriesLookup.Contains(ep.SeriesId))
+                    try
                     {
-                        _logger.LogInformation("The episode {0} does not relate to a series, so we cannot save this",
-                            ep.Name);
-                        continue;
+                        ProcessEpisode(ep, seriesLookup, episodeMetadata, epToAdd, pendingUpdates, episodesInCurrentBatch);
                     }
-
-                    // Create unique key for multi-episode files to prevent duplicates
-                    var episodeKey = $"{ep.Id}_{ep.IndexNumber}_{ep.ParentIndexNumber}";
-
-                    // Check if episode already exists using preloaded metadata (O(1) lookup)
-                    var metadataKey = $"{ep.Id}:{ep.IndexNumber}";
-                    var existingInDatabase = episodeMetadata.ContainsKey(metadataKey);
-                    var existingInCurrentBatch = episodesInCurrentBatch.Contains(episodeKey);
-
-                    if (existingInDatabase)
+                    catch (Exception e)
                     {
-                        // Check if metadata has changed (e.g. Emby re-identified the file)
-                        var existing = episodeMetadata[metadataKey];
-                        if (existing.EpisodeNumber != ep.IndexNumber || existing.SeasonNumber != ep.ParentIndexNumber)
-                        {
-                            _logger.LogInformation("Episode {0} metadata changed (S{1}E{2} -> S{3}E{4}), queuing update",
-                                ep.Name, existing.SeasonNumber, existing.EpisodeNumber, ep.ParentIndexNumber, ep.IndexNumber);
-                            pendingUpdates[metadataKey] = (ep.Id, ep.IndexNumber, ep.ParentIndexNumber);
-                            episodeMetadata[metadataKey] = (ep.IndexNumber, ep.ParentIndexNumber);
-                        }
-                    }
-                    else if (!existingInCurrentBatch)
-                    {
-                        // Sanity checks - skip only true unindexed specials (no episode AND no season number)
-                        if (ep.IndexNumber == 0 && ep.ParentIndexNumber == 0)
-                        {
-                            _logger.LogWarning($"Episode {ep.Name} has no episode or season number. Skipping.");
-                            continue;
-                        }
-
-                        _logger.LogDebug("Adding new episode {0} to parent {1}", ep.Name, ep.SeriesName);
-                        
-                        // add it
-                        epToAdd.Add(new EmbyEpisode
-                        {
-                            EmbyId = ep.Id,
-                            EpisodeNumber = ep.IndexNumber,
-                            SeasonNumber = ep.ParentIndexNumber,
-                            ParentId = ep.SeriesId,
-                            TvDbId = ep.ProviderIds.Tvdb,
-                            TheMovieDbId = ep.ProviderIds.Tmdb,
-                            ImdbId = ep.ProviderIds.Imdb,
-                            Title = ep.Name,
-                            AddedAt = DateTime.UtcNow
-                        });
-                        episodesInCurrentBatch.Add(episodeKey);
-
-                        if (ep.IndexNumberEnd.HasValue && ep.IndexNumberEnd.Value != ep.IndexNumber)
-                        {
-                            var episodeFillCount = ep.IndexNumberEnd.Value - ep.IndexNumber;
-
-                            if (episodeFillCount > 50)
-                            {
-                                _logger.LogWarning($"Episode {ep.Name} has {episodeFillCount} episodes! Skipping.");
-                                continue;
-                            }
-
-                            int episodeNumber = ep.IndexNumber;
-                            do
-                            {
-                                episodeNumber++;
-                                var multiEpisodeKey = $"{ep.Id}_{episodeNumber}_{ep.ParentIndexNumber}";
-                                
-                                // Check if this multi-episode entry already exists
-                                if (!episodesInCurrentBatch.Contains(multiEpisodeKey))
-                                {
-                                    _logger.LogDebug($"Multiple-episode file detected. Adding episode {episodeNumber}");
-                                    epToAdd.Add(new EmbyEpisode
-                                    {
-                                        EmbyId = ep.Id,
-                                        EpisodeNumber = episodeNumber,
-                                        SeasonNumber = ep.ParentIndexNumber,
-                                        ParentId = ep.SeriesId,
-                                        TvDbId = ep.ProviderIds.Tvdb,
-                                        TheMovieDbId = ep.ProviderIds.Tmdb,
-                                        ImdbId = ep.ProviderIds.Imdb,
-                                        Title = ep.Name,
-                                        AddedAt = DateTime.UtcNow
-                                    });
-                                    episodesInCurrentBatch.Add(multiEpisodeKey);
-                                }
-
-                            } while (episodeNumber < ep.IndexNumberEnd.Value);
-                        }
+                        _logger.LogError(e, "Exception when processing episode {0} ({1}), skipping it and continuing with the rest of the sync", ep.Name, ep.Id);
                     }
                 }
 
@@ -299,6 +230,108 @@ namespace Ombi.Schedule.Jobs.Emby
                 }
             }
         }
+        private void ProcessEpisode(
+            EmbyEpisodes ep,
+            HashSet<string> seriesLookup,
+            Dictionary<string, (int EpisodeNumber, int SeasonNumber)> episodeMetadata,
+            HashSet<EmbyEpisode> epToAdd,
+            Dictionary<string, (string EmbyId, int EpisodeNumber, int SeasonNumber)> pendingUpdates,
+            HashSet<string> episodesInCurrentBatch)
+        {
+            // Check if parent series exists using preloaded HashSet (O(1) lookup)
+            if (!seriesLookup.Contains(ep.SeriesId))
+            {
+                _logger.LogInformation("The episode {0} does not relate to a series, so we cannot save this",
+                    ep.Name);
+                return;
+            }
+
+            // Create unique key for multi-episode files to prevent duplicates
+            var episodeKey = $"{ep.Id}_{ep.IndexNumber}_{ep.ParentIndexNumber}";
+
+            // Check if episode already exists using preloaded metadata (O(1) lookup)
+            var metadataKey = $"{ep.Id}:{ep.IndexNumber}";
+            var existingInDatabase = episodeMetadata.ContainsKey(metadataKey);
+            var existingInCurrentBatch = episodesInCurrentBatch.Contains(episodeKey);
+
+            if (existingInDatabase)
+            {
+                // Check if metadata has changed (e.g. Emby re-identified the file)
+                var existing = episodeMetadata[metadataKey];
+                if (existing.EpisodeNumber != ep.IndexNumber || existing.SeasonNumber != ep.ParentIndexNumber)
+                {
+                    _logger.LogInformation("Episode {0} metadata changed (S{1}E{2} -> S{3}E{4}), queuing update",
+                        ep.Name, existing.SeasonNumber, existing.EpisodeNumber, ep.ParentIndexNumber, ep.IndexNumber);
+                    pendingUpdates[metadataKey] = (ep.Id, ep.IndexNumber, ep.ParentIndexNumber);
+                    episodeMetadata[metadataKey] = (ep.IndexNumber, ep.ParentIndexNumber);
+                }
+            }
+            else if (!existingInCurrentBatch)
+            {
+                // Sanity checks - skip only true unindexed specials (no episode AND no season number)
+                if (ep.IndexNumber == 0 && ep.ParentIndexNumber == 0)
+                {
+                    _logger.LogWarning($"Episode {ep.Name} has no episode or season number. Skipping.");
+                    return;
+                }
+
+                _logger.LogDebug("Adding new episode {0} to parent {1}", ep.Name, ep.SeriesName);
+
+                // add it
+                epToAdd.Add(new EmbyEpisode
+                {
+                    EmbyId = ep.Id,
+                    EpisodeNumber = ep.IndexNumber,
+                    SeasonNumber = ep.ParentIndexNumber,
+                    ParentId = ep.SeriesId,
+                    TvDbId = ep.ProviderIds?.Tvdb,
+                    TheMovieDbId = ep.ProviderIds?.Tmdb,
+                    ImdbId = ep.ProviderIds?.Imdb,
+                    Title = ep.Name,
+                    AddedAt = DateTime.UtcNow
+                });
+                episodesInCurrentBatch.Add(episodeKey);
+
+                if (ep.IndexNumberEnd.HasValue && ep.IndexNumberEnd.Value != ep.IndexNumber)
+                {
+                    var episodeFillCount = ep.IndexNumberEnd.Value - ep.IndexNumber;
+
+                    if (episodeFillCount > 50)
+                    {
+                        _logger.LogWarning($"Episode {ep.Name} has {episodeFillCount} episodes! Skipping.");
+                        return;
+                    }
+
+                    int episodeNumber = ep.IndexNumber;
+                    do
+                    {
+                        episodeNumber++;
+                        var multiEpisodeKey = $"{ep.Id}_{episodeNumber}_{ep.ParentIndexNumber}";
+
+                        // Check if this multi-episode entry already exists
+                        if (!episodesInCurrentBatch.Contains(multiEpisodeKey))
+                        {
+                            _logger.LogDebug($"Multiple-episode file detected. Adding episode {episodeNumber}");
+                            epToAdd.Add(new EmbyEpisode
+                            {
+                                EmbyId = ep.Id,
+                                EpisodeNumber = episodeNumber,
+                                SeasonNumber = ep.ParentIndexNumber,
+                                ParentId = ep.SeriesId,
+                                TvDbId = ep.ProviderIds?.Tvdb,
+                                TheMovieDbId = ep.ProviderIds?.Tmdb,
+                                ImdbId = ep.ProviderIds?.Imdb,
+                                Title = ep.Name,
+                                AddedAt = DateTime.UtcNow
+                            });
+                            episodesInCurrentBatch.Add(multiEpisodeKey);
+                        }
+
+                    } while (episodeNumber < ep.IndexNumberEnd.Value);
+                }
+            }
+        }
+
         private async Task<T> FetchEpisodesWithRetry<T>(Func<Task<T>> apiCall, int maxAttempts = 3)
         {
             for (var attempt = 1; attempt <= maxAttempts; attempt++)
