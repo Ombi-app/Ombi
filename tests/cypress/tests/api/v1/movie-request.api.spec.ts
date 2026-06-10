@@ -18,14 +18,18 @@ describe("Movie Request V1 API tests", () => {
     removeExistingRequests();
   });
 
-  // Tidy up anything the test created so it can be run repeatedly.
+  // Tidy up anything the test created so it can be run repeatedly. Header
+  // construction is deferred via cy.then so the token is read at execution time.
   afterEach(() => {
-    createdRequestIds.forEach((id) => {
-      cy.api({
-        url: `/api/v1/request/movie/${id}`,
-        method: "DELETE",
-        headers: authHeaders(),
-        failOnStatusCode: false,
+    cy.then(() => {
+      const headers = authHeaders();
+      createdRequestIds.forEach((id) => {
+        cy.api({
+          url: `/api/v1/request/movie/${id}`,
+          method: "DELETE",
+          headers,
+          failOnStatusCode: false,
+        });
       });
     });
   });
@@ -58,14 +62,18 @@ describe("Movie Request V1 API tests", () => {
       });
     });
 
+  // Deferred via cy.then so the auth token is read at execution time (after
+  // cy.login has run) rather than while the command queue is being built.
   const requestMovie = (tmdbId: number) =>
-    cy.api({
-      url: "/api/v1/request/movie",
-      method: "POST",
-      body: JSON.stringify({ TheMovieDbId: tmdbId }),
-      headers: authHeaders(),
-      failOnStatusCode: false,
-    });
+    cy.then(() =>
+      cy.api({
+        url: "/api/v1/request/movie",
+        method: "POST",
+        body: JSON.stringify({ TheMovieDbId: tmdbId }),
+        headers: authHeaders(),
+        failOnStatusCode: false,
+      })
+    );
 
   it("creates a movie request and exposes it via the request search", () => {
     requestMovie(MOVIE_TMDB_ID).then((res) => {
@@ -109,6 +117,8 @@ describe("Movie Request V1 API tests", () => {
     requestMovie(MOVIE_TMDB_ID).then((res) => {
       expect(res.body.result, res.body.errorMessage).to.be.true;
       const requestId = res.body.requestId;
+      // Track for afterEach cleanup so a mid-test failure can't leak the request.
+      createdRequestIds.push(requestId);
 
       cy.api({
         url: `/api/v1/request/movie/${requestId}`,
