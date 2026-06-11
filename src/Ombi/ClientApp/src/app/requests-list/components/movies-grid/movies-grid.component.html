@@ -87,7 +87,7 @@
 </div>
 
 <!-- Loading State -->
-<grid-spinner [loading]="isLoadingResults"></grid-spinner>
+<grid-spinner [loading]="isLoadingResults" [viewMode]="viewMode" [columns]="isAdmin ? 7 : 6"></grid-spinner>
 
 <!-- Card Grid -->
 <div class="card-grid" *ngIf="viewMode === 'cards' && dataSource && dataSource.data.length > 0">

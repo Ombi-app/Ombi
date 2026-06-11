@@ -50,6 +50,43 @@
   &.narrow { width: 40%; }
 }
 
+// Compact (table) skeleton - mirrors .compact-table styling
+.skeleton-table-wrapper {
+  background: #111;
+  border: 1px solid #1a1a1a;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.skeleton-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 10px 14px;
+    text-align: left;
+  }
+
+  thead th {
+    border-bottom: 1px solid #222;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #1a1a1a;
+
+    &:last-child { border-bottom: none; }
+  }
+
+  .skeleton-line {
+    height: 10px;
+
+    &.head { width: 55%; }
+    &.title { width: 80%; height: 12px; }
+    &.cell { width: 65%; }
+  }
+}
+
 .shimmer {
   position: relative;
   overflow: hidden;
