@@ -1,3 +1,12 @@
+## [4.60.2](https://github.com/Ombi-app/Ombi/compare/v4.60.1...v4.60.2) (2026-06-11)
+
+
+### Bug Fixes
+
+* **watchlist:** only prune Plex watchlist history on a complete sync ([#5429](https://github.com/Ombi-app/Ombi/issues/5429)) ([186978c](https://github.com/Ombi-app/Ombi/commit/186978c2bfff8b2f481639ca49a3cbd19a23ce38))
+
+
+
 ## [4.60.1](https://github.com/Ombi-app/Ombi/compare/v4.60.0...v4.60.1) (2026-06-11)
 
 
@@ -606,15 +615,6 @@
 
 * Revert "deterministic refresh (rather than 3 second wait)" ([a8bd017](https://github.com/Ombi-app/Ombi/commit/a8bd01793f67d86f6da345d7a3fe3adbaee920ca))
 * Revert "address sonarqube feedback" ([10992c7](https://github.com/Ombi-app/Ombi/commit/10992c78b6c9c33fa5b31407b02fc8eee9be59f2))
-
-
-
-## [4.51.6](https://github.com/Ombi-app/Ombi/compare/v4.51.5...v4.51.6) (2025-10-15)
-
-
-### Bug Fixes
-
-* **emby:** :bug: Skip very large multipart episodes ([fb70aa1](https://github.com/Ombi-app/Ombi/commit/fb70aa16dea5e682a27878c0845d2ef2cf3e7b07))
 
 
 
