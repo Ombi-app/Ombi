@@ -57,8 +57,9 @@ intentionally `.skip`ped cases.
 | Discover | `tests/discover/*` (cards, card‑requests, recently‑requested, responsive) | richest area |
 | Media details | `tests/details/movie`, `tests/details/tv` | request/approve/available buttons, info panel, season grid |
 | Search | `tests/search` | filters, multi‑results, empty results |
-| Requests list | `tests/requests` | TV details navigation + delete only |
-| Navigation bar | `tests/navigation` | admin vs non‑admin visibility |
+| Requests list | `tests/requests` | TV + movie details navigation & delete |
+| Navigation bar | `tests/navigation/navigation-bar` | admin vs non‑admin visibility |
+| Navigation routing | `tests/navigation/navigation-routing` | **added here** — nav items route + logout |
 | User management | `tests/usermanagement` | create/delete/limits/roles/notifications |
 | User preferences | `tests/user-preferences` | profile + security |
 | Settings → Plex | `tests/settings/plex` | needs Wiremock |
@@ -79,8 +80,9 @@ intentionally `.skip`ped cases.
    deterministic targets — see Customization/General/Features as templates.
 2. **Issues** feature (`app/issues`, `settings/issues`) — no coverage.
 3. **Vote** feature (`app/vote`, `settings/vote`) — no coverage.
-4. **Requests list** — only TV navigation + delete is covered. No movie‑tab
-   coverage, no approve/deny/filter/search within the requests grid.
+4. **Requests list** — TV and movie navigation + delete are now covered
+   (`tests/requests`). Still uncovered: approve/deny within the grid, the
+   status filters, bulk actions, and search within the requests grid.
 5. **Custom page / landing page** rendering — only touched indirectly via the
    login landing‑settings intercept.
 6. **Unsubscribe** flow — no coverage.
@@ -154,3 +156,8 @@ prefer the deterministic alternatives.
 - `cy.clearAllRequests()`, invoked from the global `before` hook, which removes
   every persisted movie/TV request so the suite is idempotent across re‑runs and
   spec orders (previously a re‑run against a dirty database failed ~6 specs).
+- Coverage beyond settings: **movie requests** (`tests/requests/requests-movie`)
+  — details navigation and delete on the requests‑list movies tab, mirroring the
+  existing TV coverage — and **navigation routing**
+  (`tests/navigation/navigation-routing`) — that each nav item routes correctly
+  and logout returns to the login page.
