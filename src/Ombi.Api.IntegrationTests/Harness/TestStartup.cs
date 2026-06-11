@@ -10,6 +10,7 @@ using Ombi.Core.Authentication;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
+using Ombi.Store.Entities.Requests;
 using Serilog;
 
 namespace Ombi.Api.IntegrationTests.Harness
@@ -37,7 +38,6 @@ namespace Ombi.Api.IntegrationTests.Harness
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
-            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             loggerFactory.AddSerilog();
 
             // Concrete SQLite contexts run their migrations in their constructor, so resolving them
@@ -48,6 +48,7 @@ namespace Ombi.Api.IntegrationTests.Harness
             settingsCtx.Seed();
 
             SeedPlexSettings(settingsCtx);
+            SeedIssues(ctx);
             SeedTestUser(serviceProvider).GetAwaiter().GetResult();
 
             app.UseRouting();
@@ -71,6 +72,32 @@ namespace Ombi.Api.IntegrationTests.Harness
                 Content = JsonConvert.SerializeObject(new PlexSettings { Enable = false, InstallId = Guid.NewGuid() })
             });
             settingsCtx.SaveChanges();
+        }
+
+        // Seed a deterministic issue category + issue so the issues contract tests can assert the
+        // item shapes the mobile app reads (not just that an array comes back).
+        private static void SeedIssues(OmbiContext ctx)
+        {
+            if (ctx.IssueCategories.Any())
+            {
+                return;
+            }
+
+            var category = new IssueCategory { Value = "Other" };
+            ctx.IssueCategories.Add(category);
+            ctx.SaveChanges();
+
+            ctx.Issues.Add(new Issues
+            {
+                Title = "Test issue",
+                Subject = "Subject",
+                Description = "Description",
+                IssueCategoryId = category.Id,
+                Status = IssueStatus.Pending,
+                RequestType = RequestType.Movie,
+                CreatedDate = DateTime.UtcNow
+            });
+            ctx.SaveChanges();
         }
 
         private static async Task SeedTestUser(IServiceProvider serviceProvider)

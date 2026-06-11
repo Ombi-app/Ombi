@@ -21,9 +21,12 @@ namespace Ombi.Api.IntegrationTests.Tests
             Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
             var array = AsArray(body);
             Assert.That(array.Count, Is.GreaterThanOrEqualTo(1));
-            AssertHasProperties((JObject)array[0],
-                "id", "userName", "alias", "claims", "emailAddress", "userType",
-                "movieRequestLimit", "episodeRequestLimit", "streamingCountry");
+            foreach (var item in array)
+            {
+                AssertHasProperties((JObject)item,
+                    "id", "userName", "alias", "claims", "emailAddress", "userType",
+                    "movieRequestLimit", "episodeRequestLimit", "streamingCountry");
+            }
         }
 
         [Test]
@@ -34,7 +37,10 @@ namespace Ombi.Api.IntegrationTests.Tests
             Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
             var array = AsArray(body);
             Assert.That(array.Count, Is.GreaterThanOrEqualTo(1));
-            AssertHasProperties((JObject)array[0], "id", "username", "email");
+            foreach (var item in array)
+            {
+                AssertHasProperties((JObject)item, "id", "username", "email");
+            }
         }
 
         [Test]
@@ -45,7 +51,10 @@ namespace Ombi.Api.IntegrationTests.Tests
             Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
             var array = AsArray(body);
             Assert.That(array.Count, Is.GreaterThanOrEqualTo(1));
-            AssertHasProperties((JObject)array[0], "value", "enabled");
+            foreach (var item in array)
+            {
+                AssertHasProperties((JObject)item, "value", "enabled");
+            }
         }
     }
 }

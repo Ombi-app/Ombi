@@ -251,12 +251,13 @@ namespace Ombi.Api.IntegrationTests.Tests
         }
 
         [Test]
-        public async Task MovieRatings_ReturnsOk()
+        public async Task MovieRatings_ReturnsExpectedShape()
         {
             Factory.RottenTomatoesApi.Setup(x => x.GetMovieRatings(It.IsAny<string>(), It.IsAny<int>()))
-                .ReturnsAsync(new MovieRatings());
-            var (status, _) = await GetAsync("/api/v2/search/ratings/movie/Up/2009");
+                .ReturnsAsync(new MovieRatings { critics_rating = "Certified Fresh", critics_score = 98, audience_rating = "Upright", audience_score = 90 });
+            var (status, body) = await GetAsync("/api/v2/search/ratings/movie/Up/2009");
             Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
+            AssertHasProperties(AsObject(body), "critics_rating", "critics_score", "audience_rating", "audience_score");
         }
 
         [Test]

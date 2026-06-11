@@ -33,8 +33,12 @@ namespace Ombi.Api.IntegrationTests.Tests
         public async Task RadarrRootFolders_ReturnsSuccess()
         {
             // When Radarr is disabled the action returns null, which MVC serializes as 204 No Content.
-            var (status, _) = await GetAsync("/api/v1/Radarr/RootFolders");
+            var (status, body) = await GetAsync("/api/v1/Radarr/RootFolders");
             Assert.That(status, Is.AnyOf(HttpStatusCode.OK, HttpStatusCode.NoContent));
+            if (status == HttpStatusCode.OK)
+            {
+                Assert.That(AsArray(body), Is.Not.Null);
+            }
         }
 
         [Test]
@@ -49,15 +53,23 @@ namespace Ombi.Api.IntegrationTests.Tests
         public async Task SonarrProfiles_ReturnsSuccess()
         {
             // Disabled Sonarr returns null -> 204 No Content.
-            var (status, _) = await GetAsync("/api/v1/Sonarr/Profiles");
+            var (status, body) = await GetAsync("/api/v1/Sonarr/Profiles");
             Assert.That(status, Is.AnyOf(HttpStatusCode.OK, HttpStatusCode.NoContent));
+            if (status == HttpStatusCode.OK)
+            {
+                Assert.That(AsArray(body), Is.Not.Null);
+            }
         }
 
         [Test]
         public async Task SonarrRootFolders_ReturnsSuccess()
         {
-            var (status, _) = await GetAsync("/api/v1/Sonarr/RootFolders");
+            var (status, body) = await GetAsync("/api/v1/Sonarr/RootFolders");
             Assert.That(status, Is.AnyOf(HttpStatusCode.OK, HttpStatusCode.NoContent));
+            if (status == HttpStatusCode.OK)
+            {
+                Assert.That(AsArray(body), Is.Not.Null);
+            }
         }
     }
 }

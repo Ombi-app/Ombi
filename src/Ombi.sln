@@ -66,7 +66,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.External", "Ombi.A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.I18n", "Ombi.I18n\Ombi.I18n.csproj", "{6A922D57-8622-4C36-8E6E-D5BA9E8DA6C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.IntegrationTests", "Ombi.Api.IntegrationTests\Ombi.Api.IntegrationTests.csproj", "{65F8847B-0905-43EB-83E2-FF3F469ABC3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.IntegrationTests", "Ombi.Api.IntegrationTests\Ombi.Api.IntegrationTests.csproj", "{65F8847B-0905-43EB-83E2-FF3F469ABC3F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -232,6 +232,7 @@ Global
 		{27111E7C-748E-4996-BD71-2117027C6460} = {6F42AB98-9196-44C4-B888-D5E409F415A1}
 		{59D19538-0496-44EE-936E-EBBC22CF7B27} = {410F36CF-9C60-428A-B191-6FD90610991A}
 		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890} = {9293CA11-360A-4C20-A674-B9E794431BF5}
+		{65F8847B-0905-43EB-83E2-FF3F469ABC3F} = {6F42AB98-9196-44C4-B888-D5E409F415A1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {192E9BF8-00B4-45E4-BCCC-4C215725C869}

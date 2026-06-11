@@ -1,5 +1,6 @@
 using System.Net;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Ombi.Api.IntegrationTests.Harness;
 
@@ -14,21 +15,32 @@ namespace Ombi.Api.IntegrationTests.Tests
     public class IssuesContractTests : IntegrationTestBase
     {
         [Test]
-        public async Task Categories_ReturnsArray()
+        public async Task Categories_ReturnsCategoryShape()
         {
             var (status, body) = await GetAsync("/api/v1/Issues/categories");
 
             Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
-            Assert.That(AsArray(body), Is.Not.Null);
+            var array = AsArray(body);
+            Assert.That(array.Count, Is.GreaterThanOrEqualTo(1));
+            foreach (var item in array)
+            {
+                AssertHasProperties((JObject)item, "id", "value");
+            }
         }
 
         [Test]
-        public async Task GetIssues_ReturnsArray()
+        public async Task GetIssues_ReturnsIssueShape()
         {
             var (status, body) = await GetAsync("/api/v1/Issues/");
 
             Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
-            Assert.That(AsArray(body), Is.Not.Null);
+            var array = AsArray(body);
+            Assert.That(array.Count, Is.GreaterThanOrEqualTo(1));
+            foreach (var item in array)
+            {
+                AssertHasProperties((JObject)item,
+                    "id", "title", "subject", "description", "status", "requestType", "createdDate");
+            }
         }
 
         [Test]
