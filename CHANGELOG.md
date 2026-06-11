@@ -1,3 +1,12 @@
+## [4.60.1](https://github.com/Ombi-app/Ombi/compare/v4.60.0...v4.60.1) (2026-06-11)
+
+
+### Bug Fixes
+
+* **requests:** match loading placeholder to compact table view ([#5428](https://github.com/Ombi-app/Ombi/issues/5428)) ([4cc0302](https://github.com/Ombi-app/Ombi/commit/4cc03025190e03ec53db5af5f0f5a9c8ad42a767))
+
+
+
 # [4.60.0](https://github.com/Ombi-app/Ombi/compare/v4.53.9...v4.60.0) (2026-06-11)
 
 
@@ -606,15 +615,6 @@
 ### Bug Fixes
 
 * **emby:** :bug: Skip very large multipart episodes ([fb70aa1](https://github.com/Ombi-app/Ombi/commit/fb70aa16dea5e682a27878c0845d2ef2cf3e7b07))
-
-
-
-## [4.51.5](https://github.com/Ombi-app/Ombi/compare/v4.51.4...v4.51.5) (2025-10-14)
-
-
-### Bug Fixes
-
-* **emby:** actually fix the dupes ([4167942](https://github.com/Ombi-app/Ombi/commit/41679427f65cfa6756ab8bb1d89eb37cf8a40b42))
 
 
 
