@@ -30,7 +30,7 @@ parts that make in-memory hosting impractical are not started:
   movie/tv streams, actor credits, Rotten Tomatoes ratings.
 - **Requests:** paginated movie/tv lists, create movie/tv, approve/deny
   (movie + tv child), mark available, advanced options, subscribe/unsubscribe,
-  delete, request info, tv children, recently requested.
+  delete, request info, tv children, recently-requested.
 - **Identity:** current user, user list, dropdown, claims.
 - **Issues:** categories, list, comments.
 - **Settings:** customization, sonarr, authentication, plex, client id,
