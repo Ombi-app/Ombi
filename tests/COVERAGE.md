@@ -92,9 +92,14 @@ prefer the deterministic alternatives.
   Several specs make *real* requests (`cy.requestMovie`, `cy.requestAllTv`) that
   persist, and other specs assume a particular item is *not yet requested*. The
   `discover-recently-requested` and `details/*` specs assume the requested item
-  appears at `body[0]`. Prefer stubbing availability in the response
+  appears at `body[0]`. This used to make the suite non‑idempotent: re‑running it
+  (or running specs out of order) failed because a show another run already
+  requested was no longer in the expected state. It is now mitigated — the global
+  `before` hook calls `cy.clearAllRequests()`, which deletes every existing movie
+  and TV request via the API so each spec starts from an empty request state. New
+  specs should still prefer stubbing availability in the response
   (`cy.intercept(... req.reply ...)`) over relying on DB state, and force the
-  full state you need (`requested/approved/available/denied`) rather than just
+  full state they need (`requested/approved/available/denied`) rather than just
   one field.
 - **Live TMDb dependency.** `search`, `details/*` and the discover request specs
   drive real TheMovieDb calls through the backend, so they break if TMDb is
