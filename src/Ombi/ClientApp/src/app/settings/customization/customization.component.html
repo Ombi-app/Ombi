@@ -7,7 +7,7 @@
         <div class="md-form-field">
             <mat-form-field appearance="outline">
                 <mat-label>Application Name</mat-label>
-                <input matInput [(ngModel)]="settings.applicationName">
+                <input matInput data-test="applicationName" [(ngModel)]="settings.applicationName">
             </mat-form-field>
         </div>
         <div class="md-form-field">
@@ -16,7 +16,7 @@
             </mat-hint>
             <mat-form-field appearance="outline">
                 <mat-label>Application URL</mat-label>
-                <input matInput [(ngModel)]="settings.applicationUrl">
+                <input matInput data-test="applicationUrl" [(ngModel)]="settings.applicationUrl">
             </mat-form-field>
         </div>
         <div class="md-form-field">
@@ -43,7 +43,7 @@
             </mat-form-field>
         </div>
         <div class="md-form-field">
-            <mat-slide-toggle [(ngModel)]="settings.hideAvailableFromDiscover" matTooltip="Any media content that is available will now be hidden on the discover page, the user still can search for it">
+            <mat-slide-toggle data-test="hideAvailableFromDiscover" [(ngModel)]="settings.hideAvailableFromDiscover" matTooltip="Any media content that is available will now be hidden on the discover page, the user still can search for it">
                 Hide Available Content On The Discover Page
             </mat-slide-toggle>
         </div>
@@ -76,7 +76,7 @@
             </mat-form-field>
         </div>
         <div class="form-group">
-            <button mat-raised-button (click)="save()" type="submit" type="submit" id="save" color="accent">Submit</button>
+            <button mat-raised-button (click)="save()" type="submit" type="submit" id="save" data-test="save" color="accent">Submit</button>
         </div>
     </div>
     <!-- <div class="col-7"> -->
