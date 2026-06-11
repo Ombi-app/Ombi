@@ -1,3 +1,12 @@
+# [4.60.0](https://github.com/Ombi-app/Ombi/compare/v4.53.9...v4.60.0) (2026-06-11)
+
+
+### Features
+
+* **requests:** add compact view, sorting and user filtering to requests list ([#5424](https://github.com/Ombi-app/Ombi/issues/5424)) ([4e82fb1](https://github.com/Ombi-app/Ombi/commit/4e82fb16e37f15bc684d2da5fa3e43866a7222a6)), closes [#5422](https://github.com/Ombi-app/Ombi/issues/5422)
+
+
+
 ## [4.53.9](https://github.com/Ombi-app/Ombi/compare/v4.53.8...v4.53.9) (2026-06-09)
 
 
@@ -606,15 +615,6 @@
 ### Bug Fixes
 
 * **emby:** actually fix the dupes ([4167942](https://github.com/Ombi-app/Ombi/commit/41679427f65cfa6756ab8bb1d89eb37cf8a40b42))
-
-
-
-## [4.51.4](https://github.com/Ombi-app/Ombi/compare/v4.51.3...v4.51.4) (2025-10-14)
-
-
-### Bug Fixes
-
-* **emby:** fixed duplicate episodes ([a1d3755](https://github.com/Ombi-app/Ombi/commit/a1d37554bdb9167dc82df121caa194e7641142df))
 
 
 
