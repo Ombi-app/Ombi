@@ -9,3 +9,5 @@ export * from './details/movies/moviedetails.page';
 export * from './settings/settings.page';
 export * from './settings/plex/plex-settings.page';
 export * from './settings/customization/customization-settings.page';
+export * from './settings/ombi/ombi-settings.page';
+export * from './settings/features/features-settings.page';

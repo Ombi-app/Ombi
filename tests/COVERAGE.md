@@ -61,20 +61,22 @@ intentionally `.skip`ped cases.
 | Navigation bar | `tests/navigation` | admin vs non‑admin visibility |
 | User management | `tests/usermanagement` | create/delete/limits/roles/notifications |
 | User preferences | `tests/user-preferences` | profile + security |
-| Settings → Plex | `tests/settings/plex` | the only settings page with coverage |
+| Settings → Plex | `tests/settings/plex` | needs Wiremock |
 | Settings → Customization | `tests/settings/customization` | **added here** |
+| Settings → General (Ombi) | `tests/settings/ombi` | **added here** — save/persist + API key refresh |
+| Settings → Features | `tests/settings/features` | **added here** — toggle persistence |
 | API (v1/v2) | `tests/api/v1/*` | movie/tv request + tv search contract checks |
 
 ## Biggest coverage gaps (in priority order)
 
 1. **Settings pages** — the app exposes ~30 settings screens
    (`src/Ombi/ClientApp/src/app/settings/*`). Only **Plex** had any coverage
-   before this change; **Customization** is added here. Still uncovered and
-   high‑value: **General/Ombi**, **Features**, **Authentication**, **Radarr**,
+   before this work; **Customization**, **General (Ombi)** and **Features** are
+   added here. Still uncovered and high‑value: **Authentication**, **Radarr**,
    **Sonarr**, **Lidarr**, **Emby/Jellyfin**, **Notifications** (email/discord/
-   telegram/…), **Jobs/Scheduled tasks**, **Landing Page**, **Customization
-   advanced**. Many of these are fully self‑contained (no external service) and
-   are therefore cheap, deterministic targets — see Customization as a template.
+   telegram/…), **Jobs/Scheduled tasks**, **Landing Page**. Many of these are
+   fully self‑contained (no external service) and are therefore cheap,
+   deterministic targets — see Customization/General/Features as templates.
 2. **Issues** feature (`app/issues`, `settings/issues`) — no coverage.
 3. **Vote** feature (`app/vote`, `settings/vote`) — no coverage.
 4. **Requests list** — only TV navigation + delete is covered. No movie‑tab
@@ -132,12 +134,23 @@ prefer the deterministic alternatives.
 
 ## What this change adds
 
-- A new, fully self‑contained **Customization settings** spec
-  (`tests/settings/customization/customization-settings.spec.ts`) plus its page
-  object — the first coverage of a non‑Plex settings page. It is deterministic:
-  no external service, every assertion waits on an explicit signal (element
-  render, intercepted save response, or a retried `have.value` assertion).
-- Stable `data-test` selectors on the Customization component
-  (`applicationName`, `applicationUrl`, `hideAvailableFromDiscover`, `save`) so
-  the page can be driven without brittle positional selectors. This is the
-  pattern to replicate when covering the other settings pages.
+- Three new, fully self‑contained settings specs — the first coverage of
+  non‑Plex settings pages:
+  - **Customization** (`tests/settings/customization`) — save an application
+    name and assert it persists across a reload.
+  - **General / Ombi** (`tests/settings/ombi`) — render check, API‑key refresh,
+    and a toggle that persists across save + reload.
+  - **Features** (`tests/settings/features`) — a feature toggle that persists
+    across reload via the enable/disable endpoint.
+  All are deterministic: no external service, every assertion waits on an
+  explicit signal (element render, intercepted response, or a retried
+  value/class assertion), and each is idempotent on re‑run (it reads the current
+  state and flips it).
+- Stable `data-test` selectors on the Customization and General components
+  (e.g. `applicationName`, `applicationUrl`, `save`, `baseUrl`, `refreshApiKey`,
+  `doNotSendNotificationsForAutoApprove`) so the pages can be driven without
+  brittle positional selectors. This is the pattern to replicate when covering
+  the remaining settings pages.
+- `cy.clearAllRequests()`, invoked from the global `before` hook, which removes
+  every persisted movie/TV request so the suite is idempotent across re‑runs and
+  spec orders (previously a re‑run against a dirty database failed ~6 specs).
