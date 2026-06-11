@@ -15,4 +15,13 @@ import { TranslateModule } from "@ngx-translate/core";
 })
 export class GridSpinnerComponent{
     @Input() public loading = false;
+    @Input() public viewMode: "cards" | "compact" = "cards";
+    @Input() public columns = 6;
+
+    public readonly cardItems = [1, 2, 3, 4, 5, 6];
+    public readonly rowItems = [1, 2, 3, 4, 5, 6, 7, 8];
+
+    public get columnItems(): number[] {
+        return Array.from({ length: Math.max(1, this.columns) }, (_, i) => i);
+    }
 }
