@@ -625,6 +625,81 @@ namespace Ombi.Schedule.Tests
             _mocker.Verify<Core.Authentication.OmbiUserManager>(x => x.CreateAsync(It.IsAny<OmbiUser>()), Times.Never);
         }
 
+        [Test]
+        public async Task EmptyWatchlist_DoesNotPurgeExistingHistory()
+        {
+            // A transient empty response from the community API must not wipe history,
+            // otherwise every title is treated as new next run and re-requested, re-monitoring
+            // and re-grabbing episodes the user has intentionally removed (issue #5427).
+            UseDefaultPlexSettings();
+            SetupHistory(new PlexWatchlistHistory { TmdbId = "500", UserId = AdminOmbiId });
+            // The default watchlist mock returns zero nodes.
+
+            await _subject.Execute(_context.Object);
+
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Delete(It.IsAny<PlexWatchlistHistory>()), Times.Never);
+        }
+
+        [Test]
+        public async Task PartiallyResolvedWatchlist_DoesNotPurgeStaleHistory()
+        {
+            // One title resolves, another can't be resolved to a TMDB id this run. The snapshot
+            // is incomplete, so even with a non-empty current set we must not prune history -
+            // the "missing" title may simply have failed metadata resolution this run.
+            UseDefaultPlexSettings();
+            SetupWatchlistNodes(AdminUuid, ("movie", "rk-ok"), ("movie", "rk-unresolved"));
+            SetupMetadataWithTmdb("rk-ok", "tmdb://77");
+            // rk-unresolved has no metadata mock, so it resolves to no provider ids.
+            SetupHistory(new PlexWatchlistHistory { TmdbId = "999", UserId = AdminOmbiId });
+
+            _mocker.Setup<IMovieRequestEngine, Task<RequestEngineResult>>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()))
+                .ReturnsAsync(new RequestEngineResult { Result = true });
+
+            await _subject.Execute(_context.Object);
+
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Delete(It.IsAny<PlexWatchlistHistory>()), Times.Never);
+        }
+
+        [Test]
+        public async Task CompleteWatchlist_PurgesStaleHistory()
+        {
+            // A fully-resolved snapshot is authoritative: history rows for titles no longer on
+            // the watchlist should be removed so they can be re-requested if re-added later.
+            UseDefaultPlexSettings();
+            SetupWatchlistNode(AdminUuid, "movie", "rk-ok");
+            SetupMetadataWithTmdb("rk-ok", "tmdb://77");
+            SetupHistory(new PlexWatchlistHistory { TmdbId = "999", UserId = AdminOmbiId });
+
+            _mocker.Setup<IMovieRequestEngine, Task<RequestEngineResult>>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()))
+                .ReturnsAsync(new RequestEngineResult { Result = true });
+
+            await _subject.Execute(_context.Object);
+
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Delete(It.Is<PlexWatchlistHistory>(h => h.TmdbId == "999")), Times.Once);
+        }
+
+        [Test]
+        public async Task TitleAlreadyInHistory_IsNotReRequested()
+        {
+            // The core guarantee: a title already imported and still on the watchlist is
+            // skipped, so it's never re-requested and we never re-monitor removed episodes.
+            UseDefaultPlexSettings();
+            SetupWatchlistNode(AdminUuid, "movie", "rk-ok");
+            SetupMetadataWithTmdb("rk-ok", "tmdb://77");
+            SetupHistory(new PlexWatchlistHistory { TmdbId = "77", UserId = AdminOmbiId });
+
+            await _subject.Execute(_context.Object);
+
+            _mocker.Verify<IMovieRequestEngine>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()), Times.Never);
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Delete(It.IsAny<PlexWatchlistHistory>()), Times.Never);
+        }
+
+        private void SetupHistory(params PlexWatchlistHistory[] entries)
+        {
+            _mocker.Setup<IExternalRepository<PlexWatchlistHistory>, IQueryable<PlexWatchlistHistory>>(x => x.GetAll())
+                .Returns(entries.ToList().AsQueryable().BuildMock());
+        }
+
         private static void SetupAdminRole(Mock<OmbiUserManager> mgr, string adminUserId)
         {
             mgr.Setup(x => x.IsInRoleAsync(It.Is<OmbiUser>(u => u.Id == adminUserId), OmbiRoles.Admin))
@@ -669,6 +744,25 @@ namespace Ombi.Schedule.Tests
                             watchlist = new PlexCommunityWatchlist
                             {
                                 nodes = new List<PlexCommunityWatchlistNode> { new PlexCommunityWatchlistNode { id = ratingKey, title = "Test", type = type } },
+                                pageInfo = new PlexCommunityPageInfo { hasNextPage = false },
+                            }
+                        }
+                    }
+                });
+        }
+
+        private void SetupWatchlistNodes(string ownerId, params (string type, string ratingKey)[] nodes)
+        {
+            _mocker.Setup<IPlexApi, Task<PlexCommunityWatchlistResponse>>(x => x.GetWatchlistForUser(AdminToken, ownerId, It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new PlexCommunityWatchlistResponse
+                {
+                    data = new PlexCommunityWatchlistData
+                    {
+                        userV2 = new PlexCommunityUserV2
+                        {
+                            watchlist = new PlexCommunityWatchlist
+                            {
+                                nodes = nodes.Select(n => new PlexCommunityWatchlistNode { id = n.ratingKey, title = "Test", type = n.type }).ToList(),
                                 pageInfo = new PlexCommunityPageInfo { hasNextPage = false },
                             }
                         }

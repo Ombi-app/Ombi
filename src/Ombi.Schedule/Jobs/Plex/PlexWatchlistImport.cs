@@ -497,6 +497,15 @@ namespace Ombi.Schedule.Jobs.Plex
             var seenCursors = new HashSet<string>();
             var pageCount = 0;
 
+            // Tracks whether we obtained a complete, trustworthy snapshot of the watchlist
+            // this run. Only an authoritative snapshot may be used to prune history: if any
+            // page bailed out, an item couldn't be resolved to a TMDB id, or the run was
+            // cancelled, the set of "current" ids is partial and pruning against it would
+            // delete history rows for titles that are still watchlisted. Those titles would
+            // then look brand-new on the next run and be re-requested, re-monitoring and
+            // re-grabbing content the user has intentionally removed (issue #5427).
+            var snapshotComplete = true;
+
             do
             {
                 pageCount++;
@@ -504,12 +513,14 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     _logger.LogWarning("Watchlist for '{User}' exceeded {Max} pages; stopping to avoid an infinite loop",
                         plexUser.username, MaxWatchlistPages);
+                    snapshotComplete = false;
                     break;
                 }
                 if (!string.IsNullOrEmpty(cursor) && !seenCursors.Add(cursor))
                 {
                     _logger.LogWarning("Plex community API returned a repeated pagination cursor for '{User}'; stopping",
                         plexUser.username);
+                    snapshotComplete = false;
                     break;
                 }
 
@@ -533,6 +544,9 @@ namespace Ombi.Schedule.Jobs.Plex
                         if (string.IsNullOrEmpty(alt))
                         {
                             _logger.LogWarning($"No TheMovieDb Id found for {node.title} for user {user.UserName}, skipping");
+                            // We can't confirm this title's identity this run, so the snapshot
+                            // is incomplete and must not be used to prune history.
+                            snapshotComplete = false;
                             continue;
                         }
                         ids.TheMovieDb = alt;
@@ -546,17 +560,34 @@ namespace Ombi.Schedule.Jobs.Plex
             }
             while (!string.IsNullOrEmpty(cursor) && !ct.IsCancellationRequested);
 
-            // Always purge history for items no longer on the user's Plex watchlist
-            // (including when the watchlist has been fully cleared).
+            if (ct.IsCancellationRequested)
+            {
+                snapshotComplete = false;
+            }
+
             var historyEntries = await _watchlistRepo.GetAll().Where(x => x.UserId == user.Id).ToListAsync(ct);
             var existingTmdbIds = new HashSet<string>(historyEntries.Select(h => h.TmdbId));
-            foreach (var entry in historyEntries)
+
+            // Purge history for titles no longer on the user's watchlist, but only when we
+            // have a complete snapshot AND it actually resolved at least one title. An empty
+            // or partial result is far more likely to be a transient community-API hiccup
+            // than a genuinely cleared watchlist; pruning against it would re-request titles
+            // the user already has (issue #5427). A stale history row is harmless — it just
+            // stops that title being re-requested — so we err on the side of keeping it.
+            if (snapshotComplete && currentWatchlistTmdbIds.Count > 0)
             {
-                if (!currentWatchlistTmdbIds.Contains(entry.TmdbId))
+                foreach (var entry in historyEntries)
                 {
-                    _logger.LogDebug($"Removing old history entry for TMDB ID {entry.TmdbId} (no longer in Plex watchlist for {user.UserName})");
-                    await _watchlistRepo.Delete(entry);
+                    if (!currentWatchlistTmdbIds.Contains(entry.TmdbId))
+                    {
+                        _logger.LogDebug($"Removing old history entry for TMDB ID {entry.TmdbId} (no longer in Plex watchlist for {user.UserName})");
+                        await _watchlistRepo.Delete(entry);
+                    }
                 }
+            }
+            else if (historyEntries.Count > 0)
+            {
+                _logger.LogWarning("Skipping watchlist history cleanup for '{User}' because this sync did not return a complete watchlist snapshot; existing history is preserved and will be re-checked next run", user.UserName);
             }
 
             foreach (var (node, ids) in pendingItems)
