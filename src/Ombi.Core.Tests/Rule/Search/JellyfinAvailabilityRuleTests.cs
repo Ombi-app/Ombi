@@ -117,5 +117,25 @@ namespace Ombi.Core.Tests.Rule.Search
             Assert.True(result.Success);
             Assert.False(search.Available);
         }
+
+        [Test]
+        public async Task Movie_ShouldNotBe_Available_WhenOnlyASeriesSharesTheMovieDbId()
+        {
+            // TheMovieDb has separate ID namespaces for movies and TV, so a series can share the same id.
+            ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new JellyfinContent
+            {
+                TheMovieDbId = "87428",
+                Quality = "1080",
+                Type = MediaType.Series
+            });
+            var search = new SearchMovieViewModel()
+            {
+                TheMovieDbId = "87428",
+            };
+            var result = await Rule.Execute(search);
+
+            Assert.True(result.Success);
+            Assert.False(search.Available);
+        }
     }
 }

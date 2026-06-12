@@ -166,11 +166,19 @@ namespace Ombi.Core.Rule.Rules.Search
             var result = new ContentLookupResult();
             IMediaServerContent item = null;
 
+            // TheMovieDb (and potentially other providers) use separate ID namespaces for
+            // movies and TV shows, so the same ID can refer to both a movie and a series.
+            // Only accept content whose type matches the thing we are searching for, otherwise
+            // a movie can be wrongly marked as available because a series shares its ID (and vice versa).
+            var expectedType = obj is SearchMovieViewModel ? MediaType.Movie : MediaType.Series;
+            bool Matches(IMediaServerContent content) => content != null && content.Type == expectedType;
+
             if (obj.ImdbId.HasValue())
             {
-                item = await getByImdbId(obj.ImdbId);
-                if (item != null)
+                var match = await getByImdbId(obj.ImdbId);
+                if (Matches(match))
                 {
+                    item = match;
                     result.UseImdb = true;
                 }
             }
@@ -179,9 +187,10 @@ namespace Ombi.Core.Rule.Rules.Search
             {
                 if (lookupById && obj.Id > 0)
                 {
-                    item = await getByTheMovieDbId(obj.Id.ToString());
-                    if (item != null)
+                    var match = await getByTheMovieDbId(obj.Id.ToString());
+                    if (Matches(match))
                     {
+                        item = match;
                         obj.TheMovieDbId = obj.Id.ToString();
                         result.UseTheMovieDb = true;
                     }
@@ -189,18 +198,20 @@ namespace Ombi.Core.Rule.Rules.Search
 
                 if (item == null && obj.TheMovieDbId.HasValue())
                 {
-                    item = await getByTheMovieDbId(obj.TheMovieDbId);
-                    if (item != null)
+                    var match = await getByTheMovieDbId(obj.TheMovieDbId);
+                    if (Matches(match))
                     {
+                        item = match;
                         result.UseTheMovieDb = true;
                     }
                 }
 
                 if (item == null && obj.TheTvDbId.HasValue())
                 {
-                    item = await getByTvDbId(obj.TheTvDbId);
-                    if (item != null)
+                    var match = await getByTvDbId(obj.TheTvDbId);
+                    if (Matches(match))
                     {
+                        item = match;
                         result.UseTvDb = true;
                     }
                 }
