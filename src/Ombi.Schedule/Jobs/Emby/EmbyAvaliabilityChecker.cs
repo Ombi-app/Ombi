@@ -70,9 +70,9 @@ namespace Ombi.Schedule.Jobs.Emby
                     embyContent = await _repo.GetByImdbId(movie.ImdbId);
                 }
                 
-                if (embyContent == null)
+                if (embyContent == null || embyContent.Type != MediaType.Movie)
                 {
-                    // We don't have this yet
+                    // We don't have this yet (a series may share the same TheMovieDbId, so ensure it's a movie)
                     continue;
                 }
 

@@ -97,9 +97,9 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                     jellyfinContent = await _repo.GetByImdbId(movie.ImdbId);
                 }
                 
-                if (jellyfinContent == null)
+                if (jellyfinContent == null || jellyfinContent.Type != MediaType.Movie)
                 {
-                    // We don't have this yet
+                    // We don't have this yet (a series may share the same TheMovieDbId, so ensure it's a movie)
                     continue;
                 }
 
