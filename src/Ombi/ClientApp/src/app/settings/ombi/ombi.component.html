@@ -7,14 +7,14 @@
             <div class="md-form-field">
                 <mat-form-field appearance="outline" >
                     <mat-label>Base URL</mat-label>
-                    <input matInput  formControlName="baseUrl">
+                    <input matInput data-test="baseUrl" formControlName="baseUrl">
                 </mat-form-field>
             </div>
             <div class="md-form-field">
                 <mat-form-field appearance="outline">
                     <mat-label>Api Key</mat-label>
                     <input matInput id="ApiKey" name="ApiKey"  formControlName="apiKey" readonly="readonly">
-                    <button type="button" matSuffix (click)="refreshApiKey()" style="display:inline-block;">
+                    <button type="button" matSuffix data-test="refreshApiKey" (click)="refreshApiKey()" style="display:inline-block;">
                         <i class="fas fa-sync-alt fa-lg"></i>
                     </button>
 
@@ -33,7 +33,7 @@
                 </mat-form-field>
             </div>
             <div>
-                <mat-slide-toggle formControlName="doNotSendNotificationsForAutoApprove">
+                <mat-slide-toggle data-test="doNotSendNotificationsForAutoApprove" formControlName="doNotSendNotificationsForAutoApprove">
                     Do not send Notifications if a User has the Auto Approve permission</mat-slide-toggle>
             </div>
             <div>

@@ -36,6 +36,12 @@ before(function () {
     return;
   }
   cy.ensureSetup();
+
+  // Start every spec from an empty request state. The suite shares one
+  // persistent database and several specs make real, persisted requests, so
+  // without this a re-run (or a different spec order) fails spuriously because a
+  // show is no longer "not requested". See cy.clearAllRequests for details.
+  cy.clearAllRequests();
 });
 
 // Alternatively you can use CommonJS syntax:
