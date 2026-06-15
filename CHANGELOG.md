@@ -1,3 +1,12 @@
+## [4.60.4](https://github.com/Ombi-app/Ombi/compare/v4.60.3...v4.60.4) (2026-06-15)
+
+
+### Bug Fixes
+
+* **tv:** don't mark unaired shows as available ([#5434](https://github.com/Ombi-app/Ombi/issues/5434)) ([782896a](https://github.com/Ombi-app/Ombi/commit/782896af65b511b612da28b5142e3051c84d53fe)), closes [#5433](https://github.com/Ombi-app/Ombi/issues/5433)
+
+
+
 ## [4.60.3](https://github.com/Ombi-app/Ombi/compare/v4.60.2...v4.60.3) (2026-06-14)
 
 
@@ -595,15 +604,6 @@
 ### Bug Fixes
 
 * **radarr/sonarr:** :bug: Sanitize usernames when adding them as tags to Radarr/Sonarr [#5307](https://github.com/Ombi-app/Ombi/issues/5307) ([d3d1d38](https://github.com/Ombi-app/Ombi/commit/d3d1d380d5695fcd6d55239966bbf18a0082d961))
-
-
-
-# [4.53.0](https://github.com/Ombi-app/Ombi/compare/v4.52.0...v4.53.0) (2025-11-06)
-
-
-### Features
-
-* **availability:** :sparkles: Add the option for the *arr to take media availability priority ([d43a2e4](https://github.com/Ombi-app/Ombi/commit/d43a2e4efcbf9ea55e25305a52657dc107acaee3)), closes [#5286](https://github.com/Ombi-app/Ombi/issues/5286)
 
 
 
