@@ -129,6 +129,20 @@ namespace Ombi.Schedule.Tests
         }
 
         [Test]
+        public async Task Import_Admin_Handles_Null_Account_When_Unauthorized()
+        {
+            // Simulates Plex returning an Unauthorized response, in which case the account cannot be retrieved.
+            _mocker.Setup<ISettingsService<UserManagementSettings>, Task<UserManagementSettings>>(x => x.GetSettingsAsync())
+                .ReturnsAsync(new UserManagementSettings { ImportPlexAdmin = true, ImportPlexUsers = false });
+            _mocker.Setup<IPlexApi, Task<PlexAccount>>(x => x.GetAccount(It.IsAny<string>())).ReturnsAsync((PlexAccount)null);
+
+            Assert.DoesNotThrowAsync(() => _subject.Execute(null));
+
+            _mocker.Verify<OmbiUserManager>(x => x.CreateAsync(It.IsAny<OmbiUser>()), Times.Never);
+            _mocker.Verify<OmbiUserManager>(x => x.UpdateAsync(It.IsAny<OmbiUser>()), Times.Never);
+        }
+
+        [Test]
         public async Task Import_Only_Imports_Plex_Admin_Already_Exists()
         {
             _mocker.Setup<ISettingsService<UserManagementSettings>, Task<UserManagementSettings>>(x => x.GetSettingsAsync())
