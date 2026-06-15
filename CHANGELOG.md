@@ -1,3 +1,7 @@
+## [4.60.5](https://github.com/Ombi-app/Ombi/compare/v4.60.4...v4.60.5) (2026-06-15)
+
+
+
 ## [4.60.4](https://github.com/Ombi-app/Ombi/compare/v4.60.3...v4.60.4) (2026-06-15)
 
 
@@ -595,15 +599,6 @@
 ### Bug Fixes
 
 * **availability:** Ensure that when Radarr/Sonarr has priority, stick to it [#5286](https://github.com/Ombi-app/Ombi/issues/5286) ([8f3f87a](https://github.com/Ombi-app/Ombi/commit/8f3f87a1896b5bc2b251fc9ed819933620a3bcfa))
-
-
-
-## [4.53.1](https://github.com/Ombi-app/Ombi/compare/v4.53.0...v4.53.1) (2026-01-08)
-
-
-### Bug Fixes
-
-* **radarr/sonarr:** :bug: Sanitize usernames when adding them as tags to Radarr/Sonarr [#5307](https://github.com/Ombi-app/Ombi/issues/5307) ([d3d1d38](https://github.com/Ombi-app/Ombi/commit/d3d1d380d5695fcd6d55239966bbf18a0082d961))
 
 
 
