@@ -40,9 +40,10 @@ namespace Ombi.Core.Rule.Rules.Search
                         x.Episodes.Any(c => !c.Available && c.AirDate == DateTime.MinValue));
                     if (!unknownAirDateUnavailable)
                     {
-                        var hasUnairedEpisodes = search.SeasonRequests.Any(x =>
-                            x.Episodes.Any(c => !c.Available && c.AirDate > DateTime.Now.Date && c.AirDate != DateTime.MinValue));
-                        if (hasUnairedEpisodes || search.PartlyAvailable)
+                        // Only treat the remaining (unaired) episodes as non-blocking when we
+                        // actually have something available already. A show where nothing has
+                        // aired yet has no available episodes and must not be marked available.
+                        if (search.PartlyAvailable)
                         {
                             search.FullyAvailable = true;
                         }

@@ -169,6 +169,32 @@ namespace Ombi.Core.Tests.Rule.Search
             Assert.That(model.PartlyAvailable, Is.False);
         }
         [Test]
+        public void Is_NotAvailable_When_No_Episodes_Have_Aired_Yet()
+        {
+            var episodes = new List<EpisodeRequests>
+            {
+                new EpisodeRequests
+                {
+                    AirDate = DateTime.Now.AddDays(1), // Tomorrow
+                    Available = false
+                },
+                new EpisodeRequests
+                {
+                    AirDate = DateTime.Now.AddDays(7), // Next week
+                    Available = false
+                }
+            };
+
+            var model = new SearchTvShowViewModel
+            {
+                SeasonRequests = new List<SeasonRequests> { new SeasonRequests { Episodes = episodes } }
+            };
+            AvailabilityRuleHelper.CheckForUnairedEpisodes(model);
+            Assert.That(model.FullyAvailable, Is.False);
+            Assert.That(model.PartlyAvailable, Is.False);
+        }
+
+        [Test]
         public void Is_NotAvailable_When_All_Episodes_Are_Unknown()
         {
             var episodes = new List<EpisodeRequests>
