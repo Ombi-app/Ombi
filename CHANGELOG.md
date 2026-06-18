@@ -1,3 +1,12 @@
+## [4.60.6](https://github.com/Ombi-app/Ombi/compare/v4.60.5...v4.60.6) (2026-06-18)
+
+
+### Bug Fixes
+
+* **dvr:** reset auto-increment in a database-provider-aware way ([#5436](https://github.com/Ombi-app/Ombi/issues/5436)) ([968aeb3](https://github.com/Ombi-app/Ombi/commit/968aeb3ed851a07929c3859258a01a434d6bbd56)), closes [#5435](https://github.com/Ombi-app/Ombi/issues/5435) [#5435](https://github.com/Ombi-app/Ombi/issues/5435)
+
+
+
 ## [4.60.5](https://github.com/Ombi-app/Ombi/compare/v4.60.4...v4.60.5) (2026-06-15)
 
 
@@ -590,15 +599,6 @@
 ### Bug Fixes
 
 * small fix to search by decade ([7da1721](https://github.com/Ombi-app/Ombi/commit/7da1721a557e7aa2e92e760a7672b2dd2c88b060))
-
-
-
-## [4.53.2](https://github.com/Ombi-app/Ombi/compare/v4.53.1...v4.53.2) (2026-01-08)
-
-
-### Bug Fixes
-
-* **availability:** Ensure that when Radarr/Sonarr has priority, stick to it [#5286](https://github.com/Ombi-app/Ombi/issues/5286) ([8f3f87a](https://github.com/Ombi-app/Ombi/commit/8f3f87a1896b5bc2b251fc9ed819933620a3bcfa))
 
 
 
