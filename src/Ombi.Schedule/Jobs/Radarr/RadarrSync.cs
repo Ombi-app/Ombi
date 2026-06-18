@@ -45,7 +45,7 @@ namespace Ombi.Schedule.Jobs.Radarr
                 using var tran = await _ctx.Database.BeginTransactionAsync();
                 await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM RadarrCache");
                 // Reset auto-increment to prevent Int32 overflow (see #5224)
-                await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM sqlite_sequence WHERE name = 'RadarrCache'");
+                await _ctx.Database.ResetAutoIncrementAsync("RadarrCache");
                 await tran.CommitAsync();
                 _logger.LogInformation("[RadarrSync] RadarrCache cleared");
 

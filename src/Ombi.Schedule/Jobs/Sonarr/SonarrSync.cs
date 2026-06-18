@@ -70,7 +70,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
                         using var tran = await _ctx.Database.BeginTransactionAsync();
                         await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrCache");
                         // Reset auto-increment to prevent Int32 overflow (see #5224)
-                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM sqlite_sequence WHERE name = 'SonarrCache'");
+                        await _ctx.Database.ResetAutoIncrementAsync("SonarrCache");
                         await tran.CommitAsync();
                     });
 
