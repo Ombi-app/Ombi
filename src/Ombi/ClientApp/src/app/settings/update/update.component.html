@@ -11,11 +11,11 @@
             <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
                 <div class="col-md-12 col-12 col-sm-12">
 
-                    <div *ngIf="isAptManaged" class="alert container-alert" role="status">
+                    <output *ngIf="isAptManaged" class="alert container-alert">
                         This installation is managed by your system package manager (apt).
                         To update, run <code>sudo apt upgrade ombi</code> on the host.
                         Ombi will continue to notify you when a new version is available.
-                    </div>
+                    </output>
 
                     <div *ngIf="!isAptManaged">
                         <mat-slide-toggle formControlName="autoUpdateEnabled"
