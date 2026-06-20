@@ -12,6 +12,7 @@ using Ombi.Settings.Settings.Models;
 namespace Ombi.Schedule.Tests
 {
     [TestFixture]
+    [NonParallelizable] // mutates the process-wide OMBI_INSTALL_METHOD env var
     public class OmbiAutomaticUpdaterTests
     {
         [SetUp]

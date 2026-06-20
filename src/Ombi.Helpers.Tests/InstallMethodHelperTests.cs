@@ -4,6 +4,7 @@ using NUnit.Framework;
 namespace Ombi.Helpers.Tests
 {
     [TestFixture]
+    [NonParallelizable] // mutates the process-wide OMBI_INSTALL_METHOD env var
     public class InstallMethodHelperTests
     {
         [TearDown]
