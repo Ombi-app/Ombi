@@ -2,36 +2,32 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using Ombi.Store.Context.Postgres;
+using Ombi.Store.Context.Sqlite;
 
 #nullable disable
 
-namespace Ombi.Store.Migrations.ExternalPostgres
+namespace Ombi.Store.Migrations.ExternalSqlite
 {
-    [DbContext(typeof(ExternalPostgresContext))]
-    partial class ExternalPostgresContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(ExternalSqliteContext))]
+    [Migration("20260623000000_PlexWatchlistHistoryLastSeen")]
+    partial class PlexWatchlistHistoryLastSeen
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.5")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
-
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.5");
 
             modelBuilder.Entity("Ombi.Store.Entities.CouchPotatoCache", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("TheMovieDbId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -42,43 +38,41 @@ namespace Ombi.Store.Migrations.ExternalPostgres
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("AddedAt")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("EmbyId")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("Has4K")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ImdbId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Quality")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TheMovieDbId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TvDbId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Type")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Url")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -89,39 +83,37 @@ namespace Ombi.Store.Migrations.ExternalPostgres
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("AddedAt")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("EmbyId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("EpisodeNumber")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ImdbId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ParentId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("SeasonNumber")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("TheMovieDbId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TvDbId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -134,43 +126,41 @@ namespace Ombi.Store.Migrations.ExternalPostgres
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("AddedAt")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("Has4K")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ImdbId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("JellyfinId")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Quality")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TheMovieDbId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TvDbId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Type")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Url")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -181,39 +171,37 @@ namespace Ombi.Store.Migrations.ExternalPostgres
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("AddedAt")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("EpisodeNumber")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ImdbId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("JellyfinId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ParentId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("SeasonNumber")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("TheMovieDbId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TvDbId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -226,33 +214,31 @@ namespace Ombi.Store.Migrations.ExternalPostgres
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("AddedAt")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("ArtistId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ForeignAlbumId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("Monitored")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<decimal>("PercentOfTracks")
-                        .HasColumnType("numeric");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("ReleaseDate")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("TrackCount")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -263,21 +249,19 @@ namespace Ombi.Store.Migrations.ExternalPostgres
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("ArtistId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ArtistName")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ForeignArtistId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("Monitored")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -288,27 +272,25 @@ namespace Ombi.Store.Migrations.ExternalPostgres
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("EpisodeNumber")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("GrandparentKey")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Key")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ParentKey")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("SeasonNumber")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -321,24 +303,22 @@ namespace Ombi.Store.Migrations.ExternalPostgres
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ParentKey")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PlexContentId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("PlexServerContentId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("SeasonKey")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("SeasonNumber")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -351,46 +331,44 @@ namespace Ombi.Store.Migrations.ExternalPostgres
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("AddedAt")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("Has4K")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ImdbId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Key")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Quality")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ReleaseYear")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("RequestId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("TheMovieDbId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TvDbId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Type")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Url")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -401,21 +379,19 @@ namespace Ombi.Store.Migrations.ExternalPostgres
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("AddedAt")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("LastSeenAt")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TmdbId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -426,21 +402,19 @@ namespace Ombi.Store.Migrations.ExternalPostgres
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("Has4K")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("HasFile")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("HasRegular")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("TheMovieDbId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -451,12 +425,10 @@ namespace Ombi.Store.Migrations.ExternalPostgres
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("TvDbId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -467,18 +439,16 @@ namespace Ombi.Store.Migrations.ExternalPostgres
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("EpisodeNumber")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("SeasonNumber")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("TvDbId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -489,15 +459,13 @@ namespace Ombi.Store.Migrations.ExternalPostgres
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("TheMovieDbId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("TvDbId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -508,24 +476,22 @@ namespace Ombi.Store.Migrations.ExternalPostgres
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("EpisodeNumber")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("HasFile")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("MovieDbId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("SeasonNumber")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("TvDbId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -536,21 +502,19 @@ namespace Ombi.Store.Migrations.ExternalPostgres
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("EpisodeNumber")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("SeasonNumber")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("TheMovieDbId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -561,15 +525,13 @@ namespace Ombi.Store.Migrations.ExternalPostgres
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("TheMovieDbId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 

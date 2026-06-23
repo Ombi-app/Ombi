@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Ombi.Store.Context.Postgres;
@@ -11,9 +12,11 @@ using Ombi.Store.Context.Postgres;
 namespace Ombi.Store.Migrations.ExternalPostgres
 {
     [DbContext(typeof(ExternalPostgresContext))]
-    partial class ExternalPostgresContextModelSnapshot : ModelSnapshot
+    [Migration("20260623000000_PlexWatchlistHistoryLastSeen")]
+    partial class PlexWatchlistHistoryLastSeen
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

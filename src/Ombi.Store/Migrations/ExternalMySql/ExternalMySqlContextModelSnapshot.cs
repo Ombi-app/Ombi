@@ -408,6 +408,9 @@ namespace Ombi.Store.Migrations.ExternalMySql
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime?>("LastSeenAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("TmdbId")
                         .HasColumnType("longtext");
 
