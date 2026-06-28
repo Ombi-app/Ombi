@@ -292,42 +292,49 @@ namespace Ombi.Schedule.Jobs.Emby
                 });
                 episodesInCurrentBatch.Add(episodeKey);
 
-                if (ep.IndexNumberEnd.HasValue && ep.IndexNumberEnd.Value != ep.IndexNumber)
+                // A multi-episode file spans IndexNumber..IndexNumberEnd. Only fill the
+                // additional episodes when the range is sane: IndexNumberEnd must be
+                // greater than IndexNumber. Some Emby servers report a bogus
+                // IndexNumberEnd (absolute numbering or corrupt metadata) that is far
+                // larger than - or even smaller than - IndexNumber, which previously
+                // either skipped the file entirely or fabricated phantom episode rows.
+                if (ep.IndexNumberEnd.HasValue && ep.IndexNumberEnd.Value > ep.IndexNumber)
                 {
                     var episodeFillCount = ep.IndexNumberEnd.Value - ep.IndexNumber;
 
                     if (episodeFillCount > 50)
                     {
-                        _logger.LogWarning($"Episode {ep.Name} has {episodeFillCount} episodes! Skipping.");
-                        return;
+                        // The primary episode has already been added above; we just skip
+                        // the implausible fill rather than discarding the whole file.
+                        _logger.LogWarning(
+                            $"Episode {ep.Name} from series {ep.SeriesName} reports {episodeFillCount} episodes in a single file, which is almost certainly incorrect metadata. Only the primary episode was added.");
                     }
-
-                    int episodeNumber = ep.IndexNumber;
-                    do
+                    else
                     {
-                        episodeNumber++;
-                        var multiEpisodeKey = $"{ep.Id}_{episodeNumber}_{ep.ParentIndexNumber}";
-
-                        // Check if this multi-episode entry already exists
-                        if (!episodesInCurrentBatch.Contains(multiEpisodeKey))
+                        for (var episodeNumber = ep.IndexNumber + 1; episodeNumber <= ep.IndexNumberEnd.Value; episodeNumber++)
                         {
-                            _logger.LogDebug($"Multiple-episode file detected. Adding episode {episodeNumber}");
-                            epToAdd.Add(new EmbyEpisode
-                            {
-                                EmbyId = ep.Id,
-                                EpisodeNumber = episodeNumber,
-                                SeasonNumber = ep.ParentIndexNumber,
-                                ParentId = ep.SeriesId,
-                                TvDbId = ep.ProviderIds?.Tvdb,
-                                TheMovieDbId = ep.ProviderIds?.Tmdb,
-                                ImdbId = ep.ProviderIds?.Imdb,
-                                Title = ep.Name,
-                                AddedAt = DateTime.UtcNow
-                            });
-                            episodesInCurrentBatch.Add(multiEpisodeKey);
-                        }
+                            var multiEpisodeKey = $"{ep.Id}_{episodeNumber}_{ep.ParentIndexNumber}";
 
-                    } while (episodeNumber < ep.IndexNumberEnd.Value);
+                            // Check if this multi-episode entry already exists
+                            if (!episodesInCurrentBatch.Contains(multiEpisodeKey))
+                            {
+                                _logger.LogDebug($"Multiple-episode file detected. Adding episode {episodeNumber}");
+                                epToAdd.Add(new EmbyEpisode
+                                {
+                                    EmbyId = ep.Id,
+                                    EpisodeNumber = episodeNumber,
+                                    SeasonNumber = ep.ParentIndexNumber,
+                                    ParentId = ep.SeriesId,
+                                    TvDbId = ep.ProviderIds?.Tvdb,
+                                    TheMovieDbId = ep.ProviderIds?.Tmdb,
+                                    ImdbId = ep.ProviderIds?.Imdb,
+                                    Title = ep.Name,
+                                    AddedAt = DateTime.UtcNow
+                                });
+                                episodesInCurrentBatch.Add(multiEpisodeKey);
+                            }
+                        }
+                    }
                 }
             }
         }

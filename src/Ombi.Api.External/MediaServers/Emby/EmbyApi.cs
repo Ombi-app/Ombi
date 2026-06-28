@@ -187,7 +187,11 @@ namespace Ombi.Api.External.MediaServers.Emby
             request.AddQueryString("Fields", includeOverview ? "ProviderIds,MediaStreams,Overview" : "ProviderIds,MediaStreams ");
             request.AddQueryString("startIndex", startIndex.ToString());
             request.AddQueryString("limit", count.ToString());
-            request.AddQueryString("sortBy", "DateCreated");
+            // Include Id as a secondary sort key so the ordering is a unique, stable
+            // total order. Without a tiebreaker, rows that share the primary sort value
+            // can shift position between paginated requests and silently fall into the
+            // gaps between startIndex pages, never getting synced.
+            request.AddQueryString("sortBy", "DateCreated,Id");
             request.AddQueryString("SortOrder", "Descending");
             if (!string.IsNullOrEmpty(parentIdFilder))
             {
@@ -243,7 +247,12 @@ namespace Ombi.Api.External.MediaServers.Emby
                 request.AddQueryString("ParentId", parentIdFilder);
             }
 
-            request.AddQueryString("SortBy", "SortName");
+            // Include Id as a secondary sort key so the ordering is a unique, stable
+            // total order. SortName alone produces large tie groups (e.g. "Pilot",
+            // "Episode 1") whose relative order is undefined and can shift between
+            // paginated requests, causing episodes to silently fall into the gaps
+            // between startIndex pages and never get synced.
+            request.AddQueryString("SortBy", "SortName,Id");
             request.AddQueryString("SortOrder", "Ascending");
 
             request.AddQueryString("isMissing", "False");
@@ -293,8 +302,10 @@ namespace Ombi.Api.External.MediaServers.Emby
             request.AddQueryString("UserId", userId);
             request.AddQueryString("isPlayed", true.ToString());
 
-            // paginate and display recently played items first
-            request.AddQueryString("sortBy", "DatePlayed");
+            // paginate and display recently played items first. Include Id as a
+            // secondary sort key so the ordering is a unique, stable total order and
+            // paginated requests cannot drop items that share the same DatePlayed.
+            request.AddQueryString("sortBy", "DatePlayed,Id");
             request.AddQueryString("SortOrder", "Descending");
             request.AddQueryString("startIndex", startIndex.ToString());
             request.AddQueryString("limit", count.ToString());
