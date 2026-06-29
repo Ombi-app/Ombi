@@ -278,18 +278,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 _logger.LogDebug("Adding new episode {0} to parent {1}", ep.Name, ep.SeriesName);
 
                 // add it
-                epToAdd.Add(new EmbyEpisode
-                {
-                    EmbyId = ep.Id,
-                    EpisodeNumber = ep.IndexNumber,
-                    SeasonNumber = ep.ParentIndexNumber,
-                    ParentId = ep.SeriesId,
-                    TvDbId = ep.ProviderIds?.Tvdb,
-                    TheMovieDbId = ep.ProviderIds?.Tmdb,
-                    ImdbId = ep.ProviderIds?.Imdb,
-                    Title = ep.Name,
-                    AddedAt = DateTime.UtcNow
-                });
+                epToAdd.Add(BuildEpisode(ep, ep.IndexNumber));
                 episodesInCurrentBatch.Add(episodeKey);
 
                 // A multi-episode file spans IndexNumber..IndexNumberEnd. Only fill the
@@ -314,29 +303,39 @@ namespace Ombi.Schedule.Jobs.Emby
                         for (var episodeNumber = ep.IndexNumber + 1; episodeNumber <= ep.IndexNumberEnd.Value; episodeNumber++)
                         {
                             var multiEpisodeKey = $"{ep.Id}_{episodeNumber}_{ep.ParentIndexNumber}";
+                            var multiEpisodeMetadataKey = $"{ep.Id}:{episodeNumber}";
 
-                            // Check if this multi-episode entry already exists
-                            if (!episodesInCurrentBatch.Contains(multiEpisodeKey))
+                            // Skip if this filled episode already exists in the current
+                            // batch or is already persisted in the database. EmbyEpisode
+                            // has no uniqueness constraint, so an unguarded insert here
+                            // would create a duplicate row.
+                            if (!episodesInCurrentBatch.Contains(multiEpisodeKey)
+                                && !episodeMetadata.ContainsKey(multiEpisodeMetadataKey))
                             {
                                 _logger.LogDebug($"Multiple-episode file detected. Adding episode {episodeNumber}");
-                                epToAdd.Add(new EmbyEpisode
-                                {
-                                    EmbyId = ep.Id,
-                                    EpisodeNumber = episodeNumber,
-                                    SeasonNumber = ep.ParentIndexNumber,
-                                    ParentId = ep.SeriesId,
-                                    TvDbId = ep.ProviderIds?.Tvdb,
-                                    TheMovieDbId = ep.ProviderIds?.Tmdb,
-                                    ImdbId = ep.ProviderIds?.Imdb,
-                                    Title = ep.Name,
-                                    AddedAt = DateTime.UtcNow
-                                });
+                                epToAdd.Add(BuildEpisode(ep, episodeNumber));
                                 episodesInCurrentBatch.Add(multiEpisodeKey);
                             }
                         }
                     }
                 }
             }
+        }
+
+        private static EmbyEpisode BuildEpisode(EmbyEpisodes ep, int episodeNumber)
+        {
+            return new EmbyEpisode
+            {
+                EmbyId = ep.Id,
+                EpisodeNumber = episodeNumber,
+                SeasonNumber = ep.ParentIndexNumber,
+                ParentId = ep.SeriesId,
+                TvDbId = ep.ProviderIds?.Tvdb,
+                TheMovieDbId = ep.ProviderIds?.Tmdb,
+                ImdbId = ep.ProviderIds?.Imdb,
+                Title = ep.Name,
+                AddedAt = DateTime.UtcNow
+            };
         }
 
         private async Task<T> FetchEpisodesWithRetry<T>(Func<Task<T>> apiCall, int maxAttempts = 3)
