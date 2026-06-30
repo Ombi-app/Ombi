@@ -187,11 +187,13 @@ namespace Ombi.Api.External.MediaServers.Emby
             request.AddQueryString("Fields", includeOverview ? "ProviderIds,MediaStreams,Overview" : "ProviderIds,MediaStreams ");
             request.AddQueryString("startIndex", startIndex.ToString());
             request.AddQueryString("limit", count.ToString());
-            // Include Id as a secondary sort key so the ordering is a unique, stable
-            // total order. Without a tiebreaker, rows that share the primary sort value
-            // can shift position between paginated requests and silently fall into the
-            // gaps between startIndex pages, never getting synced.
-            request.AddQueryString("sortBy", "DateCreated,Id");
+            // Append the season (ParentIndexNumber) and episode (IndexNumber) numbers as
+            // secondary sort keys so the ordering is deterministic across paginated
+            // requests. Without a tiebreaker, rows that share the primary sort value have
+            // an undefined relative order that can shift between requests, letting items
+            // fall into the gaps between startIndex pages and never get synced. (Emby has
+            // no unique-id sort field, so this is best-effort rather than a total order.)
+            request.AddQueryString("sortBy", "DateCreated,ParentIndexNumber,IndexNumber");
             request.AddQueryString("SortOrder", "Descending");
             if (!string.IsNullOrEmpty(parentIdFilder))
             {
@@ -247,12 +249,14 @@ namespace Ombi.Api.External.MediaServers.Emby
                 request.AddQueryString("ParentId", parentIdFilder);
             }
 
-            // Include Id as a secondary sort key so the ordering is a unique, stable
-            // total order. SortName alone produces large tie groups (e.g. "Pilot",
+            // Append the season (ParentIndexNumber) and episode (IndexNumber) numbers as
+            // secondary sort keys so the ordering is deterministic across paginated
+            // requests. SortName alone produces large tie groups (e.g. "Pilot",
             // "Episode 1") whose relative order is undefined and can shift between
-            // paginated requests, causing episodes to silently fall into the gaps
-            // between startIndex pages and never get synced.
-            request.AddQueryString("SortBy", "SortName,Id");
+            // requests, causing episodes to silently fall into the gaps between
+            // startIndex pages and never get synced. (Emby has no unique-id sort field,
+            // so this is best-effort rather than a total order.)
+            request.AddQueryString("SortBy", "SortName,ParentIndexNumber,IndexNumber");
             request.AddQueryString("SortOrder", "Ascending");
 
             request.AddQueryString("isMissing", "False");
@@ -302,10 +306,11 @@ namespace Ombi.Api.External.MediaServers.Emby
             request.AddQueryString("UserId", userId);
             request.AddQueryString("isPlayed", true.ToString());
 
-            // paginate and display recently played items first. Include Id as a
-            // secondary sort key so the ordering is a unique, stable total order and
-            // paginated requests cannot drop items that share the same DatePlayed.
-            request.AddQueryString("sortBy", "DatePlayed,Id");
+            // paginate and display recently played items first. Append the season
+            // (ParentIndexNumber) and episode (IndexNumber) numbers as secondary sort
+            // keys so paginated requests cannot drop items that share the same
+            // DatePlayed. (Emby has no unique-id sort field, so this is best-effort.)
+            request.AddQueryString("sortBy", "DatePlayed,ParentIndexNumber,IndexNumber");
             request.AddQueryString("SortOrder", "Descending");
             request.AddQueryString("startIndex", startIndex.ToString());
             request.AddQueryString("limit", count.ToString());
