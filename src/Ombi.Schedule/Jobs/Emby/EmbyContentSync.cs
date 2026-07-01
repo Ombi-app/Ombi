@@ -39,11 +39,25 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly IEmbyContentRepository _repo;
         private readonly IFeatureService _feature;
 
+        private const int DeleteBatchSize = 1000;
+
+        // Every EmbyId the server reported during this run, used to work out which
+        // database records no longer exist on the server.
+        private readonly HashSet<string> _seenEmbyIds = new HashSet<string>();
+
 
         public async override Task Execute(IJobExecutionContext context)
         {
 
             await base.Execute(context);
+
+            // A full sync has seen everything on the server, so anything in our database
+            // that was not reported no longer exists in Emby (or lives in a library that
+            // is not enabled) and would otherwise produce incorrect availability results.
+            if (!recentlyAdded)
+            {
+                await RemoveStaleContent();
+            }
 
             // Episodes
             await OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IEmbyEpisodeSync), "Emby"), new JobDataMap(new Dictionary<string, string> { { JobDataKeys.EmbyRecentlyAddedSearch, recentlyAdded.ToString() } }));
@@ -81,6 +95,7 @@ namespace Ombi.Schedule.Jobs.Emby
             {
                 if (tv.Items == null || !tv.Items.Any())
                 {
+                    syncIncomplete = true;
                     _logger.LogWarning("Emby returned no TV shows at offset {0} but reported {1} total records. Stopping the sync for this library to avoid an infinite loop.",
                         processed, totalTv);
                     break;
@@ -89,15 +104,25 @@ namespace Ombi.Schedule.Jobs.Emby
                 foreach (var tvShow in tv.Items)
                 {
                     processed++;
-                    if (!tvShow.ProviderIds.Any())
+                    _seenEmbyIds.Add(tvShow.Id);
+
+                    // ProviderIds can be missing entirely from the API response, so guard
+                    // against null as well as empty. A series without provider ids is still
+                    // added (with its EmbyId only) so that its episodes can be linked and
+                    // the metadata refresh job can backfill the ids from the title later.
+                    var hasProviderIds = tvShow.ProviderIds?.Any() == true;
+                    if (!hasProviderIds)
                     {
-                        _logger.LogInformation("Provider Id on tv {0} is null", tvShow.Name);
-                        continue;
+                        _logger.LogInformation("Provider Id on tv {0} is null, adding it with its Emby Id only. The metadata refresh will attempt to backfill the provider ids.", tvShow.Name);
                     }
 
                     var existingTv = await _repo.GetByEmbyId(tvShow.Id);
 
-                    if (existingTv != null &&
+                    // Only treat differing ids as a reidentification when the incoming item
+                    // actually has provider ids, otherwise a series that lost its metadata
+                    // would wipe the ids we already have (including ones backfilled by the
+                    // metadata refresh job).
+                    if (existingTv != null && hasProviderIds &&
                         ( existingTv.ImdbId != tvShow.ProviderIds?.Imdb
                         || existingTv.TheMovieDbId != tvShow.ProviderIds?.Tmdb
                         || existingTv.TvDbId != tvShow.ProviderIds?.Tvdb))
@@ -170,6 +195,7 @@ namespace Ombi.Schedule.Jobs.Emby
             {
                 if (movies.Items == null || !movies.Items.Any())
                 {
+                    syncIncomplete = true;
                     _logger.LogWarning("Emby returned no movies at offset {0} but reported {1} total records. Stopping the sync for this library to avoid an infinite loop.",
                         processed, totalCount);
                     break;
@@ -209,12 +235,17 @@ namespace Ombi.Schedule.Jobs.Emby
 
         private async Task ProcessMovies(EmbyMovie movieInfo, ICollection<EmbyContent> content, ICollection<EmbyContent> toUpdate, EmbyServers server)
         {
+            _seenEmbyIds.Add(movieInfo.Id);
+
             var quality = movieInfo.MediaStreams?.FirstOrDefault()?.DisplayTitle ?? string.Empty;
             var has4K = false;
             if (quality.Contains("4K", CompareOptions.IgnoreCase))
             {
                 has4K = true;
             }
+
+            // ProviderIds can be missing entirely from the API response
+            var hasProviderIds = movieInfo.ProviderIds?.Any() == true;
 
             // Check if it exists
             var existingMovie = await _repo.GetByEmbyId(movieInfo.Id);
@@ -226,7 +257,7 @@ namespace Ombi.Schedule.Jobs.Emby
             }
             if (existingMovie == null)
             {
-                if (!movieInfo.ProviderIds.Any())
+                if (!hasProviderIds)
                 {
                     _logger.LogWarning($"Movie {movieInfo.Name} has no relevant metadata. Skipping.");
                     return;
@@ -240,7 +271,7 @@ namespace Ombi.Schedule.Jobs.Emby
             else
             {
                 var movieHasChanged = false;
-                if (existingMovie.ImdbId != movieInfo.ProviderIds.Imdb || existingMovie.TheMovieDbId != movieInfo.ProviderIds.Tmdb)
+                if (hasProviderIds && (existingMovie.ImdbId != movieInfo.ProviderIds.Imdb || existingMovie.TheMovieDbId != movieInfo.ProviderIds.Tmdb))
                 {
                     _logger.LogDebug($"Updating existing movie '{movieInfo.Name}'");
                     MapEmbyContent(existingMovie, movieInfo, server, has4K, quality);
@@ -271,7 +302,7 @@ namespace Ombi.Schedule.Jobs.Emby
         }
 
         private void MapEmbyContent(EmbyContent content, EmbyMovie movieInfo, EmbyServers server, bool has4K, string quality){
-            content.ImdbId = movieInfo.ProviderIds.Imdb;
+            content.ImdbId = movieInfo.ProviderIds?.Imdb;
             content.TheMovieDbId = movieInfo.ProviderIds?.Tmdb;
             content.Title = movieInfo.Name;
             content.Type = MediaType.Movie;
@@ -279,6 +310,59 @@ namespace Ombi.Schedule.Jobs.Emby
             content.Url = EmbyHelper.GetEmbyMediaUrl(movieInfo.Id, server?.ServerId, server.ServerHostname);
             content.Quality = has4K ? null : quality;
             content.Has4K = has4K;
+        }
+
+        /// <summary>
+        /// Removes content records (and their episodes) that were not reported by the
+        /// server during this run. This clears out ghosts left behind by removed or
+        /// reidentified items, which otherwise keep matching availability lookups forever.
+        /// Only runs after a complete full sync so we never delete based on partial data.
+        /// </summary>
+        private async Task RemoveStaleContent()
+        {
+            if (syncIncomplete)
+            {
+                _logger.LogWarning("Skipping the stale Emby content cleanup because the sync did not fully complete. Removing records based on a partial sync could delete content that still exists on the server.");
+                return;
+            }
+
+            if (!_seenEmbyIds.Any())
+            {
+                _logger.LogInformation("Skipping the stale Emby content cleanup because the server reported no content.");
+                return;
+            }
+
+            var dbContent = await _repo.GetAllContentIdentifiers();
+            var staleContent = dbContent.Where(x => string.IsNullOrEmpty(x.EmbyId) || !_seenEmbyIds.Contains(x.EmbyId)).ToList();
+            if (!staleContent.Any())
+            {
+                return;
+            }
+
+            _logger.LogInformation("Removing {0} Emby content records that no longer exist on the server", staleContent.Count);
+
+            var staleSeriesIds = staleContent
+                .Where(x => x.Type == MediaType.Series && !string.IsNullOrEmpty(x.EmbyId))
+                .Select(x => x.EmbyId)
+                .ToHashSet();
+            if (staleSeriesIds.Any())
+            {
+                var allEpisodes = await _repo.GetAllEpisodeIdentifiers();
+                var orphanedEpisodes = allEpisodes.Where(x => staleSeriesIds.Contains(x.ParentId)).ToList();
+                if (orphanedEpisodes.Any())
+                {
+                    _logger.LogInformation("Removing {0} episodes belonging to the removed series", orphanedEpisodes.Count);
+                    foreach (var chunk in orphanedEpisodes.Chunk(DeleteBatchSize))
+                    {
+                        await _repo.DeleteEpisodes(chunk);
+                    }
+                }
+            }
+
+            foreach (var chunk in staleContent.Chunk(DeleteBatchSize))
+            {
+                await _repo.DeleteRange(chunk);
+            }
         }
     }
 

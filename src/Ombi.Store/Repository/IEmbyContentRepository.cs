@@ -23,5 +23,9 @@ namespace Ombi.Store.Repository
         Task<HashSet<string>> GetAllEpisodeEmbyIds();
         Task<Dictionary<string, (int EpisodeNumber, int SeasonNumber)>> GetAllEpisodeMetadata();
 
+        // Stale record cleanup
+        Task<List<EmbyContent>> GetAllContentIdentifiers();
+        Task<List<EmbyEpisode>> GetAllEpisodeIdentifiers();
+        Task DeleteEpisodes(IEnumerable<EmbyEpisode> episodes);
     }
 }

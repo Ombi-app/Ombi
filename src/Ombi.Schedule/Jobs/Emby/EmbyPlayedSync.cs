@@ -40,6 +40,12 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly IUserPlayedEpisodeRepository _episodeRepo;
         private readonly IEmbyContentRepository _contentRepo;
 
+        // A single video file spanning more episodes than this is treated as corrupt
+        // metadata (e.g. absolute numbering leaking into IndexNumberEnd). Without this
+        // guard a single bad item can loop for hundreds of thousands of iterations,
+        // each one hitting the database.
+        private const int MaxEpisodeFillCount = 50;
+
         protected async override Task ProcessTv(EmbyServers server, string parentId = default)
         {
             var allUsers = await _userManager.Users.Where(x => x.UserType == UserType.EmbyUser || x.UserType == UserType.EmbyConnectUser).ToListAsync();
@@ -83,6 +89,13 @@ namespace Ombi.Schedule.Jobs.Emby
 
             while (processed < totalCount)
             {
+                if (movies.Items == null || !movies.Items.Any())
+                {
+                    _logger.LogWarning("Emby returned no played movies at offset {0} but reported {1} total records. Stopping the sync for this user to avoid an infinite loop.",
+                        processed, totalCount);
+                    break;
+                }
+
                 foreach (var movie in movies.Items)
                 {
                     await ProcessMovie(movie, user, mediaToAdd, server);
@@ -102,14 +115,17 @@ namespace Ombi.Schedule.Jobs.Emby
 
         private async Task ProcessMovie(EmbyMovie movieInfo, OmbiUser user, ICollection<UserPlayedMovie> content, EmbyServers server)
         {
-            if (movieInfo.ProviderIds.Tmdb.IsNullOrEmpty())
+            // ProviderIds can be missing entirely from the API response, so guard against
+            // null as well as an empty Tmdb id
+            var tmdbId = movieInfo.ProviderIds?.Tmdb;
+            if (tmdbId.IsNullOrEmpty() || !int.TryParse(tmdbId, out var theMovieDbId))
             {
                 _logger.LogWarning($"Movie {movieInfo.Name} has no relevant metadata. Skipping.");
                 return;
             }
             var userPlayedMovie = new UserPlayedMovie()
             {
-                TheMovieDbId = int.Parse(movieInfo.ProviderIds.Tmdb),
+                TheMovieDbId = theMovieDbId,
                 UserId = user.Id
             };
             // Check if it exists
@@ -144,6 +160,13 @@ namespace Ombi.Schedule.Jobs.Emby
 
             while (processed < totalCount)
             {
+                if (episodes.Items == null || !episodes.Items.Any())
+                {
+                    _logger.LogWarning("Emby returned no played episodes at offset {0} but reported {1} total records. Stopping the sync for this user to avoid an infinite loop.",
+                        processed, totalCount);
+                    break;
+                }
+
                 foreach (var episode in episodes.Items)
                 {
                     await ProcessTv(episode, user, mediaToAdd, server);
@@ -191,25 +214,36 @@ namespace Ombi.Schedule.Jobs.Emby
                 UserId = user.Id
             });
 
-            if (episode.IndexNumberEnd.HasValue && episode.IndexNumberEnd.Value != episode.IndexNumber)
+            // A multi-episode file spans IndexNumber..IndexNumberEnd. Only fill the
+            // additional episodes when the range is sane: IndexNumberEnd must be greater
+            // than IndexNumber and the span plausible. Some Emby servers report a bogus
+            // IndexNumberEnd (absolute numbering or corrupt metadata) that previously
+            // caused this loop to fabricate played records for episodes that do not
+            // exist, or to run for hundreds of thousands of iterations.
+            if (episode.IndexNumberEnd.HasValue && episode.IndexNumberEnd.Value > episode.IndexNumber)
             {
-                int episodeNumber = episode.IndexNumber;
-                do
+                var episodeFillCount = episode.IndexNumberEnd.Value - episode.IndexNumber;
+
+                if (episodeFillCount > MaxEpisodeFillCount)
                 {
-                    _logger.LogDebug($"Multiple-episode file detected. Adding episode ${episodeNumber}");
-                    episodeNumber++;
-
-                    await AddToContent(content, new UserPlayedEpisode()
+                    _logger.LogWarning(
+                        $"Episode {episode.Name} from series {episode.SeriesName} reports {episodeFillCount} episodes in a single file, which is almost certainly incorrect metadata. Only the primary episode was recorded as played.");
+                }
+                else
+                {
+                    for (var episodeNumber = episode.IndexNumber + 1; episodeNumber <= episode.IndexNumberEnd.Value; episodeNumber++)
                     {
-                        TheMovieDbId = parentMovieDb,
-                        SeasonNumber = episode.ParentIndexNumber,
-                        EpisodeNumber = episodeNumber,
-                        UserId = user.Id
-                    });
+                        _logger.LogDebug($"Multiple-episode file detected. Adding episode {episodeNumber}");
 
-
-                } while (episodeNumber < episode.IndexNumberEnd.Value);
-
+                        await AddToContent(content, new UserPlayedEpisode()
+                        {
+                            TheMovieDbId = parentMovieDb,
+                            SeasonNumber = episode.ParentIndexNumber,
+                            EpisodeNumber = episodeNumber,
+                            UserId = user.Id
+                        });
+                    }
+                }
             }
         }
 
