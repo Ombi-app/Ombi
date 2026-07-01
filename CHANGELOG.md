@@ -1,3 +1,12 @@
+## [4.60.7](https://github.com/Ombi-app/Ombi/compare/v4.60.6...v4.60.7) (2026-07-01)
+
+
+### Bug Fixes
+
+* **emby:** make episode sync pagination deterministic and harden multi-episode fill ([#5438](https://github.com/Ombi-app/Ombi/issues/5438)) ([20aecdd](https://github.com/Ombi-app/Ombi/commit/20aecdd1b7d9a00c65706ce240f9691774f5da6f))
+
+
+
 ## [4.60.6](https://github.com/Ombi-app/Ombi/compare/v4.60.5...v4.60.6) (2026-06-18)
 
 
@@ -590,15 +599,6 @@
 
 * centre requested carousel items ([01c4fa9](https://github.com/Ombi-app/Ombi/commit/01c4fa916f5e6cc57cea459ad4300443ba457caa))
 * use dynamic scroll sizing for recently requested carousel ([5b0f325](https://github.com/Ombi-app/Ombi/commit/5b0f3252f68d33f93c26b54cdf83780697ed6172))
-
-
-
-## [4.53.3](https://github.com/Ombi-app/Ombi/compare/v4.53.2...v4.53.3) (2026-01-08)
-
-
-### Bug Fixes
-
-* small fix to search by decade ([7da1721](https://github.com/Ombi-app/Ombi/commit/7da1721a557e7aa2e92e760a7672b2dd2c88b060))
 
 
 
