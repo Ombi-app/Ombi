@@ -229,13 +229,14 @@ namespace Ombi.Schedule.Jobs.Emby
                 if (episodeFillCount > MaxEpisodeFillCount)
                 {
                     _logger.LogWarning(
-                        $"Episode {episode.Name} from series {episode.SeriesName} reports {episodeFillCount} episodes in a single file, which is almost certainly incorrect metadata. Only the primary episode was recorded as played.");
+                        "Episode {EpisodeName} from series {SeriesName} reports {EpisodeFillCount} episodes in a single file, which is almost certainly incorrect metadata. Only the primary episode was recorded as played.",
+                        episode.Name, episode.SeriesName, episodeFillCount);
                 }
                 else
                 {
                     for (var episodeNumber = episode.IndexNumber + 1; episodeNumber <= episode.IndexNumberEnd.Value; episodeNumber++)
                     {
-                        _logger.LogDebug($"Multiple-episode file detected. Adding episode {episodeNumber}");
+                        _logger.LogDebug("Multiple-episode file detected. Adding episode {EpisodeNumber}", episodeNumber);
 
                         await AddToContent(content, new UserPlayedEpisode()
                         {

@@ -150,22 +150,7 @@ namespace Ombi.Schedule.Jobs.Emby
             _logger.LogInformation($"Starting episode sync for server {server.Name}");
 
             // Get initial episode count
-            EmbyItemContainer<EmbyEpisodes> allEpisodes;
-            if (recentlyAdded)
-            {
-                var recentlyAddedAmountToTake = AmountToTake;
-                allEpisodes = await FetchEpisodesWithRetry(() => Api.RecentlyAddedEpisodes(server.ApiKey, parentIdFilter, 0, recentlyAddedAmountToTake, server.AdministratorId, server.FullUri));
-                total = allEpisodes.TotalRecordCount;
-                if (total > recentlyAddedAmountToTake)
-                {
-                    total = recentlyAddedAmountToTake;
-                }
-            }
-            else
-            {
-                allEpisodes = await FetchEpisodesWithRetry(() => Api.GetAllEpisodes(server.ApiKey, parentIdFilter, 0, AmountToTake, server.AdministratorId, server.FullUri));
-                total = allEpisodes.TotalRecordCount;
-            }
+            (var allEpisodes, total) = await FetchInitialEpisodes(server, recentlyAdded, parentIdFilter);
 
             _logger.LogInformation($"Processing {total} episodes in chunks of {AmountToTake}");
 
@@ -201,55 +186,14 @@ namespace Ombi.Schedule.Jobs.Emby
                     }
                 }
 
-                // Only commit to database when we reach the batch size or finish processing
                 // Apply batched metadata updates
-                if (pendingUpdates.Any())
-                {
-                    // Group updates by EmbyId so we update all rows for multi-episode files
-                    var updatesByEmbyId = pendingUpdates.GroupBy(u => u.Value.EmbyId);
-                    foreach (var group in updatesByEmbyId)
-                    {
-                        var entities = await _repo.GetEpisodesByEmbyId(group.Key);
-                        foreach (var entity in entities)
-                        {
-                            var matchingUpdate = group.FirstOrDefault(u => u.Value.EpisodeNumber == entity.EpisodeNumber);
-                            if (matchingUpdate.Key != null)
-                            {
-                                entity.SeasonNumber = matchingUpdate.Value.SeasonNumber;
-                                hasUpserts = true;
-                            }
-                            else
-                            {
-                                _logger.LogDebug("No matching update found for episode {EpisodeNumber} in EmbyId {EmbyId}",
-                                    entity.EpisodeNumber, group.Key);
-                            }
-                        }
-                    }
-                    pendingUpdates.Clear();
-                }
+                hasUpserts |= await ApplyPendingUpdates(pendingUpdates);
 
+                // Only commit to database when we reach the batch size or finish processing
                 if (epToAdd.Count >= DatabaseBatchSize || processed >= total)
                 {
-                    if (epToAdd.Any())
-                    {
-                        await _repo.AddRange(epToAdd);
-                        _logger.LogInformation($"Committed {epToAdd.Count} episodes to database. Progress: {processed}/{total}");
-
-                        // Update the episode metadata with newly added episodes to prevent duplicates in subsequent batches
-                        foreach (var episode in epToAdd)
-                        {
-                            episodeMetadata[$"{episode.EmbyId}:{episode.EpisodeNumber}"] = (episode.EpisodeNumber, episode.SeasonNumber);
-                        }
-                    }
-                    else if (hasUpserts)
-                    {
-                        // Save upserted episode metadata changes even if no new episodes were added
-                        await _repo.SaveChangesAsync();
-                        _logger.LogInformation($"Saved episode metadata updates. Progress: {processed}/{total}");
-                    }
-                    epToAdd.Clear();
+                    await CommitBatch(epToAdd, hasUpserts, episodeMetadata, episodesInCurrentBatch, processed, total);
                     hasUpserts = false;
-                    episodesInCurrentBatch.Clear();
                 }
 
                 // Get next chunk of episodes for processing
@@ -260,6 +204,81 @@ namespace Ombi.Schedule.Jobs.Emby
             }
 
             return completedWithoutGaps;
+        }
+
+        private async Task<(EmbyItemContainer<EmbyEpisodes> Episodes, int Total)> FetchInitialEpisodes(EmbyServers server, bool recentlyAdded, string parentIdFilter)
+        {
+            if (recentlyAdded)
+            {
+                var container = await FetchEpisodesWithRetry(() => Api.RecentlyAddedEpisodes(server.ApiKey, parentIdFilter, 0, AmountToTake, server.AdministratorId, server.FullUri));
+                return (container, Math.Min(container.TotalRecordCount, AmountToTake));
+            }
+
+            var allEpisodes = await FetchEpisodesWithRetry(() => Api.GetAllEpisodes(server.ApiKey, parentIdFilter, 0, AmountToTake, server.AdministratorId, server.FullUri));
+            return (allEpisodes, allEpisodes.TotalRecordCount);
+        }
+
+        private async Task<bool> ApplyPendingUpdates(Dictionary<string, (string EmbyId, int EpisodeNumber, int SeasonNumber)> pendingUpdates)
+        {
+            if (!pendingUpdates.Any())
+            {
+                return false;
+            }
+
+            var hasUpserts = false;
+
+            // Group updates by EmbyId so we update all rows for multi-episode files
+            var updatesByEmbyId = pendingUpdates.GroupBy(u => u.Value.EmbyId);
+            foreach (var group in updatesByEmbyId)
+            {
+                var entities = await _repo.GetEpisodesByEmbyId(group.Key);
+                foreach (var entity in entities)
+                {
+                    var matchingUpdate = group.FirstOrDefault(u => u.Value.EpisodeNumber == entity.EpisodeNumber);
+                    if (matchingUpdate.Key != null)
+                    {
+                        entity.SeasonNumber = matchingUpdate.Value.SeasonNumber;
+                        hasUpserts = true;
+                    }
+                    else
+                    {
+                        _logger.LogDebug("No matching update found for episode {EpisodeNumber} in EmbyId {EmbyId}",
+                            entity.EpisodeNumber, group.Key);
+                    }
+                }
+            }
+            pendingUpdates.Clear();
+
+            return hasUpserts;
+        }
+
+        private async Task CommitBatch(
+            HashSet<EmbyEpisode> epToAdd,
+            bool hasUpserts,
+            Dictionary<string, (int EpisodeNumber, int SeasonNumber)> episodeMetadata,
+            HashSet<string> episodesInCurrentBatch,
+            int processed,
+            int total)
+        {
+            if (epToAdd.Any())
+            {
+                await _repo.AddRange(epToAdd);
+                _logger.LogInformation("Committed {Count} episodes to database. Progress: {Processed}/{Total}", epToAdd.Count, processed, total);
+
+                // Update the episode metadata with newly added episodes to prevent duplicates in subsequent batches
+                foreach (var episode in epToAdd)
+                {
+                    episodeMetadata[$"{episode.EmbyId}:{episode.EpisodeNumber}"] = (episode.EpisodeNumber, episode.SeasonNumber);
+                }
+            }
+            else if (hasUpserts)
+            {
+                // Save upserted episode metadata changes even if no new episodes were added
+                await _repo.SaveChangesAsync();
+                _logger.LogInformation("Saved episode metadata updates. Progress: {Processed}/{Total}", processed, total);
+            }
+            epToAdd.Clear();
+            episodesInCurrentBatch.Clear();
         }
 
         private static void RecordSeenEpisode(EmbyEpisodes ep, HashSet<string> seenEpisodeKeys)
