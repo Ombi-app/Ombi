@@ -66,6 +66,10 @@ namespace Ombi.Schedule.Jobs.Emby
         private const int AmountToTake = 500;
         private const int DatabaseBatchSize = 1000;
 
+        // A single video file spanning more episodes than this is treated as corrupt
+        // metadata (e.g. absolute numbering leaking into IndexNumberEnd).
+        private const int MaxEpisodeFillCount = 50;
+
         private IEmbyApi Api { get; set; }
 
 
@@ -82,6 +86,13 @@ namespace Ombi.Schedule.Jobs.Emby
 
             Api = _apiFactory.CreateClient(settings);
             await _notification.SendNotificationToAdmins("Emby Episode Sync Started");
+
+            // Every EmbyId:EpisodeNumber the server reported during this run, used to work
+            // out which episode records no longer exist on the server. Only trustworthy
+            // when every server and library completed, tracked via syncIncomplete.
+            var seenEpisodeKeys = new HashSet<string>();
+            var syncIncomplete = false;
+
             foreach (var server in settings.Servers)
             {
                 try
@@ -92,19 +103,30 @@ namespace Ombi.Schedule.Jobs.Emby
                         foreach (var tvParentIdFilter in tvLibsToFilter)
                         {
                             _logger.LogInformation($"Scanning Lib for episodes '{tvParentIdFilter.Title}'");
-                            await CacheEpisodes(server, recentlyAddedSearch, tvParentIdFilter.Key);
+                            syncIncomplete |= !await CacheEpisodes(server, recentlyAddedSearch, tvParentIdFilter.Key, seenEpisodeKeys);
                         }
                     }
                     else
                     {
-                        await CacheEpisodes(server, recentlyAddedSearch, string.Empty);
+                        syncIncomplete |= !await CacheEpisodes(server, recentlyAddedSearch, string.Empty, seenEpisodeKeys);
                     }
                 }
                 catch (Exception e)
                 {
+                    syncIncomplete = true;
                     await _notification.SendNotificationToAdmins("Emby Episode Sync Failed");
                     _logger.LogError(e, "Exception when syncing Emby episodes for server {0}", server.Name);
                 }
+            }
+
+            // A full sync has seen every episode on the server, so anything in our
+            // database that was not reported no longer exists in Emby. This purges ghost
+            // records left behind by reidentifications (changed episode numbers create a
+            // new row and orphan the old one) which otherwise report availability for
+            // episodes that no longer exist.
+            if (!recentlyAddedSearch)
+            {
+                await RemoveStaleEpisodes(seenEpisodeKeys, syncIncomplete);
             }
 
             await _notification.SendNotificationToAdmins("Emby Episode Sync Finished");
@@ -112,7 +134,7 @@ namespace Ombi.Schedule.Jobs.Emby
             await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
         }
 
-        private async Task CacheEpisodes(EmbyServers server, bool recentlyAdded, string parentIdFilter)
+        private async Task<bool> CacheEpisodes(EmbyServers server, bool recentlyAdded, string parentIdFilter, HashSet<string> seenEpisodeKeys)
         {
             // Preload existing data to eliminate N+1 queries
             var seriesLookup = await _repo.GetAllSeriesEmbyIds();
@@ -128,29 +150,16 @@ namespace Ombi.Schedule.Jobs.Emby
             _logger.LogInformation($"Starting episode sync for server {server.Name}");
 
             // Get initial episode count
-            EmbyItemContainer<EmbyEpisodes> allEpisodes;
-            if (recentlyAdded)
-            {
-                var recentlyAddedAmountToTake = AmountToTake;
-                allEpisodes = await FetchEpisodesWithRetry(() => Api.RecentlyAddedEpisodes(server.ApiKey, parentIdFilter, 0, recentlyAddedAmountToTake, server.AdministratorId, server.FullUri));
-                total = allEpisodes.TotalRecordCount;
-                if (total > recentlyAddedAmountToTake)
-                {
-                    total = recentlyAddedAmountToTake;
-                }
-            }
-            else
-            {
-                allEpisodes = await FetchEpisodesWithRetry(() => Api.GetAllEpisodes(server.ApiKey, parentIdFilter, 0, AmountToTake, server.AdministratorId, server.FullUri));
-                total = allEpisodes.TotalRecordCount;
-            }
+            (var allEpisodes, total) = await FetchInitialEpisodes(server, recentlyAdded, parentIdFilter);
 
             _logger.LogInformation($"Processing {total} episodes in chunks of {AmountToTake}");
 
+            var completedWithoutGaps = true;
             while (processed < total)
             {
                 if (allEpisodes.Items == null || !allEpisodes.Items.Any())
                 {
+                    completedWithoutGaps = false;
                     _logger.LogWarning("Emby returned no episodes at offset {0} but reported {1} total records. Stopping the sync for this library to avoid an infinite loop.",
                         processed, total);
                     break;
@@ -162,6 +171,11 @@ namespace Ombi.Schedule.Jobs.Emby
                 {
                     processed++;
 
+                    // Record everything the server reports, even episodes we go on to
+                    // skip - "seen" means "exists in Emby", which is what the stale
+                    // record cleanup needs to know.
+                    RecordSeenEpisode(ep, seenEpisodeKeys);
+
                     try
                     {
                         ProcessEpisode(ep, seriesLookup, episodeMetadata, epToAdd, pendingUpdates, episodesInCurrentBatch);
@@ -172,55 +186,14 @@ namespace Ombi.Schedule.Jobs.Emby
                     }
                 }
 
-                // Only commit to database when we reach the batch size or finish processing
                 // Apply batched metadata updates
-                if (pendingUpdates.Any())
-                {
-                    // Group updates by EmbyId so we update all rows for multi-episode files
-                    var updatesByEmbyId = pendingUpdates.GroupBy(u => u.Value.EmbyId);
-                    foreach (var group in updatesByEmbyId)
-                    {
-                        var entities = await _repo.GetEpisodesByEmbyId(group.Key);
-                        foreach (var entity in entities)
-                        {
-                            var matchingUpdate = group.FirstOrDefault(u => u.Value.EpisodeNumber == entity.EpisodeNumber);
-                            if (matchingUpdate.Key != null)
-                            {
-                                entity.SeasonNumber = matchingUpdate.Value.SeasonNumber;
-                                hasUpserts = true;
-                            }
-                            else
-                            {
-                                _logger.LogDebug("No matching update found for episode {EpisodeNumber} in EmbyId {EmbyId}",
-                                    entity.EpisodeNumber, group.Key);
-                            }
-                        }
-                    }
-                    pendingUpdates.Clear();
-                }
+                hasUpserts |= await ApplyPendingUpdates(pendingUpdates);
 
+                // Only commit to database when we reach the batch size or finish processing
                 if (epToAdd.Count >= DatabaseBatchSize || processed >= total)
                 {
-                    if (epToAdd.Any())
-                    {
-                        await _repo.AddRange(epToAdd);
-                        _logger.LogInformation($"Committed {epToAdd.Count} episodes to database. Progress: {processed}/{total}");
-
-                        // Update the episode metadata with newly added episodes to prevent duplicates in subsequent batches
-                        foreach (var episode in epToAdd)
-                        {
-                            episodeMetadata[$"{episode.EmbyId}:{episode.EpisodeNumber}"] = (episode.EpisodeNumber, episode.SeasonNumber);
-                        }
-                    }
-                    else if (hasUpserts)
-                    {
-                        // Save upserted episode metadata changes even if no new episodes were added
-                        await _repo.SaveChangesAsync();
-                        _logger.LogInformation($"Saved episode metadata updates. Progress: {processed}/{total}");
-                    }
-                    epToAdd.Clear();
+                    await CommitBatch(epToAdd, hasUpserts, episodeMetadata, episodesInCurrentBatch, processed, total);
                     hasUpserts = false;
-                    episodesInCurrentBatch.Clear();
                 }
 
                 // Get next chunk of episodes for processing
@@ -229,7 +202,140 @@ namespace Ombi.Schedule.Jobs.Emby
                     allEpisodes = await FetchEpisodesWithRetry(() => Api.GetAllEpisodes(server.ApiKey, parentIdFilter, processed, AmountToTake, server.AdministratorId, server.FullUri));
                 }
             }
+
+            return completedWithoutGaps;
         }
+
+        private async Task<(EmbyItemContainer<EmbyEpisodes> Episodes, int Total)> FetchInitialEpisodes(EmbyServers server, bool recentlyAdded, string parentIdFilter)
+        {
+            if (recentlyAdded)
+            {
+                var container = await FetchEpisodesWithRetry(() => Api.RecentlyAddedEpisodes(server.ApiKey, parentIdFilter, 0, AmountToTake, server.AdministratorId, server.FullUri));
+                return (container, Math.Min(container.TotalRecordCount, AmountToTake));
+            }
+
+            var allEpisodes = await FetchEpisodesWithRetry(() => Api.GetAllEpisodes(server.ApiKey, parentIdFilter, 0, AmountToTake, server.AdministratorId, server.FullUri));
+            return (allEpisodes, allEpisodes.TotalRecordCount);
+        }
+
+        private async Task<bool> ApplyPendingUpdates(Dictionary<string, (string EmbyId, int EpisodeNumber, int SeasonNumber)> pendingUpdates)
+        {
+            if (!pendingUpdates.Any())
+            {
+                return false;
+            }
+
+            var hasUpserts = false;
+
+            // Group updates by EmbyId so we update all rows for multi-episode files
+            var updatesByEmbyId = pendingUpdates.GroupBy(u => u.Value.EmbyId);
+            foreach (var group in updatesByEmbyId)
+            {
+                var entities = await _repo.GetEpisodesByEmbyId(group.Key);
+                foreach (var entity in entities)
+                {
+                    var matchingUpdate = group.FirstOrDefault(u => u.Value.EpisodeNumber == entity.EpisodeNumber);
+                    if (matchingUpdate.Key != null)
+                    {
+                        entity.SeasonNumber = matchingUpdate.Value.SeasonNumber;
+                        hasUpserts = true;
+                    }
+                    else
+                    {
+                        _logger.LogDebug("No matching update found for episode {EpisodeNumber} in EmbyId {EmbyId}",
+                            entity.EpisodeNumber, group.Key);
+                    }
+                }
+            }
+            pendingUpdates.Clear();
+
+            return hasUpserts;
+        }
+
+        private async Task CommitBatch(
+            HashSet<EmbyEpisode> epToAdd,
+            bool hasUpserts,
+            Dictionary<string, (int EpisodeNumber, int SeasonNumber)> episodeMetadata,
+            HashSet<string> episodesInCurrentBatch,
+            int processed,
+            int total)
+        {
+            if (epToAdd.Any())
+            {
+                await _repo.AddRange(epToAdd);
+                _logger.LogInformation("Committed {Count} episodes to database. Progress: {Processed}/{Total}", epToAdd.Count, processed, total);
+
+                // Update the episode metadata with newly added episodes to prevent duplicates in subsequent batches
+                foreach (var episode in epToAdd)
+                {
+                    episodeMetadata[$"{episode.EmbyId}:{episode.EpisodeNumber}"] = (episode.EpisodeNumber, episode.SeasonNumber);
+                }
+            }
+            else if (hasUpserts)
+            {
+                // Save upserted episode metadata changes even if no new episodes were added
+                await _repo.SaveChangesAsync();
+                _logger.LogInformation("Saved episode metadata updates. Progress: {Processed}/{Total}", processed, total);
+            }
+            epToAdd.Clear();
+            episodesInCurrentBatch.Clear();
+        }
+
+        private static void RecordSeenEpisode(EmbyEpisodes ep, HashSet<string> seenEpisodeKeys)
+        {
+            // The series id is part of the identity: if Emby re-links the same item id
+            // and episode number to a different series, the old row (pointing at the
+            // previous series) must be treated as stale, not seen.
+            seenEpisodeKeys.Add($"{ep.Id}:{ep.IndexNumber}:{ep.SeriesId}");
+
+            // Multi-episode files produce one database row per episode in the span, all
+            // sharing the same EmbyId. Mirror the sane-range rules used when inserting.
+            // The subtraction is done as long so a bogus negative IndexNumber cannot
+            // overflow the span and bypass the cap.
+            if (ep.IndexNumberEnd.HasValue
+                && ep.IndexNumberEnd.Value > ep.IndexNumber
+                && (long)ep.IndexNumberEnd.Value - ep.IndexNumber <= MaxEpisodeFillCount)
+            {
+                for (var episodeNumber = ep.IndexNumber + 1; episodeNumber <= ep.IndexNumberEnd.Value; episodeNumber++)
+                {
+                    seenEpisodeKeys.Add($"{ep.Id}:{episodeNumber}:{ep.SeriesId}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes episode records that were not reported by the server during a full
+        /// sync. Skipped when the sync was incomplete or reported nothing, so records are
+        /// never removed based on partial data.
+        /// </summary>
+        private async Task RemoveStaleEpisodes(HashSet<string> seenEpisodeKeys, bool syncIncomplete)
+        {
+            if (syncIncomplete)
+            {
+                _logger.LogWarning("Skipping the stale Emby episode cleanup because the sync did not fully complete. Removing records based on a partial sync could delete episodes that still exist on the server.");
+                return;
+            }
+
+            if (!seenEpisodeKeys.Any())
+            {
+                _logger.LogInformation("Skipping the stale Emby episode cleanup because the server reported no episodes.");
+                return;
+            }
+
+            var dbEpisodes = await _repo.GetAllEpisodeIdentifiers();
+            var staleEpisodes = dbEpisodes.Where(x => !seenEpisodeKeys.Contains($"{x.EmbyId}:{x.EpisodeNumber}:{x.ParentId}")).ToList();
+            if (!staleEpisodes.Any())
+            {
+                return;
+            }
+
+            _logger.LogInformation("Removing {0} episode records that no longer exist on the Emby server", staleEpisodes.Count);
+            foreach (var chunk in staleEpisodes.Chunk(DatabaseBatchSize))
+            {
+                await _repo.DeleteEpisodes(chunk);
+            }
+        }
+
         private void ProcessEpisode(
             EmbyEpisodes ep,
             HashSet<string> seriesLookup,
@@ -289,9 +395,11 @@ namespace Ombi.Schedule.Jobs.Emby
                 // either skipped the file entirely or fabricated phantom episode rows.
                 if (ep.IndexNumberEnd.HasValue && ep.IndexNumberEnd.Value > ep.IndexNumber)
                 {
-                    var episodeFillCount = ep.IndexNumberEnd.Value - ep.IndexNumber;
+                    // Subtract as long so a bogus negative IndexNumber cannot overflow the
+                    // span, bypass the cap below and drive a huge fill loop
+                    var episodeFillCount = (long)ep.IndexNumberEnd.Value - ep.IndexNumber;
 
-                    if (episodeFillCount > 50)
+                    if (episodeFillCount > MaxEpisodeFillCount)
                     {
                         // The primary episode has already been added above; we just skip
                         // the implausible fill rather than discarding the whole file.

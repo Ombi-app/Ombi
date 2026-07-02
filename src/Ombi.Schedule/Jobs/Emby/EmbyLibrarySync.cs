@@ -26,6 +26,13 @@ namespace Ombi.Schedule.Jobs.Emby
         protected readonly ISettingsService<EmbySettings> _settings;
         protected readonly IEmbyApiFactory _apiFactory;
         protected bool recentlyAdded;
+
+        /// <summary>
+        /// Set when any server was skipped or failed part-way through, meaning the sync
+        /// did not see the full picture of what exists on the media server. Derived jobs
+        /// must not remove records they consider stale while this is set.
+        /// </summary>
+        protected bool syncIncomplete;
         protected readonly INotificationHubService _notification;
 
         protected const int AmountToTake = 300;
@@ -58,6 +65,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 }
                 catch (Exception e)
                 {
+                    syncIncomplete = true;
                     await _notification.SendNotificationToAdmins("Emby Content Sync Failed");
                     _logger.LogError(e, "Exception when caching Emby for server {0}", server.Name);
                 }
@@ -71,6 +79,7 @@ namespace Ombi.Schedule.Jobs.Emby
         {
             if (!ValidateSettings(server))
             {
+                syncIncomplete = true;
                 return;
             }
 

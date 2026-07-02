@@ -145,5 +145,30 @@ namespace Ombi.Store.Repository
                 .GroupBy(x => $"{x.EmbyId}:{x.EpisodeNumber}")
                 .ToDictionary(g => g.Key, g => (g.First().EpisodeNumber, g.First().SeasonNumber));
         }
+
+        // Stale record cleanup. These return detached stub entities carrying only the
+        // columns needed to identify a record, so the sync jobs can diff the database
+        // against what the Emby API reports without materialising full entities.
+        public async Task<List<EmbyContent>> GetAllContentIdentifiers()
+        {
+            var rows = await Db.EmbyContent.AsNoTracking()
+                .Select(x => new { x.Id, x.EmbyId, x.Type, x.Title })
+                .ToListAsync();
+            return rows.Select(x => new EmbyContent { Id = x.Id, EmbyId = x.EmbyId, Type = x.Type, Title = x.Title }).ToList();
+        }
+
+        public async Task<List<EmbyEpisode>> GetAllEpisodeIdentifiers()
+        {
+            var rows = await Db.EmbyEpisode.AsNoTracking()
+                .Select(x => new { x.Id, x.EmbyId, x.EpisodeNumber, x.ParentId })
+                .ToListAsync();
+            return rows.Select(x => new EmbyEpisode { Id = x.Id, EmbyId = x.EmbyId, EpisodeNumber = x.EpisodeNumber, ParentId = x.ParentId }).ToList();
+        }
+
+        public async Task DeleteEpisodes(IEnumerable<EmbyEpisode> episodes)
+        {
+            Db.EmbyEpisode.RemoveRange(episodes);
+            await InternalSaveChanges();
+        }
     }
 }
