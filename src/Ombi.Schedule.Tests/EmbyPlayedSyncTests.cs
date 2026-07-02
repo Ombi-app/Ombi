@@ -137,6 +137,17 @@ namespace Ombi.Schedule.Tests
         }
 
         [Test]
+        public async Task NegativeIndexNumberWithHugeIndexNumberEnd_DoesNotOverflowTheFillCap()
+        {
+            // int subtraction would wrap negative here and bypass the 50-episode cap
+            SetupPlayedEpisodes(Episode("ep1", episodeNumber: -2100000000, indexNumberEnd: 2100000000));
+
+            await _subject.Execute(_context.Object);
+
+            Assert.That(_addedEpisodes, Has.Count.EqualTo(1));
+        }
+
+        [Test]
         public async Task EmptyPlayedPageWithRemainingRecords_StopsInsteadOfRefetchingForever()
         {
             _api.Setup(x => x.GetTvPlayed(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
@@ -145,6 +156,17 @@ namespace Ombi.Schedule.Tests
             await _subject.Execute(_context.Object);
 
             _api.Verify(x => x.GetTvPlayed(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+        }
+
+        [Test]
+        public async Task EmptyPlayedMoviePageWithRemainingRecords_StopsInsteadOfRefetchingForever()
+        {
+            _api.Setup(x => x.GetMoviesPlayed(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(new EmbyItemContainer<EmbyMovie> { TotalRecordCount = 50, Items = new List<EmbyMovie>() });
+
+            await _subject.Execute(_context.Object);
+
+            _api.Verify(x => x.GetMoviesPlayed(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
 
         private void SetupPlayedMovies(params EmbyMovie[] movies)

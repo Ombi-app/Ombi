@@ -48,6 +48,8 @@ namespace Ombi.Schedule.Jobs.Emby
 
         public async override Task Execute(IJobExecutionContext context)
         {
+            // The set is run-scoped; clear it in case the same job instance is reused
+            _seenEmbyIds.Clear();
 
             await base.Execute(context);
 

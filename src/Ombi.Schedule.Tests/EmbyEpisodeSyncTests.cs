@@ -137,13 +137,31 @@ namespace Ombi.Schedule.Tests
             _mocker.Setup<IEmbyContentRepository, Task<List<EmbyEpisode>>>(x => x.GetAllEpisodeIdentifiers())
                 .ReturnsAsync(new List<EmbyEpisode>
                 {
-                    new EmbyEpisode { Id = 1, EmbyId = "ep1", EpisodeNumber = 1 },
-                    new EmbyEpisode { Id = 2, EmbyId = "goneEpisode", EpisodeNumber = 1 }
+                    new EmbyEpisode { Id = 1, EmbyId = "ep1", EpisodeNumber = 1, ParentId = "series1" },
+                    new EmbyEpisode { Id = 2, EmbyId = "goneEpisode", EpisodeNumber = 1, ParentId = "series1" }
                 });
 
             await _subject.Execute(_context.Object);
 
             Assert.That(_deletedEpisodes.Select(x => x.EmbyId), Is.EquivalentTo(new[] { "goneEpisode" }));
+        }
+
+        [Test]
+        public async Task FullSync_RemovesEpisodeRowsThatMovedToAnotherSeries()
+        {
+            // The API reports ep1 under series1, but the database row still points at
+            // a previous series - the stale row must be cleaned up
+            _api.Setup(x => x.GetAllEpisodes(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(Page(Episode("ep1")));
+            _mocker.Setup<IEmbyContentRepository, Task<List<EmbyEpisode>>>(x => x.GetAllEpisodeIdentifiers())
+                .ReturnsAsync(new List<EmbyEpisode>
+                {
+                    new EmbyEpisode { Id = 1, EmbyId = "ep1", EpisodeNumber = 1, ParentId = "previousSeries" }
+                });
+
+            await _subject.Execute(_context.Object);
+
+            Assert.That(_deletedEpisodes.Select(x => x.Id), Is.EquivalentTo(new[] { 1 }));
         }
 
         [Test]
@@ -161,14 +179,26 @@ namespace Ombi.Schedule.Tests
             _mocker.Setup<IEmbyContentRepository, Task<List<EmbyEpisode>>>(x => x.GetAllEpisodeIdentifiers())
                 .ReturnsAsync(new List<EmbyEpisode>
                 {
-                    new EmbyEpisode { Id = 1, EmbyId = "ep1", EpisodeNumber = 1 },
-                    new EmbyEpisode { Id = 2, EmbyId = "ep1", EpisodeNumber = 2 },
-                    new EmbyEpisode { Id = 3, EmbyId = "ep1", EpisodeNumber = 3 }
+                    new EmbyEpisode { Id = 1, EmbyId = "ep1", EpisodeNumber = 1, ParentId = "series1" },
+                    new EmbyEpisode { Id = 2, EmbyId = "ep1", EpisodeNumber = 2, ParentId = "series1" },
+                    new EmbyEpisode { Id = 3, EmbyId = "ep1", EpisodeNumber = 3, ParentId = "series1" }
                 });
 
             await _subject.Execute(_context.Object);
 
             Assert.That(_deletedEpisodes, Is.Empty);
+        }
+
+        [Test]
+        public async Task NegativeIndexNumberWithHugeIndexNumberEnd_DoesNotOverflowTheFillCap()
+        {
+            // int subtraction would wrap negative here and bypass the 50-episode cap
+            _api.Setup(x => x.GetAllEpisodes(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(Page(Episode("ep1", episodeNumber: -2100000000, seasonNumber: 1, indexNumberEnd: 2100000000)));
+
+            await _subject.Execute(_context.Object);
+
+            Assert.That(_addedEpisodes, Has.Count.EqualTo(1));
         }
 
         [Test]

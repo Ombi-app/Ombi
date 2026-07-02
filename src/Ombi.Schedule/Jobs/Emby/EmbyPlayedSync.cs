@@ -222,7 +222,9 @@ namespace Ombi.Schedule.Jobs.Emby
             // exist, or to run for hundreds of thousands of iterations.
             if (episode.IndexNumberEnd.HasValue && episode.IndexNumberEnd.Value > episode.IndexNumber)
             {
-                var episodeFillCount = episode.IndexNumberEnd.Value - episode.IndexNumber;
+                // Subtract as long so a bogus negative IndexNumber cannot overflow the
+                // span, bypass the cap below and drive a huge fill loop
+                var episodeFillCount = (long)episode.IndexNumberEnd.Value - episode.IndexNumber;
 
                 if (episodeFillCount > MaxEpisodeFillCount)
                 {

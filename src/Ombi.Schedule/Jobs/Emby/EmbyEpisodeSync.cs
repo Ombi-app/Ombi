@@ -264,17 +264,22 @@ namespace Ombi.Schedule.Jobs.Emby
 
         private static void RecordSeenEpisode(EmbyEpisodes ep, HashSet<string> seenEpisodeKeys)
         {
-            seenEpisodeKeys.Add($"{ep.Id}:{ep.IndexNumber}");
+            // The series id is part of the identity: if Emby re-links the same item id
+            // and episode number to a different series, the old row (pointing at the
+            // previous series) must be treated as stale, not seen.
+            seenEpisodeKeys.Add($"{ep.Id}:{ep.IndexNumber}:{ep.SeriesId}");
 
             // Multi-episode files produce one database row per episode in the span, all
             // sharing the same EmbyId. Mirror the sane-range rules used when inserting.
+            // The subtraction is done as long so a bogus negative IndexNumber cannot
+            // overflow the span and bypass the cap.
             if (ep.IndexNumberEnd.HasValue
                 && ep.IndexNumberEnd.Value > ep.IndexNumber
-                && ep.IndexNumberEnd.Value - ep.IndexNumber <= MaxEpisodeFillCount)
+                && (long)ep.IndexNumberEnd.Value - ep.IndexNumber <= MaxEpisodeFillCount)
             {
                 for (var episodeNumber = ep.IndexNumber + 1; episodeNumber <= ep.IndexNumberEnd.Value; episodeNumber++)
                 {
-                    seenEpisodeKeys.Add($"{ep.Id}:{episodeNumber}");
+                    seenEpisodeKeys.Add($"{ep.Id}:{episodeNumber}:{ep.SeriesId}");
                 }
             }
         }
@@ -299,7 +304,7 @@ namespace Ombi.Schedule.Jobs.Emby
             }
 
             var dbEpisodes = await _repo.GetAllEpisodeIdentifiers();
-            var staleEpisodes = dbEpisodes.Where(x => !seenEpisodeKeys.Contains($"{x.EmbyId}:{x.EpisodeNumber}")).ToList();
+            var staleEpisodes = dbEpisodes.Where(x => !seenEpisodeKeys.Contains($"{x.EmbyId}:{x.EpisodeNumber}:{x.ParentId}")).ToList();
             if (!staleEpisodes.Any())
             {
                 return;
@@ -371,7 +376,9 @@ namespace Ombi.Schedule.Jobs.Emby
                 // either skipped the file entirely or fabricated phantom episode rows.
                 if (ep.IndexNumberEnd.HasValue && ep.IndexNumberEnd.Value > ep.IndexNumber)
                 {
-                    var episodeFillCount = ep.IndexNumberEnd.Value - ep.IndexNumber;
+                    // Subtract as long so a bogus negative IndexNumber cannot overflow the
+                    // span, bypass the cap below and drive a huge fill loop
+                    var episodeFillCount = (long)ep.IndexNumberEnd.Value - ep.IndexNumber;
 
                     if (episodeFillCount > MaxEpisodeFillCount)
                     {
