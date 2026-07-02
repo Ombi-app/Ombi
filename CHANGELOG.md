@@ -1,3 +1,12 @@
+## [4.60.8](https://github.com/Ombi-app/Ombi/compare/v4.60.7...v4.60.8) (2026-07-02)
+
+
+### Bug Fixes
+
+* **emby:** remove stale records, harden played sync, keep provider-id-less series ([#5439](https://github.com/Ombi-app/Ombi/issues/5439)) ([fd44619](https://github.com/Ombi-app/Ombi/commit/fd44619d84dc4b88235590672673bc9b48531e38))
+
+
+
 ## [4.60.7](https://github.com/Ombi-app/Ombi/compare/v4.60.6...v4.60.7) (2026-07-01)
 
 
@@ -581,24 +590,6 @@
 
 
 ## [4.47.1](https://github.com/Ombi-app/Ombi/compare/v4.47.0...v4.47.1) (2025-01-05)
-
-
-
-# [4.54.0](https://github.com/Ombi-app/Ombi/compare/v4.53.3...v4.54.0) (2026-01-08)
-
-
-### Bug Fixes
-
-* reduce cognitive complexity ([acc5bb8](https://github.com/Ombi-app/Ombi/commit/acc5bb8a06950bb9426e99a851824c8dd768de1d))
-* remove hard-coded item width for recently requested carousel ([5d79c80](https://github.com/Ombi-app/Ombi/commit/5d79c80462692a6d4d68f1469ec46e0d5f0bb994))
-* remove negated condition ([6902895](https://github.com/Ombi-app/Ombi/commit/69028954021e09aaf95797746d24d4a8af754e8c))
-* window size check ([4fd47c1](https://github.com/Ombi-app/Ombi/commit/4fd47c18b57793303dc4c75c7fd6acb15173e064))
-
-
-### Features
-
-* centre requested carousel items ([01c4fa9](https://github.com/Ombi-app/Ombi/commit/01c4fa916f5e6cc57cea459ad4300443ba457caa))
-* use dynamic scroll sizing for recently requested carousel ([5b0f325](https://github.com/Ombi-app/Ombi/commit/5b0f3252f68d33f93c26b54cdf83780697ed6172))
 
 
 
