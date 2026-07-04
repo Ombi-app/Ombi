@@ -631,7 +631,8 @@ namespace Ombi.Schedule.Jobs.Plex
                     {
                         continue;
                     }
-                    _logger.LogDebug($"Removing old history entry for TMDB ID {entry.TmdbId} (absent from Plex watchlist for {user.UserName} since {lastSeenAtUtc:u})");
+                    _logger.LogDebug("Removing old history entry for TMDB ID {TmdbId} (absent from Plex watchlist for {Username} since {LastSeenAt:u})",
+                        entry.TmdbId, user.UserName, lastSeenAtUtc);
                     await _watchlistRepo.Delete(entry);
                 }
             }
