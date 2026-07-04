@@ -21,6 +21,7 @@ using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Test.Common;
 using Quartz;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -663,12 +664,12 @@ namespace Ombi.Schedule.Tests
         [Test]
         public async Task CompleteWatchlist_PurgesStaleHistory()
         {
-            // A fully-resolved snapshot is authoritative: history rows for titles no longer on
-            // the watchlist should be removed so they can be re-requested if re-added later.
+            // A fully-resolved snapshot is authoritative: a title that's been absent for longer
+            // than the grace window should be removed so it can be re-requested if re-added.
             UseDefaultPlexSettings();
             SetupWatchlistNode(AdminUuid, "movie", "rk-ok");
             SetupMetadataWithTmdb("rk-ok", "tmdb://77");
-            SetupHistory(new PlexWatchlistHistory { TmdbId = "999", UserId = AdminOmbiId });
+            SetupHistory(new PlexWatchlistHistory { TmdbId = "999", UserId = AdminOmbiId, LastSeenAt = DateTime.UtcNow.AddDays(-30) });
 
             _mocker.Setup<IMovieRequestEngine, Task<RequestEngineResult>>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()))
                 .ReturnsAsync(new RequestEngineResult { Result = true });
@@ -676,6 +677,45 @@ namespace Ombi.Schedule.Tests
             await _subject.Execute(_context.Object);
 
             _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Delete(It.Is<PlexWatchlistHistory>(h => h.TmdbId == "999")), Times.Once);
+        }
+
+        [Test]
+        public async Task CompleteWatchlist_DoesNotPurgeRecentlySeenHistory()
+        {
+            // Even on a complete snapshot, a title that was confirmed on the watchlist within
+            // the grace window must not be pruned. This is what stops a single flaky/ambiguous
+            // sync (where a still-watchlisted title momentarily fails to resolve) from wiping
+            // history and re-requesting/re-monitoring removed episodes (issue #5427).
+            UseDefaultPlexSettings();
+            SetupWatchlistNode(AdminUuid, "movie", "rk-ok");
+            SetupMetadataWithTmdb("rk-ok", "tmdb://77");
+            SetupHistory(new PlexWatchlistHistory { TmdbId = "999", UserId = AdminOmbiId, LastSeenAt = DateTime.UtcNow.AddHours(-1) });
+
+            _mocker.Setup<IMovieRequestEngine, Task<RequestEngineResult>>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()))
+                .ReturnsAsync(new RequestEngineResult { Result = true });
+
+            await _subject.Execute(_context.Object);
+
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Delete(It.IsAny<PlexWatchlistHistory>()), Times.Never);
+        }
+
+        [Test]
+        public async Task CompleteWatchlist_DoesNotPurgeLegacyHistoryWithoutLastSeen()
+        {
+            // Legacy rows created before last-seen tracking have a null LastSeenAt. We can't
+            // prove such a title is genuinely gone, so we keep it rather than risk re-requesting
+            // content the user already has (issue #5427). A stale row is harmless.
+            UseDefaultPlexSettings();
+            SetupWatchlistNode(AdminUuid, "movie", "rk-ok");
+            SetupMetadataWithTmdb("rk-ok", "tmdb://77");
+            SetupHistory(new PlexWatchlistHistory { TmdbId = "999", UserId = AdminOmbiId, LastSeenAt = null });
+
+            _mocker.Setup<IMovieRequestEngine, Task<RequestEngineResult>>(x => x.RequestMovie(It.IsAny<MovieRequestViewModel>()))
+                .ReturnsAsync(new RequestEngineResult { Result = true });
+
+            await _subject.Execute(_context.Object);
+
+            _mocker.Verify<IExternalRepository<PlexWatchlistHistory>>(x => x.Delete(It.IsAny<PlexWatchlistHistory>()), Times.Never);
         }
 
         [Test]
