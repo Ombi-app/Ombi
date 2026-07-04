@@ -621,11 +621,17 @@ namespace Ombi.Schedule.Jobs.Plex
                     // Never prune a row that has been confirmed on the watchlist within the
                     // grace window, nor a legacy row that predates last-seen tracking (null) —
                     // we can't prove it's genuinely gone, so we keep it.
-                    if (!entry.LastSeenAt.HasValue || entry.LastSeenAt.Value > pruneIfNotSeenSince)
+                    if (!entry.LastSeenAt.HasValue)
                     {
                         continue;
                     }
-                    _logger.LogDebug($"Removing old history entry for TMDB ID {entry.TmdbId} (absent from Plex watchlist for {user.UserName} since {entry.LastSeenAt.Value:u})");
+
+                    var lastSeenAtUtc = DateTime.SpecifyKind(entry.LastSeenAt.Value, DateTimeKind.Utc);
+                    if (lastSeenAtUtc > pruneIfNotSeenSince)
+                    {
+                        continue;
+                    }
+                    _logger.LogDebug($"Removing old history entry for TMDB ID {entry.TmdbId} (absent from Plex watchlist for {user.UserName} since {lastSeenAtUtc:u})");
                     await _watchlistRepo.Delete(entry);
                 }
             }
