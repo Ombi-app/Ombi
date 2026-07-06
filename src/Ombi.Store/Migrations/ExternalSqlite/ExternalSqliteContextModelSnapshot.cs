@@ -381,6 +381,9 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("LastSeenAt")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("TmdbId")
                         .HasColumnType("TEXT");
 

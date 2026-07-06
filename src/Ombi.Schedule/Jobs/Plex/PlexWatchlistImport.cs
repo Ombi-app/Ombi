@@ -489,6 +489,15 @@ namespace Ombi.Schedule.Jobs.Plex
 
         private const int MaxWatchlistPages = 200;
 
+        // A history row must be continuously absent from a complete watchlist snapshot for at
+        // least this long before it is pruned. Pruning is what lets a title be re-requested,
+        // so debouncing it means a single flaky/ambiguous community-API or TMDB-resolution run
+        // can't wipe a still-watchlisted title and re-monitor/re-grab content the user has
+        // intentionally removed (issue #5427). Titles still on the watchlist have their
+        // LastSeenAt refreshed every run, so a genuinely-removed title is only pruned after it
+        // has been gone for this whole window.
+        private static readonly TimeSpan WatchlistHistoryRetentionGrace = TimeSpan.FromDays(7);
+
         private async Task<bool> ImportWatchlistForUser(string adminToken, PlexCommunityUser plexUser, OmbiUser user, bool monitorAll, CancellationToken ct)
         {
             string cursor = null;
@@ -535,7 +544,13 @@ namespace Ombi.Schedule.Jobs.Plex
                 var nodes = watchlist?.nodes ?? new List<PlexCommunityWatchlistNode>();
                 foreach (var node in nodes)
                 {
-                    if (string.IsNullOrWhiteSpace(node.id)) continue;
+                    if (string.IsNullOrWhiteSpace(node.id))
+                    {
+                        // A node we can't even identify means this page wasn't fully accounted
+                        // for, so the snapshot isn't authoritative and must not drive pruning.
+                        snapshotComplete = false;
+                        continue;
+                    }
 
                     var ids = await ResolveProviderIds(adminToken, node, ct);
                     if (!ids.TheMovieDb.HasValue())
@@ -568,21 +583,57 @@ namespace Ombi.Schedule.Jobs.Plex
             var historyEntries = await _watchlistRepo.GetAll().Where(x => x.UserId == user.Id).ToListAsync(ct);
             var existingTmdbIds = new HashSet<string>(historyEntries.Select(h => h.TmdbId));
 
+            // Refresh the "last seen" marker for every history row whose title we resolved on
+            // the watchlist this run. We do this even on an incomplete snapshot — a title we
+            // actually resolved was definitely seen — so a long-standing title stays fresh and
+            // can never become eligible for pruning just because some other title failed to
+            // resolve. This is what the grace-window pruning below debounces against (#5427).
+            var now = DateTime.UtcNow;
+            var refreshed = false;
+            foreach (var entry in historyEntries)
+            {
+                if (currentWatchlistTmdbIds.Contains(entry.TmdbId))
+                {
+                    entry.LastSeenAt = now;
+                    refreshed = true;
+                }
+            }
+            if (refreshed)
+            {
+                await _watchlistRepo.SaveChangesAsync();
+            }
+
             // Purge history for titles no longer on the user's watchlist, but only when we
             // have a complete snapshot AND it actually resolved at least one title. An empty
             // or partial result is far more likely to be a transient community-API hiccup
             // than a genuinely cleared watchlist; pruning against it would re-request titles
-            // the user already has (issue #5427). A stale history row is harmless — it just
-            // stops that title being re-requested — so we err on the side of keeping it.
+            // the user already has (issue #5427). On top of that, we only prune a row once it
+            // has been continuously absent for the whole grace window, so a one-off bad run
+            // (e.g. an ambiguous TMDB resolution) can't wipe a still-watchlisted title and
+            // re-monitor episodes the user has intentionally removed. A stale history row is
+            // harmless — it just stops that title being re-requested — so we err on keeping it.
             if (snapshotComplete && currentWatchlistTmdbIds.Count > 0)
             {
+                var pruneIfNotSeenSince = now - WatchlistHistoryRetentionGrace;
                 foreach (var entry in historyEntries)
                 {
-                    if (!currentWatchlistTmdbIds.Contains(entry.TmdbId))
+                    if (currentWatchlistTmdbIds.Contains(entry.TmdbId)) continue;
+                    // Never prune a row that has been confirmed on the watchlist within the
+                    // grace window, nor a legacy row that predates last-seen tracking (null) —
+                    // we can't prove it's genuinely gone, so we keep it.
+                    if (!entry.LastSeenAt.HasValue)
                     {
-                        _logger.LogDebug($"Removing old history entry for TMDB ID {entry.TmdbId} (no longer in Plex watchlist for {user.UserName})");
-                        await _watchlistRepo.Delete(entry);
+                        continue;
                     }
+
+                    var lastSeenAtUtc = DateTime.SpecifyKind(entry.LastSeenAt.Value, DateTimeKind.Utc);
+                    if (lastSeenAtUtc > pruneIfNotSeenSince)
+                    {
+                        continue;
+                    }
+                    _logger.LogDebug("Removing old history entry for TMDB ID {TmdbId} (absent from Plex watchlist for {Username} since {LastSeenAt:u})",
+                        entry.TmdbId, user.UserName, lastSeenAtUtc);
+                    await _watchlistRepo.Delete(entry);
                 }
             }
             else if (historyEntries.Count > 0)
@@ -718,10 +769,12 @@ namespace Ombi.Schedule.Jobs.Plex
 
         private async Task AddToHistory(int theMovieDbId, string userId)
         {
+            var now = DateTime.UtcNow;
             var history = new PlexWatchlistHistory
             {
                 TmdbId = theMovieDbId.ToString(),
-                AddedAt = DateTime.UtcNow,
+                AddedAt = now,
+                LastSeenAt = now,
                 UserId = userId,
             };
             await _watchlistRepo.Add(history);
