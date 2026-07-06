@@ -159,6 +159,13 @@ Here are some of the features Ombi has:
     </td></tr>
 <tr>
     <td align="center">
+        <a href="https://github.com/mike10010100">
+            <img src="https://avatars.githubusercontent.com/u/3506604?v=4" width="50;" alt="mike10010100"/>
+            <br />
+            <sub><b>Michael Paulauski</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/Berserkir-Wolf">
             <img src="https://avatars.githubusercontent.com/u/15743201?v=4" width="50;" alt="Berserkir-Wolf"/>
             <br />
@@ -170,13 +177,6 @@ Here are some of the features Ombi has:
             <img src="https://avatars.githubusercontent.com/u/1346804?v=4" width="50;" alt="louis-lau"/>
             <br />
             <sub><b>Louis Laureys</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/mike10010100">
-            <img src="https://avatars.githubusercontent.com/u/3506604?v=4" width="50;" alt="mike10010100"/>
-            <br />
-            <sub><b>Michael Paulauski</b></sub>
         </a>
     </td>
     <td align="center">
