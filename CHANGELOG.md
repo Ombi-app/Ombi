@@ -1,3 +1,12 @@
+## [4.60.9](https://github.com/Ombi-app/Ombi/compare/v4.60.8...v4.60.9) (2026-07-06)
+
+
+### Bug Fixes
+
+* **watchlist:** debounce Plex watchlist history pruning to stop re-requests ([#5427](https://github.com/Ombi-app/Ombi/issues/5427)) ([#5440](https://github.com/Ombi-app/Ombi/issues/5440)) ([05bf8f8](https://github.com/Ombi-app/Ombi/commit/05bf8f8693e811377cdbea0f1c84da6eb40da912))
+
+
+
 ## [4.60.8](https://github.com/Ombi-app/Ombi/compare/v4.60.7...v4.60.8) (2026-07-02)
 
 
@@ -582,14 +591,6 @@
 
 * centre requested carousel items ([01c4fa9](https://github.com/Ombi-app/Ombi/commit/01c4fa916f5e6cc57cea459ad4300443ba457caa))
 * use dynamic scroll sizing for recently requested carousel ([5b0f325](https://github.com/Ombi-app/Ombi/commit/5b0f3252f68d33f93c26b54cdf83780697ed6172))
-
-
-
-## [4.53.4](https://github.com/Ombi-app/Ombi/compare/v4.54.0...v4.53.4) (2026-01-08)
-
-
-
-## [4.47.1](https://github.com/Ombi-app/Ombi/compare/v4.47.0...v4.47.1) (2025-01-05)
 
 
 
