@@ -1,3 +1,12 @@
+## [4.60.10](https://github.com/Ombi-app/Ombi/compare/v4.60.9...v4.60.10) (2026-07-07)
+
+
+### Bug Fixes
+
+* resolve discover card details and action visibility on mobile touch devices ([#5442](https://github.com/Ombi-app/Ombi/issues/5442)) ([550af0c](https://github.com/Ombi-app/Ombi/commit/550af0c3d208d6e4d6d04c34831f72b0c02f67cb))
+
+
+
 ## [4.60.9](https://github.com/Ombi-app/Ombi/compare/v4.60.8...v4.60.9) (2026-07-06)
 
 
@@ -559,38 +568,6 @@
 * Correct EmbyHelper app.emby.media path detection ([840d740](https://github.com/Ombi-app/Ombi/commit/840d740cd0860b46b185a82ef4855334b3f48301)), closes [#689](https://github.com/Ombi-app/Ombi/issues/689)
 * Correct EmbyHelper app.emby.media path detection ([d16858d](https://github.com/Ombi-app/Ombi/commit/d16858dbbc5e0b1adb2c96fc0e5c6650a7431556))
 * SonarrSync now deletes episodes per-series to prevent incomplete cache ([89b8c52](https://github.com/Ombi-app/Ombi/commit/89b8c5255b5f251d1eafc36df32b05fa6488657a)), closes [#5306](https://github.com/Ombi-app/Ombi/issues/5306)
-
-
-
-## [4.54.1](https://github.com/Ombi-app/Ombi/compare/v4.53.4...v4.54.1) (2026-01-10)
-
-
-### Bug Fixes
-
-* **availability:** Make sure we check radarr/sonarr in the availability rules for it's prioritization [#5286](https://github.com/Ombi-app/Ombi/issues/5286) ([8af1d67](https://github.com/Ombi-app/Ombi/commit/8af1d678ac5e91b927ddabfad0f2194d8b763ebb))
-
-
-
-# [4.54.0](https://github.com/Ombi-app/Ombi/compare/v4.53.3...v4.54.0) (2026-01-08)
-
-
-
-## [4.53.3](https://github.com/Ombi-app/Ombi/compare/v4.53.2...v4.53.3) (2026-01-08)
-
-
-### Bug Fixes
-
-* reduce cognitive complexity ([acc5bb8](https://github.com/Ombi-app/Ombi/commit/acc5bb8a06950bb9426e99a851824c8dd768de1d))
-* remove hard-coded item width for recently requested carousel ([5d79c80](https://github.com/Ombi-app/Ombi/commit/5d79c80462692a6d4d68f1469ec46e0d5f0bb994))
-* remove negated condition ([6902895](https://github.com/Ombi-app/Ombi/commit/69028954021e09aaf95797746d24d4a8af754e8c))
-* resolve inconsistencies in view at 768px screen width ([7cd4225](https://github.com/Ombi-app/Ombi/commit/7cd42257a333ec6e62ffd603fcd3dac77c9fe4b8))
-* window size check ([4fd47c1](https://github.com/Ombi-app/Ombi/commit/4fd47c18b57793303dc4c75c7fd6acb15173e064))
-
-
-### Features
-
-* centre requested carousel items ([01c4fa9](https://github.com/Ombi-app/Ombi/commit/01c4fa916f5e6cc57cea459ad4300443ba457caa))
-* use dynamic scroll sizing for recently requested carousel ([5b0f325](https://github.com/Ombi-app/Ombi/commit/5b0f3252f68d33f93c26b54cdf83780697ed6172))
 
 
 
