@@ -242,3 +242,23 @@
         display: none;
     }
 }
+
+@media (hover: none), (pointer: coarse) {
+    .card-inner {
+        .card-overlay {
+            opacity: 1;
+        }
+
+        .card-actions {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .card-poster {
+            filter: brightness(0.4);
+        }
+    }
+}
+
