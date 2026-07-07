@@ -243,10 +243,14 @@
     }
 }
 
-@media (hover: none), (pointer: coarse) {
+@media screen and (max-width: 768px) {
     .card-inner {
         .card-overlay {
             opacity: 1;
+        }
+
+        .overlay-content {
+            transform: translateY(0);
         }
 
         .card-actions {
