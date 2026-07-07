@@ -1,7 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
+import { of } from 'rxjs';
+
 import { PlexComponent } from './plex.component';
-import { of, throwError, EMPTY } from 'rxjs';
 import { PlexSyncType } from './components/models';
+import { JobService, NotificationService, PlexService, SettingsService } from '../../services';
 
 function createComponent() {
   const mockSettingsService = {
@@ -30,31 +34,39 @@ function createComponent() {
     open: vi.fn().mockReturnValue({ afterClosed: () => of({ closed: true }) }),
   };
 
-  const comp = new PlexComponent(
-    mockSettingsService as any,
-    mockNotify as any,
-    mockPlexService as any,
-    mockJobService as any,
-    mockDialog as any,
-  );
+  TestBed.configureTestingModule({
+    providers: [
+      { provide: SettingsService, useValue: mockSettingsService },
+      { provide: NotificationService, useValue: mockNotify },
+      { provide: PlexService, useValue: mockPlexService },
+      { provide: JobService, useValue: mockJobService },
+      { provide: MatDialog, useValue: mockDialog },
+    ],
+  });
+
+  const comp = TestBed.runInInjectionContext(() => new PlexComponent());
 
   return { comp, mockSettingsService, mockNotify, mockPlexService, mockJobService, mockDialog };
 }
 
 describe('PlexComponent', () => {
+  beforeEach(() => {
+    TestBed.resetTestingModule();
+  });
+
   describe('ngOnInit', () => {
     it('should load plex settings', () => {
       const { comp, mockSettingsService } = createComponent();
       comp.ngOnInit();
       expect(mockSettingsService.getPlex).toHaveBeenCalled();
-      expect(comp.settings).toBeDefined();
+      expect(comp.settings()).toBeDefined();
     });
 
     it('should initialize servers array when null', () => {
       const { comp, mockSettingsService } = createComponent();
       mockSettingsService.getPlex.mockReturnValue(of({ servers: null, enable: true }));
       comp.ngOnInit();
-      expect(comp.settings.servers).toEqual([]);
+      expect(comp.settings()!.servers).toEqual([]);
     });
   });
 
@@ -67,7 +79,7 @@ describe('PlexComponent', () => {
 
       comp.requestServers();
       expect(mockPlexService.getServers).toHaveBeenCalledWith('admin', 'pass');
-      expect(comp.serversButton).toBe(true);
+      expect(comp.loadedServers()).toBeDefined();
       expect(mockNotify.success).toHaveBeenCalledWith('Found the servers! Please select one!');
     });
 
@@ -122,21 +134,21 @@ describe('PlexComponent', () => {
     it('should filter out empty server names and save', () => {
       const { comp, mockSettingsService, mockNotify } = createComponent();
       comp.ngOnInit();
-      comp.settings.servers = [
+      comp.settings()!.servers = [
         { name: 'Server1', ip: '127.0.0.1', serverHostname: '' } as any,
         { name: '', ip: '' } as any,
       ];
 
       comp.save();
       expect(mockSettingsService.savePlex).toHaveBeenCalled();
-      expect(comp.settings.servers).toHaveLength(1);
+      expect(comp.settings()!.servers).toHaveLength(1);
       expect(mockNotify.success).toHaveBeenCalledWith('Successfully saved Plex settings');
     });
 
     it('should error when serverHostname does not start with http', () => {
       const { comp, mockNotify, mockSettingsService } = createComponent();
       comp.ngOnInit();
-      comp.settings.servers = [
+      comp.settings()!.servers = [
         { name: 'Server1', ip: '127.0.0.1', serverHostname: 'plex.example.com' } as any,
       ];
 
@@ -150,7 +162,7 @@ describe('PlexComponent', () => {
     it('should allow valid http hostname', () => {
       const { comp, mockSettingsService } = createComponent();
       comp.ngOnInit();
-      comp.settings.servers = [
+      comp.settings()!.servers = [
         { name: 'Server1', ip: '127.0.0.1', serverHostname: 'https://plex.example.com' } as any,
       ];
 
@@ -186,13 +198,6 @@ describe('PlexComponent', () => {
       comp.runSync(PlexSyncType.WatchlistImport);
       expect(mockJobService.runPlexWatchlistImport).toHaveBeenCalled();
       expect(mockNotify.success).toHaveBeenCalledWith('Triggered the Watchlist Import');
-    });
-  });
-
-  describe('ngOnDestroy', () => {
-    it('should complete subscriptions', () => {
-      const { comp } = createComponent();
-      expect(() => comp.ngOnDestroy()).not.toThrow();
     });
   });
 });

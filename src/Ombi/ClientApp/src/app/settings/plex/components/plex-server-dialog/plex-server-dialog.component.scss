@@ -1,27 +1,439 @@
-@media (max-width: 978px) {
-  ::ng-deep .mat-dialog-container {
-    overflow: unset;
+$plex-bg:           #0b1220;
+$plex-surface:      #131b29;
+$plex-surface-2:    #1a2333;
+$plex-border:       #232c3f;
+$plex-border-soft:  #1d2536;
+$plex-text:         #e6ebf5;
+$plex-text-muted:   #9aa6bd;
+$plex-text-faint:   #6e7a92;
+$plex-accent:       #62d2fa;
+$plex-accent-soft:  rgba(98, 210, 250, 0.14);
+$plex-danger:       #f87171;
+$plex-success:      #4ade80;
+
+:host {
     display: flex;
     flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    color: $plex-text;
+    background: $plex-surface;
+}
 
-    .mat-dialog-content{
-        max-height: unset;
+.plex-dialog {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    background: $plex-surface;
+    color: $plex-text;
+
+    &__head {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 18px;
+        padding: 28px 28px 20px;
+        background: radial-gradient(120% 140% at 0% 0%, rgba(98, 210, 250, 0.08) 0%, transparent 55%);
     }
 
-    .mat-dialog-actions{
+    &__icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: $plex-accent-soft;
+        color: $plex-accent;
+        display: grid;
+        place-items: center;
+
+        mat-icon { font-size: 26px; height: 26px; width: 26px; }
+    }
+
+    &__heading { min-width: 0; }
+
+    &__eyebrow {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: $plex-text-faint;
+    }
+
+    &__title {
+        margin: 4px 0 4px;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: #fff;
+        word-break: break-word;
+    }
+
+    &__subtitle {
+        margin: 0;
+        font-size: 13px;
+        color: $plex-text-muted;
+        line-height: 1.45;
+    }
+
+    &__close {
+        appearance: none;
+        background: transparent;
+        border: 1px solid transparent;
+        color: $plex-text-faint;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        transition: background .15s, border-color .15s, color .15s;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: $plex-border-soft;
+            color: $plex-text;
+        }
+
+        &:focus-visible { outline: 2px solid $plex-accent; outline-offset: 2px; }
+    }
+
+    &__body {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        min-height: 0;
+        padding: 8px 24px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        padding: 18px 28px 24px;
+        margin: 0;
+        background: transparent;
         min-height: unset;
     }
 
-    emby-server-dialog-component {
-      display: flex;
-      flex-direction: column;
-      min-height: 1px;
-    }
-  }
+    &__actions-spacer { flex: 1 1 auto; }
 }
 
-::ng-deep mat-form-field .mat-form-field {
-  &-subscript-wrapper {
-    position: static;
-  }
+.dialog-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    &__head {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 0 6px;
+
+        &--inline {
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+
+            > div { min-width: 0; }
+        }
+    }
+
+    &__title {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 600;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+
+    &__desc {
+        margin: 0;
+        font-size: 12.5px;
+        color: $plex-text-muted;
+        line-height: 1.5;
+    }
+}
+
+.form-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 18px 18px 6px;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid $plex-border-soft;
+    border-radius: 12px;
+}
+
+.full-width { width: 100%; }
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 130px auto;
+    gap: 12px;
+    align-items: start;
+
+    &__ssl {
+        display: flex;
+        align-items: center;
+        height: 56px;
+        padding: 0 4px;
+    }
+}
+
+.callout {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-size: 12.5px;
+    line-height: 1.5;
+
+    mat-icon { flex: 0 0 auto; font-size: 18px; height: 18px; width: 18px; margin-top: 2px; }
+
+    &--muted {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid $plex-border-soft;
+        color: $plex-text-muted;
+
+        mat-icon { color: $plex-text-faint; }
+    }
+
+    &__code {
+        display: block;
+        margin-top: 6px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 11.5px;
+        color: $plex-text;
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid $plex-border-soft;
+        border-radius: 6px;
+        padding: 6px 8px;
+        word-break: break-all;
+    }
+}
+
+.library-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+}
+
+.library-tile {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: $plex-surface-2;
+    border: 1px solid $plex-border;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+
+    &:hover {
+        border-color: rgba(98, 210, 250, 0.45);
+    }
+
+    &--on {
+        border-color: rgba(98, 210, 250, 0.55);
+        background: rgba(98, 210, 250, 0.06);
+
+        .library-tile__icon {
+            background: $plex-accent-soft;
+            color: $plex-accent;
+        }
+    }
+
+    &__icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.04);
+        color: $plex-text-faint;
+        display: grid;
+        place-items: center;
+
+        mat-icon { font-size: 18px; height: 18px; width: 18px; }
+    }
+
+    &__name {
+        font-size: 13.5px;
+        font-weight: 500;
+        color: #fff;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.empty-state {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px;
+    border: 1px dashed $plex-border;
+    border-radius: 12px;
+    color: $plex-text-muted;
+    font-size: 13px;
+    line-height: 1.5;
+
+    mat-icon { color: $plex-text-faint; font-size: 28px; height: 28px; width: 28px; flex: 0 0 auto; }
+    p { margin: 0; }
+    strong { color: $plex-text; }
+}
+
+.dialog-btn {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 38px;
+    padding: 0 14px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s, transform .12s;
+
+    mat-icon { font-size: 18px; height: 18px; width: 18px; }
+
+    &:focus-visible { outline: 2px solid $plex-accent; outline-offset: 2px; }
+    &:hover:not([disabled]) { transform: translateY(-1px); }
+    &[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+    &--primary {
+        background: $plex-accent;
+        color: #07111e;
+
+        &:hover:not([disabled]) { background: lighten($plex-accent, 4%); }
+    }
+
+    &--neutral {
+        background: transparent;
+        border-color: $plex-border;
+        color: $plex-text;
+
+        &:hover:not([disabled]) { background: rgba(255, 255, 255, 0.04); border-color: lighten($plex-border, 8%); }
+    }
+
+    &--ghost {
+        background: rgba(255, 255, 255, 0.03);
+        border-color: $plex-border-soft;
+        color: $plex-text;
+
+        &:hover:not([disabled]) {
+            background: rgba(98, 210, 250, 0.08);
+            border-color: rgba(98, 210, 250, 0.45);
+            color: #fff;
+        }
+    }
+
+    &--danger {
+        background: transparent;
+        border-color: rgba(248, 113, 113, 0.35);
+        color: $plex-danger;
+
+        &:hover:not([disabled]) {
+            background: rgba(248, 113, 113, 0.08);
+            border-color: rgba(248, 113, 113, 0.6);
+        }
+    }
+}
+
+::ng-deep .plex-dialog-panel {
+    .mat-dialog-container {
+        padding: 0 !important;
+        border-radius: 16px !important;
+        background: $plex-surface !important;
+        color: $plex-text !important;
+        border: 1px solid $plex-border !important;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55) !important;
+        overflow: hidden !important;
+        max-height: 90vh !important;
+        height: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .mat-dialog-content {
+        padding: 0 !important;
+        margin: 0 !important;
+        max-height: none !important;
+        color: $plex-text !important;
+    }
+
+    .mat-dialog-actions {
+        padding: 0 !important;
+        margin: 0 !important;
+        min-height: 0 !important;
+    }
+
+    .mat-dialog-title {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .mat-dialog-container > * {
+        margin: 0 !important;
+    }
+}
+
+::ng-deep .plex-dialog {
+    .mat-mdc-form-field { width: 100%; }
+
+    .mat-mdc-text-field-wrapper {
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 10px;
+    }
+
+    .mdc-notched-outline > * { border-color: $plex-border !important; }
+    .mat-mdc-form-field:hover .mdc-notched-outline > * { border-color: lighten($plex-border, 10%) !important; }
+    .mat-mdc-form-field.mat-focused .mdc-notched-outline > * { border-color: $plex-accent !important; }
+
+    .mdc-floating-label { color: $plex-text-muted !important; }
+    .mat-mdc-input-element { color: $plex-text !important; caret-color: $plex-accent; }
+    .mat-mdc-form-field-hint-wrapper,
+    .mat-mdc-form-field-hint { color: $plex-text-faint !important; }
+    .mat-mdc-form-field-error { color: $plex-danger !important; }
+
+    .mat-mdc-slide-toggle .mdc-form-field { color: $plex-text; }
+}
+
+@media (max-width: 720px) {
+    .plex-dialog {
+        margin: 0;
+        max-height: 100vh;
+        height: 100%;
+        border-radius: 0;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+
+        &__ssl { height: auto; }
+    }
+
+    .plex-dialog__head {
+        grid-template-columns: auto 1fr auto;
+        padding: 18px;
+    }
+
+    .plex-dialog__body { padding: 16px; }
+
+    .plex-dialog__actions {
+        padding: 12px 14px;
+
+        .dialog-btn { flex: 1 1 auto; }
+        .plex-dialog__actions-spacer { display: none; }
+    }
 }
