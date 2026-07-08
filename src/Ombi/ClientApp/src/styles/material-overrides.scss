@@ -2,10 +2,12 @@
 
 .lg-form-field .mat-form-field-infix {
     width: 480px;
+    max-width: 100%;
 }
 
 .md-form-field .mat-form-field-infix {
     width: 380px;
+    max-width: 100%;
 }
 
 td.mat-cell {

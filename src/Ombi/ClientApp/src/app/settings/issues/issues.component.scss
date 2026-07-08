@@ -13,16 +13,18 @@
     display: contents;
 }
 
-.col-md-9 {
-    display: inline-table;
-}
-
-.col-md-3 {
-    display: inline-table;
-}
-
-.row {
-    display: block;
+@media (min-width: 768px) {
+    .col-md-9 {
+        display: inline-table;
+    }
+    
+    .col-md-3 {
+        display: inline-table;
+    }
+    
+    .row {
+        display: block;
+    }
 }
 
 .btn-danger-outline {

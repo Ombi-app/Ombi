@@ -5,15 +5,16 @@
     margin-top: 10px;
 }
 
-.col-8 {
-    display: inline-table;
-}
-.col-md-5 {
-    display: inline-table;
-}
-
-.row {
-    display: block;
+@media (min-width: 768px) {
+    .col-md-7 {
+        display: inline-table;
+    }
+    .col-md-5 {
+        display: inline-table;
+    }
+    .row {
+        display: block;
+    }
 }
 
 .top-spacing {

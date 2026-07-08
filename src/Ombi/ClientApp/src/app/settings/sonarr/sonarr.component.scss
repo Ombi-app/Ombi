@@ -5,11 +5,13 @@
     margin-top: 10px;
 }
 
-.col-8 {
-    display: inline-table;
-}
-.col-md-5 {
-    display: inline-table;
+@media (min-width: 768px) {
+    .col-md-7 {
+        display: inline-table;
+    }
+    .col-md-5 {
+        display: inline-table;
+    }
 }
 
 ::ng-deep .load {
