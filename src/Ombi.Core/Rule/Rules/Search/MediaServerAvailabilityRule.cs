@@ -20,6 +20,8 @@ namespace Ombi.Core.Rule.Rules.Search
         private readonly ISettingsService<SonarrSettings> _sonarrSettings;
 
         protected ILogger Log { get; }
+        private bool? _deferToRadarr;
+        private bool? _deferToSonarr;
 
         protected MediaServerAvailabilityRule(
             ILogger log,
@@ -109,6 +111,11 @@ namespace Ombi.Core.Rule.Rules.Search
 
         private async Task CheckEpisodeAvailability(SearchTvShowViewModel search, ContentLookupResult lookup, IMediaServerContent item)
         {
+            if (await ShouldDeferToSonarr())
+            {
+                return;
+            }
+
             if (!search.SeasonRequests.Any())
             {
                 return;
@@ -130,26 +137,40 @@ namespace Ombi.Core.Rule.Rules.Search
 
         private async Task<bool> ShouldDeferToRadarr()
         {
+            if (_deferToRadarr.HasValue)
+            {
+                return _deferToRadarr.Value;
+            }
+
             if (_radarrSettings == null)
             {
+                _deferToRadarr = false;
                 return false;
             }
 
             var settings = await _radarrSettings.GetSettingsAsync();
-            return settings != null && settings.Enabled &&
+            _deferToRadarr = settings != null && settings.Enabled &&
                    settings.ScanForAvailability && settings.PrioritizeArrAvailability;
+            return _deferToRadarr.Value;
         }
 
         private async Task<bool> ShouldDeferToSonarr()
         {
+            if (_deferToSonarr.HasValue)
+            {
+                return _deferToSonarr.Value;
+            }
+
             if (_sonarrSettings == null)
             {
+                _deferToSonarr = false;
                 return false;
             }
 
             var settings = await _sonarrSettings.GetSettingsAsync();
-            return settings != null && settings.Enabled &&
+            _deferToSonarr = settings != null && settings.Enabled &&
                    settings.ScanForAvailability && settings.PrioritizeArrAvailability;
+            return _deferToSonarr.Value;
         }
 
         /// <summary>

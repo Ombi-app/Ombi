@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
+using MockQueryable.Moq;
 using NUnit.Framework;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Rules.Search;
 using Ombi.Core.Services;
 using Ombi.Core.Settings;
-using Ombi.Core.Settings.Models.External;
+using Ombi.Settings.Settings.Models.External;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
@@ -99,6 +101,90 @@ namespace Ombi.Core.Tests.Rule.Search
 
             Assert.True(result.Success);
             Assert.False(search.Available);
+        }
+
+        [Test]
+        public async Task TvShow_ShouldNotCheckEpisodes_WhenSonarrPriorityEnabled()
+        {
+            var sonarrSettingsMock = new Mock<ISettingsService<SonarrSettings>>();
+            sonarrSettingsMock.Setup(x => x.GetSettingsAsync())
+                .ReturnsAsync(new SonarrSettings { Enabled = true, ScanForAvailability = true, PrioritizeArrAvailability = true });
+
+            var rule = new EmbyAvailabilityRule(ContextMock.Object, LoggerMock.Object, FeatureMock.Object, null, sonarrSettingsMock.Object);
+
+            var search = new SearchTvShowViewModel
+            {
+                TheTvDbId = "123",
+                SeasonRequests = new List<SeasonRequests>
+                {
+                    new SeasonRequests
+                    {
+                        SeasonNumber = 1,
+                        Episodes = new List<EpisodeRequests>
+                        {
+                            new EpisodeRequests { EpisodeNumber = 1 }
+                        }
+                    }
+                }
+            };
+
+            ContextMock.Setup(x => x.GetByTvDbId("123"))
+                .ReturnsAsync(new EmbyContent { Title = "Test Show", Type = MediaType.Series, TvDbId = "123" });
+
+            var result = await rule.Execute(search);
+
+            Assert.True(result.Success);
+            Assert.False(search.Available);
+            Assert.False(search.SeasonRequests[0].Episodes[0].Available);
+
+            ContextMock.Verify(x => x.GetAllEpisodes(), Times.Never);
+        }
+
+        [Test]
+        public async Task TvShow_ShouldCheckEpisodes_WhenSonarrPriorityDisabled()
+        {
+            var sonarrSettingsMock = new Mock<ISettingsService<SonarrSettings>>();
+            sonarrSettingsMock.Setup(x => x.GetSettingsAsync())
+                .ReturnsAsync(new SonarrSettings { Enabled = true, ScanForAvailability = true, PrioritizeArrAvailability = false });
+
+            var rule = new EmbyAvailabilityRule(ContextMock.Object, LoggerMock.Object, FeatureMock.Object, null, sonarrSettingsMock.Object);
+
+            var search = new SearchTvShowViewModel
+            {
+                TheTvDbId = "123",
+                SeasonRequests = new List<SeasonRequests>
+                {
+                    new SeasonRequests
+                    {
+                        SeasonNumber = 1,
+                        Episodes = new List<EpisodeRequests>
+                        {
+                            new EpisodeRequests { EpisodeNumber = 1 }
+                        }
+                    }
+                }
+            };
+
+            ContextMock.Setup(x => x.GetByTvDbId("123"))
+                .ReturnsAsync(new EmbyContent { Title = "Test Show", Type = MediaType.Series, TvDbId = "123" });
+
+            ContextMock.Setup(x => x.GetAllEpisodes()).Returns(new List<EmbyEpisode>
+            {
+                new EmbyEpisode
+                {
+                    EpisodeNumber = 1,
+                    SeasonNumber = 1,
+                    Series = new EmbyContent { Title = "Test Show", TvDbId = "123" }
+                }
+            }.AsQueryable().BuildMock());
+
+            var result = await rule.Execute(search);
+
+            Assert.True(result.Success);
+            Assert.True(search.Available);
+            Assert.True(search.SeasonRequests[0].Episodes[0].Available);
+
+            ContextMock.Verify(x => x.GetAllEpisodes(), Times.Once);
         }
     }
 }
