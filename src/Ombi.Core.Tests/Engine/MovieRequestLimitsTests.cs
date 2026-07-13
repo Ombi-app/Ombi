@@ -260,7 +260,7 @@ namespace Ombi.Core.Tests.Engine
                 Id = "id1"
             };
 
-            var today = DateTime.UtcNow;
+            var today = new DateTime(2026, 7, 12, 12, 0, 0, DateTimeKind.Utc);
             var log = new List<RequestLog>
             {
                 new RequestLog
@@ -273,7 +273,7 @@ namespace Ombi.Core.Tests.Engine
             var repoMock = _mocker.GetMock<IRepository<RequestLog>>();
             repoMock.Setup(x => x.GetAll()).Returns(log.AsQueryable().BuildMock());
 
-            var result = await _subject.GetRemainingMovieRequests(user);
+            var result = await _subject.GetRemainingMovieRequests(user, today);
 
             Assert.That(result, Is.InstanceOf<RequestQuotaCountModel>()
                 .With.Property(nameof(RequestQuotaCountModel.HasLimit)).EqualTo(true)
