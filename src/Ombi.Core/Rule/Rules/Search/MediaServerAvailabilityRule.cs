@@ -1,6 +1,8 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
@@ -115,13 +117,38 @@ namespace Ombi.Core.Rule.Rules.Search
             }
 
             var allEpisodes = GetAllEpisodes();
+            var seriesEpisodes = new List<IMediaServerEpisode>();
+
+            try
+            {
+                if (lookup.UseImdb && !string.IsNullOrEmpty(item.ImdbId))
+                {
+                    seriesEpisodes = await allEpisodes.Where(x => x.Series.ImdbId == item.ImdbId).ToListAsync();
+                }
+                else if (lookup.UseTheMovieDb && !string.IsNullOrEmpty(item.TheMovieDbId))
+                {
+                    seriesEpisodes = await allEpisodes.Where(x => x.Series.TheMovieDbId == item.TheMovieDbId).ToListAsync();
+                }
+                else if (lookup.UseTvDb && !string.IsNullOrEmpty(item.TvDbId))
+                {
+                    seriesEpisodes = await allEpisodes.Where(x => x.Series.TvDbId == item.TvDbId).ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex, "Exception thrown when pre-fetching series episodes for availability check");
+            }
+
             foreach (var season in search.SeasonRequests.ToList())
             {
                 foreach (var episode in season.Episodes.ToList())
                 {
-                    await AvailabilityRuleHelper.SingleEpisodeCheck(
-                        lookup.UseImdb, allEpisodes, episode, season, item,
-                        lookup.UseTheMovieDb, lookup.UseTvDb, Log);
+                    var epExists = seriesEpisodes.FirstOrDefault(x =>
+                        x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber);
+                    if (epExists != null)
+                    {
+                        episode.Available = true;
+                    }
                 }
             }
 

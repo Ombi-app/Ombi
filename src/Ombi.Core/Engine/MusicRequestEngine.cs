@@ -559,7 +559,7 @@ namespace Ombi.Core.Engine
             };
         }
 
-        public async Task<RequestsViewModel<AlbumRequest>> GetRequests(int count, int position, string sortProperty, string sortOrder, string requestedByUserId = null)
+        public async Task<RequestsViewModel<AlbumRequest>> GetRequests(int count, int position, string sort, string sortOrder, string requestedByUserId = null)
         {
             var shouldHide = await HideFromOtherUsers();
             IQueryable<AlbumRequest> allRequests;
@@ -579,7 +579,7 @@ namespace Ombi.Core.Engine
             allRequests = FilterByRequestedUser(allRequests, requestedByUserId, shouldHide.IsAdmin);
 
             var total = await allRequests.CountAsync();
-            var requests = await ApplySortAlbums(allRequests, sortProperty, sortOrder)
+            var requests = await ApplySortAlbums(allRequests, sort, sortOrder)
                 .Skip(position).Take(count).ToListAsync();
 
             await CheckForSubscription(shouldHide, requests);
