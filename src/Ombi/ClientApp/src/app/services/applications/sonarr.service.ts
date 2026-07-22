@@ -27,6 +27,9 @@ export class SonarrService extends ServiceHelpers {
     public getQualityProfilesWithoutSettings(): Observable<ISonarrProfile[]> {
         return this.http.get<ISonarrProfile[]>(`${this.url}/Profiles/`, {headers: this.headers});
     }
+    public getSelectableQualityProfilesWithoutSettings(): Observable<ISonarrProfile[]> {
+        return this.http.get<ISonarrProfile[]>(`${this.url}/Profiles/selectable`, {headers: this.headers});
+    }
 
     public getV3LanguageProfiles(settings: ISonarrSettings): Observable<ILanguageProfiles[]> {
         return this.http.post<ILanguageProfiles[]>(`${this.url}/v3/languageprofiles/`, JSON.stringify(settings), {headers: this.headers});

@@ -967,6 +967,19 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                     b.ToTable("UserNotificationPreferences");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.UserSelectableQualityProfile", b =>
+                {
+                    b.Property<int>("Id").ValueGeneratedOnAdd().HasColumnType("integer");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<int>("Application").HasColumnType("integer");
+                    b.Property<bool>("Is4K").HasColumnType("boolean");
+                    b.Property<int>("QualityProfileId").HasColumnType("integer");
+                    b.Property<string>("UserId").IsRequired().HasMaxLength(128).HasColumnType("character varying(128)");
+                    b.HasKey("Id");
+                    b.HasIndex("UserId", "Application", "QualityProfileId", "Is4K").IsUnique();
+                    b.ToTable("UserSelectableQualityProfile");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.UserQualityProfiles", b =>
                 {
                     b.Property<int>("Id")
@@ -1282,6 +1295,12 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                         .WithMany("UserNotificationPreferences")
                         .HasForeignKey("UserId");
 
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.UserSelectableQualityProfile", b =>
+                {
+                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User").WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade).IsRequired();
                     b.Navigation("User");
                 });
 

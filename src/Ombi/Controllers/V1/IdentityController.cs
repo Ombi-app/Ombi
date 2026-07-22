@@ -55,6 +55,7 @@ namespace Ombi.Controllers.V1
             ISettingsService<UserManagementSettings> umSettings,
             IRepository<UserNotificationPreferences> notificationPreferences,
             IRepository<UserQualityProfiles> userProfiles,
+            IRepository<UserSelectableQualityProfile> selectableProfiles,
             IUserDeletionEngine deletionEngine,
             IRequestLimitService requestLimitService,
             ICacheService cacheService)
@@ -72,6 +73,7 @@ namespace Ombi.Controllers.V1
             _userManagementSettings = umSettings;
             _userNotificationPreferences = notificationPreferences;
             _userQualityProfiles = userProfiles;
+            _selectableProfiles = selectableProfiles;
             _deletionEngine = deletionEngine;
             _requestLimitService = requestLimitService;
             _cacheService = cacheService;
@@ -94,6 +96,7 @@ namespace Ombi.Controllers.V1
         private readonly ISettingsService<PlexSettings> _plexSettings;
         private readonly IRepository<UserNotificationPreferences> _userNotificationPreferences;
         private readonly IRepository<UserQualityProfiles> _userQualityProfiles;
+        private readonly IRepository<UserSelectableQualityProfile> _selectableProfiles;
 
         /// <summary>
         /// This is what the Wizard will call when creating the user for the very first time.
@@ -226,6 +229,8 @@ namespace Ombi.Controllers.V1
             await CreateRole(OmbiRoles.EditCustomPage);
             await CreateRole(OmbiRoles.Request4KMovie);
             await CreateRole(OmbiRoles.AutoApprove4KMovie);
+            await CreateRole(OmbiRoles.SelectRadarrQualityProfile);
+            await CreateRole(OmbiRoles.SelectSonarrQualityProfile);
         }
 
         private async Task CreateRole(string role)
@@ -420,6 +425,11 @@ namespace Ombi.Controllers.V1
                 };
             }
 
+            var selectableProfiles = await _selectableProfiles.GetAll().Where(x => x.UserId == user.Id).ToListAsync();
+            vm.AllowedRadarrProfileIds = selectableProfiles.Where(x => x.Application == SelectableQualityProfileApplication.Radarr && !x.Is4K).Select(x => x.QualityProfileId).ToList();
+            vm.AllowedRadarr4KProfileIds = selectableProfiles.Where(x => x.Application == SelectableQualityProfileApplication.Radarr && x.Is4K).Select(x => x.QualityProfileId).ToList();
+            vm.AllowedSonarrProfileIds = selectableProfiles.Where(x => x.Application == SelectableQualityProfileApplication.Sonarr).Select(x => x.QualityProfileId).ToList();
+
             return vm;
         }
 
@@ -496,6 +506,8 @@ namespace Ombi.Controllers.V1
                     UserId = ombiUser.Id
                 };
             }
+
+            await ReplaceSelectableProfiles(ombiUser.Id, user);
 
             return new OmbiIdentityResult
             {
@@ -695,6 +707,8 @@ namespace Ombi.Controllers.V1
                 }
                 await _userQualityProfiles.SaveChangesAsync();
             }
+
+            await ReplaceSelectableProfiles(user.Id, ui);
 
 
             return new OmbiIdentityResult
@@ -1070,6 +1084,28 @@ namespace Ombi.Controllers.V1
                 }
             }
             return roleResult;
+        }
+
+        private async Task ReplaceSelectableProfiles(string userId, UserViewModel model)
+        {
+            var existing = _selectableProfiles.GetAll().Where(x => x.UserId == userId);
+            if (await existing.AnyAsync())
+            {
+                await _selectableProfiles.DeleteRange(existing);
+            }
+
+            var profiles = (model.AllowedRadarrProfileIds ?? new List<int>())
+                .Select(id => new UserSelectableQualityProfile { UserId = userId, Application = SelectableQualityProfileApplication.Radarr, QualityProfileId = id })
+                .Concat((model.AllowedRadarr4KProfileIds ?? new List<int>())
+                    .Select(id => new UserSelectableQualityProfile { UserId = userId, Application = SelectableQualityProfileApplication.Radarr, QualityProfileId = id, Is4K = true }))
+                .Concat((model.AllowedSonarrProfileIds ?? new List<int>())
+                    .Select(id => new UserSelectableQualityProfile { UserId = userId, Application = SelectableQualityProfileApplication.Sonarr, QualityProfileId = id }))
+                .DistinctBy(x => new { x.Application, x.QualityProfileId, x.Is4K })
+                .ToList();
+            if (profiles.Count > 0)
+            {
+                await _selectableProfiles.AddRange(profiles);
+            }
         }
 
         private OmbiIdentityResult Error(string message)

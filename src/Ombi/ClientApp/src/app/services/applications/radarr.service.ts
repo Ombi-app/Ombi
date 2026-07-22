@@ -36,6 +36,14 @@ export class RadarrService extends ServiceHelpers {
         return this.http.get<IRadarrProfile[]>(`${this.url}/Profiles/4k`, { headers: this.headers });
     }
 
+    public getSelectableQualityProfilesFromSettings(): Observable<IRadarrProfile[]> {
+        return this.http.get<IRadarrProfile[]>(`${this.url}/Profiles/selectable`, { headers: this.headers });
+    }
+
+    public getSelectableQualityProfiles4kFromSettings(): Observable<IRadarrProfile[]> {
+        return this.http.get<IRadarrProfile[]>(`${this.url}/Profiles/4k/selectable`, { headers: this.headers });
+    }
+
     public isRadarrEnabled(): Observable<boolean> {
         return this.http.get<boolean>(`${this.url}/enabled/`, { headers: this.headers });
     }

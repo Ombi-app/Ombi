@@ -451,6 +451,9 @@
         "NewPasswordConfirm": "Confirmation du nouveau mot de passe",
         "Security": "Sécurité",
         "Profile": "Profil",
+        "AllowedRadarrProfiles": "Profils de qualité Radarr autorisés",
+        "AllowedRadarr4KProfiles": "Profils de qualité Radarr 4K autorisés",
+        "AllowedSonarrProfiles": "Profils de qualité Sonarr autorisés",
         "UpdatedYourInformation": "Informations mises à jour",
         "Unsubscribed": "Désabonné !"
     },

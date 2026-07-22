@@ -25,6 +25,9 @@ function createComponent() {
     instant: vi.fn((key: string) => key),
     currentLang: 'en',
   };
+  const mockAuth = {
+    hasRole: vi.fn().mockReturnValue(false),
+  };
 
   const comp = new DiscoverCardComponent(
     mockSearchService as any,
@@ -32,9 +35,10 @@ function createComponent() {
     mockRequestService as any,
     mockMessageService as any,
     mockTranslate as any,
+    mockAuth as any,
   );
 
-  return { comp, mockSearchService, mockDialog, mockRequestService, mockMessageService, mockTranslate };
+  return { comp, mockSearchService, mockDialog, mockRequestService, mockMessageService, mockTranslate, mockAuth };
 }
 
 function makeResult(overrides: Partial<IDiscoverCardResult> = {}): IDiscoverCardResult {
@@ -233,6 +237,21 @@ describe('DiscoverCardComponent', () => {
       comp.request(event, false);
 
       expect(mockDialog.open).toHaveBeenCalled();
+    });
+
+    it('should open a quality-only dialog for the dedicated role', () => {
+      const { comp, mockDialog, mockAuth } = createComponent();
+      comp.result = makeResult({ type: RequestType.movie });
+      comp.isAdmin = false;
+      mockAuth.hasRole.mockReturnValue(true);
+      comp.ngOnInit();
+
+      comp.request({ preventDefault: vi.fn() }, false);
+
+      expect(mockDialog.open).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({ data: expect.objectContaining({ qualityOnly: true }) }),
+      );
     });
 
     it('should open episode request dialog for TV shows', () => {

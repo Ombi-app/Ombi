@@ -25,7 +25,7 @@ describe('RadarrService', () => {
   });
 
   it('should POST for getRootFolders with settings', () => {
-    const settings = { ip: '127.0.0.1', apiKey: 'abc' } as any;
+    const settings = { ip: '127.0.0.1', apiKey: 'test-key' } as any;
     service.getRootFolders(settings);
     expect(mockHttp.post).toHaveBeenCalledWith('/api/v1/Radarr/RootFolders/', JSON.stringify(settings), expect.anything());
   });
@@ -46,6 +46,11 @@ describe('RadarrService', () => {
     expect(mockHttp.get).toHaveBeenCalledWith('/api/v1/Radarr/Profiles/', expect.anything());
   });
 
+  it('should GET for getSelectableQualityProfilesFromSettings', () => {
+    service.getSelectableQualityProfilesFromSettings();
+    expect(mockHttp.get).toHaveBeenCalledWith('/api/v1/Radarr/Profiles/selectable', expect.anything());
+  });
+
   it('should GET for getRootFolders4kFromSettings', () => {
     service.getRootFolders4kFromSettings();
     expect(mockHttp.get).toHaveBeenCalledWith('/api/v1/Radarr/RootFolders/4k', expect.anything());
@@ -54,6 +59,11 @@ describe('RadarrService', () => {
   it('should GET for getQualityProfiles4kFromSettings', () => {
     service.getQualityProfiles4kFromSettings();
     expect(mockHttp.get).toHaveBeenCalledWith('/api/v1/Radarr/Profiles/4k', expect.anything());
+  });
+
+  it('should GET for getSelectableQualityProfiles4kFromSettings', () => {
+    service.getSelectableQualityProfiles4kFromSettings();
+    expect(mockHttp.get).toHaveBeenCalledWith('/api/v1/Radarr/Profiles/4k/selectable', expect.anything());
   });
 
   it('should GET for isRadarrEnabled', () => {

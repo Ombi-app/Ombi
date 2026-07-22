@@ -46,6 +46,11 @@ describe('SonarrService', () => {
     expect(mockHttp.get).toHaveBeenCalledWith('/api/v1/Sonarr/Profiles/', expect.anything());
   });
 
+  it('should GET selectable quality profiles', () => {
+    service.getSelectableQualityProfilesWithoutSettings();
+    expect(mockHttp.get).toHaveBeenCalledWith('/api/v1/Sonarr/Profiles/selectable', expect.anything());
+  });
+
   it('should POST for getV3LanguageProfiles with settings', () => {
     const settings = { ip: '127.0.0.1' } as any;
     service.getV3LanguageProfiles(settings);

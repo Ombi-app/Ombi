@@ -2,6 +2,7 @@
 using AutoMapper;
 using Ombi.Api.External.ExternalApis.TvMaze;
 using Ombi.Api.External.ExternalApis.TheMovieDb;
+using Ombi.Api.External.ExternalApis.Sonarr;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Helpers;
@@ -21,6 +22,7 @@ using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Senders;
 using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models;
+using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Core.Models;
@@ -36,7 +38,8 @@ namespace Ombi.Core.Engine
             INotificationHelper helper, IRuleEvaluator rule, OmbiUserManager manager, ILogger<TvRequestEngine> logger,
             ITvSender sender, IRepository<RequestLog> rl, ISettingsService<OmbiSettings> settings, ICacheService cache,
             IRepository<RequestSubscription> sub, IMediaCacheService mediaCacheService,
-            IUserPlayedEpisodeRepository userPlayedEpisodeRepository) : base(user, requestService, rule, manager, cache, settings, sub)
+            IUserPlayedEpisodeRepository userPlayedEpisodeRepository, ISonarrV3Api sonarrApi,
+            ISettingsService<SonarrSettings> sonarrSettings, IRepository<UserSelectableQualityProfile> selectableProfiles) : base(user, requestService, rule, manager, cache, settings, sub)
         {
             TvApi = tvApi;
             MovieDbApi = movApi;
@@ -46,6 +49,9 @@ namespace Ombi.Core.Engine
             _requestLog = rl;
             _mediaCacheService = mediaCacheService;
             _userPlayedEpisodeRepository = userPlayedEpisodeRepository;
+            _sonarrApi = sonarrApi;
+            _sonarrSettings = sonarrSettings;
+            _selectableProfiles = selectableProfiles;
         }
 
         private INotificationHelper NotificationHelper { get; }
@@ -57,25 +63,30 @@ namespace Ombi.Core.Engine
         private readonly IRepository<RequestLog> _requestLog;
         private readonly IMediaCacheService _mediaCacheService;
         private readonly IUserPlayedEpisodeRepository _userPlayedEpisodeRepository;
+        private readonly ISonarrV3Api _sonarrApi;
+        private readonly ISettingsService<SonarrSettings> _sonarrSettings;
+        private readonly IRepository<UserSelectableQualityProfile> _selectableProfiles;
 
         public async Task<RequestEngineResult> RequestTvShow(TvRequestViewModel tv)
         {
             var user = await GetUser();
-            var canRequestOnBehalf = false;
+            var isAdmin = Username.Equals("API", StringComparison.CurrentCultureIgnoreCase) || await UserManager.IsInRoleAsync(user, OmbiRoles.PowerUser) || await UserManager.IsInRoleAsync(user, OmbiRoles.Admin);
+            var canRequestOnBehalf = tv.RequestOnBehalf.HasValue() && isAdmin;
 
-            if (tv.RequestOnBehalf.HasValue())
+            if (tv.RequestOnBehalf.HasValue() && !isAdmin)
             {
-                canRequestOnBehalf = await UserManager.IsInRoleAsync(user, OmbiRoles.PowerUser) || await UserManager.IsInRoleAsync(user, OmbiRoles.Admin);
+                return NoPermissions("You do not have the correct permissions to request on behalf of users!");
+            }
 
-                if (!canRequestOnBehalf)
-                {
-                    return new RequestEngineResult
-                    {
-                        Result = false,
-                        Message = "You do not have the correct permissions to request on behalf of users!",
-                        ErrorMessage = $"You do not have the correct permissions to request on behalf of users!"
-                    };
-                }
+            if ((tv.RootFolderOverride.HasValue || tv.LanguageProfile.HasValue) && !isAdmin)
+            {
+                return NoPermissions("You do not have the correct permissions!");
+            }
+
+            var qualityError = await ValidateQualityProfile(user, tv.QualityPathOverride, isAdmin);
+            if (qualityError != null)
+            {
+                return qualityError;
             }
 
             var tvBuilder = new TvShowRequestBuilder(TvApi, MovieDbApi, _logger);
@@ -176,15 +187,15 @@ namespace Ombi.Core.Engine
                 };
             }
 
-            if ((tv.RootFolderOverride.HasValue || tv.QualityPathOverride.HasValue || tv.LanguageProfile.HasValue) && !isAdmin)
+            if ((tv.RootFolderOverride.HasValue || tv.LanguageProfile.HasValue) && !isAdmin)
             {
-                return new RequestEngineResult
-                {
-                    Result = false,
-                    ErrorCode = ErrorCode.NoPermissions,
-                    Message = "You do not have the correct permissions!",
-                    ErrorMessage = $"You do not have the correct permissions!"
-                };
+                return NoPermissions("You do not have the correct permissions!");
+            }
+
+            var qualityError = await ValidateQualityProfile(user, tv.QualityPathOverride, isAdmin);
+            if (qualityError != null)
+            {
+                return qualityError;
             }
 
             var tvBuilder = new TvShowRequestBuilderV2(MovieDbApi);
@@ -1063,6 +1074,41 @@ namespace Ombi.Core.Engine
         }
 
        
+
+        private async Task<RequestEngineResult> ValidateQualityProfile(OmbiUser user, int? profileId, bool isAdmin)
+        {
+            if (!profileId.HasValue)
+            {
+                return null;
+            }
+
+            if (!isAdmin && !await UserManager.IsInRoleAsync(user, OmbiRoles.SelectSonarrQualityProfile))
+            {
+                return NoPermissions("You do not have the correct permissions!");
+            }
+
+            if (!isAdmin && !await _selectableProfiles.GetAll().AnyAsync(x =>
+                x.UserId == user.Id && x.Application == SelectableQualityProfileApplication.Sonarr && x.QualityProfileId == profileId.Value))
+            {
+                return new RequestEngineResult { Result = false, ErrorMessage = "The selected Sonarr quality profile is not allowed." };
+            }
+
+            var settings = await _sonarrSettings.GetSettingsAsync();
+            if (!settings.Enabled || !(await _sonarrApi.GetProfiles(settings.ApiKey, settings.FullUri)).Any(x => x.id == profileId.Value))
+            {
+                return new RequestEngineResult { Result = false, ErrorMessage = "The selected Sonarr quality profile is invalid." };
+            }
+
+            return null;
+        }
+
+        private static RequestEngineResult NoPermissions(string message) => new RequestEngineResult
+        {
+            Result = false,
+            ErrorCode = ErrorCode.NoPermissions,
+            Message = message,
+            ErrorMessage = message
+        };
 
         public async Task<RequestEngineResult> UpdateAdvancedOptions(MediaAdvancedOptions options)
         {

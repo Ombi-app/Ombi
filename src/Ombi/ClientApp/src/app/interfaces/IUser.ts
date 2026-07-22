@@ -18,6 +18,9 @@ export interface IUser {
     userAccessToken: string;
     language: string;
     userQualityProfiles: IUserQualityProfiles;
+    allowedRadarrProfileIds: number[];
+    allowedRadarr4KProfileIds: number[];
+    allowedSonarrProfileIds: number[];
     streamingCountry: string;
 
     movieRequestLimitType?: RequestLimitType;

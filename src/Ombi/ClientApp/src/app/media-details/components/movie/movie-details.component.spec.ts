@@ -227,6 +227,21 @@ describe('MovieDetailsComponent', () => {
   });
 
   describe('request (non-admin)', () => {
+    it('should open a quality-only dialog for the dedicated role', async () => {
+      const { comp, mockDialog } = createComponent();
+      comp.isAdmin = false;
+      comp.canSelectRadarrProfile = true;
+      comp.is4KEnabled = true;
+      comp.movie = { id: 550, title: 'Test Movie' } as any;
+
+      await comp.request(true);
+
+      expect(mockDialog.open).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({ data: expect.objectContaining({ is4k: true, qualityOnly: true }) }),
+      );
+    });
+
     it('should request movie and update state on success', async () => {
       const { comp, mockRequestService, mockMessageService } = createComponent();
       comp.isAdmin = false;

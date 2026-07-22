@@ -7,6 +7,7 @@ import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/materia
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule } from '@ngx-translate/core';
 import { RadarrFacade } from 'app/state/radarr';
 import { SonarrFacade } from 'app/state/sonarr';
@@ -27,6 +28,7 @@ export interface IAdminRequestDialogData {
 	type: RequestType;
 	id: number;
 	is4k: boolean | null;
+	qualityOnly?: boolean;
 }
 
 @Component({
@@ -43,6 +45,7 @@ export interface IAdminRequestDialogData {
 		MatFormFieldModule,
 		MatInputModule,
 		MatSelectModule,
+		MatProgressSpinnerModule,
 		TranslateModule
 	]
 })
@@ -74,6 +77,8 @@ export class AdminRequestDialogComponent implements OnInit {
 	public sonarrLanguageProfiles: ILanguageProfiles[];
 	public radarrProfiles: IRadarrProfile[];
 	public radarrRootFolders: IRadarrRootFolder[];
+	public profilesLoading = false;
+	public profilesError = false;
 
 	public async ngOnInit() {
 		this.form = this.fb.group({
@@ -85,14 +90,21 @@ export class AdminRequestDialogComponent implements OnInit {
 			radarrFolderId: [null],
 		});
 
-		this.options = await firstValueFrom(this.identityService.getUsersDropdown());
+		if (!this.data.qualityOnly) {
+			this.options = await firstValueFrom(this.identityService.getUsersDropdown());
 
-		this.filteredOptions = this.form.controls['username'].valueChanges.pipe(
-			startWith(''),
-			map((value) => this._filter(value)),
-		);
+			this.filteredOptions = this.form.controls['username'].valueChanges.pipe(
+				startWith(''),
+				map((value) => this._filter(value)),
+			);
+		}
 
 		if (this.data.type === RequestType.tvShow) {
+			if (this.data.qualityOnly) {
+				this.sonarrEnabled = true;
+				this.loadSonarrProfiles();
+				return;
+			}
 			this.sonarrEnabled = this.sonarrFacade.isEnabled();
 			if (this.sonarrEnabled) {
 				console.log(this.sonarrFacade.version());
@@ -110,6 +122,11 @@ export class AdminRequestDialogComponent implements OnInit {
 			}
 		}
 		if (this.data.type === RequestType.movie) {
+			if (this.data.qualityOnly) {
+				this.radarrEnabled = true;
+				this.loadRadarrProfiles();
+				return;
+			}
 			this.radarrEnabled = this.radarrFacade.isEnabled();
 			this.radarr4kEnabled = this.radarrFacade.is4KEnabled();
 
@@ -133,6 +150,37 @@ export class AdminRequestDialogComponent implements OnInit {
 				}
 			}
 		}
+	}
+
+	private loadRadarrProfiles(): void {
+		this.profilesLoading = true;
+		const profiles = this.data.is4k
+			? this.radarrService.getSelectableQualityProfiles4kFromSettings()
+			: this.radarrService.getSelectableQualityProfilesFromSettings();
+		profiles.subscribe({
+			next: (result) => {
+				this.radarrProfiles = result;
+				this.profilesLoading = false;
+			},
+			error: () => {
+				this.profilesError = true;
+				this.profilesLoading = false;
+			},
+		});
+	}
+
+	private loadSonarrProfiles(): void {
+		this.profilesLoading = true;
+		this.sonarrService.getSelectableQualityProfilesWithoutSettings().subscribe({
+			next: (result) => {
+				this.sonarrProfiles = result;
+				this.profilesLoading = false;
+			},
+			error: () => {
+				this.profilesError = true;
+				this.profilesLoading = false;
+			},
+		});
 	}
 
 	public displayFn(user: IUserDropdown): string {

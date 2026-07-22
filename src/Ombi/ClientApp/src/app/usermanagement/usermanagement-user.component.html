@@ -88,6 +88,26 @@
     </div>
   </div>
     <label class="control-label"><h3>Quality & Root Path Preferences</h3></label>
+    <mat-form-field *ngIf="selectableRadarrQualities">
+      <mat-label>{{ 'UserPreferences.AllowedRadarrProfiles' | translate }}</mat-label>
+      <mat-select multiple [(ngModel)]="user.allowedRadarrProfileIds">
+        <mat-option *ngFor="let profile of selectableRadarrQualities" [value]="profile.id">{{profile.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="selectableRadarr4KQualities">
+      <mat-label>{{ 'UserPreferences.AllowedRadarr4KProfiles' | translate }}</mat-label>
+      <mat-select multiple [(ngModel)]="user.allowedRadarr4KProfileIds">
+        <mat-option *ngFor="let profile of selectableRadarr4KQualities" [value]="profile.id">{{profile.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="selectableSonarrQualities">
+      <mat-label>{{ 'UserPreferences.AllowedSonarrProfiles' | translate }}</mat-label>
+      <mat-select multiple [(ngModel)]="user.allowedSonarrProfileIds">
+        <mat-option *ngFor="let profile of selectableSonarrQualities" [value]="profile.id">{{profile.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
     <mat-form-field *ngIf="sonarrQualities">
       <mat-label>Sonarr Quality Profile</mat-label>
       <mat-select [(ngModel)]="user.userQualityProfiles.sonarrQualityProfile">

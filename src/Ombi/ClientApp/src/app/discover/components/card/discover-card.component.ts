@@ -17,6 +17,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { IMovieRequestModel, RequestType } from "../../../interfaces";
 import { TranslateService } from "@ngx-translate/core";
 import { ImageComponent } from "../../../components";
+import { AuthService } from "../../../auth/auth.service";
 
 @Component({
     standalone: true,
@@ -44,6 +45,7 @@ export class DiscoverCardComponent implements OnInit {
     public fullyLoaded = false;
     public loading: boolean;
     public allow4KButton: boolean = false;
+    public canSelectRadarrProfile: boolean = false;
 
     public requestable: boolean;
 
@@ -51,9 +53,10 @@ export class DiscoverCardComponent implements OnInit {
     private tvSearchResult: ISearchTvResultV2;
 
     constructor(private searchService: SearchV2Service, private dialog: MatDialog, private requestService: RequestService,
-        public messageService: MessageService, private translate: TranslateService) { }
+        public messageService: MessageService, private translate: TranslateService, private auth: AuthService) { }
 
     public ngOnInit() {
+        this.canSelectRadarrProfile = this.auth.hasRole("selectradarrqualityprofile");
         if (this.result.type == RequestType.tvShow) {
             this.fullyLoaded = true;
             this.getExtraTvInfo();
@@ -165,7 +168,7 @@ export class DiscoverCardComponent implements OnInit {
               is4KRequest: is4k,
             };
 
-            if (!this.isAdmin) {
+            if (!this.isAdmin && !this.canSelectRadarrProfile) {
               this.requestMovie(movieRequest);
               break;
             }
@@ -174,7 +177,7 @@ export class DiscoverCardComponent implements OnInit {
               AdminRequestDialogComponent,
               {
                 width: "700px",
-                data: { type: RequestType.movie, id: this.result.id, is4k: is4k },
+                data: { type: RequestType.movie, id: this.result.id, is4k: is4k, qualityOnly: !this.isAdmin },
                 panelClass: "modal-panel",
               }
             );
@@ -184,9 +187,9 @@ export class DiscoverCardComponent implements OnInit {
                 return;
               }
 
-              movieRequest.requestOnBehalf = result.username?.id;
+              movieRequest.requestOnBehalf = this.isAdmin ? result.username?.id : null;
               movieRequest.qualityPathOverride = result.radarrPathId;
-              movieRequest.rootFolderOverride = result.radarrFolderId;
+              movieRequest.rootFolderOverride = this.isAdmin ? result.radarrFolderId : null;
               this.requestMovie(movieRequest);
             });
             break;

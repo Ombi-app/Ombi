@@ -80,6 +80,7 @@ export class MovieDetailsComponent implements OnInit {
 	public hasRequest: boolean;
 	public movieRequest: IMovieRequests;
 	public isAdmin: boolean;
+	public canSelectRadarrProfile: boolean;
 	public advancedOptions: IAdvancedData;
 	public showAdvanced: boolean; // Set on the UI
 	public issuesEnabled: boolean;
@@ -136,6 +137,7 @@ export class MovieDetailsComponent implements OnInit {
 		this.is4KEnabled = this.featureFacade.is4kEnabled();
 		this.issuesEnabled = this.settingsState.getIssue();
 		this.isAdmin = this.auth.hasRole('admin') || this.auth.hasRole('poweruser');
+		this.canSelectRadarrProfile = this.auth.hasRole('selectradarrqualityprofile');
 
 		if (this.isAdmin) {
 			this.showAdvanced = await firstValueFrom(this.radarrService.isRadarrEnabled());
@@ -173,10 +175,10 @@ export class MovieDetailsComponent implements OnInit {
 		if (!this.is4KEnabled) {
 			is4K = false;
 		}
-		if (this.isAdmin) {
+		if (this.isAdmin || this.canSelectRadarrProfile) {
 			const dialog = this.dialog.open(AdminRequestDialogComponent, {
 				width: '700px',
-				data: { type: RequestType.movie, id: this.movie.id, is4K: is4K },
+				data: { type: RequestType.movie, id: this.movie.id, is4k: is4K, qualityOnly: !this.isAdmin },
 				panelClass: 'modal-panel',
 			});
 			dialog.afterClosed().subscribe(async (result) => {
@@ -186,8 +188,8 @@ export class MovieDetailsComponent implements OnInit {
 							theMovieDbId: this.theMovidDbId,
 							languageCode: this.translate.currentLang,
 							qualityPathOverride: result.radarrPathId,
-							requestOnBehalf: result.username?.id,
-							rootFolderOverride: result.radarrFolderId,
+							requestOnBehalf: this.isAdmin ? result.username?.id : undefined,
+							rootFolderOverride: this.isAdmin ? result.radarrFolderId : undefined,
 							is4KRequest: is4K,
 						}),
 					);

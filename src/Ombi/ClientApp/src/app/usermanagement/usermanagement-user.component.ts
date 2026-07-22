@@ -63,6 +63,9 @@ export class UserManagementUserComponent implements OnInit {
     public radarrRootFolders: IRadarrRootFolder[];
     public radarr4KQualities: IRadarrProfile[];
     public radarr4KRootFolders: IRadarrRootFolder[];
+    public selectableSonarrQualities: ISonarrProfile[];
+    public selectableRadarrQualities: IRadarrProfile[];
+    public selectableRadarr4KQualities: IRadarrProfile[];
 
     public NotificationAgent = INotificationAgent;
     public edit: boolean;
@@ -129,7 +132,8 @@ export class UserManagementUserComponent implements OnInit {
             });
         }
         this.sonarrService.getQualityProfilesWithoutSettings().subscribe(x => {
-            this.sonarrQualities = x;
+            this.selectableSonarrQualities = x;
+            this.sonarrQualities = [...x];
             this.sonarrQualities.unshift({id: 0, name: "None"});
         });
         this.sonarrService.getRootFoldersWithoutSettings().subscribe(x => {
@@ -137,7 +141,8 @@ export class UserManagementUserComponent implements OnInit {
             this.sonarrRootFolders.unshift({id: 0, path: "None"});
         });
         this.radarrService.getQualityProfilesFromSettings().subscribe(x => {
-            this.radarrQualities = x;
+            this.selectableRadarrQualities = x;
+            this.radarrQualities = [...x];
             this.radarrQualities.unshift({id: 0, name: "None"});
         });
         this.radarrService.getRootFoldersFromSettings().subscribe(x => {
@@ -151,7 +156,8 @@ export class UserManagementUserComponent implements OnInit {
                 this.radarr4KRootFolders.unshift({id: 0, path: "None"});
             });
             this.radarrService.getQualityProfiles4kFromSettings().subscribe(x => {
-                this.radarr4KQualities = x;
+                this.selectableRadarr4KQualities = x;
+                this.radarr4KQualities = [...x];
                 this.radarr4KQualities.unshift({id: 0, name: "None"});
             });
         }
@@ -188,6 +194,9 @@ export class UserManagementUserComponent implements OnInit {
                     sonarrRootPath: 0,
                     sonarrRootPathAnime: 0,
                 },
+                allowedRadarrProfileIds: [],
+                allowedRadarr4KProfileIds: [],
+                allowedSonarrProfileIds: [],
                 musicRequestQuota: null,
         };
     }

@@ -18,5 +18,7 @@
         public const string EditCustomPage = nameof(EditCustomPage);
         public const string Request4KMovie = nameof(Request4KMovie);
         public const string AutoApprove4KMovie = nameof(AutoApprove4KMovie);
+        public const string SelectRadarrQualityProfile = nameof(SelectRadarrQualityProfile);
+        public const string SelectSonarrQualityProfile = nameof(SelectSonarrQualityProfile);
     }
 }

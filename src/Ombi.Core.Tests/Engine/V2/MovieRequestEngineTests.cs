@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Ombi.Api.External.ExternalApis.TheMovieDb;
+using Ombi.Api.External.ExternalApis.Radarr;
 using Ombi.Core.Engine;
 using Ombi.Core.Helpers;
 using Ombi.Core.Models.Requests;
@@ -14,6 +15,7 @@ using Ombi.Core.Services;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
+using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
@@ -47,8 +49,13 @@ namespace Ombi.Core.Tests.Engine.V2
             var mediaCache = new Mock<IMediaCacheService>();
             var featureService = new Mock<IFeatureService>();
             var userPlayedMovieRepository = new Mock<IUserPlayedMovieRepository>();
+            var radarrApi = new Mock<IRadarrV3Api>();
+            var radarrSettings = new Mock<ISettingsService<RadarrSettings>>();
+            var radarr4KSettings = new Mock<ISettingsService<Radarr4KSettings>>();
+            var selectableProfiles = new Mock<IRepository<UserSelectableQualityProfile>>();
             _engine = new MovieRequestEngine(movieApi.Object, requestService.Object, user.Object, notificationHelper.Object, rules.Object, movieSender.Object,
-                logger.Object, userManager.Object, requestLogRepo.Object, cache.Object, ombiSettings.Object, requestSubs.Object, mediaCache.Object, featureService.Object, userPlayedMovieRepository.Object);
+                logger.Object, userManager.Object, requestLogRepo.Object, cache.Object, ombiSettings.Object, requestSubs.Object, mediaCache.Object, featureService.Object,
+                userPlayedMovieRepository.Object, radarrApi.Object, radarrSettings.Object, radarr4KSettings.Object, selectableProfiles.Object);
         }
 
         [Test]

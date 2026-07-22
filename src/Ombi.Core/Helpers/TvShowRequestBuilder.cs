@@ -252,6 +252,7 @@ namespace Ombi.Core.Helpers
                 Status = ShowInfo.status,
                 ImdbId = ShowInfo.externals?.imdb ?? string.Empty,
                 TvDbId = tv.TvDbId,
+                QualityOverride = tv.QualityPathOverride,
                 ChildRequests = new List<ChildRequests>(),
                 TotalSeasons = tv.Seasons?.Count ?? 0,
                 Background = BackdropPath

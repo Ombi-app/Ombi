@@ -16,6 +16,7 @@ import { RequestServiceV2 } from "../../../../../services/requestV2.service";
 import { AdminRequestDialogComponent } from "../../../../../shared/admin-request-dialog/admin-request-dialog.component";
 import { OmbiDatePipe } from "../../../../../pipes/OmbiDatePipe";
 import { MatCardModule } from "@angular/material/card";
+import { AuthService } from "../../../../../auth/auth.service";
 
 @Component({
     standalone: true,
@@ -38,6 +39,7 @@ export class TvRequestGridComponent {
     @Input() public tv: ISearchTvResultV2;
     @Input() public tvRequest: IChildRequests[];
     @Input() public isAdmin: boolean;
+    public canSelectQualityProfile: boolean;
     public selection = new SelectionModel<IEpisodesRequests>(true, []);
     public selectedSeasonIndex: number = 0;
 
@@ -58,8 +60,11 @@ export class TvRequestGridComponent {
         private readonly requestServiceV2: RequestServiceV2,
         private readonly notificationService: MessageService,
         private readonly dialog: MatDialog,
-        private readonly translate: TranslateService
-    ) {}
+        private readonly translate: TranslateService,
+        private readonly auth: AuthService
+    ) {
+        this.canSelectQualityProfile = this.auth.hasRole("SelectSonarrQualityProfile");
+    }
 
     public selectSeason(index: number) {
         this.selectedSeasonIndex = index;
@@ -164,10 +169,10 @@ export class TvRequestGridComponent {
             viewModel.seasons.push(seasonsViewModel);
         });
 
-        if (this.isAdmin) {
+        if (this.isAdmin || this.canSelectQualityProfile) {
             const dialog = this.dialog.open(AdminRequestDialogComponent, {
                 width: "700px",
-                data: { type: RequestType.tvShow, id: this.tv.id, is4k: null },
+                data: { type: RequestType.tvShow, id: this.tv.id, is4k: null, qualityOnly: !this.isAdmin },
                 panelClass: "modal-panel",
             });
             dialog.afterClosed().subscribe(async (result) => {

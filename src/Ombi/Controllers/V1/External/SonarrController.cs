@@ -1,14 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Ombi.Api.External.ExternalApis.Sonarr;
 using Ombi.Api.External.ExternalApis.Sonarr.Models;
 using Ombi.Api.External.ExternalApis.Sonarr.Models.V3;
 using Ombi.Attributes;
+using Ombi.Core.Authentication;
+using Ombi.Core.Helpers;
 using Ombi.Core.Settings;
+using Ombi.Helpers;
 using Ombi.Settings.Settings.Models.External;
+using Ombi.Store.Entities;
+using Ombi.Store.Repository;
 
 namespace Ombi.Controllers.V1.External
 {
@@ -17,16 +24,23 @@ namespace Ombi.Controllers.V1.External
     [Produces("application/json")]
     public class SonarrController : Controller
     {
-        public SonarrController(ISonarrApi sonarr, ISonarrV3Api sonarrv3, ISettingsService<SonarrSettings> settings)
+        public SonarrController(ISonarrApi sonarr, ISonarrV3Api sonarrv3, ISettingsService<SonarrSettings> settings,
+            ICurrentUser currentUser, OmbiUserManager userManager, IRepository<UserSelectableQualityProfile> selectableProfiles)
         {
             SonarrApi = sonarr;
             SonarrV3Api = sonarrv3;
             SonarrSettings = settings;
+            _currentUser = currentUser;
+            _userManager = userManager;
+            _selectableProfiles = selectableProfiles;
         }
 
         private ISonarrApi SonarrApi { get; }
         private ISonarrV3Api SonarrV3Api { get; }
         private ISettingsService<SonarrSettings> SonarrSettings { get; }
+        private readonly ICurrentUser _currentUser;
+        private readonly OmbiUserManager _userManager;
+        private readonly IRepository<UserSelectableQualityProfile> _selectableProfiles;
 
         /// <summary>
         /// Gets the Sonarr profiles.
@@ -67,6 +81,24 @@ namespace Ombi.Controllers.V1.External
                 return await SonarrV3Api.GetProfiles(settings.ApiKey, settings.FullUri);
             }
             return null;
+        }
+
+        [HttpGet("Profiles/selectable")]
+        [Authorize(Roles = OmbiRoles.Admin + "," + OmbiRoles.PowerUser + "," + OmbiRoles.SelectSonarrQualityProfile)]
+        public async Task<IEnumerable<SonarrProfile>> GetSelectableProfiles()
+        {
+            var profiles = await GetProfiles() ?? new List<SonarrProfile>();
+            var user = await _currentUser.GetUser();
+            if (await _userManager.IsInRoleAsync(user, OmbiRoles.Admin) || await _userManager.IsInRoleAsync(user, OmbiRoles.PowerUser))
+            {
+                return profiles;
+            }
+
+            var allowed = await _selectableProfiles.GetAll()
+                .Where(x => x.UserId == user.Id && x.Application == SelectableQualityProfileApplication.Sonarr)
+                .Select(x => x.QualityProfileId)
+                .ToListAsync();
+            return profiles.Where(x => allowed.Contains(x.id));
         }
 
         /// <summary>

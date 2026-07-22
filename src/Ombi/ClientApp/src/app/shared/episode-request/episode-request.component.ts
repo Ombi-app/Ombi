@@ -14,6 +14,7 @@ import { ISeasonsViewModel, IEpisodesRequests, INewSeasonRequests, ITvRequestVie
 import { RequestServiceV2 } from "../../services/requestV2.service";
 import { AdminRequestDialogComponent } from "../admin-request-dialog/admin-request-dialog.component";
 import { OmbiDatePipe } from "../../pipes/OmbiDatePipe";
+import { AuthService } from "../../auth/auth.service";
 
 export interface EpisodeRequestData {
     series: ISearchTvResultV2;
@@ -38,13 +39,17 @@ export interface EpisodeRequestData {
 })
 export class EpisodeRequestComponent {
 
+    public canSelectQualityProfile: boolean;
+
     public get requestable() {
         return this.data?.series?.seasonRequests?.length > 0
     }
 
     constructor(public dialogRef: MatDialogRef<EpisodeRequestComponent>, @Inject(MAT_DIALOG_DATA) public data: EpisodeRequestData,
         private requestService: RequestServiceV2, private notificationService: MessageService, private dialog: MatDialog, 
-        private translate: TranslateService) { }
+        private translate: TranslateService, private auth: AuthService) {
+        this.canSelectQualityProfile = this.auth.hasRole("SelectSonarrQualityProfile");
+    }
 
 
     public async submitRequests() {
@@ -80,8 +85,8 @@ export class EpisodeRequestComponent {
             viewModel.seasons.push(seasonsViewModel);
         });
 
-        if (this.data.isAdmin) {
-            const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.tvShow, id: this.data.series.id, is4k: null }, panelClass: 'modal-panel' });
+        if (this.data.isAdmin || this.canSelectQualityProfile) {
+            const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.tvShow, id: this.data.series.id, is4k: null, qualityOnly: !this.data.isAdmin }, panelClass: 'modal-panel' });
             dialog.afterClosed().subscribe(async (result) => {
                 if (result) {
                     viewModel.requestOnBehalf = result.username?.id;
