@@ -189,9 +189,10 @@ namespace Ombi.Core.Senders
             }
 
             // Overrides on the request take priority
-            if (model.QualityOverride > 0)
+            var qualityOverride = is4k ? model.QualityOverride4K : model.QualityOverride;
+            if (qualityOverride > 0)
             {
-                qualityToUse = model.QualityOverride;
+                qualityToUse = qualityOverride;
             }
             if (model.RootPathOverride > 0)
             {

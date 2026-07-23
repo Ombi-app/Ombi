@@ -1088,11 +1088,7 @@ namespace Ombi.Controllers.V1
 
         private async Task ReplaceSelectableProfiles(string userId, UserViewModel model)
         {
-            var existing = _selectableProfiles.GetAll().Where(x => x.UserId == userId);
-            if (await existing.AnyAsync())
-            {
-                await _selectableProfiles.DeleteRange(existing);
-            }
+            var existing = await _selectableProfiles.GetAll().Where(x => x.UserId == userId).ToListAsync();
 
             var profiles = (model.AllowedRadarrProfileIds ?? new List<int>())
                 .Select(id => new UserSelectableQualityProfile { UserId = userId, Application = SelectableQualityProfileApplication.Radarr, QualityProfileId = id })
@@ -1102,9 +1098,17 @@ namespace Ombi.Controllers.V1
                     .Select(id => new UserSelectableQualityProfile { UserId = userId, Application = SelectableQualityProfileApplication.Sonarr, QualityProfileId = id }))
                 .DistinctBy(x => new { x.Application, x.QualityProfileId, x.Is4K })
                 .ToList();
+            if (existing.Count > 0)
+            {
+                await _selectableProfiles.DeleteRange(existing, false);
+            }
             if (profiles.Count > 0)
             {
                 await _selectableProfiles.AddRange(profiles);
+            }
+            else if (existing.Count > 0)
+            {
+                await _selectableProfiles.SaveChangesAsync();
             }
         }
 

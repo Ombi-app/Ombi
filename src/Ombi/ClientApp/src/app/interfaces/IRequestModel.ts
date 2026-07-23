@@ -12,6 +12,7 @@ export interface IMovieRequests extends IFullBaseRequest {
   theMovieDbId: number;
   rootPathOverride: number;
   qualityOverride: number;
+  qualityOverride4K: number;
   digitalReleaseDate: Date;
   subscribed: boolean;
   showSubscribe: boolean;
@@ -41,6 +42,7 @@ export enum RequestCombination {
 export interface IMovieAdvancedOptions {
   requestId: number;
   qualityOverride: number;
+  is4K?: boolean;
   rootPathOverride: number;
   languageProfile: number;
 }

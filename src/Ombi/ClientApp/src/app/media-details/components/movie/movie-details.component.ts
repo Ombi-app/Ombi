@@ -17,7 +17,7 @@ import { ICrewViewModel, ISearchMovieResultV2 } from '../../../interfaces/ISearc
 import { MatDialog } from '@angular/material/dialog';
 import { YoutubeTrailerComponent } from '../shared/youtube-trailer.component';
 import { AuthService } from '../../../auth/auth.service';
-import { IMovieRequests, RequestType, IAdvancedData } from '../../../interfaces';
+import { IMovieRequests, RequestType, IAdvancedData, RequestCombination } from '../../../interfaces';
 import { DenyDialogComponent } from '../shared/deny-dialog/deny-dialog.component';
 import { NewIssueComponent } from '../shared/new-issue/new-issue.component';
 import { TranslateService } from '@ngx-translate/core';
@@ -317,11 +317,13 @@ export class MovieDetailsComponent implements OnInit {
 
 	public setAdvancedOptions(data: IAdvancedData) {
 		this.advancedOptions = data;
-		if (data.rootFolderId) {
-			this.movieRequest.qualityOverrideTitle = data.profiles.filter((x) => x.id == data.profileId)[0].name;
+		const profile = data.profiles?.find((x) => x.id == data.profileId);
+		if (profile) {
+			this.movieRequest.qualityOverrideTitle = profile.name;
 		}
-		if (data.profileId) {
-			this.movieRequest.rootPathOverrideTitle = data.rootFolders.filter((x) => x.id == data.rootFolderId)[0].path;
+		const rootFolder = data.rootFolders?.find((x) => x.id == data.rootFolderId);
+		if (rootFolder) {
+			this.movieRequest.rootPathOverrideTitle = rootFolder.path;
 		}
 	}
 
@@ -333,16 +335,20 @@ export class MovieDetailsComponent implements OnInit {
 		});
 		await dialog.afterClosed().subscribe(async (result) => {
 			if (result) {
-				result.rootFolder = result.rootFolders.filter((f) => f.id === +result.rootFolderId)[0];
-				result.profile = result.profiles.filter((f) => f.id === +result.profileId)[0];
-				await this.requestService2
-					.updateMovieAdvancedOptions({
-						qualityOverride: result.profileId,
+				const options = (qualityOverride: number, is4K: boolean) =>
+					this.requestService2.updateMovieAdvancedOptions({
+						qualityOverride,
+						is4K,
 						rootPathOverride: result.rootFolderId,
 						languageProfile: 0,
 						requestId: this.movieRequest.id,
-					})
-					.toPromise();
+					}).toPromise();
+				if (result.movieRequest.requestCombination === RequestCombination.Both) {
+					await options(result.profileId, false);
+					await options(result.profileId4K, true);
+				} else {
+					await options(result.profileId, result.movieRequest.requestCombination === RequestCombination.FourK);
+				}
 				this.setAdvancedOptions(result);
 			}
 		});

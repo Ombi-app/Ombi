@@ -5,6 +5,7 @@
         public int RequestId { get; set; }
         public int RootPathOverride { get; set; }
         public int QualityOverride { get; set; }
+        public bool Is4K { get; set; }
         public int LanguageProfile { get; set; }
     }
 }

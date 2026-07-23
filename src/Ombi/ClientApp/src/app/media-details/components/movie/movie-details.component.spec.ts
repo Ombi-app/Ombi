@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { MovieDetailsComponent } from './movie-details.component';
 import { of } from 'rxjs';
-import { RequestType } from '../../../interfaces';
+import { RequestCombination, RequestType } from '../../../interfaces';
 
 function createComponent() {
   const mockSearchService = {
@@ -406,7 +406,7 @@ describe('MovieDetailsComponent', () => {
       expect(comp.movieRequest.rootPathOverrideTitle).toBe('/movies');
     });
 
-    it('should skip qualityOverrideTitle when rootFolderId is falsy (condition is inverted in source)', () => {
+    it('should set qualityOverrideTitle independently of the root folder', () => {
       const { comp } = createComponent();
       comp.movieRequest = {} as any;
 
@@ -419,15 +419,11 @@ describe('MovieDetailsComponent', () => {
 
       comp.setAdvancedOptions(data);
 
-      // BUG: qualityOverrideTitle is gated by rootFolderId instead of profileId
-      // When rootFolderId is falsy, the `if (data.rootFolderId)` block is skipped
-      expect(comp.movieRequest.qualityOverrideTitle).toBeUndefined();
-      // But rootPathOverrideTitle IS set because profileId is truthy (inverted gate)
-      // and it filters rootFolders by rootFolderId=0
+      expect(comp.movieRequest.qualityOverrideTitle).toBe('1080p');
       expect(comp.movieRequest.rootPathOverrideTitle).toBe('/default');
     });
 
-    it('should skip rootPathOverrideTitle when profileId is falsy (condition is inverted in source)', () => {
+    it('should set rootPathOverrideTitle independently of the profile', () => {
       const { comp } = createComponent();
       comp.movieRequest = {} as any;
 
@@ -440,12 +436,30 @@ describe('MovieDetailsComponent', () => {
 
       comp.setAdvancedOptions(data);
 
-      // BUG: rootPathOverrideTitle is gated by profileId instead of rootFolderId
-      // When profileId is falsy, the `if (data.profileId)` block is skipped
-      expect(comp.movieRequest.rootPathOverrideTitle).toBeUndefined();
-      // But qualityOverrideTitle IS set because rootFolderId is truthy (inverted gate)
-      // and it filters profiles by profileId=0
+      expect(comp.movieRequest.rootPathOverrideTitle).toBe('/movies');
       expect(comp.movieRequest.qualityOverrideTitle).toBe('Any');
+    });
+  });
+
+  describe('openAdvancedOptions', () => {
+    it('submits normal and 4K quality overrides independently for a dual request', async () => {
+      const { comp, mockDialog, mockRequestService2 } = createComponent();
+      comp.movieRequest = { id: 42, requestCombination: RequestCombination.Both } as any;
+      mockDialog.open.mockReturnValue({ afterClosed: () => of({
+        movieRequest: comp.movieRequest,
+        profileId: 2,
+        profileId4K: 4,
+        profiles: [{ id: 2, name: '1080p' }],
+        profiles4K: [{ id: 4, name: '2160p' }],
+        rootFolderId: 7,
+        rootFolders: [{ id: 7, path: '/movies' }],
+      }) });
+
+      await comp.openAdvancedOptions();
+
+      await vi.waitFor(() => expect(mockRequestService2.updateMovieAdvancedOptions).toHaveBeenCalledTimes(2));
+      expect(mockRequestService2.updateMovieAdvancedOptions).toHaveBeenNthCalledWith(1, expect.objectContaining({ qualityOverride: 2, is4K: false, rootPathOverride: 7 }));
+      expect(mockRequestService2.updateMovieAdvancedOptions).toHaveBeenNthCalledWith(2, expect.objectContaining({ qualityOverride: 4, is4K: true, rootPathOverride: 7 }));
     });
   });
 });

@@ -25,6 +25,8 @@ export interface IAdvancedData {
     profile: IRadarrProfile;
     profiles: IRadarrProfile[];
     profileId: number;
+    profiles4K?: IRadarrProfile[];
+    profileId4K?: number;
     rootFolder: IRadarrRootFolder;
     rootFolders: IRadarrRootFolder[];
     rootFolderId: number;

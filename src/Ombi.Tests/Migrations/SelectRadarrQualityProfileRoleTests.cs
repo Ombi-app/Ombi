@@ -65,9 +65,8 @@ namespace Ombi.Tests.Migrations
                 await context.SaveChangesAsync();
                 Assert.That(context.UserSelectableQualityProfiles.Count(), Is.Zero);
 
+                await context.Database.EnsureDeletedAsync();
                 await context.Database.GetService<IMigrator>().MigrateAsync(PreviousMigrationId);
-                await context.Database.ExecuteSqlRawAsync(
-                    "DELETE FROM AspNetRoles WHERE Name = {0}", OmbiRoles.SelectRadarrQualityProfile);
                 await context.Database.MigrateAsync();
 
                 Assert.Multiple(() =>

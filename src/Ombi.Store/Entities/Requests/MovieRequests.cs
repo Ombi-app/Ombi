@@ -32,6 +32,7 @@ namespace Ombi.Store.Entities.Requests
 
         public int RootPathOverride { get; set; }
         public int QualityOverride { get; set; }
+        public int QualityOverride4K { get; set; }
 
         public bool Has4KRequest  { get; set; }
 

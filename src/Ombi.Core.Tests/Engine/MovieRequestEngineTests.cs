@@ -100,7 +100,22 @@ namespace Ombi.Core.Tests.Engine
             var result = await _subject.RequestMovie(new MovieRequestViewModel { TheMovieDbId = 1, QualityPathOverride = 2 });
 
             Assert.That(result.Result, Is.True);
-            _repoMock.Verify(x => x.Add(It.Is<MovieRequests>(r => r.QualityOverride == 2 && r.RootPathOverride == 0)), Times.Once);
+            _repoMock.Verify(x => x.Add(It.Is<MovieRequests>(r =>
+                r.QualityOverride == 2 && r.QualityOverride4K == 0 && r.RootPathOverride == 0)), Times.Once);
+        }
+
+        [Test]
+        public async Task RequestMovie_New4KRequestKeepsStandardQualityOverrideIndependent()
+        {
+            SetupMovieRequestRoles(OmbiRoles.SelectRadarrQualityProfile);
+            SetupRadarrProfile(true, 4);
+            _mocker.GetMock<IFeatureService>().Setup(x => x.FeatureEnabled(FeatureNames.Movie4KRequests)).ReturnsAsync(true);
+
+            var result = await _subject.RequestMovie(new MovieRequestViewModel { TheMovieDbId = 1, Is4kRequest = true, QualityPathOverride = 4 });
+
+            Assert.That(result.Result, Is.True);
+            _repoMock.Verify(x => x.Add(It.Is<MovieRequests>(r =>
+                r.QualityOverride == 0 && r.QualityOverride4K == 4)), Times.Once);
         }
 
         [Test]
@@ -123,14 +138,14 @@ namespace Ombi.Core.Tests.Engine
             SetupMovieRequestRoles(OmbiRoles.SelectRadarrQualityProfile);
             SetupRadarrProfile(false, 2);
             _mocker.GetMock<IFeatureService>().Setup(x => x.FeatureEnabled(FeatureNames.Movie4KRequests)).ReturnsAsync(true);
-            var existing = new MovieRequests { TheMovieDbId = 1, Is4kRequest = true, Has4KRequest = true, QualityOverride = 4 };
+            var existing = new MovieRequests { TheMovieDbId = 1, Is4kRequest = true, Has4KRequest = true, QualityOverride = 4, QualityOverride4K = 6 };
             _repoMock.Setup(x => x.GetRequestAsync(1)).ReturnsAsync(existing);
 
             var result = await _subject.RequestMovie(new MovieRequestViewModel { TheMovieDbId = 1, QualityPathOverride = 2 });
 
             Assert.That(result.Result, Is.True);
             _repoMock.Verify(x => x.Update(It.Is<MovieRequests>(r =>
-                r == existing && r.QualityOverride == 2 && r.Is4kRequest && r.Has4KRequest)), Times.Once);
+                r == existing && r.QualityOverride == 2 && r.QualityOverride4K == 6 && r.Is4kRequest && r.Has4KRequest)), Times.Once);
         }
 
         [Test]
@@ -146,7 +161,7 @@ namespace Ombi.Core.Tests.Engine
 
             Assert.That(result.Result, Is.True);
             _repoMock.Verify(x => x.Update(It.Is<MovieRequests>(r =>
-                r == existing && r.QualityOverride == 4 && r.Is4kRequest && r.Has4KRequest)), Times.Once);
+                r == existing && r.QualityOverride == 2 && r.QualityOverride4K == 4 && r.Is4kRequest && r.Has4KRequest)), Times.Once);
         }
 
         [Test]

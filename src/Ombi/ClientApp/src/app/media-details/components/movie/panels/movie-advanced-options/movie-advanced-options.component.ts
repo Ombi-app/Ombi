@@ -26,6 +26,7 @@ import { TranslateModule } from "@ngx-translate/core";
 export class MovieAdvancedOptionsComponent implements OnInit {
 
     public radarrProfiles: IRadarrProfile[];
+    public radarrProfiles4K: IRadarrProfile[];
     public radarrRootFolders: IRadarrRootFolder[];
     public show4k: boolean = false;
     public showNormal: boolean = false;
@@ -39,39 +40,47 @@ export class MovieAdvancedOptionsComponent implements OnInit {
     public async ngOnInit() {
         this.show4k = this.data.movieRequest.requestCombination === RequestCombination.FourK || this.data.movieRequest.requestCombination === RequestCombination.Both;
         this.showNormal = this.data.movieRequest.requestCombination === RequestCombination.Normal || this.data.movieRequest.requestCombination === RequestCombination.Both;
-        if (this.show4k) {
-            this.radarrService.getQualityProfiles4kFromSettings().subscribe(c => {
+        if (this.showNormal) {
+            this.radarrService.getQualityProfilesFromSettings().subscribe(c => {
                 this.radarrProfiles = c;
                 this.data.profiles = c;
-                this.setQualityOverrides();
+                this.data.profileId ??= this.data.movieRequest.qualityOverride;
+                this.setQualityOverrideTitle(c, this.data.movieRequest.qualityOverride);
+            });
+        }
+        if (this.show4k) {
+            this.radarrService.getQualityProfiles4kFromSettings().subscribe(c => {
+                if (this.showNormal) {
+                    this.radarrProfiles4K = c;
+                    this.data.profiles4K = c;
+                    this.data.profileId4K ??= this.data.movieRequest.qualityOverride4K;
+                } else {
+                    this.radarrProfiles = c;
+                    this.data.profiles = c;
+                    this.data.profileId ??= this.data.movieRequest.qualityOverride4K;
+                    this.setQualityOverrideTitle(c, this.data.movieRequest.qualityOverride4K);
+                }
             });
             this.radarrService.getRootFolders4kFromSettings().subscribe(c => {
                 this.radarrRootFolders = c;
                 this.data.rootFolders = c;
+                this.data.rootFolderId ??= this.data.movieRequest.rootPathOverride;
                 this.setRootFolderOverrides();
             });
-        } else { // Currently show either 4k or normal, if it's a dual request there needs to be more work done to save the overrides for 4k separately
-            this.radarrService.getQualityProfilesFromSettings().subscribe(c => {
-                this.radarrProfiles = c;
-                this.data.profiles = c;
-                this.setQualityOverrides();
-            });
+        } else {
             this.radarrService.getRootFoldersFromSettings().subscribe(c => {
                 this.radarrRootFolders = c;
                 this.data.rootFolders = c;
+                this.data.rootFolderId ??= this.data.movieRequest.rootPathOverride;
                 this.setRootFolderOverrides();
             });
         }
     }
 
-    private setQualityOverrides(): void {
-        if (this.radarrProfiles) {
-            const profile = this.radarrProfiles.filter((p) => {
-                return p.id === this.data.movieRequest.qualityOverride;
-            });
-            if (profile.length > 0) {
-                this.data.movieRequest.qualityOverrideTitle = profile[0].name;
-            }
+    private setQualityOverrideTitle(profiles: IRadarrProfile[], qualityOverride: number): void {
+        const profile = profiles.find(p => p.id === qualityOverride);
+        if (profile) {
+            this.data.movieRequest.qualityOverrideTitle = profile.name;
         }
     }
 

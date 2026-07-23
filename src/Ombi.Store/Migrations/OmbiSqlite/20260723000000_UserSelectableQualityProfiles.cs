@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Ombi.Helpers;
+using Ombi.Store;
 using Ombi.Store.Context.Sqlite;
 
 #nullable disable
@@ -12,7 +14,7 @@ namespace Ombi.Store.Migrations.OmbiSqlite
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql("INSERT INTO AspNetRoles (Id, Name, NormalizedName, ConcurrencyStamp) SELECT '1d86b5f2-5c17-4d42-b69b-2575ca769ef8', 'SelectSonarrQualityProfile', 'SELECTSONARRQUALITYPROFILE', 'b557b666-6665-476e-8f4c-e320515af27a' WHERE NOT EXISTS (SELECT 1 FROM AspNetRoles WHERE NormalizedName = 'SELECTSONARRQUALITYPROFILE');");
+            migrationBuilder.InsertRole(OmbiRoles.SelectSonarrQualityProfile);
             migrationBuilder.CreateTable(
                 name: "UserSelectableQualityProfile",
                 columns: table => new

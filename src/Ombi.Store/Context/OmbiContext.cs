@@ -54,6 +54,9 @@ namespace Ombi.Store.Context
                 .HasIndex(x => x.UserId)
                 .IsUnique();
             builder.Entity<UserSelectableQualityProfile>()
+                .Property(x => x.UserId)
+                .HasMaxLength(128);
+            builder.Entity<UserSelectableQualityProfile>()
                 .HasIndex(x => new { x.UserId, x.Application, x.QualityProfileId, x.Is4K })
                 .IsUnique();
             builder.Entity<UserSelectableQualityProfile>()

@@ -6,8 +6,11 @@ import { of } from 'rxjs';
 function createComponent(requestCombination = RequestCombination.Normal) {
   const mockDialogRef = { close: vi.fn() };
   const data = {
-    movieRequest: { requestCombination, qualityOverride: 1, rootPathOverride: 2, qualityOverrideTitle: '', rootPathOverrideTitle: '' },
+    movieRequest: { requestCombination, qualityOverride: 1, qualityOverride4K: 3, rootPathOverride: 2, qualityOverrideTitle: '', rootPathOverrideTitle: '' },
     profiles: [],
+    profiles4K: [],
+    profileId: undefined as number | undefined,
+    profileId4K: undefined as number | undefined,
     rootFolders: [],
   };
   const mockRadarrService = {
@@ -51,10 +54,16 @@ describe('MovieAdvancedOptionsComponent', () => {
     expect(data.movieRequest.rootPathOverrideTitle).toBe('/movies');
   });
 
-  it('should show both for Both request combination', async () => {
-    const { comp } = createComponent(RequestCombination.Both);
+  it('should load independent normal and 4K profiles for Both request combination', async () => {
+    const { comp, data, mockRadarrService } = createComponent(RequestCombination.Both);
     await comp.ngOnInit();
     expect(comp.show4k).toBe(true);
     expect(comp.showNormal).toBe(true);
+    expect(mockRadarrService.getQualityProfilesFromSettings).toHaveBeenCalled();
+    expect(mockRadarrService.getQualityProfiles4kFromSettings).toHaveBeenCalled();
+    expect(data.profiles).toEqual([{ id: 1, name: 'HD-1080p' }]);
+    expect(data.profiles4K).toEqual([{ id: 3, name: 'UHD' }]);
+    expect(data.profileId).toBe(1);
+    expect(data.profileId4K).toBe(3);
   });
 });

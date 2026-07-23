@@ -773,6 +773,9 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                     b.Property<int>("QualityOverride")
                         .HasColumnType("integer");
 
+                    b.Property<int>("QualityOverride4K")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("timestamp with time zone");
 

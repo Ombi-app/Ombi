@@ -740,6 +740,9 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<int>("QualityOverride")
                         .HasColumnType("int");
 
+                    b.Property<int>("QualityOverride4K")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("datetime(6)");
 

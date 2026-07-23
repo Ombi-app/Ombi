@@ -182,7 +182,14 @@ namespace Ombi.Core.Engine
                 }
                 if (model.QualityPathOverride.HasValue)
                 {
-                    existingRequest.QualityOverride = model.QualityPathOverride.Value;
+                    if (model.Is4kRequest)
+                    {
+                        existingRequest.QualityOverride4K = model.QualityPathOverride.Value;
+                    }
+                    else
+                    {
+                        existingRequest.QualityOverride = model.QualityPathOverride.Value;
+                    }
                 }
                 isExisting = true;
                 requestModel = existingRequest;
@@ -209,7 +216,8 @@ namespace Ombi.Core.Engine
                     LangCode = model.LanguageCode,
                     RequestedByAlias = model.RequestedByAlias,
                     RootPathOverride = model.RootFolderOverride.GetValueOrDefault(),
-                    QualityOverride = model.QualityPathOverride.GetValueOrDefault(),
+                    QualityOverride = model.Is4kRequest ? 0 : model.QualityPathOverride.GetValueOrDefault(),
+                    QualityOverride4K = model.Is4kRequest ? model.QualityPathOverride.GetValueOrDefault() : 0,
                     RequestedDate4k = model.Is4kRequest ? DateTime.UtcNow : DateTime.MinValue,
                     Is4kRequest = model.Is4kRequest,
                     Source = model.Source
@@ -477,7 +485,14 @@ namespace Ombi.Core.Engine
                 };
             }
 
-            request.QualityOverride = options.QualityOverride;
+            if (options.Is4K)
+            {
+                request.QualityOverride4K = options.QualityOverride;
+            }
+            else
+            {
+                request.QualityOverride = options.QualityOverride;
+            }
             request.RootPathOverride = options.RootPathOverride;
 
             await MovieRepository.Update(request);
@@ -789,6 +804,7 @@ namespace Ombi.Core.Engine
             results.Overview = request.Overview;
             results.PosterPath = PosterPathHelper.FixPosterPath(request.PosterPath);
             results.QualityOverride = request.QualityOverride;
+            results.QualityOverride4K = request.QualityOverride4K;
             results.RootPathOverride = request.RootPathOverride;
 
             await MovieRepository.Update(results);

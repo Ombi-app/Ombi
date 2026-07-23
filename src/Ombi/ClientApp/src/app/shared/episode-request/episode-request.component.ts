@@ -65,8 +65,6 @@ export class EpisodeRequestComponent {
             return;
         }
 
-        this.data.series.requested = true;
-
         const viewModel = <ITvRequestViewModelV2>{
             firstSeason: this.data.series.firstSeason, latestSeason: this.data.series.latestSeason, requestAll: this.data.series.requestAll, theMovieDbId: this.data.series.id,
             requestOnBehalf: this.data.requestOnBehalf, languageCode: this.translate.currentLang
@@ -77,7 +75,6 @@ export class EpisodeRequestComponent {
             if (!this.data.series.latestSeason && !this.data.series.requestAll && !this.data.series.firstSeason) {
                 season.episodes.forEach(ep => {
                     if (ep.selected) {
-                        ep.requested = true;
                         seasonsViewModel.episodes.push({ episodeNumber: ep.episodeNumber });
                     }
                 });
@@ -146,8 +143,16 @@ export class EpisodeRequestComponent {
         await this.submitRequests();
     }
 
+    private markRequested() {
+        this.data.series.requested = true;
+        this.data.series.seasonRequests.forEach((season) => {
+            season.episodes.filter((episode) => episode.selected).forEach((episode) => episode.requested = true);
+        });
+    }
+
     private postRequest(requestResult: IRequestEngineResult) {
         if (requestResult.result) {
+            this.markRequested();
             this.notificationService.send(
                 this.translate.instant("Requests.RequestAddedSuccessfully", { title: this.data.series.title }));
 
