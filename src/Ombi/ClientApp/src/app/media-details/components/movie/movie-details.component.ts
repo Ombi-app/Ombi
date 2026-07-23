@@ -346,8 +346,12 @@ export class MovieDetailsComponent implements OnInit {
 				if (result.movieRequest.requestCombination === RequestCombination.Both) {
 					await options(result.profileId, false);
 					await options(result.profileId4K, true);
+					this.movieRequest.qualityOverride = result.profileId;
+					this.movieRequest.qualityOverride4K = result.profileId4K;
 				} else {
-					await options(result.profileId, result.movieRequest.requestCombination === RequestCombination.FourK);
+					const is4K = result.movieRequest.requestCombination === RequestCombination.FourK;
+					await options(result.profileId, is4K);
+					this.movieRequest[is4K ? 'qualityOverride4K' : 'qualityOverride'] = result.profileId;
 				}
 				this.setAdvancedOptions(result);
 			}

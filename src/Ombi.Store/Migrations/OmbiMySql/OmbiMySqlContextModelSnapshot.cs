@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Ombi.Store.Context.MySql;
 
@@ -16,8 +17,10 @@ namespace Ombi.Store.Migrations.OmbiMySql
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.9")
+                .HasAnnotation("ProductVersion", "8.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -51,6 +54,8 @@ namespace Ombi.Store.Migrations.OmbiMySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<string>("ClaimType")
                         .HasColumnType("longtext");
 
@@ -73,6 +78,8 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("longtext");
@@ -153,6 +160,8 @@ namespace Ombi.Store.Migrations.OmbiMySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<int>("AuditArea")
                         .HasColumnType("int");
 
@@ -179,6 +188,8 @@ namespace Ombi.Store.Migrations.OmbiMySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("datetime(6)");
 
@@ -200,6 +211,8 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Agent")
                         .HasColumnType("int");
@@ -226,6 +239,8 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("datetime(6)");
@@ -356,6 +371,8 @@ namespace Ombi.Store.Migrations.OmbiMySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<DateTime>("LastSyncedAt")
                         .HasColumnType("datetime(6)");
 
@@ -379,6 +396,8 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("datetime(6)");
@@ -412,6 +431,8 @@ namespace Ombi.Store.Migrations.OmbiMySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<DateTime?>("Completed")
                         .HasColumnType("datetime(6)");
 
@@ -435,11 +456,37 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.ToTable("RequestQueue");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("RequestId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RequestSubscription");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.Requests.AlbumRequest", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("Approved")
                         .HasColumnType("tinyint(1)");
@@ -514,6 +561,8 @@ namespace Ombi.Store.Migrations.OmbiMySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<bool>("Approved")
                         .HasColumnType("tinyint(1)");
 
@@ -577,6 +626,8 @@ namespace Ombi.Store.Migrations.OmbiMySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<string>("Value")
                         .HasColumnType("longtext");
 
@@ -590,6 +641,8 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Comment")
                         .HasColumnType("longtext");
@@ -617,6 +670,8 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime(6)");
@@ -670,6 +725,8 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("Approved")
                         .HasColumnType("tinyint(1)");
@@ -789,6 +846,8 @@ namespace Ombi.Store.Migrations.OmbiMySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<int>("EpisodeCount")
                         .HasColumnType("int");
 
@@ -816,6 +875,8 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Background")
                         .HasColumnType("longtext");
@@ -861,33 +922,13 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.ToTable("TvRequests");
                 });
 
-            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("RequestId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RequestType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("RequestSubscription");
-                });
-
             modelBuilder.Entity("Ombi.Store.Entities.Tokens", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Token")
                         .HasColumnType("longtext");
@@ -908,6 +949,8 @@ namespace Ombi.Store.Migrations.OmbiMySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<int>("Agent")
                         .HasColumnType("int");
 
@@ -927,24 +970,13 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.ToTable("UserNotificationPreferences");
                 });
 
-            modelBuilder.Entity("Ombi.Store.Entities.UserSelectableQualityProfile", b =>
-                {
-                    b.Property<int>("Id").ValueGeneratedOnAdd().HasColumnType("int");
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-                    b.Property<int>("Application").HasColumnType("int");
-                    b.Property<bool>("Is4K").HasColumnType("tinyint(1)");
-                    b.Property<int>("QualityProfileId").HasColumnType("int");
-                    b.Property<string>("UserId").IsRequired().HasMaxLength(128).HasColumnType("varchar(128)");
-                    b.HasKey("Id");
-                    b.HasIndex("UserId", "Application", "QualityProfileId", "Is4K").IsUnique();
-                    b.ToTable("UserSelectableQualityProfile");
-                });
-
             modelBuilder.Entity("Ombi.Store.Entities.UserQualityProfiles", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Radarr4KQualityProfile")
                         .HasColumnType("int");
@@ -980,11 +1012,42 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.ToTable("UserQualityProfiles");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.UserSelectableQualityProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Application")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Is4K")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("QualityProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "Application", "QualityProfileId", "Is4K")
+                        .IsUnique();
+
+                    b.ToTable("UserSelectableQualityProfile");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.Votes", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
@@ -1016,6 +1079,8 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AirDate")
                         .HasColumnType("datetime(6)");
@@ -1053,6 +1118,8 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ChildRequestId")
                         .HasColumnType("int");
@@ -1134,6 +1201,15 @@ namespace Ombi.Store.Migrations.OmbiMySql
                 {
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
                         .WithMany("NotificationUserIds")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
+                {
+                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
+                        .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
@@ -1223,15 +1299,6 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
-                {
-                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Ombi.Store.Entities.Tokens", b =>
                 {
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
@@ -1250,17 +1317,21 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Ombi.Store.Entities.UserSelectableQualityProfile", b =>
-                {
-                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User").WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade).IsRequired();
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Ombi.Store.Entities.UserQualityProfiles", b =>
                 {
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.UserSelectableQualityProfile", b =>
+                {
+                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("User");
                 });

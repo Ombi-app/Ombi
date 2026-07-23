@@ -94,7 +94,7 @@ namespace Ombi.Core.Tests.Engine
         [Test]
         public async Task RequestMovie_AllowsDedicatedRoleWithValidProfile()
         {
-            SetupMovieRequestRoles(OmbiRoles.SelectRadarrQualityProfile);
+            SetupMovieRequestRoles(OmbiRoles.RequestMovie, OmbiRoles.SelectRadarrQualityProfile);
             SetupRadarrProfile(false, 2);
 
             var result = await _subject.RequestMovie(new MovieRequestViewModel { TheMovieDbId = 1, QualityPathOverride = 2 });
@@ -105,9 +105,22 @@ namespace Ombi.Core.Tests.Engine
         }
 
         [Test]
-        public async Task RequestMovie_New4KRequestKeepsStandardQualityOverrideIndependent()
+        public async Task RequestMovie_RejectsSelectorRoleWithoutRequestRole()
         {
             SetupMovieRequestRoles(OmbiRoles.SelectRadarrQualityProfile);
+            _mocker.GetMock<IRuleEvaluator>().Setup(x => x.StartRequestRules(It.IsAny<MovieRequests>()))
+                .ReturnsAsync(new List<RuleResult> { new RuleResult { Success = false, ErrorCode = ErrorCode.NoPermissions } });
+
+            var result = await _subject.RequestMovie(new MovieRequestViewModel { TheMovieDbId = 1 });
+
+            Assert.That(result.ErrorCode, Is.EqualTo(ErrorCode.NoPermissions));
+            _repoMock.Verify(x => x.Add(It.IsAny<MovieRequests>()), Times.Never);
+        }
+
+        [Test]
+        public async Task RequestMovie_New4KRequestKeepsStandardQualityOverrideIndependent()
+        {
+            SetupMovieRequestRoles(OmbiRoles.RequestMovie, OmbiRoles.SelectRadarrQualityProfile);
             SetupRadarrProfile(true, 4);
             _mocker.GetMock<IFeatureService>().Setup(x => x.FeatureEnabled(FeatureNames.Movie4KRequests)).ReturnsAsync(true);
 
@@ -135,7 +148,7 @@ namespace Ombi.Core.Tests.Engine
         [Test]
         public async Task RequestMovie_UpdatesQualityOverrideOnExistingStandardRequest()
         {
-            SetupMovieRequestRoles(OmbiRoles.SelectRadarrQualityProfile);
+            SetupMovieRequestRoles(OmbiRoles.RequestMovie, OmbiRoles.SelectRadarrQualityProfile);
             SetupRadarrProfile(false, 2);
             _mocker.GetMock<IFeatureService>().Setup(x => x.FeatureEnabled(FeatureNames.Movie4KRequests)).ReturnsAsync(true);
             var existing = new MovieRequests { TheMovieDbId = 1, Is4kRequest = true, Has4KRequest = true, QualityOverride = 4, QualityOverride4K = 6 };
@@ -151,7 +164,7 @@ namespace Ombi.Core.Tests.Engine
         [Test]
         public async Task RequestMovie_UpdatesQualityOverrideOnExisting4KRequest()
         {
-            SetupMovieRequestRoles(OmbiRoles.SelectRadarrQualityProfile);
+            SetupMovieRequestRoles(OmbiRoles.RequestMovie, OmbiRoles.SelectRadarrQualityProfile);
             SetupRadarrProfile(true, 4);
             _mocker.GetMock<IFeatureService>().Setup(x => x.FeatureEnabled(FeatureNames.Movie4KRequests)).ReturnsAsync(true);
             var existing = new MovieRequests { TheMovieDbId = 1, QualityOverride = 2 };

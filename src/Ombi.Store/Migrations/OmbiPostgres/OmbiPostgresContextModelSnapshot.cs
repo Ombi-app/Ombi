@@ -17,7 +17,7 @@ namespace Ombi.Store.Migrations.OmbiPostgres
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.22")
+                .HasAnnotation("ProductVersion", "8.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -169,7 +169,7 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("DateTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -191,7 +191,7 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Token")
                         .HasColumnType("text");
@@ -243,7 +243,7 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("PlayerId")
                         .HasColumnType("text");
@@ -290,7 +290,7 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("LastLoggedIn")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
@@ -374,7 +374,7 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("LastSyncedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("SyncStatus")
                         .HasColumnType("integer");
@@ -400,7 +400,7 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("AlbumId")
                         .HasColumnType("text");
@@ -434,10 +434,10 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("Completed")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("Dts")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Error")
                         .HasColumnType("text");
@@ -454,6 +454,30 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                     b.HasKey("Id");
 
                     b.ToTable("RequestQueue");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("RequestId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("RequestType")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RequestSubscription");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.AlbumRequest", b =>
@@ -492,19 +516,19 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                         .HasColumnType("text");
 
                     b.Property<DateTime>("MarkedAsApproved")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("MarkedAsAvailable")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("MarkedAsDenied")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<decimal>("Rating")
                         .HasColumnType("numeric");
 
                     b.Property<DateTime>("ReleaseDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("RequestType")
                         .HasColumnType("integer");
@@ -513,7 +537,7 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                         .HasColumnType("text");
 
                     b.Property<DateTime>("RequestedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("RequestedUserId")
                         .HasColumnType("text");
@@ -555,13 +579,13 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("MarkedAsApproved")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("MarkedAsAvailable")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("MarkedAsDenied")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("ParentRequestId")
                         .HasColumnType("integer");
@@ -573,7 +597,7 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                         .HasColumnType("text");
 
                     b.Property<DateTime>("RequestedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("RequestedUserId")
                         .HasColumnType("text");
@@ -624,7 +648,7 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                         .HasColumnType("text");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int?>("IssuesId")
                         .HasColumnType("integer");
@@ -650,7 +674,7 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -671,7 +695,7 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("ResovledDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
@@ -732,7 +756,7 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("DigitalReleaseDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<bool>("Has4KRequest")
                         .HasColumnType("boolean");
@@ -747,22 +771,22 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                         .HasColumnType("text");
 
                     b.Property<DateTime>("MarkedAsApproved")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("MarkedAsApproved4K")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("MarkedAsAvailable")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("MarkedAsAvailable4K")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("MarkedAsDenied")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("MarkedAsDenied4K")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Overview")
                         .HasColumnType("text");
@@ -777,7 +801,7 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("ReleaseDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("RequestType")
                         .HasColumnType("integer");
@@ -786,10 +810,10 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                         .HasColumnType("text");
 
                     b.Property<DateTime>("RequestedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("RequestedDate4k")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("RequestedUserId")
                         .HasColumnType("text");
@@ -828,7 +852,7 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("RequestDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("RequestId")
                         .HasColumnType("integer");
@@ -876,7 +900,7 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("ReleaseDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int?>("RootFolder")
                         .HasColumnType("integer");
@@ -896,30 +920,6 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                     b.HasKey("Id");
 
                     b.ToTable("TvRequests");
-                });
-
-            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("RequestId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("RequestType")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("RequestSubscription");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Tokens", b =>
@@ -970,19 +970,6 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                     b.ToTable("UserNotificationPreferences");
                 });
 
-            modelBuilder.Entity("Ombi.Store.Entities.UserSelectableQualityProfile", b =>
-                {
-                    b.Property<int>("Id").ValueGeneratedOnAdd().HasColumnType("integer");
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-                    b.Property<int>("Application").HasColumnType("integer");
-                    b.Property<bool>("Is4K").HasColumnType("boolean");
-                    b.Property<int>("QualityProfileId").HasColumnType("integer");
-                    b.Property<string>("UserId").IsRequired().HasMaxLength(128).HasColumnType("character varying(128)");
-                    b.HasKey("Id");
-                    b.HasIndex("UserId", "Application", "QualityProfileId", "Is4K").IsUnique();
-                    b.ToTable("UserSelectableQualityProfile");
-                });
-
             modelBuilder.Entity("Ombi.Store.Entities.UserQualityProfiles", b =>
                 {
                     b.Property<int>("Id")
@@ -1025,6 +1012,35 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                     b.ToTable("UserQualityProfiles");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.UserSelectableQualityProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Application")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("Is4K")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("QualityProfileId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "Application", "QualityProfileId", "Is4K")
+                        .IsUnique();
+
+                    b.ToTable("UserSelectableQualityProfile");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.Votes", b =>
                 {
                     b.Property<int>("Id")
@@ -1034,7 +1050,7 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<bool>("Deleted")
                         .HasColumnType("boolean");
@@ -1067,7 +1083,7 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AirDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<bool>("Approved")
                         .HasColumnType("boolean");
@@ -1190,6 +1206,15 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
+                {
+                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.Requests.AlbumRequest", b =>
                 {
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "RequestedUser")
@@ -1274,15 +1299,6 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
-                {
-                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Ombi.Store.Entities.Tokens", b =>
                 {
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
@@ -1301,17 +1317,21 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Ombi.Store.Entities.UserSelectableQualityProfile", b =>
-                {
-                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User").WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade).IsRequired();
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Ombi.Store.Entities.UserQualityProfiles", b =>
                 {
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.UserSelectableQualityProfile", b =>
+                {
+                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("User");
                 });

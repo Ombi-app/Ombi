@@ -460,6 +460,33 @@ describe('MovieDetailsComponent', () => {
       await vi.waitFor(() => expect(mockRequestService2.updateMovieAdvancedOptions).toHaveBeenCalledTimes(2));
       expect(mockRequestService2.updateMovieAdvancedOptions).toHaveBeenNthCalledWith(1, expect.objectContaining({ qualityOverride: 2, is4K: false, rootPathOverride: 7 }));
       expect(mockRequestService2.updateMovieAdvancedOptions).toHaveBeenNthCalledWith(2, expect.objectContaining({ qualityOverride: 4, is4K: true, rootPathOverride: 7 }));
+      expect(comp.movieRequest.qualityOverride).toBe(2);
+      expect(comp.movieRequest.qualityOverride4K).toBe(4);
+
+      await comp.openAdvancedOptions();
+      expect(mockDialog.open).toHaveBeenLastCalledWith(expect.anything(), expect.objectContaining({
+        data: expect.objectContaining({ movieRequest: expect.objectContaining({ qualityOverride: 2, qualityOverride4K: 4 }) }),
+      }));
+    });
+
+    it.each<[RequestCombination, 'qualityOverride' | 'qualityOverride4K']>([
+      [RequestCombination.Normal, 'qualityOverride'],
+      [RequestCombination.FourK, 'qualityOverride4K'],
+    ])('synchronizes the selected profile for a single request variant', async (requestCombination, property) => {
+      const { comp, mockDialog, mockRequestService2 } = createComponent();
+      comp.movieRequest = { id: 42, requestCombination, qualityOverride: 1, qualityOverride4K: 3 } as any;
+      mockDialog.open.mockReturnValue({ afterClosed: () => of({
+        movieRequest: comp.movieRequest,
+        profileId: 5,
+        rootFolderId: 7,
+        profiles: [],
+        rootFolders: [],
+      }) });
+
+      await comp.openAdvancedOptions();
+
+      await vi.waitFor(() => expect(mockRequestService2.updateMovieAdvancedOptions).toHaveBeenCalledTimes(1));
+      expect((comp.movieRequest as any)[property]).toBe(5);
     });
   });
 });
