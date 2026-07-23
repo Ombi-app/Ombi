@@ -3,7 +3,7 @@ import { MovieAdvancedOptionsComponent } from './movie-advanced-options.componen
 import { RequestCombination } from '../../../../../interfaces';
 import { of } from 'rxjs';
 
-function createComponent(requestCombination = RequestCombination.Normal) {
+function createComponent(requestCombination = RequestCombination.Normal, canSelectQualityProfile = true) {
   const mockDialogRef = { close: vi.fn() };
   const data = {
     movieRequest: { requestCombination, qualityOverride: 1, qualityOverride4K: 3, rootPathOverride: 2, qualityOverrideTitle: '', rootPathOverrideTitle: '' },
@@ -19,9 +19,12 @@ function createComponent(requestCombination = RequestCombination.Normal) {
     getQualityProfiles4kFromSettings: vi.fn().mockReturnValue(of([{ id: 3, name: 'UHD' }])),
     getRootFolders4kFromSettings: vi.fn().mockReturnValue(of([{ id: 4, path: '/movies4k' }])),
   };
+  const mockAuthService = {
+    hasRole: vi.fn().mockImplementation((role: string) => canSelectQualityProfile && role === 'SelectRadarrQualityProfile'),
+  };
 
-  const comp = new MovieAdvancedOptionsComponent(mockDialogRef as any, data as any, mockRadarrService as any);
-  return { comp, data, mockRadarrService };
+  const comp = new MovieAdvancedOptionsComponent(mockDialogRef as any, data as any, mockRadarrService as any, mockAuthService as any);
+  return { comp, data, mockRadarrService, mockAuthService };
 }
 
 describe('MovieAdvancedOptionsComponent', () => {
@@ -65,5 +68,16 @@ describe('MovieAdvancedOptionsComponent', () => {
     expect(data.profiles4K).toEqual([{ id: 3, name: 'UHD' }]);
     expect(data.profileId).toBe(1);
     expect(data.profileId4K).toBe(3);
+  });
+
+  it('should not expose or load quality profile controls without the selector role', async () => {
+    const { comp, mockRadarrService } = createComponent(RequestCombination.Both, false);
+
+    await comp.ngOnInit();
+
+    expect(comp.canSelectRadarrQualityProfile).toBe(false);
+    expect(mockRadarrService.getQualityProfilesFromSettings).not.toHaveBeenCalled();
+    expect(mockRadarrService.getQualityProfiles4kFromSettings).not.toHaveBeenCalled();
+    expect(mockRadarrService.getRootFolders4kFromSettings).toHaveBeenCalled();
   });
 });
