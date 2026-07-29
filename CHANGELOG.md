@@ -1,3 +1,12 @@
+## [4.60.12](https://github.com/Ombi-app/Ombi/compare/v4.60.11...v4.60.12) (2026-07-29)
+
+
+### Bug Fixes
+
+* auto-import and link Plex Admin during Plex OAuth login ([#5446](https://github.com/Ombi-app/Ombi/issues/5446)) ([8e1d264](https://github.com/Ombi-app/Ombi/commit/8e1d2647d013e03df6cfea52e704ae535a7fb1b5))
+
+
+
 ## [4.60.11](https://github.com/Ombi-app/Ombi/compare/v4.60.10...v4.60.11) (2026-07-29)
 
 
@@ -561,10 +570,6 @@
 
 * src/Ombi/ClientApp/package.json & src/Ombi/ClientApp/yarn.lock to reduce vulnerabilities ([e55de4e](https://github.com/Ombi-app/Ombi/commit/e55de4e4e5496bd61d3f80d9f2719b8df04b1d4b))
 * src/Ombi/ClientApp/package.json & src/Ombi/ClientApp/yarn.lock to reduce vulnerabilities ([80c96a7](https://github.com/Ombi-app/Ombi/commit/80c96a77c9667fc56b8f8c2d79ce0cc0f75e53f6))
-
-
-
-## [4.54.3](https://github.com/Ombi-app/Ombi/compare/v4.54.2...v4.54.3) (2026-02-10)
 
 
 
