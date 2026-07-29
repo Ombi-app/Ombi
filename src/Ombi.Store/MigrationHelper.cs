@@ -44,7 +44,25 @@ WHERE NOT EXISTS(SELECT 1 FROM public.""AspNetRoles"" WHERE ""Name"" = '{role}')
             AddUserSelectableQualityProfiles(mb, DatabaseProvider.Postgres);
 
         public static void RemoveUserSelectableQualityProfiles(this MigrationBuilder mb)
+            => RemoveUserSelectableQualityProfiles(mb, DatabaseProvider.Sqlite);
+
+        public static void RemoveUserSelectableQualityProfilesMySql(this MigrationBuilder mb)
+            => RemoveUserSelectableQualityProfiles(mb, DatabaseProvider.MySql);
+
+        public static void RemoveUserSelectableQualityProfilesPostgres(this MigrationBuilder mb)
+            => RemoveUserSelectableQualityProfiles(mb, DatabaseProvider.Postgres);
+
+        private static void RemoveUserSelectableQualityProfiles(MigrationBuilder mb, DatabaseProvider provider)
         {
+            var rolesTable = provider switch
+            {
+                DatabaseProvider.Sqlite => "AspnetRoles WHERE Name",
+                DatabaseProvider.MySql => "AspNetRoles WHERE Name",
+                DatabaseProvider.Postgres => "public.\"AspNetRoles\" WHERE \"Name\"",
+                _ => throw new ArgumentOutOfRangeException(nameof(provider))
+            };
+
+            mb.Sql($"DELETE FROM {rolesTable} IN ('{OmbiRoles.SelectRadarrQualityProfile}', '{OmbiRoles.SelectSonarrQualityProfile}');");
             mb.DropTable("UserSelectableQualityProfile");
             mb.DropColumn("QualityOverride4K", "MovieRequests");
         }
@@ -80,7 +98,7 @@ WHERE NOT EXISTS(SELECT 1 FROM public.""AspNetRoles"" WHERE ""Name"" = '{role}')
                 tableBuilder.Annotation("MySql:CharSet", "utf8mb4");
             }
 
-            mb.CreateIndex("IX_UserSelectableQualityProfile_UserId_Application_QualityProfileId_Is4K", "UserSelectableQualityProfile", new[] { "UserId", "Application", "QualityProfileId", "Is4K" }, unique: true);
+            mb.CreateIndex("IX_UserSelectableQualityProfile_User_Application_Profile_Is4K", "UserSelectableQualityProfile", new[] { "UserId", "Application", "QualityProfileId", "Is4K" }, unique: true);
             mb.AddColumn<int>("QualityOverride4K", "MovieRequests", type: integerType, nullable: false, defaultValue: 0);
         }
 

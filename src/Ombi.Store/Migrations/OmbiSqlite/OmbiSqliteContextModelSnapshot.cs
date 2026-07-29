@@ -933,7 +933,7 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.Property<int>("QualityProfileId").HasColumnType("INTEGER");
                     b.Property<string>("UserId").IsRequired().HasMaxLength(128).HasColumnType("TEXT");
                     b.HasKey("Id");
-                    b.HasIndex("UserId", "Application", "QualityProfileId", "Is4K").IsUnique();
+                    b.HasIndex("UserId", "Application", "QualityProfileId", "Is4K").IsUnique().HasDatabaseName("IX_UserSelectableQualityProfile_User_Application_Profile_Is4K");
                     b.ToTable("UserSelectableQualityProfile");
                 });
 

@@ -18,7 +18,7 @@ namespace Ombi.Store.Migrations.OmbiPostgres
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RemoveUserSelectableQualityProfiles();
+            migrationBuilder.RemoveUserSelectableQualityProfilesPostgres();
         }
     }
 }

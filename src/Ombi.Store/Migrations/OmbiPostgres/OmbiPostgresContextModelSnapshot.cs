@@ -979,7 +979,7 @@ namespace Ombi.Store.Migrations.OmbiPostgres
                     b.Property<int>("QualityProfileId").HasColumnType("integer");
                     b.Property<string>("UserId").IsRequired().HasMaxLength(128).HasColumnType("character varying(128)");
                     b.HasKey("Id");
-                    b.HasIndex("UserId", "Application", "QualityProfileId", "Is4K").IsUnique();
+                    b.HasIndex("UserId", "Application", "QualityProfileId", "Is4K").IsUnique().HasDatabaseName("IX_UserSelectableQualityProfile_User_Application_Profile_Is4K");
                     b.ToTable("UserSelectableQualityProfile");
                 });
 
