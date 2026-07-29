@@ -27,7 +27,7 @@
 
         <!-- Request button -->
         <div class="card-actions" *ngIf="!result.available && !result.approved && !result.requested">
-            <button [matMenuTriggerFor]="is4kEnabled && requestable && result.type === RequestType.movie ? menu : null"
+            <button [matMenuTriggerFor]="is4kEnabled && result.type === RequestType.movie ? menu : null"
                     id="requestButton{{result.id}}{{result.type}}{{discoverType}}"
                     *ngIf="requestable"
                     mat-raised-button
