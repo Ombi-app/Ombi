@@ -381,7 +381,7 @@ namespace Ombi.Core.Engine
                 return new RequestsViewModel<ChildRequests>();
             }
 
-            allRequests = FilterByRequestedUser(allRequests.AsQueryable(), requestedByUserId, shouldHide.IsAdmin).ToList();
+            allRequests = FilterByRequestedUser(allRequests.AsQueryable(), requestedByUserId, shouldHide.IsAdmin).AsEnumerable().ToList();
 
             allRequests = ApplySortTv(allRequests, sortProperty, sortOrder);
 
@@ -418,7 +418,7 @@ namespace Ombi.Core.Engine
 
             }
 
-            allRequests = FilterByRequestedUser(allRequests.AsQueryable(), requestedByUserId, shouldHide.IsAdmin).ToList();
+            allRequests = FilterByRequestedUser(allRequests.AsQueryable(), requestedByUserId, shouldHide.IsAdmin).AsEnumerable().ToList();
 
             switch (status)
             {
@@ -483,7 +483,7 @@ namespace Ombi.Core.Engine
                 return new RequestsViewModel<ChildRequests>();
             }
 
-            allRequests = FilterByRequestedUser(allRequests.AsQueryable(), requestedByUserId, shouldHide.IsAdmin).ToList();
+            allRequests = FilterByRequestedUser(allRequests.AsQueryable(), requestedByUserId, shouldHide.IsAdmin).AsEnumerable().ToList();
 
             allRequests = ApplySortTv(allRequests, sortProperty, sortOrder);
 
