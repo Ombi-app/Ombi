@@ -1,4 +1,4 @@
-﻿using Ombi.Api.External.ExternalApis.TheMovieDb;
+using Ombi.Api.External.ExternalApis.TheMovieDb;
 using Ombi.Core.Models.Requests;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
@@ -510,7 +510,7 @@ namespace Ombi.Core.Engine
             return new RequestEngineResult { Result = true, Message = $"{model.Title} has been successfully added!", RequestId = model.Id };
         }
 
-        public async Task<RequestsViewModel<AlbumRequest>> GetRequestsByStatus(int count, int position, string sortProperty, string sortOrder, RequestStatus status, string requestedByUserId = null)
+        public async Task<RequestsViewModel<AlbumRequest>> GetRequestsByStatus(int count, int position, string sort, string sortOrder, RequestStatus available, string requestedByUserId = null)
         {
              var shouldHide = await HideFromOtherUsers();
             IQueryable<AlbumRequest> allRequests;
@@ -529,7 +529,7 @@ namespace Ombi.Core.Engine
 
             allRequests = FilterByRequestedUser(allRequests, requestedByUserId, shouldHide.IsAdmin);
 
-            switch (status)
+            switch (available)
             {
                 case RequestStatus.PendingApproval:
                     allRequests = allRequests.Where(x => !x.Approved && !x.Available && (!x.Denied.HasValue || !x.Denied.Value));
@@ -548,7 +548,7 @@ namespace Ombi.Core.Engine
             }
 
             var total = await allRequests.CountAsync();
-            var requests = await ApplySortAlbums(allRequests, sortProperty, sortOrder)
+            var requests = await ApplySortAlbums(allRequests, sort, sortOrder)
                 .Skip(position).Take(count).ToListAsync();
 
             await CheckForSubscription(shouldHide, requests);
@@ -590,10 +590,10 @@ namespace Ombi.Core.Engine
             };
         }
 
-        private static IQueryable<AlbumRequest> ApplySortAlbums(IQueryable<AlbumRequest> query, string sortProperty, string sortOrder)
+        private static IQueryable<AlbumRequest> ApplySortAlbums(IQueryable<AlbumRequest> query, string sort, string sortOrder)
         {
             var asc = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase);
-            return sortProperty.ToLowerInvariant() switch
+            return sort.ToLowerInvariant() switch
             {
                 "id" => asc ? query.OrderBy(x => x.Id) : query.OrderByDescending(x => x.Id),
                 "title" => asc ? query.OrderBy(x => x.Title) : query.OrderByDescending(x => x.Title),
