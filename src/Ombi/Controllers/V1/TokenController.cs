@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
+using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Models;
 using Ombi.Models.External;
@@ -38,7 +39,7 @@ namespace Ombi.Controllers.V1
     {
         public TokenController(OmbiUserManager um, ITokenRepository token,
             IPlexOAuthManager oAuthManager, ILogger<TokenController> logger, ISettingsService<AuthenticationSettings> auth,
-            ISettingsService<UserManagementSettings> userManagement)
+            ISettingsService<UserManagementSettings> userManagement, ISettingsService<PlexSettings> plexSettings)
         {
             _userManager = um;
             _token = token;
@@ -46,6 +47,7 @@ namespace Ombi.Controllers.V1
             _log = logger;
             _authSettings = auth;
             _userManagementSettings = userManagement;
+            _plexSettings = plexSettings;
         }
 
         private readonly ITokenRepository _token;
@@ -54,6 +56,7 @@ namespace Ombi.Controllers.V1
         private readonly ILogger<TokenController> _log;
         private readonly ISettingsService<AuthenticationSettings> _authSettings;
         private readonly ISettingsService<UserManagementSettings> _userManagementSettings;
+        private readonly ISettingsService<PlexSettings> _plexSettings;
 
         /// <summary>
         /// Gets the token.
@@ -201,24 +204,194 @@ namespace Ombi.Controllers.V1
 
             // Let's look for the users account
             var account = await _plexOAuthManager.GetAccount(accessToken);
+            if (account?.user == null)
+            {
+                return new JsonResult(new
+                {
+                    errorMessage = "Plex account details are invalid or missing"
+                });
+            }
 
-            // Get the ombi user
-            var user = await _userManager.FindByNameAsync(account.user.username);
+            if (string.IsNullOrEmpty(account.user.authentication_token))
+            {
+                return new JsonResult(new
+                {
+                    errorMessage = "Plex authentication token is missing"
+                });
+            }
+
+            // Get the ombi user using Plex stable ID, username or fallback to ID
+            OmbiUser user = null;
+            if (!string.IsNullOrEmpty(account.user.id))
+            {
+                user = await _userManager.Users.FirstOrDefaultAsync(x => x.ProviderUserId == account.user.id && x.UserType == UserType.PlexUser);
+            }
+
+            var plexUserName = !string.IsNullOrEmpty(account.user.username) ? account.user.username : account.user.id;
 
             if (user == null)
             {
-                // Could this be an email login?
-                user = await _userManager.FindByEmailAsync(account.user.email);
+                // Could this be a username login?
+                if (!string.IsNullOrEmpty(plexUserName))
+                {
+                    user = await _userManager.FindByNameAsync(plexUserName);
+                }
+
+                if (user == null)
+                {
+                    // Could this be an email login?
+                    if (!string.IsNullOrEmpty(account.user.email))
+                    {
+                        user = await _userManager.FindByEmailAsync(account.user.email);
+                    }
+                }
+
+                if (user == null)
+                {
+                    // Check if this user is the Plex Admin / Server Owner
+                    var isPlexAdmin = false;
+                    var plexSettings = await _plexSettings.GetSettingsAsync();
+                    if (!string.IsNullOrEmpty(account.user.id) && plexSettings?.Servers != null)
+                    {
+                        foreach (var server in plexSettings.Servers)
+                        {
+                            if (string.IsNullOrEmpty(server.PlexAuthToken))
+                            {
+                                continue;
+                            }
+
+                            // If the tokens match, they are definitely the admin (case-sensitive check)
+                            if (!string.IsNullOrEmpty(account.user.authentication_token) &&
+                                string.Equals(server.PlexAuthToken, account.user.authentication_token, StringComparison.Ordinal))
+                            {
+                                isPlexAdmin = true;
+                                break;
+                            }
+                        }
+
+                        if (!isPlexAdmin)
+                        {
+                            // Deduplicate active tokens that are not the same as the user's authentication token (which was already checked)
+                            var uniqueTokens = plexSettings.Servers
+                                .Select(s => s.PlexAuthToken)
+                                .Where(token => !string.IsNullOrEmpty(token) && 
+                                                (string.IsNullOrEmpty(account.user.authentication_token) || 
+                                                 !string.Equals(token, account.user.authentication_token, StringComparison.Ordinal)))
+                                .Distinct()
+                                .ToList();
+
+                            if (uniqueTokens.Any())
+                            {
+                                foreach (var token in uniqueTokens)
+                                {
+                                    try
+                                    {
+                                        // Fetch the account for the server token and compare the stable unique ID
+                                        var serverAdminAccount = await _plexOAuthManager.GetAccount(token);
+                                        if (serverAdminAccount?.user != null)
+                                        {
+                                            var idMatch = !string.IsNullOrEmpty(serverAdminAccount.user.id) &&
+                                                          string.Equals(serverAdminAccount.user.id, account.user.id, StringComparison.OrdinalIgnoreCase);
+                                            if (idMatch)
+                                            {
+                                                isPlexAdmin = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        _log.LogWarning(ex, "Failed to retrieve Plex account for token verification during Plex Admin OAuth import.");
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (isPlexAdmin)
+                    {
+                        // Automatically import the Plex Admin
+                        var userManagementSettings = await _userManagementSettings.GetSettingsAsync();
+                        user = new OmbiUser
+                        {
+                            UserType = UserType.PlexUser,
+                            UserName = plexUserName,
+                            ProviderUserId = account.user.id,
+                            Email = account.user.email ?? string.Empty,
+                            Alias = string.Empty,
+                            StreamingCountry = userManagementSettings.DefaultStreamingCountry ?? string.Empty
+                        };
+
+                        var createResult = await _userManager.CreateAsync(user);
+                        if (createResult.Succeeded)
+                        {
+                            var roleResult = await _userManager.AddToRoleAsync(user, OmbiRoles.Admin);
+                            if (!roleResult.Succeeded)
+                            {
+                                foreach (var err in roleResult.Errors)
+                                {
+                                    _log.LogError("Failed to add auto-created Plex admin user {UserName} to Admin role: {Description}", user.UserName, err.Description);
+                                }
+                                try
+                                {
+                                    await _userManager.DeleteAsync(user);
+                                }
+                                catch (Exception ex)
+                                {
+                                    _log.LogError(ex, "Failed to roll back auto-created Plex admin user {UserName} after role assignment failure", user.UserName);
+                                }
+                                return new JsonResult(new
+                                {
+                                    errorMessage = "Failed to assign admin permissions to the auto-created Plex admin user"
+                                });
+                            }
+                        }
+                        else
+                        {
+                            // In case of a race condition where the user was created concurrently, try to fetch them
+                            user = await _userManager.Users.FirstOrDefaultAsync(x => x.ProviderUserId == account.user.id && x.UserType == UserType.PlexUser);
+                            if (user != null)
+                            {
+                                // Ensure the resolved fallback user is in the Admin role
+                                if (!await _userManager.IsInRoleAsync(user, OmbiRoles.Admin))
+                                {
+                                    var roleResult = await _userManager.AddToRoleAsync(user, OmbiRoles.Admin);
+                                    if (!roleResult.Succeeded)
+                                    {
+                                        foreach (var err in roleResult.Errors)
+                                        {
+                                            _log.LogError("Failed to add fallback Plex admin user {UserName} to Admin role: {Description}", user.UserName, err.Description);
+                                        }
+                                        return new JsonResult(new
+                                        {
+                                            errorMessage = "Failed to assign admin permissions to the fallback Plex admin user"
+                                        });
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                foreach (var err in createResult.Errors)
+                                {
+                                    _log.LogError("Failed to auto-create Plex admin user {UserName}: {Description}", plexUserName, err.Description);
+                                }
+                            }
+                        }
+                    }
+                }
 
                 if (user == null || user.UserType != UserType.PlexUser)
                 {
-                    return new UnauthorizedResult();
+                    return new JsonResult(new
+                    {
+                        errorMessage = "This Plex account is not authorized to access Ombi"
+                    });
                 }
             }
 
             user.MediaServerToken = account.user.authentication_token;
             await _userManager.UpdateAsync(user);
-
+ 
             return await CreateToken(true, user);
         }
 
