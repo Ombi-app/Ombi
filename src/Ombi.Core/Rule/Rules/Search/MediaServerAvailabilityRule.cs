@@ -111,6 +111,11 @@ namespace Ombi.Core.Rule.Rules.Search
 
         private async Task CheckEpisodeAvailability(SearchTvShowViewModel search, ContentLookupResult lookup, IMediaServerContent item)
         {
+            if (await ShouldDeferToSonarr())
+            {
+                return;
+            }
+
             if (!search.SeasonRequests.Any())
             {
                 return;
@@ -139,9 +144,11 @@ namespace Ombi.Core.Rule.Rules.Search
                 Log.LogError(ex, "Exception thrown when pre-fetching series episodes for availability check");
             }
 
+            var episodeSet = seriesEpisodes.Select(x => (x.SeasonNumber, x.EpisodeNumber)).ToHashSet();
+
             foreach (var season in search.SeasonRequests)
             {
-                foreach (var episode in season.Episodes.Where(e => seriesEpisodes.Any(x => x.EpisodeNumber == e.EpisodeNumber && x.SeasonNumber == season.SeasonNumber)))
+                foreach (var episode in season.Episodes.Where(e => episodeSet.Contains((season.SeasonNumber, e.EpisodeNumber))))
                 {
                     episode.Available = true;
                 }
