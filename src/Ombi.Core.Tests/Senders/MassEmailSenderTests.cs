@@ -149,7 +149,7 @@ namespace Ombi.Core.Tests.Senders
         {
             var model = new MassEmailModel
             {
-                Body = "Test",
+                Body = "Test {Alias} {UserName}",
                 Subject = "Subject",
                 Bcc = true,
                 Users = new List<OmbiUser>
@@ -182,7 +182,7 @@ namespace Ombi.Core.Tests.Senders
             var result = await _subject.SendMassEmail(model);
 
             _mocker.Verify<IEmailProvider>(x => x.SendAdHoc(It.Is<NotificationMessage>(m => m.Subject == model.Subject
-            && m.Message == model.Body
+            && m.Message == "Test User User"
             && m.Other["bcc"] == "Test@test.com,b@test.com"), It.IsAny<EmailNotificationSettings>()), Times.Once);
         }
 

@@ -103,10 +103,8 @@ namespace Ombi.Core.Senders
                 return;
             }
 
-            var firstUser = validUsers.FirstOrDefault();
-
             var bccAddress = string.Join(',', validUsers.Select(x => x.Email));
-            curlys.Setup(firstUser, customization);
+            curlys.Setup(new OmbiUser { UserName = "User", Alias = "User" }, customization);
             var template = new NotificationTemplates() { Message = model.Body, Subject = model.Subject };
             var content = resolver.ParseMessage(template, curlys);
             var msg = new NotificationMessage
