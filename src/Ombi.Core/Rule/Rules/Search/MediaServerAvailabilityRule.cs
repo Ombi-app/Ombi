@@ -139,14 +139,11 @@ namespace Ombi.Core.Rule.Rules.Search
                 Log.LogError(ex, "Exception thrown when pre-fetching series episodes for availability check");
             }
 
-            foreach (var season in search.SeasonRequests.ToList())
+            foreach (var season in search.SeasonRequests)
             {
-                foreach (var episode in season.Episodes.ToList())
+                foreach (var episode in season.Episodes.Where(e => seriesEpisodes.Any(x => x.EpisodeNumber == e.EpisodeNumber && x.SeasonNumber == season.SeasonNumber)))
                 {
-                    if (seriesEpisodes.Any(x => x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber))
-                    {
-                        episode.Available = true;
-                    }
+                    episode.Available = true;
                 }
             }
 
