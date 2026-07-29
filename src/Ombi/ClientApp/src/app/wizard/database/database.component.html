@@ -21,50 +21,50 @@
                         </p>
                     </mat-tab>
                     <mat-tab label="MySQL/MariaDB">
-                        <ng-container *ngTemplateOutlet="dbForm; context: { dbType: 'MySQL' }"></ng-container>
+                        <ng-container *ngTemplateOutlet="dbForm; context: { idPrefix: 'mysql', dbType: 'MySQL/MariaDB' }"></ng-container>
                     </mat-tab>
 
                     <mat-tab label="Postgres">
-                        <ng-container *ngTemplateOutlet="dbForm; context: { dbType: 'Postgres' }"></ng-container>
+                        <ng-container *ngTemplateOutlet="dbForm; context: { idPrefix: 'postgres', dbType: 'Postgres' }"></ng-container>
                     </mat-tab>
                 </mat-tab-group>
 
-                <ng-template #dbForm let-dbType="dbType">
+                <ng-template #dbForm let-idPrefix="idPrefix" let-dbType="dbType">
                     <p class="space-or">
                         Please enter your {{dbType}} connection details below
                     </p>
                     <div>
                         <mat-form-field>
-                            <input matInput type="text" formControlName="host" [id]="dbType.toLowerCase() + '-host'" placeholder="Host">
+                            <input matInput type="text" formControlName="host" [id]="idPrefix + '-host'" placeholder="Host">
                             <mat-error>This field is required</mat-error>
                         </mat-form-field>
                     </div>
                     <div>
                         <mat-form-field>
-                            <input matInput type="number" formControlName="port" [id]="dbType.toLowerCase() + '-port'" placeholder="Port">
+                            <input matInput type="number" formControlName="port" [id]="idPrefix + '-port'" placeholder="Port">
                             <mat-error>This field is required</mat-error>
                         </mat-form-field>
                     </div>
                     <div>
                         <mat-form-field>
-                            <input matInput type="text" formControlName="name" [id]="dbType.toLowerCase() + '-database'" placeholder="Database Name">
+                            <input matInput type="text" formControlName="name" [id]="idPrefix + '-database'" placeholder="Database Name">
                             <mat-error>This field is required</mat-error>
                         </mat-form-field>
                     </div>
                     <div>
                         <mat-form-field>
-                            <input matInput type="text" formControlName="user" [id]="dbType.toLowerCase() + '-user'" placeholder="User">
+                            <input matInput type="text" formControlName="user" [id]="idPrefix + '-user'" placeholder="User">
                         </mat-form-field>
                     </div>
                     <div>
                         <mat-form-field>
-                            <input matInput type="password" formControlName="password" [id]="dbType.toLowerCase() + '-password'" placeholder="Password">
+                            <input matInput type="password" formControlName="password" [id]="idPrefix + '-password'" placeholder="Password">
                         </mat-form-field>
                     </div>
                     <p>{{connectionString | async}}</p>
                     <div style="text-align: center; margin-top: 20px">
-                        <button (click)="save()" [id]="dbType.toLowerCase() + '-databaseSave'" mat-raised-button color="accent" type="button" class="viewon-btn database" [disabled]="form.invalid">Save</button>
-                        <div [id]="dbType.toLowerCase() + '-spinner'"></div>
+                        <button (click)="save()" [id]="idPrefix + '-databaseSave'" mat-raised-button color="accent" type="button" class="viewon-btn database" [disabled]="form.invalid">Save</button>
+                        <div [id]="idPrefix + '-spinner'"></div>
                     </div>
                 </ng-template>
             </form>
