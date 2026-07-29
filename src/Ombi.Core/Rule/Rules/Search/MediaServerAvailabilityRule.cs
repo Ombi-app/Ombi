@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
@@ -20,8 +22,6 @@ namespace Ombi.Core.Rule.Rules.Search
         private readonly ISettingsService<SonarrSettings> _sonarrSettings;
 
         protected ILogger Log { get; }
-        private bool? _deferToRadarr;
-        private bool? _deferToSonarr;
 
         protected MediaServerAvailabilityRule(
             ILogger log,
@@ -111,24 +111,42 @@ namespace Ombi.Core.Rule.Rules.Search
 
         private async Task CheckEpisodeAvailability(SearchTvShowViewModel search, ContentLookupResult lookup, IMediaServerContent item)
         {
-            if (await ShouldDeferToSonarr())
-            {
-                return;
-            }
-
             if (!search.SeasonRequests.Any())
             {
                 return;
             }
 
             var allEpisodes = GetAllEpisodes();
+            var seriesEpisodes = new List<IMediaServerEpisode>();
+
+            try
+            {
+                if (lookup.UseImdb && !string.IsNullOrEmpty(item.ImdbId))
+                {
+                    seriesEpisodes = await allEpisodes.Where(x => x.Series.ImdbId == item.ImdbId).ToListAsync();
+                }
+                else if (lookup.UseTheMovieDb && !string.IsNullOrEmpty(item.TheMovieDbId))
+                {
+                    seriesEpisodes = await allEpisodes.Where(x => x.Series.TheMovieDbId == item.TheMovieDbId).ToListAsync();
+                }
+                else if (lookup.UseTvDb && !string.IsNullOrEmpty(item.TvDbId))
+                {
+                    seriesEpisodes = await allEpisodes.Where(x => x.Series.TvDbId == item.TvDbId).ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex, "Exception thrown when pre-fetching series episodes for availability check");
+            }
+
             foreach (var season in search.SeasonRequests.ToList())
             {
                 foreach (var episode in season.Episodes.ToList())
                 {
-                    await AvailabilityRuleHelper.SingleEpisodeCheck(
-                        lookup.UseImdb, allEpisodes, episode, season, item,
-                        lookup.UseTheMovieDb, lookup.UseTvDb, Log);
+                    if (seriesEpisodes.Any(x => x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber))
+                    {
+                        episode.Available = true;
+                    }
                 }
             }
 
@@ -137,40 +155,26 @@ namespace Ombi.Core.Rule.Rules.Search
 
         private async Task<bool> ShouldDeferToRadarr()
         {
-            if (_deferToRadarr.HasValue)
-            {
-                return _deferToRadarr.Value;
-            }
-
             if (_radarrSettings == null)
             {
-                _deferToRadarr = false;
                 return false;
             }
 
             var settings = await _radarrSettings.GetSettingsAsync();
-            _deferToRadarr = settings != null && settings.Enabled &&
+            return settings != null && settings.Enabled &&
                    settings.ScanForAvailability && settings.PrioritizeArrAvailability;
-            return _deferToRadarr.Value;
         }
 
         private async Task<bool> ShouldDeferToSonarr()
         {
-            if (_deferToSonarr.HasValue)
-            {
-                return _deferToSonarr.Value;
-            }
-
             if (_sonarrSettings == null)
             {
-                _deferToSonarr = false;
                 return false;
             }
 
             var settings = await _sonarrSettings.GetSettingsAsync();
-            _deferToSonarr = settings != null && settings.Enabled &&
+            return settings != null && settings.Enabled &&
                    settings.ScanForAvailability && settings.PrioritizeArrAvailability;
-            return _deferToSonarr.Value;
         }
 
         /// <summary>
