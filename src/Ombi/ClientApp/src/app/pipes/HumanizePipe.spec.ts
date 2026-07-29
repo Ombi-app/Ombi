@@ -27,4 +27,8 @@ describe('HumanizePipe', () => {
   it('should return non-string values as-is', () => {
     expect(pipe.transform(123 as any)).toBe(123);
   });
+
+  it('should return empty string as-is', () => {
+    expect(pipe.transform('')).toBe('');
+  });
 });
