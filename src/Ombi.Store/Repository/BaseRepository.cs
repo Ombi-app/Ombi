@@ -67,10 +67,15 @@ namespace Ombi.Store.Repository
             await InternalSaveChanges();
         }
 
-        public async Task DeleteRange(IEnumerable<T> req)
+        public Task DeleteRange(IEnumerable<T> req) => DeleteRange(req, true);
+
+        public async Task DeleteRange(IEnumerable<T> req, bool save)
         {
             _db.RemoveRange(req);
-            await InternalSaveChanges();
+            if (save)
+            {
+                await InternalSaveChanges();
+            }
         }
 
         public async Task<int> SaveChangesAsync()
