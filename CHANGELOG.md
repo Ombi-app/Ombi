@@ -1,3 +1,14 @@
+## [4.60.11](https://github.com/Ombi-app/Ombi/compare/v4.60.10...v4.60.11) (2026-07-29)
+
+
+### Bug Fixes
+
+* resolve user data leakage in BCC mass email templates ([#5444](https://github.com/Ombi-app/Ombi/issues/5444)) [skip ci] ([a5cfb02](https://github.com/Ombi-app/Ombi/commit/a5cfb02d4ab973dd2183b39c3436a3d393818e2f))
+* respect Sonarr availability priority for TV episodes ([#5445](https://github.com/Ombi-app/Ombi/issues/5445)) [skip ci] ([ddba9e3](https://github.com/Ombi-app/Ombi/commit/ddba9e3224201fd8a3e195e03e2e3df641973989))
+* **settings:** resolve mobile dropdown positioning and horizontal layout overflow ([#5443](https://github.com/Ombi-app/Ombi/issues/5443)) ([1ba4825](https://github.com/Ombi-app/Ombi/commit/1ba48252b6e1b2adbb22ae1d44e81b637cf2877e))
+
+
+
 ## [4.60.10](https://github.com/Ombi-app/Ombi/compare/v4.60.9...v4.60.10) (2026-07-07)
 
 
@@ -554,20 +565,6 @@
 
 
 ## [4.54.3](https://github.com/Ombi-app/Ombi/compare/v4.54.2...v4.54.3) (2026-02-10)
-
-
-
-## [4.54.2](https://github.com/Ombi-app/Ombi/compare/v4.54.1...v4.54.2) (2026-02-03)
-
-
-### Bug Fixes
-
-* Add missing using System to EmbyHelper ([bb6300f](https://github.com/Ombi-app/Ombi/commit/bb6300fe984dd8b7d5d3f10e64885301e80693d4))
-* Correct EmbyHelper app.emby.media path detection ([9adb2ed](https://github.com/Ombi-app/Ombi/commit/9adb2ed4ef6deae79de1f1f2b5c8d249f9400e24))
-* Correct EmbyHelper app.emby.media path detection ([88b5215](https://github.com/Ombi-app/Ombi/commit/88b52159e7582022b7261b79c24359edc8e70da2)), closes [#689](https://github.com/Ombi-app/Ombi/issues/689)
-* Correct EmbyHelper app.emby.media path detection ([840d740](https://github.com/Ombi-app/Ombi/commit/840d740cd0860b46b185a82ef4855334b3f48301)), closes [#689](https://github.com/Ombi-app/Ombi/issues/689)
-* Correct EmbyHelper app.emby.media path detection ([d16858d](https://github.com/Ombi-app/Ombi/commit/d16858dbbc5e0b1adb2c96fc0e5c6650a7431556))
-* SonarrSync now deletes episodes per-series to prevent incomplete cache ([89b8c52](https://github.com/Ombi-app/Ombi/commit/89b8c5255b5f251d1eafc36df32b05fa6488657a)), closes [#5306](https://github.com/Ombi-app/Ombi/issues/5306)
 
 
 
