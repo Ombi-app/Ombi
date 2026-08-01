@@ -903,8 +903,8 @@ namespace Ombi.Core.Engine
 
         private static bool IsTransientSqliteLock(DbUpdateException ex)
         {
-            var message = ex.InnerException?.Message ?? ex.Message;
-            return message.Contains("database is locked", StringComparison.OrdinalIgnoreCase);
+            return ex.InnerException is Microsoft.Data.Sqlite.SqliteException sqliteEx
+                && sqliteEx.SqliteErrorCode == 5; // SQLITE_BUSY
         }
     }
 }
