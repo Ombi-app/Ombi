@@ -173,7 +173,7 @@ namespace Ombi.Core.Engine
                 var requestEngineResult = await AddMovieRequest(requestModel, fullMovieName, model.RequestOnBehalf, isExisting, is4kRequest);
                 if (requestEngineResult.Result)
                 {
-                    var result = await ApproveMovie(requestModel, model.Is4kRequest);
+                    var result = await ApproveMovie(requestModel, model.Is4kRequest, isAutoApprove: true);
                     if (result.IsError)
                     {
                         Logger.LogWarning("Tried auto sending movie but failed. Message: {0}", result.Message);
@@ -608,7 +608,7 @@ namespace Ombi.Core.Engine
             };
         }
 
-        public async Task<RequestEngineResult> ApproveMovie(MovieRequests request, bool is4K)
+        public async Task<RequestEngineResult> ApproveMovie(MovieRequests request, bool is4K, bool isAutoApprove = false)
         {
             if (request == null)
             {
@@ -634,15 +634,19 @@ namespace Ombi.Core.Engine
             {
                 await MovieRepository.Update(request);
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException ex) when (IsTransientSqliteLock(ex))
             {
-                // The auto-approve path already saved this request via AddMovieRequest().
-                // A transient DB failure here (e.g. SQLite lock from concurrent writes) must
-                // not prevent the movie from being sent to Radarr -- an orphaned "Processing"
-                // request with no retry queue entry is worse than a missing MarkedAsApproved
-                // timestamp. The in-memory entity still has the correct Approved state for the
-                // sender below.
-                Logger.LogError(ex, "Failed to update movie request {RequestId} during approval (request may have already been saved); continuing to send to downstream service", request.Id);
+                if (!isAutoApprove)
+                {
+                    // Manual approval: this DB update is the first save of Approved=true.
+                    // If it failed, the approval was never persisted — do not proceed.
+                    throw;
+                }
+
+                // Auto-approve path: AddMovieRequest() already persisted Approved=true.
+                // A transient SQLite lock here only loses the MarkedAsApproved timestamp.
+                // The in-memory entity still has the correct state for the sender below.
+                Logger.LogError(ex, "Transient SQLite lock updating movie request {RequestId} during auto-approval (request already saved); continuing to send to downstream service", request.Id);
             }
 
             var canNotify = await RunSpecificRule(request, SpecificRules.CanSendNotification, string.Empty);
@@ -895,6 +899,12 @@ namespace Ombi.Core.Engine
             });
 
             return new RequestEngineResult { Result = true, Message = $"{movieName} has been successfully added!", RequestId = model.Id };
+        }
+
+        private static bool IsTransientSqliteLock(DbUpdateException ex)
+        {
+            var message = ex.InnerException?.Message ?? ex.Message;
+            return message.Contains("database is locked", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

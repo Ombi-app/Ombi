@@ -686,16 +686,12 @@ namespace Ombi.Core.Engine
                 }
             }
 
-            try
-            {
-                await TvRepository.UpdateChild(request);
-            }
-            catch (DbUpdateException ex)
-            {
-                // A transient DB failure (e.g. SQLite lock) must not prevent the show from
-                // being sent to Sonarr. The in-memory entity has the correct Approved state.
-                _logger.LogError(ex, "Failed to update child request {RequestId} during approval; continuing to send to downstream service", request.Id);
-            }
+            // No catch here: ApproveChildRequest is always a manual approval. The DB update
+            // is the first save of Approved=true, so if it fails the approval was never
+            // persisted and we must not proceed to send. (The auto-approve path saves via
+            // AddRequest/AddExistingRequest and sends via ProcessSendingShow, never through
+            // this method.)
+            await TvRepository.UpdateChild(request);
             await _mediaCacheService.Purge();
 
             if (request.Approved)
