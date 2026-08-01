@@ -88,7 +88,7 @@ namespace Ombi.Core.Senders
             }
             catch (Exception e)
             {
-                Logger.LogError(e, "Exception thrown when sending a movie to DVR app, added to the request queue");
+                Logger.LogError(e, "Exception thrown when sending a series to DVR app, added to the request queue");
                 await AddToRequestFailureQueue(model, e.Message);
             }
 
@@ -609,7 +609,7 @@ namespace Ombi.Core.Senders
 
         private async Task AddToRequestFailureQueue(ChildRequests model, string errorMessage)
         {
-            var existingQueue = await _requestQueueRepository.FirstOrDefaultAsync(x => x.RequestId == model.Id);
+            var existingQueue = await _requestQueueRepository.FirstOrDefaultAsync(x => x.RequestId == model.Id && x.Type == RequestType.TvShow);
             if (existingQueue != null)
             {
                 existingQueue.RetryCount++;

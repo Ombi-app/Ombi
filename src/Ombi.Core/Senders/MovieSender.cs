@@ -99,6 +99,7 @@ namespace Ombi.Core.Senders
             {
                 _log.LogError(e, "Error when sending movie to DVR app, added to the request queue");
                 await AddToRequestFailureQueue(model, e.Message);
+                return new SenderResult { Success = false, Sent = false, Message = e.Message };
             }
 
             if (result != null && !result.Success)
@@ -270,7 +271,7 @@ namespace Ombi.Core.Senders
 
         private async Task AddToRequestFailureQueue(MovieRequests model, string errorMessage)
         {
-            var existingQueue = await _requestQueuRepository.FirstOrDefaultAsync(x => x.RequestId == model.Id);
+            var existingQueue = await _requestQueuRepository.FirstOrDefaultAsync(x => x.RequestId == model.Id && x.Type == RequestType.Movie);
             if (existingQueue != null)
             {
                 existingQueue.RetryCount++;
