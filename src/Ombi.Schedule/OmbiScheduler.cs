@@ -81,12 +81,12 @@ namespace Ombi.Schedule
         {
             await OmbiQuartz.Instance.AddJob<ISonarrSync>(nameof(ISonarrSync), "DVR", JobSettingsHelper.Sonarr(s));
             await OmbiQuartz.Instance.AddJob<IRadarrSync>(nameof(IRadarrSync), "DVR", JobSettingsHelper.Radarr(s));
-            await OmbiQuartz.Instance.AddJob<IArrAvailabilityChecker>(nameof(IArrAvailabilityChecker), "DVR", null);
+            await OmbiQuartz.Instance.AddJob<IArrAvailabilityChecker>(nameof(IArrAvailabilityChecker), "DVR", Cron.MinuteInterval(5));
             await OmbiQuartz.Instance.AddJob<ICouchPotatoSync>(nameof(ICouchPotatoSync), "DVR", JobSettingsHelper.CouchPotato(s));
             await OmbiQuartz.Instance.AddJob<ISickRageSync>(nameof(ISickRageSync), "DVR", JobSettingsHelper.SickRageSync(s));
             await OmbiQuartz.Instance.AddJob<ILidarrArtistSync>(nameof(ILidarrArtistSync), "DVR", JobSettingsHelper.LidarrArtistSync(s));
             await OmbiQuartz.Instance.AddJob<ILidarrAlbumSync>(nameof(ILidarrAlbumSync), "DVR", null);
-            await OmbiQuartz.Instance.AddJob<ILidarrAvailabilityChecker>(nameof(ILidarrAvailabilityChecker), "DVR", null);
+            await OmbiQuartz.Instance.AddJob<ILidarrAvailabilityChecker>(nameof(ILidarrAvailabilityChecker), "DVR", Cron.MinuteInterval(5));
         }
 
         private static async Task AddPlex(JobSettings s)
@@ -95,7 +95,7 @@ namespace Ombi.Schedule
             await OmbiQuartz.Instance.AddJob<IPlexContentSync>(nameof(IPlexContentSync) + "RecentlyAdded", "Plex", JobSettingsHelper.PlexRecentlyAdded(s), new Dictionary<string, string> { { JobDataKeys.RecentlyAddedSearch, "true" } });
             await OmbiQuartz.Instance.AddJob<IPlexUserImporter>(nameof(IPlexUserImporter), "Plex", JobSettingsHelper.UserImporter(s));
             await OmbiQuartz.Instance.AddJob<IPlexEpisodeSync>(nameof(IPlexEpisodeSync), "Plex", null);
-            await OmbiQuartz.Instance.AddJob<IPlexAvailabilityChecker>(nameof(IPlexAvailabilityChecker), "Plex", null);
+            await OmbiQuartz.Instance.AddJob<IPlexAvailabilityChecker>(nameof(IPlexAvailabilityChecker), "Plex", Cron.MinuteInterval(5));
             await OmbiQuartz.Instance.AddJob<IPlexWatchlistImport>(nameof(IPlexWatchlistImport), "Plex", JobSettingsHelper.PlexWatchlistImport(s));
         }
 
@@ -105,7 +105,7 @@ namespace Ombi.Schedule
             await OmbiQuartz.Instance.AddJob<IEmbyContentSync>(nameof(IEmbyContentSync) + "RecentlyAdded", "Emby", JobSettingsHelper.EmbyRecentlyAddedSync(s), new Dictionary<string, string> { { JobDataKeys.EmbyRecentlyAddedSearch, "true" } });
             await OmbiQuartz.Instance.AddJob<IEmbyEpisodeSync>(nameof(IEmbyEpisodeSync), "Emby", null);
             await OmbiQuartz.Instance.AddJob<IEmbyPlayedSync>(nameof(IEmbyPlayedSync), "Emby", null);
-            await OmbiQuartz.Instance.AddJob<IEmbyAvaliabilityChecker>(nameof(IEmbyAvaliabilityChecker), "Emby", null);
+            await OmbiQuartz.Instance.AddJob<IEmbyAvaliabilityChecker>(nameof(IEmbyAvaliabilityChecker), "Emby", Cron.MinuteInterval(5));
             await OmbiQuartz.Instance.AddJob<IEmbyUserImporter>(nameof(IEmbyUserImporter), "Emby", JobSettingsHelper.UserImporter(s));
         }
 
@@ -113,7 +113,7 @@ namespace Ombi.Schedule
         {
             await OmbiQuartz.Instance.AddJob<IJellyfinContentSync>(nameof(IJellyfinContentSync), "Jellyfin", JobSettingsHelper.JellyfinContent(s));
             await OmbiQuartz.Instance.AddJob<IJellyfinEpisodeSync>(nameof(IJellyfinEpisodeSync), "Jellyfin", null);
-            await OmbiQuartz.Instance.AddJob<IJellyfinAvaliabilityChecker>(nameof(IJellyfinAvaliabilityChecker), "Jellyfin", null);
+            await OmbiQuartz.Instance.AddJob<IJellyfinAvaliabilityChecker>(nameof(IJellyfinAvaliabilityChecker), "Jellyfin", Cron.MinuteInterval(5));
             await OmbiQuartz.Instance.AddJob<IJellyfinUserImporter>(nameof(IJellyfinUserImporter), "Jellyfin", JobSettingsHelper.UserImporter(s));
         }
 
