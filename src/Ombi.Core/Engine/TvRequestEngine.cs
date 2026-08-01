@@ -686,7 +686,16 @@ namespace Ombi.Core.Engine
                 }
             }
 
-            await TvRepository.UpdateChild(request);
+            try
+            {
+                await TvRepository.UpdateChild(request);
+            }
+            catch (DbUpdateException ex)
+            {
+                // A transient DB failure (e.g. SQLite lock) must not prevent the show from
+                // being sent to Sonarr. The in-memory entity has the correct Approved state.
+                _logger.LogError(ex, "Failed to update child request {RequestId} during approval; continuing to send to downstream service", request.Id);
+            }
             await _mediaCacheService.Purge();
 
             if (request.Approved)

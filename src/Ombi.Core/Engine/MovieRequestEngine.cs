@@ -630,7 +630,20 @@ namespace Ombi.Core.Engine
                 request.Approved = true;
                 request.Denied = false;
             }
-            await MovieRepository.Update(request);
+            try
+            {
+                await MovieRepository.Update(request);
+            }
+            catch (DbUpdateException ex)
+            {
+                // The auto-approve path already saved this request via AddMovieRequest().
+                // A transient DB failure here (e.g. SQLite lock from concurrent writes) must
+                // not prevent the movie from being sent to Radarr -- an orphaned "Processing"
+                // request with no retry queue entry is worse than a missing MarkedAsApproved
+                // timestamp. The in-memory entity still has the correct Approved state for the
+                // sender below.
+                Logger.LogError(ex, "Failed to update movie request {RequestId} during approval (request may have already been saved); continuing to send to downstream service", request.Id);
+            }
 
             var canNotify = await RunSpecificRule(request, SpecificRules.CanSendNotification, string.Empty);
             if (canNotify.Success)
