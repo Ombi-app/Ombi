@@ -44,6 +44,7 @@ namespace Ombi.Core.Senders
 
         public async Task<SenderResult> Send(ChildRequests model)
         {
+            SenderResult senderResult = null;
             try
             {
                 var sonarr = await SonarrSettings.GetSettingsAsync();
@@ -59,7 +60,7 @@ namespace Ombi.Core.Senders
                         };
                     }
                 }
-                
+
                 var sr = await SickRageSettings.GetSettingsAsync();
                 if (sr.Enabled)
                 {
@@ -72,39 +73,30 @@ namespace Ombi.Core.Senders
                             Success = true
                         };
                     }
-                    return new SenderResult
+                    senderResult = new SenderResult
                     {
                         Message = "Could not send to SickRage!"
                     };
                 }
-                return new SenderResult
+                else
                 {
-                    Success = true
-                };
+                    return new SenderResult
+                    {
+                        Success = true
+                    };
+                }
             }
             catch (Exception e)
             {
                 Logger.LogError(e, "Exception thrown when sending a movie to DVR app, added to the request queue");
-                // Check if already in request queue
-                var existingQueue = await _requestQueueRepository.FirstOrDefaultAsync(x => x.RequestId == model.Id);
-                if (existingQueue != null)
-                {
-                    existingQueue.RetryCount++;
-                    existingQueue.Error = e.Message;
-                    await _requestQueueRepository.SaveChangesAsync();
-                }
-                else
-                {
-                    await _requestQueueRepository.Add(new RequestQueue
-                    {
-                        Dts = DateTime.UtcNow,
-                        Error = e.Message,
-                        RequestId = model.Id,
-                        Type = RequestType.TvShow,
-                        RetryCount = 0
-                    });
-                    await _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
-                }
+                await AddToRequestFailureQueue(model, e.Message);
+            }
+
+            if (senderResult != null && !senderResult.Success)
+            {
+                Logger.LogWarning("TV send to DVR app failed: {Message}, added to the request queue", senderResult.Message);
+                await AddToRequestFailureQueue(model, senderResult.Message);
+                return senderResult;
             }
 
             return new SenderResult
@@ -613,6 +605,29 @@ namespace Ombi.Core.Senders
 
             Logger.LogError("No matching root folder found for ID: {PathId}", pathId);
             return string.Empty;
+        }
+
+        private async Task AddToRequestFailureQueue(ChildRequests model, string errorMessage)
+        {
+            var existingQueue = await _requestQueueRepository.FirstOrDefaultAsync(x => x.RequestId == model.Id);
+            if (existingQueue != null)
+            {
+                existingQueue.RetryCount++;
+                existingQueue.Error = errorMessage;
+                await _requestQueueRepository.SaveChangesAsync();
+            }
+            else
+            {
+                await _requestQueueRepository.Add(new RequestQueue
+                {
+                    Dts = DateTime.UtcNow,
+                    Error = errorMessage,
+                    RequestId = model.Id,
+                    Type = RequestType.TvShow,
+                    RetryCount = 0
+                });
+                await _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
+            }
         }
     }
 }
