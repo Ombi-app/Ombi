@@ -21,22 +21,32 @@ namespace Ombi.Controllers.V1
     public class PlexOAuthController : Controller
     {
         public PlexOAuthController(IPlexOAuthManager manager, IPlexApi plexApi, ISettingsService<PlexSettings> plexSettings,
-            ILogger<PlexOAuthController> log)
+            ILogger<PlexOAuthController> log, OmbiUserManager userManager)
         {
             _manager = manager;
             _plexApi = plexApi;
             _plexSettings = plexSettings;
             _log = log;
+            _userManager = userManager;
         }
 
         private readonly IPlexOAuthManager _manager;
         private readonly IPlexApi _plexApi;
         private readonly ISettingsService<PlexSettings> _plexSettings;
         private readonly ILogger _log;
+        private readonly OmbiUserManager _userManager;
 
         [HttpGet("{pinId:int}")]
         public async Task<IActionResult> OAuthWizardCallBack([FromRoute] int pinId)
         {
+            // This endpoint is anonymous purely so the first-run wizard can resolve the Plex PIN and
+            // populate the server configuration before any user account exists. Once an administrator
+            // has been set up the wizard is finished, so this is no longer part of the setup flow.
+            if (await AdminAccountExists())
+            {
+                return Unauthorized();
+            }
+
             var accessToken = await _manager.GetAccessTokenFromPin(pinId);
             if (accessToken.IsNullOrEmpty())
             {
@@ -71,6 +81,15 @@ namespace Ombi.Controllers.V1
 
             await _plexSettings.SaveSettingsAsync(settings);
             return Json(new { accessToken });
+        }
+
+        private async Task<bool> AdminAccountExists()
+        {
+            // GetUsersInRoleAsync returns an empty list when the role does not yet exist
+            // (fresh install, before the wizard creates the roles), so this is safe to call
+            // at any point during first-time setup.
+            var admins = await _userManager.GetUsersInRoleAsync(OmbiRoles.Admin);
+            return admins.Any();
         }
     }
 }
