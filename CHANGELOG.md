@@ -1,3 +1,7 @@
+## [4.60.13](https://github.com/Ombi-app/Ombi/compare/v4.60.12...v4.60.13) (2026-08-06)
+
+
+
 ## [4.60.12](https://github.com/Ombi-app/Ombi/compare/v4.60.11...v4.60.12) (2026-07-29)
 
 
@@ -560,16 +564,6 @@
 
 
 ## [4.54.5](https://github.com/Ombi-app/Ombi/compare/v4.54.4...v4.54.5) (2026-02-10)
-
-
-
-## [4.54.4](https://github.com/Ombi-app/Ombi/compare/v4.54.3...v4.54.4) (2026-02-10)
-
-
-### Bug Fixes
-
-* src/Ombi/ClientApp/package.json & src/Ombi/ClientApp/yarn.lock to reduce vulnerabilities ([e55de4e](https://github.com/Ombi-app/Ombi/commit/e55de4e4e5496bd61d3f80d9f2719b8df04b1d4b))
-* src/Ombi/ClientApp/package.json & src/Ombi/ClientApp/yarn.lock to reduce vulnerabilities ([80c96a7](https://github.com/Ombi-app/Ombi/commit/80c96a77c9667fc56b8f8c2d79ce0cc0f75e53f6))
 
 
 
