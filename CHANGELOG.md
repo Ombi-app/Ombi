@@ -1,3 +1,7 @@
+## [4.60.14](https://github.com/Ombi-app/Ombi/compare/v4.60.13...v4.60.14) (2026-08-06)
+
+
+
 ## [4.60.13](https://github.com/Ombi-app/Ombi/compare/v4.60.12...v4.60.13) (2026-08-06)
 
 
@@ -560,10 +564,6 @@
 ### Features
 
 * Add Ntfy ([dfcea55](https://github.com/Ombi-app/Ombi/commit/dfcea555887efdff4311d2a5734561ab7bbd9380))
-
-
-
-## [4.54.5](https://github.com/Ombi-app/Ombi/compare/v4.54.4...v4.54.5) (2026-02-10)
 
 
 
