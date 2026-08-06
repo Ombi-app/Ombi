@@ -26,13 +26,15 @@ namespace Ombi.Controllers.V1.External
     public class PlexController : Controller
     {
         public PlexController(IPlexApi plexApi, ISettingsService<PlexSettings> plexSettings,
-            ILogger<PlexController> logger, IPlexOAuthManager manager, IPlexService plexService)
+            ILogger<PlexController> logger, IPlexOAuthManager manager, IPlexService plexService,
+            OmbiUserManager userManager)
         {
             PlexApi = plexApi;
             PlexSettings = plexSettings;
             _log = logger;
             _plexOAuthManager = manager;
             _plexService = plexService;
+            _userManager = userManager;
         }
 
         private IPlexApi PlexApi { get; }
@@ -40,6 +42,7 @@ namespace Ombi.Controllers.V1.External
         private readonly ILogger<PlexController> _log;
         private readonly IPlexOAuthManager _plexOAuthManager;
         private readonly IPlexService _plexService;
+        private readonly OmbiUserManager _userManager;
 
         /// <summary>
         /// Signs into the Plex API.
@@ -52,10 +55,21 @@ namespace Ombi.Controllers.V1.External
         {
             try
             {
+                // SignIn is [AllowAnonymous] so the first-run wizard can sign in to Plex.tv and
+                // populate the server configuration before any user/JWT exists. Once an administrator
+                // has been established, setup is complete and this must not be reachable anonymously,
+                // otherwise an unauthenticated caller could overwrite the trusted Plex configuration
+                // and escalate to admin.
+                var admins = await _userManager.GetUsersInRoleAsync(OmbiRoles.Admin);
+                if (admins.Any())
+                {
+                    return null;
+                }
+
                 // Do we already have settings?
                 _log.LogDebug("OK, signing into Plex");
                 var settings = await PlexSettings.GetSettingsAsync();
-                if (!settings.Servers?.Any() ?? false) return null;
+                if (settings?.Servers?.Any() ?? false) return null;
 
                 _log.LogDebug("This is our first time, good to go!");
 
