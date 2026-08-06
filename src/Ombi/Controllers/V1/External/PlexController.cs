@@ -26,13 +26,15 @@ namespace Ombi.Controllers.V1.External
     public class PlexController : Controller
     {
         public PlexController(IPlexApi plexApi, ISettingsService<PlexSettings> plexSettings,
-            ILogger<PlexController> logger, IPlexOAuthManager manager, IPlexService plexService)
+            ILogger<PlexController> logger, IPlexOAuthManager manager, IPlexService plexService,
+            OmbiUserManager userManager)
         {
             PlexApi = plexApi;
             PlexSettings = plexSettings;
             _log = logger;
             _plexOAuthManager = manager;
             _plexService = plexService;
+            _userManager = userManager;
         }
 
         private IPlexApi PlexApi { get; }
@@ -40,6 +42,7 @@ namespace Ombi.Controllers.V1.External
         private readonly ILogger<PlexController> _log;
         private readonly IPlexOAuthManager _plexOAuthManager;
         private readonly IPlexService _plexService;
+        private readonly OmbiUserManager _userManager;
 
         /// <summary>
         /// Signs into the Plex API.
@@ -52,10 +55,22 @@ namespace Ombi.Controllers.V1.External
         {
             try
             {
+                // This is only used by the first-run setup wizard, which runs before any user
+                // account is created. Once an administrator has been set up the wizard is complete,
+                // so there is nothing left for this endpoint to do.
+                var admins = await _userManager.GetUsersInRoleAsync(OmbiRoles.Admin);
+                if (admins.Any())
+                {
+                    return null;
+                }
+
                 // Do we already have settings?
                 _log.LogDebug("OK, signing into Plex");
                 var settings = await PlexSettings.GetSettingsAsync();
-                if (!settings.Servers?.Any() ?? false) return null;
+                // GetSettingsAsync never returns null (it falls back to a new instance) and the
+                // save path below dereferences settings directly, so only null-check Servers here.
+                // Servers?. still handles the fresh-install case where the list is null.
+                if (settings.Servers?.Any() ?? false) return null;
 
                 _log.LogDebug("This is our first time, good to go!");
 
