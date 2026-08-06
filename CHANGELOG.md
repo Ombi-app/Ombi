@@ -1,3 +1,7 @@
+## [4.60.15](https://github.com/Ombi-app/Ombi/compare/v4.60.14...v4.60.15) (2026-08-06)
+
+
+
 ## [4.60.14](https://github.com/Ombi-app/Ombi/compare/v4.60.13...v4.60.14) (2026-08-06)
 
 
@@ -555,15 +559,6 @@
 ### Bug Fixes
 
 * **plex:** content sync duplicate key errors ([cefe989](https://github.com/Ombi-app/Ombi/commit/cefe989d4efc9b2a686b50f47479d283992f9267))
-
-
-
-# [4.55.0](https://github.com/Ombi-app/Ombi/compare/v4.54.5...v4.55.0) (2026-02-10)
-
-
-### Features
-
-* Add Ntfy ([dfcea55](https://github.com/Ombi-app/Ombi/commit/dfcea555887efdff4311d2a5734561ab7bbd9380))
 
 
 
