@@ -54,6 +54,7 @@ namespace Ombi.Core.Senders
 
         public async Task<SenderResult> Send(MovieRequests model, bool is4K)
         {
+            SenderResult result = null;
             try
             {
                 var cpSettings = await _couchPotatoSettings.GetSettingsAsync();
@@ -69,49 +70,43 @@ namespace Ombi.Core.Senders
                 }
                 if (radarrSettings.Enabled)
                 {
-                    return await SendToRadarr(model, radarrSettings, is4K);
+                    result = await SendToRadarr(model, radarrSettings, is4K);
                 }
-
-                var dogSettings = await _dogNzbSettings.GetSettingsAsync();
-                if (dogSettings.Enabled)
+                else
                 {
-                    await SendToDogNzb(model, dogSettings);
-                    return new SenderResult
+                    var dogSettings = await _dogNzbSettings.GetSettingsAsync();
+                    if (dogSettings.Enabled)
                     {
-                        Success = true,
-                        Sent = true,
-                    };
+                        await SendToDogNzb(model, dogSettings);
+                        result = new SenderResult
+                        {
+                            Success = true,
+                            Sent = true,
+                        };
+                    }
+                    else if (cpSettings.Enabled)
+                    {
+                        result = await SendToCp(model, cpSettings, cpSettings.DefaultProfileId);
+                    }
                 }
 
-                if (cpSettings.Enabled)
+                if (result != null && result.Success)
                 {
-                    return await SendToCp(model, cpSettings, cpSettings.DefaultProfileId);
+                    return result;
                 }
             }
             catch (Exception e)
             {
                 _log.LogError(e, "Error when sending movie to DVR app, added to the request queue");
+                await AddToRequestFailureQueue(model, e.Message);
+                return new SenderResult { Success = false, Sent = false, Message = e.Message };
+            }
 
-                // Check if already in request quee
-                var existingQueue = await _requestQueuRepository.FirstOrDefaultAsync(x => x.RequestId == model.Id);
-                if (existingQueue != null)
-                {
-                    existingQueue.RetryCount++;
-                    existingQueue.Error = e.Message;
-                    await _requestQueuRepository.SaveChangesAsync();
-                }
-                else
-                {
-                    await _requestQueuRepository.Add(new RequestQueue
-                    {
-                        Dts = DateTime.UtcNow,
-                        Error = e.Message,
-                        RequestId = model.Id,
-                        Type = RequestType.Movie,
-                        RetryCount = 0
-                    });
-                    await _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
-                }
+            if (result != null && !result.Success)
+            {
+                _log.LogWarning("Movie send to DVR app failed: {Message}, added to the request queue", result.Message);
+                await AddToRequestFailureQueue(model, result.Message);
+                return result;
             }
 
             return new SenderResult
@@ -272,6 +267,29 @@ namespace Ombi.Core.Senders
             existingTag ??= await _radarrV3Api.CreateTag(s.ApiKey, s.FullUri, tagName);
 
             return existingTag;
+        }
+
+        private async Task AddToRequestFailureQueue(MovieRequests model, string errorMessage)
+        {
+            var existingQueue = await _requestQueuRepository.FirstOrDefaultAsync(x => x.RequestId == model.Id && x.Type == RequestType.Movie);
+            if (existingQueue != null)
+            {
+                existingQueue.RetryCount++;
+                existingQueue.Error = errorMessage;
+                await _requestQueuRepository.SaveChangesAsync();
+            }
+            else
+            {
+                await _requestQueuRepository.Add(new RequestQueue
+                {
+                    Dts = DateTime.UtcNow,
+                    Error = errorMessage,
+                    RequestId = model.Id,
+                    Type = RequestType.Movie,
+                    RetryCount = 0
+                });
+                await _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
+            }
         }
     }
 }
