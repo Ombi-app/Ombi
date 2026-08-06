@@ -949,6 +949,7 @@ namespace Ombi.Controllers.V1
         }
 
         [HttpGet("notificationpreferences")]
+        [Authorize]
         public async Task<List<UserNotificationPreferences>> GetUserPreferences()
         {
             var username = User.Identity.Name.ToUpper();
@@ -957,10 +958,21 @@ namespace Ombi.Controllers.V1
         }
 
         [HttpGet("notificationpreferences/{userId}")]
-        public async Task<List<UserNotificationPreferences>> GetUserPreferences(string userId)
+        [Authorize]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(401)]
+        public async Task<IActionResult> GetUserPreferences(string userId)
         {
             var user = await UserManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
-            return await GetPreferences(user);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            if (!await HasAccessToUserPreferences(user))
+            {
+                return Unauthorized();
+            }
+            return Json(await GetPreferences(user));
         }
 
         private readonly List<NotificationAgent> _excludedAgents = new List<NotificationAgent>
@@ -969,6 +981,24 @@ namespace Ombi.Controllers.V1
             NotificationAgent.Mobile,
             NotificationAgent.Webhook
         };
+
+        private async Task<bool> HasAccessToUserPreferences(OmbiUser user)
+        {
+            // A user can always access their own preferences, otherwise the power user/admin role is required
+            var username = User.Identity.Name.ToUpper();
+            var me = await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
+            if (me == null)
+            {
+                return false;
+            }
+            if (me.Id.Equals(user.Id, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return true;
+            }
+            var isPowerUser = await UserManager.IsInRoleAsync(me, OmbiRoles.PowerUser);
+            var isAdmin = await UserManager.IsInRoleAsync(me, OmbiRoles.Admin);
+            return isPowerUser || isAdmin;
+        }
 
         private async Task<List<UserNotificationPreferences>> GetPreferences(OmbiUser user)
         {
@@ -993,36 +1023,33 @@ namespace Ombi.Controllers.V1
         }
 
         [HttpPost("NotificationPreferences")]
+        [Authorize]
         [ProducesResponseType(404)]
         [ProducesResponseType(401)]
         public async Task<IActionResult> AddUserNotificationPreference([FromBody] List<AddNotificationPreference> preferences)
         {
+            // Validate the whole batch up front so a failure part way through cannot
+            // leave the request partially applied
             foreach (var pref in preferences)
             {
-
                 // Make sure the user exists
                 var user = await UserManager.Users.FirstOrDefaultAsync(x => x.Id == pref.UserId);
                 if (user == null)
                 {
                     return NotFound();
                 }
-                // Check if we are editing a different user than ourself, if we are then we need to power user role
-
-                var username = User.Identity.Name.ToUpper();
-                var me = await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
-                if (!me.Id.Equals(user.Id, StringComparison.InvariantCultureIgnoreCase))
+                // Check if we are touching a different user than ourself, if we are then we need the power user role
+                if (!await HasAccessToUserPreferences(user))
                 {
-                    var isPowerUser = await UserManager.IsInRoleAsync(me, OmbiRoles.PowerUser);
-                    var isAdmin = await UserManager.IsInRoleAsync(me, OmbiRoles.Admin);
-                    if (!isPowerUser && !isAdmin)
-                    {
-                        return Unauthorized();
-                    }
+                    return Unauthorized();
                 }
+            }
 
+            foreach (var pref in preferences)
+            {
                 // Make sure we don't already have a preference for this agent
                 var existingPreference = await _userNotificationPreferences.GetAll()
-                    .FirstOrDefaultAsync(x => x.UserId == user.Id && x.Agent == pref.Agent);
+                    .FirstOrDefaultAsync(x => x.UserId == pref.UserId && x.Agent == pref.Agent);
                 if (existingPreference != null)
                 {
                     // Update it
