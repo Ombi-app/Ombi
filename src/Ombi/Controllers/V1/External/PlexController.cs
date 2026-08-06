@@ -69,7 +69,10 @@ namespace Ombi.Controllers.V1.External
                 // Do we already have settings?
                 _log.LogDebug("OK, signing into Plex");
                 var settings = await PlexSettings.GetSettingsAsync();
-                if (settings?.Servers?.Any() ?? false) return null;
+                // GetSettingsAsync never returns null (it falls back to a new instance), and the
+                // save path below dereferences settings directly, so keep the null-check on Servers
+                // only. Servers?. still handles the fresh-install case where the list is null.
+                if (settings.Servers?.Any() ?? false) return null;
 
                 _log.LogDebug("This is our first time, good to go!");
 
