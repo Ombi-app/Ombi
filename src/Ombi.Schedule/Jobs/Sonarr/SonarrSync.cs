@@ -44,6 +44,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
         {
             try
             {
+                var ct = job.CancellationToken;
                 var settings = await _settings.GetSettingsAsync();
                 if (!settings.Enabled)
                 {
@@ -67,10 +68,10 @@ namespace Ombi.Schedule.Jobs.Sonarr
                     var strat = _ctx.Database.CreateExecutionStrategy();
                     await strat.ExecuteAsync(async () =>
                     {
-                        using var tran = await _ctx.Database.BeginTransactionAsync();
-                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrCache");
-                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrEpisodeCache");
-                        await tran.CommitAsync();
+                        using var tran = await _ctx.Database.BeginTransactionAsync(ct);
+                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrCache", ct);
+                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrEpisodeCache", ct);
+                        await tran.CommitAsync(ct);
                     });
                     // Outside the transaction: MySQL ALTER TABLE AUTO_INCREMENT implicitly commits (see #5224)
                     await _ctx.Database.ResetAutoIncrementAsync("SonarrCache");
@@ -93,8 +94,8 @@ namespace Ombi.Schedule.Jobs.Sonarr
                         sonarrCacheToSave.Add(cache);
                     }
 
-                    await _ctx.SonarrCache.AddRangeAsync(sonarrCacheToSave);
-                    await _ctx.SaveChangesAsync();
+                    await _ctx.SonarrCache.AddRangeAsync(sonarrCacheToSave, ct);
+                    await _ctx.SaveChangesAsync(ct);
                     sonarrCacheToSave.Clear();
 
                     foreach (var s in ids)
@@ -122,11 +123,11 @@ namespace Ombi.Schedule.Jobs.Sonarr
                         strat = _ctx.Database.CreateExecutionStrategy();
                         await strat.ExecuteAsync(async () =>
                         {
-                            using var tran = await _ctx.Database.BeginTransactionAsync();
-                            await _ctx.SonarrEpisodeCache.AddRangeAsync(episodesToAdd);
+                            using var tran = await _ctx.Database.BeginTransactionAsync(ct);
+                            await _ctx.SonarrEpisodeCache.AddRangeAsync(episodesToAdd, ct);
                             _log.LogDebug("Commiting the transaction");
-                            await _ctx.SaveChangesAsync();
-                            await tran.CommitAsync();
+                            await _ctx.SaveChangesAsync(ct);
+                            await tran.CommitAsync(ct);
                         });
                     }
 
