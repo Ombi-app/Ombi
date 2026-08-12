@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +33,8 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly ITvRequestRepository _tvRequestRepository;
         private readonly IMusicRequestRepository _musicRequestRepository;
 
+        private const int MaxRetryLimit = 10;
+
         public async Task Execute(IJobExecutionContext job)
         {
             // Get all the failed ones!
@@ -40,6 +42,15 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             foreach (var request in failedRequests)
             {
+                // Abandon items exceeding max retries or carrying unretryable metadata errors
+                if (request.RetryCount >= MaxRetryLimit || 
+                    (!string.IsNullOrEmpty(request.Error) && request.Error.Contains("TVDBID is missing", StringComparison.OrdinalIgnoreCase)))
+                {
+                    await _requestQueue.Delete(request);
+                    await _requestQueue.SaveChangesAsync();
+                    continue;
+                }
+
                 if (request.Type == RequestType.Movie)
                 {
                     var movieRequest = await _movieRequestRepository.GetAll().FirstOrDefaultAsync(x => x.Id == request.RequestId);
@@ -55,6 +66,15 @@ namespace Ombi.Schedule.Jobs.Ombi
                     if (result.Success)
                     {
                         request.Completed = DateTime.UtcNow;
+                        await _requestQueue.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        request.RetryCount++;
+                        if (!string.IsNullOrEmpty(result.Message))
+                        {
+                            request.Error = result.Message;
+                        }
                         await _requestQueue.SaveChangesAsync();
                     }
                 }
@@ -73,6 +93,15 @@ namespace Ombi.Schedule.Jobs.Ombi
                         request.Completed = DateTime.UtcNow;
                         await _requestQueue.SaveChangesAsync();
                     }
+                    else
+                    {
+                        request.RetryCount++;
+                        if (!string.IsNullOrEmpty(result.Message))
+                        {
+                            request.Error = result.Message;
+                        }
+                        await _requestQueue.SaveChangesAsync();
+                    }
                 }
                 if (request.Type == RequestType.Album)
                 {
@@ -87,6 +116,15 @@ namespace Ombi.Schedule.Jobs.Ombi
                     if (result.Success)
                     {
                         request.Completed = DateTime.UtcNow;
+                        await _requestQueue.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        request.RetryCount++;
+                        if (!string.IsNullOrEmpty(result.Message))
+                        {
+                            request.Error = result.Message;
+                        }
                         await _requestQueue.SaveChangesAsync();
                     }
                 }
