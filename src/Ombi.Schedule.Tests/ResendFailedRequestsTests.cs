@@ -232,6 +232,38 @@ namespace Ombi.Schedule.Tests
         }
 
         [Test]
+        public async Task Execute_MarksCompleted_WhenTvRetrySucceeds()
+        {
+            var requestQueueItem = new RequestQueue
+            {
+                Id = 4,
+                RequestId = 103,
+                Type = RequestType.TvShow,
+                RetryCount = 1,
+                Completed = null
+            };
+
+            var tvRequest = new ChildRequests
+            {
+                Id = 103,
+                Title = "Success Show"
+            };
+
+            QueueRepo.Setup(x => x.GetAll()).Returns(new List<RequestQueue> { requestQueueItem }.AsQueryable().BuildMock());
+            TvRepo.Setup(x => x.GetChild()).Returns(new List<ChildRequests> { tvRequest }.AsQueryable().BuildMock());
+
+            TvSender.Setup(x => x.Send(tvRequest)).ReturnsAsync(new SenderResult
+            {
+                Success = true
+            });
+
+            await Job.Execute(null);
+
+            Assert.That(requestQueueItem.Completed, Is.Not.Null);
+            QueueRepo.Verify(x => x.SaveChangesAsync(), Times.Once);
+        }
+
+        [Test]
         public async Task Execute_MarksCompleted_WhenMovieRetrySucceeds()
         {
             var requestQueueItem = new RequestQueue
