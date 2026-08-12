@@ -94,14 +94,14 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         private async Task HandleRetryResultAsync(RequestQueue request, SenderResult result)
         {
-            if (result.Success)
+            if (result?.Success == true)
             {
                 request.Completed = DateTime.UtcNow;
             }
             else
             {
                 request.RetryCount++;
-                if (!string.IsNullOrEmpty(result.Message))
+                if (result != null && !string.IsNullOrEmpty(result.Message))
                 {
                     request.Error = result.Message;
                 }

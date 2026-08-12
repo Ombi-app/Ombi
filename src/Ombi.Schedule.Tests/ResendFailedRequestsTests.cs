@@ -294,5 +294,34 @@ namespace Ombi.Schedule.Tests
             Assert.That(requestQueueItem.Completed, Is.Not.Null);
             QueueRepo.Verify(x => x.SaveChangesAsync(), Times.Once);
         }
+
+        [Test]
+        public async Task Execute_HandlesNullSenderResult_WithoutThrowing()
+        {
+            var requestQueueItem = new RequestQueue
+            {
+                Id = 9,
+                RequestId = 108,
+                Type = RequestType.Movie,
+                RetryCount = 1,
+                Completed = null
+            };
+
+            var movieRequest = new MovieRequests
+            {
+                Id = 108,
+                Title = "Null Sender Movie"
+            };
+
+            QueueRepo.Setup(x => x.GetAll()).Returns(new List<RequestQueue> { requestQueueItem }.AsQueryable().BuildMock());
+            MovieRepo.Setup(x => x.GetAll()).Returns(new List<MovieRequests> { movieRequest }.AsQueryable().BuildMock());
+            MovieSender.Setup(x => x.Send(movieRequest, false)).ReturnsAsync((SenderResult)null);
+
+            await Job.Execute(null);
+
+            Assert.That(requestQueueItem.RetryCount, Is.EqualTo(2));
+            Assert.That(requestQueueItem.Completed, Is.Null);
+            QueueRepo.Verify(x => x.SaveChangesAsync(), Times.Once);
+        }
     }
 }
