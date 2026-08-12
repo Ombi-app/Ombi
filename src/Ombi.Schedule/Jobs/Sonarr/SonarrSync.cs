@@ -70,11 +70,11 @@ namespace Ombi.Schedule.Jobs.Sonarr
                         using var tran = await _ctx.Database.BeginTransactionAsync();
                         await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrCache");
                         await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrEpisodeCache");
-                        // Reset auto-increment to prevent Int32 overflow (see #5224)
-                        await _ctx.Database.ResetAutoIncrementAsync("SonarrCache");
-                        await _ctx.Database.ResetAutoIncrementAsync("SonarrEpisodeCache");
                         await tran.CommitAsync();
                     });
+                    // Outside the transaction: MySQL ALTER TABLE AUTO_INCREMENT implicitly commits (see #5224)
+                    await _ctx.Database.ResetAutoIncrementAsync("SonarrCache");
+                    await _ctx.Database.ResetAutoIncrementAsync("SonarrEpisodeCache");
 
                     var sonarrCacheToSave = new HashSet<SonarrCache>();
                     foreach (var id in ids)

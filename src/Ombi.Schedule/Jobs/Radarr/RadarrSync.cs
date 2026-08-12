@@ -42,11 +42,13 @@ namespace Ombi.Schedule.Jobs.Radarr
             {
                 _logger.LogInformation("[RadarrSync] Starting Radarr cache sync - clearing existing cache");
                 // Let's remove the old cached data
-                using var tran = await _ctx.Database.BeginTransactionAsync();
-                await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM RadarrCache");
-                // Reset auto-increment to prevent Int32 overflow (see #5224)
+                using (var tran = await _ctx.Database.BeginTransactionAsync())
+                {
+                    await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM RadarrCache");
+                    await tran.CommitAsync();
+                }
+                // Outside the transaction: MySQL ALTER TABLE AUTO_INCREMENT implicitly commits (see #5224)
                 await _ctx.Database.ResetAutoIncrementAsync("RadarrCache");
-                await tran.CommitAsync();
                 _logger.LogInformation("[RadarrSync] RadarrCache cleared");
 
                 var radarrSettings = _radarrSettings.GetSettingsAsync();
