@@ -55,6 +55,8 @@ namespace Ombi.Schedule.Jobs.Lidarr
                                 using (var tran = await _ctx.Database.BeginTransactionAsync())
                                 {
                                     await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM LidarrAlbumCache");
+                                    // Reset auto-increment to prevent Int32/Id overflow (see #5224)
+                                    await _ctx.Database.ResetAutoIncrementAsync("LidarrAlbumCache");
                                     await tran.CommitAsync();
                                 }
                             });
