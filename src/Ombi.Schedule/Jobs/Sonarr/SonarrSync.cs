@@ -69,8 +69,10 @@ namespace Ombi.Schedule.Jobs.Sonarr
                     {
                         using var tran = await _ctx.Database.BeginTransactionAsync();
                         await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrCache");
+                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrEpisodeCache");
                         // Reset auto-increment to prevent Int32 overflow (see #5224)
                         await _ctx.Database.ResetAutoIncrementAsync("SonarrCache");
+                        await _ctx.Database.ResetAutoIncrementAsync("SonarrEpisodeCache");
                         await tran.CommitAsync();
                     });
 
@@ -106,16 +108,6 @@ namespace Ombi.Schedule.Jobs.Sonarr
                         var episodes = await _api.GetEpisodes(s.Id, settings.ApiKey, settings.FullUri);
                         var monitoredEpisodes = episodes.Where(x => x.monitored || x.hasFile);
 
-                        // Delete existing episodes for this series before adding new ones
-                        strat = _ctx.Database.CreateExecutionStrategy();
-                        await strat.ExecuteAsync(async () =>
-                        {
-                            using var tran = await _ctx.Database.BeginTransactionAsync();
-                            await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrEpisodeCache WHERE TvDbId = {0}", s.TvDbId);
-                            await tran.CommitAsync();
-                        });
-
-                        //var allExistingEpisodes = await _ctx.SonarrEpisodeCache.Where(x => x.TvDbId == s.tvdbId).ToListAsync();
                         // Add to DB
                         _log.LogDebug("We have the episodes, adding to db transaction");
                         var episodesToAdd = monitoredEpisodes.Select(episode =>
@@ -127,32 +119,6 @@ namespace Ombi.Schedule.Jobs.Sonarr
                                     MovieDbId = s.MovieDbId,
                                     HasFile = episode.hasFile
                                 });
-                        //var episodesToAdd = new List<SonarrEpisodeCache>();
-
-                        //foreach (var monitored in monitoredEpisodes)
-                        //{
-                        //    var existing = allExistingEpisodes.FirstOrDefault(x => x.SeasonNumber == monitored.seasonNumber && x.EpisodeNumber == monitored.episodeNumber);
-                        //    if (existing == null)
-                        //    {
-                        //        // Just add a new one
-                        //        episodesToAdd.Add(new SonarrEpisodeCache
-                        //        {
-                        //            EpisodeNumber = monitored.episodeNumber,
-                        //            SeasonNumber = monitored.seasonNumber,
-                        //            TvDbId = s.tvdbId,
-                        //            HasFile = monitored.hasFile
-                        //        });
-                        //    } 
-                        //    else
-                        //    {
-                        //        // Do we need to update the availability?
-                        //        if (monitored.hasFile != existing.HasFile)
-                        //        {
-                        //            existing.HasFile = monitored.hasFile;
-                        //        }
-                        //    }
-
-                        //}
                         strat = _ctx.Database.CreateExecutionStrategy();
                         await strat.ExecuteAsync(async () =>
                         {

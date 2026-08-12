@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Ombi.Store.Entities
 {
     [Table("LidarrAlbumCache")]
-    public class LidarrAlbumCache : Entity
+    public class LidarrAlbumCache : LongEntity
     {
         public int ArtistId { get; set; }
         public string ForeignAlbumId { get; set; }

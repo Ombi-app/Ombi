@@ -6,6 +6,7 @@ namespace Ombi.Store.Entities
 {
     public interface IMediaServerContent : IEntity
     {
+        public int Id { get; set; }
         public string Title { get; set; }
         public string ImdbId { get; set; }
         public string TvDbId { get; set; }
