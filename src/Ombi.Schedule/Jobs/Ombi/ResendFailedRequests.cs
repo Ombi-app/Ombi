@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core;
@@ -37,8 +38,10 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         public async Task Execute(IJobExecutionContext job)
         {
+            var cancellationToken = job?.CancellationToken ?? CancellationToken.None;
+
             // Get all the failed ones!
-            var failedRequests = await _requestQueue.GetAll().Where(x => x.Completed == null).ToListAsync();
+            var failedRequests = await _requestQueue.GetAll().Where(x => x.Completed == null).ToListAsync(cancellationToken);
 
             foreach (var request in failedRequests)
             {
@@ -53,7 +56,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 if (request.Type == RequestType.Movie)
                 {
-                    var movieRequest = await _movieRequestRepository.GetAll().FirstOrDefaultAsync(x => x.Id == request.RequestId);
+                    var movieRequest = await _movieRequestRepository.GetAll().FirstOrDefaultAsync(x => x.Id == request.RequestId, cancellationToken);
                     if (movieRequest == null)
                     {
                         await _requestQueue.Delete(request);
@@ -67,7 +70,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
                 if (request.Type == RequestType.TvShow)
                 {
-                    var tvRequest = await _tvRequestRepository.GetChild().FirstOrDefaultAsync(x => x.Id == request.RequestId);
+                    var tvRequest = await _tvRequestRepository.GetChild().FirstOrDefaultAsync(x => x.Id == request.RequestId, cancellationToken);
                     if (tvRequest == null)
                     {
                         await _requestQueue.Delete(request);
@@ -79,7 +82,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
                 if (request.Type == RequestType.Album)
                 {
-                    var musicRequest = await _musicRequestRepository.GetAll().FirstOrDefaultAsync(x => x.Id == request.RequestId);
+                    var musicRequest = await _musicRequestRepository.GetAll().FirstOrDefaultAsync(x => x.Id == request.RequestId, cancellationToken);
                     if (musicRequest == null)
                     {
                         await _requestQueue.Delete(request);
