@@ -124,6 +124,7 @@ namespace Ombi.Schedule.Tests
 
             QueueRepo.Verify(x => x.Delete(It.IsAny<RequestQueue>()), Times.Never);
             Assert.That(requestQueueItem.Completed, Is.Not.Null);
+            QueueRepo.Verify(x => x.SaveChangesAsync(), Times.Once);
         }
 
         [Test]
