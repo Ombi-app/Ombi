@@ -43,8 +43,8 @@ namespace Ombi.Schedule.Jobs.Ombi
             foreach (var request in failedRequests)
             {
                 // Abandon items exceeding max retries or carrying unretryable metadata errors
-                if (request.RetryCount >= MaxRetryLimit || 
-                    (!string.IsNullOrEmpty(request.Error) && request.Error.Contains("TVDBID is missing", StringComparison.OrdinalIgnoreCase)))
+                if (request.RetryCount >= MaxRetryLimit ||
+                    (request.Type == RequestType.TvShow && !string.IsNullOrEmpty(request.Error) && request.Error.Contains("TVDBID is missing", StringComparison.OrdinalIgnoreCase)))
                 {
                     await _requestQueue.Delete(request);
                     await _requestQueue.SaveChangesAsync();
@@ -63,20 +63,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                     // TODO probably need to add something to the request queue to better idenitfy if it's a 4k request
                     var result = await _movieSender.Send(movieRequest, movieRequest.Approved4K);
-                    if (result.Success)
-                    {
-                        request.Completed = DateTime.UtcNow;
-                        await _requestQueue.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        request.RetryCount++;
-                        if (!string.IsNullOrEmpty(result.Message))
-                        {
-                            request.Error = result.Message;
-                        }
-                        await _requestQueue.SaveChangesAsync();
-                    }
+                    await HandleRetryResultAsync(request, result);
                 }
                 if (request.Type == RequestType.TvShow)
                 {
@@ -88,20 +75,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         continue;
                     }
                     var result = await _tvSender.Send(tvRequest);
-                    if (result.Success)
-                    {
-                        request.Completed = DateTime.UtcNow;
-                        await _requestQueue.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        request.RetryCount++;
-                        if (!string.IsNullOrEmpty(result.Message))
-                        {
-                            request.Error = result.Message;
-                        }
-                        await _requestQueue.SaveChangesAsync();
-                    }
+                    await HandleRetryResultAsync(request, result);
                 }
                 if (request.Type == RequestType.Album)
                 {
@@ -113,22 +87,26 @@ namespace Ombi.Schedule.Jobs.Ombi
                         continue;
                     }
                     var result = await _musicSender.Send(musicRequest);
-                    if (result.Success)
-                    {
-                        request.Completed = DateTime.UtcNow;
-                        await _requestQueue.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        request.RetryCount++;
-                        if (!string.IsNullOrEmpty(result.Message))
-                        {
-                            request.Error = result.Message;
-                        }
-                        await _requestQueue.SaveChangesAsync();
-                    }
+                    await HandleRetryResultAsync(request, result);
                 }
             }
+        }
+
+        private async Task HandleRetryResultAsync(RequestQueue request, SenderResult result)
+        {
+            if (result.Success)
+            {
+                request.Completed = DateTime.UtcNow;
+            }
+            else
+            {
+                request.RetryCount++;
+                if (!string.IsNullOrEmpty(result.Message))
+                {
+                    request.Error = result.Message;
+                }
+            }
+            await _requestQueue.SaveChangesAsync();
         }
     }
 }

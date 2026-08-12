@@ -73,7 +73,7 @@ namespace Ombi.Schedule.Tests
         }
 
         [Test]
-        public async Task Execute_DeletesRequest_WhenErrorContainsTvdbIdMissing()
+        public async Task Execute_DeletesRequest_WhenErrorContainsTvdbIdMissing_ForTvShow()
         {
             var failedRequests = new List<RequestQueue>
             {
@@ -98,7 +98,36 @@ namespace Ombi.Schedule.Tests
         }
 
         [Test]
-        public async Task Execute_IncrementsRetryCount_WhenRetryFails()
+        public async Task Execute_DoesNotDelete_WhenErrorContainsTvdbIdMissing_ForMovie()
+        {
+            var requestQueueItem = new RequestQueue
+            {
+                Id = 20,
+                RequestId = 201,
+                Type = RequestType.Movie,
+                RetryCount = 1,
+                Error = "TVDBID is missing\n",
+                Completed = null
+            };
+
+            var movieRequest = new MovieRequests
+            {
+                Id = 201,
+                Title = "Test Movie"
+            };
+
+            QueueRepo.Setup(x => x.GetAll()).Returns(new List<RequestQueue> { requestQueueItem }.AsQueryable().BuildMock());
+            MovieRepo.Setup(x => x.GetAll()).Returns(new List<MovieRequests> { movieRequest }.AsQueryable().BuildMock());
+            MovieSender.Setup(x => x.Send(movieRequest, false)).ReturnsAsync(new SenderResult { Success = true });
+
+            await Job.Execute(null);
+
+            QueueRepo.Verify(x => x.Delete(It.IsAny<RequestQueue>()), Times.Never);
+            Assert.That(requestQueueItem.Completed, Is.Not.Null);
+        }
+
+        [Test]
+        public async Task Execute_IncrementsRetryCount_WhenTvRetryFails()
         {
             var requestQueueItem = new RequestQueue
             {
@@ -133,27 +162,129 @@ namespace Ombi.Schedule.Tests
         }
 
         [Test]
-        public async Task Execute_MarksCompleted_WhenRetrySucceeds()
+        public async Task Execute_IncrementsRetryCount_WhenMovieRetryFails()
         {
             var requestQueueItem = new RequestQueue
             {
-                Id = 4,
-                RequestId = 103,
-                Type = RequestType.TvShow,
+                Id = 5,
+                RequestId = 104,
+                Type = RequestType.Movie,
+                RetryCount = 2,
+                Completed = null
+            };
+
+            var movieRequest = new MovieRequests
+            {
+                Id = 104,
+                Title = "Test Movie"
+            };
+
+            QueueRepo.Setup(x => x.GetAll()).Returns(new List<RequestQueue> { requestQueueItem }.AsQueryable().BuildMock());
+            MovieRepo.Setup(x => x.GetAll()).Returns(new List<MovieRequests> { movieRequest }.AsQueryable().BuildMock());
+
+            MovieSender.Setup(x => x.Send(movieRequest, false)).ReturnsAsync(new SenderResult
+            {
+                Success = false,
+                Message = "Radarr offline"
+            });
+
+            await Job.Execute(null);
+
+            Assert.That(requestQueueItem.RetryCount, Is.EqualTo(3));
+            Assert.That(requestQueueItem.Error, Is.EqualTo("Radarr offline"));
+            Assert.That(requestQueueItem.Completed, Is.Null);
+            QueueRepo.Verify(x => x.SaveChangesAsync(), Times.Once);
+        }
+
+        [Test]
+        public async Task Execute_IncrementsRetryCount_WhenAlbumRetryFails()
+        {
+            var requestQueueItem = new RequestQueue
+            {
+                Id = 6,
+                RequestId = 105,
+                Type = RequestType.Album,
+                RetryCount = 2,
+                Completed = null
+            };
+
+            var albumRequest = new AlbumRequest
+            {
+                Id = 105,
+                Title = "Test Album"
+            };
+
+            QueueRepo.Setup(x => x.GetAll()).Returns(new List<RequestQueue> { requestQueueItem }.AsQueryable().BuildMock());
+            MusicRepo.Setup(x => x.GetAll()).Returns(new List<AlbumRequest> { albumRequest }.AsQueryable().BuildMock());
+
+            MusicSender.Setup(x => x.Send(albumRequest)).ReturnsAsync(new SenderResult
+            {
+                Success = false,
+                Message = "Lidarr offline"
+            });
+
+            await Job.Execute(null);
+
+            Assert.That(requestQueueItem.RetryCount, Is.EqualTo(3));
+            Assert.That(requestQueueItem.Error, Is.EqualTo("Lidarr offline"));
+            Assert.That(requestQueueItem.Completed, Is.Null);
+            QueueRepo.Verify(x => x.SaveChangesAsync(), Times.Once);
+        }
+
+        [Test]
+        public async Task Execute_MarksCompleted_WhenMovieRetrySucceeds()
+        {
+            var requestQueueItem = new RequestQueue
+            {
+                Id = 7,
+                RequestId = 106,
+                Type = RequestType.Movie,
                 RetryCount = 1,
                 Completed = null
             };
 
-            var tvRequest = new ChildRequests
+            var movieRequest = new MovieRequests
             {
-                Id = 103,
-                Title = "Success Show"
+                Id = 106,
+                Title = "Success Movie"
             };
 
             QueueRepo.Setup(x => x.GetAll()).Returns(new List<RequestQueue> { requestQueueItem }.AsQueryable().BuildMock());
-            TvRepo.Setup(x => x.GetChild()).Returns(new List<ChildRequests> { tvRequest }.AsQueryable().BuildMock());
+            MovieRepo.Setup(x => x.GetAll()).Returns(new List<MovieRequests> { movieRequest }.AsQueryable().BuildMock());
 
-            TvSender.Setup(x => x.Send(tvRequest)).ReturnsAsync(new SenderResult
+            MovieSender.Setup(x => x.Send(movieRequest, false)).ReturnsAsync(new SenderResult
+            {
+                Success = true
+            });
+
+            await Job.Execute(null);
+
+            Assert.That(requestQueueItem.Completed, Is.Not.Null);
+            QueueRepo.Verify(x => x.SaveChangesAsync(), Times.Once);
+        }
+
+        [Test]
+        public async Task Execute_MarksCompleted_WhenAlbumRetrySucceeds()
+        {
+            var requestQueueItem = new RequestQueue
+            {
+                Id = 8,
+                RequestId = 107,
+                Type = RequestType.Album,
+                RetryCount = 1,
+                Completed = null
+            };
+
+            var albumRequest = new AlbumRequest
+            {
+                Id = 107,
+                Title = "Success Album"
+            };
+
+            QueueRepo.Setup(x => x.GetAll()).Returns(new List<RequestQueue> { requestQueueItem }.AsQueryable().BuildMock());
+            MusicRepo.Setup(x => x.GetAll()).Returns(new List<AlbumRequest> { albumRequest }.AsQueryable().BuildMock());
+
+            MusicSender.Setup(x => x.Send(albumRequest)).ReturnsAsync(new SenderResult
             {
                 Success = true
             });
