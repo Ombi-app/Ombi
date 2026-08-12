@@ -55,11 +55,11 @@ namespace Ombi.Schedule.Jobs.Lidarr
                                 using (var tran = await _ctx.Database.BeginTransactionAsync())
                                 {
                                     await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM LidarrAlbumCache");
-                                    // Reset auto-increment to prevent Int32/Id overflow (see #5224)
-                                    await _ctx.Database.ResetAutoIncrementAsync("LidarrAlbumCache");
                                     await tran.CommitAsync();
                                 }
                             });
+                            // Outside the transaction: MySQL ALTER TABLE AUTO_INCREMENT implicitly commits (see #5224)
+                            await _ctx.Database.ResetAutoIncrementAsync("LidarrAlbumCache");
 
                             var albumCache = new List<LidarrAlbumCache>();
                             foreach (var a in albums)
