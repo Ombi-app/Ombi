@@ -59,6 +59,8 @@ namespace Ombi.Controllers.V1
         private readonly ISettingsService<UserManagementSettings> _userManagementSettings;
         private readonly ISettingsService<PlexSettings> _plexSettings;
 
+        private const string PlexAccountUnauthorizedMessage = "This Plex account is not authorized to access Ombi";
+
         /// <summary>
         /// Creates a strong Plex OAuth PIN from the Ombi backend.
         /// Keeping PIN creation server-side avoids Plex cross-origin PIN creation issues.
@@ -285,7 +287,7 @@ namespace Ombi.Controllers.V1
                     _log.LogWarning("Plex OAuth username and email resolve to different Ombi accounts; refusing authentication.");
                     return new JsonResult(new
                     {
-                        errorMessage = "This Plex account is not authorized to access Ombi"
+                        errorMessage = PlexAccountUnauthorizedMessage
                     });
                 }
 
@@ -297,7 +299,7 @@ namespace Ombi.Controllers.V1
                     _log.LogWarning("An Ombi account matched by Plex username/email is already linked to a different Plex identity; refusing authentication.");
                     return new JsonResult(new
                     {
-                        errorMessage = "This Plex account is not authorized to access Ombi"
+                        errorMessage = PlexAccountUnauthorizedMessage
                     });
                 }
 
@@ -343,9 +345,19 @@ namespace Ombi.Controllers.V1
                         _log.LogWarning("A local Ombi account matches the Plex username but has a different email; refusing automatic account linking.");
                         return new JsonResult(new
                         {
-                            errorMessage = "This Plex account is not authorized to access Ombi"
+                            errorMessage = PlexAccountUnauthorizedMessage
                         });
                     }
+                }
+                else if (identityCandidate != null)
+                {
+                    _log.LogWarning(
+                        "An Ombi account of type {UserType} matched the Plex username or email; refusing automatic account linking.",
+                        identityCandidate.UserType);
+                    return new JsonResult(new
+                    {
+                        errorMessage = PlexAccountUnauthorizedMessage
+                    });
                 }
 
                 if (user == null)
@@ -526,7 +538,7 @@ namespace Ombi.Controllers.V1
                         account.user.id, plexUserName);
                     return new JsonResult(new
                     {
-                        errorMessage = "This Plex account is not authorized to access Ombi"
+                        errorMessage = PlexAccountUnauthorizedMessage
                     });
                 }
             }
