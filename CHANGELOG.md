@@ -1,3 +1,7 @@
+## [4.60.17](https://github.com/ExtremeFiretop/Ombi-Fix/compare/v4.60.16...v4.60.17) (2026-08-14)
+
+
+
 ## [4.60.16](https://github.com/ExtremeFiretop/Ombi-Fix/compare/v4.60.15...v4.60.16) (2026-08-14)
 
 
@@ -550,10 +554,6 @@
 ### Performance Improvements
 
 * Improvements to api calls ([6907604](https://github.com/ExtremeFiretop/Ombi-Fix/commit/69076047f5ace434b175fa424acd78d87eeeb1de))
-
-
-
-## [4.55.2](https://github.com/ExtremeFiretop/Ombi-Fix/compare/v4.55.1...v4.55.2) (2026-02-10)
 
 
 
