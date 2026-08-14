@@ -185,8 +185,8 @@ namespace Ombi.Schedule.Jobs.Plex
             var candidates = await _ombiUserManager.Users
                 .Where(u =>
                     (u.UserType == UserType.PlexUser || u.UserType == UserType.LocalUser) &&
-                    u.ProviderUserId != null && u.ProviderUserId != string.Empty &&
-                    u.MediaServerToken != null && u.MediaServerToken != string.Empty)
+                    !string.IsNullOrWhiteSpace(u.ProviderUserId) &&
+                    !string.IsNullOrWhiteSpace(u.MediaServerToken))
                 .ToListAsync(ct);
 
             foreach (var candidate in candidates)

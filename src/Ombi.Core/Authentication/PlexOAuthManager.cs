@@ -38,8 +38,13 @@ namespace Ombi.Core.Authentication
             {
                 // The PIN code is authentication material. Keep it server-side so polling only needs
                 // the numeric PIN id and the code never has to be placed in Ombi request URLs.
-                var lifetimeSeconds = pin.Result.expiresIn > 0 ? Math.Min(pin.Result.expiresIn, 1800) : 1800;
-                _memoryCache.Set(GetPinCacheKey(pin.Result.id), pin.Result.code, TimeSpan.FromSeconds(lifetimeSeconds));
+                var lifetimeSeconds = pin.Result.expiresIn > 0 ? Math.Min(pin.Result.expiresIn, 1800) : 300;
+                var cacheOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(lifetimeSeconds),
+                    Size = 1
+                };
+                _memoryCache.Set(GetPinCacheKey(pin.Result.id), pin.Result.code, cacheOptions);
             }
 
             return pin;

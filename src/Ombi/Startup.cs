@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,11 +23,13 @@ using Serilog;
 using System;
 using System.IO;
 using Microsoft.AspNetCore.StaticFiles.Infrastructure;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using ILogger = Serilog.ILogger;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Ombi.HealthChecks;
 using Ombi.Attributes;
+using System.Threading.RateLimiting;
 
 namespace Ombi
 {
@@ -83,6 +86,21 @@ namespace Ombi
             services.AddMemoryCache();
             services.AddLazyCache();
             services.AddHttpClient();
+
+            services.AddRateLimiter(options =>
+            {
+                options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+                options.AddPolicy("PlexPinCreation", httpContext =>
+                    RateLimitPartition.GetFixedWindowLimiter(
+                        partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                        factory: _ => new FixedWindowRateLimiterOptions
+                        {
+                            AutoReplenishment = true,
+                            PermitLimit = 10,
+                            QueueLimit = 0,
+                            Window = TimeSpan.FromMinutes(1)
+                        }));
+            });
 
             services.AddJwtAuthentication();
 
@@ -169,6 +187,7 @@ namespace Ombi
             app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseMiddleware<ApiKeyMiddlewear>();
             app.UseRouting();
+            app.UseRateLimiter();
 
             app.UseAuthentication();
             app.UseAuthorization();

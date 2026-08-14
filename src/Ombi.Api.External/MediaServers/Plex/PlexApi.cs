@@ -73,7 +73,7 @@ namespace Ombi.Api.External.MediaServers.Plex
         private const string WatchlistUri = "https://discover.provider.plex.tv/";
         private const string CommunityApiUri = "https://community.plex.tv/api";
         private const string ApplicationJson = "application/json";
-        private static readonly string PlexTvBaseUri = new Uri(SignInUri).GetLeftPart(UriPartial.Authority) + "/";
+        private static readonly string PlexTvBaseUri = new Uri(SignInUri).GetLeftPart(UriPartial.Authority);
 
         private const string AllFriendsQuery = @"query GetAllFriends { allFriendsV2 { user { id username displayName avatar } createdAt } }";
         private const string UserWatchlistQuery = @"query GetWatchlistHub($user: UserInput!, $first: PaginationInt!, $after: String) { userV2(user: $user) { ... on User { watchlist(first: $first, after: $after) { nodes { id title type } pageInfo { hasNextPage endCursor } } } } }";

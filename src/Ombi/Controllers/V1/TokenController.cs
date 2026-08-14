@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -63,6 +64,7 @@ namespace Ombi.Controllers.V1
         /// Keeping PIN creation server-side avoids Plex cross-origin PIN creation issues.
         /// </summary>
         [HttpPost("plexpin")]
+        [EnableRateLimiting("PlexPinCreation")]
         public async Task<IActionResult> CreatePlexPin()
         {
             var pin = await _plexOAuthManager.CreatePin();

@@ -24,7 +24,7 @@ namespace Ombi.Core.Tests.Authentication
         public void Setup()
         {
             _mocker = new AutoMocker();
-            _memoryCache = new MemoryCache(new MemoryCacheOptions());
+            _memoryCache = new MemoryCache(new MemoryCacheOptions { SizeLimit = 10 });
             _mocker.Use<IMemoryCache>(_memoryCache);
             _mocker.Use(Mock.Of<ILogger<PlexOAuthManager>>());
         }
