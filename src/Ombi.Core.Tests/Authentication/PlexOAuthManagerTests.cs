@@ -1,9 +1,10 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.AutoMock;
 using NUnit.Framework;
-using Microsoft.Extensions.Logging;
 using Ombi.Api.External.MediaServers.Plex;
 using Ombi.Api.External.MediaServers.Plex.Models.OAuth;
 using Ombi.Core.Authentication;
@@ -17,11 +18,21 @@ namespace Ombi.Core.Tests.Authentication
     public class PlexOAuthManagerTests
     {
         private AutoMocker _mocker;
+        private MemoryCache _memoryCache;
 
         [SetUp]
         public void Setup()
         {
             _mocker = new AutoMocker();
+            _memoryCache = new MemoryCache(new MemoryCacheOptions());
+            _mocker.Use<IMemoryCache>(_memoryCache);
+            _mocker.Use(Mock.Of<ILogger<PlexOAuthManager>>());
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _memoryCache.Dispose();
         }
 
         private PlexOAuthManager CreateSubject()
@@ -30,20 +41,32 @@ namespace Ombi.Core.Tests.Authentication
         }
 
         [Test]
-        public async Task GetAccessTokenFromPin_ReturnsToken_WhenPinValid_AndClientIdMatches()
+        public async Task CreatePin_CachesCode_AndPollingUsesIt()
         {
-            // Arrange
             var guid = Guid.NewGuid();
             var clientId = guid.ToString("N");
 
             _mocker.GetMock<IPlexApi>()
-                .Setup(x => x.GetPin(It.IsAny<int>()))
+                .Setup(x => x.CreatePin())
                 .ReturnsAsync(new OAuthContainer
                 {
                     Result = new OAuthPin
                     {
                         id = 123,
-                        code = "code",
+                        code = "pin-code",
+                        clientIdentifier = clientId,
+                        expiresIn = 60
+                    }
+                });
+
+            _mocker.GetMock<IPlexApi>()
+                .Setup(x => x.GetPin(123, "pin-code"))
+                .ReturnsAsync(new OAuthContainer
+                {
+                    Result = new OAuthPin
+                    {
+                        id = 123,
+                        code = "pin-code",
                         trusted = true,
                         clientIdentifier = clientId,
                         expiresIn = 60,
@@ -51,64 +74,67 @@ namespace Ombi.Core.Tests.Authentication
                     }
                 });
 
-            _mocker.GetMock<ISettingsService<CustomizationSettings>>()
-                .Setup(x => x.GetSettingsAsync())
-                .ReturnsAsync(new CustomizationSettings());
-
             _mocker.GetMock<ISettingsService<PlexSettings>>()
                 .Setup(x => x.GetSettingsAsync())
                 .ReturnsAsync(new PlexSettings { InstallId = guid });
 
-            _mocker.Use(Mock.Of<ILogger<PlexOAuthManager>>());
-
             var subject = CreateSubject();
 
-            // Act
+            await subject.CreatePin();
             var token = await subject.GetAccessTokenFromPin(123);
 
-            // Assert
             Assert.AreEqual("auth-token", token);
+            _mocker.GetMock<IPlexApi>().Verify(x => x.GetPin(123, "pin-code"), Times.Once);
         }
 
         [Test]
-        public async Task GetAccessTokenFromPin_ReturnsToken_WhenPinValid_AndClientIdMismatch()
+        public async Task GetAccessTokenFromPin_ReturnsEmpty_WhenPinCodeIsNotCached()
         {
-            // Arrange
-            var serverGuid = Guid.NewGuid();
-            var pinGuid = Guid.NewGuid();
+            var subject = CreateSubject();
+
+            var token = await subject.GetAccessTokenFromPin(999);
+
+            Assert.That(token, Is.Empty);
+            _mocker.GetMock<IPlexApi>().Verify(x => x.GetPin(It.IsAny<int>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Test]
+        public async Task SuccessfulPolling_RemovesCachedPinCode()
+        {
+            var guid = Guid.NewGuid();
+            var clientId = guid.ToString("N");
 
             _mocker.GetMock<IPlexApi>()
-                .Setup(x => x.GetPin(It.IsAny<int>()))
+                .Setup(x => x.CreatePin())
+                .ReturnsAsync(new OAuthContainer
+                {
+                    Result = new OAuthPin { id = 456, code = "one-use-code", clientIdentifier = clientId, expiresIn = 60 }
+                });
+
+            _mocker.GetMock<IPlexApi>()
+                .Setup(x => x.GetPin(456, "one-use-code"))
                 .ReturnsAsync(new OAuthContainer
                 {
                     Result = new OAuthPin
                     {
                         id = 456,
-                        code = "code",
-                        trusted = true,
-                        clientIdentifier = pinGuid.ToString("N"),
+                        code = "one-use-code",
+                        clientIdentifier = clientId,
                         expiresIn = 60,
                         authToken = "auth-token-2"
                     }
                 });
 
-            _mocker.GetMock<ISettingsService<CustomizationSettings>>()
-                .Setup(x => x.GetSettingsAsync())
-                .ReturnsAsync(new CustomizationSettings());
-
             _mocker.GetMock<ISettingsService<PlexSettings>>()
                 .Setup(x => x.GetSettingsAsync())
-                .ReturnsAsync(new PlexSettings { InstallId = serverGuid });
-
-            _mocker.Use(Mock.Of<ILogger<PlexOAuthManager>>());
+                .ReturnsAsync(new PlexSettings { InstallId = guid });
 
             var subject = CreateSubject();
+            await subject.CreatePin();
 
-            // Act
-            var token = await subject.GetAccessTokenFromPin(456);
-
-            // Assert
-            Assert.AreEqual("auth-token-2", token);
+            Assert.AreEqual("auth-token-2", await subject.GetAccessTokenFromPin(456));
+            Assert.That(await subject.GetAccessTokenFromPin(456), Is.Empty);
+            _mocker.GetMock<IPlexApi>().Verify(x => x.GetPin(456, "one-use-code"), Times.Once);
         }
     }
 }

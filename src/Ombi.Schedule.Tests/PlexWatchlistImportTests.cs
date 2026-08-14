@@ -145,6 +145,86 @@ namespace Ombi.Schedule.Tests
         }
 
         [Test]
+        public async Task LinkedLocalAdminOAuthToken_IsUsedForWatchlistImport()
+        {
+            var users = new List<OmbiUser>
+            {
+                new OmbiUser
+                {
+                    Id = AdminOmbiId,
+                    UserName = "owner",
+                    NormalizedUserName = "OWNER",
+                    UserType = UserType.LocalUser,
+                    ProviderUserId = AdminUuid,
+                    MediaServerToken = AdminToken
+                },
+            };
+            var userMgr = MockHelper.MockUserManager(users);
+            SetupAdminRole(userMgr, AdminOmbiId);
+            _mocker.Use(userMgr);
+            _subject = _mocker.CreateInstance<PlexWatchlistImport>();
+            UseDefaultPlexSettings();
+
+            await _subject.Execute(_context.Object);
+
+            _mocker.Verify<IPlexApi>(x => x.GetAllFriends(AdminToken, It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test]
+        public async Task LinkedSystemUserOAuthToken_IsIgnoredForWatchlistImport()
+        {
+            var users = new List<OmbiUser>
+            {
+                new OmbiUser
+                {
+                    Id = AdminOmbiId,
+                    UserName = "system",
+                    NormalizedUserName = "SYSTEM",
+                    UserType = UserType.SystemUser,
+                    ProviderUserId = AdminUuid,
+                    MediaServerToken = AdminToken
+                },
+            };
+            var userMgr = MockHelper.MockUserManager(users);
+            SetupAdminRole(userMgr, AdminOmbiId);
+            _mocker.Use(userMgr);
+            _subject = _mocker.CreateInstance<PlexWatchlistImport>();
+            UseDefaultPlexSettings();
+
+            await _subject.Execute(_context.Object);
+
+            _mocker.Verify<IPlexApi>(x => x.GetAccount(It.IsAny<string>()), Times.Never);
+            _mocker.Verify<IPlexApi>(x => x.GetAllFriends(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Test]
+        public async Task LinkedLocalNonAdminOAuthToken_IsIgnoredForWatchlistImport()
+        {
+            var users = new List<OmbiUser>
+            {
+                new OmbiUser
+                {
+                    Id = "local-user",
+                    UserName = "owner",
+                    NormalizedUserName = "OWNER",
+                    UserType = UserType.LocalUser,
+                    ProviderUserId = AdminUuid,
+                    MediaServerToken = AdminToken
+                },
+            };
+            var userMgr = MockHelper.MockUserManager(users);
+            userMgr.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), OmbiRoles.Admin)).ReturnsAsync(false);
+            _mocker.Use(userMgr);
+            _subject = _mocker.CreateInstance<PlexWatchlistImport>();
+            UseDefaultPlexSettings();
+
+            await _subject.Execute(_context.Object);
+
+            _mocker.Verify<IPlexApi>(x => x.GetAccount(It.IsAny<string>()), Times.Never);
+            _mocker.Verify<IPlexApi>(x => x.GetAllFriends(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Test]
         public async Task FetchesFriendsListWithAdminToken()
         {
             UseDefaultPlexSettings();

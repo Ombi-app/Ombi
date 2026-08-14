@@ -240,10 +240,49 @@ namespace Ombi.Api.External.MediaServers.Plex
             return await Api.Request<PlexMetadata>(request);
         }
 
-        public async Task<OAuthContainer> GetPin(int pinId)
+        public async Task<OAuthContainer> CreatePin()
+        {
+            // Create the strong Plex PIN from the Ombi backend rather than directly from the
+            // browser. Plex PINs created by a cross-origin browser request can authenticate
+            // successfully in the Plex popup but subsequently fail redemption with code 1020.
+            // This mirrors Plex's working server-side form flow.
+            var request = new Request("api/v2/pins", "https://plex.tv/", HttpMethod.Post);
+            var settings = await _plexSettings.GetSettingsAsync();
+
+            request.AddHeader("Accept", "application/json");
+            request.AddFormBody("strong", "true");
+            request.AddFormBody("X-Plex-Product", ApplicationName);
+            request.AddFormBody("X-Plex-Client-Identifier", settings.InstallId.ToString("N"));
+
+            var response = await Api.RequestContent(request);
+
+            if (response.Contains("errors"))
+            {
+                var errors = JsonConvert.DeserializeObject<OAuthErrorsContainer>(response, Ombi.Api.Api.Settings);
+                return new OAuthContainer
+                {
+                    Errors = errors
+                };
+            }
+
+            var pinResult = JsonConvert.DeserializeObject<OAuthPin>(response, Ombi.Api.Api.Settings);
+            return new OAuthContainer
+            {
+                Result = pinResult
+            };
+        }
+
+        public async Task<OAuthContainer> GetPin(int pinId, string pinCode)
         {
             var request = new Request($"api/v2/pins/{pinId}", "https://plex.tv/", HttpMethod.Get);
-            await AddHeaders(request);
+
+            // Plex's strong-PIN polling flow expects both the PIN code and the client identifier
+            // as application/x-www-form-urlencoded values on the GET request. Supplying only the
+            // client identifier header causes Plex to answer 404 / code 1020 (code not found or expired).
+            var settings = await _plexSettings.GetSettingsAsync();
+            request.AddHeader("Accept", "application/json");
+            request.AddFormBody("code", pinCode);
+            request.AddFormBody("X-Plex-Client-Identifier", settings.InstallId.ToString("N"));
 
             var response = await Api.RequestContent(request);
 

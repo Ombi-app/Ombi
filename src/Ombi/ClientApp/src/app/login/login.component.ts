@@ -214,7 +214,7 @@ export class LoginComponent implements OnDestroy, OnInit {
         width=500,
         height=500`
     );
-    this.plexTv.GetPin(this.clientId, this.appName).subscribe({
+    this.plexTv.GetPin().subscribe({
       next: (pin: any) => {
         this.authService
           .login({
