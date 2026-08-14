@@ -262,55 +262,89 @@ namespace Ombi.Controllers.V1
 
             if (user == null)
             {
-                // Preserve the original Plex-user username/email fallback, but only treat an
-                // existing LocalUser as a link candidate under stricter identity rules below.
+                // Resolve username and email candidates together before authorizing either one.
+                // This prevents recycled usernames/emails from linking a Plex identity to the wrong
+                // Ombi account and never overwrites an existing, different ProviderUserId.
                 OmbiUser matchingUser = null;
                 OmbiUser usernameMatch = null;
+                OmbiUser emailMatch = null;
 
                 if (!string.IsNullOrEmpty(plexUserName))
                 {
                     usernameMatch = await _userManager.FindByNameAsync(plexUserName);
-                    if (usernameMatch?.UserType == UserType.PlexUser)
-                    {
-                        user = usernameMatch;
-                    }
                 }
 
-                if (user == null && !string.IsNullOrEmpty(account.user.email))
+                if (!string.IsNullOrEmpty(account.user.email))
                 {
-                    var emailMatch = await _userManager.FindByEmailAsync(account.user.email);
-                    if (emailMatch?.UserType == UserType.PlexUser)
-                    {
-                        user = emailMatch;
-                    }
-                    else if (emailMatch?.UserType == UserType.LocalUser)
-                    {
-                        // Matching a verified email is the strongest available way to associate an
-                        // existing local Ombi administrator with the Plex server owner.
-                        matchingUser = emailMatch;
-                    }
+                    emailMatch = await _userManager.FindByEmailAsync(account.user.email);
                 }
 
-                if (user == null && matchingUser == null && usernameMatch?.UserType == UserType.LocalUser)
+                if (usernameMatch != null && emailMatch != null &&
+                    !string.Equals(usernameMatch.Id, emailMatch.Id, StringComparison.Ordinal))
                 {
-                    // Local admins created by Ombi's first-run wizard historically have no email.
-                    // Permit an exact username match only while that local account still has no email.
-                    // If it has an email, require that email to match Plex rather than merging two
-                    // identities solely because their usernames happen to be the same.
-                    if (string.IsNullOrWhiteSpace(usernameMatch.Email))
+                    _log.LogWarning("Plex OAuth username and email resolve to different Ombi accounts; refusing authentication.");
+                    return new JsonResult(new
                     {
-                        matchingUser = usernameMatch;
+                        errorMessage = "This Plex account is not authorized to access Ombi"
+                    });
+                }
+
+                var identityCandidate = emailMatch ?? usernameMatch;
+                if (identityCandidate != null &&
+                    !string.IsNullOrWhiteSpace(identityCandidate.ProviderUserId) &&
+                    !string.Equals(identityCandidate.ProviderUserId, account.user.id, StringComparison.OrdinalIgnoreCase))
+                {
+                    _log.LogWarning("An Ombi account matched by Plex username/email is already linked to a different Plex identity; refusing authentication.");
+                    return new JsonResult(new
+                    {
+                        errorMessage = "This Plex account is not authorized to access Ombi"
+                    });
+                }
+
+                if (identityCandidate?.UserType == UserType.PlexUser)
+                {
+                    // Older Plex users may predate ProviderUserId storage. Backfill it only when empty;
+                    // a conflicting non-empty value was rejected above.
+                    if (string.IsNullOrWhiteSpace(identityCandidate.ProviderUserId))
+                    {
+                        identityCandidate.ProviderUserId = account.user.id;
+                        var updateResult = await _userManager.UpdateAsync(identityCandidate);
+                        if (!updateResult.Succeeded)
+                        {
+                            foreach (var err in updateResult.Errors)
+                            {
+                                _log.LogError("Failed to backfill Plex ProviderUserId: {Description}", err.Description);
+                            }
+
+                            return new JsonResult(new
+                            {
+                                errorMessage = "Failed to update the existing Plex user"
+                            });
+                        }
                     }
-                    else if (!string.IsNullOrWhiteSpace(account.user.email) &&
-                             string.Equals(usernameMatch.Email, account.user.email, StringComparison.OrdinalIgnoreCase))
+
+                    user = identityCandidate;
+                }
+                else if (identityCandidate?.UserType == UserType.LocalUser)
+                {
+                    // A matching verified email is sufficient to consider a LocalUser for owner
+                    // linking. For historical first-run local admins with no email, permit an exact
+                    // username match. Never merge on username when a different local email exists.
+                    var sameAccountByEmail = emailMatch != null;
+                    var sameAccountByUsernameWithoutEmail = usernameMatch != null &&
+                                                            string.IsNullOrWhiteSpace(identityCandidate.Email);
+
+                    if (sameAccountByEmail || sameAccountByUsernameWithoutEmail)
                     {
-                        matchingUser = usernameMatch;
+                        matchingUser = identityCandidate;
                     }
                     else
                     {
-                        _log.LogWarning(
-                            "Plex server owner {PlexUserId} has username {PlexUserName}, which matches local Ombi user {UserName}, but the account emails do not match; refusing automatic account linking.",
-                            account.user.id, plexUserName, usernameMatch.UserName);
+                        _log.LogWarning("A local Ombi account matches the Plex username but has a different email; refusing automatic account linking.");
+                        return new JsonResult(new
+                        {
+                            errorMessage = "This Plex account is not authorized to access Ombi"
+                        });
                     }
                 }
 
@@ -378,14 +412,12 @@ namespace Ombi.Controllers.V1
                             if (!await _userManager.IsInRoleAsync(matchingUser, OmbiRoles.Admin))
                             {
                                 _log.LogWarning(
-                                    "Verified Plex server owner {PlexUserId} matches Ombi user {UserName}, but that user is not an Admin; refusing automatic account linking.",
-                                    account.user.id, matchingUser.UserName);
+                                    "Verified Plex server owner matches an existing Ombi user that is not an Admin; refusing automatic account linking.");
                             }
                             else if (matchingUser.UserType != UserType.LocalUser)
                             {
                                 _log.LogWarning(
-                                    "Verified Plex server owner {PlexUserId} matches Ombi user {UserName}, but that user's provider type {UserType} cannot be linked to Plex automatically.",
-                                    account.user.id, matchingUser.UserName, matchingUser.UserType);
+                                    "Verified Plex server owner matches an Ombi user type that cannot be linked automatically; refusing account linking.");
                             }
                             else
                             {
@@ -397,8 +429,8 @@ namespace Ombi.Controllers.V1
                                     foreach (var err in linkResult.Errors)
                                     {
                                         _log.LogError(
-                                            "Failed to link existing Ombi admin {UserName} to Plex owner {PlexUserId}: {Description}",
-                                            matchingUser.UserName, account.user.id, err.Description);
+                                            "Failed to link existing Ombi admin to Plex owner: {Description}",
+                                            err.Description);
                                     }
 
                                     return new JsonResult(new
@@ -408,8 +440,7 @@ namespace Ombi.Controllers.V1
                                 }
 
                                 _log.LogInformation(
-                                    "Linked existing Ombi admin {UserName} to Plex server owner {PlexUserId} while preserving local authentication.",
-                                    matchingUser.UserName, account.user.id);
+                                    "Linked an existing Ombi admin to the verified Plex server owner while preserving local authentication.");
                                 user = matchingUser;
                             }
                         }
