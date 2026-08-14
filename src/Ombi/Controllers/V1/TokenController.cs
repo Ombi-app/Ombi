@@ -352,8 +352,8 @@ namespace Ombi.Controllers.V1
                 else if (identityCandidate != null)
                 {
                     _log.LogWarning(
-                        "An Ombi account of type {UserType} matched the Plex username or email; refusing automatic account linking.",
-                        identityCandidate.UserType);
+                        "An existing Ombi account matched the Plex username or email but is not eligible for Plex account linking; refusing authentication.");
+
                     return new JsonResult(new
                     {
                         errorMessage = PlexAccountUnauthorizedMessage
