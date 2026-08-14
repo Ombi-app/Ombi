@@ -25,7 +25,8 @@ namespace Ombi.Api.External.MediaServers.Plex
         Task<PlexUsers> GetUsers(string authToken);
         Task<PlexAccount> GetAccount(string authToken);
         Task<PlexMetadata> GetRecentlyAdded(string authToken, string uri, string sectionId);
-        Task<OAuthContainer> GetPin(int pinId);
+        Task<OAuthContainer> CreatePin();
+        Task<OAuthContainer> GetPin(int pinId, string pinCode);
         Task<Uri> GetOAuthUrl(string code, string applicationUrl);
         Task<PlexAddWrapper> AddUser(string emailAddress, string serverId, string authToken, int[] libs);
         Task<PlexWatchlistContainer> GetWatchlist(string plexToken, CancellationToken cancellationToken);

@@ -183,7 +183,10 @@ namespace Ombi.Schedule.Jobs.Plex
         private async Task<string> ResolveAdminOAuthToken(CancellationToken ct)
         {
             var candidates = await _ombiUserManager.Users
-                .Where(u => u.UserType == UserType.PlexUser && u.MediaServerToken != null && u.MediaServerToken != string.Empty)
+                .Where(u =>
+                    (u.UserType == UserType.PlexUser || u.UserType == UserType.LocalUser) &&
+                    !string.IsNullOrWhiteSpace(u.ProviderUserId) &&
+                    !string.IsNullOrWhiteSpace(u.MediaServerToken))
                 .ToListAsync(ct);
 
             foreach (var candidate in candidates)

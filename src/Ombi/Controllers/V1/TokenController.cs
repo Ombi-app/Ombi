@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -57,6 +58,36 @@ namespace Ombi.Controllers.V1
         private readonly ISettingsService<AuthenticationSettings> _authSettings;
         private readonly ISettingsService<UserManagementSettings> _userManagementSettings;
         private readonly ISettingsService<PlexSettings> _plexSettings;
+
+        private const string PlexAccountUnauthorizedMessage = "This Plex account is not authorized to access Ombi";
+
+        /// <summary>
+        /// Creates a strong Plex OAuth PIN from the Ombi backend.
+        /// Keeping PIN creation server-side avoids Plex cross-origin PIN creation issues.
+        /// </summary>
+        [HttpPost("plexpin")]
+        [EnableRateLimiting("PlexPinCreation")]
+        public async Task<IActionResult> CreatePlexPin()
+        {
+            var pin = await _plexOAuthManager.CreatePin();
+            if (pin?.Result != null)
+            {
+                return Ok(pin.Result);
+            }
+
+            if (pin?.Errors?.errors != null)
+            {
+                foreach (var err in pin.Errors.errors)
+                {
+                    _log.LogError(
+                        "Plex PIN creation failed. Code: '{Code}' : '{Message}'",
+                        err.code,
+                        err.message);
+                }
+            }
+
+            return StatusCode(502, new { errorMessage = "Could not create Plex authentication PIN" });
+        }
 
         /// <summary>
         /// Gets the token.
@@ -220,35 +251,120 @@ namespace Ombi.Controllers.V1
                 });
             }
 
-            // Get the ombi user using Plex stable ID, username or fallback to ID
+            // Get the Ombi user using the stable Plex account id first.
             OmbiUser user = null;
             if (!string.IsNullOrEmpty(account.user.id))
             {
-                user = await _userManager.Users.FirstOrDefaultAsync(x => x.ProviderUserId == account.user.id && x.UserType == UserType.PlexUser);
+                user = await _userManager.Users.FirstOrDefaultAsync(x =>
+                    x.ProviderUserId == account.user.id &&
+                    (x.UserType == UserType.PlexUser || x.UserType == UserType.LocalUser));
             }
 
             var plexUserName = !string.IsNullOrEmpty(account.user.username) ? account.user.username : account.user.id;
 
             if (user == null)
             {
-                // Could this be a username login?
+                // Resolve username and email candidates together before authorizing either one.
+                // This prevents recycled usernames/emails from linking a Plex identity to the wrong
+                // Ombi account and never overwrites an existing, different ProviderUserId.
+                OmbiUser matchingUser = null;
+                OmbiUser usernameMatch = null;
+                OmbiUser emailMatch = null;
+
                 if (!string.IsNullOrEmpty(plexUserName))
                 {
-                    user = await _userManager.FindByNameAsync(plexUserName);
+                    usernameMatch = await _userManager.FindByNameAsync(plexUserName);
                 }
 
-                if (user == null)
+                if (!string.IsNullOrEmpty(account.user.email))
                 {
-                    // Could this be an email login?
-                    if (!string.IsNullOrEmpty(account.user.email))
+                    emailMatch = await _userManager.FindByEmailAsync(account.user.email);
+                }
+
+                if (usernameMatch != null && emailMatch != null &&
+                    !string.Equals(usernameMatch.Id, emailMatch.Id, StringComparison.Ordinal))
+                {
+                    _log.LogWarning("Plex OAuth username and email resolve to different Ombi accounts; refusing authentication.");
+                    return new JsonResult(new
                     {
-                        user = await _userManager.FindByEmailAsync(account.user.email);
+                        errorMessage = PlexAccountUnauthorizedMessage
+                    });
+                }
+
+                var identityCandidate = emailMatch ?? usernameMatch;
+                if (identityCandidate != null &&
+                    !string.IsNullOrWhiteSpace(identityCandidate.ProviderUserId) &&
+                    !string.Equals(identityCandidate.ProviderUserId, account.user.id, StringComparison.OrdinalIgnoreCase))
+                {
+                    _log.LogWarning("An Ombi account matched by Plex username/email is already linked to a different Plex identity; refusing authentication.");
+                    return new JsonResult(new
+                    {
+                        errorMessage = PlexAccountUnauthorizedMessage
+                    });
+                }
+
+                if (identityCandidate?.UserType == UserType.PlexUser)
+                {
+                    // Older Plex users may predate ProviderUserId storage. Backfill it only when empty;
+                    // a conflicting non-empty value was rejected above.
+                    if (string.IsNullOrWhiteSpace(identityCandidate.ProviderUserId))
+                    {
+                        identityCandidate.ProviderUserId = account.user.id;
+                        var updateResult = await _userManager.UpdateAsync(identityCandidate);
+                        if (!updateResult.Succeeded)
+                        {
+                            foreach (var err in updateResult.Errors)
+                            {
+                                _log.LogError("Failed to backfill Plex ProviderUserId: {Description}", err.Description);
+                            }
+
+                            return new JsonResult(new
+                            {
+                                errorMessage = "Failed to update the existing Plex user"
+                            });
+                        }
+                    }
+
+                    user = identityCandidate;
+                }
+                else if (identityCandidate?.UserType == UserType.LocalUser)
+                {
+                    // A matching verified email is sufficient to consider a LocalUser for owner
+                    // linking. For historical first-run local admins with no email, permit an exact
+                    // username match. Never merge on username when a different local email exists.
+                    var sameAccountByEmail = emailMatch != null;
+                    var sameAccountByUsernameWithoutEmail = usernameMatch != null &&
+                                                            string.IsNullOrWhiteSpace(identityCandidate.Email);
+
+                    if (sameAccountByEmail || sameAccountByUsernameWithoutEmail)
+                    {
+                        matchingUser = identityCandidate;
+                    }
+                    else
+                    {
+                        _log.LogWarning("A local Ombi account matches the Plex username but has a different email; refusing automatic account linking.");
+                        return new JsonResult(new
+                        {
+                            errorMessage = PlexAccountUnauthorizedMessage
+                        });
                     }
                 }
+                else if (identityCandidate != null)
+                {
+                    _log.LogWarning(
+                        "An existing Ombi account matched the Plex username or email but is not eligible for Plex account linking; refusing authentication.");
+
+                    return new JsonResult(new
+                    {
+                        errorMessage = PlexAccountUnauthorizedMessage
+                    });
+                }
 
                 if (user == null)
                 {
-                    // Check if this user is the Plex Admin / Server Owner
+                    // Check whether this OAuth account is the owner of one of the configured Plex
+                    // servers. The OAuth token itself can differ from the token stored in Plex
+                    // settings, so compare the stable Plex account ids when necessary.
                     var isPlexAdmin = false;
                     var plexSettings = await _plexSettings.GetSettingsAsync();
                     if (!string.IsNullOrEmpty(account.user.id) && plexSettings?.Servers != null)
@@ -260,7 +376,6 @@ namespace Ombi.Controllers.V1
                                 continue;
                             }
 
-                            // If the tokens match, they are definitely the admin (case-sensitive check)
                             if (!string.IsNullOrEmpty(account.user.authentication_token) &&
                                 string.Equals(server.PlexAuthToken, account.user.authentication_token, StringComparison.Ordinal))
                             {
@@ -271,38 +386,30 @@ namespace Ombi.Controllers.V1
 
                         if (!isPlexAdmin)
                         {
-                            // Deduplicate active tokens that are not the same as the user's authentication token (which was already checked)
                             var uniqueTokens = plexSettings.Servers
                                 .Select(s => s.PlexAuthToken)
-                                .Where(token => !string.IsNullOrEmpty(token) && 
-                                                (string.IsNullOrEmpty(account.user.authentication_token) || 
+                                .Where(token => !string.IsNullOrEmpty(token) &&
+                                                (string.IsNullOrEmpty(account.user.authentication_token) ||
                                                  !string.Equals(token, account.user.authentication_token, StringComparison.Ordinal)))
                                 .Distinct()
                                 .ToList();
 
-                            if (uniqueTokens.Any())
+                            foreach (var token in uniqueTokens)
                             {
-                                foreach (var token in uniqueTokens)
+                                try
                                 {
-                                    try
+                                    var serverAdminAccount = await _plexOAuthManager.GetAccount(token);
+                                    if (serverAdminAccount?.user != null &&
+                                        !string.IsNullOrEmpty(serverAdminAccount.user.id) &&
+                                        string.Equals(serverAdminAccount.user.id, account.user.id, StringComparison.OrdinalIgnoreCase))
                                     {
-                                        // Fetch the account for the server token and compare the stable unique ID
-                                        var serverAdminAccount = await _plexOAuthManager.GetAccount(token);
-                                        if (serverAdminAccount?.user != null)
-                                        {
-                                            var idMatch = !string.IsNullOrEmpty(serverAdminAccount.user.id) &&
-                                                          string.Equals(serverAdminAccount.user.id, account.user.id, StringComparison.OrdinalIgnoreCase);
-                                            if (idMatch)
-                                            {
-                                                isPlexAdmin = true;
-                                                break;
-                                            }
-                                        }
+                                        isPlexAdmin = true;
+                                        break;
                                     }
-                                    catch (Exception ex)
-                                    {
-                                        _log.LogWarning(ex, "Failed to retrieve Plex account for token verification during Plex Admin OAuth import.");
-                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    _log.LogWarning(ex, "Failed to retrieve Plex account for token verification during Plex Admin OAuth import.");
                                 }
                             }
                         }
@@ -310,81 +417,128 @@ namespace Ombi.Controllers.V1
 
                     if (isPlexAdmin)
                     {
-                        // Automatically import the Plex Admin
-                        var userManagementSettings = await _userManagementSettings.GetSettingsAsync();
-                        user = new OmbiUser
+                        if (matchingUser != null)
                         {
-                            UserType = UserType.PlexUser,
-                            UserName = plexUserName,
-                            ProviderUserId = account.user.id,
-                            Email = account.user.email ?? string.Empty,
-                            Alias = string.Empty,
-                            StreamingCountry = userManagementSettings.DefaultStreamingCountry ?? string.Empty
-                        };
-
-                        var createResult = await _userManager.CreateAsync(user);
-                        if (createResult.Succeeded)
-                        {
-                            var roleResult = await _userManager.AddToRoleAsync(user, OmbiRoles.Admin);
-                            if (!roleResult.Succeeded)
+                            // Link only a verified Plex owner to an existing local Ombi Admin. Keep
+                            // the local account type/password intact so Plex is a secondary identity.
+                            if (!await _userManager.IsInRoleAsync(matchingUser, OmbiRoles.Admin))
                             {
-                                foreach (var err in roleResult.Errors)
+                                _log.LogWarning(
+                                    "Verified Plex server owner matches an existing Ombi user that is not an Admin; refusing automatic account linking.");
+                            }
+                            else if (matchingUser.UserType != UserType.LocalUser)
+                            {
+                                _log.LogWarning(
+                                    "Verified Plex server owner matches an Ombi user type that cannot be linked automatically; refusing account linking.");
+                            }
+                            else
+                            {
+                                matchingUser.ProviderUserId = account.user.id;
+
+                                var linkResult = await _userManager.UpdateAsync(matchingUser);
+                                if (!linkResult.Succeeded)
                                 {
-                                    _log.LogError("Failed to add auto-created Plex admin user {UserName} to Admin role: {Description}", user.UserName, err.Description);
+                                    foreach (var err in linkResult.Errors)
+                                    {
+                                        _log.LogError(
+                                            "Failed to link existing Ombi admin to Plex owner: {Description}",
+                                            err.Description);
+                                    }
+
+                                    return new JsonResult(new
+                                    {
+                                        errorMessage = "Failed to link the existing Ombi admin account to the Plex server owner"
+                                    });
                                 }
-                                try
-                                {
-                                    await _userManager.DeleteAsync(user);
-                                }
-                                catch (Exception ex)
-                                {
-                                    _log.LogError(ex, "Failed to roll back auto-created Plex admin user {UserName} after role assignment failure", user.UserName);
-                                }
-                                return new JsonResult(new
-                                {
-                                    errorMessage = "Failed to assign admin permissions to the auto-created Plex admin user"
-                                });
+
+                                _log.LogInformation(
+                                    "Linked an existing Ombi admin to the verified Plex server owner while preserving local authentication.");
+                                user = matchingUser;
                             }
                         }
                         else
                         {
-                            // In case of a race condition where the user was created concurrently, try to fetch them
-                            user = await _userManager.Users.FirstOrDefaultAsync(x => x.ProviderUserId == account.user.id && x.UserType == UserType.PlexUser);
-                            if (user != null)
+                            // No matching Ombi account exists, so create the Plex owner as an Admin.
+                            var userManagementSettings = await _userManagementSettings.GetSettingsAsync();
+                            user = new OmbiUser
                             {
-                                // Ensure the resolved fallback user is in the Admin role
-                                if (!await _userManager.IsInRoleAsync(user, OmbiRoles.Admin))
+                                UserType = UserType.PlexUser,
+                                UserName = plexUserName,
+                                ProviderUserId = account.user.id,
+                                Email = account.user.email ?? string.Empty,
+                                Alias = string.Empty,
+                                StreamingCountry = userManagementSettings.DefaultStreamingCountry ?? string.Empty
+                            };
+
+                            var createResult = await _userManager.CreateAsync(user);
+                            if (createResult.Succeeded)
+                            {
+                                var roleResult = await _userManager.AddToRoleAsync(user, OmbiRoles.Admin);
+                                if (!roleResult.Succeeded)
                                 {
-                                    var roleResult = await _userManager.AddToRoleAsync(user, OmbiRoles.Admin);
-                                    if (!roleResult.Succeeded)
+                                    foreach (var err in roleResult.Errors)
                                     {
-                                        foreach (var err in roleResult.Errors)
-                                        {
-                                            _log.LogError("Failed to add fallback Plex admin user {UserName} to Admin role: {Description}", user.UserName, err.Description);
-                                        }
-                                        return new JsonResult(new
-                                        {
-                                            errorMessage = "Failed to assign admin permissions to the fallback Plex admin user"
-                                        });
+                                        _log.LogError("Failed to add auto-created Plex admin user {UserName} to Admin role: {Description}", user.UserName, err.Description);
                                     }
+                                    try
+                                    {
+                                        await _userManager.DeleteAsync(user);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        _log.LogError(ex, "Failed to roll back auto-created Plex admin user {UserName} after role assignment failure", user.UserName);
+                                    }
+                                    return new JsonResult(new
+                                    {
+                                        errorMessage = "Failed to assign admin permissions to the auto-created Plex admin user"
+                                    });
                                 }
                             }
                             else
                             {
-                                foreach (var err in createResult.Errors)
+                                // In case of a race where the Plex user was created concurrently,
+                                // resolve it by provider id and make sure it has the Admin role.
+                                user = await _userManager.Users.FirstOrDefaultAsync(x =>
+                                    x.ProviderUserId == account.user.id && x.UserType == UserType.PlexUser);
+
+                                if (user != null)
                                 {
-                                    _log.LogError("Failed to auto-create Plex admin user {UserName}: {Description}", plexUserName, err.Description);
+                                    if (!await _userManager.IsInRoleAsync(user, OmbiRoles.Admin))
+                                    {
+                                        var roleResult = await _userManager.AddToRoleAsync(user, OmbiRoles.Admin);
+                                        if (!roleResult.Succeeded)
+                                        {
+                                            foreach (var err in roleResult.Errors)
+                                            {
+                                                _log.LogError("Failed to add fallback Plex admin user {UserName} to Admin role: {Description}", user.UserName, err.Description);
+                                            }
+                                            return new JsonResult(new
+                                            {
+                                                errorMessage = "Failed to assign admin permissions to the fallback Plex admin user"
+                                            });
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    foreach (var err in createResult.Errors)
+                                    {
+                                        _log.LogError("Failed to auto-create Plex admin user {UserName}: {Description}", plexUserName, err.Description);
+                                    }
                                 }
                             }
                         }
                     }
                 }
 
-                if (user == null || user.UserType != UserType.PlexUser)
+                if (user == null)
                 {
+                    _log.LogWarning(
+                        "Plex OAuth account {PlexUserId} ({PlexUserName}) could not be matched to an authorized Plex user or linked as the configured Plex server owner.",
+                        account.user.id, plexUserName);
                     return new JsonResult(new
                     {
-                        errorMessage = "This Plex account is not authorized to access Ombi"
+                        errorMessage = PlexAccountUnauthorizedMessage
                     });
                 }
             }

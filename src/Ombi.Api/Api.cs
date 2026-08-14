@@ -253,13 +253,18 @@ namespace Ombi.Api
 
         private void AddHeadersBody(Request request, HttpRequestMessage httpRequestMessage)
         {
-            // Add the Json Body
+            // Add the request body. Plex PIN polling requires application/x-www-form-urlencoded
+            // values even though the request method is GET, while most Ombi APIs use JSON bodies.
             if (request.JsonBody != null)
             {
                 LogDebugContent("REQUEST: " + request.JsonBody);
                 httpRequestMessage.Content = new JsonContent(request.JsonBody);
                 httpRequestMessage.Content.Headers.ContentType =
                     new MediaTypeHeaderValue("application/json"); // Emby connect fails if we have the charset in the header
+            }
+            else if (request.FormBody.Count > 0)
+            {
+                httpRequestMessage.Content = new FormUrlEncodedContent(request.FormBody);
             }
 
             // Add headers

@@ -90,7 +90,7 @@ export class PlexComponent implements OnInit, OnDestroy {
         resizable=1,
         width=500,
         height=500`);
-        this.plexTv.GetPin(this.clientId, "Ombi").subscribe((pin: any) => {
+        this.plexTv.GetPin().subscribe((pin: any) => {
 
             this.authService.login({ usePlexOAuth: true, password: "", rememberMe: true, username: "", plexTvPin: pin }).subscribe(x => {
                 oAuthWindow!.location.replace(x.url);
