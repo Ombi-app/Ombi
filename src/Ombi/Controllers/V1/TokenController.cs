@@ -75,7 +75,10 @@ namespace Ombi.Controllers.V1
             {
                 foreach (var err in pin.Errors.errors)
                 {
-                    _log.LogError($"Plex PIN creation failed. Code: '{err.code}' : '{err.message}'");
+                    _log.LogError(
+                        "Plex PIN creation failed. Code: '{Code}' : '{Message}'",
+                        err.code,
+                        err.message);
                 }
             }
 
