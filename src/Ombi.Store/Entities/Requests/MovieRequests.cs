@@ -73,24 +73,39 @@ namespace Ombi.Store.Entities.Requests
         public string RequestStatus {
             get
             {
-                if (Available)
+                // A request tracks a standard copy and a 4K copy independently, so report
+                // whichever one is still outstanding. The standard copy takes precedence
+                // while both are, which matches how the media details page reads.
+                var hasStandardRequest = RequestCombination != RequestCombination.FourK;
+
+                if (hasStandardRequest && !Available)
+                {
+                    if (Denied ?? false)
+                    {
+                        return "Common.Denied";
+                    }
+
+                    return Approved ? "Common.ProcessingRequest" : "Common.PendingApproval";
+                }
+
+                if (Has4KRequest && !Available4K)
+                {
+                    if (Denied4K ?? false)
+                    {
+                        return "Common.RequestDenied4K";
+                    }
+
+                    return Approved4K ? "Common.ProcessingRequest4K" : "Common.PendingApproval4K";
+                }
+
+                if (hasStandardRequest && Available)
                 {
                     return "Common.Available";
                 }
 
-                if (Denied ?? false)
+                if (Has4KRequest && Available4K)
                 {
-                    return "Common.Denied";
-                }
-
-                if (Approved & !Available)
-                {
-                    return "Common.ProcessingRequest";
-                }
-
-                if (!Approved && !Available)
-                {
-                    return "Common.PendingApproval";
+                    return "Common.Available4K";
                 }
 
                 return string.Empty;
