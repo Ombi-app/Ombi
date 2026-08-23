@@ -69,47 +69,45 @@ namespace Ombi.Store.Entities.Requests
         [JsonIgnore]
         public string LanguageCode => LangCode.IsNullOrEmpty() ? "en" : LangCode;
 
+        /// <summary>
+        /// A request tracks a standard copy and a 4K copy independently. Report whichever
+        /// one is still outstanding, preferring the standard copy while both are, which
+        /// matches how the media details page reads.
+        /// </summary>
         [NotMapped]
-        public string RequestStatus {
-            get
+        public string RequestStatus => RequestCombination == RequestCombination.FourK
+            ? Get4KStatus()
+            : GetStandardStatus();
+
+        private string GetStandardStatus()
+        {
+            if (!Available)
             {
-                // A request tracks a standard copy and a 4K copy independently, so report
-                // whichever one is still outstanding. The standard copy takes precedence
-                // while both are, which matches how the media details page reads.
-                var hasStandardRequest = RequestCombination != RequestCombination.FourK;
-
-                if (hasStandardRequest && !Available)
+                if (Denied ?? false)
                 {
-                    if (Denied ?? false)
-                    {
-                        return "Common.Denied";
-                    }
-
-                    return Approved ? "Common.ProcessingRequest" : "Common.PendingApproval";
+                    return "Common.Denied";
                 }
 
-                if (Has4KRequest && !Available4K)
-                {
-                    if (Denied4K ?? false)
-                    {
-                        return "Common.RequestDenied4K";
-                    }
-
-                    return Approved4K ? "Common.ProcessingRequest4K" : "Common.PendingApproval4K";
-                }
-
-                if (hasStandardRequest && Available)
-                {
-                    return "Common.Available";
-                }
-
-                if (Has4KRequest && Available4K)
-                {
-                    return "Common.Available4K";
-                }
-
-                return string.Empty;
+                return Approved ? "Common.ProcessingRequest" : "Common.PendingApproval";
             }
+
+            // The standard copy has landed, but a combined request may still owe a 4K one.
+            return Has4KRequest && !Available4K ? Get4KStatus() : "Common.Available";
+        }
+
+        private string Get4KStatus()
+        {
+            if (!Available4K)
+            {
+                if (Denied4K ?? false)
+                {
+                    return "Common.RequestDenied4K";
+                }
+
+                return Approved4K ? "Common.ProcessingRequest4K" : "Common.PendingApproval4K";
+            }
+
+            return "Common.Available4K";
         }
 
         [NotMapped]
