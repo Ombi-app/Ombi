@@ -92,7 +92,11 @@ namespace Ombi.Schedule.Tests
 
             await _subject.Execute(null);
 
-            Assert.That(request.Available4K, Is.True);
+            Assert.Multiple(() =>
+            {
+                Assert.That(request.Available4K, Is.True);
+                Assert.That(request.Available, Is.False, "the 4K copy should not satisfy a standard request while the 4K feature is on");
+            });
         }
 
         /// <summary>
