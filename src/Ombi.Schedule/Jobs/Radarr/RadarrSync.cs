@@ -36,6 +36,11 @@ namespace Ombi.Schedule.Jobs.Radarr
         private readonly ExternalContext _ctx;
         private readonly IExternalRepository<RadarrCache> _radarrRepo;
 
+        /// <summary>
+        /// Clears and repopulates the Radarr movie cache, resetting its identity counter after the delete commits.
+        /// Radarr uses the same bulk delete/re-insert pattern as Sonarr and Lidarr; without a reset, MySQL
+        /// <c>AUTO_INCREMENT</c> continues climbing and will eventually overflow <see cref="int.MaxValue"/> (see #5224).
+        /// </summary>
         public async Task Execute(IJobExecutionContext job)
         {
             try

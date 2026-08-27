@@ -15,6 +15,9 @@ using Polly;
 
 namespace Ombi.Store.Repository
 {
+    /// <summary>
+    /// Base EF Core repository supporting any entity type that implements <see cref="IEntity"/>.
+    /// </summary>
     public class BaseRepository<T, U> : IRepository<T> where T : class, IEntity where U : DbContext
     {
         public BaseRepository(U ctx)

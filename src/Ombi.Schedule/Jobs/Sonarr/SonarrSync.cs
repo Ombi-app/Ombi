@@ -40,6 +40,9 @@ namespace Ombi.Schedule.Jobs.Sonarr
         private readonly ExternalContext _ctx;
         private readonly IMovieDbApi _movieDbApi;
 
+        /// <summary>
+        /// Clears Sonarr series and episode caches, resets their identity counters, then repopulates from Sonarr.
+        /// </summary>
         public async Task Execute(IJobExecutionContext job)
         {
             try
