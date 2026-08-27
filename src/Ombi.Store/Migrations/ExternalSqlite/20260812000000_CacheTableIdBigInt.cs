@@ -4,10 +4,14 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Ombi.Store.Migrations.ExternalSqlite
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// Widens Sonarr and Lidarr cache primary keys from <c>int</c> to <c>bigint</c>.
+    /// </summary>
     public partial class CacheTableIdBigInt : Migration
     {
-        /// <inheritdoc />
+        /// <summary>
+        /// Alters cache table identity columns to 64-bit integers.
+        /// </summary>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<long>(
@@ -31,7 +35,9 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                 .OldAnnotation("Sqlite:Autoincrement", true);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Reverts cache table identity columns back to 32-bit integers.
+        /// </summary>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<int>(

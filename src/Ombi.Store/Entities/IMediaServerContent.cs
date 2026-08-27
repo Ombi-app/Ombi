@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ombi.Store.Entities
 {
+    /// <summary>
+    /// Common shape for media-server content rows exposed to availability and newsletter jobs.
+    /// </summary>
     public interface IMediaServerContent : IEntity
     {
         /// <summary>

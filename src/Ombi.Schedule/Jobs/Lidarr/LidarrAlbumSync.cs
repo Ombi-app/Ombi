@@ -34,6 +34,9 @@ namespace Ombi.Schedule.Jobs.Lidarr
         private readonly ExternalContext _ctx;
         private readonly INotificationHubService _notification;
 
+        /// <summary>
+        /// Clears and repopulates the Lidarr album cache, resetting its identity counter after the delete commits.
+        /// </summary>
         public async Task Execute(IJobExecutionContext ctx)
         {
             try

@@ -2,6 +2,10 @@
 
 namespace Ombi.Store.Entities
 {
+    /// <summary>
+    /// Cached Sonarr episode metadata used for series availability and request workflows.
+    /// Uses <see cref="LongEntity"/> because rows are re-inserted frequently during sync.
+    /// </summary>
     [Table("SonarrEpisodeCache")]
     public class SonarrEpisodeCache : LongEntity, IBaseMediaServerEpisode
     {
