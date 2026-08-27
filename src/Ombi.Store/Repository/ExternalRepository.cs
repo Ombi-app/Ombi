@@ -8,6 +8,10 @@ namespace Ombi.Store.Repository
     /// </summary>
     public class ExternalRepository<T> : BaseRepository<T, ExternalContext>, IExternalRepository<T> where T : class, IEntity
     {
+        /// <summary>
+        /// Creates a repository backed by the external database context.
+        /// </summary>
+        /// <param name="ctx">External database context for Arr cache and related tables.</param>
         public ExternalRepository(ExternalContext ctx) : base(ctx)
         {
         }
