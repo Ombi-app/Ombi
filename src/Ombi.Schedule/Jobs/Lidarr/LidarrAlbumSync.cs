@@ -68,8 +68,16 @@ namespace Ombi.Schedule.Jobs.Lidarr
                                     await tran.CommitAsync();
                                 }
                             });
-                            // Outside the transaction: MySQL ALTER TABLE AUTO_INCREMENT implicitly commits (see #5224)
-                            await _ctx.Database.ResetAutoIncrementAsync("LidarrAlbumCache");
+                            // Outside the transaction: MySQL ALTER TABLE AUTO_INCREMENT implicitly commits (see #5224).
+                            // Isolate reset failures so a counter reset error cannot leave the cache empty after the delete commits.
+                            try
+                            {
+                                await _ctx.Database.ResetAutoIncrementAsync("LidarrAlbumCache");
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogWarning(ex, "Failed to reset LidarrAlbumCache auto-increment; continuing with cache repopulation");
+                            }
 
                             var albumCache = new List<LidarrAlbumCache>();
                             foreach (var a in albums)

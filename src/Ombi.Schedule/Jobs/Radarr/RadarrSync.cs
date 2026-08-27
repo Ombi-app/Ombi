@@ -61,8 +61,16 @@ namespace Ombi.Schedule.Jobs.Radarr
                     await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM RadarrCache", ct);
                     await tran.CommitAsync(ct);
                 }
-                // Outside the transaction: MySQL ALTER TABLE AUTO_INCREMENT implicitly commits (see #5224)
-                await _ctx.Database.ResetAutoIncrementAsync("RadarrCache");
+                // Outside the transaction: MySQL ALTER TABLE AUTO_INCREMENT implicitly commits (see #5224).
+                // Isolate reset failures so a counter reset error cannot leave the cache empty after the delete commits.
+                try
+                {
+                    await _ctx.Database.ResetAutoIncrementAsync("RadarrCache");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "[RadarrSync] Failed to reset RadarrCache auto-increment; continuing with cache repopulation");
+                }
                 _logger.LogInformation("[RadarrSync] RadarrCache cleared");
 
                 var radarrSettings = _radarrSettings.GetSettingsAsync();
