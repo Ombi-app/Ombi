@@ -16,6 +16,9 @@ namespace Ombi.Schedule.Jobs.Radarr
 {
     public class RadarrSync : IRadarrSync
     {
+        /// <summary>
+        /// Creates the Radarr movie cache synchronisation job.
+        /// </summary>
         public RadarrSync(ISettingsService<RadarrSettings> radarr, ISettingsService<Radarr4KSettings> radarr4k, IRadarrV3Api radarrApi, ILogger<RadarrSync> log, ExternalContext ctx,
             IExternalRepository<RadarrCache> radarrRepo)
         {
@@ -41,6 +44,7 @@ namespace Ombi.Schedule.Jobs.Radarr
         /// Radarr uses the same bulk delete/re-insert pattern as Sonarr and Lidarr; without a reset, MySQL
         /// <c>AUTO_INCREMENT</c> continues climbing and will eventually overflow <see cref="int.MaxValue"/> (see #5224).
         /// </summary>
+        /// <param name="job">Quartz job execution context.</param>
         public async Task Execute(IJobExecutionContext job)
         {
             try
@@ -69,6 +73,10 @@ namespace Ombi.Schedule.Jobs.Radarr
             }
         }
 
+        /// <summary>
+        /// Fetches movies from a Radarr instance and upserts them into <see cref="RadarrCache"/>.
+        /// </summary>
+        /// <param name="settings">Radarr connection settings for the instance being synced.</param>
         private async Task Process(RadarrSettings settings)
         {
             if (settings.Enabled)

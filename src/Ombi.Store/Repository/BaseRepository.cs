@@ -20,6 +20,10 @@ namespace Ombi.Store.Repository
     /// </summary>
     public class BaseRepository<T, U> : IRepository<T> where T : class, IEntity where U : DbContext
     {
+        /// <summary>
+        /// Initializes the repository with the given database context.
+        /// </summary>
+        /// <param name="ctx">EF Core context used for persistence operations.</param>
         public BaseRepository(U ctx)
         {
             _ctx = ctx;

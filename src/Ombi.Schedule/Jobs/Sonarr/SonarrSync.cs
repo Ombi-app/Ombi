@@ -23,6 +23,9 @@ namespace Ombi.Schedule.Jobs.Sonarr
 {
     public class SonarrSync : ISonarrSync
     {
+        /// <summary>
+        /// Creates the Sonarr series and episode cache synchronisation job.
+        /// </summary>
         public SonarrSync(ISettingsService<SonarrSettings> s, ISonarrV3Api api, ILogger<SonarrSync> l, ExternalContext ctx,
             IMovieDbApi movieDbApi)
         {
@@ -43,6 +46,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
         /// <summary>
         /// Clears Sonarr series and episode caches, resets their identity counters, then repopulates from Sonarr.
         /// </summary>
+        /// <param name="job">Quartz job execution context.</param>
         public async Task Execute(IJobExecutionContext job)
         {
             try
@@ -145,6 +149,10 @@ namespace Ombi.Schedule.Jobs.Sonarr
         }
 
         private bool _disposed;
+        /// <summary>
+        /// Releases managed resources when <paramref name="disposing"/> is true.
+        /// </summary>
+        /// <param name="disposing">True when called from <see cref="Dispose()"/>.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed)
@@ -158,6 +166,9 @@ namespace Ombi.Schedule.Jobs.Sonarr
             _disposed = true;
         }
 
+        /// <summary>
+        /// Releases the external database context held by this job.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
