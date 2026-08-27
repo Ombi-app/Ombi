@@ -6,6 +6,9 @@ namespace Ombi.Store.Entities
 {
     public interface IMediaServerContent : IEntity
     {
+        /// <summary>
+        /// Surrogate primary key exposed on the interface because <see cref="IEntity"/> is a marker type.
+        /// </summary>
         public int Id { get; set; }
         public string Title { get; set; }
         public string ImdbId { get; set; }

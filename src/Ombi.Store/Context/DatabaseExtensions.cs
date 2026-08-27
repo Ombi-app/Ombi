@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Ombi.Store.Context
 {
+    /// <summary>
+    /// Provider-aware helpers for external database maintenance operations.
+    /// </summary>
     public static class DatabaseExtensions
     {
         /// <summary>
@@ -17,6 +20,9 @@ namespace Ombi.Store.Context
         /// implicit commit, so running it inside a transaction can leave prior deletes non-rollbackable.
         /// </para>
         /// </summary>
+        /// <param name="database">The EF Core database facade for the external context.</param>
+        /// <param name="tableName">Name of a cache table whose identity counter should be reset.</param>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="tableName"/> is not an allowed cache table.</exception>
         public static async Task ResetAutoIncrementAsync(this DatabaseFacade database, string tableName)
         {
             var provider = database.ProviderName ?? string.Empty;
