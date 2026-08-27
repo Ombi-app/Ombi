@@ -21,6 +21,9 @@ using Quartz;
 
 namespace Ombi.Schedule.Jobs.Sonarr
 {
+    /// <summary>
+    /// Quartz job that synchronises Sonarr series and episode metadata into the external cache database.
+    /// </summary>
     public class SonarrSync : ISonarrSync
     {
         /// <summary>
