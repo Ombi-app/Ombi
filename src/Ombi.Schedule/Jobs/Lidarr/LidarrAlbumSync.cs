@@ -16,6 +16,9 @@ using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Ombi.Schedule.Jobs.Lidarr
 {
+    /// <summary>
+    /// Quartz job that synchronises Lidarr album metadata into the external cache database.
+    /// </summary>
     public class LidarrAlbumSync : ILidarrAlbumSync
     {
         /// <summary>

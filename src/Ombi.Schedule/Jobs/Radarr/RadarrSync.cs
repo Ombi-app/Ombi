@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -14,6 +15,9 @@ using Quartz;
 
 namespace Ombi.Schedule.Jobs.Radarr
 {
+    /// <summary>
+    /// Quartz job that synchronises Radarr movie metadata into the external cache database.
+    /// </summary>
     public class RadarrSync : IRadarrSync
     {
         /// <summary>
@@ -49,12 +53,13 @@ namespace Ombi.Schedule.Jobs.Radarr
         {
             try
             {
+                var ct = job.CancellationToken;
                 _logger.LogInformation("[RadarrSync] Starting Radarr cache sync - clearing existing cache");
                 // Let's remove the old cached data
-                using (var tran = await _ctx.Database.BeginTransactionAsync())
+                using (var tran = await _ctx.Database.BeginTransactionAsync(ct))
                 {
-                    await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM RadarrCache");
-                    await tran.CommitAsync();
+                    await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM RadarrCache", ct);
+                    await tran.CommitAsync(ct);
                 }
                 // Outside the transaction: MySQL ALTER TABLE AUTO_INCREMENT implicitly commits (see #5224)
                 await _ctx.Database.ResetAutoIncrementAsync("RadarrCache");
@@ -145,6 +150,10 @@ namespace Ombi.Schedule.Jobs.Radarr
         }
 
         private bool _disposed;
+        /// <summary>
+        /// Releases managed resources when <paramref name="disposing"/> is true.
+        /// </summary>
+        /// <param name="disposing">True when called from <see cref="Dispose()"/>.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed)
@@ -158,6 +167,9 @@ namespace Ombi.Schedule.Jobs.Radarr
             _disposed = true;
         }
 
+        /// <summary>
+        /// Releases the external database context held by this job.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
