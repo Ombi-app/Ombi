@@ -8,6 +8,9 @@ namespace Ombi.Store.Entities
     /// </summary>
     public abstract class LongEntity : IEntity
     {
+        /// <summary>
+        /// Surrogate primary key for high-churn cache rows.
+        /// </summary>
         [Key]
         public long Id { get; set; }
     }
