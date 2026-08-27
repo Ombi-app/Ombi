@@ -83,9 +83,17 @@ namespace Ombi.Schedule.Jobs.Sonarr
                         await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrEpisodeCache", ct);
                         await tran.CommitAsync(ct);
                     });
-                    // Outside the transaction: MySQL ALTER TABLE AUTO_INCREMENT implicitly commits (see #5224)
-                    await _ctx.Database.ResetAutoIncrementAsync("SonarrCache");
-                    await _ctx.Database.ResetAutoIncrementAsync("SonarrEpisodeCache");
+                    // Outside the transaction: MySQL ALTER TABLE AUTO_INCREMENT implicitly commits (see #5224).
+                    // Isolate reset failures so a counter reset error cannot leave the caches empty after the delete commits.
+                    try
+                    {
+                        await _ctx.Database.ResetAutoIncrementAsync("SonarrCache");
+                        await _ctx.Database.ResetAutoIncrementAsync("SonarrEpisodeCache");
+                    }
+                    catch (Exception ex)
+                    {
+                        _log.LogWarning(ex, "Failed to reset Sonarr cache auto-increment; continuing with cache repopulation");
+                    }
 
                     var sonarrCacheToSave = new HashSet<SonarrCache>();
                     foreach (var id in ids)
