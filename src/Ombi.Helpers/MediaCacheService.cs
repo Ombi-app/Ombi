@@ -68,7 +68,9 @@ namespace Ombi.Helpers
                 {
                     base.Remove(key);
                 }
-                _memoryCache.Remove(_cacheKey);
+                // We deliberately keep tracking the keys. A caller can register its key and then
+                // be pre-empted by a purge before it has stored the value, forgetting the key here
+                // would leave that value in the cache until it expires.
             }
             return Task.CompletedTask;
         }

@@ -70,12 +70,20 @@ namespace Ombi.Helpers.Tests
         }
 
         [Test]
-        public async Task Purge_ForgetsTheKeysItHasAlreadyPurged()
+        public async Task Purge_StillRemovesAValueThatWasStoredDuringAPurge()
         {
-            await _subject.GetOrAddAsync("first", () => Task.FromResult("1"));
+            // The key is registered before the factory runs, so a purge can land in between.
+            // The value must still be tracked, otherwise it sits there until it expires.
+            var purgeDuringFactory = _subject.GetOrAddAsync("first", async () =>
+            {
+                await _subject.Purge();
+                return "1";
+            });
+            await purgeDuringFactory;
+
             await _subject.Purge();
 
-            Assert.That(_memoryCache.Get<HashSet<string>>(TrackedKeys), Is.Null);
+            Assert.That(_memoryCache.Get<string>("first"), Is.Null);
         }
     }
 }

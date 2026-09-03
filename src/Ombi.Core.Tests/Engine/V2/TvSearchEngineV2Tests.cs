@@ -71,8 +71,8 @@ namespace Ombi.Core.Tests.Engine.V2
                         .Select(x => new Season { season_number = x })
                         .ToList()
                 });
-            _movieApi.Setup(x => x.GetSeasonEpisodes(TheMovieDbId, It.IsAny<int>(), It.IsAny<CancellationToken>(), It.IsAny<string>()))
-                .ReturnsAsync((int _, int seasonNumber, CancellationToken __, string ___) => new SeasonDetails
+            _movieApi.Setup(x => x.GetSeasonEpisodes(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>(), It.IsAny<string>()))
+                .ReturnsAsync((int showId, int seasonNumber, CancellationToken _, string __) => new SeasonDetails
                 {
                     season_number = seasonNumber,
                     episodes = Enumerable.Range(1, EpisodesPerSeason)
@@ -80,7 +80,7 @@ namespace Ombi.Core.Tests.Engine.V2
                         {
                             season_number = seasonNumber,
                             episode_number = x,
-                            name = $"S{seasonNumber}E{x}",
+                            name = $"{showId}-S{seasonNumber}E{x}",
                             air_date = "2011-04-17"
                         }).ToArray()
                 });
@@ -169,6 +169,28 @@ namespace Ombi.Core.Tests.Engine.V2
         }
 
         [Test]
+        public async Task Popular_DoesNotMixUpTheEpisodesOfShowsWithColidingCacheKeys()
+        {
+            // Show 1 season 23 and show 12 season 3 both used to build the key "SeasonEpisodes123"
+            _cachedApiResults.Clear();
+            _cachedApiResults.Add(new MovieDbSearchResult { Id = 1, Title = "First" });
+            _cachedApiResults.Add(new MovieDbSearchResult { Id = 12, Title = "Second" });
+            SetupShow(1, 23);
+            SetupShow(12, 3);
+
+            await _engine.Popular(0, 10);
+
+            var first = _rulesRanAgainst.Single(x => x.Id == 1);
+            var second = _rulesRanAgainst.Single(x => x.Id == 12);
+            Assert.That(first.SeasonRequests.Select(x => x.SeasonNumber), Is.EquivalentTo(Enumerable.Range(1, 23)));
+            Assert.That(second.SeasonRequests.Select(x => x.SeasonNumber), Is.EquivalentTo(Enumerable.Range(1, 3)));
+            Assert.That(first.SeasonRequests.SelectMany(x => x.Episodes).Select(x => x.Title),
+                Has.All.StartWith("1-"));
+            Assert.That(second.SeasonRequests.SelectMany(x => x.Episodes).Select(x => x.Title),
+                Has.All.StartWith("12-"));
+        }
+
+        [Test]
         public async Task Popular_DoesNotLookupSeasons_WhenNotHidingAvailableContent()
         {
             _customization.HideAvailableFromDiscover = false;
@@ -178,6 +200,19 @@ namespace Ombi.Core.Tests.Engine.V2
             Assert.That(result.Single().SeasonRequests, Is.Empty);
             _movieApi.Verify(x => x.GetSeasonEpisodes(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>(),
                 It.IsAny<string>()), Times.Never);
+        }
+
+        private void SetupShow(int theMovieDbId, int seasonCount)
+        {
+            _movieApi.Setup(x => x.GetTVInfo(theMovieDbId.ToString(), It.IsAny<string>()))
+                .ReturnsAsync(new TvInfo
+                {
+                    id = theMovieDbId,
+                    name = $"Show {theMovieDbId}",
+                    seasons = Enumerable.Range(0, seasonCount + 1)
+                        .Select(x => new Season { season_number = x })
+                        .ToList()
+                });
         }
 
         /// <summary>

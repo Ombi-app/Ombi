@@ -273,7 +273,7 @@ namespace Ombi.Core.Engine.V2
 
             foreach (var tvSeason in show.seasons.Where(x => x.season_number != 0))
             {
-                var seasonEpisodes = await Cache.GetOrAddAsync("SeasonEpisodes" + show.id + tvSeason.season_number,
+                var seasonEpisodes = await Cache.GetOrAddAsync($"SeasonEpisodes|{show.id}|{tvSeason.season_number}",
                     () => _movieApi.GetSeasonEpisodes(show.id, tvSeason.season_number, CancellationToken.None),
                     DateTimeOffset.Now.AddHours(12));
 
