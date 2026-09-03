@@ -14,6 +14,7 @@ namespace Ombi.Helpers
     public class MediaCacheService : CacheService, IMediaCacheService
     {
         private const string _cacheKey = "MediaCacheServiceKeys";
+        private static readonly object _lock = new object();
 
         public MediaCacheService(IMemoryCache memoryCache) : base(memoryCache)
         {
@@ -26,12 +27,7 @@ namespace Ombi.Helpers
                 absoluteExpiration = DateTimeOffset.Now.AddHours(1);
             }
 
-            if (_memoryCache.TryGetValue<T>($"MediaCacheService_{cacheKey}", out var result))
-            {
-                return (T)result;
-            }
-
-            // Not in the cache, so add this Key into our MediaServiceCache
+            // Keep track of the key so that we know what to remove when we purge
             UpdateLocalCache(cacheKey);
 
             return await _memoryCache.GetOrCreateAsync<T>(cacheKey, entry =>
@@ -43,26 +39,36 @@ namespace Ombi.Helpers
 
         private void UpdateLocalCache(string cacheKey)
         {
-            var mediaServiceCache = _memoryCache.Get<List<string>>(_cacheKey);
-            if (mediaServiceCache == null)
+            lock (_lock)
             {
-                mediaServiceCache = new List<string>();
+                var mediaServiceCache = _memoryCache.Get<HashSet<string>>(_cacheKey);
+                if (mediaServiceCache == null)
+                {
+                    mediaServiceCache = new HashSet<string>();
+                }
+                if (!mediaServiceCache.Add(cacheKey))
+                {
+                    // We are already tracking this key
+                    return;
+                }
+                _memoryCache.Set(_cacheKey, mediaServiceCache);
             }
-            mediaServiceCache.Add(cacheKey);
-            _memoryCache.Remove(_cacheKey);
-            _memoryCache.Set(_cacheKey, mediaServiceCache);
         }
 
         public Task Purge()
         {
-            var keys = _memoryCache.Get<List<string>>(_cacheKey);
-            if (keys == null)
+            lock (_lock)
             {
-                return Task.CompletedTask;
-            }
-            foreach (var key in keys)
-            {
-                base.Remove(key);
+                var keys = _memoryCache.Get<HashSet<string>>(_cacheKey);
+                if (keys == null)
+                {
+                    return Task.CompletedTask;
+                }
+                foreach (var key in keys)
+                {
+                    base.Remove(key);
+                }
+                _memoryCache.Remove(_cacheKey);
             }
             return Task.CompletedTask;
         }
