@@ -620,7 +620,7 @@ Here are some of the features Ombi has:
         <a href="https://github.com/malmcf">
             <img src="https://avatars.githubusercontent.com/u/243155210?v=4" width="50;" alt="malmcf"/>
             <br />
-            <sub><b>malmcf</b></sub>
+            <sub><b>Malmcf</b></sub>
         </a>
     </td>
     <td align="center">
