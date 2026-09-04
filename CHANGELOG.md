@@ -1,3 +1,12 @@
+## [4.60.16](https://github.com/Ombi-app/Ombi/compare/v4.60.15...v4.60.16) (2026-09-04)
+
+
+### Bug Fixes
+
+* stop the TV discover endpoints duplicating episode data ([#5472](https://github.com/Ombi-app/Ombi/issues/5472)) ([#5473](https://github.com/Ombi-app/Ombi/issues/5473)) ([44e5749](https://github.com/Ombi-app/Ombi/commit/44e5749b2026bf73a6dffb605feadbfd94eac75f))
+
+
+
 ## [4.60.15](https://github.com/Ombi-app/Ombi/compare/v4.60.14...v4.60.15) (2026-08-06)
 
 
@@ -550,15 +559,6 @@
 
 
 ## [4.55.2](https://github.com/Ombi-app/Ombi/compare/v4.55.1...v4.55.2) (2026-02-10)
-
-
-
-## [4.55.1](https://github.com/Ombi-app/Ombi/compare/v4.55.0...v4.55.1) (2026-02-10)
-
-
-### Bug Fixes
-
-* **plex:** content sync duplicate key errors ([cefe989](https://github.com/Ombi-app/Ombi/commit/cefe989d4efc9b2a686b50f47479d283992f9267))
 
 
 
