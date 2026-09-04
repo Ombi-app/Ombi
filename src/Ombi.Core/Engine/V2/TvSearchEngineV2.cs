@@ -227,42 +227,65 @@ namespace Ombi.Core.Engine.V2
 
             var nonDemoItems = items.Where(item => !DemoCheck(item.Title)).ToList();
 
-            if (settings.HideAvailableFromDiscover)
-            {
-                foreach (var tvMazeSearch in nonDemoItems)
-                {
-                    var show = await Cache.GetOrAddAsync(nameof(GetShowInformation) + tvMazeSearch.Id.ToString(),
-                        () => _movieApi.GetTVInfo(tvMazeSearch.Id.ToString()), DateTime.Now.AddHours(12));
-
-                    if (show == null || string.IsNullOrEmpty(show.name) || show.seasons == null)
-                    {
-                        continue;
-                    }
-
-                    var seasons = show.seasons.Where(x => x.season_number != 0).ToList();
-                    foreach (var tvSeason in seasons)
-                    {
-                        var seasonEpisodes = await Cache.GetOrAddAsync("SeasonEpisodes" + show.id + tvSeason.season_number,
-                            () => _movieApi.GetSeasonEpisodes(show.id, tvSeason.season_number, CancellationToken.None),
-                            DateTimeOffset.Now.AddHours(12));
-                        MapSeasons(tvMazeSearch.SeasonRequests, tvSeason, seasonEpisodes);
-                    }
-                }
-            }
-
             // Run ProcessResult sequentially (RunSearchRules accesses DbContext which is not thread-safe)
             var retVal = new List<SearchTvShowViewModel>();
             foreach (var item in nonDemoItems)
             {
-                var result = await ProcessResult(item);
+                // We only need the episodes to work out how much of the show is available.
+                // The results from TheMovieDb are cached and shared by every request, so the seasons
+                // must be built into a new list each time. Writing them onto the cached item would
+                // append another copy of every episode each time we are called.
+                var seasonRequests = settings.HideAvailableFromDiscover
+                    ? await GetSeasonsForAvailability(item.Id)
+                    : new List<SeasonRequests>();
+
+                var result = await ProcessResult(item, seasonRequests);
                 if (result == null || (settings.HideAvailableFromDiscover && result.Available))
                 {
                     continue;
                 }
+
+                // The availability rules have had their use out of the seasons, the discover views
+                // do not display them and they are megabytes worth of JSON per page.
+                result.SeasonRequests = new List<SeasonRequests>();
                 retVal.Add(result);
             }
 
             return retVal;
+        }
+
+        /// <summary>
+        /// Builds the season and episode information used to determine how much of a show we
+        /// already have. Always returns a new list, the caller must not write it back onto any
+        /// cached object.
+        /// </summary>
+        private async Task<List<SeasonRequests>> GetSeasonsForAvailability(int theMovieDbId)
+        {
+            var seasonRequests = new List<SeasonRequests>();
+
+            var show = await Cache.GetOrAddAsync(nameof(GetShowInformation) + theMovieDbId,
+                () => _movieApi.GetTVInfo(theMovieDbId.ToString()), DateTimeOffset.Now.AddHours(12));
+
+            if (show == null || string.IsNullOrEmpty(show.name) || show.seasons == null)
+            {
+                return seasonRequests;
+            }
+
+            foreach (var tvSeason in show.seasons.Where(x => x.season_number != 0))
+            {
+                var seasonEpisodes = await Cache.GetOrAddAsync($"SeasonEpisodes|{show.id}|{tvSeason.season_number}",
+                    () => _movieApi.GetSeasonEpisodes(show.id, tvSeason.season_number, CancellationToken.None),
+                    DateTimeOffset.Now.AddHours(12));
+
+                if (seasonEpisodes?.episodes == null)
+                {
+                    continue;
+                }
+
+                MapSeasons(seasonRequests, tvSeason, seasonEpisodes);
+            }
+
+            return seasonRequests;
         }
 
         private static void MapSeasons(List<SeasonRequests> seasonRequests, Season tvSeason, SeasonDetails seasonEpisodes)
@@ -314,9 +337,11 @@ namespace Ombi.Core.Engine.V2
             }
         }
 
-        private async Task<SearchTvShowViewModel> ProcessResult<T>(T tvMazeSearch)
+        private async Task<SearchTvShowViewModel> ProcessResult<T>(T tvMazeSearch, List<SeasonRequests> seasonRequests)
         {
             var item = _mapper.Map<SearchTvShowViewModel>(tvMazeSearch);
+            // The availability rules use the seasons to set FullyAvailable/PartlyAvailable
+            item.SeasonRequests = seasonRequests;
 
             await RunSearchRules(item);
             return item;
