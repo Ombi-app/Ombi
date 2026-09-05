@@ -4,8 +4,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ombi.Store.Entities
 {
+    /// <summary>
+    /// Common shape for media-server content rows exposed to availability and newsletter jobs.
+    /// </summary>
     public interface IMediaServerContent : IEntity
     {
+        /// <summary>
+        /// Surrogate primary key exposed on the interface because <see cref="IEntity"/> is a marker type.
+        /// </summary>
+        public int Id { get; set; }
         public string Title { get; set; }
         public string ImdbId { get; set; }
         public string TvDbId { get; set; }

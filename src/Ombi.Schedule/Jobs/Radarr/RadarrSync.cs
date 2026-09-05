@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -14,8 +15,14 @@ using Quartz;
 
 namespace Ombi.Schedule.Jobs.Radarr
 {
+    /// <summary>
+    /// Quartz job that synchronises Radarr movie metadata into the external cache database.
+    /// </summary>
     public class RadarrSync : IRadarrSync
     {
+        /// <summary>
+        /// Creates the Radarr movie cache synchronisation job.
+        /// </summary>
         public RadarrSync(ISettingsService<RadarrSettings> radarr, ISettingsService<Radarr4KSettings> radarr4k, IRadarrV3Api radarrApi, ILogger<RadarrSync> log, ExternalContext ctx,
             IExternalRepository<RadarrCache> radarrRepo)
         {
@@ -36,17 +43,34 @@ namespace Ombi.Schedule.Jobs.Radarr
         private readonly ExternalContext _ctx;
         private readonly IExternalRepository<RadarrCache> _radarrRepo;
 
+        /// <summary>
+        /// Clears and repopulates the Radarr movie cache, resetting its identity counter after the delete commits.
+        /// Radarr uses the same bulk delete/re-insert pattern as Sonarr and Lidarr; without a reset, MySQL
+        /// <c>AUTO_INCREMENT</c> continues climbing and will eventually overflow <see cref="int.MaxValue"/> (see #5224).
+        /// </summary>
+        /// <param name="job">Quartz job execution context.</param>
         public async Task Execute(IJobExecutionContext job)
         {
             try
             {
+                var ct = job.CancellationToken;
                 _logger.LogInformation("[RadarrSync] Starting Radarr cache sync - clearing existing cache");
                 // Let's remove the old cached data
-                using var tran = await _ctx.Database.BeginTransactionAsync();
-                await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM RadarrCache");
-                // Reset auto-increment to prevent Int32 overflow (see #5224)
-                await _ctx.Database.ResetAutoIncrementAsync("RadarrCache");
-                await tran.CommitAsync();
+                using (var tran = await _ctx.Database.BeginTransactionAsync(ct))
+                {
+                    await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM RadarrCache", ct);
+                    await tran.CommitAsync(ct);
+                }
+                // Outside the transaction: MySQL ALTER TABLE AUTO_INCREMENT implicitly commits (see #5224).
+                // Isolate reset failures so a counter reset error cannot leave the cache empty after the delete commits.
+                try
+                {
+                    await _ctx.Database.ResetAutoIncrementAsync("RadarrCache");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "[RadarrSync] Failed to reset RadarrCache auto-increment; continuing with cache repopulation");
+                }
                 _logger.LogInformation("[RadarrSync] RadarrCache cleared");
 
                 var radarrSettings = _radarrSettings.GetSettingsAsync();
@@ -62,6 +86,10 @@ namespace Ombi.Schedule.Jobs.Radarr
             }
         }
 
+        /// <summary>
+        /// Fetches movies from a Radarr instance and upserts them into <see cref="RadarrCache"/>.
+        /// </summary>
+        /// <param name="settings">Radarr connection settings for the instance being synced.</param>
         private async Task Process(RadarrSettings settings)
         {
             if (settings.Enabled)
@@ -130,6 +158,10 @@ namespace Ombi.Schedule.Jobs.Radarr
         }
 
         private bool _disposed;
+        /// <summary>
+        /// Releases managed resources when <paramref name="disposing"/> is true.
+        /// </summary>
+        /// <param name="disposing">True when called from <see cref="Dispose()"/>.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed)
@@ -143,6 +175,9 @@ namespace Ombi.Schedule.Jobs.Radarr
             _disposed = true;
         }
 
+        /// <summary>
+        /// Releases the external database context held by this job.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);

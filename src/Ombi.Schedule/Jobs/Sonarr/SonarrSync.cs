@@ -21,8 +21,14 @@ using Quartz;
 
 namespace Ombi.Schedule.Jobs.Sonarr
 {
+    /// <summary>
+    /// Quartz job that synchronises Sonarr series and episode metadata into the external cache database.
+    /// </summary>
     public class SonarrSync : ISonarrSync
     {
+        /// <summary>
+        /// Creates the Sonarr series and episode cache synchronisation job.
+        /// </summary>
         public SonarrSync(ISettingsService<SonarrSettings> s, ISonarrV3Api api, ILogger<SonarrSync> l, ExternalContext ctx,
             IMovieDbApi movieDbApi)
         {
@@ -40,10 +46,15 @@ namespace Ombi.Schedule.Jobs.Sonarr
         private readonly ExternalContext _ctx;
         private readonly IMovieDbApi _movieDbApi;
 
+        /// <summary>
+        /// Clears Sonarr series and episode caches, resets their identity counters, then repopulates from Sonarr.
+        /// </summary>
+        /// <param name="job">Quartz job execution context.</param>
         public async Task Execute(IJobExecutionContext job)
         {
             try
             {
+                var ct = job.CancellationToken;
                 var settings = await _settings.GetSettingsAsync();
                 if (!settings.Enabled)
                 {
@@ -67,12 +78,22 @@ namespace Ombi.Schedule.Jobs.Sonarr
                     var strat = _ctx.Database.CreateExecutionStrategy();
                     await strat.ExecuteAsync(async () =>
                     {
-                        using var tran = await _ctx.Database.BeginTransactionAsync();
-                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrCache");
-                        // Reset auto-increment to prevent Int32 overflow (see #5224)
-                        await _ctx.Database.ResetAutoIncrementAsync("SonarrCache");
-                        await tran.CommitAsync();
+                        using var tran = await _ctx.Database.BeginTransactionAsync(ct);
+                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrCache", ct);
+                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrEpisodeCache", ct);
+                        await tran.CommitAsync(ct);
                     });
+                    // Outside the transaction: MySQL ALTER TABLE AUTO_INCREMENT implicitly commits (see #5224).
+                    // Isolate reset failures so a counter reset error cannot leave the caches empty after the delete commits.
+                    try
+                    {
+                        await _ctx.Database.ResetAutoIncrementAsync("SonarrCache");
+                        await _ctx.Database.ResetAutoIncrementAsync("SonarrEpisodeCache");
+                    }
+                    catch (Exception ex)
+                    {
+                        _log.LogWarning(ex, "Failed to reset Sonarr cache auto-increment; continuing with cache repopulation");
+                    }
 
                     var sonarrCacheToSave = new HashSet<SonarrCache>();
                     foreach (var id in ids)
@@ -91,8 +112,8 @@ namespace Ombi.Schedule.Jobs.Sonarr
                         sonarrCacheToSave.Add(cache);
                     }
 
-                    await _ctx.SonarrCache.AddRangeAsync(sonarrCacheToSave);
-                    await _ctx.SaveChangesAsync();
+                    await _ctx.SonarrCache.AddRangeAsync(sonarrCacheToSave, ct);
+                    await _ctx.SaveChangesAsync(ct);
                     sonarrCacheToSave.Clear();
 
                     foreach (var s in ids)
@@ -106,16 +127,6 @@ namespace Ombi.Schedule.Jobs.Sonarr
                         var episodes = await _api.GetEpisodes(s.Id, settings.ApiKey, settings.FullUri);
                         var monitoredEpisodes = episodes.Where(x => x.monitored || x.hasFile);
 
-                        // Delete existing episodes for this series before adding new ones
-                        strat = _ctx.Database.CreateExecutionStrategy();
-                        await strat.ExecuteAsync(async () =>
-                        {
-                            using var tran = await _ctx.Database.BeginTransactionAsync();
-                            await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrEpisodeCache WHERE TvDbId = {0}", s.TvDbId);
-                            await tran.CommitAsync();
-                        });
-
-                        //var allExistingEpisodes = await _ctx.SonarrEpisodeCache.Where(x => x.TvDbId == s.tvdbId).ToListAsync();
                         // Add to DB
                         _log.LogDebug("We have the episodes, adding to db transaction");
                         var episodesToAdd = monitoredEpisodes.Select(episode =>
@@ -127,40 +138,14 @@ namespace Ombi.Schedule.Jobs.Sonarr
                                     MovieDbId = s.MovieDbId,
                                     HasFile = episode.hasFile
                                 });
-                        //var episodesToAdd = new List<SonarrEpisodeCache>();
-
-                        //foreach (var monitored in monitoredEpisodes)
-                        //{
-                        //    var existing = allExistingEpisodes.FirstOrDefault(x => x.SeasonNumber == monitored.seasonNumber && x.EpisodeNumber == monitored.episodeNumber);
-                        //    if (existing == null)
-                        //    {
-                        //        // Just add a new one
-                        //        episodesToAdd.Add(new SonarrEpisodeCache
-                        //        {
-                        //            EpisodeNumber = monitored.episodeNumber,
-                        //            SeasonNumber = monitored.seasonNumber,
-                        //            TvDbId = s.tvdbId,
-                        //            HasFile = monitored.hasFile
-                        //        });
-                        //    } 
-                        //    else
-                        //    {
-                        //        // Do we need to update the availability?
-                        //        if (monitored.hasFile != existing.HasFile)
-                        //        {
-                        //            existing.HasFile = monitored.hasFile;
-                        //        }
-                        //    }
-
-                        //}
                         strat = _ctx.Database.CreateExecutionStrategy();
                         await strat.ExecuteAsync(async () =>
                         {
-                            using var tran = await _ctx.Database.BeginTransactionAsync();
-                            await _ctx.SonarrEpisodeCache.AddRangeAsync(episodesToAdd);
+                            using var tran = await _ctx.Database.BeginTransactionAsync(ct);
+                            await _ctx.SonarrEpisodeCache.AddRangeAsync(episodesToAdd, ct);
                             _log.LogDebug("Commiting the transaction");
-                            await _ctx.SaveChangesAsync();
-                            await tran.CommitAsync();
+                            await _ctx.SaveChangesAsync(ct);
+                            await tran.CommitAsync(ct);
                         });
                     }
 
@@ -175,6 +160,10 @@ namespace Ombi.Schedule.Jobs.Sonarr
         }
 
         private bool _disposed;
+        /// <summary>
+        /// Releases managed resources when <paramref name="disposing"/> is true.
+        /// </summary>
+        /// <param name="disposing">True when called from <see cref="Dispose()"/>.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed)
@@ -188,6 +177,9 @@ namespace Ombi.Schedule.Jobs.Sonarr
             _disposed = true;
         }
 
+        /// <summary>
+        /// Releases the external database context held by this job.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
