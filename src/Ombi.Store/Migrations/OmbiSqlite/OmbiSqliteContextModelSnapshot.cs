@@ -738,6 +738,9 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.Property<int>("QualityOverride")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("QualityOverride4K")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("TEXT");
 
@@ -920,6 +923,18 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.HasIndex("UserId");
 
                     b.ToTable("UserNotificationPreferences");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.UserSelectableQualityProfile", b =>
+                {
+                    b.Property<int>("Id").ValueGeneratedOnAdd().HasColumnType("INTEGER");
+                    b.Property<int>("Application").HasColumnType("INTEGER");
+                    b.Property<bool>("Is4K").HasColumnType("INTEGER");
+                    b.Property<int>("QualityProfileId").HasColumnType("INTEGER");
+                    b.Property<string>("UserId").IsRequired().HasMaxLength(128).HasColumnType("TEXT");
+                    b.HasKey("Id");
+                    b.HasIndex("UserId", "Application", "QualityProfileId", "Is4K").IsUnique().HasDatabaseName("IX_UserSelectableQualityProfile_User_Application_Profile_Is4K");
+                    b.ToTable("UserSelectableQualityProfile");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.UserQualityProfiles", b =>
@@ -1229,6 +1244,16 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                         .WithMany("UserNotificationPreferences")
                         .HasForeignKey("UserId");
 
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.UserSelectableQualityProfile", b =>
+                {
+                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                     b.Navigation("User");
                 });
 
