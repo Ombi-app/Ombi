@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core;
@@ -33,16 +34,29 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly ITvRequestRepository _tvRequestRepository;
         private readonly IMusicRequestRepository _musicRequestRepository;
 
+        private const int MaxRetryLimit = 10;
+
         public async Task Execute(IJobExecutionContext job)
         {
+            var cancellationToken = job?.CancellationToken ?? CancellationToken.None;
+
             // Get all the failed ones!
-            var failedRequests = _requestQueue.GetAll().Where(x => x.Completed == null);
+            var failedRequests = await _requestQueue.GetAll().Where(x => x.Completed == null).ToListAsync(cancellationToken);
 
             foreach (var request in failedRequests)
             {
+                // Abandon items exceeding max retries or carrying unretryable metadata errors
+                if (request.RetryCount >= MaxRetryLimit ||
+                    (request.Type == RequestType.TvShow && !string.IsNullOrEmpty(request.Error) && request.Error.Contains("TVDBID is missing", StringComparison.OrdinalIgnoreCase)))
+                {
+                    await _requestQueue.Delete(request);
+                    await _requestQueue.SaveChangesAsync();
+                    continue;
+                }
+
                 if (request.Type == RequestType.Movie)
                 {
-                    var movieRequest = await _movieRequestRepository.GetAll().FirstOrDefaultAsync(x => x.Id == request.RequestId);
+                    var movieRequest = await _movieRequestRepository.GetAll().FirstOrDefaultAsync(x => x.Id == request.RequestId, cancellationToken);
                     if (movieRequest == null)
                     {
                         await _requestQueue.Delete(request);
@@ -52,15 +66,11 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                     // TODO probably need to add something to the request queue to better idenitfy if it's a 4k request
                     var result = await _movieSender.Send(movieRequest, movieRequest.Approved4K);
-                    if (result.Success)
-                    {
-                        request.Completed = DateTime.UtcNow;
-                        await _requestQueue.SaveChangesAsync();
-                    }
+                    await HandleRetryResultAsync(request, result);
                 }
                 if (request.Type == RequestType.TvShow)
                 {
-                    var tvRequest = await _tvRequestRepository.GetChild().FirstOrDefaultAsync(x => x.Id == request.RequestId);
+                    var tvRequest = await _tvRequestRepository.GetChild().FirstOrDefaultAsync(x => x.Id == request.RequestId, cancellationToken);
                     if (tvRequest == null)
                     {
                         await _requestQueue.Delete(request);
@@ -68,15 +78,11 @@ namespace Ombi.Schedule.Jobs.Ombi
                         continue;
                     }
                     var result = await _tvSender.Send(tvRequest);
-                    if (result.Success)
-                    {
-                        request.Completed = DateTime.UtcNow;
-                        await _requestQueue.SaveChangesAsync();
-                    }
+                    await HandleRetryResultAsync(request, result);
                 }
                 if (request.Type == RequestType.Album)
                 {
-                    var musicRequest = await _musicRequestRepository.GetAll().FirstOrDefaultAsync(x => x.Id == request.RequestId);
+                    var musicRequest = await _musicRequestRepository.GetAll().FirstOrDefaultAsync(x => x.Id == request.RequestId, cancellationToken);
                     if (musicRequest == null)
                     {
                         await _requestQueue.Delete(request);
@@ -84,13 +90,26 @@ namespace Ombi.Schedule.Jobs.Ombi
                         continue;
                     }
                     var result = await _musicSender.Send(musicRequest);
-                    if (result.Success)
-                    {
-                        request.Completed = DateTime.UtcNow;
-                        await _requestQueue.SaveChangesAsync();
-                    }
+                    await HandleRetryResultAsync(request, result);
                 }
             }
+        }
+
+        private async Task HandleRetryResultAsync(RequestQueue request, SenderResult result)
+        {
+            if (result?.Success == true)
+            {
+                request.Completed = DateTime.UtcNow;
+            }
+            else
+            {
+                request.RetryCount++;
+                if (result != null && !string.IsNullOrEmpty(result.Message))
+                {
+                    request.Error = result.Message;
+                }
+            }
+            await _requestQueue.SaveChangesAsync();
         }
     }
 }
