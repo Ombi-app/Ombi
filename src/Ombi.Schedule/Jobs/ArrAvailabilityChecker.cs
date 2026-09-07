@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core;
+using Ombi.Core.Services;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Hubs;
 using Ombi.Notifications.Models;
+using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
@@ -26,6 +28,7 @@ namespace Ombi.Schedule.Jobs.Radarr
         private readonly ISettingsService<SonarrSettings> _sonarrSettings;
         private readonly IExternalRepository<SonarrEpisodeCache> _sonarrEpisodeRepo;
         private readonly IMovieRequestRepository _movies;
+        private readonly IFeatureService _featureService;
 
         public ArrAvailabilityChecker(
             IExternalRepository<RadarrCache> radarrRepo,
@@ -35,7 +38,8 @@ namespace Ombi.Schedule.Jobs.Radarr
             ITvRequestRepository tvRequest, IMovieRequestRepository movies,
             ILogger<ArrAvailabilityChecker> log,
             ISettingsService<RadarrSettings> radarrSettings,
-            ISettingsService<SonarrSettings> sonarrSettings)
+            ISettingsService<SonarrSettings> sonarrSettings,
+            IFeatureService featureService)
              : base(tvRequest, notification, log, notificationHubService)
         {
             _radarrRepo = radarrRepo;
@@ -44,6 +48,7 @@ namespace Ombi.Schedule.Jobs.Radarr
             _movies = movies;
             _radarrSettings = radarrSettings;
             _sonarrSettings = sonarrSettings;
+            _featureService = featureService;
         }
         public async Task Execute(IJobExecutionContext job)
         {
@@ -63,6 +68,7 @@ namespace Ombi.Schedule.Jobs.Radarr
 
         private async Task ProcessMovies()
         {
+            var feature4kEnabled = await _featureService.FeatureEnabled(FeatureNames.Movie4KRequests);
             var availableRadarrMovies = _radarrRepo.GetAll().Where(x => x.HasFile).ToImmutableHashSet();
             var unavailableMovieRequests = _movies.GetAll().Where(x => !x.Available || (!x.Available4K && x.Has4KRequest)).ToImmutableHashSet();
 
@@ -74,7 +80,7 @@ namespace Ombi.Schedule.Jobs.Radarr
                 if (available != null)
                 {
                     _log.LogInformation($"Found move '{movieRequest.Title}' available in Radarr");
-                    if (available.Has4K && !movieRequest.Available4K)
+                    if (movieRequest.Has4KRequest && available.Has4K && !movieRequest.Available4K && feature4kEnabled)
                     {
                         itemsForAvailability.Add(new AvailabilityModel
                         {
@@ -84,7 +90,8 @@ namespace Ombi.Schedule.Jobs.Radarr
                         movieRequest.Available4K = true;
                         movieRequest.MarkedAsAvailable4K = DateTime.UtcNow;
                     }
-                    if (available.HasRegular)
+                    // If we have a non-4k version or we don't care about versions, then mark as available
+                    if (!movieRequest.Available && (!feature4kEnabled || available.HasRegular))
                     {
                         itemsForAvailability.Add(new AvailabilityModel
                         {
