@@ -15,6 +15,7 @@ function createComponent() {
       windowsService: false,
       windowsServiceName: '',
       isWindows: true,
+      isManagedByPackageManager: false,
       testMode: false,
       updateSchedule: '0 0 0/6 1/1 * ? *',
     })),
@@ -111,5 +112,31 @@ describe('UpdateComponent', () => {
     comp.onSubmit(comp.form);
     expect(mockNotify.error).toHaveBeenCalledWith('Please check your entered values');
     expect(mockSettingsService.saveUpdateSettings).not.toHaveBeenCalled();
+  });
+
+  it('should not be apt-managed by default', () => {
+    const { comp } = createComponent();
+    comp.ngOnInit();
+    expect(comp.isAptManaged).toBe(false);
+  });
+
+  it('should be apt-managed when install is package managed', () => {
+    const { comp, mockSettingsService } = createComponent();
+    mockSettingsService.getUpdateSettings.mockReturnValue(of({
+      autoUpdateEnabled: false,
+      username: '',
+      password: '',
+      processName: 'Ombi',
+      useScript: false,
+      scriptLocation: '',
+      windowsService: false,
+      windowsServiceName: '',
+      isWindows: false,
+      isManagedByPackageManager: true,
+      testMode: false,
+      updateSchedule: '0 0 0/6 1/1 * ? *',
+    }));
+    comp.ngOnInit();
+    expect(comp.isAptManaged).toBe(true);
   });
 });

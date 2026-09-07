@@ -66,6 +66,14 @@ namespace Ombi.Schedule.Jobs.Ombi
         {
             Logger.LogDebug(LoggingEvents.Updater, "Starting Update job");
 
+            if (InstallMethodHelper.IsPackageManaged)
+            {
+                Logger.LogDebug(LoggingEvents.Updater,
+                    "Skipping self-updater: install method is '{0}'. Updates are managed by the system package manager.",
+                    InstallMethodHelper.InstallMethod);
+                return;
+            }
+
             var settings = await Settings.GetSettingsAsync();
             if (!settings.AutoUpdateEnabled && !settings.TestMode)
             {
