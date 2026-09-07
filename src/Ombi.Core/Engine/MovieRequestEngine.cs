@@ -173,7 +173,7 @@ namespace Ombi.Core.Engine
                 var requestEngineResult = await AddMovieRequest(requestModel, fullMovieName, model.RequestOnBehalf, isExisting, is4kRequest);
                 if (requestEngineResult.Result)
                 {
-                    var result = await ApproveMovie(requestModel, model.Is4kRequest);
+                    var result = await ApproveMovie(requestModel, model.Is4kRequest, isAutoApprove: true);
                     if (result.IsError)
                     {
                         Logger.LogWarning("Tried auto sending movie but failed. Message: {0}", result.Message);
@@ -608,7 +608,7 @@ namespace Ombi.Core.Engine
             };
         }
 
-        public async Task<RequestEngineResult> ApproveMovie(MovieRequests request, bool is4K)
+        public async Task<RequestEngineResult> ApproveMovie(MovieRequests request, bool is4K, bool isAutoApprove = false)
         {
             if (request == null)
             {
@@ -630,7 +630,24 @@ namespace Ombi.Core.Engine
                 request.Approved = true;
                 request.Denied = false;
             }
-            await MovieRepository.Update(request);
+            try
+            {
+                await MovieRepository.Update(request);
+            }
+            catch (DbUpdateException ex) when (IsTransientSqliteLock(ex))
+            {
+                if (!isAutoApprove)
+                {
+                    // Manual approval: this DB update is the first save of Approved=true.
+                    // If it failed, the approval was never persisted — do not proceed.
+                    throw;
+                }
+
+                // Auto-approve path: AddMovieRequest() already persisted Approved=true.
+                // A transient SQLite lock here only loses the MarkedAsApproved timestamp.
+                // The in-memory entity still has the correct state for the sender below.
+                Logger.LogError(ex, "Transient SQLite lock updating movie request {RequestId} during auto-approval (request already saved); continuing to send to downstream service", request.Id);
+            }
 
             var canNotify = await RunSpecificRule(request, SpecificRules.CanSendNotification, string.Empty);
             if (canNotify.Success)
@@ -882,6 +899,12 @@ namespace Ombi.Core.Engine
             });
 
             return new RequestEngineResult { Result = true, Message = $"{movieName} has been successfully added!", RequestId = model.Id };
+        }
+
+        private static bool IsTransientSqliteLock(DbUpdateException ex)
+        {
+            return ex.InnerException is Microsoft.Data.Sqlite.SqliteException sqliteEx
+                && sqliteEx.SqliteErrorCode == 5; // SQLITE_BUSY
         }
     }
 }
