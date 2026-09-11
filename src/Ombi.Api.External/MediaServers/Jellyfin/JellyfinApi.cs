@@ -191,6 +191,10 @@ namespace Ombi.Api.External.MediaServers.Jellyfin
             if (!string.IsNullOrEmpty(apiKey))
             {
                 req.AddHeader("X-MediaBrowser-Token", apiKey);
+                // Jellyfin 10.9+/12 removed support for the legacy X-MediaBrowser-Token /
+                // X-Emby-Token headers in favor of the MediaBrowser scheme on Authorization.
+                // Send both so this keeps working across old and new server versions.
+                req.AddHeader("Authorization", $"MediaBrowser Token=\"{apiKey}\"");
             }
             req.AddHeader("Accept", "application/json");
             req.AddContentHeader("Content-Type", "application/json");
