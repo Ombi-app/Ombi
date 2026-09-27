@@ -1,3 +1,7 @@
+## [4.60.62](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/compare/v4.60.61...v4.60.62) (2026-09-27)
+
+
+
 ## [4.60.61](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/compare/v4.60.60...v4.60.61) (2026-09-27)
 
 
@@ -199,15 +203,6 @@
 
 
 ## [4.60.13](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/compare/v4.60.12...v4.60.13) (2026-08-06)
-
-
-
-## [4.60.12](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/compare/v4.60.11...v4.60.12) (2026-07-29)
-
-
-### Bug Fixes
-
-* auto-import and link Plex Admin during Plex OAuth login ([#5446](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/issues/5446)) ([8e1d264](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/commit/8e1d2647d013e03df6cfea52e704ae535a7fb1b5))
 
 
 
