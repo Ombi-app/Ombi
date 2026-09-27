@@ -540,26 +540,29 @@ namespace Ombi.Schedule.Jobs.Ombi
             _log.LogInformation("The media item {0} does not have a TvDbId, searching for TvDbId", title);
             if (hasTheMovieDb)
             {
-                _log.LogInformation("The show {0} has theMovieDBId but not ImdbId, searching for ImdbId", title);
+                _log.LogInformation("The show {0} has TheMovieDbId but not TvDbId, searching for TvDbId", title);
                 if (int.TryParse(theMovieDbId, out var id))
                 {
                     var result = await _movieApi.GetTvExternals(id);
-
-                    return result.tvdb_id.ToString();
+                    if (result?.tvdb_id > 0)
+                    {
+                        return result.tvdb_id.ToString();
+                    }
                 }
             }
 
-            if (hasImdb)
+            if (hasImdb && imdbId.HasValue())
             {
-                _log.LogInformation("The show {0} has ImdbId but not ImdbId, searching for ImdbId", title);
+                _log.LogInformation("The show {0} has ImdbId but not TvDbId, searching for TvDbId", title);
                 var result = await _movieApi.Find(imdbId, ExternalSource.imdb_id);
-                if (result?.tv_results?.Length > 0)
+                var movieId = result?.tv_results?.FirstOrDefault()?.id ?? 0;
+                if (movieId > 0)
                 {
-                    var movieId = result.tv_results?[0]?.id ?? 0;
-
                     var externalResult = await _movieApi.GetTvExternals(movieId);
-
-                    return externalResult.imdb_id;
+                    if (externalResult?.tvdb_id > 0)
+                    {
+                        return externalResult.tvdb_id.ToString();
+                    }
                 }
             }
             return string.Empty;
