@@ -133,11 +133,23 @@ namespace Ombi.Settings.Settings.Models
 
     public class MediaCleanupDeletionPlan
     {
-        public int Version { get; set; } = 1;
+        public int Version { get; set; } = 2;
         public bool DeleteFiles { get; set; }
         public bool AddImportExclusion { get; set; }
         public DateTime AuthorizedAt { get; set; }
+        /// <summary>
+        /// Ombi-side request/ownership state captured when deletion becomes authorized.
+        /// Execution revalidates current state against this snapshot before contacting *arr.
+        /// </summary>
+        public MediaCleanupAuthorizationSnapshot Authorization { get; set; }
         public List<MediaCleanupExternalTarget> Targets { get; set; } = new List<MediaCleanupExternalTarget>();
+    }
+
+    public class MediaCleanupAuthorizationSnapshot
+    {
+        public bool ResidualTvCatalog { get; set; }
+        public List<string> OwnerUserIds { get; set; } = new List<string>();
+        public List<string> RequestClaims { get; set; } = new List<string>();
     }
 
     public class MediaCleanupExternalTarget

@@ -1407,6 +1407,11 @@ namespace Ombi.Core.Engine
                             "Create/approve a new cleanup request before deleting media.");
                     }
 
+                    // Re-check Ombi's request/ownership state immediately before the first
+                    // destructive *arr call. Authorization may shrink while it waits, but a new
+                    // request/owner or a changed target must never inherit an older approval.
+                    await RevalidateDeletionAuthorization(record);
+
                     var externalDeleted = record.RequestType == RequestType.Movie
                         ? await DeleteMovie(record)
                         : record.RequestType == RequestType.TvShow
@@ -2423,12 +2428,18 @@ namespace Ombi.Core.Engine
                     "Specific TV episode cleanup requires Delete Files to be enabled when deletion is authorized.");
             }
 
+            var authorization = await CaptureAuthorizationSnapshot(record);
             var plan = new MediaCleanupDeletionPlan
             {
                 DeleteFiles = settings.DeleteFiles,
                 AddImportExclusion = settings.AddImportExclusion,
-                AuthorizedAt = DateTime.UtcNow
+                AuthorizedAt = DateTime.UtcNow,
+                Authorization = authorization
             };
+
+            // Keep the record's owner display/audit field aligned with the state that was
+            // actually authorized, rather than the potentially older nomination snapshot.
+            record.OwnerUserIds = authorization.OwnerUserIds.ToList();
 
             if (record.RequestType == RequestType.Movie)
             {
@@ -2497,12 +2508,201 @@ namespace Ombi.Core.Engine
             }
         }
 
-        private static MediaCleanupDeletionPlan GetDeletionPlan(MediaCleanupRecord record)
+        private async Task<MediaCleanupAuthorizationSnapshot> CaptureAuthorizationSnapshot(MediaCleanupRecord record)
         {
-            if (record.DeletionPlan == null || record.DeletionPlan.Version != 1)
+            if (record.RequestType == RequestType.Movie)
+            {
+                var requests = await _movieRequests.GetAll()
+                    .Where(x => x.Id == record.MediaRequestId ||
+                                (record.TheMovieDbId > 0 && x.TheMovieDbId == record.TheMovieDbId))
+                    .ToListAsync();
+
+                var idConflict = requests.FirstOrDefault(x =>
+                    x.Id == record.MediaRequestId &&
+                    record.TheMovieDbId > 0 &&
+                    x.TheMovieDbId != record.TheMovieDbId);
+                if (idConflict != null)
+                {
+                    throw new MediaCleanupTerminalException(
+                        "The Ombi movie request now points at a different provider identity. Create/approve a new cleanup request.");
+                }
+
+                var matching = requests
+                    .Where(x => record.TheMovieDbId <= 0 || x.TheMovieDbId == record.TheMovieDbId)
+                    .ToList();
+                if (matching.Count == 0)
+                {
+                    throw new MediaCleanupTerminalException(
+                        "The Ombi movie request no longer exists. Create/approve a new cleanup request before deleting media.");
+                }
+                if (!matching.Any(x => x.Available))
+                {
+                    throw new MediaCleanupTerminalException(
+                        "The Ombi movie request is no longer marked available. Create/approve a new cleanup request before deleting media.");
+                }
+
+                return new MediaCleanupAuthorizationSnapshot
+                {
+                    OwnerUserIds = matching
+                        .Select(x => x.RequestedUserId)
+                        .Where(x => !string.IsNullOrEmpty(x))
+                        .Distinct(StringComparer.Ordinal)
+                        .OrderBy(x => x, StringComparer.Ordinal)
+                        .ToList(),
+                    RequestClaims = matching
+                        .Select(x => $"movie:{x.Id}:{x.RequestedUserId ?? string.Empty}")
+                        .Distinct(StringComparer.Ordinal)
+                        .OrderBy(x => x, StringComparer.Ordinal)
+                        .ToList()
+                };
+            }
+
+            if (record.RequestType == RequestType.TvShow)
+            {
+                var parents = await _tvRequests.Get()
+                    .Where(x => x.Id == record.MediaRequestId ||
+                                (record.TvDbId > 0 && x.TvDbId == record.TvDbId) ||
+                                (record.TheMovieDbId > 0 && x.ExternalProviderId == record.TheMovieDbId))
+                    .ToListAsync();
+
+                var idConflict = parents.FirstOrDefault(x =>
+                    x.Id == record.MediaRequestId &&
+                    ((record.TvDbId > 0 && x.TvDbId > 0 && x.TvDbId != record.TvDbId) ||
+                     (record.TheMovieDbId > 0 && x.ExternalProviderId > 0 && x.ExternalProviderId != record.TheMovieDbId)));
+                if (idConflict != null)
+                {
+                    throw new MediaCleanupTerminalException(
+                        "The Ombi TV request now points at a different provider identity. Create/approve a new cleanup request.");
+                }
+
+                var matching = parents
+                    .Where(x =>
+                        (record.TvDbId > 0 && x.TvDbId == record.TvDbId) ||
+                        (record.TheMovieDbId > 0 && x.ExternalProviderId == record.TheMovieDbId) ||
+                        x.Id == record.MediaRequestId)
+                    .ToList();
+                var children = matching
+                    .SelectMany(x => x.ChildRequests ?? new List<ChildRequests>())
+                    .ToList();
+
+                if (children.Count == 0)
+                {
+                    // After a completed partial cleanup Ombi can intentionally keep a residual
+                    // Sonarr-backed catalog entry even when no request rows remain. Preserve that
+                    // supported workflow, but only while the same residual series still exists.
+                    var state = await LoadState();
+                    var residual = FindResidualTvCatalogRecord(state, record.MediaRequestId);
+                    if (residual != null &&
+                        IsSameCleanupMedia(residual, record.RequestType, record.MediaRequestId, record.TheMovieDbId, record.TvDbId) &&
+                        await HasResidualTvSeries(residual))
+                    {
+                        return new MediaCleanupAuthorizationSnapshot
+                        {
+                            ResidualTvCatalog = true,
+                            OwnerUserIds = (record.OwnerUserIds ?? new List<string>())
+                                .Where(x => !string.IsNullOrEmpty(x))
+                                .Distinct(StringComparer.Ordinal)
+                                .OrderBy(x => x, StringComparer.Ordinal)
+                                .ToList()
+                        };
+                    }
+
+                    throw new MediaCleanupTerminalException(
+                        "The Ombi TV request no longer exists. Create/approve a new cleanup request before deleting media.");
+                }
+
+                if (children.Any(x => !x.Available))
+                {
+                    throw new MediaCleanupTerminalException(
+                        "The Ombi TV request changed and is no longer fully available. Create/approve a new cleanup request before deleting media.");
+                }
+
+                var claims = new List<string>();
+                foreach (var parent in matching)
+                {
+                    foreach (var child in parent.ChildRequests ?? new List<ChildRequests>())
+                    {
+                        claims.Add($"tv-child:{parent.Id}:{child.Id}:{child.RequestedUserId ?? string.Empty}");
+                        foreach (var season in child.SeasonRequests ?? new List<SeasonRequests>())
+                        {
+                            foreach (var episode in season.Episodes ?? new List<EpisodeRequests>())
+                            {
+                                if (episode.Requested || episode.Approved)
+                                {
+                                    claims.Add($"tv-episode:{child.Id}:{season.SeasonNumber}:{episode.EpisodeNumber}");
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return new MediaCleanupAuthorizationSnapshot
+                {
+                    OwnerUserIds = children
+                        .Select(x => x.RequestedUserId)
+                        .Where(x => !string.IsNullOrEmpty(x))
+                        .Distinct(StringComparer.Ordinal)
+                        .OrderBy(x => x, StringComparer.Ordinal)
+                        .ToList(),
+                    RequestClaims = claims
+                        .Distinct(StringComparer.Ordinal)
+                        .OrderBy(x => x, StringComparer.Ordinal)
+                        .ToList()
+                };
+            }
+
+            throw new MediaCleanupTerminalException($"Unsupported cleanup request type: {record.RequestType}.");
+        }
+
+        private async Task RevalidateDeletionAuthorization(MediaCleanupRecord record)
+        {
+            var plan = GetDeletionPlan(record);
+            var approved = plan.Authorization;
+            var current = await CaptureAuthorizationSnapshot(record);
+
+            var approvedClaims = (approved.RequestClaims ?? new List<string>()).ToHashSet(StringComparer.Ordinal);
+            var currentClaims = (current.RequestClaims ?? new List<string>()).ToHashSet(StringComparer.Ordinal);
+            var approvedOwners = (approved.OwnerUserIds ?? new List<string>()).ToHashSet(StringComparer.Ordinal);
+            var currentOwners = (current.OwnerUserIds ?? new List<string>()).ToHashSet(StringComparer.Ordinal);
+
+            if (approved.ResidualTvCatalog != current.ResidualTvCatalog)
             {
                 throw new MediaCleanupTerminalException(
-                    "This cleanup does not contain a supported frozen deletion plan. Create/approve a new cleanup request before deleting media.");
+                    "The Ombi request state changed after this cleanup was authorized. Create/approve a new cleanup request before deleting media.");
+            }
+
+            // Removing an owner/request narrows the authorization and is safe. Adding a claim or
+            // owner expands or changes what the old approval would affect and requires reapproval.
+            var addedClaims = currentClaims.Except(approvedClaims, StringComparer.Ordinal).ToList();
+            var addedOwners = currentOwners.Except(approvedOwners, StringComparer.Ordinal).ToList();
+            if (addedClaims.Count > 0 || addedOwners.Count > 0)
+            {
+                _logger.LogWarning(
+                    "Media cleanup authorization became stale for {RequestType} '{Title}' ({CleanupId}); {AddedClaimCount} new request claim(s), {AddedOwnerCount} new owner(s)",
+                    record.RequestType,
+                    record.Title,
+                    record.Id,
+                    addedClaims.Count,
+                    addedOwners.Count);
+                throw new MediaCleanupTerminalException(
+                    "The Ombi request or ownership state changed after this cleanup was authorized. Create/approve a new cleanup request before deleting media.");
+            }
+
+            if (!approved.ResidualTvCatalog && approvedClaims.Count > 0 && currentClaims.Count == 0)
+            {
+                throw new MediaCleanupTerminalException(
+                    "The Ombi request that authorized this cleanup no longer exists. Create/approve a new cleanup request before deleting media.");
+            }
+        }
+
+        private static MediaCleanupDeletionPlan GetDeletionPlan(MediaCleanupRecord record)
+        {
+            if (record.DeletionPlan == null ||
+                record.DeletionPlan.Version != 2 ||
+                record.DeletionPlan.Authorization == null)
+            {
+                throw new MediaCleanupTerminalException(
+                    "This cleanup does not contain a supported frozen deletion plan and authorization snapshot. Create/approve a new cleanup request before deleting media.");
             }
 
             return record.DeletionPlan;

@@ -177,6 +177,9 @@ namespace Ombi.Core.Tests.Engine
                         Assert.That(record.DeletionPlan, Is.Not.Null);
                         Assert.That(record.DeletionPlan.DeleteFiles, Is.True);
                         Assert.That(record.DeletionPlan.AddImportExclusion, Is.False);
+                        Assert.That(record.DeletionPlan.Version, Is.EqualTo(2));
+                        Assert.That(record.DeletionPlan.Authorization, Is.Not.Null);
+                        Assert.That(record.DeletionPlan.Authorization.RequestClaims, Is.EqualTo(new[] { "movie:100:owner" }));
                         Assert.That(record.DeletionPlan.Targets, Has.Count.EqualTo(1));
                         Assert.That(record.DeletionPlan.Targets[0].Service, Is.EqualTo(MediaCleanupExternalService.Radarr));
                         Assert.That(record.DeletionPlan.Targets[0].Endpoint, Does.Contain("localhost:7878"));
@@ -567,6 +570,75 @@ namespace Ombi.Core.Tests.Engine
         }
 
         [Test]
+        public async Task ScheduledMovieDeletion_NewSameOwnerRequestAfterAuthorization_FailsClosedBeforeRadarrQuery()
+        {
+            var record = AddDueMovie();
+            var original = MovieRequest(record.MediaRequestId, record.TheMovieDbId, "owner");
+            var laterDuplicate = MovieRequest(record.MediaRequestId + 1, record.TheMovieDbId, "owner");
+            _movieRequests.Setup(x => x.GetAll())
+                .Returns(new[] { original, laterDuplicate }.AsQueryable().BuildMock());
+
+            await _subject.ProcessPending();
+
+            Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Failed));
+            Assert.That(record.ExternalDeletionCompletedAt, Is.Null);
+            Assert.That(record.FailureReason, Does.Contain("request or ownership state changed"));
+            _radarr.Verify(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _radarr.Verify(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
+        }
+
+        [Test]
+        public async Task ScheduledMovieDeletion_OriginalRequestRemoved_FailsClosedBeforeRadarrQuery()
+        {
+            var record = AddDueMovie();
+            _movieRequests.Setup(x => x.GetAll())
+                .Returns(Array.Empty<MovieRequests>().AsQueryable().BuildMock());
+
+            await _subject.ProcessPending();
+
+            Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Failed));
+            Assert.That(record.ExternalDeletionCompletedAt, Is.Null);
+            Assert.That(record.FailureReason, Does.Contain("no longer exists"));
+            _radarr.Verify(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _radarr.Verify(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
+        }
+
+        [Test]
+        public async Task ScheduledTvDeletion_NewOwnerAfterAuthorization_FailsClosedBeforeSonarrQuery()
+        {
+            var record = AddDuePartialTv();
+            var parent = TvRequest(record,
+                TvChild(301, "owner"),
+                TvChild(302, "new-owner"));
+            _tvRequests.Setup(x => x.Get())
+                .Returns(new[] { parent }.AsQueryable().BuildMock());
+
+            await _subject.ProcessPending();
+
+            Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Failed));
+            Assert.That(record.ExternalDeletionCompletedAt, Is.Null);
+            Assert.That(record.FailureReason, Does.Contain("request or ownership state changed"));
+            _sonarr.Verify(x => x.GetSeries(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _sonarr.Verify(x => x.DeleteEpisodeFile(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _sonarr.Verify(x => x.DeleteSeries(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
+        }
+
+        [Test]
+        public async Task VersionOneDeletionPlan_FailsClosedBeforeExternalQuery()
+        {
+            var record = AddDueMovie();
+            record.DeletionPlan.Version = 1;
+            record.DeletionPlan.Authorization = null;
+
+            await _subject.ProcessPending();
+
+            Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Failed));
+            Assert.That(record.ExternalDeletionCompletedAt, Is.Null);
+            Assert.That(record.FailureReason, Does.Contain("authorization snapshot"));
+            _radarr.Verify(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Test]
         public async Task ScheduledMovieDeletion_UsesFrozenDestructiveFlagsAfterSettingsChange()
         {
             var record = AddDueMovie();
@@ -654,6 +726,8 @@ namespace Ombi.Core.Tests.Engine
             Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.ScheduledForDeletion));
             Assert.That(record.DeletionPlan, Is.Not.Null);
             Assert.That(record.DeletionPlan.DeleteFiles, Is.True);
+            Assert.That(record.DeletionPlan.Authorization, Is.Not.Null);
+            Assert.That(record.DeletionPlan.Authorization.RequestClaims, Is.EqualTo(new[] { "movie:600:community-owner" }));
             Assert.That(record.DeletionPlan.Targets, Has.Count.EqualTo(1));
             Assert.That(record.DeletionPlan.Targets[0].Service, Is.EqualTo(MediaCleanupExternalService.Radarr));
             _radarr.Verify(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
@@ -737,6 +811,8 @@ namespace Ombi.Core.Tests.Engine
             };
             _movieRequests.Setup(x => x.GetWithUser())
                 .Returns(new[] { movie }.AsQueryable().BuildMock());
+            _movieRequests.Setup(x => x.GetAll())
+                .Returns(new[] { movie }.AsQueryable().BuildMock());
             return movie;
         }
 
@@ -749,6 +825,7 @@ namespace Ombi.Core.Tests.Engine
                 MediaRequestId = 100,
                 TheMovieDbId = 200,
                 Title = "Safety Test Movie",
+                OwnerUserIds = new List<string> { "owner" },
                 Origin = MediaCleanupOrigin.OwnRequest,
                 Status = MediaCleanupStatus.ScheduledForDeletion,
                 CreatedAt = DateTime.UtcNow.AddDays(-1),
@@ -758,6 +835,11 @@ namespace Ombi.Core.Tests.Engine
                     DeleteFiles = _cleanupSettings.DeleteFiles,
                     AddImportExclusion = _cleanupSettings.AddImportExclusion,
                     AuthorizedAt = DateTime.UtcNow.AddHours(-1),
+                    Authorization = new MediaCleanupAuthorizationSnapshot
+                    {
+                        OwnerUserIds = new List<string> { "owner" },
+                        RequestClaims = new List<string> { "movie:100:owner" }
+                    },
                     Targets = new List<MediaCleanupExternalTarget>
                     {
                         new MediaCleanupExternalTarget
@@ -769,6 +851,8 @@ namespace Ombi.Core.Tests.Engine
                 }
             };
             _state.Requests.Add(record);
+            _movieRequests.Setup(x => x.GetAll())
+                .Returns(new[] { MovieRequest(record.MediaRequestId, record.TheMovieDbId, "owner") }.AsQueryable().BuildMock());
             return record;
         }
 
@@ -782,6 +866,7 @@ namespace Ombi.Core.Tests.Engine
                 TvDbId = 400,
                 TheMovieDbId = 500,
                 Title = "Safety Test Series",
+                OwnerUserIds = new List<string> { "owner" },
                 Origin = MediaCleanupOrigin.OwnRequest,
                 Status = MediaCleanupStatus.ScheduledForDeletion,
                 CreatedAt = DateTime.UtcNow.AddDays(-1),
@@ -791,6 +876,11 @@ namespace Ombi.Core.Tests.Engine
                     DeleteFiles = true,
                     AddImportExclusion = false,
                     AuthorizedAt = DateTime.UtcNow.AddHours(-1),
+                    Authorization = new MediaCleanupAuthorizationSnapshot
+                    {
+                        OwnerUserIds = new List<string> { "owner" },
+                        RequestClaims = new List<string> { "tv-child:300:301:owner" }
+                    },
                     Targets = new List<MediaCleanupExternalTarget>
                     {
                         new MediaCleanupExternalTarget
@@ -812,6 +902,8 @@ namespace Ombi.Core.Tests.Engine
                 }
             };
             _state.Requests.Add(record);
+            _tvRequests.Setup(x => x.Get())
+                .Returns(new[] { TvRequest(record, TvChild(301, "owner")) }.AsQueryable().BuildMock());
             return record;
         }
 
@@ -830,7 +922,47 @@ namespace Ombi.Core.Tests.Engine
                 VotingEndsAt = DateTime.UtcNow.AddMinutes(-1)
             };
             _state.Requests.Add(record);
+            _movieRequests.Setup(x => x.GetAll())
+                .Returns(new[] { MovieRequest(record.MediaRequestId, record.TheMovieDbId, "community-owner") }.AsQueryable().BuildMock());
             return record;
+        }
+
+        private static MovieRequests MovieRequest(int id, int tmdbId, string owner)
+        {
+            return new MovieRequests
+            {
+                Id = id,
+                TheMovieDbId = tmdbId,
+                Title = "Safety Test Movie",
+                Available = true,
+                RequestedUserId = owner,
+                RequestedDate = DateTime.UtcNow.AddDays(-10),
+                MarkedAsAvailable = DateTime.UtcNow.AddDays(-5)
+            };
+        }
+
+        private static ChildRequests TvChild(int id, string owner)
+        {
+            return new ChildRequests
+            {
+                Id = id,
+                Available = true,
+                Approved = true,
+                RequestedUserId = owner,
+                SeasonRequests = new List<SeasonRequests>()
+            };
+        }
+
+        private static TvRequests TvRequest(MediaCleanupRecord record, params ChildRequests[] children)
+        {
+            return new TvRequests
+            {
+                Id = record.MediaRequestId,
+                TvDbId = record.TvDbId,
+                ExternalProviderId = record.TheMovieDbId,
+                Title = record.Title,
+                ChildRequests = children.ToList()
+            };
         }
 
         private void SetupMovieInRadarr(MediaCleanupRecord record)
