@@ -174,6 +174,12 @@ namespace Ombi.Core.Tests.Engine
                     {
                         Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.ScheduledForDeletion));
                         Assert.That(record.ScheduledForDeletionAt, Is.Not.Null);
+                        Assert.That(record.DeletionPlan, Is.Not.Null);
+                        Assert.That(record.DeletionPlan.DeleteFiles, Is.True);
+                        Assert.That(record.DeletionPlan.AddImportExclusion, Is.False);
+                        Assert.That(record.DeletionPlan.Targets, Has.Count.EqualTo(1));
+                        Assert.That(record.DeletionPlan.Targets[0].Service, Is.EqualTo(MediaCleanupExternalService.Radarr));
+                        Assert.That(record.DeletionPlan.Targets[0].Endpoint, Does.Contain("localhost:7878"));
                     }
                     events.Add(record.ExternalDeletionCompletedAt.HasValue
                         ? "post-delete-checkpoint"
@@ -561,6 +567,99 @@ namespace Ombi.Core.Tests.Engine
         }
 
         [Test]
+        public async Task ScheduledMovieDeletion_UsesFrozenDestructiveFlagsAfterSettingsChange()
+        {
+            var record = AddDueMovie();
+            SetupMovieInRadarr(record);
+
+            // Global settings drift after authorization must not change what the old approval means.
+            _cleanupSettings.DeleteFiles = false;
+            _cleanupSettings.AddImportExclusion = true;
+            _radarr.Setup(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), true, false))
+                .ReturnsAsync(true);
+
+            await _subject.ProcessPending();
+
+            Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Completed));
+            _radarr.Verify(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), true, false), Times.Once);
+            _radarr.Verify(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), false, true), Times.Never);
+        }
+
+        [Test]
+        public async Task ScheduledMovieDeletion_ApprovedRadarrDestinationChanged_FailsClosedBeforeQuery()
+        {
+            var record = AddDueMovie();
+
+            // The cleanup was authorized for localhost:7878, then the configured destination moved.
+            _radarrSettings.Port = 7999;
+
+            await _subject.ProcessPending();
+
+            Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Failed));
+            Assert.That(record.ExternalDeletionCompletedAt, Is.Null);
+            Assert.That(record.FailureReason, Does.Contain("destination changed"));
+            _radarr.Verify(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _radarr.Verify(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
+        }
+
+        [Test]
+        public async Task ScheduledMovieDeletion_NewRadarr4KEnabledAfterAuthorization_IsNotAddedToOldPlan()
+        {
+            var record = AddDueMovie();
+            SetupMovieInRadarr(record);
+            _radarr4KSettings.Enabled = true;
+            _radarr.Setup(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), true, false))
+                .ReturnsAsync(true);
+
+            await _subject.ProcessPending();
+
+            Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Completed));
+            _radarr.Verify(x => x.GetMovies(_radarrSettings.ApiKey, It.IsAny<string>()), Times.Once);
+            _radarr.Verify(x => x.GetMovies(_radarr4KSettings.ApiKey, It.IsAny<string>()), Times.Never);
+        }
+
+        [Test]
+        public async Task LegacyScheduledCleanupWithoutDeletionPlan_FailsClosed()
+        {
+            var record = AddDueMovie();
+            record.DeletionPlan = null;
+
+            await _subject.ProcessPending();
+
+            Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Failed));
+            Assert.That(record.ExternalDeletionCompletedAt, Is.Null);
+            Assert.That(record.FailureReason, Does.Contain("authorized before destructive settings"));
+            _radarr.Verify(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _radarr.Verify(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
+        }
+
+        [Test]
+        public async Task AutomaticCommunityAuthorization_SnapshotsDeletionPlanWhenThresholdIsFinal()
+        {
+            _cleanupSettings.OwnRequestRemoval = OwnRequestRemovalMode.Off;
+            _cleanupSettings.CommunityCleanup = CommunityCleanupMode.AutomaticAfterThreshold;
+            _cleanupSettings.MinimumDeleteVotes = 2;
+            _cleanupSettings.RequiredVoteMargin = 1;
+            _cleanupSettings.RequesterCanVeto = false;
+            _cleanupSettings.GracePeriodDays = 1;
+            var record = AddExpiredCommunityVote();
+            record.Votes.AddRange(new[]
+            {
+                Vote("delete-1", MediaCleanupVoteType.Delete),
+                Vote("delete-2", MediaCleanupVoteType.Delete)
+            });
+
+            await _subject.ProcessPending();
+
+            Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.ScheduledForDeletion));
+            Assert.That(record.DeletionPlan, Is.Not.Null);
+            Assert.That(record.DeletionPlan.DeleteFiles, Is.True);
+            Assert.That(record.DeletionPlan.Targets, Has.Count.EqualTo(1));
+            Assert.That(record.DeletionPlan.Targets[0].Service, Is.EqualTo(MediaCleanupExternalService.Radarr));
+            _radarr.Verify(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Test]
         public async Task CommunityCleanup_RequesterKeepVeto_BlocksDeletion()
         {
             _cleanupSettings.OwnRequestRemoval = OwnRequestRemovalMode.Off;
@@ -653,7 +752,21 @@ namespace Ombi.Core.Tests.Engine
                 Origin = MediaCleanupOrigin.OwnRequest,
                 Status = MediaCleanupStatus.ScheduledForDeletion,
                 CreatedAt = DateTime.UtcNow.AddDays(-1),
-                ScheduledForDeletionAt = DateTime.UtcNow.AddMinutes(-1)
+                ScheduledForDeletionAt = DateTime.UtcNow.AddMinutes(-1),
+                DeletionPlan = new MediaCleanupDeletionPlan
+                {
+                    DeleteFiles = _cleanupSettings.DeleteFiles,
+                    AddImportExclusion = _cleanupSettings.AddImportExclusion,
+                    AuthorizedAt = DateTime.UtcNow.AddHours(-1),
+                    Targets = new List<MediaCleanupExternalTarget>
+                    {
+                        new MediaCleanupExternalTarget
+                        {
+                            Service = MediaCleanupExternalService.Radarr,
+                            Endpoint = _radarrSettings.FullUri.TrimEnd('/')
+                        }
+                    }
+                }
             };
             _state.Requests.Add(record);
             return record;
@@ -673,6 +786,20 @@ namespace Ombi.Core.Tests.Engine
                 Status = MediaCleanupStatus.ScheduledForDeletion,
                 CreatedAt = DateTime.UtcNow.AddDays(-1),
                 ScheduledForDeletionAt = DateTime.UtcNow.AddMinutes(-1),
+                DeletionPlan = new MediaCleanupDeletionPlan
+                {
+                    DeleteFiles = true,
+                    AddImportExclusion = false,
+                    AuthorizedAt = DateTime.UtcNow.AddHours(-1),
+                    Targets = new List<MediaCleanupExternalTarget>
+                    {
+                        new MediaCleanupExternalTarget
+                        {
+                            Service = MediaCleanupExternalService.Sonarr,
+                            Endpoint = _sonarrSettings.FullUri.TrimEnd('/')
+                        }
+                    }
+                },
                 SelectedEpisodes = new List<MediaCleanupEpisodeRecord>
                 {
                     new MediaCleanupEpisodeRecord

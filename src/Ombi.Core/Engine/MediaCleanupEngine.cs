@@ -870,6 +870,12 @@ namespace Ombi.Core.Engine
                     return Success("Removal request submitted for administrator approval.", record.Id);
                 }
 
+                var deletionPlanError = await TrySnapshotDeletionPlan(record, settings);
+                if (!string.IsNullOrEmpty(deletionPlanError))
+                {
+                    return Fail(deletionPlanError);
+                }
+
                 record.Status = MediaCleanupStatus.ScheduledForDeletion;
                 record.ScheduledForDeletionAt = TruncateToSecond(DateTime.UtcNow);
                 state.Requests.Add(record);
@@ -991,7 +997,7 @@ namespace Ombi.Core.Engine
                     Vote = MediaCleanupVoteType.Delete,
                     Date = DateTime.UtcNow
                 });
-                EvaluateCommunity(record, settings, DateTime.UtcNow);
+                await EvaluateCommunityAndSnapshotDeletionPlan(record, settings, DateTime.UtcNow);
                 state.Requests.Add(record);
                 await SaveState(state);
                 if (record.Status == MediaCleanupStatus.PendingAdminApproval)
@@ -1038,7 +1044,7 @@ namespace Ombi.Core.Engine
                 }
 
                 var statusBeforeDeadlineEvaluation = record.Status;
-                EvaluateCommunity(record, settings, DateTime.UtcNow);
+                await EvaluateCommunityAndSnapshotDeletionPlan(record, settings, DateTime.UtcNow);
                 if (!IsVoteable(record))
                 {
                     await SaveState(state);
@@ -1062,7 +1068,7 @@ namespace Ombi.Core.Engine
                     existing.Date = DateTime.UtcNow;
                 }
 
-                EvaluateCommunity(record, settings, DateTime.UtcNow);
+                await EvaluateCommunityAndSnapshotDeletionPlan(record, settings, DateTime.UtcNow);
                 await SaveState(state);
                 if (previousStatus != MediaCleanupStatus.PendingAdminApproval && record.Status == MediaCleanupStatus.PendingAdminApproval)
                 {
@@ -1098,6 +1104,12 @@ namespace Ombi.Core.Engine
                 if (!IsOriginEnabled(record, settings))
                 {
                     return Fail("This cleanup system is currently disabled in Media Cleanup settings.");
+                }
+
+                var deletionPlanError = await TrySnapshotDeletionPlan(record, settings);
+                if (!string.IsNullOrEmpty(deletionPlanError))
+                {
+                    return Fail(deletionPlanError, record.Id);
                 }
 
                 record.ApprovedByUserId = user.Id;
@@ -1222,7 +1234,7 @@ namespace Ombi.Core.Engine
                     {
                         var before = record.Status;
                         var beforeScheduled = record.ScheduledForDeletionAt;
-                        EvaluateCommunity(record, settings, now);
+                        await EvaluateCommunityAndSnapshotDeletionPlan(record, settings, now);
                         changed |= before != record.Status || beforeScheduled != record.ScheduledForDeletionAt;
                         if (before != MediaCleanupStatus.PendingAdminApproval && record.Status == MediaCleanupStatus.PendingAdminApproval)
                         {
@@ -1388,10 +1400,17 @@ namespace Ombi.Core.Engine
             {
                 try
                 {
+                    if (record.DeletionPlan == null)
+                    {
+                        throw new MediaCleanupTerminalException(
+                            "This cleanup was authorized before destructive settings and destination snapshotting was available. " +
+                            "Create/approve a new cleanup request before deleting media.");
+                    }
+
                     var externalDeleted = record.RequestType == RequestType.Movie
-                        ? await DeleteMovie(record, settings)
+                        ? await DeleteMovie(record)
                         : record.RequestType == RequestType.TvShow
-                            ? await DeleteTv(record, settings)
+                            ? await DeleteTv(record)
                             : throw new MediaCleanupTerminalException($"Unsupported cleanup request type: {record.RequestType}.");
 
                     if (!externalDeleted)
@@ -1852,47 +1871,60 @@ namespace Ombi.Core.Engine
             }
         }
 
-        private async Task<bool> DeleteMovie(MediaCleanupRecord record, MediaCleanupSettings cleanupSettings)
+        private async Task<bool> DeleteMovie(MediaCleanupRecord record)
         {
+            var plan = GetDeletionPlan(record);
+            var targets = plan.Targets ?? new List<MediaCleanupExternalTarget>();
+            if (targets.Count == 0 || targets.Any(x => x.Service == MediaCleanupExternalService.Sonarr))
+            {
+                throw new MediaCleanupTerminalException("The cleanup's frozen Radarr destination plan is invalid.");
+            }
+
+            // Resolve and validate every approved destination before deleting from any of them.
+            // That avoids partially executing an old authorization when one endpoint has drifted.
+            var approvedSettings = new List<RadarrSettings>();
+            foreach (var target in targets)
+            {
+                RadarrSettings current;
+                switch (target.Service)
+                {
+                    case MediaCleanupExternalService.Radarr:
+                        current = await _radarrSettings.GetSettingsAsync();
+                        break;
+                    case MediaCleanupExternalService.Radarr4K:
+                        current = await _radarr4KSettings.GetSettingsAsync();
+                        break;
+                    default:
+                        throw new MediaCleanupTerminalException("The cleanup's frozen Radarr destination plan contains an unsupported target.");
+                }
+
+                ValidateExternalTarget(record, target, current.Enabled, current.FullUri);
+                approvedSettings.Add(current);
+            }
+
             var deleted = false;
             var deletedKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            var anyEnabled = false;
-
-            var regular = await _radarrSettings.GetSettingsAsync();
-            if (regular.Enabled)
+            foreach (var radarrSettings in approvedSettings)
             {
-                anyEnabled = true;
-                deleted |= await DeleteMovieFromRadarr(record.TheMovieDbId, regular, cleanupSettings, deletedKeys);
-            }
-
-            var fourK = await _radarr4KSettings.GetSettingsAsync();
-            if (fourK.Enabled)
-            {
-                anyEnabled = true;
-                deleted |= await DeleteMovieFromRadarr(record.TheMovieDbId, fourK, cleanupSettings, deletedKeys);
-            }
-
-            if (!anyEnabled)
-            {
-                throw new MediaCleanupTerminalException("No Radarr instance is enabled for Media Cleanup.");
+                deleted |= await DeleteMovieFromRadarr(record.TheMovieDbId, radarrSettings, plan, deletedKeys);
             }
 
             return deleted;
         }
 
-        private async Task<bool> DeleteMovieFromRadarr(int tmdbId, RadarrSettings radarrSettings, MediaCleanupSettings cleanupSettings, HashSet<string> deletedKeys)
+        private async Task<bool> DeleteMovieFromRadarr(int tmdbId, RadarrSettings radarrSettings, MediaCleanupDeletionPlan plan, HashSet<string> deletedKeys)
         {
             var movies = await _radarr.GetMovies(radarrSettings.ApiKey, radarrSettings.FullUri);
             var matches = movies.Where(x => x.tmdbId == tmdbId).ToList();
             var deleted = false;
             foreach (var movie in matches)
             {
-                var key = $"{radarrSettings.FullUri}|{movie.id}";
+                var key = $"{NormalizeExternalEndpoint(radarrSettings.FullUri)}|{movie.id}";
                 if (!deletedKeys.Add(key))
                 {
                     continue;
                 }
-                var deleteSucceeded = await _radarr.DeleteMovie(movie.id, radarrSettings.ApiKey, radarrSettings.FullUri, cleanupSettings.DeleteFiles, cleanupSettings.AddImportExclusion);
+                var deleteSucceeded = await _radarr.DeleteMovie(movie.id, radarrSettings.ApiKey, radarrSettings.FullUri, plan.DeleteFiles, plan.AddImportExclusion);
                 if (!deleteSucceeded)
                 {
                     throw new InvalidOperationException($"Radarr rejected the delete request for movie id {movie.id}.");
@@ -1902,13 +1934,18 @@ namespace Ombi.Core.Engine
             return deleted;
         }
 
-        private async Task<bool> DeleteTv(MediaCleanupRecord record, MediaCleanupSettings cleanupSettings)
+        private async Task<bool> DeleteTv(MediaCleanupRecord record)
         {
-            var sonarrSettings = await _sonarrSettings.GetSettingsAsync();
-            if (!sonarrSettings.Enabled)
+            var plan = GetDeletionPlan(record);
+            var targets = plan.Targets ?? new List<MediaCleanupExternalTarget>();
+            if (targets.Count != 1 || targets[0].Service != MediaCleanupExternalService.Sonarr)
             {
-                throw new MediaCleanupTerminalException("Sonarr is not enabled for Media Cleanup.");
+                throw new MediaCleanupTerminalException("The cleanup's frozen Sonarr destination plan is invalid.");
             }
+
+            var target = targets[0];
+            var sonarrSettings = await _sonarrSettings.GetSettingsAsync();
+            ValidateExternalTarget(record, target, sonarrSettings.Enabled, sonarrSettings.FullUri);
 
             var series = await _sonarr.GetSeries(sonarrSettings.ApiKey, sonarrSettings.FullUri);
             var match = series.FirstOrDefault(x => x.tvdbId == record.TvDbId);
@@ -1919,16 +1956,16 @@ namespace Ombi.Core.Engine
 
             if (IsPartialTvCleanup(record))
             {
-                if (!cleanupSettings.DeleteFiles)
+                if (!plan.DeleteFiles)
                 {
                     throw new MediaCleanupTerminalException(
-                        "Specific TV episode cleanup requires Delete Files to remain enabled until the cleanup is completed.");
+                        "The frozen deletion plan is invalid because partial TV cleanup requires Delete Files.");
                 }
 
                 return await DeleteTvEpisodes(record, match, sonarrSettings);
             }
 
-            var deleteSucceeded = await _sonarr.DeleteSeries(match.id, sonarrSettings.ApiKey, sonarrSettings.FullUri, cleanupSettings.DeleteFiles, cleanupSettings.AddImportExclusion);
+            var deleteSucceeded = await _sonarr.DeleteSeries(match.id, sonarrSettings.ApiKey, sonarrSettings.FullUri, plan.DeleteFiles, plan.AddImportExclusion);
             if (!deleteSucceeded)
             {
                 throw new InvalidOperationException($"Sonarr rejected the delete request for series id {match.id}.");
@@ -2354,6 +2391,151 @@ namespace Ombi.Core.Engine
                 Origin = origin,
                 CreatedAt = DateTime.UtcNow
             };
+        }
+
+        private async Task<string> TrySnapshotDeletionPlan(MediaCleanupRecord record, MediaCleanupSettings settings)
+        {
+            try
+            {
+                record.DeletionPlan = await CreateDeletionPlan(record, settings);
+                return null;
+            }
+            catch (MediaCleanupTerminalException ex)
+            {
+                return ex.Message;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,
+                    "Could not snapshot destructive settings/destination for {RequestType} '{Title}' ({CleanupId})",
+                    record.RequestType,
+                    record.Title,
+                    record.Id);
+                return "Ombi could not freeze the destructive settings and external destination for this cleanup. No media was deleted.";
+            }
+        }
+
+        private async Task<MediaCleanupDeletionPlan> CreateDeletionPlan(MediaCleanupRecord record, MediaCleanupSettings settings)
+        {
+            if (record.RequestType == RequestType.TvShow && IsPartialTvCleanup(record) && !settings.DeleteFiles)
+            {
+                throw new MediaCleanupTerminalException(
+                    "Specific TV episode cleanup requires Delete Files to be enabled when deletion is authorized.");
+            }
+
+            var plan = new MediaCleanupDeletionPlan
+            {
+                DeleteFiles = settings.DeleteFiles,
+                AddImportExclusion = settings.AddImportExclusion,
+                AuthorizedAt = DateTime.UtcNow
+            };
+
+            if (record.RequestType == RequestType.Movie)
+            {
+                var regular = await _radarrSettings.GetSettingsAsync();
+                if (regular.Enabled)
+                {
+                    plan.Targets.Add(new MediaCleanupExternalTarget
+                    {
+                        Service = MediaCleanupExternalService.Radarr,
+                        Endpoint = NormalizeExternalEndpoint(regular.FullUri)
+                    });
+                }
+
+                var fourK = await _radarr4KSettings.GetSettingsAsync();
+                if (fourK.Enabled)
+                {
+                    plan.Targets.Add(new MediaCleanupExternalTarget
+                    {
+                        Service = MediaCleanupExternalService.Radarr4K,
+                        Endpoint = NormalizeExternalEndpoint(fourK.FullUri)
+                    });
+                }
+
+                if (plan.Targets.Count == 0)
+                {
+                    throw new MediaCleanupTerminalException("No Radarr instance is enabled, so this cleanup cannot be authorized for deletion.");
+                }
+
+                return plan;
+            }
+
+            if (record.RequestType == RequestType.TvShow)
+            {
+                var sonarr = await _sonarrSettings.GetSettingsAsync();
+                if (!sonarr.Enabled)
+                {
+                    throw new MediaCleanupTerminalException("Sonarr is not enabled, so this cleanup cannot be authorized for deletion.");
+                }
+
+                plan.Targets.Add(new MediaCleanupExternalTarget
+                {
+                    Service = MediaCleanupExternalService.Sonarr,
+                    Endpoint = NormalizeExternalEndpoint(sonarr.FullUri)
+                });
+                return plan;
+            }
+
+            throw new MediaCleanupTerminalException($"Unsupported cleanup request type: {record.RequestType}.");
+        }
+
+        private async Task EvaluateCommunityAndSnapshotDeletionPlan(MediaCleanupRecord record, MediaCleanupSettings settings, DateTime now)
+        {
+            var wasScheduled = record.Status == MediaCleanupStatus.ScheduledForDeletion;
+            EvaluateCommunity(record, settings, now);
+
+            if (!wasScheduled &&
+                record.Status == MediaCleanupStatus.ScheduledForDeletion &&
+                !record.ExternalDeletionCompletedAt.HasValue &&
+                record.DeletionPlan == null)
+            {
+                var error = await TrySnapshotDeletionPlan(record, settings);
+                if (!string.IsNullOrEmpty(error))
+                {
+                    MarkTerminalFailure(record, new MediaCleanupTerminalException(error), "deletion authorization");
+                }
+            }
+        }
+
+        private static MediaCleanupDeletionPlan GetDeletionPlan(MediaCleanupRecord record)
+        {
+            if (record.DeletionPlan == null || record.DeletionPlan.Version != 1)
+            {
+                throw new MediaCleanupTerminalException(
+                    "This cleanup does not contain a supported frozen deletion plan. Create/approve a new cleanup request before deleting media.");
+            }
+
+            return record.DeletionPlan;
+        }
+
+        private void ValidateExternalTarget(MediaCleanupRecord record, MediaCleanupExternalTarget target, bool enabled, string currentEndpoint)
+        {
+            var approvedEndpoint = NormalizeExternalEndpoint(target.Endpoint);
+            var normalizedCurrent = NormalizeExternalEndpoint(currentEndpoint);
+            if (!enabled ||
+                string.IsNullOrEmpty(approvedEndpoint) ||
+                !string.Equals(approvedEndpoint, normalizedCurrent, StringComparison.OrdinalIgnoreCase))
+            {
+                _logger.LogWarning(
+                    "Media cleanup destination changed for {RequestType} '{Title}' ({CleanupId}). Service={Service}, ApprovedEndpoint={ApprovedEndpoint}, CurrentEndpoint={CurrentEndpoint}, Enabled={Enabled}",
+                    record.RequestType,
+                    record.Title,
+                    record.Id,
+                    target.Service,
+                    approvedEndpoint,
+                    normalizedCurrent,
+                    enabled);
+                throw new MediaCleanupTerminalException(
+                    $"The configured {target.Service} destination changed after this cleanup was authorized. " +
+                    "Create/approve a new cleanup request before deleting media.");
+            }
+        }
+
+        private static string NormalizeExternalEndpoint(string endpoint)
+        {
+            return string.IsNullOrWhiteSpace(endpoint)
+                ? string.Empty
+                : endpoint.Trim().TrimEnd('/');
         }
 
         private void EvaluateCommunity(MediaCleanupRecord record, MediaCleanupSettings settings, DateTime now)

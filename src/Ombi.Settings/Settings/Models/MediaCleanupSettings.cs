@@ -111,12 +111,39 @@ namespace Ombi.Settings.Settings.Models
         public string ApprovedByUserId { get; set; }
         public string FailureReason { get; set; }
         /// <summary>
+        /// Frozen destructive behavior and external destination identity captured when the
+        /// cleanup becomes authorized for deletion. API keys are deliberately not stored.
+        /// </summary>
+        public MediaCleanupDeletionPlan DeletionPlan { get; set; }
+        /// <summary>
         /// Empty means the cleanup targets the entire TV series. Populated entries make the
         /// cleanup episode-scoped while keeping old serialized records backwards compatible.
         /// </summary>
         public List<MediaCleanupEpisodeRecord> SelectedEpisodes { get; set; } = new List<MediaCleanupEpisodeRecord>();
         public List<int> SelectedSeasons { get; set; } = new List<int>();
         public List<MediaCleanupVoteRecord> Votes { get; set; } = new List<MediaCleanupVoteRecord>();
+    }
+
+    public enum MediaCleanupExternalService
+    {
+        Radarr = 0,
+        Radarr4K = 1,
+        Sonarr = 2
+    }
+
+    public class MediaCleanupDeletionPlan
+    {
+        public int Version { get; set; } = 1;
+        public bool DeleteFiles { get; set; }
+        public bool AddImportExclusion { get; set; }
+        public DateTime AuthorizedAt { get; set; }
+        public List<MediaCleanupExternalTarget> Targets { get; set; } = new List<MediaCleanupExternalTarget>();
+    }
+
+    public class MediaCleanupExternalTarget
+    {
+        public MediaCleanupExternalService Service { get; set; }
+        public string Endpoint { get; set; }
     }
 
     public class MediaCleanupEpisodeRecord
