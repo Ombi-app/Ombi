@@ -1,3 +1,7 @@
+## [4.60.61](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/compare/v4.60.60...v4.60.61) (2026-09-27)
+
+
+
 ## [4.60.60](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/compare/v4.60.59...v4.60.60) (2026-09-27)
 
 
@@ -204,17 +208,6 @@
 ### Bug Fixes
 
 * auto-import and link Plex Admin during Plex OAuth login ([#5446](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/issues/5446)) ([8e1d264](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/commit/8e1d2647d013e03df6cfea52e704ae535a7fb1b5))
-
-
-
-## [4.60.11](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/compare/v4.60.10...v4.60.11) (2026-07-29)
-
-
-### Bug Fixes
-
-* resolve user data leakage in BCC mass email templates ([#5444](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/issues/5444)) [skip ci] ([a5cfb02](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/commit/a5cfb02d4ab973dd2183b39c3436a3d393818e2f))
-* respect Sonarr availability priority for TV episodes ([#5445](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/issues/5445)) [skip ci] ([ddba9e3](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/commit/ddba9e3224201fd8a3e195e03e2e3df641973989))
-* **settings:** resolve mobile dropdown positioning and horizontal layout overflow ([#5443](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/issues/5443)) ([1ba4825](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/commit/1ba48252b6e1b2adbb22ae1d44e81b637cf2877e))
 
 
 
