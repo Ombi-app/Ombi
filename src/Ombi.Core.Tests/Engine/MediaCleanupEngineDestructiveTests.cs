@@ -227,7 +227,7 @@ namespace Ombi.Core.Tests.Engine
         {
             var events = new List<string>();
             var record = AddDueMovie();
-            var request = new MovieRequests { Id = record.MediaRequestId, TheMovieDbId = record.TheMovieDbId };
+            var request = MovieRequest(record.MediaRequestId, record.TheMovieDbId, "owner");
             _movieRequests.Setup(x => x.GetAll())
                 .Returns(new List<MovieRequests> { request }.AsQueryable().BuildMock());
             SetupMovieInRadarr(record);
@@ -252,7 +252,7 @@ namespace Ombi.Core.Tests.Engine
         public async Task ReconciliationFailure_AfterCheckpoint_RetriesWithoutDeletingExternallyAgain()
         {
             var record = AddDueMovie();
-            var request = new MovieRequests { Id = record.MediaRequestId, TheMovieDbId = record.TheMovieDbId };
+            var request = MovieRequest(record.MediaRequestId, record.TheMovieDbId, "owner");
             _movieRequests.Setup(x => x.GetAll())
                 .Returns(new List<MovieRequests> { request }.AsQueryable().BuildMock());
             SetupMovieInRadarr(record);
