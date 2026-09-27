@@ -1541,15 +1541,16 @@ namespace Ombi.Core.Engine
 
         private async Task RemoveSelectedTvRequests(MediaCleanupRecord record)
         {
+            // SelectedEpisodes is the frozen authorization boundary for partial TV cleanup.
+            // SelectedSeasons is derived metadata describing what was complete at selection time;
+            // it must never authorize episodes that appeared after the cleanup was approved.
             var selected = record.SelectedEpisodes
                 .Select(x => (x.SeasonNumber, x.EpisodeNumber))
                 .ToHashSet();
-            var selectedSeasons = (record.SelectedSeasons ?? new List<int>()).ToHashSet();
             var selectedSeasonNumbers = selected.Select(x => x.SeasonNumber)
-                .Concat(selectedSeasons)
                 .Distinct()
                 .ToList();
-            if (selected.Count == 0 && selectedSeasons.Count == 0)
+            if (selected.Count == 0)
             {
                 return;
             }
@@ -1590,8 +1591,7 @@ namespace Ombi.Core.Engine
             foreach (var season in touchedSeasons)
             {
                 var episodes = season.Episodes
-                    .Where(x => selectedSeasons.Contains(season.SeasonNumber) ||
-                                selected.Contains((season.SeasonNumber, x.EpisodeNumber)))
+                    .Where(x => selected.Contains((season.SeasonNumber, x.EpisodeNumber)))
                     .ToList();
                 if (episodes.Count == 0)
                 {
@@ -1691,11 +1691,9 @@ namespace Ombi.Core.Engine
                         var selected = record.SelectedEpisodes
                             .Select(x => (x.SeasonNumber, x.EpisodeNumber))
                             .ToHashSet();
-                        var selectedSeasons = (record.SelectedSeasons ?? new List<int>()).ToHashSet();
                         var episodeMatches = await episodeQuery.ToListAsync();
                         episodeMatches = episodeMatches
-                            .Where(x => selectedSeasons.Contains(x.SeasonNumber) ||
-                                        selected.Contains((x.SeasonNumber, x.EpisodeNumber)))
+                            .Where(x => selected.Contains((x.SeasonNumber, x.EpisodeNumber)))
                             .ToList();
                         if (episodeMatches.Count > 0)
                         {
@@ -1797,10 +1795,8 @@ namespace Ombi.Core.Engine
                         var selected = record.SelectedEpisodes
                             .Select(x => (x.SeasonNumber, x.EpisodeNumber))
                             .ToHashSet();
-                        var selectedSeasons = (record.SelectedSeasons ?? new List<int>()).ToHashSet();
                         var episodes = content.Episodes?.OfType<PlexEpisode>()
-                            .Where(x => selectedSeasons.Contains(x.SeasonNumber) ||
-                                        selected.Contains((x.SeasonNumber, x.EpisodeNumber)))
+                            .Where(x => selected.Contains((x.SeasonNumber, x.EpisodeNumber)))
                             .ToList() ?? new List<PlexEpisode>();
                         foreach (var episode in episodes)
                         {
@@ -1924,14 +1920,15 @@ namespace Ombi.Core.Engine
 
         private async Task<bool> DeleteTvEpisodes(MediaCleanupRecord record, Ombi.Api.External.ExternalApis.Sonarr.Models.SonarrSeries series, SonarrSettings sonarrSettings)
         {
+            // The exact episode keys captured when the cleanup was created are the authorization
+            // boundary. SelectedSeasons is informational only and must not cause later downloads
+            // in the same season to become implicitly authorized.
             var selectedKeys = record.SelectedEpisodes
                 .Select(x => (x.SeasonNumber, x.EpisodeNumber))
                 .ToHashSet();
-            var selectedSeasons = (record.SelectedSeasons ?? new List<int>()).ToHashSet();
             var episodes = (await _sonarr.GetEpisodes(series.id, sonarrSettings.ApiKey, sonarrSettings.FullUri)).ToList();
             var selectedEpisodes = episodes
-                .Where(x => selectedSeasons.Contains(x.seasonNumber) ||
-                            selectedKeys.Contains((x.seasonNumber, x.episodeNumber)))
+                .Where(x => selectedKeys.Contains((x.seasonNumber, x.episodeNumber)))
                 .ToList();
 
             if (selectedEpisodes.Count == 0)
@@ -1952,7 +1949,6 @@ namespace Ombi.Core.Engine
                 .Where(x => x.hasFile &&
                             x.episodeFileId > 0 &&
                             selectedFileIds.Contains(x.episodeFileId) &&
-                            !selectedSeasons.Contains(x.seasonNumber) &&
                             !selectedKeys.Contains((x.seasonNumber, x.episodeNumber)))
                 .OrderBy(x => x.seasonNumber)
                 .ThenBy(x => x.episodeNumber)
@@ -1980,28 +1976,9 @@ namespace Ombi.Core.Engine
                 }
             }
 
-            // When every file-bearing episode in a season was selected, also unmonitor the season.
-            // This prevents future/new episodes in a deliberately-cleaned season from being picked up.
-            if (record.SelectedSeasons?.Count > 0 && series.seasons != null)
-            {
-                var changed = false;
-                foreach (var season in series.seasons.Where(x => record.SelectedSeasons.Contains(x.seasonNumber)))
-                {
-                    if (season.monitored)
-                    {
-                        season.monitored = false;
-                        changed = true;
-                    }
-                }
-                if (changed)
-                {
-                    var updatedSeries = await _sonarr.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
-                    if (updatedSeries == null)
-                    {
-                        throw new InvalidOperationException("Sonarr did not confirm the season unmonitor update.");
-                    }
-                }
-            }
+            // Do not unmonitor the whole season for a partial cleanup. SelectedSeasons is inferred
+            // from the files present at selection time, so treating it as a future-facing command
+            // would silently expand the approved scope to episodes downloaded later.
 
             var fileIds = selectedFileIds.ToList();
             foreach (var fileId in fileIds)
@@ -2307,6 +2284,9 @@ namespace Ombi.Core.Engine
                     SizeOnDisk = fileById.TryGetValue(x.episodeFileId, out var file) ? file.size : 0
                 }).ToList();
 
+                // Informational only: this records seasons for which every file-bearing episode was
+                // selected at this moment. Destructive execution must use result.Episodes as the
+                // frozen authorization boundary and must never authorize by SelectedSeasons.
                 result.SelectedSeasons = episodes
                     .Where(x => x.hasFile && x.episodeFileId > 0)
                     .GroupBy(x => x.seasonNumber)

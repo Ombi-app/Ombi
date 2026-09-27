@@ -372,9 +372,87 @@ namespace Ombi.Core.Tests.Engine
         }
 
         [Test]
+        public async Task PartialTvCleanup_InferredSelectedSeason_DoesNotAuthorizeEpisodeDownloadedLater()
+        {
+            var record = AddDuePartialTv();
+            // This is how a cleanup created when E01 was the only downloaded episode can be stored:
+            // SelectedSeasons says the season was complete at selection time, but only E01 was
+            // actually approved. A later E02 download must remain outside the authorization scope.
+            record.SelectedSeasons.Add(1);
+
+            var series = new SonarrSeries
+            {
+                id = 33,
+                tvdbId = record.TvDbId,
+                title = record.Title,
+                seasons = new[]
+                {
+                    new Season { seasonNumber = 1, monitored = true }
+                }
+            };
+            _sonarr.Setup(x => x.GetSeries(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(new[] { series });
+            _sonarr.Setup(x => x.GetEpisodes(series.id, It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(new[]
+                {
+                    new Episode { id = 101, seasonNumber = 1, episodeNumber = 1, hasFile = true, episodeFileId = 50 },
+                    new Episode { id = 102, seasonNumber = 1, episodeNumber = 2, hasFile = true, episodeFileId = 51 }
+                });
+            _sonarr.Setup(x => x.MonitorEpisode(It.IsAny<int[]>(), false, It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(new List<MonitoredEpisodeResult>
+                {
+                    new MonitoredEpisodeResult { id = 101, seasonNumber = 1, episodeNumber = 1, monitored = false }
+                });
+            _sonarr.Setup(x => x.DeleteEpisodeFile(50, It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(true);
+
+            var selectedCacheRow = new SonarrEpisodeCache
+            {
+                TvDbId = record.TvDbId,
+                MovieDbId = record.TheMovieDbId,
+                SeasonNumber = 1,
+                EpisodeNumber = 1,
+                HasFile = true
+            };
+            var laterCacheRow = new SonarrEpisodeCache
+            {
+                TvDbId = record.TvDbId,
+                MovieDbId = record.TheMovieDbId,
+                SeasonNumber = 1,
+                EpisodeNumber = 2,
+                HasFile = true
+            };
+            var episodeCache = _mocker.GetMock<IExternalRepository<SonarrEpisodeCache>>();
+            episodeCache.Setup(x => x.GetAll())
+                .Returns(new[] { selectedCacheRow, laterCacheRow }.AsQueryable().BuildMock());
+            IReadOnlyList<SonarrEpisodeCache> deletedCacheRows = Array.Empty<SonarrEpisodeCache>();
+            episodeCache.Setup(x => x.DeleteRange(It.IsAny<IEnumerable<SonarrEpisodeCache>>()))
+                .Callback<IEnumerable<SonarrEpisodeCache>>(rows => deletedCacheRows = rows.ToList())
+                .Returns(Task.CompletedTask);
+
+            await _subject.ProcessPending();
+
+            Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Completed));
+            Assert.That(record.ExternalDeletionCompletedAt, Is.Not.Null);
+            _sonarr.Verify(x => x.MonitorEpisode(
+                It.Is<int[]>(ids => ids.SequenceEqual(new[] { 101 })),
+                false,
+                It.IsAny<string>(),
+                It.IsAny<string>()), Times.Once);
+            _sonarr.Verify(x => x.DeleteEpisodeFile(50, It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            _sonarr.Verify(x => x.DeleteEpisodeFile(51, It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _sonarr.Verify(x => x.UpdateSeries(It.IsAny<SonarrSeries>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never,
+                "An inferred SelectedSeasons entry must not unmonitor the whole season.");
+            Assert.That(deletedCacheRows, Has.Count.EqualTo(1));
+            Assert.That(deletedCacheRows[0].EpisodeNumber, Is.EqualTo(1),
+                "Cache reconciliation must use the frozen episode scope rather than SelectedSeasons.");
+        }
+
+        [Test]
         public async Task PartialTvCleanup_SharedFileWithUnselectedEpisode_FailsBeforeDestructiveCalls()
         {
             var record = AddDuePartialTv();
+            record.SelectedSeasons.Add(1);
             var series = new SonarrSeries { id = 33, tvdbId = record.TvDbId, title = record.Title };
             _sonarr.Setup(x => x.GetSeries(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new[] { series });
