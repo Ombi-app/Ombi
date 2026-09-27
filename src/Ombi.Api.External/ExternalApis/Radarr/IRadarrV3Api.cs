@@ -9,6 +9,7 @@ namespace Ombi.Api.External.ExternalApis.Radarr
     public interface IRadarrV3Api
     {
         Task<List<MovieResponse>> GetMovies(string apiKey, string baseUrl);
+        Task<List<MovieResponse>> GetMoviesForCleanup(string apiKey, string baseUrl);
         Task<List<RadarrV3QualityProfile>> GetProfiles(string apiKey, string baseUrl);
         Task<List<RadarrRootFolder>> GetRootFolders(string apiKey, string baseUrl);
         Task<SystemStatus> SystemStatus(string apiKey, string baseUrl);

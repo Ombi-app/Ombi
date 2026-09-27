@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -1459,6 +1461,21 @@ namespace Ombi.Core.Engine
                     MarkTerminalFailure(record, ex, "external deletion");
                     return;
                 }
+                catch (HttpRequestException ex) when (IsPermanentExternalHttpFailure(ex))
+                {
+                    MarkTerminalFailure(record, ex, "external deletion");
+                    return;
+                }
+                catch (UriFormatException ex)
+                {
+                    MarkTerminalFailure(record, ex, "external deletion configuration");
+                    return;
+                }
+                catch (ArgumentException ex)
+                {
+                    MarkTerminalFailure(record, ex, "external deletion configuration");
+                    return;
+                }
                 catch (Exception ex)
                 {
                     var phase = record.ExternalDeletionCompletedAt.HasValue
@@ -1532,6 +1549,32 @@ namespace Ombi.Core.Engine
                 // service, but never turn an already-deleted title into a terminal cleanup failure.
                 ScheduleRetry(record, ex, "Ombi reconciliation");
             }
+        }
+
+        private static bool IsPermanentExternalHttpFailure(HttpRequestException exception)
+        {
+            if (!exception.StatusCode.HasValue)
+            {
+                // Transport failures such as DNS errors, connection resets, and timeouts do not
+                // carry an HTTP response status and remain retryable.
+                return false;
+            }
+
+            var status = exception.StatusCode.Value;
+            if (status == HttpStatusCode.RequestTimeout || status == HttpStatusCode.TooManyRequests)
+            {
+                return false;
+            }
+
+            var numericStatus = (int)status;
+            if (numericStatus >= 500 && numericStatus <= 599)
+            {
+                return false;
+            }
+
+            // A concrete non-success response outside the retryable classes needs a request,
+            // credential, permission, or configuration change before another attempt can help.
+            return numericStatus >= 300 && numericStatus <= 499;
         }
 
         private void ScheduleRetry(MediaCleanupRecord record, Exception ex, string phase)
@@ -1919,7 +1962,7 @@ namespace Ombi.Core.Engine
 
         private async Task<bool> DeleteMovieFromRadarr(int tmdbId, RadarrSettings radarrSettings, MediaCleanupDeletionPlan plan, HashSet<string> deletedKeys)
         {
-            var movies = await _radarr.GetMovies(radarrSettings.ApiKey, radarrSettings.FullUri);
+            var movies = await _radarr.GetMoviesForCleanup(radarrSettings.ApiKey, radarrSettings.FullUri);
             var matches = movies.Where(x => x.tmdbId == tmdbId).ToList();
             var deleted = false;
             foreach (var movie in matches)
@@ -1932,7 +1975,7 @@ namespace Ombi.Core.Engine
                 var deleteSucceeded = await _radarr.DeleteMovie(movie.id, radarrSettings.ApiKey, radarrSettings.FullUri, plan.DeleteFiles, plan.AddImportExclusion);
                 if (!deleteSucceeded)
                 {
-                    throw new InvalidOperationException($"Radarr rejected the delete request for movie id {movie.id}.");
+                    throw new MediaCleanupTerminalException($"Radarr rejected the delete request for movie id {movie.id} without an HTTP status.");
                 }
                 deleted = true;
             }
@@ -1952,7 +1995,7 @@ namespace Ombi.Core.Engine
             var sonarrSettings = await _sonarrSettings.GetSettingsAsync();
             ValidateExternalTarget(record, target, sonarrSettings.Enabled, sonarrSettings.FullUri);
 
-            var series = await _sonarr.GetSeries(sonarrSettings.ApiKey, sonarrSettings.FullUri);
+            var series = await _sonarr.GetSeriesForCleanup(sonarrSettings.ApiKey, sonarrSettings.FullUri);
             var match = series.FirstOrDefault(x => x.tvdbId == record.TvDbId);
             if (match == null)
             {
@@ -1973,7 +2016,7 @@ namespace Ombi.Core.Engine
             var deleteSucceeded = await _sonarr.DeleteSeries(match.id, sonarrSettings.ApiKey, sonarrSettings.FullUri, plan.DeleteFiles, plan.AddImportExclusion);
             if (!deleteSucceeded)
             {
-                throw new InvalidOperationException($"Sonarr rejected the delete request for series id {match.id}.");
+                throw new MediaCleanupTerminalException($"Sonarr rejected the delete request for series id {match.id} without an HTTP status.");
             }
             return true;
         }
@@ -1986,7 +2029,7 @@ namespace Ombi.Core.Engine
             var selectedKeys = record.SelectedEpisodes
                 .Select(x => (x.SeasonNumber, x.EpisodeNumber))
                 .ToHashSet();
-            var episodes = (await _sonarr.GetEpisodes(series.id, sonarrSettings.ApiKey, sonarrSettings.FullUri)).ToList();
+            var episodes = (await _sonarr.GetEpisodesForCleanup(series.id, sonarrSettings.ApiKey, sonarrSettings.FullUri)).ToList();
             var selectedEpisodes = episodes
                 .Where(x => selectedKeys.Contains((x.seasonNumber, x.episodeNumber)))
                 .ToList();
@@ -2029,7 +2072,7 @@ namespace Ombi.Core.Engine
             var episodeIds = selectedEpisodes.Select(x => x.id).Where(x => x > 0).Distinct().ToArray();
             if (episodeIds.Length > 0)
             {
-                var monitorResult = await _sonarr.MonitorEpisode(episodeIds, false, sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                var monitorResult = await _sonarr.MonitorEpisodeForCleanup(episodeIds, false, sonarrSettings.ApiKey, sonarrSettings.FullUri);
                 if (monitorResult == null)
                 {
                     throw new InvalidOperationException("Sonarr did not confirm the episode unmonitor request.");
@@ -2046,7 +2089,7 @@ namespace Ombi.Core.Engine
                 var deleteSucceeded = await _sonarr.DeleteEpisodeFile(fileId, sonarrSettings.ApiKey, sonarrSettings.FullUri);
                 if (!deleteSucceeded)
                 {
-                    throw new InvalidOperationException($"Sonarr rejected the delete request for episode file id {fileId}.");
+                    throw new MediaCleanupTerminalException($"Sonarr rejected the delete request for episode file id {fileId} without an HTTP status.");
                 }
             }
 

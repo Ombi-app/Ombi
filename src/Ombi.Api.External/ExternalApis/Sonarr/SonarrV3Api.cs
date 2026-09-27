@@ -54,5 +54,16 @@ namespace Ombi.Api.External.ExternalApis.Sonarr
             request.AddJsonBody(new { episodeIds = episodeIds, monitored = monitor });
             return await Api.Request<List<MonitoredEpisodeResult>>(request);
         }
+
+        public async Task<List<MonitoredEpisodeResult>> MonitorEpisodeForCleanup(int[] episodeIds, bool monitor, string apiKey, string baseUrl)
+        {
+            var request = new Request($"{ApiBaseUrl}episode/monitor", baseUrl, HttpMethod.Put)
+            {
+                ThrowOnErrorStatus = true
+            };
+            request.AddHeader("X-Api-Key", apiKey);
+            request.AddJsonBody(new { episodeIds = episodeIds, monitored = monitor });
+            return await Api.Request<List<MonitoredEpisodeResult>>(request);
+        }
     }
 }

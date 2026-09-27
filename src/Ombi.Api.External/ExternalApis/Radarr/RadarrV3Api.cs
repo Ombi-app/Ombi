@@ -55,6 +55,17 @@ namespace Ombi.Api.External.ExternalApis.Radarr
             return await Api.Request<List<MovieResponse>>(request);
         }
 
+        public async Task<List<MovieResponse>> GetMoviesForCleanup(string apiKey, string baseUrl)
+        {
+            var request = new Request("/api/v3/movie", baseUrl, HttpMethod.Get)
+            {
+                ThrowOnErrorStatus = true
+            };
+            AddHeaders(request, apiKey);
+
+            return await Api.Request<List<MovieResponse>>(request);
+        }
+
         public async Task<MovieResponse> GetMovie(int id, string apiKey, string baseUrl)
         {
             var request = new Request($"/api/v3/movie/{id}", baseUrl, HttpMethod.Get);
@@ -80,7 +91,15 @@ namespace Ombi.Api.External.ExternalApis.Radarr
                 HttpMethod.Delete);
             AddHeaders(request, apiKey);
             using var response = await Api.Request(request);
-            return response.IsSuccessStatusCode;
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException(
+                    $"Radarr rejected the movie delete request with HTTP {(int)response.StatusCode} ({response.StatusCode}).",
+                    null,
+                    response.StatusCode);
+            }
+
+            return true;
         }
 
         public async Task<RadarrAddMovie> AddMovie(int tmdbId, string title, int year, int qualityId, string rootPath, string apiKey, string baseUrl, bool searchNow, string minimumAvailability, List<int> tags)

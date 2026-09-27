@@ -10,11 +10,13 @@ namespace Ombi.Api.External.ExternalApis.Sonarr
         Task<IEnumerable<SonarrProfile>> GetProfiles(string apiKey, string baseUrl);
         Task<IEnumerable<SonarrRootFolder>> GetRootFolders(string apiKey, string baseUrl);
         Task<IEnumerable<SonarrSeries>> GetSeries(string apiKey, string baseUrl);
+        Task<IEnumerable<SonarrSeries>> GetSeriesForCleanup(string apiKey, string baseUrl);
         Task<SonarrSeries> GetSeriesById(int id, string apiKey, string baseUrl);
         Task<SonarrSeries> UpdateSeries(SonarrSeries updated, string apiKey, string baseUrl);
         Task<bool> DeleteSeries(int id, string apiKey, string baseUrl, bool deleteFiles, bool addImportListExclusion);
         Task<NewSeries> AddSeries(NewSeries seriesToAdd, string apiKey, string baseUrl);
         Task<IEnumerable<Episode>> GetEpisodes(int seriesId, string apiKey, string baseUrl);
+        Task<IEnumerable<Episode>> GetEpisodesForCleanup(int seriesId, string apiKey, string baseUrl);
         Task<IEnumerable<Episodefile>> GetEpisodeFiles(int seriesId, string apiKey, string baseUrl);
         Task<bool> DeleteEpisodeFile(int episodeFileId, string apiKey, string baseUrl);
         Task<Episode> GetEpisodeById(int episodeId, string apiKey, string baseUrl);

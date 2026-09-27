@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -158,7 +159,7 @@ namespace Ombi.Core.Tests.Engine
             var events = new List<string>();
             var movie = SetupImmediateMovieRequest();
 
-            _radarr.Setup(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()))
+            _radarr.Setup(x => x.GetMoviesForCleanup(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new List<MovieResponse>
                 {
                     new MovieResponse { id = 44, tmdbId = movie.TheMovieDbId, title = movie.Title }
@@ -217,7 +218,7 @@ namespace Ombi.Core.Tests.Engine
             Assert.That(result.Message, Does.Contain("No media was deleted"));
             Assert.That(_state.Requests, Is.Empty,
                 "A cleanup request that could not be persisted must not remain active in memory.");
-            _radarr.Verify(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _radarr.Verify(x => x.GetMoviesForCleanup(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             _radarr.Verify(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
             _stateService.Verify(x => x.SaveSettingsAsync(It.IsAny<MediaCleanupState>()), Times.Never);
         }
@@ -312,7 +313,7 @@ namespace Ombi.Core.Tests.Engine
         {
             var before = DateTime.UtcNow;
             var record = AddDueMovie();
-            _radarr.Setup(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()))
+            _radarr.Setup(x => x.GetMoviesForCleanup(It.IsAny<string>(), It.IsAny<string>()))
                 .ThrowsAsync(new HttpRequestException("Radarr unavailable"));
 
             await _subject.ProcessPending();
@@ -330,7 +331,33 @@ namespace Ombi.Core.Tests.Engine
         }
 
         [Test]
-        public async Task RadarrRejectsDelete_SchedulesRetryWithoutCheckpoint()
+        public async Task PermanentRadarrQueryHttpFailure_FailsWithoutRetry()
+        {
+            var record = AddDueMovie();
+            _radarr.Setup(x => x.GetMoviesForCleanup(It.IsAny<string>(), It.IsAny<string>()))
+                .ThrowsAsync(new HttpRequestException(
+                    "External API request failed with HTTP 401 (Unauthorized).",
+                    null,
+                    HttpStatusCode.Unauthorized));
+
+            await _subject.ProcessPending();
+
+            Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Failed));
+            Assert.That(record.ExternalDeletionCompletedAt, Is.Null);
+            Assert.That(record.RetryCount, Is.Zero);
+            Assert.That(record.NextRetryAt, Is.Null);
+            Assert.That(record.FailureReason, Does.Contain("401"));
+            _radarr.Verify(x => x.DeleteMovie(
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<bool>(),
+                It.IsAny<bool>()), Times.Never);
+            _checkpointStateService.Verify(x => x.SaveSettingsAsync(It.IsAny<MediaCleanupState>()), Times.Never);
+        }
+
+        [Test]
+        public async Task RadarrRejectsDeleteWithoutStatus_IsTerminalFailure()
         {
             var record = AddDueMovie();
             SetupMovieInRadarr(record);
@@ -339,10 +366,62 @@ namespace Ombi.Core.Tests.Engine
 
             await _subject.ProcessPending();
 
+            Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Failed));
+            Assert.That(record.ExternalDeletionCompletedAt, Is.Null);
+            Assert.That(record.RetryCount, Is.Zero);
+            Assert.That(record.NextRetryAt, Is.Null);
+            Assert.That(record.FailureReason, Does.Contain("without an HTTP status"));
+            _checkpointStateService.Verify(x => x.SaveSettingsAsync(It.IsAny<MediaCleanupState>()), Times.Never);
+        }
+
+        [TestCase(HttpStatusCode.BadRequest)]
+        [TestCase(HttpStatusCode.Unauthorized)]
+        [TestCase(HttpStatusCode.Forbidden)]
+        [TestCase(HttpStatusCode.NotFound)]
+        [TestCase(HttpStatusCode.UnprocessableEntity)]
+        public async Task PermanentRadarrHttpFailure_FailsWithoutRetry(HttpStatusCode statusCode)
+        {
+            var record = AddDueMovie();
+            SetupMovieInRadarr(record);
+            _radarr.Setup(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), true, false))
+                .ThrowsAsync(new HttpRequestException(
+                    $"Radarr rejected the movie delete request with HTTP {(int)statusCode} ({statusCode}).",
+                    null,
+                    statusCode));
+
+            await _subject.ProcessPending();
+
+            Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Failed));
+            Assert.That(record.ExternalDeletionCompletedAt, Is.Null);
+            Assert.That(record.RetryCount, Is.Zero);
+            Assert.That(record.NextRetryAt, Is.Null);
+            Assert.That(record.ScheduledForDeletionAt, Is.Null);
+            Assert.That(record.FailureReason, Does.Contain(((int)statusCode).ToString()));
+            _checkpointStateService.Verify(x => x.SaveSettingsAsync(It.IsAny<MediaCleanupState>()), Times.Never);
+        }
+
+        [TestCase(HttpStatusCode.RequestTimeout)]
+        [TestCase(HttpStatusCode.TooManyRequests)]
+        [TestCase(HttpStatusCode.InternalServerError)]
+        [TestCase(HttpStatusCode.BadGateway)]
+        [TestCase(HttpStatusCode.ServiceUnavailable)]
+        public async Task TransientRadarrHttpFailure_SchedulesRetry(HttpStatusCode statusCode)
+        {
+            var record = AddDueMovie();
+            SetupMovieInRadarr(record);
+            _radarr.Setup(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), true, false))
+                .ThrowsAsync(new HttpRequestException(
+                    $"Radarr rejected the movie delete request with HTTP {(int)statusCode} ({statusCode}).",
+                    null,
+                    statusCode));
+
+            await _subject.ProcessPending();
+
             Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.ScheduledForDeletion));
             Assert.That(record.ExternalDeletionCompletedAt, Is.Null);
             Assert.That(record.RetryCount, Is.EqualTo(1));
-            Assert.That(record.FailureReason, Does.Contain("Radarr rejected the delete request"));
+            Assert.That(record.NextRetryAt, Is.Not.Null);
+            Assert.That(record.FailureReason, Does.Contain("will retry automatically"));
             _checkpointStateService.Verify(x => x.SaveSettingsAsync(It.IsAny<MediaCleanupState>()), Times.Never);
         }
 
@@ -353,7 +432,7 @@ namespace Ombi.Core.Tests.Engine
             record.RetryCount = 1;
             record.LastFailureAt = DateTime.UtcNow.AddMinutes(-15);
             record.NextRetryAt = DateTime.UtcNow.AddSeconds(-1);
-            _radarr.Setup(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()))
+            _radarr.Setup(x => x.GetMoviesForCleanup(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new List<MovieResponse>());
 
             await _subject.ProcessPending();
@@ -370,7 +449,7 @@ namespace Ombi.Core.Tests.Engine
         public async Task FirstMovieAttempt_MissingFromRadarr_IsTerminalFailure()
         {
             var record = AddDueMovie();
-            _radarr.Setup(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()))
+            _radarr.Setup(x => x.GetMoviesForCleanup(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new List<MovieResponse>());
 
             await _subject.ProcessPending();
@@ -394,7 +473,7 @@ namespace Ombi.Core.Tests.Engine
             await _subject.ProcessPending();
 
             Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Completed));
-            _radarr.Verify(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _radarr.Verify(x => x.GetMoviesForCleanup(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             _radarr.Verify(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
         }
 
@@ -411,15 +490,15 @@ namespace Ombi.Core.Tests.Engine
                 SizeOnDisk = 1234
             });
             var series = new SonarrSeries { id = 33, tvdbId = record.TvDbId, title = record.Title };
-            _sonarr.Setup(x => x.GetSeries(It.IsAny<string>(), It.IsAny<string>()))
+            _sonarr.Setup(x => x.GetSeriesForCleanup(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new[] { series });
-            _sonarr.Setup(x => x.GetEpisodes(series.id, It.IsAny<string>(), It.IsAny<string>()))
+            _sonarr.Setup(x => x.GetEpisodesForCleanup(series.id, It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new[]
                 {
                     new Episode { id = 101, seasonNumber = 1, episodeNumber = 1, hasFile = true, episodeFileId = 50 },
                     new Episode { id = 102, seasonNumber = 1, episodeNumber = 2, hasFile = true, episodeFileId = 50 }
                 });
-            _sonarr.Setup(x => x.MonitorEpisode(It.IsAny<int[]>(), false, It.IsAny<string>(), It.IsAny<string>()))
+            _sonarr.Setup(x => x.MonitorEpisodeForCleanup(It.IsAny<int[]>(), false, It.IsAny<string>(), It.IsAny<string>()))
                 .Callback<int[], bool, string, string>((_, _, _, _) => events.Add("unmonitor"))
                 .ReturnsAsync(new List<MonitoredEpisodeResult>
                 {
@@ -438,10 +517,43 @@ namespace Ombi.Core.Tests.Engine
             Assert.That(events, Is.EqualTo(new[] { "unmonitor", "delete-file", "checkpoint" }));
             Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Completed));
             Assert.That(record.ExternalDeletionCompletedAt, Is.Not.Null);
-            _sonarr.Verify(x => x.MonitorEpisode(It.Is<int[]>(ids => ids.OrderBy(x => x).SequenceEqual(new[] { 101, 102 })), false, It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            _sonarr.Verify(x => x.MonitorEpisodeForCleanup(It.Is<int[]>(ids => ids.OrderBy(x => x).SequenceEqual(new[] { 101, 102 })), false, It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             _sonarr.Verify(x => x.DeleteEpisodeFile(50, It.IsAny<string>(), It.IsAny<string>()), Times.Once,
                 "A shared multi-episode file must only be deleted once when every covered episode is approved.");
             _sonarr.Verify(x => x.DeleteSeries(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
+        }
+
+        [Test]
+        public async Task PartialTvDelete_ForbiddenHttpFailure_IsTerminalWithoutRetry()
+        {
+            var record = AddDuePartialTv();
+            var series = new SonarrSeries { id = 33, tvdbId = record.TvDbId, title = record.Title };
+            _sonarr.Setup(x => x.GetSeriesForCleanup(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(new[] { series });
+            _sonarr.Setup(x => x.GetEpisodesForCleanup(series.id, It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(new[]
+                {
+                    new Episode { id = 101, seasonNumber = 1, episodeNumber = 1, hasFile = true, episodeFileId = 50 }
+                });
+            _sonarr.Setup(x => x.MonitorEpisodeForCleanup(It.IsAny<int[]>(), false, It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(new List<MonitoredEpisodeResult>
+                {
+                    new MonitoredEpisodeResult { id = 101, seasonNumber = 1, episodeNumber = 1, monitored = false }
+                });
+            _sonarr.Setup(x => x.DeleteEpisodeFile(50, It.IsAny<string>(), It.IsAny<string>()))
+                .ThrowsAsync(new HttpRequestException(
+                    "Sonarr rejected the episode-file delete request with HTTP 403 (Forbidden).",
+                    null,
+                    HttpStatusCode.Forbidden));
+
+            await _subject.ProcessPending();
+
+            Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Failed));
+            Assert.That(record.ExternalDeletionCompletedAt, Is.Null);
+            Assert.That(record.RetryCount, Is.Zero);
+            Assert.That(record.NextRetryAt, Is.Null);
+            Assert.That(record.FailureReason, Does.Contain("403"));
+            _checkpointStateService.Verify(x => x.SaveSettingsAsync(It.IsAny<MediaCleanupState>()), Times.Never);
         }
 
         [Test]
@@ -463,15 +575,15 @@ namespace Ombi.Core.Tests.Engine
                     new Season { seasonNumber = 1, monitored = true }
                 }
             };
-            _sonarr.Setup(x => x.GetSeries(It.IsAny<string>(), It.IsAny<string>()))
+            _sonarr.Setup(x => x.GetSeriesForCleanup(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new[] { series });
-            _sonarr.Setup(x => x.GetEpisodes(series.id, It.IsAny<string>(), It.IsAny<string>()))
+            _sonarr.Setup(x => x.GetEpisodesForCleanup(series.id, It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new[]
                 {
                     new Episode { id = 101, seasonNumber = 1, episodeNumber = 1, hasFile = true, episodeFileId = 50 },
                     new Episode { id = 102, seasonNumber = 1, episodeNumber = 2, hasFile = true, episodeFileId = 51 }
                 });
-            _sonarr.Setup(x => x.MonitorEpisode(It.IsAny<int[]>(), false, It.IsAny<string>(), It.IsAny<string>()))
+            _sonarr.Setup(x => x.MonitorEpisodeForCleanup(It.IsAny<int[]>(), false, It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new List<MonitoredEpisodeResult>
                 {
                     new MonitoredEpisodeResult { id = 101, seasonNumber = 1, episodeNumber = 1, monitored = false }
@@ -507,7 +619,7 @@ namespace Ombi.Core.Tests.Engine
 
             Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Completed));
             Assert.That(record.ExternalDeletionCompletedAt, Is.Not.Null);
-            _sonarr.Verify(x => x.MonitorEpisode(
+            _sonarr.Verify(x => x.MonitorEpisodeForCleanup(
                 It.Is<int[]>(ids => ids.SequenceEqual(new[] { 101 })),
                 false,
                 It.IsAny<string>(),
@@ -527,9 +639,9 @@ namespace Ombi.Core.Tests.Engine
             var record = AddDuePartialTv();
             record.SelectedSeasons.Add(1);
             var series = new SonarrSeries { id = 33, tvdbId = record.TvDbId, title = record.Title };
-            _sonarr.Setup(x => x.GetSeries(It.IsAny<string>(), It.IsAny<string>()))
+            _sonarr.Setup(x => x.GetSeriesForCleanup(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new[] { series });
-            _sonarr.Setup(x => x.GetEpisodes(series.id, It.IsAny<string>(), It.IsAny<string>()))
+            _sonarr.Setup(x => x.GetEpisodesForCleanup(series.id, It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new[]
                 {
                     new Episode { id = 101, seasonNumber = 1, episodeNumber = 1, hasFile = true, episodeFileId = 50 },
@@ -541,7 +653,7 @@ namespace Ombi.Core.Tests.Engine
             Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Failed));
             Assert.That(record.ExternalDeletionCompletedAt, Is.Null);
             Assert.That(record.FailureReason, Does.Contain("S01E02"));
-            _sonarr.Verify(x => x.MonitorEpisode(It.IsAny<int[]>(), It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _sonarr.Verify(x => x.MonitorEpisodeForCleanup(It.IsAny<int[]>(), It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             _sonarr.Verify(x => x.DeleteEpisodeFile(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             _sonarr.Verify(x => x.DeleteSeries(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
         }
@@ -554,9 +666,9 @@ namespace Ombi.Core.Tests.Engine
             record.LastFailureAt = DateTime.UtcNow.AddMinutes(-15);
             record.NextRetryAt = DateTime.UtcNow.AddSeconds(-1);
             var series = new SonarrSeries { id = 33, tvdbId = record.TvDbId, title = record.Title };
-            _sonarr.Setup(x => x.GetSeries(It.IsAny<string>(), It.IsAny<string>()))
+            _sonarr.Setup(x => x.GetSeriesForCleanup(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new[] { series });
-            _sonarr.Setup(x => x.GetEpisodes(series.id, It.IsAny<string>(), It.IsAny<string>()))
+            _sonarr.Setup(x => x.GetEpisodesForCleanup(series.id, It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(Array.Empty<Episode>());
 
             await _subject.ProcessPending();
@@ -583,7 +695,7 @@ namespace Ombi.Core.Tests.Engine
             Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Failed));
             Assert.That(record.ExternalDeletionCompletedAt, Is.Null);
             Assert.That(record.FailureReason, Does.Contain("request or ownership state changed"));
-            _radarr.Verify(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _radarr.Verify(x => x.GetMoviesForCleanup(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             _radarr.Verify(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
         }
 
@@ -599,7 +711,7 @@ namespace Ombi.Core.Tests.Engine
             Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Failed));
             Assert.That(record.ExternalDeletionCompletedAt, Is.Null);
             Assert.That(record.FailureReason, Does.Contain("no longer exists"));
-            _radarr.Verify(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _radarr.Verify(x => x.GetMoviesForCleanup(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             _radarr.Verify(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
         }
 
@@ -618,7 +730,7 @@ namespace Ombi.Core.Tests.Engine
             Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Failed));
             Assert.That(record.ExternalDeletionCompletedAt, Is.Null);
             Assert.That(record.FailureReason, Does.Contain("request or ownership state changed"));
-            _sonarr.Verify(x => x.GetSeries(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _sonarr.Verify(x => x.GetSeriesForCleanup(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             _sonarr.Verify(x => x.DeleteEpisodeFile(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             _sonarr.Verify(x => x.DeleteSeries(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
         }
@@ -635,7 +747,7 @@ namespace Ombi.Core.Tests.Engine
             Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Failed));
             Assert.That(record.ExternalDeletionCompletedAt, Is.Null);
             Assert.That(record.FailureReason, Does.Contain("authorization snapshot"));
-            _radarr.Verify(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _radarr.Verify(x => x.GetMoviesForCleanup(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
         [Test]
@@ -670,7 +782,7 @@ namespace Ombi.Core.Tests.Engine
             Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Failed));
             Assert.That(record.ExternalDeletionCompletedAt, Is.Null);
             Assert.That(record.FailureReason, Does.Contain("destination changed"));
-            _radarr.Verify(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _radarr.Verify(x => x.GetMoviesForCleanup(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             _radarr.Verify(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
         }
 
@@ -686,8 +798,8 @@ namespace Ombi.Core.Tests.Engine
             await _subject.ProcessPending();
 
             Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Completed));
-            _radarr.Verify(x => x.GetMovies(_radarrSettings.ApiKey, It.IsAny<string>()), Times.Once);
-            _radarr.Verify(x => x.GetMovies(_radarr4KSettings.ApiKey, It.IsAny<string>()), Times.Never);
+            _radarr.Verify(x => x.GetMoviesForCleanup(_radarrSettings.ApiKey, It.IsAny<string>()), Times.Once);
+            _radarr.Verify(x => x.GetMoviesForCleanup(_radarr4KSettings.ApiKey, It.IsAny<string>()), Times.Never);
         }
 
         [Test]
@@ -701,7 +813,7 @@ namespace Ombi.Core.Tests.Engine
             Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Failed));
             Assert.That(record.ExternalDeletionCompletedAt, Is.Null);
             Assert.That(record.FailureReason, Does.Contain("authorized before destructive settings"));
-            _radarr.Verify(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _radarr.Verify(x => x.GetMoviesForCleanup(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             _radarr.Verify(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
         }
 
@@ -730,7 +842,7 @@ namespace Ombi.Core.Tests.Engine
             Assert.That(record.DeletionPlan.Authorization.RequestClaims, Is.EqualTo(new[] { "movie:600:community-owner" }));
             Assert.That(record.DeletionPlan.Targets, Has.Count.EqualTo(1));
             Assert.That(record.DeletionPlan.Targets[0].Service, Is.EqualTo(MediaCleanupExternalService.Radarr));
-            _radarr.Verify(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _radarr.Verify(x => x.GetMoviesForCleanup(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
         [Test]
@@ -757,7 +869,7 @@ namespace Ombi.Core.Tests.Engine
 
             Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Rejected));
             Assert.That(record.ScheduledForDeletionAt, Is.Null);
-            _radarr.Verify(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _radarr.Verify(x => x.GetMoviesForCleanup(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             _radarr.Verify(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
         }
 
@@ -785,7 +897,7 @@ namespace Ombi.Core.Tests.Engine
 
             Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.Rejected));
             Assert.That(record.ScheduledForDeletionAt, Is.Null);
-            _radarr.Verify(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _radarr.Verify(x => x.GetMoviesForCleanup(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             _radarr.Verify(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
         }
 
@@ -967,7 +1079,7 @@ namespace Ombi.Core.Tests.Engine
 
         private void SetupMovieInRadarr(MediaCleanupRecord record)
         {
-            _radarr.Setup(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()))
+            _radarr.Setup(x => x.GetMoviesForCleanup(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new List<MovieResponse>
                 {
                     new MovieResponse

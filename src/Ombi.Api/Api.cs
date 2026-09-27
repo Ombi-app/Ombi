@@ -114,6 +114,14 @@ namespace Ombi.Api
                 // Only cache successful responses
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
+                    if (request.ThrowOnErrorStatus)
+                    {
+                        throw new HttpRequestException(
+                            $"External API request failed with HTTP {(int)httpResponseMessage.StatusCode} ({httpResponseMessage.StatusCode}).",
+                            null,
+                            httpResponseMessage.StatusCode);
+                    }
+
                     // For failed responses, don't cache. The body is usually an error payload
                     // (e.g. Plex returns an <errors> document on a 401) that does not match the
                     // expected success type, so attempt to deserialize it but fall back to the
