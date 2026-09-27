@@ -53,6 +53,9 @@ namespace Ombi.Api.IntegrationTests.Harness
 
             app.UseRouting();
             app.UseAuthentication();
+            // Mirror production endpoint rate limiting so contract tests fail if a controller
+            // references a policy that was not registered by Startup.ConfigureServices.
+            app.UseRateLimiter();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }

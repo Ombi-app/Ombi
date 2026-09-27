@@ -103,6 +103,7 @@ namespace Ombi.Controllers.V1
         /// <param name="model">The model.</param>
         /// <returns></returns>
         [HttpPost]
+        [EnableRateLimiting("TokenLogin")]
         [ProducesResponseType(401)]
         [ProducesResponseType(typeof(Token), 200)]
         public async Task<IActionResult> GetToken([FromBody] UserAuthModel model)
@@ -163,6 +164,7 @@ namespace Ombi.Controllers.V1
         /// Returns the Token for the Ombi User if we can match the Plex user with a valid Ombi User
         /// </summary>
         [HttpPost("plextoken")]
+        [EnableRateLimiting("PlexTokenLogin")]
         [ProducesResponseType(401)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetTokenWithPlexToken([FromBody] PlexTokenAuthentication model)

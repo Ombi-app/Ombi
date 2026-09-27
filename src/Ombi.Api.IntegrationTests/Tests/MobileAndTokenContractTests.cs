@@ -32,5 +32,12 @@ namespace Ombi.Api.IntegrationTests.Tests
             var (status, _) = await PostJsonAsync("/api/v1/token", new { username = "does-not-exist", password = "wrong" });
             Assert.That(status, Is.EqualTo(HttpStatusCode.Unauthorized));
         }
+
+        [Test]
+        public async Task PlexTokenLogin_WithoutToken_ReturnsBadRequest()
+        {
+            var (status, _) = await PostJsonAsync("/api/v1/token/plextoken", new { plexToken = "" });
+            Assert.That(status, Is.EqualTo(HttpStatusCode.BadRequest));
+        }
     }
 }

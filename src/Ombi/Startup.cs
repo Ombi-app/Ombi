@@ -112,6 +112,34 @@ namespace Ombi
                             Window = TimeSpan.FromMinutes(1)
                         }));
 
+                // The username/password token endpoint is intentionally IP-partitioned because
+                // there is no authenticated Ombi user yet. Keep the window tight enough to slow
+                // credential guessing without penalizing normal interactive login retries.
+                options.AddPolicy("TokenLogin", httpContext =>
+                    RateLimitPartition.GetFixedWindowLimiter(
+                        partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                        factory: _ => new FixedWindowRateLimiterOptions
+                        {
+                            AutoReplenishment = true,
+                            PermitLimit = 10,
+                            QueueLimit = 0,
+                            Window = TimeSpan.FromMinutes(1)
+                        }));
+
+                // Plex tokens are high entropy, so brute-force guessing is not the primary concern.
+                // A looser anonymous limit still prevents expensive repeated token validation from
+                // being used as a resource-abuse path.
+                options.AddPolicy("PlexTokenLogin", httpContext =>
+                    RateLimitPartition.GetFixedWindowLimiter(
+                        partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                        factory: _ => new FixedWindowRateLimiterOptions
+                        {
+                            AutoReplenishment = true,
+                            PermitLimit = 30,
+                            QueueLimit = 0,
+                            Window = TimeSpan.FromMinutes(1)
+                        }));
+
                 // Plex login polls once per second. Keep the limit comfortably above normal UI
                 // behavior while preventing anonymous clients from hammering arbitrary sessions.
                 options.AddPolicy("PlexPinPolling", httpContext =>
