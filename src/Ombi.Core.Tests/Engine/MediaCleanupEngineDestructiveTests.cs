@@ -45,6 +45,7 @@ namespace Ombi.Core.Tests.Engine
         private Mock<ITvRequestRepository> _tvRequests;
         private Mock<IRadarrV3Api> _radarr;
         private Mock<ISonarrV3Api> _sonarr;
+        private Mock<OmbiUserManager> _userManager;
 
         [SetUp]
         public void SetUp()
@@ -142,11 +143,74 @@ namespace Ombi.Core.Tests.Engine
             _radarr = _mocker.GetMock<IRadarrV3Api>();
             _sonarr = _mocker.GetMock<ISonarrV3Api>();
 
-            // MediaCleanupEngine takes the concrete user manager even though ProcessPending does
-            // not need a user. Supply the same lightweight test manager used throughout Core tests.
-            _mocker.Use(MockHelper.MockUserManager(new List<OmbiUser>()).Object);
+            // MediaCleanupEngine takes the concrete user manager even though most destructive
+            // tests do not need a user. Keep the mock so immediate-removal tests can enable the
+            // required roles without changing the rest of the fixture.
+            _userManager = MockHelper.MockUserManager(new List<OmbiUser>());
+            _mocker.Use(_userManager.Object);
 
             _subject = _mocker.CreateInstance<MediaCleanupEngine>();
+        }
+
+        [Test]
+        public async Task ImmediateMovieDeletion_PersistsCleanupBeforeExternalDelete()
+        {
+            var events = new List<string>();
+            var movie = SetupImmediateMovieRequest();
+
+            _radarr.Setup(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(new List<MovieResponse>
+                {
+                    new MovieResponse { id = 44, tmdbId = movie.TheMovieDbId, title = movie.Title }
+                });
+            _radarr.Setup(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), true, false))
+                .Callback<int, string, string, bool, bool>((_, _, _, _, _) => events.Add("external-delete"))
+                .ReturnsAsync(true);
+            _checkpointStateService.Setup(x => x.SaveSettingsAsync(It.IsAny<MediaCleanupState>()))
+                .Callback<MediaCleanupState>(state =>
+                {
+                    var record = state.Requests.Single();
+                    if (!record.ExternalDeletionCompletedAt.HasValue)
+                    {
+                        Assert.That(record.Status, Is.EqualTo(MediaCleanupStatus.ScheduledForDeletion));
+                        Assert.That(record.ScheduledForDeletionAt, Is.Not.Null);
+                    }
+                    events.Add(record.ExternalDeletionCompletedAt.HasValue
+                        ? "post-delete-checkpoint"
+                        : "pre-delete-checkpoint");
+                })
+                .ReturnsAsync(true);
+
+            var result = await _subject.RequestOwnRemoval(RequestType.Movie, movie.Id);
+
+            Assert.That(result.Result, Is.True);
+            Assert.That(events, Is.EqualTo(new[]
+            {
+                "pre-delete-checkpoint",
+                "external-delete",
+                "post-delete-checkpoint"
+            }));
+            _checkpointStateService.Verify(x => x.SaveSettingsAsync(It.IsAny<MediaCleanupState>()), Times.Exactly(2));
+            _stateService.Verify(x => x.SaveSettingsAsync(_state), Times.Once);
+        }
+
+        [Test]
+        public async Task ImmediateMovieDeletion_PreDeletePersistenceFailure_DoesNotCallRadarr()
+        {
+            var movie = SetupImmediateMovieRequest();
+            _checkpointStateService.Setup(x => x.SaveSettingsAsync(It.IsAny<MediaCleanupState>()))
+                .ReturnsAsync(false);
+
+            var result = await _subject.RequestOwnRemoval(RequestType.Movie, movie.Id);
+
+            Assert.That(result.Result, Is.False);
+            Assert.That(result.Message, Does.Contain("could not be persisted"));
+            Assert.That(result.Message, Does.Contain("No media was deleted"));
+            Assert.That(_state.Requests, Is.Empty,
+                "A cleanup request that could not be persisted must not remain active in memory.");
+            _radarr.Verify(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _radarr.Verify(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
+            _stateService.Verify(x => x.SaveSettingsAsync(It.IsAny<MediaCleanupState>()), Times.Never);
         }
 
         [Test]
@@ -550,6 +614,31 @@ namespace Ombi.Core.Tests.Engine
             Assert.That(record.ScheduledForDeletionAt, Is.Null);
             _radarr.Verify(x => x.GetMovies(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             _radarr.Verify(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
+        }
+
+        private MovieRequests SetupImmediateMovieRequest()
+        {
+            _cleanupSettings.OwnRequestRemoval = OwnRequestRemovalMode.ImmediateDeletion;
+            var user = new OmbiUser { Id = "owner", UserName = "owner", NormalizedUserName = "OWNER" };
+            _mocker.GetMock<ICurrentUser>()
+                .Setup(x => x.GetUser())
+                .ReturnsAsync(user);
+            _userManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), It.IsAny<string>()))
+                .ReturnsAsync(true);
+
+            var movie = new MovieRequests
+            {
+                Id = 100,
+                TheMovieDbId = 200,
+                Title = "Immediate Safety Test Movie",
+                Available = true,
+                RequestedUserId = user.Id,
+                RequestedDate = DateTime.UtcNow.AddDays(-10),
+                MarkedAsAvailable = DateTime.UtcNow.AddDays(-5)
+            };
+            _movieRequests.Setup(x => x.GetWithUser())
+                .Returns(new[] { movie }.AsQueryable().BuildMock());
+            return movie;
         }
 
         private MediaCleanupRecord AddDueMovie()

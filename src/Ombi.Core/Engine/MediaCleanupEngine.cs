@@ -874,9 +874,27 @@ namespace Ombi.Core.Engine
                 record.ScheduledForDeletionAt = TruncateToSecond(DateTime.UtcNow);
                 state.Requests.Add(record);
 
-                // Immediate deletion is synchronous. ExecuteDeletion persists its destructive
-                // operation checkpoint through a fresh scope, then this scoped state is saved
-                // once with the final/retryable reconciliation state.
+                // Immediate deletion must be durable before the first destructive *arr call.
+                // Persist through a fresh scope so a process crash after Sonarr/Radarr accepts
+                // the delete cannot erase the cleanup record that authorized the operation.
+                try
+                {
+                    await SaveStateCheckpoint(state);
+                }
+                catch (Exception ex)
+                {
+                    state.Requests.Remove(record);
+                    _logger.LogError(
+                        ex,
+                        "Could not persist immediate media cleanup request for {RequestType} '{Title}' ({CleanupId}); no external deletion was attempted",
+                        record.RequestType,
+                        record.Title,
+                        record.Id);
+                    return Fail("Media removal could not start because the cleanup request could not be persisted. No media was deleted.");
+                }
+
+                // ExecuteDeletion persists a second checkpoint after the destructive operation,
+                // then this scoped state is saved once with the final/retryable reconciliation state.
                 await ExecuteDeletion(record, settings, state);
                 await SaveState(state);
                 if (record.Status == MediaCleanupStatus.Completed)
