@@ -1,12 +1,16 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Ombi.Store.Entities;
 
 namespace Ombi.Settings.Settings.Models
 {
     public class MediaCleanupSettings : Settings
     {
+        [EnumDataType(typeof(OwnRequestRemovalMode))]
         public OwnRequestRemovalMode OwnRequestRemoval { get; set; } = OwnRequestRemovalMode.Off;
+
+        [EnumDataType(typeof(CommunityCleanupMode))]
         public CommunityCleanupMode CommunityCleanup { get; set; } = CommunityCleanupMode.Off;
 
         public int MinimumDeleteVotes { get; set; } = 3;
