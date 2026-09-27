@@ -2660,10 +2660,10 @@ namespace Ombi.Core.Engine
             var approved = plan.Authorization;
             var current = await CaptureAuthorizationSnapshot(record);
 
-            var approvedClaims = (approved.RequestClaims ?? new List<string>()).ToHashSet(StringComparer.Ordinal);
-            var currentClaims = (current.RequestClaims ?? new List<string>()).ToHashSet(StringComparer.Ordinal);
-            var approvedOwners = (approved.OwnerUserIds ?? new List<string>()).ToHashSet(StringComparer.Ordinal);
-            var currentOwners = (current.OwnerUserIds ?? new List<string>()).ToHashSet(StringComparer.Ordinal);
+            var approvedClaims = new HashSet<string>(approved.RequestClaims ?? new List<string>(), StringComparer.Ordinal);
+            var currentClaims = new HashSet<string>(current.RequestClaims ?? new List<string>(), StringComparer.Ordinal);
+            var approvedOwners = new HashSet<string>(approved.OwnerUserIds ?? new List<string>(), StringComparer.Ordinal);
+            var currentOwners = new HashSet<string>(current.OwnerUserIds ?? new List<string>(), StringComparer.Ordinal);
 
             if (approved.ResidualTvCatalog != current.ResidualTvCatalog)
             {
