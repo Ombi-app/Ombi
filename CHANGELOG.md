@@ -1,3 +1,7 @@
+## [4.60.60](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/compare/v4.60.59...v4.60.60) (2026-09-27)
+
+
+
 ## [4.60.59](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/compare/v4.60.58...v4.60.59) (2026-09-22)
 
 
@@ -211,15 +215,6 @@
 * resolve user data leakage in BCC mass email templates ([#5444](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/issues/5444)) [skip ci] ([a5cfb02](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/commit/a5cfb02d4ab973dd2183b39c3436a3d393818e2f))
 * respect Sonarr availability priority for TV episodes ([#5445](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/issues/5445)) [skip ci] ([ddba9e3](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/commit/ddba9e3224201fd8a3e195e03e2e3df641973989))
 * **settings:** resolve mobile dropdown positioning and horizontal layout overflow ([#5443](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/issues/5443)) ([1ba4825](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/commit/1ba48252b6e1b2adbb22ae1d44e81b637cf2877e))
-
-
-
-## [4.60.10](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/compare/v4.60.9...v4.60.10) (2026-07-07)
-
-
-### Bug Fixes
-
-* resolve discover card details and action visibility on mobile touch devices ([#5442](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/issues/5442)) ([550af0c](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/commit/550af0c3d208d6e4d6d04c34831f72b0c02f67cb))
 
 
 
