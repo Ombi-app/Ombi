@@ -331,15 +331,11 @@ namespace Ombi.Core.Senders
                         existingSeries = await SonarrApi.UpdateSeries(existingSeries, s.ApiKey, s.FullUri);
                     }
 
+                    // SendToSonarr performs the request-scoped season/episode search after
+                    // applying any series-wide profile update. Do not follow it with SeriesSearch:
+                    // choosing a profile for one request must not implicitly search every monitored
+                    // season in an existing Sonarr series.
                     await SendToSonarr(model, existingSeries, s, options);
-
-                    if (profileOverrideRequested && !s.AddOnly)
-                    {
-                        // Sonarr profiles are series-wide. An explicit profile selection therefore
-                        // re-searches the entire monitored series, even when the series was already
-                        // on that profile, instead of limiting the search to the new season.
-                        await SonarrApi.SeriesSearch(existingSeries.id, s.ApiKey, s.FullUri);
-                    }
                 }
 
                 return new NewSeries
