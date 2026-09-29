@@ -1,3 +1,12 @@
+## [4.60.17](https://github.com/Ombi-app/Ombi/compare/v4.60.16...v4.60.17) (2026-09-29)
+
+
+### Bug Fixes
+
+* **jellyfin:** authenticate with the Authorization header (Jellyfin 12.0 disables the legacy Emby authorization methods by default) ([#5475](https://github.com/Ombi-app/Ombi/issues/5475)) ([52aceb7](https://github.com/Ombi-app/Ombi/commit/52aceb74446a29bb5d5d99ca543e78699b03b945))
+
+
+
 ## [4.60.16](https://github.com/Ombi-app/Ombi/compare/v4.60.15...v4.60.16) (2026-09-04)
 
 
@@ -555,10 +564,6 @@
 ### Performance Improvements
 
 * Improvements to api calls ([6907604](https://github.com/Ombi-app/Ombi/commit/69076047f5ace434b175fa424acd78d87eeeb1de))
-
-
-
-## [4.55.2](https://github.com/Ombi-app/Ombi/compare/v4.55.1...v4.55.2) (2026-02-10)
 
 
 
