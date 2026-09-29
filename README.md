@@ -438,13 +438,6 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/bybeet">
-            <img src="https://avatars.githubusercontent.com/u/1662279?v=4" width="50;" alt="bybeet"/>
-            <br />
-            <sub><b>Travis Bybee</b></sub>
-        </a>
-    </td>
-    <td align="center">
         <a href="https://github.com/Torkiliuz">
             <img src="https://avatars.githubusercontent.com/u/460764?v=4" width="50;" alt="Torkiliuz"/>
             <br />
@@ -457,15 +450,15 @@ Here are some of the features Ombi has:
             <br />
             <sub><b>Tom McClellan</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/Tim-Trott">
             <img src="https://avatars.githubusercontent.com/u/8249434?v=4" width="50;" alt="Tim-Trott"/>
             <br />
             <sub><b>Tim Trott</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/thomasvt1">
             <img src="https://avatars.githubusercontent.com/u/2271011?v=4" width="50;" alt="thomasvt1"/>
@@ -500,15 +493,15 @@ Here are some of the features Ombi has:
             <br />
             <sub><b>Sean Callinan</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/sambartik">
             <img src="https://avatars.githubusercontent.com/u/63553146?v=4" width="50;" alt="sambartik"/>
             <br />
             <sub><b>Samuel Bartík</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/rob1998">
             <img src="https://avatars.githubusercontent.com/u/1560707?v=4" width="50;" alt="rob1998"/>
@@ -543,15 +536,15 @@ Here are some of the features Ombi has:
             <br />
             <sub><b>Micky</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/LMaxence">
             <img src="https://avatars.githubusercontent.com/u/29194680?v=4" width="50;" alt="LMaxence"/>
             <br />
             <sub><b>Maxence Lecanu</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/mattmattmatt">
             <img src="https://avatars.githubusercontent.com/u/927830?v=4" width="50;" alt="mattmattmatt"/>
@@ -564,6 +557,13 @@ Here are some of the features Ombi has:
             <img src="https://avatars.githubusercontent.com/u/55280588?v=4" width="50;" alt="marleypowell"/>
             <br />
             <sub><b>Marley</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/Lucane">
+            <img src="https://avatars.githubusercontent.com/u/7999446?v=4" width="50;" alt="Lucane"/>
+            <br />
+            <sub><b>Lucane</b></sub>
         </a>
     </td>
     <td align="center">
@@ -610,13 +610,6 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/masterhuck">
-            <img src="https://avatars.githubusercontent.com/u/4671442?v=4" width="50;" alt="masterhuck"/>
-            <br />
-            <sub><b>Patrick Weber</b></sub>
-        </a>
-    </td>
-    <td align="center">
         <a href="https://github.com/malmcf">
             <img src="https://avatars.githubusercontent.com/u/243155210?v=4" width="50;" alt="malmcf"/>
             <br />
@@ -629,15 +622,15 @@ Here are some of the features Ombi has:
             <br />
             <sub><b>Maartenheebink</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/m4tta">
             <img src="https://avatars.githubusercontent.com/u/427218?v=4" width="50;" alt="m4tta"/>
             <br />
             <sub><b>M4tta</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/echel0n">
             <img src="https://avatars.githubusercontent.com/u/1128022?v=4" width="50;" alt="echel0n"/>
@@ -672,15 +665,15 @@ Here are some of the features Ombi has:
             <br />
             <sub><b>Camjac251</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/bwittgen">
             <img src="https://avatars.githubusercontent.com/u/26683380?v=4" width="50;" alt="bwittgen"/>
             <br />
             <sub><b>Bwittgen</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/x-limitless-x">
             <img src="https://avatars.githubusercontent.com/u/17127926?v=4" width="50;" alt="x-limitless-x"/>
@@ -700,6 +693,13 @@ Here are some of the features Ombi has:
             <img src="https://avatars.githubusercontent.com/u/6020502?v=4" width="50;" alt="Xirg"/>
             <br />
             <sub><b>Xirg</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/bybeet">
+            <img src="https://avatars.githubusercontent.com/u/1662279?v=4" width="50;" alt="bybeet"/>
+            <br />
+            <sub><b>Travis Bybee</b></sub>
         </a>
     </td>
     <td align="center">
@@ -832,10 +832,10 @@ Here are some of the features Ombi has:
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/Lucane">
-            <img src="https://avatars.githubusercontent.com/u/7999446?v=4" width="50;" alt="Lucane"/>
+        <a href="https://github.com/lou-perret">
+            <img src="https://avatars.githubusercontent.com/u/110917536?v=4" width="50;" alt="lou-perret"/>
             <br />
-            <sub><b>Lucane</b></sub>
+            <sub><b>Lou</b></sub>
         </a>
     </td>
     <td align="center">
