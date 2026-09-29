@@ -67,8 +67,6 @@ namespace Ombi.Api.External.MediaServers.Jellyfin
 
             request.AddJsonBody(body);
 
-            request.AddHeader("X-Emby-Authorization",
-                $"MediaBrowser Client=\"Ombi\", Device=\"Ombi\", DeviceId=\"v3\", Version=\"v3\"");
             AddHeaders(request, apiKey);
 
             // Use the correct authentication result model from Jellyfin API
@@ -186,12 +184,16 @@ namespace Ombi.Api.External.MediaServers.Jellyfin
             return obj;
         }
 
+        private const string ClientIdentification =
+            "Client=\"Ombi\", Device=\"Ombi\", DeviceId=\"v3\", Version=\"v3\"";
+
         private static void AddHeaders(Request req, string apiKey)
         {
-            if (!string.IsNullOrEmpty(apiKey))
-            {
-                req.AddHeader("X-MediaBrowser-Token", apiKey);
-            }
+            var authorization = string.IsNullOrEmpty(apiKey)
+                ? ClientIdentification
+                : $"{ClientIdentification}, Token=\"{apiKey}\"";
+            req.AddHeader("Authorization", $"MediaBrowser {authorization}");
+
             req.AddHeader("Accept", "application/json");
             req.AddContentHeader("Content-Type", "application/json");
             req.AddHeader("Device", "Ombi");
