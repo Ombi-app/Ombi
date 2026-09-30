@@ -867,7 +867,11 @@ namespace Ombi.Core.Engine
                 {
                     record.Status = MediaCleanupStatus.PendingAdminApproval;
                     state.Requests.Add(record);
-                    await SaveState(state);
+                    if (!await TrySaveState(state, "submitting an own-request removal for administrator approval"))
+                    {
+                        state.Requests.Remove(record);
+                        return PersistenceFailure(record.Id);
+                    }
                     QueueManagersPendingApprovalNotification(record, settings);
                     return Success("Removal request submitted for administrator approval.", record.Id);
                 }
@@ -904,7 +908,20 @@ namespace Ombi.Core.Engine
                 // ExecuteDeletion persists a second checkpoint after the destructive operation,
                 // then this scoped state is saved once with the final/retryable reconciliation state.
                 await ExecuteDeletion(record, settings, state);
-                await SaveState(state);
+                if (!await TrySaveState(state, "persisting the final state of an immediate media removal"))
+                {
+                    if (record.ExternalDeletionCompletedAt.HasValue)
+                    {
+                        return Fail(
+                            "Media was removed from the external service, but Ombi could not persist the final cleanup state. " +
+                            "The recovery checkpoint is durable and Ombi will retry reconciliation automatically.",
+                            record.Id);
+                    }
+
+                    return Fail(
+                        "Media cleanup could not persist its latest state. The durable cleanup request remains available for recovery and may retry automatically.",
+                        record.Id);
+                }
                 if (record.Status == MediaCleanupStatus.Completed)
                 {
                     return Success("Media was removed successfully.", record.Id);
@@ -1001,7 +1018,11 @@ namespace Ombi.Core.Engine
                 });
                 await EvaluateCommunityAndSnapshotDeletionPlan(record, settings, DateTime.UtcNow);
                 state.Requests.Add(record);
-                await SaveState(state);
+                if (!await TrySaveState(state, "starting a community cleanup vote"))
+                {
+                    state.Requests.Remove(record);
+                    return PersistenceFailure(record.Id);
+                }
                 if (record.Status == MediaCleanupStatus.PendingAdminApproval)
                 {
                     QueueManagersPendingApprovalNotification(record, settings);
@@ -1049,7 +1070,10 @@ namespace Ombi.Core.Engine
                 await EvaluateCommunityAndSnapshotDeletionPlan(record, settings, DateTime.UtcNow);
                 if (!IsVoteable(record))
                 {
-                    await SaveState(state);
+                    if (!await TrySaveState(state, "persisting a cleanup vote deadline transition"))
+                    {
+                        return PersistenceFailure(record.Id);
+                    }
                     if (statusBeforeDeadlineEvaluation != MediaCleanupStatus.PendingAdminApproval &&
                         record.Status == MediaCleanupStatus.PendingAdminApproval)
                     {
@@ -1071,7 +1095,10 @@ namespace Ombi.Core.Engine
                 }
 
                 await EvaluateCommunityAndSnapshotDeletionPlan(record, settings, DateTime.UtcNow);
-                await SaveState(state);
+                if (!await TrySaveState(state, "recording a media cleanup vote"))
+                {
+                    return PersistenceFailure(record.Id);
+                }
                 if (previousStatus != MediaCleanupStatus.PendingAdminApproval && record.Status == MediaCleanupStatus.PendingAdminApproval)
                 {
                     QueueManagersPendingApprovalNotification(record, settings);
@@ -1118,7 +1145,10 @@ namespace Ombi.Core.Engine
                 record.Status = MediaCleanupStatus.ScheduledForDeletion;
                 record.ScheduledForDeletionAt = TruncateToSecond(DateTime.UtcNow).AddDays(Math.Max(0, settings.GracePeriodDays));
                 ResetRetryState(record);
-                await SaveState(state);
+                if (!await TrySaveState(state, "approving and scheduling a media cleanup"))
+                {
+                    return PersistenceFailure(record.Id);
+                }
                 return Success("Cleanup approved and scheduled for deletion.", record.Id);
             }
             finally
@@ -1163,7 +1193,10 @@ namespace Ombi.Core.Engine
 
                 record.Status = MediaCleanupStatus.Cancelled;
                 record.ScheduledForDeletionAt = null;
-                await SaveState(state);
+                if (!await TrySaveState(state, "cancelling a media cleanup request"))
+                {
+                    return PersistenceFailure(record.Id);
+                }
                 return Success("Cleanup request cancelled.", record.Id);
             }
             finally
@@ -1204,7 +1237,17 @@ namespace Ombi.Core.Engine
                     ResetRetryState(record);
                 }
 
-                await SaveState(state);
+                if (!await TrySaveState(state, "cancelling cleanup workflows for a deleted Ombi request"))
+                {
+                    _logger.LogError(
+                        "Could not persist cancellation of {Count} Media Cleanup workflow(s) for deleted Ombi {RequestType} request {RequestId}. " +
+                        "The underlying request is already deleted; any stale cleanup will be blocked by deletion revalidation.",
+                        matches.Count,
+                        requestType,
+                        requestId);
+                    return;
+                }
+
                 _logger.LogInformation(
                     "Cancelled {Count} active Media Cleanup workflow(s) because the underlying Ombi {RequestType} request was deleted. RequestId={RequestId}, TMDB={TmdbId}, TVDB={TvdbId}",
                     matches.Count,
@@ -1255,9 +1298,11 @@ namespace Ombi.Core.Engine
                     }
                 }
 
-                if (changed)
+                if (changed && !await TrySaveState(state, "persisting scheduled Media Cleanup processing"))
                 {
-                    await SaveState(state);
+                    // Do not emit notifications for transitions that were not durably saved.
+                    // A later scheduler pass will reload the last durable state and evaluate it again.
+                    return;
                 }
 
                 foreach (var record in newlyPendingApproval)
@@ -1302,7 +1347,10 @@ namespace Ombi.Core.Engine
                 record.Status = status;
                 record.ScheduledForDeletionAt = null;
                 ResetRetryState(record);
-                await SaveState(state);
+                if (!await TrySaveState(state, $"setting media cleanup state to {status}"))
+                {
+                    return PersistenceFailure(record.Id);
+                }
                 return Success(message, record.Id);
             }
             finally
@@ -2990,9 +3038,24 @@ namespace Ombi.Core.Engine
             return state;
         }
 
-        private Task<bool> SaveState(MediaCleanupState state)
+        private async Task<bool> TrySaveState(MediaCleanupState state, string operation)
         {
-            return _state.SaveSettingsAsync(state);
+            if (await _state.SaveSettingsAsync(state))
+            {
+                return true;
+            }
+
+            _logger.LogError(
+                "Media Cleanup state persistence returned false while {Operation}; the in-memory transition will not be reported as successful",
+                operation);
+            return false;
+        }
+
+        private static MediaCleanupActionResult PersistenceFailure(string cleanupRequestId = null)
+        {
+            return Fail(
+                "Media Cleanup could not persist this change. The action was not confirmed; please try again.",
+                cleanupRequestId);
         }
 
         private async Task SaveStateCheckpoint(MediaCleanupState state)

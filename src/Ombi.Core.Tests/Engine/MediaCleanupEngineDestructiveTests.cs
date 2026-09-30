@@ -224,6 +224,86 @@ namespace Ombi.Core.Tests.Engine
         }
 
         [Test]
+        public async Task OwnRemovalRequest_PersistenceFalse_DoesNotReportSuccess()
+        {
+            var movie = SetupImmediateMovieRequest();
+            _cleanupSettings.OwnRequestRemoval = OwnRequestRemovalMode.RequestRemoval;
+            _stateService.Setup(x => x.SaveSettingsAsync(It.IsAny<MediaCleanupState>()))
+                .ReturnsAsync(false);
+
+            var result = await _subject.RequestOwnRemoval(RequestType.Movie, movie.Id);
+
+            Assert.That(result.Result, Is.False);
+            Assert.That(result.Message, Does.Contain("could not persist"));
+            Assert.That(result.Message, Does.Contain("not confirmed"));
+            Assert.That(_state.Requests, Is.Empty,
+                "A newly-created cleanup record must not remain in the in-memory state when its initial save fails.");
+            _checkpointStateService.Verify(x => x.SaveSettingsAsync(It.IsAny<MediaCleanupState>()), Times.Never);
+            _radarr.Verify(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
+        }
+
+        [Test]
+        public async Task ImmediateMovieDeletion_FinalPersistenceFalse_ReportsDurableRecoveryCheckpoint()
+        {
+            var movie = SetupImmediateMovieRequest();
+            _radarr.Setup(x => x.GetMoviesForCleanup(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(new List<MovieResponse>
+                {
+                    new MovieResponse { id = 44, tmdbId = movie.TheMovieDbId, title = movie.Title }
+                });
+            _radarr.Setup(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), true, false))
+                .ReturnsAsync(true);
+            _stateService.Setup(x => x.SaveSettingsAsync(It.IsAny<MediaCleanupState>()))
+                .ReturnsAsync(false);
+
+            var result = await _subject.RequestOwnRemoval(RequestType.Movie, movie.Id);
+
+            Assert.That(result.Result, Is.False);
+            Assert.That(result.Message, Does.Contain("removed from the external service"));
+            Assert.That(result.Message, Does.Contain("recovery checkpoint is durable"));
+            _radarr.Verify(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), true, false), Times.Once);
+            _checkpointStateService.Verify(x => x.SaveSettingsAsync(It.IsAny<MediaCleanupState>()), Times.Exactly(2));
+            _stateService.Verify(x => x.SaveSettingsAsync(_state), Times.Once);
+        }
+
+        [Test]
+        public async Task Approve_PersistenceFalse_DoesNotReportScheduledSuccess()
+        {
+            var manager = new OmbiUser { Id = "manager", UserName = "manager", NormalizedUserName = "MANAGER" };
+            _mocker.GetMock<ICurrentUser>()
+                .Setup(x => x.GetUser())
+                .ReturnsAsync(manager);
+            _userManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), It.IsAny<string>()))
+                .ReturnsAsync(true);
+
+            var record = new MediaCleanupRecord
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                RequestType = RequestType.Movie,
+                MediaRequestId = 100,
+                TheMovieDbId = 200,
+                Title = "Approval Persistence Test Movie",
+                OwnerUserIds = new List<string> { "owner" },
+                Origin = MediaCleanupOrigin.OwnRequest,
+                Status = MediaCleanupStatus.PendingAdminApproval,
+                CreatedAt = DateTime.UtcNow.AddDays(-1)
+            };
+            _state.Requests.Add(record);
+            _movieRequests.Setup(x => x.GetAll())
+                .Returns(new[] { MovieRequest(record.MediaRequestId, record.TheMovieDbId, "owner") }.AsQueryable().BuildMock());
+            _stateService.Setup(x => x.SaveSettingsAsync(It.IsAny<MediaCleanupState>()))
+                .ReturnsAsync(false);
+
+            var result = await _subject.Approve(record.Id);
+
+            Assert.That(result.Result, Is.False);
+            Assert.That(result.Message, Does.Contain("could not persist"));
+            Assert.That(result.Message, Does.Contain("not confirmed"));
+            _radarr.Verify(x => x.GetMoviesForCleanup(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _radarr.Verify(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
+        }
+
+        [Test]
         public async Task SuccessfulMovieDeletion_CheckpointsBeforeOmbiRequestDeletion()
         {
             var events = new List<string>();
