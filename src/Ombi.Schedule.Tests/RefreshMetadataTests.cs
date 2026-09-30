@@ -1,10 +1,15 @@
 ﻿using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using Moq.AutoMock;
 using NUnit.Framework;
+using AutoMapper;
+using Ombi.Api;
 using Ombi.Api.External.ExternalApis.TheMovieDb;
 using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
+using Ombi.Core.Settings;
+using Ombi.Core.Settings.Models.External;
 using Ombi.Schedule.Jobs.Ombi;
 
 namespace Ombi.Schedule.Tests
@@ -90,6 +95,42 @@ namespace Ombi.Schedule.Tests
             var result = await InvokeGetTvDbId(true, false, "42", string.Empty, "Example Show");
 
             Assert.That(result, Is.Empty);
+        }
+
+
+        [Test]
+        public async Task GetTheMovieDbId_WithMissingImdbValue_DoesNotCallFind()
+        {
+            var result = await _subject.GetTheMovieDbId(false, true, string.Empty, "   ", "Example Movie", true);
+
+            Assert.That(result, Is.Empty);
+            _mocker.GetMock<IMovieDbApi>()
+                .Verify(x => x.Find(It.IsAny<string>(), It.IsAny<ExternalSource>()), Times.Never);
+        }
+
+        [Test]
+        public async Task GetTheMovieDbId_WithMissingTvDbValue_DoesNotCallFind()
+        {
+            var result = await _subject.GetTheMovieDbId(true, false, "   ", string.Empty, "Example Show", false);
+
+            Assert.That(result, Is.Empty);
+            _mocker.GetMock<IMovieDbApi>()
+                .Verify(x => x.Find(It.IsAny<string>(), It.IsAny<ExternalSource>()), Times.Never);
+        }
+
+        [Test]
+        public async Task TheMovieDbFind_WithBlankExternalId_DoesNotSendRequest()
+        {
+            var api = new Mock<IApi>();
+            var subject = new TheMovieDbApi(
+                Mock.Of<IMapper>(),
+                api.Object,
+                Mock.Of<ISettingsService<TheMovieDbSettings>>());
+
+            var result = await subject.Find("   ", ExternalSource.imdb_id);
+
+            Assert.That(result, Is.Not.Null);
+            api.Verify(x => x.Request<FindResult>(It.IsAny<Request>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         private async Task<string> InvokeGetTvDbId(bool hasTheMovieDb, bool hasImdb, string theMovieDbId, string imdbId, string title)

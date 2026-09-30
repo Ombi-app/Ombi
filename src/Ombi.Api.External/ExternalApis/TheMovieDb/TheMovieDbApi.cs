@@ -131,6 +131,11 @@ namespace Ombi.Api.External.ExternalApis.TheMovieDb
 
         public async Task<FindResult> Find(string externalId, ExternalSource source)
         {
+            if (string.IsNullOrWhiteSpace(externalId))
+            {
+                return new FindResult();
+            }
+
             var request = new Request($"find/{externalId}", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             request.CacheDuration = TimeSpan.FromHours(6); // External ID mappings rarely change

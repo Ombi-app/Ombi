@@ -458,14 +458,14 @@ namespace Ombi.Schedule.Jobs.Ombi
             _log.LogInformation("The Media item {0} does not have a TheMovieDbId, searching for TheMovieDbId", title);
             FindResult result = null;
             var hasResult = false;
-            if (hasTvDbId)
+            if (hasTvDbId && !string.IsNullOrWhiteSpace(tvdbID))
             {
                 result = await _movieApi.Find(tvdbID, ExternalSource.tvdb_id);
                 hasResult = result?.tv_results?.Length > 0;
 
                 _log.LogInformation("Setting Show {0} because we have TvDbId, result: {1}", title, hasResult);
             }
-            if (hasImdb && !hasResult)
+            if (hasImdb && !string.IsNullOrWhiteSpace(imdbId) && !hasResult)
             {
                 result = await _movieApi.Find(imdbId, ExternalSource.imdb_id);
                 if (movie)
