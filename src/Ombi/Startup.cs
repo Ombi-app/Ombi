@@ -177,6 +177,20 @@ namespace Ombi
                             QueueLimit = 0,
                             Window = TimeSpan.FromMinutes(1)
                         }));
+
+                // Media Cleanup mutations change persisted workflow state and some can authorize or
+                // trigger destructive external operations. Partition by authenticated Ombi user so
+                // unrelated users behind the same NAT do not consume each other's mutation budget.
+                options.AddPolicy("MediaCleanupMutation", httpContext =>
+                    RateLimitPartition.GetFixedWindowLimiter(
+                        partitionKey: AuthenticatedUserOrIpPartition(httpContext),
+                        factory: _ => new FixedWindowRateLimiterOptions
+                        {
+                            AutoReplenishment = true,
+                            PermitLimit = 20,
+                            QueueLimit = 0,
+                            Window = TimeSpan.FromMinutes(1)
+                        }));
             });
 
             services.AddJwtAuthentication();

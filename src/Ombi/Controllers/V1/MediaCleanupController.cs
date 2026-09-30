@@ -42,36 +42,42 @@ namespace Ombi.Controllers.V1
         }
 
         [HttpPost("own/{requestType}/{requestId:int}")]
+        [EnableRateLimiting("MediaCleanupMutation")]
         public Task<MediaCleanupActionResult> RequestOwnRemoval(RequestType requestType, int requestId, [FromBody] MediaCleanupSelection selection = null)
         {
             return _engine.RequestOwnRemoval(requestType, requestId, selection);
         }
 
         [HttpPost("nominate/{requestType}/{requestId:int}")]
+        [EnableRateLimiting("MediaCleanupMutation")]
         public Task<MediaCleanupActionResult> Nominate(RequestType requestType, int requestId, [FromBody] MediaCleanupSelection selection = null)
         {
             return _engine.Nominate(requestType, requestId, selection);
         }
 
         [HttpPost("vote/{cleanupRequestId}/{vote}")]
+        [EnableRateLimiting("MediaCleanupMutation")]
         public Task<MediaCleanupActionResult> Vote(string cleanupRequestId, MediaCleanupVoteType vote)
         {
             return _engine.Vote(cleanupRequestId, vote);
         }
 
         [HttpPost("approve/{cleanupRequestId}")]
+        [EnableRateLimiting("MediaCleanupMutation")]
         public Task<MediaCleanupActionResult> Approve(string cleanupRequestId)
         {
             return _engine.Approve(cleanupRequestId);
         }
 
         [HttpPost("reject/{cleanupRequestId}")]
+        [EnableRateLimiting("MediaCleanupMutation")]
         public Task<MediaCleanupActionResult> Reject(string cleanupRequestId)
         {
             return _engine.Reject(cleanupRequestId);
         }
 
         [HttpPost("cancel/{cleanupRequestId}")]
+        [EnableRateLimiting("MediaCleanupMutation")]
         public Task<MediaCleanupActionResult> Cancel(string cleanupRequestId)
         {
             return _engine.Cancel(cleanupRequestId);
