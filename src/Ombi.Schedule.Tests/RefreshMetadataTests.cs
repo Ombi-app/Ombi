@@ -122,7 +122,7 @@ namespace Ombi.Schedule.Tests
         public async Task TheMovieDbFind_WithBlankExternalId_DoesNotSendRequest()
         {
             var api = new Mock<IApi>();
-            var subject = new TheMovieDbApi(
+            var subject = new Ombi.Api.External.ExternalApis.TheMovieDb.TheMovieDbApi(
                 Mock.Of<IMapper>(),
                 api.Object,
                 Mock.Of<ISettingsService<TheMovieDbSettings>>());

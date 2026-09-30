@@ -177,7 +177,7 @@ namespace Ombi.Core.Tests.Senders
             RequestQueue queued = null;
             var queueRepository = _mocker.GetMock<IRepository<RequestQueue>>();
             queueRepository
-                .Setup(x => x.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<System.Func<RequestQueue, bool>>>())))
+                .Setup(x => x.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<System.Func<RequestQueue, bool>>>()))
                 .ReturnsAsync((RequestQueue)null);
             queueRepository
                 .Setup(x => x.Add(It.IsAny<RequestQueue>()))
