@@ -223,7 +223,7 @@ namespace Ombi.Core.Tests.Senders
                     false))
                 .ReturnsAsync(true);
 
-            var exception = Assert.ThrowsAsync<System.InvalidOperationException>(
+            var exception = Assert.CatchAsync<System.InvalidOperationException>(
                 async () => await _subject.SendToSonarr(request, settings));
 
             StringAssert.Contains("Unable to safely map requested season 1", exception.Message);
@@ -260,7 +260,7 @@ namespace Ombi.Core.Tests.Senders
                     }
                 });
 
-            var exception = Assert.ThrowsAsync<System.InvalidOperationException>(
+            var exception = Assert.CatchAsync<System.InvalidOperationException>(
                 async () => await _subject.SendToSonarr(request, settings));
 
             StringAssert.Contains("Unable to safely map requested season 1", exception.Message);
@@ -302,7 +302,7 @@ namespace Ombi.Core.Tests.Senders
                     false))
                 .ThrowsAsync(new System.Net.Http.HttpRequestException("rollback failed"));
 
-            var exception = Assert.ThrowsAsync<System.InvalidOperationException>(
+            var exception = Assert.CatchAsync<System.InvalidOperationException>(
                 async () => await _subject.SendToSonarr(request, settings));
 
             StringAssert.Contains("Unable to safely map requested season 1", exception.Message);
