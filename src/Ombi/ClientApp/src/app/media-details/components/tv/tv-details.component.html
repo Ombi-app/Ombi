@@ -1,5 +1,12 @@
-<div *ngIf="!tv" class="loading-spinner">
+<div *ngIf="!tv && !metadataUnavailable" class="loading-spinner">
 	<mat-spinner [color]="'accent'"></mat-spinner>
+</div>
+
+<div *ngIf="metadataUnavailable" class="main-content-container">
+	<div class="no-info">
+		<h1><i class="far fa-frown-o" aria-hidden="true"></i></h1>
+		<h3>{{ 'MediaDetails.NotEnoughInfo' | translate }}</h3>
+	</div>
 </div>
 
 <div *ngIf="tv" class="main-content-container">

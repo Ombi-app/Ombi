@@ -83,6 +83,7 @@ export class TvDetailsComponent implements OnInit {
     public cleanupOverview?: IMediaCleanupOverview;
     public cleanupItem?: IMediaCleanupItem;
     public cleanupBusy = false;
+    public metadataUnavailable = false;
     public readonly MediaCleanupVoteType = MediaCleanupVoteType;
 
     private tvdbId: number;
@@ -106,7 +107,9 @@ export class TvDetailsComponent implements OnInit {
 
     public async ngOnInit() {
         await this.load();
-        this.checkPoster();
+        if (this.tv) {
+            this.checkPoster();
+        }
     }
 
     public async load() {
@@ -124,8 +127,19 @@ export class TvDetailsComponent implements OnInit {
         //     this.tv = await this.searchService.getTvInfoWithMovieDbId(this.tvdbId);
         //     this.tvdbId = this.tv.id;
         // } else {
+        this.metadataUnavailable = false;
+        try {
             this.tv = await this.searchService.getTvInfo(this.tvdbId);
+        } catch {
+            this.metadataUnavailable = true;
+            return;
+        }
         // }
+
+        if (!this.tv) {
+            this.metadataUnavailable = true;
+            return;
+        }
 
         if (this.tv.requestId) {
             this.tvRequest = await this.requestService.getChildRequests(this.tv.requestId).toPromise();
