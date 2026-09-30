@@ -14,6 +14,7 @@ import { SettingsMenuComponent } from "../settingsmenu.component";
 import { WikiComponent } from "../wiki.component";
 import { RequestRetryService } from "../../services";
 import { MatTableModule } from "@angular/material/table";
+import { HumanizePipe } from "../../pipes/standalone-pipes";
 
 @Component({
     standalone: true,
@@ -28,7 +29,8 @@ import { MatTableModule } from "@angular/material/table";
         MatSlideToggleModule,
         MatTooltipModule,
         TranslateModule,
-        MatTableModule
+        MatTableModule,
+        HumanizePipe
     ],
     providers: [
         RequestRetryService
@@ -39,7 +41,7 @@ import { MatTableModule } from "@angular/material/table";
 export class FailedRequestsComponent implements OnInit {
 
     public columnsToDisplay = ["title", "type", "retryCount", "errorDescription", "deleteBtn"];
-    public vm: IFailedRequestsViewModel[];
+    public vm: IFailedRequestsViewModel[] = [];
     public RequestType = RequestType;
 
     constructor(private retry: RequestRetryService) { }

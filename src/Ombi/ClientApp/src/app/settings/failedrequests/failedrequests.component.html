@@ -19,7 +19,7 @@
 
     <ng-container matColumnDef="errorDescription">
       <th mat-header-cell *matHeaderCellDef>Error Description</th>
-      <td mat-cell *matCellDef="let v"><i [pTooltip]="v.error" class="fas fa-info-circle"></i></td>
+      <td mat-cell *matCellDef="let v"><i [matTooltip]="v.error" class="fas fa-info-circle"></i></td>
     </ng-container>
 
     <ng-container matColumnDef="deleteBtn">

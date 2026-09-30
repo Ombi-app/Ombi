@@ -5,8 +5,8 @@ import { of } from 'rxjs';
 function createComponent() {
   const mockRetryService = {
     getFailedRequests: vi.fn().mockReturnValue(of([
-      { failedId: 1, title: 'Movie A', type: 1, retryCount: 3, errorDescription: 'Timeout' },
-      { failedId: 2, title: 'Show B', type: 0, retryCount: 1, errorDescription: 'Not found' },
+      { failedId: 1, title: 'Movie A', type: 1, retryCount: 3, error: 'Timeout' },
+      { failedId: 2, title: 'Show B', type: 0, retryCount: 1, error: 'Not found' },
     ])),
     deleteFailedRequest: vi.fn().mockReturnValue(of(true)),
   };
@@ -21,6 +21,17 @@ describe('FailedRequestsComponent', () => {
     comp.ngOnInit();
     expect(comp.vm).toHaveLength(2);
     expect(comp.vm[0].title).toBe('Movie A');
+  });
+
+  it('loads the failure metadata used by every table column', () => {
+    const { comp } = createComponent();
+    comp.ngOnInit();
+
+    expect(comp.vm[0].type).toBe(1);
+    expect(comp.vm[0].retryCount).toBe(3);
+    expect(comp.vm[0].error).toBe('Timeout');
+    expect(comp.vm[1].type).toBe(0);
+    expect(comp.vm[1].error).toBe('Not found');
   });
 
   it('should remove a failed request and update the list', () => {
