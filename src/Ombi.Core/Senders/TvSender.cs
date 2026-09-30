@@ -938,7 +938,20 @@ namespace Ombi.Core.Senders
             var existingQueue = await _requestQueueRepository.FirstOrDefaultAsync(x => x.RequestId == model.Id && x.Type == RequestType.TvShow);
             if (existingQueue != null)
             {
-                existingQueue.RetryCount++;
+                if (existingQueue.Completed.HasValue)
+                {
+                    // A completed row is historical. Reusing it for a new failure without clearing
+                    // Completed makes the new failure invisible to the Failed Requests endpoint,
+                    // which only returns incomplete rows. Treat this as a fresh failure event.
+                    existingQueue.Completed = null;
+                    existingQueue.Dts = DateTime.UtcNow;
+                    existingQueue.RetryCount = 0;
+                }
+                else
+                {
+                    existingQueue.RetryCount++;
+                }
+
                 existingQueue.Error = persistedError;
                 await _requestQueueRepository.SaveChangesAsync();
             }

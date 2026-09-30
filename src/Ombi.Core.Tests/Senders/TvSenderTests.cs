@@ -195,6 +195,150 @@ namespace Ombi.Core.Tests.Senders
         }
 
         [Test]
+        public async Task Send_UnsafeSeasonMapping_ReopensCompletedQueueEntry()
+        {
+            var settings = CreateSettings();
+            settings.Enabled = true;
+            var request = CreateSingleEpisodeRequest();
+            request.Id = 78;
+            var existingSeries = CreateSeries(id: 42, tvdbId: request.ParentRequest.TvDbId);
+
+            _mocker.GetMock<ISettingsService<SonarrSettings>>()
+                .Setup(x => x.GetSettingsAsync())
+                .ReturnsAsync(settings);
+            SetupRootFolder(settings);
+            _sonarr.Setup(x => x.GetSeries(settings.ApiKey, settings.FullUri))
+                .ReturnsAsync(new[] { existingSeries });
+            _sonarr.Setup(x => x.GetEpisodes(existingSeries.id, settings.ApiKey, settings.FullUri))
+                .ReturnsAsync(new[]
+                {
+                    new Episode
+                    {
+                        id = 100,
+                        seriesId = existingSeries.id,
+                        seasonNumber = 1,
+                        episodeNumber = 1,
+                        title = "A Different Episode Title",
+                        monitored = false
+                    }
+                });
+
+            var oldDts = System.DateTime.UtcNow.AddDays(-2);
+            var queueItem = new RequestQueue
+            {
+                Id = 9,
+                RequestId = request.Id,
+                Type = RequestType.TvShow,
+                Dts = oldDts,
+                Error = "previous completed failure",
+                Completed = System.DateTime.UtcNow.AddDays(-1),
+                RetryCount = 7
+            };
+            var queueRepository = _mocker.GetMock<IRepository<RequestQueue>>();
+            queueRepository
+                .Setup(x => x.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<System.Func<RequestQueue, bool>>>())))
+                .ReturnsAsync(queueItem);
+
+            var result = await _subject.Send(request);
+
+            Assert.That(result.Success, Is.False);
+            Assert.That(queueItem.Completed, Is.Null);
+            Assert.That(queueItem.RetryCount, Is.Zero);
+            Assert.That(queueItem.Dts, Is.GreaterThan(oldDts));
+            Assert.That(queueItem.Error, Does.StartWith(TvSender.ManualInterventionQueuePrefix));
+            queueRepository.Verify(x => x.SaveChangesAsync(), Times.Once);
+            queueRepository.Verify(x => x.Add(It.IsAny<RequestQueue>()), Times.Never);
+        }
+
+        [Test]
+        public async Task Send_UnsafeSeasonMapping_ActiveQueueEntryKeepsRetryHistory()
+        {
+            var settings = CreateSettings();
+            settings.Enabled = true;
+            var request = CreateSingleEpisodeRequest();
+            request.Id = 79;
+            var existingSeries = CreateSeries(id: 42, tvdbId: request.ParentRequest.TvDbId);
+
+            _mocker.GetMock<ISettingsService<SonarrSettings>>()
+                .Setup(x => x.GetSettingsAsync())
+                .ReturnsAsync(settings);
+            SetupRootFolder(settings);
+            _sonarr.Setup(x => x.GetSeries(settings.ApiKey, settings.FullUri))
+                .ReturnsAsync(new[] { existingSeries });
+            _sonarr.Setup(x => x.GetEpisodes(existingSeries.id, settings.ApiKey, settings.FullUri))
+                .ReturnsAsync(new[]
+                {
+                    new Episode
+                    {
+                        id = 100,
+                        seriesId = existingSeries.id,
+                        seasonNumber = 1,
+                        episodeNumber = 1,
+                        title = "A Different Episode Title",
+                        monitored = false
+                    }
+                });
+
+            var originalDts = System.DateTime.UtcNow.AddHours(-3);
+            var queueItem = new RequestQueue
+            {
+                Id = 10,
+                RequestId = request.Id,
+                Type = RequestType.TvShow,
+                Dts = originalDts,
+                Error = "existing active failure",
+                Completed = null,
+                RetryCount = 2
+            };
+            var queueRepository = _mocker.GetMock<IRepository<RequestQueue>>();
+            queueRepository
+                .Setup(x => x.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<System.Func<RequestQueue, bool>>>())))
+                .ReturnsAsync(queueItem);
+
+            await _subject.Send(request);
+
+            Assert.That(queueItem.Completed, Is.Null);
+            Assert.That(queueItem.RetryCount, Is.EqualTo(3));
+            Assert.That(queueItem.Dts, Is.EqualTo(originalDts));
+            Assert.That(queueItem.Error, Does.StartWith(TvSender.ManualInterventionQueuePrefix));
+        }
+
+        [Test]
+        public async Task Send_TransientFailure_ReopensCompletedQueueEntryForAutomaticRetry()
+        {
+            var request = CreateSingleEpisodeRequest();
+            request.Id = 80;
+            _mocker.GetMock<ISettingsService<SonarrSettings>>()
+                .Setup(x => x.GetSettingsAsync())
+                .ThrowsAsync(new System.InvalidOperationException("temporary send failure"));
+
+            var oldDts = System.DateTime.UtcNow.AddDays(-2);
+            var queueItem = new RequestQueue
+            {
+                Id = 11,
+                RequestId = request.Id,
+                Type = RequestType.TvShow,
+                Dts = oldDts,
+                Error = "previous completed failure",
+                Completed = System.DateTime.UtcNow.AddDays(-1),
+                RetryCount = 4
+            };
+            var queueRepository = _mocker.GetMock<IRepository<RequestQueue>>();
+            queueRepository
+                .Setup(x => x.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<System.Func<RequestQueue, bool>>>())))
+                .ReturnsAsync(queueItem);
+
+            var result = await _subject.Send(request);
+
+            Assert.That(result.Success, Is.False);
+            Assert.That(queueItem.Completed, Is.Null);
+            Assert.That(queueItem.RetryCount, Is.Zero);
+            Assert.That(queueItem.Dts, Is.GreaterThan(oldDts));
+            Assert.That(queueItem.Error, Is.EqualTo("temporary send failure"));
+            Assert.That(queueItem.Error, Does.Not.StartWith(TvSender.ManualInterventionQueuePrefix));
+        }
+
+        [Test]
         public void NewlyAddedSeries_ConfigurationFailure_RollsBackWithoutDeletingFiles()
         {
             var settings = CreateSettings();
