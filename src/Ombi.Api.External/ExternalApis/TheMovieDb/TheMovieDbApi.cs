@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Nito.AsyncEx;
 using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
 using Ombi.Core.Settings;
@@ -21,11 +22,12 @@ namespace Ombi.Api.External.ExternalApis.TheMovieDb
 {
     public class TheMovieDbApi : IMovieDbApi
     {
-        public TheMovieDbApi(IMapper mapper, IApi api, ISettingsService<TheMovieDbSettings> settingsService)
+        public TheMovieDbApi(IMapper mapper, IApi api, ISettingsService<TheMovieDbSettings> settingsService, ILogger<TheMovieDbApi> logger = null)
         {
             Api = api;
             Mapper = mapper;
             Settings = new AsyncLazy<TheMovieDbSettings>(() => settingsService.GetSettingsAsync());
+            Logger = logger;
         }
 
         private const string ApiToken = "b8eabaf5608b88d0298aa189dd90bf00";
@@ -33,9 +35,15 @@ namespace Ombi.Api.External.ExternalApis.TheMovieDb
         private IMapper Mapper { get; }
         private IApi Api { get; }
         private AsyncLazy<TheMovieDbSettings> Settings { get; }
+        private ILogger<TheMovieDbApi> Logger { get; }
 
         public async Task<MovieResponseDto> GetMovieInformation(int movieId)
         {
+            if (!HasValidTmdbId(movieId, nameof(GetMovieInformation)))
+            {
+                return new MovieResponseDto();
+            }
+
             var request = new Request($"movie/{movieId}", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             request.CacheDuration = TimeSpan.FromHours(4); // Movie info rarely changes
@@ -48,6 +56,11 @@ namespace Ombi.Api.External.ExternalApis.TheMovieDb
 
         public async Task<FullMovieInfo> GetFullMovieInfo(int movieId, CancellationToken cancellationToken, string langCode)
         {
+            if (!HasValidTmdbId(movieId, nameof(GetFullMovieInfo)))
+            {
+                return new FullMovieInfo();
+            }
+
             var request = new Request($"movie/{movieId}", BaseUri, HttpMethod.Get);
             request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
             request.FullUri = request.FullUri.AddQueryParameter("language", langCode);
@@ -197,6 +210,11 @@ namespace Ombi.Api.External.ExternalApis.TheMovieDb
 
         public async Task<TvExternals> GetTvExternals(int theMovieDbId)
         {
+            if (!HasValidTmdbId(theMovieDbId, nameof(GetTvExternals)))
+            {
+                return new TvExternals();
+            }
+
             var request = new Request($"/tv/{theMovieDbId}/external_ids", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             request.CacheDuration = TimeSpan.FromHours(6); // External IDs rarely change
@@ -207,6 +225,11 @@ namespace Ombi.Api.External.ExternalApis.TheMovieDb
 
         public async Task<List<MovieDbSearchResult>> SimilarMovies(int movieId, string langCode)
         {
+            if (!HasValidTmdbId(movieId, nameof(SimilarMovies)))
+            {
+                return new List<MovieDbSearchResult>();
+            }
+
             var request = new Request($"movie/{movieId}/similar", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             request.AddQueryString("language", langCode);
@@ -218,6 +241,11 @@ namespace Ombi.Api.External.ExternalApis.TheMovieDb
 
         public async Task<MovieResponseDto> GetMovieInformationWithExtraInfo(int movieId, string langCode = "en")
         {
+            if (!HasValidTmdbId(movieId, nameof(GetMovieInformationWithExtraInfo)))
+            {
+                return new MovieResponseDto();
+            }
+
             var request = new Request($"movie/{movieId}", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             request.AddQueryString("append_to_response", "videos,release_dates");
@@ -418,7 +446,12 @@ namespace Ombi.Api.External.ExternalApis.TheMovieDb
 
         public async Task<TvInfo> GetTVInfo(string themoviedbid, string langCode = "en")
         {
-            var request = new Request($"/tv/{themoviedbid}", BaseUri, HttpMethod.Get);
+            if (!TryGetValidTmdbId(themoviedbid, nameof(GetTVInfo), out var tmdbId))
+            {
+                return null;
+            }
+
+            var request = new Request($"/tv/{tmdbId}", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             request.AddQueryString("language", langCode);
             request.AddQueryString("append_to_response", "videos,credits,similar,recommendations,external_ids,keywords,images");
@@ -429,6 +462,11 @@ namespace Ombi.Api.External.ExternalApis.TheMovieDb
 
         public async Task<SeasonDetails> GetSeasonEpisodes(int theMovieDbId, int seasonNumber, CancellationToken token, string langCode = "en")
         {
+            if (!HasValidTmdbId(theMovieDbId, nameof(GetSeasonEpisodes)))
+            {
+                return new SeasonDetails { episodes = Array.Empty<Episode>() };
+            }
+
             var request = new Request($"/tv/{theMovieDbId}/season/{seasonNumber}", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             request.AddQueryString("language", langCode);
@@ -528,6 +566,11 @@ namespace Ombi.Api.External.ExternalApis.TheMovieDb
 
         public Task<WatchProviders> GetMovieWatchProviders(int theMoviedbId, CancellationToken token)
         {
+            if (!HasValidTmdbId(theMoviedbId, nameof(GetMovieWatchProviders)))
+            {
+                return Task.FromResult(new WatchProviders());
+            }
+
             var request = new Request($"movie/{theMoviedbId}/watch/providers", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
 
@@ -536,6 +579,11 @@ namespace Ombi.Api.External.ExternalApis.TheMovieDb
 
         public Task<WatchProviders> GetTvWatchProviders(int theMoviedbId, CancellationToken token)
         {
+            if (!HasValidTmdbId(theMoviedbId, nameof(GetTvWatchProviders)))
+            {
+                return Task.FromResult(new WatchProviders());
+            }
+
             var request = new Request($"tv/{theMoviedbId}/watch/providers", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
 
@@ -544,7 +592,12 @@ namespace Ombi.Api.External.ExternalApis.TheMovieDb
 
         public Task<MovieDbImages> GetTvImages(string theMovieDbId, CancellationToken token)
         {
-            var request = new Request($"tv/{theMovieDbId}/images", BaseUri, HttpMethod.Get);
+            if (!TryGetValidTmdbId(theMovieDbId, nameof(GetTvImages), out var tmdbId))
+            {
+                return Task.FromResult(new MovieDbImages());
+            }
+
+            var request = new Request($"tv/{tmdbId}/images", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
 
             return Api.Request<MovieDbImages>(request, token);
@@ -552,10 +605,42 @@ namespace Ombi.Api.External.ExternalApis.TheMovieDb
 
         public Task<MovieDbImages> GetMovieImages(string theMovieDbId, CancellationToken token)
         {
-            var request = new Request($"movie/{theMovieDbId}/images", BaseUri, HttpMethod.Get);
+            if (!TryGetValidTmdbId(theMovieDbId, nameof(GetMovieImages), out var tmdbId))
+            {
+                return Task.FromResult(new MovieDbImages());
+            }
+
+            var request = new Request($"movie/{tmdbId}/images", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
 
             return Api.Request<MovieDbImages>(request, token);
+        }
+
+        private bool HasValidTmdbId(int tmdbId, string operation)
+        {
+            if (tmdbId > 0)
+            {
+                return true;
+            }
+
+            Logger?.LogWarning(
+                "Skipping TMDB {Operation} request because {TmdbId} is not a positive TMDB ID",
+                operation, tmdbId);
+            return false;
+        }
+
+        private bool TryGetValidTmdbId(string tmdbId, string operation, out int parsedTmdbId)
+        {
+            if (int.TryParse(tmdbId, out parsedTmdbId) && parsedTmdbId > 0)
+            {
+                return true;
+            }
+
+            Logger?.LogWarning(
+                "Skipping TMDB {Operation} request because '{TmdbId}' is not a positive numeric TMDB ID",
+                operation, tmdbId);
+            parsedTmdbId = 0;
+            return false;
         }
 
         private async Task AddDiscoverSettings(Request request)

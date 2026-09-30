@@ -133,6 +133,48 @@ namespace Ombi.Schedule.Tests
             api.Verify(x => x.Request<FindResult>(It.IsAny<Request>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
+
+        [Test]
+        public async Task TheMovieDbMediaEndpoints_WithInvalidTmdbIds_DoNotSendRequests()
+        {
+            var api = new Mock<IApi>();
+            var subject = new Ombi.Api.External.ExternalApis.TheMovieDb.TheMovieDbApi(
+                Mock.Of<IMapper>(),
+                api.Object,
+                Mock.Of<ISettingsService<TheMovieDbSettings>>());
+
+            var movieInfo = await subject.GetMovieInformation(0);
+            var fullMovieInfo = await subject.GetFullMovieInfo(-1, CancellationToken.None, "en");
+            var externals = await subject.GetTvExternals(0);
+            var similar = await subject.SimilarMovies(-1, "en");
+            var movieInfoWithExtras = await subject.GetMovieInformationWithExtraInfo(0);
+            var tvInfo = await subject.GetTVInfo("0");
+            var malformedTvInfo = await subject.GetTVInfo("not-a-number");
+            var season = await subject.GetSeasonEpisodes(0, 1, CancellationToken.None);
+            var movieProviders = await subject.GetMovieWatchProviders(0, CancellationToken.None);
+            var tvProviders = await subject.GetTvWatchProviders(-1, CancellationToken.None);
+            var tvImages = await subject.GetTvImages("0", CancellationToken.None);
+            var movieImages = await subject.GetMovieImages("   ", CancellationToken.None);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(movieInfo, Is.Not.Null);
+                Assert.That(fullMovieInfo, Is.Not.Null);
+                Assert.That(externals, Is.Not.Null);
+                Assert.That(similar, Is.Empty);
+                Assert.That(movieInfoWithExtras, Is.Not.Null);
+                Assert.That(tvInfo, Is.Null);
+                Assert.That(malformedTvInfo, Is.Null);
+                Assert.That(season?.episodes, Is.Empty);
+                Assert.That(movieProviders, Is.Not.Null);
+                Assert.That(tvProviders, Is.Not.Null);
+                Assert.That(tvImages, Is.Not.Null);
+                Assert.That(movieImages, Is.Not.Null);
+            });
+
+            Assert.That(api.Invocations, Is.Empty);
+        }
+
         private async Task<string> InvokeGetTvDbId(bool hasTheMovieDb, bool hasImdb, string theMovieDbId, string imdbId, string title)
         {
             var method = typeof(RefreshMetadata).GetMethod("GetTvDbId", BindingFlags.NonPublic | BindingFlags.Instance);
