@@ -68,7 +68,7 @@ describe('TvDetailsComponent', () => {
     await expect(component.ngOnInit()).resolves.toBeUndefined();
 
     expect(component.metadataUnavailable).toBe(true);
-    expect(component.tv).toBeUndefined();
+    expect(component.tv).toBeNull();
     expect(mockRequestService.getChildRequests).not.toHaveBeenCalled();
   });
 
