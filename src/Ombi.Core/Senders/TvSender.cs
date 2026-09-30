@@ -306,8 +306,32 @@ namespace Ombi.Core.Senders
                     {
                         throw new Exception(string.Join(',', result.ErrorMessages));
                     }
-                    existingSeries = await SonarrApi.GetSeriesById(result.id, s.ApiKey, s.FullUri);
-                    await SendToSonarr(model, existingSeries, s, options);
+                    if (result == null || result.id <= 0)
+                    {
+                        throw new InvalidOperationException(
+                            $"Sonarr did not return a valid series identifier after adding '{model.ParentRequest.Title}'.");
+                    }
+
+                    // Sonarr creates a new series before Ombi can validate/apply its final episode
+                    // monitoring state. If any post-add configuration step fails, remove only the
+                    // series record created by this operation. Never delete files or add an import
+                    // exclusion during this compensating rollback.
+                    try
+                    {
+                        existingSeries = await SonarrApi.GetSeriesById(result.id, s.ApiKey, s.FullUri);
+                        if (existingSeries == null)
+                        {
+                            throw new InvalidOperationException(
+                                $"Sonarr returned no series metadata after adding '{model.ParentRequest.Title}' (series id {result.id}).");
+                        }
+
+                        await SendToSonarr(model, existingSeries, s, options);
+                    }
+                    catch (Exception configurationException)
+                    {
+                        await TryRollbackNewSonarrSeries(result.id, model.ParentRequest.Title, s, configurationException);
+                        throw;
+                    }
                 }
                 else
                 {
@@ -483,6 +507,14 @@ namespace Ombi.Core.Senders
 
         public const string MissingTvDbAfterRefreshPrefix = "TVDBID is missing after TMDB external-id refresh";
 
+
+        private sealed class UnsafeSeasonMappingException : InvalidOperationException
+        {
+            public UnsafeSeasonMappingException(string message) : base(message)
+            {
+            }
+        }
+
         private sealed class MissingTvDbIdException : Exception
         {
             public MissingTvDbIdException(string message) : base(message)
@@ -582,7 +614,7 @@ namespace Ombi.Core.Senders
 
                 if (SonarrEpisodeFingerprintMatcher.HasConflictingExactSeason(season, sonarrEpList))
                 {
-                    throw new InvalidOperationException(
+                    throw new UnsafeSeasonMappingException(
                         $"Unable to safely map requested season {season.SeasonNumber} for '{model.ParentRequest.Title}' to the existing Sonarr series. " +
                         "The same season number exists in Sonarr but its episode titles do not match, and no unique episode fingerprint match was found.");
                 }
@@ -678,6 +710,46 @@ namespace Ombi.Core.Senders
             if (!s.AddOnly)
             {
                 await SearchForRequest(model, sonarrEpList, result, s, episodesToUpdate, seasonNumberMap);
+            }
+        }
+
+
+        private async Task TryRollbackNewSonarrSeries(
+            int seriesId,
+            string title,
+            SonarrSettings settings,
+            Exception configurationException)
+        {
+            try
+            {
+                var removed = await SonarrApi.DeleteSeries(
+                    seriesId,
+                    settings.ApiKey,
+                    settings.FullUri,
+                    deleteFiles: false,
+                    addImportListExclusion: false);
+
+                if (removed)
+                {
+                    Logger.LogWarning(
+                        "Rolled back newly-added Sonarr series {SeriesId} ({Title}) after post-add configuration failed: {ConfigurationError}",
+                        seriesId, title, configurationException.Message);
+                }
+                else
+                {
+                    Logger.LogError(
+                        "Sonarr did not confirm rollback of newly-added series {SeriesId} ({Title}) after post-add configuration failed: {ConfigurationError}",
+                        seriesId, title, configurationException.Message);
+                }
+            }
+            catch (Exception rollbackException)
+            {
+                // Preserve the original configuration failure. A rollback failure is important to
+                // surface, but must not replace the exception that explains why the send failed.
+                Logger.LogError(
+                    rollbackException,
+                    "Failed to roll back newly-added Sonarr series {SeriesId} ({Title}) after post-add configuration failed: {ConfigurationError}",
+                    seriesId, title, configurationException.Message);
             }
         }
 

@@ -139,5 +139,206 @@ namespace Ombi.Core.Tests.Senders
                 x => x.SeriesSearch(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()),
                 Times.Never);
         }
+
+
+        [Test]
+        public void NewlyAddedSeries_ConfigurationFailure_RollsBackWithoutDeletingFiles()
+        {
+            var settings = CreateSettings();
+            var request = CreateSingleEpisodeRequest();
+            var createdSeries = CreateSeries(id: 42, tvdbId: request.ParentRequest.TvDbId);
+
+            SetupNewSeriesPath(settings, createdSeries);
+            _sonarr.Setup(x => x.GetEpisodes(createdSeries.id, settings.ApiKey, settings.FullUri))
+                .ReturnsAsync(new[]
+                {
+                    new Episode
+                    {
+                        id = 100,
+                        seriesId = createdSeries.id,
+                        seasonNumber = 1,
+                        episodeNumber = 1,
+                        title = "A Different Episode Title",
+                        monitored = false
+                    }
+                });
+            _sonarr.Setup(x => x.DeleteSeries(
+                    createdSeries.id,
+                    settings.ApiKey,
+                    settings.FullUri,
+                    false,
+                    false))
+                .ReturnsAsync(true);
+
+            var exception = Assert.ThrowsAsync<InvalidOperationException>(
+                async () => await _subject.SendToSonarr(request, settings));
+
+            StringAssert.Contains("Unable to safely map requested season 1", exception.Message);
+            _sonarr.Verify(x => x.DeleteSeries(
+                    createdSeries.id,
+                    settings.ApiKey,
+                    settings.FullUri,
+                    false,
+                    false),
+                Times.Once);
+        }
+
+        [Test]
+        public void ExistingSeries_ConfigurationFailure_DoesNotRollback()
+        {
+            var settings = CreateSettings();
+            var request = CreateSingleEpisodeRequest();
+            var existingSeries = CreateSeries(id: 42, tvdbId: request.ParentRequest.TvDbId);
+
+            SetupRootFolder(settings);
+            _sonarr.Setup(x => x.GetSeries(settings.ApiKey, settings.FullUri))
+                .ReturnsAsync(new[] { existingSeries });
+            _sonarr.Setup(x => x.GetEpisodes(existingSeries.id, settings.ApiKey, settings.FullUri))
+                .ReturnsAsync(new[]
+                {
+                    new Episode
+                    {
+                        id = 100,
+                        seriesId = existingSeries.id,
+                        seasonNumber = 1,
+                        episodeNumber = 1,
+                        title = "A Different Episode Title",
+                        monitored = false
+                    }
+                });
+
+            var exception = Assert.ThrowsAsync<InvalidOperationException>(
+                async () => await _subject.SendToSonarr(request, settings));
+
+            StringAssert.Contains("Unable to safely map requested season 1", exception.Message);
+            _sonarr.Verify(x => x.DeleteSeries(
+                    It.IsAny<int>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<bool>(),
+                    It.IsAny<bool>()),
+                Times.Never);
+        }
+
+        [Test]
+        public void NewlyAddedSeries_RollbackFailure_PreservesOriginalConfigurationException()
+        {
+            var settings = CreateSettings();
+            var request = CreateSingleEpisodeRequest();
+            var createdSeries = CreateSeries(id: 42, tvdbId: request.ParentRequest.TvDbId);
+
+            SetupNewSeriesPath(settings, createdSeries);
+            _sonarr.Setup(x => x.GetEpisodes(createdSeries.id, settings.ApiKey, settings.FullUri))
+                .ReturnsAsync(new[]
+                {
+                    new Episode
+                    {
+                        id = 100,
+                        seriesId = createdSeries.id,
+                        seasonNumber = 1,
+                        episodeNumber = 1,
+                        title = "A Different Episode Title",
+                        monitored = false
+                    }
+                });
+            _sonarr.Setup(x => x.DeleteSeries(
+                    createdSeries.id,
+                    settings.ApiKey,
+                    settings.FullUri,
+                    false,
+                    false))
+                .ThrowsAsync(new System.Net.Http.HttpRequestException("rollback failed"));
+
+            var exception = Assert.ThrowsAsync<InvalidOperationException>(
+                async () => await _subject.SendToSonarr(request, settings));
+
+            StringAssert.Contains("Unable to safely map requested season 1", exception.Message);
+            StringAssert.DoesNotContain("rollback failed", exception.Message);
+        }
+
+        private void SetupNewSeriesPath(SonarrSettings settings, SonarrSeries createdSeries)
+        {
+            SetupRootFolder(settings);
+            _sonarr.Setup(x => x.GetSeries(settings.ApiKey, settings.FullUri))
+                .ReturnsAsync(Enumerable.Empty<SonarrSeries>());
+            _sonarr.Setup(x => x.AddSeries(It.IsAny<NewSeries>(), settings.ApiKey, settings.FullUri))
+                .ReturnsAsync(new NewSeries { id = createdSeries.id });
+            _sonarr.Setup(x => x.GetSeriesById(createdSeries.id, settings.ApiKey, settings.FullUri))
+                .ReturnsAsync(createdSeries);
+        }
+
+        private void SetupRootFolder(SonarrSettings settings)
+        {
+            _sonarr.Setup(x => x.GetRootFolders(settings.ApiKey, settings.FullUri))
+                .ReturnsAsync(new[]
+                {
+                    new SonarrRootFolder
+                    {
+                        id = 1,
+                        path = "/tv"
+                    }
+                });
+        }
+
+        private static SonarrSettings CreateSettings()
+        {
+            return new SonarrSettings
+            {
+                ApiKey = "key",
+                Ip = "localhost",
+                Port = 8989,
+                RootPath = "1",
+                QualityProfile = "1",
+                AddOnly = false
+            };
+        }
+
+        private static ChildRequests CreateSingleEpisodeRequest()
+        {
+            return new ChildRequests
+            {
+                RequestedUserId = "user",
+                SeriesType = SeriesType.Standard,
+                ParentRequest = new TvRequests
+                {
+                    Title = "Test Show",
+                    TvDbId = 123,
+                    TotalSeasons = 1
+                },
+                SeasonRequests = new List<SeasonRequests>
+                {
+                    new SeasonRequests
+                    {
+                        SeasonNumber = 1,
+                        Episodes = new List<EpisodeRequests>
+                        {
+                            new EpisodeRequests
+                            {
+                                EpisodeNumber = 1,
+                                Title = "Pilot"
+                            }
+                        }
+                    }
+                }
+            };
+        }
+
+        private static SonarrSeries CreateSeries(int id, int tvdbId)
+        {
+            return new SonarrSeries
+            {
+                id = id,
+                tvdbId = tvdbId,
+                monitored = true,
+                seasons = new[]
+                {
+                    new Season
+                    {
+                        seasonNumber = 1,
+                        monitored = false
+                    }
+                }
+            };
+        }
     }
 }
