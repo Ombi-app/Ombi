@@ -40,6 +40,7 @@ namespace Ombi.Core.Engine
             IRepository<RequestSubscription> sub, IMediaCacheService mediaCacheService,
             IUserPlayedEpisodeRepository userPlayedEpisodeRepository,
             IQualityProfileSelectionService qualityProfileSelectionService,
+            IRepository<RequestQueue> requestQueue,
             IMediaCleanupEngine mediaCleanupEngine = null) : base(user, requestService, rule, manager, cache, settings, sub)
         {
             TvApi = tvApi;
@@ -51,6 +52,7 @@ namespace Ombi.Core.Engine
             _mediaCacheService = mediaCacheService;
             _userPlayedEpisodeRepository = userPlayedEpisodeRepository;
             _qualityProfileSelectionService = qualityProfileSelectionService;
+            _requestQueueRepository = requestQueue;
             _mediaCleanupEngine = mediaCleanupEngine;
         }
 
@@ -64,6 +66,7 @@ namespace Ombi.Core.Engine
         private readonly IMediaCacheService _mediaCacheService;
         private readonly IUserPlayedEpisodeRepository _userPlayedEpisodeRepository;
         private readonly IQualityProfileSelectionService _qualityProfileSelectionService;
+        private readonly IRepository<RequestQueue> _requestQueueRepository;
         private readonly IMediaCleanupEngine _mediaCleanupEngine;
 
         public async Task<RequestEngineResult> RequestTvShow(TvRequestViewModel tv)
@@ -899,12 +902,38 @@ namespace Ombi.Core.Engine
                     await NotificationHelper.Notify(request, NotificationType.RequestApproved);
                 }
                 // Autosend
-                await TvSender.Send(request);
+                var sendResult = await TvSender.Send(request);
+                if (sendResult.Success)
+                {
+                    await CompleteActiveTvRequestFailures(request.Id);
+                }
             }
             return new RequestEngineResult
             {
                 Result = true
             };
+        }
+
+        private async Task CompleteActiveTvRequestFailures(int requestId)
+        {
+            var activeFailures = await _requestQueueRepository.GetAll()
+                .Where(x => x.RequestId == requestId &&
+                    x.Type == RequestType.TvShow &&
+                    !x.Completed.HasValue)
+                .ToListAsync();
+
+            if (activeFailures.Count == 0)
+            {
+                return;
+            }
+
+            var completedAt = DateTime.UtcNow;
+            foreach (var failure in activeFailures)
+            {
+                failure.Completed = completedAt;
+            }
+
+            await _requestQueueRepository.SaveChangesAsync();
         }
 
         public async Task<RequestEngineResult> DenyChildRequest(int requestId, string reason)

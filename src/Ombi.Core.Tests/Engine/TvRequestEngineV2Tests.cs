@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MockQueryable.Moq;
 using Moq;
 using Moq.AutoMock;
 using NUnit.Framework;
@@ -12,7 +14,10 @@ using Ombi.Core.Helpers;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Rule;
 using Ombi.Core.Rule.Interfaces;
+using Ombi.Core.Senders;
 using Ombi.Store.Entities;
+using Ombi.Store.Entities.Requests;
+using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
 using Ombi.Test.Common;
 
@@ -21,6 +26,135 @@ namespace Ombi.Core.Tests.Engine
     [TestFixture]
     public class TvRequestEngineV2Tests
     {
+
+        [Test]
+        public async Task ApproveChildRequest_SuccessfulManualResend_CompletesActiveFailureRows()
+        {
+            var mocker = new AutoMocker();
+            var request = new ChildRequests
+            {
+                Id = 335846,
+                Title = "The Bad Guys: The Series",
+                SeasonRequests = new List<SeasonRequests>
+                {
+                    new SeasonRequests
+                    {
+                        SeasonNumber = 2,
+                        Episodes = new List<EpisodeRequests>
+                        {
+                            new EpisodeRequests { EpisodeNumber = 7, Title = "I, Webs" }
+                        }
+                    }
+                }
+            };
+
+            var tvRepository = new Mock<ITvRequestRepository>();
+            tvRepository.Setup(x => x.GetChild())
+                .Returns(new List<ChildRequests> { request }.AsQueryable().BuildMock());
+            tvRepository.Setup(x => x.UpdateChild(request)).Returns(Task.CompletedTask);
+
+            var requestService = new Mock<IRequestServiceMain>();
+            requestService.Setup(x => x.TvRequestService).Returns(tvRepository.Object);
+            requestService.Setup(x => x.MovieRequestService).Returns(new Mock<IMovieRequestRepository>().Object);
+            requestService.Setup(x => x.MusicRequestRepository).Returns(new Mock<IMusicRequestRepository>().Object);
+            mocker.Use(requestService.Object);
+
+            mocker.GetMock<IMediaCacheService>()
+                .Setup(x => x.Purge())
+                .Returns(Task.CompletedTask);
+            mocker.GetMock<IRuleEvaluator>()
+                .Setup(x => x.StartSpecificRules(request, SpecificRules.CanSendNotification, string.Empty))
+                .ReturnsAsync(new RuleResult { Success = false });
+            mocker.GetMock<ITvSender>()
+                .Setup(x => x.Send(request))
+                .ReturnsAsync(new SenderResult { Success = true, Sent = true });
+
+            var failedRequest = new RequestQueue
+            {
+                Id = 73,
+                RequestId = request.Id,
+                Type = RequestType.TvShow,
+                Error = TvSender.ManualInterventionQueuePrefix + "Unsafe season mapping",
+                Completed = null,
+                RetryCount = 8
+            };
+            var unrelatedFailure = new RequestQueue
+            {
+                Id = 74,
+                RequestId = 999999,
+                Type = RequestType.TvShow,
+                Error = "unrelated failure",
+                Completed = null
+            };
+            var queueRepository = mocker.GetMock<IRepository<RequestQueue>>();
+            queueRepository.Setup(x => x.GetAll())
+                .Returns(new List<RequestQueue> { failedRequest, unrelatedFailure }.AsQueryable().BuildMock());
+            queueRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
+
+            var subject = mocker.CreateInstance<TvRequestEngine>();
+            var result = await subject.ApproveChildRequest(request.Id);
+
+            Assert.That(result.Result, Is.True);
+            Assert.That(failedRequest.Completed, Is.Not.Null);
+            Assert.That(unrelatedFailure.Completed, Is.Null);
+            Assert.That(failedRequest.Error, Does.StartWith(TvSender.ManualInterventionQueuePrefix));
+            Assert.That(failedRequest.RetryCount, Is.EqualTo(8));
+            queueRepository.Verify(x => x.SaveChangesAsync(), Times.Once);
+        }
+
+        [Test]
+        public async Task ApproveChildRequest_FailedManualResend_LeavesActiveFailureIncomplete()
+        {
+            var mocker = new AutoMocker();
+            var request = new ChildRequests
+            {
+                Id = 335846,
+                Title = "The Bad Guys: The Series",
+                SeasonRequests = new List<SeasonRequests>()
+            };
+
+            var tvRepository = new Mock<ITvRequestRepository>();
+            tvRepository.Setup(x => x.GetChild())
+                .Returns(new List<ChildRequests> { request }.AsQueryable().BuildMock());
+            tvRepository.Setup(x => x.UpdateChild(request)).Returns(Task.CompletedTask);
+
+            var requestService = new Mock<IRequestServiceMain>();
+            requestService.Setup(x => x.TvRequestService).Returns(tvRepository.Object);
+            requestService.Setup(x => x.MovieRequestService).Returns(new Mock<IMovieRequestRepository>().Object);
+            requestService.Setup(x => x.MusicRequestRepository).Returns(new Mock<IMusicRequestRepository>().Object);
+            mocker.Use(requestService.Object);
+
+            mocker.GetMock<IMediaCacheService>()
+                .Setup(x => x.Purge())
+                .Returns(Task.CompletedTask);
+            mocker.GetMock<IRuleEvaluator>()
+                .Setup(x => x.StartSpecificRules(request, SpecificRules.CanSendNotification, string.Empty))
+                .ReturnsAsync(new RuleResult { Success = false });
+            mocker.GetMock<ITvSender>()
+                .Setup(x => x.Send(request))
+                .ReturnsAsync(new SenderResult { Success = false });
+
+            var failedRequest = new RequestQueue
+            {
+                Id = 73,
+                RequestId = request.Id,
+                Type = RequestType.TvShow,
+                Error = TvSender.ManualInterventionQueuePrefix + "Unsafe season mapping",
+                Completed = null,
+                RetryCount = 8
+            };
+            var queueRepository = mocker.GetMock<IRepository<RequestQueue>>();
+            queueRepository.Setup(x => x.GetAll())
+                .Returns(new List<RequestQueue> { failedRequest }.AsQueryable().BuildMock());
+
+            var subject = mocker.CreateInstance<TvRequestEngine>();
+            var result = await subject.ApproveChildRequest(request.Id);
+
+            Assert.That(result.Result, Is.True);
+            Assert.That(failedRequest.Completed, Is.Null);
+            queueRepository.Verify(x => x.SaveChangesAsync(), Times.Never);
+        }
+
         [Test]
         public async Task RequestTvShow_PreservesRuleErrorCode()
         {
