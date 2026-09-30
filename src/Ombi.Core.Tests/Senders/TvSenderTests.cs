@@ -236,7 +236,7 @@ namespace Ombi.Core.Tests.Senders
             };
             var queueRepository = _mocker.GetMock<IRepository<RequestQueue>>();
             queueRepository
-                .Setup(x => x.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<System.Func<RequestQueue, bool>>>())))
+                .Setup(x => x.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<System.Func<RequestQueue, bool>>>()))
                 .ReturnsAsync(queueItem);
 
             var result = await _subject.Send(request);
@@ -292,7 +292,7 @@ namespace Ombi.Core.Tests.Senders
             };
             var queueRepository = _mocker.GetMock<IRepository<RequestQueue>>();
             queueRepository
-                .Setup(x => x.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<System.Func<RequestQueue, bool>>>())))
+                .Setup(x => x.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<System.Func<RequestQueue, bool>>>()))
                 .ReturnsAsync(queueItem);
 
             await _subject.Send(request);
@@ -325,7 +325,7 @@ namespace Ombi.Core.Tests.Senders
             };
             var queueRepository = _mocker.GetMock<IRepository<RequestQueue>>();
             queueRepository
-                .Setup(x => x.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<System.Func<RequestQueue, bool>>>())))
+                .Setup(x => x.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<System.Func<RequestQueue, bool>>>()))
                 .ReturnsAsync(queueItem);
 
             var result = await _subject.Send(request);
