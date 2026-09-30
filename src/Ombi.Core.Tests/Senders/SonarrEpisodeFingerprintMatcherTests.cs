@@ -68,6 +68,90 @@ namespace Ombi.Core.Tests.Senders
             Assert.That(SonarrEpisodeFingerprintMatcher.HasConflictingExactSeason(source, sonarrEpisodes), Is.True);
         }
 
+        [Test]
+        public void ExactSeason_WithProviderTitleVariantsOnAvailableEpisodes_IsSafeWhenOutstandingEpisodeMatches()
+        {
+            var source = BuildSeason(2, BadGuysTmdbTitles);
+            foreach (var episode in source.Episodes)
+            {
+                episode.Requested = true;
+                episode.Approved = true;
+                episode.Available = true;
+            }
+            source.Episodes.Single(x => x.EpisodeNumber == 7).Available = false;
+
+            var sonarrEpisodes = BuildEpisodes(2, BadGuysSonarrTitles).ToList();
+
+            var result = SonarrEpisodeFingerprintMatcher.FindSingleSeasonMatch(source, sonarrEpisodes);
+
+            Assert.That(result, Is.Null, "Provider title variants should not masquerade as a full fingerprint match");
+            Assert.That(SonarrEpisodeFingerprintMatcher.HasConflictingExactSeason(source, sonarrEpisodes), Is.False);
+        }
+
+        [Test]
+        public void ExactSeason_WhenOutstandingEpisodeTitleDiffers_RemainsUnsafe()
+        {
+            var source = BuildSeason(2, BadGuysTmdbTitles);
+            foreach (var episode in source.Episodes)
+            {
+                episode.Requested = true;
+                episode.Approved = true;
+                episode.Available = true;
+            }
+            source.Episodes.Single(x => x.EpisodeNumber == 9).Available = false;
+
+            var sonarrEpisodes = BuildEpisodes(2, BadGuysSonarrTitles).ToList();
+
+            Assert.That(SonarrEpisodeFingerprintMatcher.HasConflictingExactSeason(source, sonarrEpisodes), Is.True);
+        }
+
+        [Test]
+        public void ExactSeason_WithTooManyProviderTitleDifferences_RemainsUnsafe()
+        {
+            var source = BuildSeason(2, BadGuysTmdbTitles);
+            foreach (var episode in source.Episodes)
+            {
+                episode.Requested = true;
+                episode.Approved = true;
+                episode.Available = true;
+            }
+            source.Episodes.Single(x => x.EpisodeNumber == 7).Available = false;
+
+            var weakMatchTitles = BadGuysSonarrTitles.ToArray();
+            weakMatchTitles[5] = "Completely Different Six";
+            var sonarrEpisodes = BuildEpisodes(2, weakMatchTitles).ToList();
+
+            Assert.That(SonarrEpisodeFingerprintMatcher.HasConflictingExactSeason(source, sonarrEpisodes), Is.True);
+        }
+
+        [Test]
+        public void ExactSeason_WithDifferentEpisodeStructure_RemainsUnsafe()
+        {
+            var source = BuildSeason(2, BadGuysTmdbTitles);
+            foreach (var episode in source.Episodes)
+            {
+                episode.Requested = true;
+                episode.Approved = true;
+                episode.Available = true;
+            }
+            source.Episodes.Single(x => x.EpisodeNumber == 7).Available = false;
+
+            var sonarrEpisodes = BuildEpisodes(2, BadGuysSonarrTitles)
+                .Concat(new[]
+                {
+                    new Episode
+                    {
+                        id = 211,
+                        seasonNumber = 2,
+                        episodeNumber = 11,
+                        title = "Unexpected Episode"
+                    }
+                })
+                .ToList();
+
+            Assert.That(SonarrEpisodeFingerprintMatcher.HasConflictingExactSeason(source, sonarrEpisodes), Is.True);
+        }
+
         private static SeasonRequests BuildSeason(int seasonNumber, IReadOnlyList<string> titles)
         {
             return new SeasonRequests
@@ -116,6 +200,34 @@ namespace Ombi.Core.Tests.Senders
             "Bed and Breakfast",
             "The Trial of the Century",
             "Carnival"
+        };
+
+        private static readonly string[] BadGuysTmdbTitles =
+        {
+            "The Heist-Over",
+            "The Con Test",
+            "Natural Heistory",
+            "A Nice Day for a Bad Wedding",
+            "Me Mentor Mori",
+            "Double Jeopardy",
+            "I, Webs",
+            "Bad Actors",
+            "Fear the Ripper (1)",
+            "Fear the Ripper (2)"
+        };
+
+        private static readonly string[] BadGuysSonarrTitles =
+        {
+            "The Heist-Over",
+            "The Con Test",
+            "Natural Heistory",
+            "A Nice Day for a Bad Wedding",
+            "Me Mentor Mori",
+            "Double Jeopardy",
+            "I, Webs",
+            "Bad Actors",
+            "Fear the Ripper",
+            "Fear the Ripper Pt. 2"
         };
     }
 }

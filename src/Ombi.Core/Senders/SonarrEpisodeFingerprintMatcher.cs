@@ -8,8 +8,10 @@ namespace Ombi.Core.Senders
 {
     /// <summary>
     /// Resolves a TMDB-style requested season to the corresponding Sonarr season when providers
-    /// disagree about whether an anthology season is a standalone show. Matches are intentionally
+    /// disagree about whether an anthology season is a standalone show. Remaps are intentionally
     /// conservative: at least three requested episode titles must identify exactly one Sonarr season.
+    /// Exact-number seasons may tolerate a small number of provider title variants only when the
+    /// episode structure strongly agrees and every episode Ombi still needs matches exactly.
     /// </summary>
     public static class SonarrEpisodeFingerprintMatcher
     {
@@ -79,9 +81,10 @@ namespace Ombi.Core.Senders
         }
 
         /// <summary>
-        /// Returns true when Sonarr contains the source season number but its episode titles do not
-        /// describe the requested season. This protects anthology mappings from silently targeting
-        /// the wrong season when a safe fingerprint remap cannot be established.
+        /// Returns true when Sonarr contains the source season number but the available episode
+        /// evidence is not strong enough to use it safely. This protects anthology mappings from
+        /// silently targeting the wrong season while allowing small provider title differences in
+        /// an otherwise identical exact-number season.
         /// </summary>
         public static bool HasConflictingExactSeason(
             SeasonRequests sourceSeason,
@@ -103,9 +106,81 @@ namespace Ombi.Core.Senders
                 return false;
             }
 
-            return fingerprint.Any(expected =>
+            // Missing episode numbers are a structural disagreement, not a provider-title variant.
+            // Keep treating those as unsafe.
+            if (fingerprint.Any(expected => !exactSeason.ContainsKey(expected.EpisodeNumber)))
+            {
+                return true;
+            }
+
+            var mismatchedTitles = fingerprint
+                .Where(expected => !TitlesMatch(exactSeason[expected.EpisodeNumber], expected.NormalizedTitle))
+                .ToList();
+
+            if (mismatchedTitles.Count == 0)
+            {
+                return false;
+            }
+
+            // TMDB and TVDB occasionally use different display names for a small number of
+            // episodes in an otherwise identical season (for example "Fear the Ripper (2)" vs
+            // "Fear the Ripper Pt. 2"). Do not reject the exact season solely because of those
+            // unrelated title variants when the season structure strongly agrees and every
+            // episode Ombi still needs is an exact number/title match.
+            if (HasStrongExactSeasonEvidence(sourceSeason, fingerprint, exactSeason, mismatchedTitles.Count))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool HasStrongExactSeasonEvidence(
+            SeasonRequests sourceSeason,
+            IReadOnlyCollection<EpisodeFingerprint> fingerprint,
+            IReadOnlyDictionary<int, string> exactSeason,
+            int mismatchedTitleCount)
+        {
+            // Require the providers to describe the same episode-number set. This keeps the
+            // tolerance from masking anthology splits, missing episodes, or shifted numbering.
+            if (exactSeason.Count != fingerprint.Count)
+            {
+                return false;
+            }
+
+            var unavailableEpisodes = sourceSeason?.Episodes?
+                .Where(x => x != null && !x.Available)
+                .GroupBy(x => x.EpisodeNumber)
+                .Select(x => x.First())
+                .ToList() ?? new List<EpisodeRequests>();
+
+            // If Ombi has nothing outstanding, there is no actionable target to corroborate the
+            // exact-season mapping. Keep the original strict behavior in that case.
+            if (unavailableEpisodes.Count == 0)
+            {
+                return false;
+            }
+
+            // Every episode Ombi still needs must itself agree exactly by number and normalized
+            // title. Provider-title tolerance is only allowed on episodes unrelated to the action.
+            if (unavailableEpisodes.Any(expected =>
+                string.IsNullOrWhiteSpace(expected.Title) ||
                 !exactSeason.TryGetValue(expected.EpisodeNumber, out var actualTitle) ||
-                !TitlesMatch(actualTitle, expected.NormalizedTitle));
+                !TitlesMatch(actualTitle, NormalizeTitle(expected.Title))))
+            {
+                return false;
+            }
+
+            var matchingTitleCount = fingerprint.Count - mismatchedTitleCount;
+            if (matchingTitleCount < MinimumEpisodeFingerprintSize)
+            {
+                return false;
+            }
+
+            // Require at least 80% of the full season fingerprint to agree exactly. This is high
+            // enough to preserve the anthology safety check while tolerating a small number of
+            // provider naming differences in a structurally identical season.
+            return matchingTitleCount * 100 >= fingerprint.Count * 80;
         }
 
         private static List<EpisodeFingerprint> GetFingerprint(SeasonRequests sourceSeason)
