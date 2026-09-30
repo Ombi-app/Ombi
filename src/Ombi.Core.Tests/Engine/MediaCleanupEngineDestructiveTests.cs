@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using MockQueryable.Moq;
@@ -13,9 +15,12 @@ using Ombi.Api.External.ExternalApis.Radarr;
 using Ombi.Api.External.ExternalApis.Radarr.Models;
 using Ombi.Api.External.ExternalApis.Sonarr;
 using Ombi.Api.External.ExternalApis.Sonarr.Models;
+using Ombi.Api.External.MediaServers.Plex;
+using Ombi.Api.External.MediaServers.Plex.Models;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine;
 using Ombi.Core.Helpers;
+using Ombi.Core.Models.MediaCleanup;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
@@ -979,6 +984,109 @@ namespace Ombi.Core.Tests.Engine
             Assert.That(record.ScheduledForDeletionAt, Is.Null);
             _radarr.Verify(x => x.GetMoviesForCleanup(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             _radarr.Verify(x => x.DeleteMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Never);
+        }
+
+        [Test]
+        public async Task PlexHistoryFailure_LeavesLastPlayedUnknown()
+        {
+            SetupSinglePlexServer();
+            var plex = _mocker.GetMock<IPlexApi>();
+            plex.Setup(x => x.GetHistory(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new HttpRequestException(
+                    "Plex history item was not found.",
+                    null,
+                    HttpStatusCode.NotFound));
+            var item = CleanupItemForHistoryTest();
+
+            await InvokePopulateLastPlayed(item);
+
+            Assert.That(item.LastPlayedKnown, Is.False);
+            Assert.That(item.LastPlayedAt, Is.Null);
+        }
+
+        [Test]
+        public async Task NullPlexHistoryPayload_LeavesLastPlayedUnknown()
+        {
+            SetupSinglePlexServer();
+            var plex = _mocker.GetMock<IPlexApi>();
+            plex.Setup(x => x.GetHistory(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((PlexContainer)null);
+            var item = CleanupItemForHistoryTest();
+
+            await InvokePopulateLastPlayed(item);
+
+            Assert.That(item.LastPlayedKnown, Is.False);
+            Assert.That(item.LastPlayedAt, Is.Null);
+        }
+
+        [Test]
+        public async Task SuccessfulEmptyPlexHistory_MarksLastPlayedKnown()
+        {
+            SetupSinglePlexServer();
+            var plex = _mocker.GetMock<IPlexApi>();
+            plex.Setup(x => x.GetHistory(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new PlexContainer
+                {
+                    MediaContainer = new Mediacontainer
+                    {
+                        Metadata = Array.Empty<Ombi.Api.External.MediaServers.Plex.Models.Metadata>()
+                    }
+                });
+            var item = CleanupItemForHistoryTest();
+
+            await InvokePopulateLastPlayed(item);
+
+            Assert.That(item.LastPlayedKnown, Is.True);
+            Assert.That(item.LastPlayedAt, Is.Null);
+        }
+
+        private void SetupSinglePlexServer()
+        {
+            _mocker.GetMock<ISettingsService<PlexSettings>>()
+                .Setup(x => x.GetSettingsAsync())
+                .ReturnsAsync(new PlexSettings
+                {
+                    Enable = true,
+                    Servers = new List<PlexServers>
+                    {
+                        new PlexServers
+                        {
+                            Ip = "localhost",
+                            Port = 32400,
+                            Ssl = true,
+                            PlexAuthToken = "plex-token"
+                        }
+                    }
+                });
+        }
+
+        private static MediaCleanupItemViewModel CleanupItemForHistoryTest()
+        {
+            return new MediaCleanupItemViewModel
+            {
+                RequestType = RequestType.Movie,
+                RequestId = 76124,
+                Title = "Plex History Test"
+            };
+        }
+
+        private async Task InvokePopulateLastPlayed(MediaCleanupItemViewModel item)
+        {
+            var method = typeof(MediaCleanupEngine).GetMethod(
+                "PopulateLastPlayed",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null);
+
+            var plexKeys = new Dictionary<(RequestType Type, int RequestId), string>
+            {
+                [(item.RequestType, item.RequestId)] = "76124"
+            };
+
+            var task = method.Invoke(
+                _subject,
+                new object[] { new[] { item }, plexKeys, CancellationToken.None }) as Task;
+            Assert.That(task, Is.Not.Null);
+            await task;
         }
 
         private MovieRequests SetupImmediateMovieRequest()

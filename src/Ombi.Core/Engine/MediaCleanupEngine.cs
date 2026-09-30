@@ -2262,9 +2262,21 @@ namespace Ombi.Core.Engine
                         entered = true;
                         var key = plexKeys[(item.RequestType, item.RequestId)];
                         var history = await _plex.GetHistory(server.PlexAuthToken, server.FullUri, key, timeout.Token);
-                        var latest = history?.MediaContainer?.Metadata?.FirstOrDefault();
 
-                        // A successful empty response means Plex has no recorded play for this title.
+                        // A null/default payload is not proof that Plex successfully returned an
+                        // empty history. Preserve Unknown unless a real MediaContainer was returned.
+                        if (history?.MediaContainer == null)
+                        {
+                            _logger.LogDebug(
+                                "Plex play history returned no usable response for cleanup item {Title}; leaving Last Played as Unknown",
+                                item.Title);
+                            return;
+                        }
+
+                        var latest = history.MediaContainer.Metadata?.FirstOrDefault();
+
+                        // A successful response with an empty Metadata collection means Plex has
+                        // positively reported no recorded play for this title.
                         item.LastPlayedKnown = true;
                         if (latest?.viewedAt > 0)
                         {
@@ -2274,6 +2286,14 @@ namespace Ombi.Core.Engine
                     catch (OperationCanceledException) when (timeout.IsCancellationRequested)
                     {
                         // Leave LastPlayedKnown false. The cleanup page treats this as Unknown.
+                    }
+                    catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        // A stale/missing Plex rating key is not equivalent to "never played".
+                        // Keep the value Unknown without escalating an optional enrichment miss.
+                        _logger.LogDebug(
+                            "Plex play history was not found for cleanup item {Title}; leaving Last Played as Unknown",
+                            item.Title);
                     }
                     catch (Exception ex)
                     {
