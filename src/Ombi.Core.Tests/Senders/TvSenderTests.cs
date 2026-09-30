@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MockQueryable.Moq;
@@ -7,7 +7,10 @@ using Moq.AutoMock;
 using NUnit.Framework;
 using Ombi.Api.External.ExternalApis.Sonarr;
 using Ombi.Api.External.ExternalApis.Sonarr.Models;
+using Ombi.Core;
+using Ombi.Core.Settings;
 using Ombi.Core.Senders;
+using Ombi.Helpers;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
@@ -140,6 +143,56 @@ namespace Ombi.Core.Tests.Senders
                 Times.Never);
         }
 
+
+
+        [Test]
+        public async Task Send_UnsafeSeasonMapping_QueuesManualInterventionWithoutRetryNotification()
+        {
+            var settings = CreateSettings();
+            settings.Enabled = true;
+            var request = CreateSingleEpisodeRequest();
+            request.Id = 77;
+            var existingSeries = CreateSeries(id: 42, tvdbId: request.ParentRequest.TvDbId);
+
+            _mocker.GetMock<ISettingsService<SonarrSettings>>()
+                .Setup(x => x.GetSettingsAsync())
+                .ReturnsAsync(settings);
+            SetupRootFolder(settings);
+            _sonarr.Setup(x => x.GetSeries(settings.ApiKey, settings.FullUri))
+                .ReturnsAsync(new[] { existingSeries });
+            _sonarr.Setup(x => x.GetEpisodes(existingSeries.id, settings.ApiKey, settings.FullUri))
+                .ReturnsAsync(new[]
+                {
+                    new Episode
+                    {
+                        id = 100,
+                        seriesId = existingSeries.id,
+                        seasonNumber = 1,
+                        episodeNumber = 1,
+                        title = "A Different Episode Title",
+                        monitored = false
+                    }
+                });
+
+            RequestQueue queued = null;
+            var queueRepository = _mocker.GetMock<IRepository<RequestQueue>>();
+            queueRepository
+                .Setup(x => x.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<System.Func<RequestQueue, bool>>>())))
+                .ReturnsAsync((RequestQueue)null);
+            queueRepository
+                .Setup(x => x.Add(It.IsAny<RequestQueue>()))
+                .Callback<RequestQueue>(x => queued = x)
+                .ReturnsAsync((RequestQueue x) => x);
+
+            var result = await _subject.Send(request);
+
+            Assert.That(result.Success, Is.False);
+            Assert.That(queued, Is.Not.Null);
+            Assert.That(queued.Error, Does.StartWith(TvSender.ManualInterventionQueuePrefix));
+            Assert.That(queued.Error, Does.Contain("Unable to safely map requested season 1"));
+            _mocker.GetMock<INotificationHelper>()
+                .Verify(x => x.Notify(request, NotificationType.ItemAddedToFaultQueue), Times.Never);
+        }
 
         [Test]
         public void NewlyAddedSeries_ConfigurationFailure_RollsBackWithoutDeletingFiles()

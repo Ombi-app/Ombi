@@ -68,6 +68,19 @@ namespace Ombi.Schedule.Jobs.Ombi
                         await _requestQueue.SaveChangesAsync();
                         continue;
                     }
+
+                    // Deterministic mapping failures require an administrator to reconcile the
+                    // Ombi/TMDB request with the existing Sonarr series. Keep the queue row
+                    // incomplete so it remains visible under Failed Requests, but do not keep
+                    // retrying an operation that cannot succeed without human intervention.
+                    var manualInterventionRequired = request.Error?.StartsWith(
+                        TvSender.ManualInterventionQueuePrefix,
+                        StringComparison.OrdinalIgnoreCase) == true;
+                    if (manualInterventionRequired)
+                    {
+                        continue;
+                    }
+
                     // A TV request with no TVDB mapping can never be accepted by Sonarr.
                     // TvSender gets at least one chance after this patch to repair legacy rows from
                     // TMDB. If TMDB still has no mapping, stop retrying it every day after a small

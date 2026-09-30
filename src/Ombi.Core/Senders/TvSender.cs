@@ -92,6 +92,11 @@ namespace Ombi.Core.Senders
                     };
                 }
             }
+            catch (UnsafeSeasonMappingException e)
+            {
+                Logger.LogError(e, "Exception thrown when sending a series to DVR app; manual intervention is required and it will not be retried automatically");
+                await AddToRequestFailureQueue(model, e.Message, automaticRetryAllowed: false);
+            }
             catch (Exception e)
             {
                 Logger.LogError(e, "Exception thrown when sending a series to DVR app, added to the request queue");
@@ -506,6 +511,7 @@ namespace Ombi.Core.Senders
         }
 
         public const string MissingTvDbAfterRefreshPrefix = "TVDBID is missing after TMDB external-id refresh";
+        public const string ManualInterventionQueuePrefix = "Manual intervention required: ";
 
 
         private sealed class UnsafeSeasonMappingException : InvalidOperationException
@@ -923,13 +929,17 @@ namespace Ombi.Core.Senders
             return string.Empty;
         }
 
-        private async Task AddToRequestFailureQueue(ChildRequests model, string errorMessage)
+        private async Task AddToRequestFailureQueue(ChildRequests model, string errorMessage, bool automaticRetryAllowed = true)
         {
+            var persistedError = automaticRetryAllowed
+                ? errorMessage
+                : ManualInterventionQueuePrefix + errorMessage;
+
             var existingQueue = await _requestQueueRepository.FirstOrDefaultAsync(x => x.RequestId == model.Id && x.Type == RequestType.TvShow);
             if (existingQueue != null)
             {
                 existingQueue.RetryCount++;
-                existingQueue.Error = errorMessage;
+                existingQueue.Error = persistedError;
                 await _requestQueueRepository.SaveChangesAsync();
             }
             else
@@ -937,12 +947,22 @@ namespace Ombi.Core.Senders
                 await _requestQueueRepository.Add(new RequestQueue
                 {
                     Dts = DateTime.UtcNow,
-                    Error = errorMessage,
+                    Error = persistedError,
                     RequestId = model.Id,
                     Type = RequestType.TvShow,
                     RetryCount = 0
                 });
-                await _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
+
+                if (automaticRetryAllowed)
+                {
+                    await _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
+                }
+                else
+                {
+                    Logger.LogWarning(
+                        "TV request {RequestId} requires manual intervention and was left visible in Failed Requests without automatic retries",
+                        model.Id);
+                }
             }
         }
     }
