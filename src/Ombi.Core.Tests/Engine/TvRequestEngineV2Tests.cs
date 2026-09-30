@@ -12,6 +12,7 @@ using Ombi.Core.Authentication;
 using Ombi.Core.Engine;
 using Ombi.Core.Helpers;
 using Ombi.Core.Models.Requests;
+using Ombi.Helpers;
 using Ombi.Core.Rule;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Senders;
