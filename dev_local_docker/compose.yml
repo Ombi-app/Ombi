@@ -1,0 +1,58 @@
+name: ombi-dev
+
+services:
+  ombi-back:
+    build:
+      # Use parent repo root as context (contains src/, etc.)
+      context: ..
+      dockerfile: dev_local_docker/docker/backend.Dockerfile
+    container_name: ombi-back
+    working_dir: /workspace/src/Ombi
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://0.0.0.0:5000
+      DOTNET_USE_POLLING_FILE_WATCHER: "1"       # reliable with Windows volume mounts
+      DOTNET_WATCH_SUPPRESS_LAUNCH_BROWSER: "1" # disable browser auto-launch
+    volumes:
+      - ..:/workspace                           # mount repo root into /workspace
+      - ./ombi_config:/config                   # persistent Ombi configs and DB
+      - ./aspnet_keys:/root/.aspnet/DataProtection-Keys # persist ASP.NET data protection keys
+    command: >
+      bash -lc "
+      dotnet restore &&
+      echo 'Waiting for front dev-server on http://localhost:3578...' &&
+      until curl -sf http://localhost:3578/ >/dev/null 2>&1; do sleep 1; done &&
+      echo 'Front OK, starting backend' &&
+      dotnet watch --non-interactive run -- --host http://*:5000 --storage /config
+      "
+    ports:
+      - "5000:5000"                             # main Ombi interface
+
+  ombi-front:
+    build:
+      context: ..
+      dockerfile: dev_local_docker/docker/frontend.Dockerfile
+    container_name: ombi-front
+    # Important: share network namespace with backend so "localhost:3578" matches correctly
+    network_mode: "service:ombi-back"
+    working_dir: /workspace/src/Ombi/ClientApp
+    environment:
+      CHOKIDAR_USEPOLLING: "true"               # reliable file watching under Windows
+      WATCHPACK_POLLING: "true"
+      COREPACK_ENABLE_DOWNLOAD_PROMPT: "0"
+    volumes:
+      - ..:/workspace
+      - node_modules_front:/workspace/src/Ombi/ClientApp/node_modules
+    command: >
+      bash -lc "
+      corepack enable &&
+      yarn install &&
+      ./node_modules/.bin/ng serve --port 3578 --configuration development --host 0.0.0.0
+      "
+
+volumes:
+  node_modules_front:
+
+#run with that : 
+#docker compose up --build
+  
