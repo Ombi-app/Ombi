@@ -511,6 +511,7 @@ namespace Ombi.Core.Senders
         }
 
         public const string MissingTvDbAfterRefreshPrefix = "TVDBID is missing after TMDB external-id refresh";
+        public const string MissingTvDbSonarrRepairAttemptedMarker = "no unique existing Sonarr";
         public const string ManualInterventionQueuePrefix = "Manual intervention required: ";
 
 

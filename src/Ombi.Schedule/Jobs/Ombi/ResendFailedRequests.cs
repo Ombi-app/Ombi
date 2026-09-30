@@ -81,14 +81,21 @@ namespace Ombi.Schedule.Jobs.Ombi
                         continue;
                     }
 
-                    // A TV request with no TVDB mapping can never be accepted by Sonarr.
-                    // TvSender gets at least one chance after this patch to repair legacy rows from
-                    // TMDB. If TMDB still has no mapping, stop retrying it every day after a small
-                    // number of attempts. Keep the queue row incomplete so it remains visible under
-                    // Failed Requests. If an admin later supplies a TVDB ID, automatic retries resume.
+                    // A TV request with no TVDB mapping can never be accepted by Sonarr. Keep
+                    // deterministic failures capped, but allow legacy rows created before the
+                    // Sonarr identity-repair fallback existed to pass through TvSender once. The
+                    // current sender records that it attempted the Sonarr fallback in the terminal
+                    // error text, so a failed migration attempt becomes capped again immediately.
+                    // This lets historical rows benefit from newer repair logic without restoring
+                    // the old endless-retry behavior.
                     var unresolvedTvDb = tvRequest.ParentRequest?.TvDbId <= 0 &&
                         request.Error?.StartsWith(TvSender.MissingTvDbAfterRefreshPrefix, StringComparison.OrdinalIgnoreCase) == true;
-                    if (unresolvedTvDb && request.RetryCount >= MissingTvDbMaxAutomaticRetries)
+                    var sonarrIdentityRepairAlreadyAttempted = request.Error?.IndexOf(
+                        TvSender.MissingTvDbSonarrRepairAttemptedMarker,
+                        StringComparison.OrdinalIgnoreCase) >= 0;
+                    if (unresolvedTvDb &&
+                        request.RetryCount >= MissingTvDbMaxAutomaticRetries &&
+                        sonarrIdentityRepairAlreadyAttempted)
                     {
                         continue;
                     }
