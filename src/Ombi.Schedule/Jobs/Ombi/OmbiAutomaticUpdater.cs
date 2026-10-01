@@ -22,7 +22,6 @@ using Ombi.Updater;
 using Quartz;
 using SharpCompress.Common;
 using SharpCompress.Readers;
-using SharpCompress.Readers.Tar;
 
 namespace Ombi.Schedule.Jobs.Ombi
 {
@@ -366,7 +365,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             {
                 // Something else!
                 using (var stream = File.Open(zipDir, FileMode.Open))
-                using (var files = TarReader.Open(stream))
+                using (var files = ReaderFactory.OpenReader(stream))
                 {
                     Directory.CreateDirectory(tempPath);
                     files.WriteAllToDirectory(tempPath, new ExtractionOptions { Overwrite = true });
