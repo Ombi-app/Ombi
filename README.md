@@ -2,7 +2,7 @@
 
 **Self-hosted media requests, automation, and lifecycle management — independently maintained and based on [Ombi](https://github.com/Ombi-app/Ombi).**
 
-[![Build](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/actions/workflows/build.yml/badge.svg?branch=MediaCleanupFeature)](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/actions/workflows/build.yml)
+[![Build](https://github.com/ExtremeFiretop/Reqestra/actions/workflows/build.yml/badge.svg?branch=MediaCleanupFeature)](https://github.com/ExtremeFiretop/Reqestra/actions/workflows/build.yml)
 [![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](LICENSE)
 [![Based on Ombi](https://img.shields.io/badge/based%20on-Ombi-orange.svg)](https://github.com/Ombi-app/Ombi)
 [![Upstream](https://img.shields.io/badge/upstream-Ombi--app%2FOmbi-informational.svg)](https://github.com/Ombi-app/Ombi)
@@ -49,8 +49,8 @@ Nothing in this repository should be interpreted as an official Ombi release or 
 
 Use **builds/releases from this repository** when you want Reqestra features. Official Ombi binaries do not contain Reqestra's downstream changes.
 
-- Reqestra releases: [ExtremeFiretop/Ombi-MediaCleanup releases](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/releases)
-- Reqestra source: [ExtremeFiretop/Ombi-MediaCleanup](https://github.com/ExtremeFiretop/Ombi-MediaCleanup)
+- Reqestra releases: [ExtremeFiretop/Reqestra releases](https://github.com/ExtremeFiretop/Reqestra/releases)
+- Reqestra source: [ExtremeFiretop/Reqestra](https://github.com/ExtremeFiretop/Reqestra)
 - Upstream installation documentation: [docs.ombi.app/installation](https://docs.ombi.app/installation/)
 - Upstream reverse-proxy examples: [docs.ombi.app/info/reverse-proxy](https://docs.ombi.app/info/reverse-proxy/)
 
@@ -70,7 +70,7 @@ Alongside the Reqestra-specific work above, the project retains the core capabil
 
 ## Issues and contributions
 
-For problems that occur specifically in Reqestra, use this repository's [issue tracker](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/issues). If a problem is reproducible in an unmodified upstream Ombi build, it may also be appropriate to report it to the upstream project using their contribution guidelines.
+For problems that occur specifically in Reqestra, use this repository's [issue tracker](https://github.com/ExtremeFiretop/Reqestra/issues). If a problem is reproducible in an unmodified upstream Ombi build, it may also be appropriate to report it to the upstream project using their contribution guidelines.
 
 # Contributors
 
