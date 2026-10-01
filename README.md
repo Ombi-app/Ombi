@@ -1,71 +1,76 @@
- 
-![Ombi logo](https://ombi.io/img/logo-orange-small.png)   
-____ 
-[![Discord](https://img.shields.io/discord/270828201473736705.svg)](https://discord.gg/Sa7wNWb)
-[![Docker Pulls](https://img.shields.io/docker/pulls/linuxserver/ombi.svg)](https://hub.docker.com/r/linuxserver/ombi/)
-[![Github All Releases](https://img.shields.io/github/downloads/tidusjar/Ombi/total.svg)](https://github.com/ombi-app/Ombi)
-[![firsttimersonly](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
-[![Crowdin](https://d322cqt584bo4o.cloudfront.net/ombi/localized.svg)](https://crowdin.com/project/ombi)
-[![Automation Tests](https://github.com/Ombi-app/Ombi/actions/workflows/automation-tests.yml/badge.svg)](https://github.com/Ombi-app/Ombi/actions/workflows/automation-tests.yml)
-[![RepoShark Health](https://reposhark.com/api/badge/Ombi-app/Ombi)](https://reposhark.com/repo/Ombi-app/Ombi)
+# Reqestra
 
-[![Patreon](https://img.shields.io/badge/patreon-donate-yellow.svg)](https://patreon.com/tidusjar/Ombi)
-[![Paypal](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://paypal.me/PlexRequestsNet)
+**Self-hosted media requests, automation, and lifecycle management — independently maintained and based on [Ombi](https://github.com/Ombi-app/Ombi).**
 
-# Welcome
+[![Build](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/actions/workflows/build.yml/badge.svg?branch=MediaCleanupFeature)](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/actions/workflows/build.yml)
+[![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](LICENSE)
+[![Based on Ombi](https://img.shields.io/badge/based%20on-Ombi-orange.svg)](https://github.com/Ombi-app/Ombi)
+[![Upstream](https://img.shields.io/badge/upstream-Ombi--app%2FOmbi-informational.svg)](https://github.com/Ombi-app/Ombi)
 
-Ombi is your friendly media request tool, automatically syncs with your media servers!
-Don't worry, it's grandma friendly, and more importantly; has wife approval certification 😂
+> [!IMPORTANT]
+> **Reqestra is a separate downstream project, not an official Ombi release.** It is independently maintained and has diverged substantially from the upstream codebase. Bugs caused by Reqestra-specific behavior should be reported here rather than to the upstream Ombi maintainers.
 
-| Service  | Stable         | Develop          
-|----------|:---------------------------:|:----------------------------:|
-| Build Status | [![CI Build](https://github.com/Ombi-app/Ombi/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Ombi-app/Ombi/actions/workflows/build.yml) | [![CI Build](https://github.com/Ombi-app/Ombi/actions/workflows/build.yml/badge.svg?branch=develop)](https://github.com/Ombi-app/Ombi/actions/workflows/build.yml) | [![Build Status](https://dev.azure.com/tidusjar/Ombi/_apis/build/status/Ombi%20CI?branchName=feature%2Fv4)](https://dev.azure.com/tidusjar/Ombi/_build/latest?definitionId=18&branchName=feature%2Fv4)
-| Download |[![Download](https://img.shields.io/badge/-Download-blue)](https://github.com/Ombi-app/Ombi/releases)            |      [![Download](https://img.shields.io/badge/-Download-blue)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/develop/artifacts)       | [![Download](https://img.shields.io/badge/-Download-blue)](https://github.com/ombi-app/ombi/releases)       | 
+## What is Reqestra?
 
-# Feature Requests
-Feature requests are handled on Feature Upvote.
+Reqestra began as an Ombi fork focused on safer media cleanup and lifecycle automation. It has since grown into a broader self-hosted media request and automation project with extensive changes across request processing, Sonarr integration, failure recovery, authentication, dependency security, metadata handling, and the web UI.
 
-Search the existing requests to see if your suggestion has already been submitted.
-(If a similar request exists, please vote, or add additional comments to the request)
+Reqestra deliberately keeps **Ombi at its core**. The request-management model, major media-server integrations, and a large amount of the underlying application are inherited from Ombi. Reqestra builds on that foundation while developing its own identity, release path, and downstream feature set.
 
-#### [![Feature Requests](https://cloud.githubusercontent.com/assets/390379/10127973/045b3a96-6560-11e5-9b20-31a2032956b2.png)](https://features.ombi.io)
+## Highlights of this fork
 
+- **Media Cleanup lifecycle automation** — adds cleanup state and workflows for requested media, including safer handling of partial TV requests and destructive cleanup operations.
+- **Stronger destructive-operation safeguards** — freezes deletion scope, persists cleanup state before external destructive calls, snapshots destination/settings identity, and revalidates request ownership and scope immediately before deletion.
+- **More resilient Sonarr TV matching** — repairs missing provider identity, handles consolidated Sonarr series, tolerates safe title variants, and uses episode fingerprints when season numbering or metadata does not line up cleanly.
+- **Improved failed-request recovery** — distinguishes retryable and deterministic failures, prevents endless retries for known-bad mappings, supports manual reprocessing, and repairs stale request-queue state after successful retries.
+- **Safer Sonarr request handling** — rolls back partially-created Sonarr series when configuration fails and avoids unnecessary full-series searches in profile-override paths.
+- **Plex resilience improvements** — preserves unknown history state when Plex history lookups fail rather than incorrectly treating failures as confirmed “never played” results.
+- **Plex-only authentication mode** — administrators can optionally disable Ombi username/password authentication and require Plex sign-in while keeping the existing behavior as the default.
+- **Custom branding improvements** — the configured custom logo is also used in the authenticated sidebar instead of being limited to the login experience.
+- **API and metadata hardening** — rejects invalid/non-positive TMDB IDs, avoids empty TMDB `/find` requests, handles missing TV metadata more defensively, and validates Media Cleanup API enum values.
+- **Security and dependency maintenance** — includes authentication and Media Cleanup mutation rate limiting plus targeted upgrades for MailKit, SharpCompress, Angular, Lodash, SignalR's `ws` dependency, and AutoMapper.
+- **Discover/cache correctness fixes** — incorporates protections against TV Discover duplicate episode data, season cache-key collisions, and mutation of cached TMDB objects.
 
-<!---[![Twitter](https://img.shields.io/twitter/follow/tidusjar.svg?style=social)](https://twitter.com/intent/follow?screen_name=tidusjar)--->
+This list is intentionally a summary, not a complete changelog. See the repository history and releases for the detailed evolution of the fork.
 
-<!---Follow me developing Ombi!--->
+## Relationship to upstream Ombi
 
-<!---[![Twitch](https://img.shields.io/badge/Twitch-Watch-blue.svg?style=flat-square&logo=twitch)](https://www.twitch.tv/tidusjar) --->
+Reqestra is derived from the open-source **Ombi** project created and maintained by **Jamie Rees (`tidusjar`)** and the wider Ombi contributor community.
 
+- Upstream source: [Ombi-app/Ombi](https://github.com/Ombi-app/Ombi)
+- Upstream website: [ombi.io](https://ombi.io/)
+- Upstream documentation: [docs.ombi.app](https://docs.ombi.app/)
+- License: [GNU GPL v2](LICENSE)
 
-___
-<a href='https://play.google.com/store/apps/details?id=com.tidusjar.Ombi&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img width="150"   alt='Get it on Google Play' src='https://play.google.com/intl/en_gb/badges/images/generic/en_badge_web_generic.png'/></a>
-<br>
-<a href='https://apps.apple.com/us/app/ombi/id1335260043'><img width="130"   alt='Get it on the App Store' src='https://developer.apple.com/app-store/marketing/guidelines/images/badge-example-preferred.png'/></a>
-<br>
+A significant portion of this repository remains Ombi code, and the original contributors are retained and credited below. Upstream fixes are reviewed and selectively reconciled where they remain applicable to this increasingly divergent codebase.
 
-# Features
-Here are some of the features Ombi has:
-* Lets users request Movies, Music, and TV Shows (whether it being the entire series, an entire season, or even single episodes.)
-* Easily manage your requests
-* Allows you to set specific users to automatically have requests approved and added to the relevant service (Sonarr/Radarr/Lidarr/Couchpotato etc)
-* User management system (supports plex.tv, Emby and local accounts)
-* A landing page that will give you the availability of your Plex/Emby server and also add custom notification text to inform your users of downtime.
-* Allows your users to get custom notifications!
-* Secure authentication using best practises
-* Will show if the request is already on plex or even if it's already monitored.
-* Automatically updates the status of requests when they are available on Plex/Emby
-* Slick, responsive and mobile friendly UI
+Nothing in this repository should be interpreted as an official Ombi release or as being endorsed or supported by the upstream maintainers.
 
+## Installation and upgrades
 
-# Preview
+Use **builds/releases from this repository** when you want Reqestra features. Official Ombi binaries do not contain Reqestra's downstream changes.
 
-![Preview](https://i.imgur.com/kBXIqer.png)
+- Reqestra releases: [ExtremeFiretop/Ombi-MediaCleanup releases](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/releases)
+- Reqestra source: [ExtremeFiretop/Ombi-MediaCleanup](https://github.com/ExtremeFiretop/Ombi-MediaCleanup)
+- Upstream installation documentation: [docs.ombi.app/installation](https://docs.ombi.app/installation/)
+- Upstream reverse-proxy examples: [docs.ombi.app/info/reverse-proxy](https://docs.ombi.app/info/reverse-proxy/)
 
-# Installation
+The upstream documentation is still useful for functionality inherited from Ombi, but this fork can differ in behavior, settings, dependencies, and release cadence.
 
-[Installation Guide](https://docs.ombi.app/installation/)  
-[Here for Reverse Proxy Config Examples](https://docs.ombi.app/info/reverse-proxy/)  
+## Inherited Ombi capabilities
+
+Alongside the Reqestra-specific work above, the project retains the core capabilities that made Ombi its foundation, including:
+
+- Movie, TV, episode, season, and music requests.
+- Request approval and management workflows.
+- Integration with services such as Sonarr, Radarr, Lidarr, Plex, Emby, and Jellyfin.
+- User management with media-server and local authentication options.
+- Availability/status synchronization with configured media servers.
+- User notifications and request automation.
+- Responsive web UI and configurable application branding.
+
+## Issues and contributions
+
+For problems that occur specifically in Reqestra, use this repository's [issue tracker](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/issues). If a problem is reproducible in an unmodified upstream Ombi build, it may also be appropriate to report it to the upstream project using their contribution guidelines.
 
 # Contributors
 
@@ -963,11 +968,11 @@ Here are some of the features Ombi has:
 </table>
 <!-- readme: collaborators,contributors -end -->
 
-# Donation
-If you feel like donating you can donate with the below buttons!
+## Upstream credit and support
 
+A massive thanks to Jamie Rees and every Ombi contributor whose work forms the foundation of this project.
 
-[![Patreon](https://img.shields.io/badge/patreon-donate-yellow.svg)](https://patreon.com/tidusjar/Ombi)
-[![Paypal](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://paypal.me/PlexRequestsNet)
+If you want to support the **original Ombi project and its developer**, the upstream donation links are:
 
-### A massive thanks to everyone for all their help!
+[![Patreon](https://img.shields.io/badge/patreon-support%20upstream-yellow.svg)](https://patreon.com/tidusjar/Ombi)
+[![Paypal](https://img.shields.io/badge/paypal-support%20upstream-yellow.svg)](https://paypal.me/PlexRequestsNet)
