@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Ombi.Api.External.ExternalApis.Sonarr.Models;
 using Ombi.Store.Repository.Requests;
@@ -9,24 +10,22 @@ namespace Ombi.Core.Senders
     /// <summary>
     /// Resolves a TMDB-style requested season to the corresponding Sonarr season when providers
     /// disagree about whether an anthology season is a standalone show. Remaps are intentionally
-    /// conservative: at least three requested episode titles must identify exactly one Sonarr season.
-    /// Exact-number seasons may tolerate a small number of provider title variants only when the
+    /// conservative: title fingerprints remain the primary signal, while strong episode-number and
+    /// air-date fingerprints provide a secondary signal when providers localize or rename episode
+    /// titles. Exact-number seasons may also tolerate a small number of title variants when the
     /// episode structure strongly agrees and every episode Ombi still needs matches exactly.
     /// </summary>
     public static class SonarrEpisodeFingerprintMatcher
     {
         private const int MinimumEpisodeFingerprintSize = 3;
+        private const int MinimumComparableAirDatePercentage = 80;
+        private const int MinimumMatchingAirDatePercentage = 90;
+        private const int AirDateToleranceDays = 1;
 
         public static SonarrSeasonFingerprintMatch FindSingleSeasonMatch(
             SeasonRequests sourceSeason,
             IEnumerable<Episode> sonarrEpisodes)
         {
-            var fingerprint = GetFingerprint(sourceSeason);
-            if (fingerprint.Count < MinimumEpisodeFingerprintSize)
-            {
-                return null;
-            }
-
             var episodes = sonarrEpisodes?
                 .Where(x => x != null)
                 .ToList() ?? new List<Episode>();
@@ -36,39 +35,59 @@ namespace Ombi.Core.Senders
                 return null;
             }
 
-            // Use the longest title as an anchor to keep the candidate set small. The final
-            // decision still requires every requested episode title/number to match.
-            var anchor = fingerprint
-                .OrderByDescending(x => x.NormalizedTitle.Length)
-                .First();
-
-            var candidateSeasons = episodes
-                .Where(x => x.episodeNumber == anchor.EpisodeNumber &&
-                            TitlesMatch(x.title, anchor.NormalizedTitle))
-                .Select(x => x.seasonNumber)
-                .Distinct()
-                .ToList();
-
-            var matches = new List<int>();
-            foreach (var candidateSeason in candidateSeasons)
+            // Preserve the existing title fingerprint as the primary signal. It is precise when
+            // providers agree on episode names and already handles anthology/standalone remaps.
+            var fingerprint = GetFingerprint(sourceSeason);
+            if (fingerprint.Count >= MinimumEpisodeFingerprintSize)
             {
-                var candidateByNumber = episodes
-                    .Where(x => x.seasonNumber == candidateSeason)
-                    .GroupBy(x => x.episodeNumber)
-                    .ToDictionary(x => x.Key, x => x.First().title);
+                // Use the longest title as an anchor to keep the candidate set small. The final
+                // decision still requires every requested episode title/number to match.
+                var anchor = fingerprint
+                    .OrderByDescending(x => x.NormalizedTitle.Length)
+                    .First();
 
-                var fullFingerprintMatches = fingerprint.All(expected =>
-                    candidateByNumber.TryGetValue(expected.EpisodeNumber, out var actualTitle) &&
-                    TitlesMatch(actualTitle, expected.NormalizedTitle));
+                var candidateSeasons = episodes
+                    .Where(x => x.episodeNumber == anchor.EpisodeNumber &&
+                                TitlesMatch(x.title, anchor.NormalizedTitle))
+                    .Select(x => x.seasonNumber)
+                    .Distinct()
+                    .ToList();
 
-                if (fullFingerprintMatches)
+                var titleMatches = new List<int>();
+                foreach (var candidateSeason in candidateSeasons)
                 {
-                    matches.Add(candidateSeason);
+                    var candidateByNumber = episodes
+                        .Where(x => x.seasonNumber == candidateSeason)
+                        .GroupBy(x => x.episodeNumber)
+                        .ToDictionary(x => x.Key, x => x.First().title);
+
+                    var fullFingerprintMatches = fingerprint.All(expected =>
+                        candidateByNumber.TryGetValue(expected.EpisodeNumber, out var actualTitle) &&
+                        TitlesMatch(actualTitle, expected.NormalizedTitle));
+
+                    if (fullFingerprintMatches)
+                    {
+                        titleMatches.Add(candidateSeason);
+                    }
+                }
+
+                if (titleMatches.Count == 1)
+                {
+                    return new SonarrSeasonFingerprintMatch
+                    {
+                        SourceSeasonNumber = sourceSeason.SeasonNumber,
+                        SonarrSeasonNumber = titleMatches[0]
+                    };
                 }
             }
 
-            // Never guess when more than one Sonarr season satisfies the fingerprint.
-            if (matches.Count != 1)
+            // Providers can substantially rename/localize episode titles while still agreeing on
+            // the season structure and original air dates. Fall back to a strict date fingerprint:
+            // the complete episode-number set must match, at least 80% of the season must have
+            // comparable dates, and at least 90% of those dates must agree within one day. A
+            // cross-season remap is accepted only when exactly one Sonarr season satisfies it.
+            var airDateMatches = FindAirDateFingerprintMatches(sourceSeason, episodes);
+            if (airDateMatches.Count != 1)
             {
                 return null;
             }
@@ -76,7 +95,7 @@ namespace Ombi.Core.Senders
             return new SonarrSeasonFingerprintMatch
             {
                 SourceSeasonNumber = sourceSeason.SeasonNumber,
-                SonarrSeasonNumber = matches[0]
+                SonarrSeasonNumber = airDateMatches[0]
             };
         }
 
@@ -132,6 +151,15 @@ namespace Ombi.Core.Senders
                 return false;
             }
 
+            // A strong date fingerprint can safely corroborate the exact-number season even when
+            // localized/provider-specific titles disagree. Do not accept it when another Sonarr
+            // season satisfies the same date fingerprint; ambiguity must still fail closed.
+            var airDateMatches = FindAirDateFingerprintMatches(sourceSeason, sonarrEpisodes);
+            if (airDateMatches.Count == 1 && airDateMatches[0] == sourceSeason.SeasonNumber)
+            {
+                return false;
+            }
+
             return true;
         }
 
@@ -181,6 +209,114 @@ namespace Ombi.Core.Senders
             // enough to preserve the anthology safety check while tolerating a small number of
             // provider naming differences in a structurally identical season.
             return matchingTitleCount * 100 >= fingerprint.Count * 80;
+        }
+
+        private static List<int> FindAirDateFingerprintMatches(
+            SeasonRequests sourceSeason,
+            IEnumerable<Episode> sonarrEpisodes)
+        {
+            var sourceEpisodes = sourceSeason?.Episodes?
+                .Where(x => x != null)
+                .GroupBy(x => x.EpisodeNumber)
+                .Select(x => x.First())
+                .OrderBy(x => x.EpisodeNumber)
+                .ToList() ?? new List<EpisodeRequests>();
+
+            if (sourceEpisodes.Count < MinimumEpisodeFingerprintSize)
+            {
+                return new List<int>();
+            }
+
+            var sourceEpisodeNumbers = new HashSet<int>(sourceEpisodes.Select(x => x.EpisodeNumber));
+            var sourceDatedEpisodeCount = sourceEpisodes.Count(x => HasUsableAirDate(x.AirDate));
+            if (sourceDatedEpisodeCount < MinimumEpisodeFingerprintSize)
+            {
+                return new List<int>();
+            }
+
+            var matches = new List<int>();
+            var candidateSeasons = (sonarrEpisodes ?? Enumerable.Empty<Episode>())
+                .Where(x => x != null)
+                .GroupBy(x => x.seasonNumber);
+
+            foreach (var candidateSeason in candidateSeasons)
+            {
+                var candidateEpisodes = candidateSeason
+                    .GroupBy(x => x.episodeNumber)
+                    .Select(x => x.First())
+                    .ToDictionary(x => x.episodeNumber);
+
+                // Air dates are only corroborating evidence after the providers agree on the exact
+                // episode-number structure. Never use dates to paper over splits, missing episodes,
+                // extra episodes, or shifted numbering.
+                if (candidateEpisodes.Count != sourceEpisodes.Count ||
+                    !sourceEpisodeNumbers.SetEquals(candidateEpisodes.Keys))
+                {
+                    continue;
+                }
+
+                var comparableDateCount = 0;
+                var matchingDateCount = 0;
+
+                foreach (var sourceEpisode in sourceEpisodes)
+                {
+                    if (!HasUsableAirDate(sourceEpisode.AirDate) ||
+                        !TryGetSonarrAirDate(candidateEpisodes[sourceEpisode.EpisodeNumber], out var sonarrAirDate))
+                    {
+                        continue;
+                    }
+
+                    comparableDateCount++;
+                    var difference = Math.Abs((sourceEpisode.AirDate.Date - sonarrAirDate.Date).TotalDays);
+                    if (difference <= AirDateToleranceDays)
+                    {
+                        matchingDateCount++;
+                    }
+                }
+
+                if (comparableDateCount < MinimumEpisodeFingerprintSize)
+                {
+                    continue;
+                }
+
+                // Sparse metadata must not look convincing merely because the few available dates
+                // happen to agree. Require comparable dates for at least 80% of the full season.
+                if (comparableDateCount * 100 < sourceEpisodes.Count * MinimumComparableAirDatePercentage)
+                {
+                    continue;
+                }
+
+                if (matchingDateCount * 100 < comparableDateCount * MinimumMatchingAirDatePercentage)
+                {
+                    continue;
+                }
+
+                matches.Add(candidateSeason.Key);
+            }
+
+            return matches;
+        }
+
+        private static bool HasUsableAirDate(DateTime airDate)
+        {
+            return airDate != DateTime.MinValue;
+        }
+
+        private static bool TryGetSonarrAirDate(Episode episode, out DateTime airDate)
+        {
+            if (!string.IsNullOrWhiteSpace(episode?.airDate) &&
+                DateTime.TryParse(
+                    episode.airDate,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.AllowWhiteSpaces,
+                    out var parsedAirDate))
+            {
+                airDate = parsedAirDate.Date;
+                return true;
+            }
+
+            airDate = default;
+            return false;
         }
 
         private static List<EpisodeFingerprint> GetFingerprint(SeasonRequests sourceSeason)

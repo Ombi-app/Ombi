@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -601,8 +601,10 @@ namespace Ombi.Core.Senders
             }
 
             // Provider splits can expose an anthology season as a standalone TMDB show. Resolve
-            // the requested season to Sonarr by episode title/number before changing monitoring.
-            // Never mutate Ombi's stored season number; the mapping only applies to this send.
+            // the requested season to Sonarr by conservative episode title/number fingerprints,
+            // with strong episode-structure/air-date evidence as a secondary signal when providers
+            // rename or localize episode titles. Never mutate Ombi's stored season number; the
+            // mapping only applies to this send.
             var seasonNumberMap = new Dictionary<int, int>();
             foreach (var season in model.SeasonRequests)
             {
@@ -623,7 +625,7 @@ namespace Ombi.Core.Senders
                 {
                     throw new UnsafeSeasonMappingException(
                         $"Unable to safely map requested season {season.SeasonNumber} for '{model.ParentRequest.Title}' to the existing Sonarr series. " +
-                        "The same season number exists in Sonarr but its episode titles do not match, and no unique episode fingerprint match was found.");
+                        "The same season number exists in Sonarr but its episode metadata does not match safely, and no unique episode fingerprint match was found.");
                 }
 
                 seasonNumberMap[season.SeasonNumber] = season.SeasonNumber;
