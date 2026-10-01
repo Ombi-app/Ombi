@@ -17,6 +17,9 @@
 		"test:watch": "vitest"
 	},
 	"private": true,
+	"resolutions": {
+		"@microsoft/signalr/ws": "7.5.13"
+	},
 	"dependencies": {
 		"@angular/animations": "20.3.33",
 		"@angular/cdk": "^16.2.14",
