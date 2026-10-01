@@ -22,9 +22,7 @@ namespace Ombi.Api.IntegrationTests.Tests
         [Test]
         public async Task AuthenticationSettings_RejectDisablingLocalLoginWithoutPlexOAuth()
         {
-            using var scope = Factory.Services.CreateScope();
-            var settingsService = scope.ServiceProvider.GetRequiredService<ISettingsService<AuthenticationSettings>>();
-            var original = Clone(await settingsService.GetSettingsAsync());
+            var original = await GetAuthenticationSettingsAsync();
 
             try
             {
@@ -39,40 +37,41 @@ namespace Ombi.Api.IntegrationTests.Tests
             }
             finally
             {
-                await settingsService.SaveSettingsAsync(original);
+                await SaveAuthenticationSettingsAsync(original);
             }
         }
 
         [Test]
         public async Task LocalCredentialLogin_IsRejectedWhenDisabled_AndWorksWhenEnabled()
         {
-            using var scope = Factory.Services.CreateScope();
-            var settingsService = scope.ServiceProvider.GetRequiredService<ISettingsService<AuthenticationSettings>>();
-            var userManager = scope.ServiceProvider.GetRequiredService<OmbiUserManager>();
-            var original = Clone(await settingsService.GetSettingsAsync());
+            var original = await GetAuthenticationSettingsAsync();
 
-            var user = await userManager.FindByNameAsync(LocalUserName);
-            if (user == null)
+            using (var scope = Factory.Services.CreateScope())
             {
-                user = new OmbiUser
+                var userManager = scope.ServiceProvider.GetRequiredService<OmbiUserManager>();
+                var user = await userManager.FindByNameAsync(LocalUserName);
+                if (user == null)
                 {
-                    UserName = LocalUserName,
-                    UserType = UserType.LocalUser,
-                    Alias = "Plex-only mode test user",
-                    Email = "plex-only-mode@example.com",
-                    StreamingCountry = "US",
-                    Language = "en"
-                };
+                    user = new OmbiUser
+                    {
+                        UserName = LocalUserName,
+                        UserType = UserType.LocalUser,
+                        Alias = "Plex-only mode test user",
+                        Email = "plex-only-mode@example.com",
+                        StreamingCountry = "US",
+                        Language = "en"
+                    };
 
-                var created = await userManager.CreateAsync(user, LocalUserPassword);
-                Assert.That(created.Succeeded, Is.True, string.Join("; ", created.Errors));
+                    var created = await userManager.CreateAsync(user, LocalUserPassword);
+                    Assert.That(created.Succeeded, Is.True, string.Join("; ", created.Errors));
+                }
             }
 
             try
             {
                 var enabled = Clone(original);
                 enabled.DisableLocalAuthentication = false;
-                await settingsService.SaveSettingsAsync(enabled);
+                await SaveAuthenticationSettingsAsync(enabled);
 
                 var (enabledStatus, _) = await PostJsonAsync("/api/v1/token", new
                 {
@@ -87,7 +86,7 @@ namespace Ombi.Api.IntegrationTests.Tests
                 var plexOnly = Clone(original);
                 plexOnly.EnableOAuth = true;
                 plexOnly.DisableLocalAuthentication = true;
-                await settingsService.SaveSettingsAsync(plexOnly);
+                await SaveAuthenticationSettingsAsync(plexOnly);
 
                 var (disabledStatus, _) = await PostJsonAsync("/api/v1/token", new
                 {
@@ -110,8 +109,26 @@ namespace Ombi.Api.IntegrationTests.Tests
             }
             finally
             {
-                await settingsService.SaveSettingsAsync(original);
+                await SaveAuthenticationSettingsAsync(original);
             }
+        }
+
+        private async Task<AuthenticationSettings> GetAuthenticationSettingsAsync()
+        {
+            using var scope = Factory.Services.CreateScope();
+            var settingsService = scope.ServiceProvider.GetRequiredService<ISettingsService<AuthenticationSettings>>();
+            return Clone(await settingsService.GetSettingsAsync());
+        }
+
+        private async Task SaveAuthenticationSettingsAsync(AuthenticationSettings settings)
+        {
+            // SettingsJsonRepository keeps updated entities tracked for the lifetime of its scoped
+            // DbContext. Use a fresh request-like scope for each settings mutation so this integration
+            // test mirrors production HTTP requests and never tries to attach a second GlobalSettings
+            // instance with the same key to one DbContext.
+            using var scope = Factory.Services.CreateScope();
+            var settingsService = scope.ServiceProvider.GetRequiredService<ISettingsService<AuthenticationSettings>>();
+            await settingsService.SaveSettingsAsync(Clone(settings));
         }
 
         private static AuthenticationSettings Clone(AuthenticationSettings settings)
