@@ -1,3 +1,7 @@
+## [4.60.90](https://github.com/ExtremeFiretop/Reqestra/compare/v4.60.89...v4.60.90) (2026-10-01)
+
+
+
 ## [4.60.89](https://github.com/ExtremeFiretop/Reqestra/compare/v4.60.88...v4.60.89) (2026-10-01)
 
 
@@ -192,17 +196,6 @@
 
 * **notifications:** harden legacy mobile recipient handling ([85caf3c](https://github.com/ExtremeFiretop/Reqestra/commit/85caf3cc3f7d54c6b0624a5d459133d011d3ab0d))
 * **tv:** prevent duplicate watchlist requests across provider ID changes ([4f2b833](https://github.com/ExtremeFiretop/Reqestra/commit/4f2b833c983cac8bba9853e3737f3436e37e6fa6))
-
-
-
-## [4.60.50](https://github.com/ExtremeFiretop/Reqestra/compare/v4.60.49...v4.60.50) (2026-09-21)
-
-
-### Bug Fixes
-
-* **availability:** mark movies available when Radarr only has a 4K file ([264ae07](https://github.com/ExtremeFiretop/Reqestra/commit/264ae07cbfcec5166f53d9e2ba2e1746243b18d8))
-* **i18n:** keep paginator labels from rendering as translation keys ([0c17762](https://github.com/ExtremeFiretop/Reqestra/commit/0c17762d412e1132948339b5e523b06ee296ed00))
-* **pipes:** update HumanizePipe signature and add empty value handling ([4b4dfe2](https://github.com/ExtremeFiretop/Reqestra/commit/4b4dfe2997cc089690a205f621da94514f4ed2af))
 
 
 
