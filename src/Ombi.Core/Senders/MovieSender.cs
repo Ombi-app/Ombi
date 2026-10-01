@@ -111,7 +111,7 @@ namespace Ombi.Core.Senders
 
             return new SenderResult
             {
-                Success = true,
+                Success = false,
                 Sent = false,
             };
         }
