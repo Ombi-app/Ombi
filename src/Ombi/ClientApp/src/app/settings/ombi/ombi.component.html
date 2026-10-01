@@ -1,7 +1,7 @@
 ﻿<div class="small-middle-container">
 <wiki></wiki>
 <fieldset *ngIf="form">
-    <legend>Ombi Configuration</legend>
+    <legend>Reqestra Configuration</legend>
     <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
         <div class="col-md-12 col-12 col-sm-12">
             <div class="md-form-field">
@@ -22,12 +22,12 @@
             </div>
             <div>
                 <mat-form-field>
-                    <mat-select placeholder="Branch" formControlName="branch" matTooltip="This will not update your current version, but only control the update checks on the About page">
+                    <mat-select placeholder="Update Channel" formControlName="branch" matTooltip="Controls which Reqestra releases are used for update checks. Stable uses normal releases; Develop uses prereleases.">
                         <mat-option [value]="Branch.Stable">
-                            Stable
+                            Stable (Reqestra releases)
                         </mat-option>
                         <mat-option [value]="Branch.Develop">
-                            Develop
+                            Develop (Reqestra prereleases)
                         </mat-option>
                     </mat-select>
                 </mat-form-field>

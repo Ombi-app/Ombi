@@ -139,7 +139,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     try
                     {
                         var displayVersion = serverVersion?.TrimStart('v', 'V');
-                        await _notificationHubService.SendNotificationToAdmins($"Ombi update available: v{displayVersion}. Downloading...");
+                        await _notificationHubService.SendNotificationToAdmins($"Reqestra update available: v{displayVersion}. Downloading...");
                     }
                     catch (Exception notifyEx)
                     {

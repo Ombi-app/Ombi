@@ -19,6 +19,10 @@ namespace Ombi.Schedule.Processor
 {
     public class ChangeLogProcessor : IChangeLogProcessor
     {
+        private const string RepositoryOwner = "ExtremeFiretop";
+        private const string RepositoryName = "Reqestra";
+        private const string ProductHeader = "Reqestra";
+
         private readonly ISettingsService<OmbiSettings> _ombiSettingsService;
 
         public ChangeLogProcessor(ISettingsService<OmbiSettings> ombiSettings)
@@ -33,7 +37,7 @@ namespace Ombi.Schedule.Processor
                 Downloads = new List<Downloads>()
             };
             var settings = _ombiSettingsService.GetSettingsAsync();
-            await GetGitubRelease(release, settings);
+            await GetGithubRelease(release, settings);
 
             return TransformUpdate(release);
         }
@@ -64,11 +68,14 @@ namespace Ombi.Schedule.Processor
             return newUpdate;
         }
 
-        private async Task GetGitubRelease(Release release, Task<OmbiSettings> settingsTask)
+        private async Task GetGithubRelease(Release release, Task<OmbiSettings> settingsTask)
         {
-            var client = new GitHubClient(Octokit.ProductHeaderValue.Parse("OmbiV4"));
+            var client = new GitHubClient(Octokit.ProductHeaderValue.Parse(ProductHeader));
 
-            var releases = await client.Repository.Release.GetAll("ombi-app", "ombi");
+            // Reqestra is now maintained and released independently from upstream Ombi.
+            // Both update channels are sourced exclusively from the Reqestra GitHub releases:
+            // Stable = normal releases, Develop = prereleases.
+            var releases = await client.Repository.Release.GetAll(RepositoryOwner, RepositoryName);
 
             var settings = await settingsTask;
 
@@ -78,6 +85,12 @@ namespace Ombi.Schedule.Processor
                 Branch.Stable => releases.Where(x => !x.Prerelease).OrderByDescending(x => x.CreatedAt).FirstOrDefault(),
                 _ => throw new NotImplementedException(),
             };
+
+            if (latest == null)
+            {
+                throw new InvalidOperationException(
+                    $"No {settings.Branch} release was found in {RepositoryOwner}/{RepositoryName}.");
+            }
 
             foreach (var item in latest.Assets)
             {

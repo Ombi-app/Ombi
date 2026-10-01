@@ -176,9 +176,9 @@ jobs:
         with:
           path: artifacts
 
-      - name: Publish to GitHub Master
+      - name: Publish Reqestra Stable Release
         uses: softprops/action-gh-release@v1
-        if: contains(github.ref, 'master')
+        if: github.ref == 'refs/heads/master'
         with:
           body: ${{ needs.versioning.outputs.changelog }}
           name: ${{ needs.versioning.outputs.tag }}
@@ -187,9 +187,9 @@ jobs:
             artifacts/**/*.tar.gz
             artifacts/**/*.zip
 
-      - name: Publish to GitHub Develop
+      - name: Publish Reqestra Develop Release
         uses: softprops/action-gh-release@v1
-        if: contains(github.ref, 'develop')
+        if: github.ref == 'refs/heads/develop'
         with:
           prerelease: true
           generate_release_notes: false
@@ -244,18 +244,3 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-  update-apt:
-    needs: [ release, versioning ]
-    runs-on: ubuntu-latest
-    steps:
-    - name: Trigger APT Build
-      uses: fjogeleit/http-request-action@master
-      with:
-        url: 'https://api.github.com/repos/Ombi-app/Ombi.Apt/actions/workflows/build-deb.yml/dispatches'
-        method: 'POST'
-        contentType: 'application/json'
-        data: '{ "ref":"main", "inputs": { "version": "${{ needs.versioning.outputs.tag }}"} }'
-        customHeaders: '{"Accept":"application/vnd.github.v3+json", "Authorization":"Bearer ${{secrets.APT_PAT}}", "User-Agent":"Ombi"}'
-
-
