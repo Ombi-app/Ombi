@@ -19,6 +19,20 @@
 
       <div class="form-group">
         <div class="checkbox">
+          <mat-slide-toggle id="disableLocalAuthentication" name="disableLocalAuthentication" formControlName="disableLocalAuthentication">
+            Disable Ombi username/password sign-in
+          </mat-slide-toggle>
+        </div>
+        <div class="alert warning-box" *ngIf="form.controls.disableLocalAuthentication.value">
+          Local username/password sign-in will be disabled for all users, including administrators. Plex OAuth must be working before enabling this option.
+        </div>
+        <div class="alert warning-box" *ngIf="form.controls.disableLocalAuthentication.value && !form.controls.enableOAuth.value">
+          Enable Plex OAuth before disabling Ombi username/password sign-in.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="checkbox">
           <mat-slide-toggle id="enableHeaderAuth" name="enableHeaderAuth" formControlName="enableHeaderAuth">Enable Authentication with Header Variable</mat-slide-toggle>
         </div>
         <div class="alert warning-box">
@@ -45,7 +59,7 @@
 
       <div class="form-group">
         <div>
-          <button mat-raised-button type="submit" color="primary" [disabled]="form.invalid" class="mat-focus-indicator mat-stroked-button accent mat-accent mat-raised-button mat-button-base" ng-reflect-disabled="false">
+          <button mat-raised-button type="submit" color="primary" [disabled]="form.invalid || (form.controls.disableLocalAuthentication.value && !form.controls.enableOAuth.value)" class="mat-focus-indicator mat-stroked-button accent mat-accent mat-raised-button mat-button-base" ng-reflect-disabled="false">
             <span class="mat-button-wrapper">Submit</span><div matripple="" class="mat-ripple mat-button-ripple" ng-reflect-disabled="false" ng-reflect-centered="false" ng-reflect-trigger="[object HTMLButtonElement]"></div>
             <div class="mat-button-focus-overlay"></div>
           </button><div class="md-form-field" style="margin-top:1em;"></div>

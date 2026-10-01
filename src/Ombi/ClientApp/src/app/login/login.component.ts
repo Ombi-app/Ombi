@@ -132,6 +132,9 @@ export class LoginComponent implements OnDestroy, OnInit {
       .getAuthentication()
       .subscribe((x) => {
         this.authenticationSettings = x;
+        if (x.disableLocalAuthentication) {
+          this.loginWithOmbi = false;
+        }
         this.headerAuth();
       });
     this.settingsService.getClientId().subscribe((x) => (this.clientId = x));
@@ -149,6 +152,13 @@ export class LoginComponent implements OnDestroy, OnInit {
   }
 
   public onSubmit(form: UntypedFormGroup) {
+    if (this.authenticationSettings?.disableLocalAuthentication) {
+      this.notify.open("Ombi username/password sign-in is disabled", "OK", {
+        duration: 3000,
+      });
+      return;
+    }
+
     if (form.invalid) {
       this.notify.open(this.errorValidation, "OK", {
         duration: 300000,

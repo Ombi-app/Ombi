@@ -42,7 +42,7 @@ namespace Ombi.Api.IntegrationTests.Tests
 
             Assert.That(status, Is.EqualTo(HttpStatusCode.OK));
             AssertHasProperties(AsObject(body),
-                "allowNoPassword", "enableOAuth", "enableHeaderAuth",
+                "allowNoPassword", "enableOAuth", "disableLocalAuthentication", "enableHeaderAuth",
                 "requireDigit", "requiredLength");
         }
 

@@ -51,6 +51,7 @@ export class AuthenticationComponent implements OnInit {
                 requireNonAlphanumeric: [x.requireNonAlphanumeric],
                 requireUppercase: [x.requireUppercase],
                 enableOAuth: [x.enableOAuth],
+                disableLocalAuthentication: [x.disableLocalAuthentication],
                 enableHeaderAuth: [x.enableHeaderAuth],
                 headerAuthVariable: [x.headerAuthVariable],
                 headerAuthCreateUser: [x.headerAuthCreateUser],
@@ -71,6 +72,11 @@ export class AuthenticationComponent implements OnInit {
     public onSubmit(form: UntypedFormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
+            return;
+        }
+
+        if (form.controls.disableLocalAuthentication.value && !form.controls.enableOAuth.value) {
+            this.notificationService.error("Enable Plex OAuth before disabling Ombi username/password sign-in");
             return;
         }
 

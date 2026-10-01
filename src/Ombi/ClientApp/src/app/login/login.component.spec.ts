@@ -20,7 +20,7 @@ function createComponent() {
   const fb = new UntypedFormBuilder();
   const mockSettingsService = {
     getLandingPage: vi.fn().mockReturnValue(of({ enabled: false })),
-    getAuthentication: vi.fn().mockReturnValue(of({ allowNoPassword: false, enableHeaderAuth: false })),
+    getAuthentication: vi.fn().mockReturnValue(of({ allowNoPassword: false, enableHeaderAuth: false, disableLocalAuthentication: false })),
     getClientId: vi.fn().mockReturnValue(of('test-client-id')),
   };
   const mockCustomizationFacade = {
@@ -187,6 +187,18 @@ describe('LoginComponent', () => {
       comp.onSubmit(comp.form);
 
       expect(mockAuth.requiresPassword).toHaveBeenCalled();
+    });
+
+    it('should not attempt Ombi credential login when local authentication is disabled', () => {
+      const { comp, mockAuth, mockNotify } = createComponent();
+      comp.form.patchValue({ username: 'testuser', password: 'pass123' });
+      comp.authenticationSettings = { allowNoPassword: false, disableLocalAuthentication: true } as any;
+
+      comp.onSubmit(comp.form);
+
+      expect(mockAuth.requiresPassword).not.toHaveBeenCalled();
+      expect(mockAuth.login).not.toHaveBeenCalled();
+      expect(mockNotify.open).toHaveBeenCalled();
     });
 
     it('should save token and navigate on successful login', () => {

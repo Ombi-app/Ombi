@@ -110,6 +110,13 @@ namespace Ombi.Controllers.V1
         {
             if (!model.UsePlexOAuth)
             {
+                var authSettings = await _authSettings.GetSettingsAsync();
+                if (authSettings.DisableLocalAuthentication)
+                {
+                    _log.LogWarning("Blocked Ombi username/password login attempt by IP: {IpAddress}", GetRequestIP());
+                    return new UnauthorizedResult();
+                }
+
                 var user = await _userManager.FindByNameAsync(model.Username);
 
                 if (user == null)
@@ -714,6 +721,14 @@ namespace Ombi.Controllers.V1
         [HttpPost("requirePassword")]
         public async Task<bool> DoesUserRequireAPassword([FromBody] UserAuthModel model)
         {
+            var authSettings = await _authSettings.GetSettingsAsync();
+            if (authSettings.DisableLocalAuthentication)
+            {
+                // Do not look up users when Ombi credential login is disabled. The login UI will
+                // not call this endpoint, and returning true keeps legacy clients fail-closed.
+                return true;
+            }
+
             var user = await _userManager.FindByNameAsync(model.Username);
 
             if (user == null)

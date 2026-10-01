@@ -476,6 +476,13 @@ namespace Ombi.Controllers.V1
         [HttpPost("authentication")]
         public async Task<bool> AuthenticationsSettings([FromBody]AuthenticationSettings settings)
         {
+            // Avoid locking every interactive user out. Header authentication remains an
+            // independent option, but disabling Ombi credentials specifically requires Plex OAuth.
+            if (settings.DisableLocalAuthentication && !settings.EnableOAuth)
+            {
+                return false;
+            }
+
             return await Save(settings);
         }
 

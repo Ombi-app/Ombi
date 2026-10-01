@@ -251,6 +251,7 @@ export interface IAuthenticationSettings extends ISettings {
   requireNonAlphanumeric: boolean;
   requireUppercase: boolean;
   enableOAuth: boolean;
+  disableLocalAuthentication: boolean;
   enableHeaderAuth: boolean;
   headerAuthVariable: string;
   headerAuthCreateUser: boolean;

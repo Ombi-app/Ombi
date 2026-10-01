@@ -20,11 +20,11 @@
       <!-- OAuth selection view -->
       <div *ngIf="authenticationSettings.enableOAuth && !loginWithOmbi" class="login-body">
         <div class="oauth-buttons">
-          <button class="btn-login btn-login--primary" type="button" data-cy="OmbiButton" (click)="loginWithOmbi = true">
+          <button *ngIf="!authenticationSettings.disableLocalAuthentication" class="btn-login btn-login--primary" type="button" data-cy="OmbiButton" (click)="loginWithOmbi = true">
             <mat-icon class="btn-icon">person</mat-icon>
             <span>{{'Login.SignInWith' | translate:appNameTranslate}}</span>
           </button>
-          <div class="divider-row">
+          <div *ngIf="!authenticationSettings.disableLocalAuthentication" class="divider-row">
             <span class="divider-line"></span>
             <span class="divider-text">{{'Login.Or' | translate}}</span>
             <span class="divider-line"></span>
@@ -44,7 +44,7 @@
       </div>
 
       <!-- Credentials form -->
-      <div *ngIf="!authenticationSettings.enableOAuth || loginWithOmbi" class="login-body">
+      <div *ngIf="!authenticationSettings.disableLocalAuthentication && (!authenticationSettings.enableOAuth || loginWithOmbi)" class="login-body">
         <form *ngIf="authenticationSettings" class="login-form" novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
 
           <div class="form-group">
