@@ -1268,7 +1268,7 @@ namespace Ombi.Core.Engine
                 };
             }
 
-            return await ProcessSendingShow(request);
+            return await ProcessSendingShow(request, completeActiveFailuresOnSuccess: true);
         }
 
 
@@ -1293,7 +1293,7 @@ namespace Ombi.Core.Engine
             return await ProcessSendingShow(model);
         }
 
-        private async Task<RequestEngineResult> ProcessSendingShow(ChildRequests model)
+        private async Task<RequestEngineResult> ProcessSendingShow(ChildRequests model, bool completeActiveFailuresOnSuccess = false)
         {
             if (model.Approved)
             {
@@ -1306,6 +1306,10 @@ namespace Ombi.Core.Engine
                 var result = await TvSender.Send(model);
                 if (result.Success)
                 {
+                    if (completeActiveFailuresOnSuccess)
+                    {
+                        await CompleteActiveTvRequestFailures(model.Id);
+                    }
                     return new RequestEngineResult { Result = true, RequestId = model.Id };
                 }
                 return new RequestEngineResult
