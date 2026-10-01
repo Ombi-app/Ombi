@@ -184,6 +184,16 @@ $sidenav-width: 240px;
         &:hover, &:focus, &:active {
             color: $ombi-active;
         }
+
+        .brand-logo {
+            display: block;
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 96px;
+            object-fit: contain;
+            object-position: left center;
+        }
     }
 }
 

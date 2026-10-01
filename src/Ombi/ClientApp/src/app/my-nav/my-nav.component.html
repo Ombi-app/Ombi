@@ -5,9 +5,20 @@
 
         <!-- Brand -->
         <div class="sidebar-brand" id="nav-applicationName">
-            <a *ngIf="applicationUrl; else noApplicationUrlLogo" class="brand-link" [href]="applicationUrl">{{applicationName}}</a>
+            <a *ngIf="applicationUrl; else noApplicationUrlLogo" class="brand-link" [href]="applicationUrl">
+                <ng-container *ngTemplateOutlet="brandContent"></ng-container>
+            </a>
             <ng-template #noApplicationUrlLogo>
-                <span class="brand-link">{{applicationName}}</span>
+                <span class="brand-link">
+                    <ng-container *ngTemplateOutlet="brandContent"></ng-container>
+                </span>
+            </ng-template>
+            <ng-template #brandContent>
+                <img *ngIf="applicationLogo; else applicationNameBrand"
+                    class="brand-logo"
+                    [src]="applicationLogo"
+                    [alt]="applicationName || 'Ombi'">
+                <ng-template #applicationNameBrand>{{applicationName}}</ng-template>
             </ng-template>
         </div>
 
