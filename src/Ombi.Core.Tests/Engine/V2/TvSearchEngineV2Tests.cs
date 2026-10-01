@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moq.AutoMock;
 using NUnit.Framework;
@@ -47,7 +48,7 @@ namespace Ombi.Core.Tests.Engine.V2
                 .Setup(x => x.GetUser())
                 .ReturnsAsync((OmbiUser)null);
 
-            var mapperConfig = new MapperConfiguration(cfg => cfg.AddProfile<TvProfileV2>());
+            var mapperConfig = new MapperConfiguration(cfg => cfg.AddProfile<TvProfileV2>(), NullLoggerFactory.Instance);
             mocker.Use(mapperConfig.CreateMapper());
 
             mocker.GetMock<ICacheService>()
@@ -137,7 +138,7 @@ namespace Ombi.Core.Tests.Engine.V2
                 .Setup(x => x.GetUser())
                 .ReturnsAsync(user);
 
-            var mapperConfig = new MapperConfiguration(cfg => cfg.AddProfile<TvProfileV2>());
+            var mapperConfig = new MapperConfiguration(cfg => cfg.AddProfile<TvProfileV2>(), NullLoggerFactory.Instance);
             mocker.Use(mapperConfig.CreateMapper());
 
             mocker.GetMock<ICacheService>()
@@ -271,7 +272,7 @@ namespace Ombi.Core.Tests.Engine.V2
             var requestService = new Mock<IRequestServiceMain>();
             requestService.Setup(x => x.TvRequestService).Returns(tvRepo.Object);
 
-            var mapper = new MapperConfiguration(cfg => cfg.AddProfile<TvProfile>()).CreateMapper();
+            var mapper = new MapperConfiguration(cfg => cfg.AddProfile<TvProfile>(), NullLoggerFactory.Instance).CreateMapper();
 
             _engine = new TvSearchEngineV2(currentUser.Object, requestService.Object, new Mock<ITvMazeApi>().Object,
                 mapper, new Mock<ITraktApi>().Object, rules.Object,

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Collections.Generic;
 using AutoMapper;
-using AutoMapper.Configuration;
+using AutoMapper.EquivalencyExpression;
 using Microsoft.Extensions.DependencyInjection;
 using Ombi.Mapping.Profiles;
 
@@ -21,13 +18,11 @@ namespace Ombi.Mapping
                 new TvProfile(),
                 new TvProfileV2()
             };
-            var config = new AutoMapper.MapperConfiguration(cfg =>
+            services.AddAutoMapper(cfg =>
             {
                 cfg.AddProfiles(profiles);
+                cfg.AddCollectionMappers();
             });
-
-            var mapper = config.CreateMapper();
-            services.AddSingleton(mapper);
 
             return services;
         }

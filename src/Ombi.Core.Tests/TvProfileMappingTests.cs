@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
 using Ombi.Core.Models.Search;
@@ -17,7 +18,7 @@ namespace Ombi.Core.Tests
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<TvProfile>();
-            });
+            }, NullLoggerFactory.Instance);
             _mapper = config.CreateMapper();
         }
 

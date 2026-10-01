@@ -1,5 +1,4 @@
-﻿using AutoMapper.EquivalencyExpression;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
@@ -202,7 +201,6 @@ namespace Ombi
                 });
 
             services.AddOmbiMappingProfile();
-            services.AddAutoMapper(expression => expression.AddCollectionMappers());
 
             services.RegisterApplicationDependencies(); // Ioc and EF
             services.AddSwagger();
