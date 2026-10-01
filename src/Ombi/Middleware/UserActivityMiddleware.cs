@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Authentication;
 using Ombi.Store.Entities;
@@ -20,20 +21,25 @@ namespace Ombi
         private const string ActivityCachePrefix = "user-last-active:";
         private readonly RequestDelegate _next;
         private readonly ILogger<UserActivityMiddleware> _logger;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public UserActivityMiddleware(RequestDelegate next, ILogger<UserActivityMiddleware> logger)
+        public UserActivityMiddleware(
+            RequestDelegate next,
+            ILogger<UserActivityMiddleware> logger,
+            IServiceScopeFactory scopeFactory)
         {
             _next = next;
             _logger = logger;
+            _scopeFactory = scopeFactory;
         }
 
-        public async Task InvokeAsync(HttpContext context, OmbiUserManager userManager, IMemoryCache cache)
+        public async Task InvokeAsync(HttpContext context, IMemoryCache cache)
         {
-            await RecordActivity(context, userManager, cache);
+            await RecordActivity(context, cache);
             await _next(context);
         }
 
-        private async Task RecordActivity(HttpContext context, OmbiUserManager userManager, IMemoryCache cache)
+        private async Task RecordActivity(HttpContext context, IMemoryCache cache)
         {
             if (!context.Request.Path.StartsWithSegments(new PathString("/api")) ||
                 context.User?.Identity?.IsAuthenticated != true ||
@@ -66,6 +72,16 @@ namespace Ombi
 
             try
             {
+                // Identity's EF user store shares the request-scoped OmbiContext with request
+                // repositories. If a LastActive update loses an optimistic-concurrency race,
+                // Identity can leave the failed OmbiUser entity tracked as Modified. A later
+                // SaveChanges for the user's real request can then retry that stale user update
+                // and fail the unrelated request. Keep activity tracking in its own scope so any
+                // failed Identity update and its change tracker are disposed before the request
+                // pipeline continues.
+                using var activityScope = _scopeFactory.CreateScope();
+                var userManager = activityScope.ServiceProvider.GetRequiredService<OmbiUserManager>();
+
                 OmbiUser user;
                 if (!string.IsNullOrWhiteSpace(userId))
                 {
