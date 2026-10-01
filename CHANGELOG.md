@@ -1,3 +1,7 @@
+## [4.60.79](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/compare/v4.60.78...v4.60.79) (2026-10-01)
+
+
+
 ## [4.60.78](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/compare/v4.60.77...v4.60.78) (2026-10-01)
 
 
@@ -199,10 +203,6 @@
 
 
 ## [4.60.40](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/compare/v4.60.39...v4.60.40) (2026-09-20)
-
-
-
-## [4.60.39](https://github.com/ExtremeFiretop/Ombi-MediaCleanup/compare/v4.60.38...v4.60.39) (2026-09-15)
 
 
 
