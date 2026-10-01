@@ -4,7 +4,7 @@ import { Injectable, Inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
-import { IFailedRequestsViewModel } from "../interfaces";
+import { IFailedRequestsViewModel, IRequestEngineResult } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
 @Injectable()
@@ -17,5 +17,8 @@ export class RequestRetryService extends ServiceHelpers {
     }
     public deleteFailedRequest(failedId: number): Observable<boolean> {
         return this.http.delete<boolean>(`${this.url}${failedId}`, {headers: this.headers});
+    }
+    public retryFailedRequest(failedId: number): Observable<IRequestEngineResult> {
+        return this.http.post<IRequestEngineResult>(`${this.url}${failedId}/retry`, undefined, {headers: this.headers});
     }
 }

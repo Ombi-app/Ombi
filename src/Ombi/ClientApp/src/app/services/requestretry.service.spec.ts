@@ -6,6 +6,7 @@ function createService() {
   const mockHttp = {
     get: vi.fn().mockReturnValue(of([])),
     delete: vi.fn().mockReturnValue(of(true)),
+    post: vi.fn().mockReturnValue(of({ result: true })),
   };
 
   const service = Object.create(RequestRetryService.prototype);
@@ -34,5 +35,10 @@ describe('RequestRetryService', () => {
   it('should call DELETE for deleteFailedRequest with correct id', () => {
     service.deleteFailedRequest(42);
     expect(mockHttp.delete).toHaveBeenCalledWith('/api/v1/requestretry/42', expect.anything());
+  });
+
+  it('should call POST for retryFailedRequest with correct queue id', () => {
+    service.retryFailedRequest(42);
+    expect(mockHttp.post).toHaveBeenCalledWith('/api/v1/requestretry/42/retry', undefined, expect.anything());
   });
 });

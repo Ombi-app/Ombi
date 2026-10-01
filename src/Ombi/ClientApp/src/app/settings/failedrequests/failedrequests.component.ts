@@ -8,11 +8,10 @@ import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { finalize } from "rxjs/operators";
 import { IFailedRequestsViewModel, RequestType } from "../../interfaces";
-import { SettingsMenuComponent } from "../settingsmenu.component";
-import { WikiComponent } from "../wiki.component";
-import { RequestRetryService } from "../../services";
+import { MessageService, RequestRetryService } from "../../services";
 import { MatTableModule } from "@angular/material/table";
 import { HumanizePipe } from "../../pipes/standalone-pipes";
 
@@ -40,11 +39,16 @@ import { HumanizePipe } from "../../pipes/standalone-pipes";
 })
 export class FailedRequestsComponent implements OnInit {
 
-    public columnsToDisplay = ["title", "type", "retryCount", "errorDescription", "deleteBtn"];
+    public columnsToDisplay = ["title", "type", "retryCount", "errorDescription", "reprocessBtn", "deleteBtn"];
     public vm: IFailedRequestsViewModel[] = [];
     public RequestType = RequestType;
+    public reprocessing = new Set<number>();
 
-    constructor(private retry: RequestRetryService) { }
+    constructor(
+        private retry: RequestRetryService,
+        private messageService: MessageService,
+        private translateService: TranslateService
+    ) { }
 
     public ngOnInit() {
         this.retry.getFailedRequests().subscribe(x => this.vm = x);
@@ -53,9 +57,42 @@ export class FailedRequestsComponent implements OnInit {
     public remove(failed: IFailedRequestsViewModel) {
         this.retry.deleteFailedRequest(failed.failedId).subscribe(x => {
             if(x) {
-                const index = this.vm.indexOf(failed);
-                this.vm.splice(index,1);
+                this.removeFromList(failed);
             }
         });
+    }
+
+    public reprocess(failed: IFailedRequestsViewModel) {
+        if (this.reprocessing.has(failed.failedId)) {
+            return;
+        }
+
+        this.reprocessing.add(failed.failedId);
+        this.retry.retryFailedRequest(failed.failedId).pipe(
+            finalize(() => this.reprocessing.delete(failed.failedId))
+        ).subscribe({
+            next: result => {
+                if (result.result) {
+                    this.removeFromList(failed);
+                    this.messageService.send(this.translateService.instant("Requests.SuccessfullyReprocessed"));
+                } else {
+                    this.messageService.sendRequestEngineResultError(result);
+                }
+            },
+            error: () => {
+                this.messageService.send(this.translateService.instant("ErrorPages.SomethingWentWrong"));
+            }
+        });
+    }
+
+    public isReprocessing(failedId: number): boolean {
+        return this.reprocessing.has(failedId);
+    }
+
+    private removeFromList(failed: IFailedRequestsViewModel) {
+        const index = this.vm.indexOf(failed);
+        if (index >= 0) {
+            this.vm.splice(index, 1);
+        }
     }
 }

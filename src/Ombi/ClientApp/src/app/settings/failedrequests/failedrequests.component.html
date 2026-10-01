@@ -22,6 +22,16 @@
       <td mat-cell *matCellDef="let v"><i [matTooltip]="v.error" class="fas fa-info-circle"></i></td>
     </ng-container>
 
+    <ng-container matColumnDef="reprocessBtn">
+      <th mat-header-cell *matHeaderCellDef>Re-Process</th>
+      <td mat-cell *matCellDef="let v">
+        <button mat-raised-button color="primary" [disabled]="isReprocessing(v.failedId)" (click)="reprocess(v)">
+          <i class="fas fa-sync" [class.fa-spin]="isReprocessing(v.failedId)"></i>
+          {{ 'MediaDetails.ReProcessRequest' | translate }}
+        </button>
+      </td>
+    </ng-container>
+
     <ng-container matColumnDef="deleteBtn">
       <th mat-header-cell *matHeaderCellDef>Delete</th>
       <td mat-cell *matCellDef="let v"><button mat-raised-button color="warn" (click)="remove(v)">Remove</button></td>
