@@ -686,6 +686,11 @@ namespace Ombi.Core.Engine
                 }
             }
 
+            // No catch here: ApproveChildRequest is always a manual approval. The DB update
+            // is the first save of Approved=true, so if it fails the approval was never
+            // persisted and we must not proceed to send. (The auto-approve path saves via
+            // AddRequest/AddExistingRequest and sends via ProcessSendingShow, never through
+            // this method.)
             await TvRepository.UpdateChild(request);
             await _mediaCacheService.Purge();
 
