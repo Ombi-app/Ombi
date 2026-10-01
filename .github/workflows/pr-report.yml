@@ -9,7 +9,9 @@ on:
     types: [completed]
 
 permissions:
+  actions: read
   checks: write
+  contents: read
   pull-requests: write
 
 jobs:

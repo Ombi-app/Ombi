@@ -1,0 +1,11 @@
+# Reqestra pull request review configuration.
+reviews:
+  request_changes_workflow: true
+  high_level_summary: true
+  review_status: true
+  auto_review:
+    enabled: true
+    drafts: false
+
+chat:
+  auto_reply: true

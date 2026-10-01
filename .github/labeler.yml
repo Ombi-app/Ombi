@@ -1,7 +1,15 @@
-automation: tests/**/*
+automation:
+  - changed-files:
+      - any-glob-to-any-file: 'tests/**/*'
 
-frontend: src/Ombi/ClientApp/**/*
+frontend:
+  - changed-files:
+      - any-glob-to-any-file: 'src/Ombi/ClientApp/**/*'
 
-backend: src/**/*.cs
+backend:
+  - changed-files:
+      - any-glob-to-any-file: 'src/**/*.cs'
 
-devops: .github/workflows/*
+devops:
+  - changed-files:
+      - any-glob-to-any-file: '.github/workflows/*'
