@@ -299,6 +299,50 @@ namespace Ombi.Core.Tests.Senders
             Assert.That(SonarrEpisodeFingerprintMatcher.HasConflictingExactSeason(source, sonarrEpisodes), Is.True);
         }
 
+        [Test]
+        public void SeriesIdentity_TotalDramaAction_StrongStructuralTitleFingerprintMapsToConsolidatedSeason()
+        {
+            var source = BuildSeason(1, TotalDramaActionStandaloneTitles);
+            var sonarrEpisodes = BuildEpisodes(2, TotalDramaActionConsolidatedTitles)
+                .Concat(BuildEpisodes(3, Enumerable.Range(1, 10).Select(x => $"Other Episode {x}").ToArray()))
+                .ToList();
+
+            var normalResult = SonarrEpisodeFingerprintMatcher.FindSingleSeasonMatch(source, sonarrEpisodes);
+            var identityResult = SonarrEpisodeFingerprintMatcher.FindSingleSeriesIdentityMatch(source, sonarrEpisodes);
+
+            Assert.That(normalResult, Is.Not.Null);
+            Assert.That(normalResult.SourceSeasonNumber, Is.EqualTo(1));
+            Assert.That(normalResult.SonarrSeasonNumber, Is.EqualTo(2));
+            Assert.That(identityResult, Is.Not.Null);
+            Assert.That(identityResult.SonarrSeasonNumber, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void SeriesIdentity_PahkitewShiftedIntoSecondHalfOfSeason_DoesNotInferEpisodeOffset()
+        {
+            var source = BuildSeason(1, PahkitewTitles);
+            var firstHalf = Enumerable.Range(1, 13).Select(x => $"All Stars {x}").ToArray();
+            var combinedSeason = firstHalf.Concat(PahkitewTitles).ToArray();
+            var sonarrEpisodes = BuildEpisodes(5, combinedSeason).ToList();
+
+            var result = SonarrEpisodeFingerprintMatcher.FindSingleSeriesIdentityMatch(source, sonarrEpisodes);
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void SeriesIdentity_WhenMultipleSeasonsHaveStrongStructuralTitleFingerprint_DoesNotGuess()
+        {
+            var source = BuildSeason(1, TotalDramaActionStandaloneTitles);
+            var sonarrEpisodes = BuildEpisodes(2, TotalDramaActionConsolidatedTitles)
+                .Concat(BuildEpisodes(7, TotalDramaActionConsolidatedTitles))
+                .ToList();
+
+            var result = SonarrEpisodeFingerprintMatcher.FindSingleSeriesIdentityMatch(source, sonarrEpisodes);
+
+            Assert.That(result, Is.Null);
+        }
+
         private static SeasonRequests BuildSeason(int seasonNumber, IReadOnlyList<string> titles)
         {
             return BuildSeason(seasonNumber, titles, null);
@@ -415,6 +459,51 @@ namespace Ombi.Core.Tests.Senders
             "Fear the Ripper Pt. 2"
         };
 
+
+        private static readonly string[] TotalDramaActionStandaloneTitles =
+        {
+            "Monster Cash!",
+            "Alien Resurr-eggtion",
+            "Riot on Set",
+            "Beach Blanket Bogus",
+            "3:10 To Crazytown",
+            "TDA Aftermath: I",
+            "The Chefshank Redemption",
+            "One Flu Over The Cuckoos",
+            "The Sand Witch Project",
+            "Masters of Disasters"
+        };
+
+        private static readonly string[] TotalDramaActionConsolidatedTitles =
+        {
+            "Monster Cash",
+            "Alien Resurr-eggtion",
+            "Riot on Set",
+            "Beach Blanket Bogus",
+            "3:10 to Crazytown",
+            "TDA Aftermath I: Trent's Descent",
+            "The Chefshank Redemption",
+            "One Flu Over the Cuckoos",
+            "The Sand Witch Project",
+            "Masters of Disasters"
+        };
+
+        private static readonly string[] PahkitewTitles =
+        {
+            "So, Uh, This Is My Team?",
+            "I Love You, Grease Pig!",
+            "Twinning Isn't Everything",
+            "I Love You, I Love You Knots",
+            "A Blast from the Past",
+            "Mo Monkey Mo Problems",
+            "This Is the Pits!",
+            "Three Zones and a Baby",
+            "Hurl and Go Seek",
+            "Scarlett Fever",
+            "Sky Fall",
+            "Pahk'd With Talent",
+            "Lies, Cries and One Big Prize"
+        };
 
         private static readonly string[] MetalFamilyTmdbTitles =
         {

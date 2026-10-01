@@ -129,9 +129,12 @@ namespace Ombi.Core.Senders
                 return null;
             }
 
-            await EnsureTvDbId(model, s);
-
             var options = new SonarrSendOptions();
+            var identityRepairSeasonNumberMap = await EnsureTvDbId(model, s);
+            foreach (var mapping in identityRepairSeasonNumberMap)
+            {
+                options.IdentityRepairSeasonNumberMap[mapping.Key] = mapping.Value;
+            }
 
             int qualityToUse;
             var languageProfileId = s.LanguageProfile;
@@ -383,11 +386,11 @@ namespace Ombi.Core.Senders
             }
         }
 
-        private async Task EnsureTvDbId(ChildRequests model, SonarrSettings settings)
+        private async Task<Dictionary<int, int>> EnsureTvDbId(ChildRequests model, SonarrSettings settings)
         {
             if (model?.ParentRequest == null || model.ParentRequest.TvDbId > 0)
             {
-                return;
+                return new Dictionary<int, int>();
             }
 
             var parent = model.ParentRequest;
@@ -415,14 +418,15 @@ namespace Ombi.Core.Senders
                     Logger.LogInformation(
                         "Repaired TV request {RequestId} for {Title}: TMDB {TmdbId} -> TVDB {TvdbId}",
                         model.Id, parent.Title, parent.ExternalProviderId, parent.TvDbId);
-                    return;
+                    return new Dictionary<int, int>();
                 }
             }
 
-            // Some anthology seasons are exposed by TMDB as standalone series while Sonarr/TVDB
-            // keeps them under the anthology parent. If TMDB cannot provide a TVDB mapping, use
-            // Sonarr's own series metadata. Prefer provider IDs and only then accept one unique
-            // normalized title/alternate-title match.
+            // Some anthology/franchise seasons are exposed by TMDB as standalone series while
+            // Sonarr/TVDB keeps them under a consolidated parent. If TMDB cannot provide a TVDB
+            // mapping, use Sonarr's own metadata. Prefer provider IDs, then one exact normalized
+            // title/alternate-title match, and finally a uniquely corroborated parent whose title
+            // is related and whose episode fingerprint matches the requested standalone season.
             var allSeries = (await SonarrApi.GetSeries(settings.ApiKey, settings.FullUri))?.ToList()
                 ?? new List<SonarrSeries>();
 
@@ -465,6 +469,20 @@ namespace Ombi.Core.Senders
                 }
             }
 
+            var identityRepairSeasonNumberMap = new Dictionary<int, int>();
+            if (sonarrMatch == null)
+            {
+                var fingerprintRepair = await FindUniqueSonarrParentByEpisodeFingerprint(model, allSeries, settings);
+                if (fingerprintRepair != null)
+                {
+                    sonarrMatch = fingerprintRepair.Series;
+                    foreach (var mapping in fingerprintRepair.SeasonNumberMap)
+                    {
+                        identityRepairSeasonNumberMap[mapping.Key] = mapping.Value;
+                    }
+                }
+            }
+
             if (sonarrMatch?.tvdbId > 0)
             {
                 parent.TvDbId = sonarrMatch.tvdbId;
@@ -478,7 +496,7 @@ namespace Ombi.Core.Senders
                 Logger.LogInformation(
                     "Repaired TV request {RequestId} for {Title} from existing Sonarr series {SonarrTitle}: TVDB {TvdbId}",
                     model.Id, parent.Title, sonarrMatch.title, parent.TvDbId);
-                return;
+                return identityRepairSeasonNumberMap;
             }
 
             if (parent.ExternalProviderId <= 0)
@@ -489,6 +507,107 @@ namespace Ombi.Core.Senders
 
             throw new MissingTvDbIdException(
                 $"{MissingTvDbAfterRefreshPrefix}: '{parent.Title}' (child request {model.Id}, TMDB {parent.ExternalProviderId}) still has no TVDB mapping and no unique existing Sonarr match.");
+        }
+
+        private async Task<SonarrIdentityRepairMatch> FindUniqueSonarrParentByEpisodeFingerprint(
+            ChildRequests model,
+            IEnumerable<SonarrSeries> allSeries,
+            SonarrSettings settings)
+        {
+            if (model?.ParentRequest == null || model.SeasonRequests == null || !model.SeasonRequests.Any())
+            {
+                return null;
+            }
+
+            // Do not scan an entire Sonarr library. Episode fingerprints are an expensive final
+            // fallback, so first require a conservative title containment relationship such as
+            // "Total Drama Action" -> "Total Drama". This is candidate discovery only; the
+            // episode fingerprint below is what establishes identity.
+            var candidates = (allSeries ?? Enumerable.Empty<SonarrSeries>())
+                .Where(x => x != null && x.id > 0 && x.tvdbId > 0 &&
+                            IsSeriesTitleContainmentCandidate(model.ParentRequest.Title, x))
+                .ToList();
+
+            var matches = new List<SonarrIdentityRepairMatch>();
+            foreach (var candidate in candidates)
+            {
+                var candidateEpisodes = (await SonarrApi.GetEpisodes(candidate.id, settings.ApiKey, settings.FullUri))?
+                    .Where(x => x != null)
+                    .ToList() ?? new List<Episode>();
+                if (!candidateEpisodes.Any())
+                {
+                    continue;
+                }
+
+                var seasonNumberMap = new Dictionary<int, int>();
+                var allRequestedSeasonsMatch = true;
+                foreach (var requestedSeason in model.SeasonRequests.Where(x => x != null))
+                {
+                    var seasonMatch = SonarrEpisodeFingerprintMatcher.FindSingleSeriesIdentityMatch(
+                        requestedSeason, candidateEpisodes);
+                    if (seasonMatch == null)
+                    {
+                        allRequestedSeasonsMatch = false;
+                        break;
+                    }
+
+                    seasonNumberMap[requestedSeason.SeasonNumber] = seasonMatch.SonarrSeasonNumber;
+                }
+
+                if (allRequestedSeasonsMatch && seasonNumberMap.Count > 0)
+                {
+                    matches.Add(new SonarrIdentityRepairMatch
+                    {
+                        Series = candidate,
+                        SeasonNumberMap = seasonNumberMap
+                    });
+                }
+            }
+
+            if (matches.Count == 1)
+            {
+                Logger.LogInformation(
+                    "Identified existing Sonarr parent {SonarrTitle} (TVDB {TvdbId}) for TV request {RequestId} ({Title}) using episode fingerprints",
+                    matches[0].Series.title, matches[0].Series.tvdbId, model.Id, model.ParentRequest.Title);
+                return matches[0];
+            }
+
+            if (matches.Count > 1)
+            {
+                Logger.LogWarning(
+                    "Could not repair TVDB ID for TV request {RequestId} ({Title}) because episode fingerprints matched multiple existing Sonarr series",
+                    model.Id, model.ParentRequest.Title);
+            }
+
+            return null;
+        }
+
+        private static bool IsSeriesTitleContainmentCandidate(string requestTitle, SonarrSeries series)
+        {
+            const int minimumCandidateTitleLength = 5;
+            var normalizedRequestTitle = NormalizeSeriesTitle(requestTitle);
+            if (normalizedRequestTitle.Length < minimumCandidateTitleLength)
+            {
+                return false;
+            }
+
+            var candidateTitles = new List<string> { series?.title };
+            if (series?.alternateTitles != null)
+            {
+                candidateTitles.AddRange(series.alternateTitles.Select(x => x?.title));
+            }
+
+            return candidateTitles
+                .Select(NormalizeSeriesTitle)
+                .Where(x => x.Length >= minimumCandidateTitleLength)
+                .Any(x => normalizedRequestTitle.IndexOf(x, StringComparison.Ordinal) >= 0 ||
+                          x.IndexOf(normalizedRequestTitle, StringComparison.Ordinal) >= 0);
+        }
+
+        private sealed class SonarrIdentityRepairMatch
+        {
+            public SonarrSeries Series { get; set; }
+            public Dictionary<int, int> SeasonNumberMap { get; set; } = new Dictionary<int, int>();
         }
 
         private static SonarrSeries GetUniqueSeriesMatch(IEnumerable<SonarrSeries> series, Func<SonarrSeries, bool> predicate)
@@ -608,6 +727,18 @@ namespace Ombi.Core.Senders
             var seasonNumberMap = new Dictionary<int, int>();
             foreach (var season in model.SeasonRequests)
             {
+                if (options.IdentityRepairSeasonNumberMap.TryGetValue(season.SeasonNumber, out var identityRepairSeason))
+                {
+                    seasonNumberMap[season.SeasonNumber] = identityRepairSeason;
+                    if (identityRepairSeason != season.SeasonNumber)
+                    {
+                        Logger.LogInformation(
+                            "Mapped requested season {SourceSeason} for {Title} to Sonarr season {SonarrSeason} using the parent identity-repair fingerprint",
+                            season.SeasonNumber, model.ParentRequest.Title, identityRepairSeason);
+                    }
+                    continue;
+                }
+
                 var fingerprintMatch = SonarrEpisodeFingerprintMatcher.FindSingleSeasonMatch(season, sonarrEpList);
                 if (fingerprintMatch != null)
                 {

@@ -7,6 +7,8 @@ using Moq.AutoMock;
 using NUnit.Framework;
 using Ombi.Api.External.ExternalApis.Sonarr;
 using Ombi.Api.External.ExternalApis.Sonarr.Models;
+using Ombi.Api.External.ExternalApis.TheMovieDb;
+using Ombi.Api.External.ExternalApis.TheMovieDb.Models;
 using Ombi.Core;
 using Ombi.Core.Settings;
 using Ombi.Core.Senders;
@@ -451,6 +453,225 @@ namespace Ombi.Core.Tests.Senders
 
             StringAssert.Contains("Unable to safely map requested season 1", exception.Message);
             StringAssert.DoesNotContain("rollback failed", exception.Message);
+        }
+
+        [Test]
+        public async Task MissingTvDb_StandaloneSeries_RepairsConsolidatedParentFromEpisodeFingerprint()
+        {
+            var settings = CreateSettings();
+            var request = new ChildRequests
+            {
+                Id = 8616,
+                RequestedUserId = "user",
+                SeriesType = SeriesType.Standard,
+                ParentRequest = new TvRequests
+                {
+                    Title = "Total Drama Action",
+                    ExternalProviderId = 8616,
+                    TvDbId = 0,
+                    TotalSeasons = 1
+                },
+                SeasonRequests = new List<SeasonRequests>
+                {
+                    new SeasonRequests
+                    {
+                        SeasonNumber = 1,
+                        Episodes = new List<EpisodeRequests>
+                        {
+                            new EpisodeRequests { EpisodeNumber = 1, Title = "Monster Cash!" },
+                            new EpisodeRequests { EpisodeNumber = 2, Title = "Alien Resurr-eggtion" },
+                            new EpisodeRequests { EpisodeNumber = 3, Title = "Riot on Set" },
+                            new EpisodeRequests { EpisodeNumber = 4, Title = "Beach Blanket Bogus" },
+                            new EpisodeRequests { EpisodeNumber = 5, Title = "TDA Aftermath: I" }
+                        }
+                    }
+                }
+            };
+            var existingSeries = new SonarrSeries
+            {
+                id = 620,
+                title = "Total Drama",
+                tvdbId = 83294,
+                tmdbId = 0,
+                monitored = true,
+                seasons = new[]
+                {
+                    new Season { seasonNumber = 2, monitored = true }
+                }
+            };
+            var episodes = new[]
+            {
+                new Episode { id = 201, seriesId = 620, seasonNumber = 2, episodeNumber = 1, title = "Monster Cash", monitored = true },
+                new Episode { id = 202, seriesId = 620, seasonNumber = 2, episodeNumber = 2, title = "Alien Resurr-eggtion", monitored = true },
+                new Episode { id = 203, seriesId = 620, seasonNumber = 2, episodeNumber = 3, title = "Riot on Set", monitored = true },
+                new Episode { id = 204, seriesId = 620, seasonNumber = 2, episodeNumber = 4, title = "Beach Blanket Bogus", monitored = true },
+                new Episode { id = 205, seriesId = 620, seasonNumber = 2, episodeNumber = 5, title = "TDA Aftermath I: Trent's Descent", monitored = true }
+            };
+
+            _mocker.GetMock<IMovieDbApi>()
+                .Setup(x => x.GetTvExternals(request.ParentRequest.ExternalProviderId))
+                .ReturnsAsync(new TvExternals());
+            _mocker.GetMock<ITvRequestRepository>()
+                .Setup(x => x.Save())
+                .Returns(Task.CompletedTask);
+            SetupRootFolder(settings);
+            _sonarr.Setup(x => x.GetSeries(settings.ApiKey, settings.FullUri))
+                .ReturnsAsync(new[] { existingSeries });
+            _sonarr.Setup(x => x.GetEpisodes(existingSeries.id, settings.ApiKey, settings.FullUri))
+                .ReturnsAsync(episodes);
+            _sonarr.Setup(x => x.SeasonSearch(existingSeries.id, 2, settings.ApiKey, settings.FullUri))
+                .ReturnsAsync(true);
+
+            var result = await _subject.SendToSonarr(request, settings);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(request.ParentRequest.TvDbId, Is.EqualTo(83294));
+            _mocker.GetMock<ITvRequestRepository>().Verify(x => x.Save(), Times.Once);
+            _sonarr.Verify(x => x.SeasonSearch(existingSeries.id, 2, settings.ApiKey, settings.FullUri), Times.Once);
+            _sonarr.Verify(x => x.SeasonSearch(existingSeries.id, 1, settings.ApiKey, settings.FullUri), Times.Never);
+        }
+
+        [Test]
+        public async Task MissingTvDb_WorldTour_RepairsConsolidatedParentFromAirDateFingerprint()
+        {
+            var settings = CreateSettings();
+            var request = new ChildRequests
+            {
+                Id = 19123,
+                RequestedUserId = "user",
+                SeriesType = SeriesType.Standard,
+                ParentRequest = new TvRequests
+                {
+                    Title = "Total Drama World Tour",
+                    ExternalProviderId = 19123,
+                    TvDbId = 0,
+                    TotalSeasons = 1
+                },
+                SeasonRequests = new List<SeasonRequests>
+                {
+                    new SeasonRequests
+                    {
+                        SeasonNumber = 1,
+                        Episodes = new List<EpisodeRequests>
+                        {
+                            new EpisodeRequests { EpisodeNumber = 1, Title = "Walk Like An Egyptian, Part 1", AirDate = new System.DateTime(2010, 6, 10) },
+                            new EpisodeRequests { EpisodeNumber = 2, Title = "Walk Like An Egyptian, Part 2", AirDate = new System.DateTime(2010, 9, 9) },
+                            new EpisodeRequests { EpisodeNumber = 3, Title = "Super Crazy Happy Fun Time Japan", AirDate = new System.DateTime(2010, 9, 16) },
+                            new EpisodeRequests { EpisodeNumber = 4, Title = "Anything Yukon Do, I Can Do Better", AirDate = new System.DateTime(2010, 9, 23) },
+                            new EpisodeRequests { EpisodeNumber = 5, Title = "Broadway, Baby!", AirDate = new System.DateTime(2010, 9, 30) },
+                            new EpisodeRequests { EpisodeNumber = 6, Title = "Aftermath: Bridgette Over Troubled Water", AirDate = new System.DateTime(2010, 10, 7) }
+                        }
+                    }
+                }
+            };
+            var existingSeries = new SonarrSeries
+            {
+                id = 620,
+                title = "Total Drama",
+                tvdbId = 83294,
+                tmdbId = 0,
+                monitored = true,
+                seasons = new[]
+                {
+                    new Season { seasonNumber = 3, monitored = true }
+                }
+            };
+            var episodes = new[]
+            {
+                new Episode { id = 301, seriesId = 620, seasonNumber = 3, episodeNumber = 1, title = "Walk Like an Egyptian: Part 1", airDate = "2010-06-10", monitored = true },
+                new Episode { id = 302, seriesId = 620, seasonNumber = 3, episodeNumber = 2, title = "Walk Like an Egyptian: Part 2", airDate = "2010-09-09", monitored = true },
+                new Episode { id = 303, seriesId = 620, seasonNumber = 3, episodeNumber = 3, title = "Super Crazy Happy Fun Time in Japan", airDate = "2010-09-16", monitored = true },
+                new Episode { id = 304, seriesId = 620, seasonNumber = 3, episodeNumber = 4, title = "Anything Yukon Do, I Can Do Better", airDate = "2010-09-23", monitored = true },
+                new Episode { id = 305, seriesId = 620, seasonNumber = 3, episodeNumber = 5, title = "Broadway, Baby!", airDate = "2010-09-30", monitored = true },
+                new Episode { id = 306, seriesId = 620, seasonNumber = 3, episodeNumber = 6, title = "TDWT Aftermath I: Bridgette Over Troubled Waters", airDate = "2010-10-07", monitored = true }
+            };
+
+            _mocker.GetMock<IMovieDbApi>()
+                .Setup(x => x.GetTvExternals(request.ParentRequest.ExternalProviderId))
+                .ReturnsAsync(new TvExternals());
+            _mocker.GetMock<ITvRequestRepository>()
+                .Setup(x => x.Save())
+                .Returns(Task.CompletedTask);
+            SetupRootFolder(settings);
+            _sonarr.Setup(x => x.GetSeries(settings.ApiKey, settings.FullUri))
+                .ReturnsAsync(new[] { existingSeries });
+            _sonarr.Setup(x => x.GetEpisodes(existingSeries.id, settings.ApiKey, settings.FullUri))
+                .ReturnsAsync(episodes);
+            _sonarr.Setup(x => x.SeasonSearch(existingSeries.id, 3, settings.ApiKey, settings.FullUri))
+                .ReturnsAsync(true);
+
+            var result = await _subject.SendToSonarr(request, settings);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(request.ParentRequest.TvDbId, Is.EqualTo(83294));
+            _sonarr.Verify(x => x.SeasonSearch(existingSeries.id, 3, settings.ApiKey, settings.FullUri), Times.Once);
+            _sonarr.Verify(x => x.SeasonSearch(existingSeries.id, 1, settings.ApiKey, settings.FullUri), Times.Never);
+        }
+
+        [Test]
+        public void MissingTvDb_ShiftedEpisodeSubset_DoesNotRepairConsolidatedParent()
+        {
+            var settings = CreateSettings();
+            var request = new ChildRequests
+            {
+                Id = 296168,
+                RequestedUserId = "user",
+                SeriesType = SeriesType.Standard,
+                ParentRequest = new TvRequests
+                {
+                    Title = "Total Drama Pahkitew Island",
+                    ExternalProviderId = 296168,
+                    TvDbId = 0,
+                    TotalSeasons = 1
+                },
+                SeasonRequests = new List<SeasonRequests>
+                {
+                    new SeasonRequests
+                    {
+                        SeasonNumber = 1,
+                        Episodes = new List<EpisodeRequests>
+                        {
+                            new EpisodeRequests { EpisodeNumber = 1, Title = "So, Uh, This Is My Team?" },
+                            new EpisodeRequests { EpisodeNumber = 2, Title = "I Love You, Grease Pig!" },
+                            new EpisodeRequests { EpisodeNumber = 3, Title = "Twinning Isn't Everything" },
+                            new EpisodeRequests { EpisodeNumber = 4, Title = "I Love You, I Love You Knots" }
+                        }
+                    }
+                }
+            };
+            var existingSeries = new SonarrSeries
+            {
+                id = 620,
+                title = "Total Drama",
+                tvdbId = 83294,
+                tmdbId = 0
+            };
+            var episodes = new[]
+            {
+                new Episode { id = 501, seriesId = 620, seasonNumber = 5, episodeNumber = 1, title = "All Stars One" },
+                new Episode { id = 502, seriesId = 620, seasonNumber = 5, episodeNumber = 2, title = "All Stars Two" },
+                new Episode { id = 503, seriesId = 620, seasonNumber = 5, episodeNumber = 3, title = "All Stars Three" },
+                new Episode { id = 504, seriesId = 620, seasonNumber = 5, episodeNumber = 4, title = "All Stars Four" },
+                new Episode { id = 505, seriesId = 620, seasonNumber = 5, episodeNumber = 5, title = "So, Uh, This Is My Team?" },
+                new Episode { id = 506, seriesId = 620, seasonNumber = 5, episodeNumber = 6, title = "I Love You, Grease Pig!" },
+                new Episode { id = 507, seriesId = 620, seasonNumber = 5, episodeNumber = 7, title = "Twinning Isn't Everything" },
+                new Episode { id = 508, seriesId = 620, seasonNumber = 5, episodeNumber = 8, title = "I Love You, I Love You Knots" }
+            };
+
+            _mocker.GetMock<IMovieDbApi>()
+                .Setup(x => x.GetTvExternals(request.ParentRequest.ExternalProviderId))
+                .ReturnsAsync(new TvExternals());
+            _sonarr.Setup(x => x.GetSeries(settings.ApiKey, settings.FullUri))
+                .ReturnsAsync(new[] { existingSeries });
+            _sonarr.Setup(x => x.GetEpisodes(existingSeries.id, settings.ApiKey, settings.FullUri))
+                .ReturnsAsync(episodes);
+
+            var exception = Assert.CatchAsync<System.Exception>(
+                async () => await _subject.SendToSonarr(request, settings));
+
+            StringAssert.Contains(TvSender.MissingTvDbAfterRefreshPrefix, exception.Message);
+            Assert.That(request.ParentRequest.TvDbId, Is.Zero);
+            _mocker.GetMock<ITvRequestRepository>().Verify(x => x.Save(), Times.Never);
         }
 
         private void SetupNewSeriesPath(SonarrSettings settings, SonarrSeries createdSeries)

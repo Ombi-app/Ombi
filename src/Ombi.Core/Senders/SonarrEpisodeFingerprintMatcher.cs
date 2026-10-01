@@ -81,6 +81,22 @@ namespace Ombi.Core.Senders
                 }
             }
 
+            // A standalone provider show can also correspond to a differently-numbered season
+            // in a consolidated Sonarr parent while a minority of display titles differ. Accept
+            // this only for a unique cross-season candidate with the exact episode-number set and
+            // at least 80% normalized title agreement. Exact-number seasons keep the stricter
+            // outstanding-episode safeguards in HasConflictingExactSeason().
+            var structuralTitleMatches = FindStrongStructuralTitleMatches(sourceSeason, episodes);
+            if (structuralTitleMatches.Count == 1 &&
+                structuralTitleMatches[0] != sourceSeason.SeasonNumber)
+            {
+                return new SonarrSeasonFingerprintMatch
+                {
+                    SourceSeasonNumber = sourceSeason.SeasonNumber,
+                    SonarrSeasonNumber = structuralTitleMatches[0]
+                };
+            }
+
             // Providers can substantially rename/localize episode titles while still agreeing on
             // the season structure and original air dates. Fall back to a strict date fingerprint:
             // the complete episode-number set must match, at least 80% of the season must have
@@ -97,6 +113,99 @@ namespace Ombi.Core.Senders
                 SourceSeasonNumber = sourceSeason.SeasonNumber,
                 SonarrSeasonNumber = airDateMatches[0]
             };
+        }
+
+
+        /// <summary>
+        /// Finds one season match strong enough to identify a consolidated Sonarr parent when
+        /// provider IDs and exact titles cannot. This is intentionally broader than the normal
+        /// request-time mapper only in one respect: after all strict title/date checks fail, an
+        /// exact episode-number structure with at least 80% normalized title agreement may
+        /// identify one unique season. Shifted/subset episode numbering is never accepted.
+        /// </summary>
+        public static SonarrSeasonFingerprintMatch FindSingleSeriesIdentityMatch(
+            SeasonRequests sourceSeason,
+            IEnumerable<Episode> sonarrEpisodes)
+        {
+            var episodes = sonarrEpisodes?
+                .Where(x => x != null)
+                .ToList() ?? new List<Episode>();
+
+            var strictMatch = FindSingleSeasonMatch(sourceSeason, episodes);
+            if (strictMatch != null)
+            {
+                return strictMatch;
+            }
+
+            // Parent identity repair may also use one strong exact-number structural/title match.
+            // This is not enabled in the ordinary mapper because exact-season sends retain the
+            // stricter outstanding-episode safeguards used for The Bad Guys-style title variants.
+            var structuralTitleMatches = FindStrongStructuralTitleMatches(sourceSeason, episodes);
+            if (structuralTitleMatches.Count != 1)
+            {
+                return null;
+            }
+
+            return new SonarrSeasonFingerprintMatch
+            {
+                SourceSeasonNumber = sourceSeason.SeasonNumber,
+                SonarrSeasonNumber = structuralTitleMatches[0]
+            };
+        }
+
+        private static List<int> FindStrongStructuralTitleMatches(
+            SeasonRequests sourceSeason,
+            IEnumerable<Episode> sonarrEpisodes)
+        {
+            var sourceEpisodes = sourceSeason?.Episodes?
+                .Where(x => x != null)
+                .GroupBy(x => x.EpisodeNumber)
+                .Select(x => x.First())
+                .OrderBy(x => x.EpisodeNumber)
+                .ToList() ?? new List<EpisodeRequests>();
+            var fingerprint = GetFingerprint(sourceSeason);
+
+            if (sourceEpisodes.Count < MinimumEpisodeFingerprintSize ||
+                fingerprint.Count < MinimumEpisodeFingerprintSize)
+            {
+                return new List<int>();
+            }
+
+            var sourceEpisodeNumbers = new HashSet<int>(sourceEpisodes.Select(x => x.EpisodeNumber));
+            var strongMatches = new List<int>();
+
+            foreach (var candidateSeason in (sonarrEpisodes ?? Enumerable.Empty<Episode>())
+                .Where(x => x != null)
+                .GroupBy(x => x.seasonNumber))
+            {
+                var candidateEpisodes = candidateSeason
+                    .GroupBy(x => x.episodeNumber)
+                    .Select(x => x.First())
+                    .ToDictionary(x => x.episodeNumber);
+
+                // Parent-series recovery must never infer an episode offset. Pahkitew-style
+                // provider splits, where standalone E1 maps to consolidated E14, require an
+                // explicit per-episode mapping and are intentionally left for manual handling.
+                if (candidateEpisodes.Count != sourceEpisodes.Count ||
+                    !sourceEpisodeNumbers.SetEquals(candidateEpisodes.Keys))
+                {
+                    continue;
+                }
+
+                var matchingTitleCount = fingerprint.Count(expected =>
+                    candidateEpisodes.TryGetValue(expected.EpisodeNumber, out var actual) &&
+                    TitlesMatch(actual.title, expected.NormalizedTitle));
+
+                // Require at least 80% of the complete episode structure to agree by normalized
+                // title, not merely 80% of whichever source episodes happen to have titles.
+                if (matchingTitleCount >= MinimumEpisodeFingerprintSize &&
+                    matchingTitleCount * 100 >= sourceEpisodes.Count * 80)
+                {
+                    strongMatches.Add(candidateSeason.Key);
+                }
+            }
+
+            return strongMatches;
         }
 
         /// <summary>
