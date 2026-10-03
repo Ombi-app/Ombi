@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -27,38 +27,25 @@ namespace Ombi.Core.Rule.Rules
             {
                 var vm = (ChildRequests) obj;
                 var result = await _ctx.SonarrCache.FirstOrDefaultAsync(x => x.TheMovieDbId == vm.Id);
-                if (result != null)
+                if (result != null && vm.SeasonRequests.Any())
                 {
-                    if (vm.SeasonRequests.Any())
+                    var seriesEpisodes = await _ctx.SonarrEpisodeCache
+                        .Where(x => x.MovieDbId == vm.Id)
+                        .ToListAsync();
+                    var episodeSet = seriesEpisodes
+                        .Select(x => (x.SeasonNumber, x.EpisodeNumber))
+                        .ToHashSet();
+
+                    foreach (var season in vm.SeasonRequests)
                     {
-                        var sonarrEpisodes = _ctx.SonarrEpisodeCache;
-                        foreach (var season in vm.SeasonRequests)
-                        {
-                            var toRemove = new List<EpisodeRequests>();
-                            foreach (var ep in season.Episodes)
-                            {
-                                // Check if we have it
-                                var monitoredInSonarr = sonarrEpisodes.FirstOrDefault(x =>
-                                    x.EpisodeNumber == ep.EpisodeNumber && x.SeasonNumber == season.SeasonNumber
-                                    && x.MovieDbId == vm.Id);
-                                if (monitoredInSonarr != null)
-                                {
-                                    toRemove.Add(ep);
-                                                                   }
-                            }
+                        season.Episodes.RemoveAll(ep => episodeSet.Contains((season.SeasonNumber, ep.EpisodeNumber)));
+                    }
 
-                            toRemove.ForEach(x =>
-                            {
-                                season.Episodes.Remove(x);
-                            });
+                    var anyEpisodes = vm.SeasonRequests.SelectMany(x => x.Episodes).Any();
 
-                        }
-                        var anyEpisodes = vm.SeasonRequests.SelectMany(x => x.Episodes).Any();
-
-                        if (!anyEpisodes)
-                        {
-                            return new RuleResult { ErrorCode = ErrorCode.EpisodesAlreadyRequested, Message = $"We already have episodes requested from series {vm.Title}" };
-                        }
+                    if (!anyEpisodes)
+                    {
+                        return new RuleResult { ErrorCode = ErrorCode.EpisodesAlreadyRequested, Message = $"We already have episodes requested from series {vm.Title}" };
                     }
                 }
             }
@@ -83,16 +70,24 @@ namespace Ombi.Core.Rule.Rules
 
                     if (vm.SeasonRequests.Any())
                     {
-                        var sonarrEpisodes = _ctx.SonarrEpisodeCache;
+                        var seriesEpisodes = await _ctx.SonarrEpisodeCache
+                            .Where(x => x.TvDbId == tvdbidint)
+                            .ToListAsync();
+
+                        var episodeLookup = new Dictionary<(int Season, int Episode), SonarrEpisodeCache>();
+                        foreach (var ep in seriesEpisodes)
+                        {
+                            if (!episodeLookup.TryGetValue((ep.SeasonNumber, ep.EpisodeNumber), out var existing) || (!existing.HasFile && ep.HasFile))
+                            {
+                                episodeLookup[(ep.SeasonNumber, ep.EpisodeNumber)] = ep;
+                            }
+                        }
+
                         foreach (var season in vm.SeasonRequests)
                         {
                             foreach (var ep in season.Episodes)
                             {
-                                // Check if we have it
-                                var monitoredInSonarr = await sonarrEpisodes.FirstOrDefaultAsync(x =>
-                                    x.EpisodeNumber == ep.EpisodeNumber && x.SeasonNumber == season.SeasonNumber
-                                    && x.TvDbId == tvdbidint);
-                                if (monitoredInSonarr != null)
+                                if (episodeLookup.TryGetValue((season.SeasonNumber, ep.EpisodeNumber), out var monitoredInSonarr))
                                 {
                                     ep.Approved = true;
                                     if (monitoredInSonarr.HasFile)
