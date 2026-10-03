@@ -67,6 +67,7 @@ export class UpdateComponent implements OnInit {
                 windowsServiceName: [x.windowsServiceName],
                 testMode: [x.testMode],
                 isWindows: [{ value: x.isWindows, disabled: true }],
+                isManagedByPackageManager: [{ value: x.isManagedByPackageManager, disabled: true }],
             });
 
             this.form.get("useScript").valueChanges.subscribe(useScript => {
@@ -87,6 +88,10 @@ export class UpdateComponent implements OnInit {
         this.settingsService.about().subscribe(x => {
             this.about = x;
         });
+    }
+
+    public get isAptManaged(): boolean {
+        return !!this.form && !!this.form.get("isManagedByPackageManager")?.value;
     }
 
     public onAutoUpdateToggle() {

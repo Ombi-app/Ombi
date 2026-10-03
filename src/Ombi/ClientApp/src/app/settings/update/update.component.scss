@@ -36,3 +36,8 @@ mat-form-field {
 .field-spacing {
     padding-bottom: 1.25rem;
 }
+
+// <output> defaults to display:inline; keep the apt banner full-width like a block alert
+output.alert {
+    display: block;
+}

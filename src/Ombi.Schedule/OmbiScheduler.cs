@@ -67,10 +67,14 @@ namespace Ombi.Schedule
         {
             await OmbiQuartz.Instance.AddJob<IRefreshMetadata>(nameof(IRefreshMetadata), "System", null);
             await OmbiQuartz.Instance.AddJob<IIssuesPurge>(nameof(IIssuesPurge), "System", JobSettingsHelper.IssuePurge(s));
-            var updaterCron = string.IsNullOrWhiteSpace(updateSettings?.UpdateSchedule)
-                ? JobSettingsHelper.Updater(s)
-                : updateSettings.UpdateSchedule;
-            await OmbiQuartz.Instance.AddJob<IOmbiAutomaticUpdater>(nameof(IOmbiAutomaticUpdater), "System", updaterCron);
+            // Skip the built-in self-updater on package-managed installs (e.g. apt); the package manager owns updates.
+            if (!InstallMethodHelper.IsPackageManaged)
+            {
+                var updaterCron = string.IsNullOrWhiteSpace(updateSettings?.UpdateSchedule)
+                    ? JobSettingsHelper.Updater(s)
+                    : updateSettings.UpdateSchedule;
+                await OmbiQuartz.Instance.AddJob<IOmbiAutomaticUpdater>(nameof(IOmbiAutomaticUpdater), "System", updaterCron);
+            }
             await OmbiQuartz.Instance.AddJob<INewsletterJob>(nameof(INewsletterJob), "System", JobSettingsHelper.Newsletter(s));
             await OmbiQuartz.Instance.AddJob<IResendFailedRequests>(nameof(IResendFailedRequests), "System", JobSettingsHelper.ResendFailedRequests(s));
             await OmbiQuartz.Instance.AddJob<IMediaDatabaseRefresh>(nameof(IMediaDatabaseRefresh), "System", JobSettingsHelper.MediaDatabaseRefresh(s));

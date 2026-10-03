@@ -37,6 +37,7 @@ export interface IUpdateSettings extends ISettings {
   windowsService: boolean;
   windowsServiceName: string;
   isWindows: boolean;
+  isManagedByPackageManager: boolean;
   testMode: boolean;
   updateSchedule: string;
 }
