@@ -27,25 +27,20 @@
 
         <!-- Request button -->
         <div class="card-actions" *ngIf="!result.available && !result.approved && !result.requested">
-            <div *ngIf="is4kEnabled && requestable && result.type === RequestType.movie;then show4K else regular"></div>
-            <ng-template #show4K>
-                <button [matMenuTriggerFor]="menu" id="requestButton{{result.id}}{{result.type}}{{discoverType}}" mat-raised-button class="request-btn">
-                    <i *ngIf="!loading" class="fas fa-plus" aria-hidden="true"></i>
-                    <i *ngIf="loading" class="fas fa-spinner fa-pulse" aria-hidden="true"></i>
-                    <span>{{'Common.Request' | translate }}</span>
-                </button>
-                <mat-menu #menu="matMenu">
-                    <button mat-menu-item class="request-menu-item" (click)="request($event, false)">{{'Common.Request' | translate }}</button>
-                    <button mat-menu-item class="request-menu-item" (click)="request($event, true)">{{'Common.Request4K' | translate }}</button>
-                </mat-menu>
-            </ng-template>
-            <ng-template #regular>
-                <button id="requestButton{{result.id}}{{result.type}}{{discoverType}}" *ngIf="requestable" mat-raised-button class="request-btn" (click)="request($event, false)">
-                    <i *ngIf="!loading" class="fas fa-plus" aria-hidden="true"></i>
-                    <i *ngIf="loading" class="fas fa-spinner fa-pulse" aria-hidden="true"></i>
-                    <span>{{'Common.Request' | translate }}</span>
-                </button>
-            </ng-template>
+            <button [matMenuTriggerFor]="is4kEnabled && result.type === RequestType.movie ? menu : null"
+                    id="requestButton{{result.id}}{{result.type}}{{discoverType}}"
+                    *ngIf="requestable"
+                    mat-raised-button
+                    class="request-btn"
+                    (click)="!(is4kEnabled && result.type === RequestType.movie) ? request($event, false) : null">
+                <i *ngIf="!loading" class="fas fa-plus" aria-hidden="true"></i>
+                <i *ngIf="loading" class="fas fa-spinner fa-pulse" aria-hidden="true"></i>
+                <span>{{'Common.Request' | translate }}</span>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item class="request-menu-item" (click)="request($event, false)">{{'Common.Request' | translate }}</button>
+                <button mat-menu-item class="request-menu-item" (click)="request($event, true)">{{'Common.Request4K' | translate }}</button>
+            </mat-menu>
         </div>
     </div>
 </div>
