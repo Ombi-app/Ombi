@@ -16,8 +16,14 @@ using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Ombi.Schedule.Jobs.Lidarr
 {
+    /// <summary>
+    /// Quartz job that synchronises Lidarr album metadata into the external cache database.
+    /// </summary>
     public class LidarrAlbumSync : ILidarrAlbumSync
     {
+        /// <summary>
+        /// Creates the Lidarr album cache synchronisation job.
+        /// </summary>
         public LidarrAlbumSync(ISettingsService<LidarrSettings> lidarr, ILidarrApi lidarrApi, ILogger<LidarrAlbumSync> log, ExternalContext ctx,
              INotificationHubService notification)
         {
@@ -34,6 +40,10 @@ namespace Ombi.Schedule.Jobs.Lidarr
         private readonly ExternalContext _ctx;
         private readonly INotificationHubService _notification;
 
+        /// <summary>
+        /// Clears and repopulates the Lidarr album cache, resetting its identity counter after the delete commits.
+        /// </summary>
+        /// <param name="ctx">Quartz job execution context.</param>
         public async Task Execute(IJobExecutionContext ctx)
         {
             try
@@ -58,6 +68,16 @@ namespace Ombi.Schedule.Jobs.Lidarr
                                     await tran.CommitAsync();
                                 }
                             });
+                            // Outside the transaction: MySQL ALTER TABLE AUTO_INCREMENT implicitly commits (see #5224).
+                            // Isolate reset failures so a counter reset error cannot leave the cache empty after the delete commits.
+                            try
+                            {
+                                await _ctx.Database.ResetAutoIncrementAsync("LidarrAlbumCache");
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogWarning(ex, "Failed to reset LidarrAlbumCache auto-increment; continuing with cache repopulation");
+                            }
 
                             var albumCache = new List<LidarrAlbumCache>();
                             foreach (var a in albums)
@@ -107,12 +127,19 @@ namespace Ombi.Schedule.Jobs.Lidarr
             }
         }
 
+        /// <summary>
+        /// Returns all rows currently stored in the Lidarr album cache.
+        /// </summary>
         public async Task<IEnumerable<LidarrAlbumCache>> GetCachedContent()
         {
             return await _ctx.LidarrAlbumCache.ToListAsync();
         }
 
         private bool _disposed;
+        /// <summary>
+        /// Releases managed resources when <paramref name="disposing"/> is true.
+        /// </summary>
+        /// <param name="disposing">True when called from <see cref="Dispose()"/>.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed)
@@ -126,6 +153,9 @@ namespace Ombi.Schedule.Jobs.Lidarr
             _disposed = true;
         }
 
+        /// <summary>
+        /// Releases the external database context held by this job.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);

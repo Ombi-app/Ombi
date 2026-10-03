@@ -15,8 +15,15 @@ using Polly;
 
 namespace Ombi.Store.Repository
 {
-    public class BaseRepository<T, U> : IRepository<T> where T : Entity where U : DbContext
+    /// <summary>
+    /// Base EF Core repository supporting any entity type that implements <see cref="IEntity"/>.
+    /// </summary>
+    public class BaseRepository<T, U> : IRepository<T> where T : class, IEntity where U : DbContext
     {
+        /// <summary>
+        /// Initializes the repository with the given database context.
+        /// </summary>
+        /// <param name="ctx">EF Core context used for persistence operations.</param>
         public BaseRepository(U ctx)
         {
             _ctx = ctx;
