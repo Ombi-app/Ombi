@@ -18,7 +18,7 @@ namespace Ombi.Core.Engine.Interfaces
         Task RemoveAllMovieRequests();
         Task<MovieRequests> GetRequest(int requestId);
         Task<MovieRequests> UpdateMovieRequest(MovieRequests request);
-        Task<RequestEngineResult> ApproveMovie(MovieRequests request, bool is4K);
+        Task<RequestEngineResult> ApproveMovie(MovieRequests request, bool is4K, bool isAutoApprove = false);
         Task<RequestEngineResult> ApproveMovieById(int requestId, bool is4K);
         Task<RequestEngineResult> DenyMovieById(int modelId, string denyReason, bool is4K);
         Task<RequestsViewModel<MovieRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder, string requestedByUserId = null);
