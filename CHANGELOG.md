@@ -1,3 +1,12 @@
+## [4.60.18](https://github.com/Ombi-app/Ombi/compare/v4.60.17...v4.60.18) (2026-11-05)
+
+
+### Bug Fixes
+
+* **i18n:** keep paginator labels from rendering as translation keys ([#5470](https://github.com/Ombi-app/Ombi/issues/5470)) ([986114f](https://github.com/Ombi-app/Ombi/commit/986114f7ccee818c4170ec712c132a02d103bf18))
+
+
+
 ## [4.60.17](https://github.com/Ombi-app/Ombi/compare/v4.60.16...v4.60.17) (2026-09-29)
 
 
@@ -555,15 +564,6 @@
 ### Bug Fixes
 
 * **emby/jellyfin:** fix [#5338](https://github.com/Ombi-app/Ombi/issues/5338) ([6217461](https://github.com/Ombi-app/Ombi/commit/62174617bbef0839527c179909cdbe50e90f5955))
-
-
-
-## [4.55.3](https://github.com/Ombi-app/Ombi/compare/v4.55.2...v4.55.3) (2026-02-20)
-
-
-### Performance Improvements
-
-* Improvements to api calls ([6907604](https://github.com/Ombi-app/Ombi/commit/69076047f5ace434b175fa424acd78d87eeeb1de))
 
 
 
