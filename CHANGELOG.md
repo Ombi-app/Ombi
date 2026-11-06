@@ -1,3 +1,7 @@
+## [4.60.19](https://github.com/Ombi-app/Ombi/compare/v4.60.18...v4.60.19) (2026-11-06)
+
+
+
 ## [4.60.18](https://github.com/Ombi-app/Ombi/compare/v4.60.17...v4.60.18) (2026-11-05)
 
 
@@ -555,15 +559,6 @@
 
 * **build:** silence remaining esbuild/sass warnings and remove unused imports ([1915b09](https://github.com/Ombi-app/Ombi/commit/1915b09e557128d43d70cdecb87f38277497bacb))
 * **tmdb:** Fix rendering of the movie db page ([a0b84f7](https://github.com/Ombi-app/Ombi/commit/a0b84f74620f7e0b8c33a03fa3cc5f7d6d42ab93))
-
-
-
-## [4.55.4](https://github.com/Ombi-app/Ombi/compare/v4.55.3...v4.55.4) (2026-02-20)
-
-
-### Bug Fixes
-
-* **emby/jellyfin:** fix [#5338](https://github.com/Ombi-app/Ombi/issues/5338) ([6217461](https://github.com/Ombi-app/Ombi/commit/62174617bbef0839527c179909cdbe50e90f5955))
 
 
 
