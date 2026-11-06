@@ -56,7 +56,7 @@ namespace Ombi.Core.Helpers
 
         public TvShowRequestBuilderV2 CreateChild(TvRequestViewModelV2 model, string userId, RequestSource source)
         {
-            var animationGenre = TheMovieDbRecord.genres?.Any(s => s.name.Equals("Animation", StringComparison.InvariantCultureIgnoreCase)) ?? false;
+            var animationGenre = TheMovieDbRecord.genres?.Any(s => s.id == 16) ?? false;
             var animeKeyword = TheMovieDbRecord.Keywords?.KeywordsValue?.Any(s => s.Name.Equals("Anime", StringComparison.InvariantCultureIgnoreCase)) ?? false;
             ChildRequest = new ChildRequests
             {
