@@ -34,20 +34,13 @@ namespace Ombi.Core.Rule.Rules.Search
             {
                 var airedButNotAvailable = search.SeasonRequests.Any(x =>
                     x.Episodes.Any(c => !c.Available && c.AirDate <= DateTime.Now.Date && c.AirDate != DateTime.MinValue));
-                if (!airedButNotAvailable)
+                
+                var unknownAirDateUnavailable = search.SeasonRequests.Any(x =>
+                    x.Episodes.Any(c => !c.Available && c.AirDate == DateTime.MinValue));
+
+                if (!airedButNotAvailable && !unknownAirDateUnavailable && search.PartlyAvailable)
                 {
-                    var unknownAirDateUnavailable = search.SeasonRequests.Any(x =>
-                        x.Episodes.Any(c => !c.Available && c.AirDate == DateTime.MinValue));
-                    if (!unknownAirDateUnavailable)
-                    {
-                        // Only treat the remaining (unaired) episodes as non-blocking when we
-                        // actually have something available already. A show where nothing has
-                        // aired yet has no available episodes and must not be marked available.
-                        if (search.PartlyAvailable)
-                        {
-                            search.FullyAvailable = true;
-                        }
-                    }
+                    search.FullyAvailable = true;
                 }
             }
 
@@ -67,22 +60,21 @@ namespace Ombi.Core.Rule.Rules.Search
             IMediaServerEpisode epExists = null;
             try
             {
-
-                if (useImdb)
+                if (useImdb && !string.IsNullOrEmpty(item.ImdbId))
                 {
                     epExists = await allEpisodes.FirstOrDefaultAsync(x =>
                         x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
                         x.Series.ImdbId == item.ImdbId);
                 }
 
-                if (useTheMovieDb)
+                if (epExists == null && useTheMovieDb && !string.IsNullOrEmpty(item.TheMovieDbId))
                 {
                     epExists = await allEpisodes.FirstOrDefaultAsync(x =>
                         x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
                         x.Series.TheMovieDbId == item.TheMovieDbId);
                 }
 
-                if (useTvDb)
+                if (epExists == null && useTvDb && !string.IsNullOrEmpty(item.TvDbId))
                 {
                     epExists = await allEpisodes.FirstOrDefaultAsync(x =>
                         x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
