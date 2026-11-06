@@ -490,8 +490,15 @@ namespace Ombi.Core.Engine
         public async Task<MovieRequests> GetRequest(int requestId)
         {
             var shouldHide = await HideFromOtherUsers();
-            // TODO: this query should return the request only if the user is allowed to see it (see shouldHide implementations)
-            var request = await MovieRepository.GetWithUser().Where(x => x.Id == requestId).FirstOrDefaultAsync();
+            var query = shouldHide.Hide
+                ? MovieRepository.GetWithUser(shouldHide.UserId)
+                : MovieRepository.GetWithUser();
+            var request = await query.Where(x => x.Id == requestId).FirstOrDefaultAsync();
+            if (request == null)
+            {
+                return null;
+            }
+
             await FillAdditionalFields(shouldHide, new List<MovieRequests> { request });
 
             return request;
