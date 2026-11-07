@@ -17,6 +17,7 @@ namespace Ombi.Store.Repository
         Task AddRange(IEnumerable<T> content, bool save = true);
         Task<T> Add(T content);
         Task DeleteRange(IEnumerable<T> req);
+        Task DeleteRange(IEnumerable<T> req, bool save);
         Task Delete(T request);
         Task<int> SaveChangesAsync();
 

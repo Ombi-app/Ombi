@@ -53,6 +53,18 @@ namespace Ombi.Store.Context
             builder.Entity<PlexWatchlistUserStatus>()
                 .HasIndex(x => x.UserId)
                 .IsUnique();
+            builder.Entity<UserSelectableQualityProfile>()
+                .Property(x => x.UserId)
+                .HasMaxLength(128);
+            builder.Entity<UserSelectableQualityProfile>()
+                .HasIndex(x => new { x.UserId, x.Application, x.QualityProfileId, x.Is4K })
+                .HasDatabaseName("IX_UserSelectableQualityProfile_User_Application_Profile_Is4K")
+                .IsUnique();
+            builder.Entity<UserSelectableQualityProfile>()
+                .HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
 
@@ -62,6 +74,7 @@ namespace Ombi.Store.Context
         public DbSet<UserNotificationPreferences> UserNotificationPreferences { get; set; }
         public DbSet<MobileDevices> MobileDevices { get; set; }
         public DbSet<UserQualityProfiles> UserQualityProfileses { get; set; }
+        public DbSet<UserSelectableQualityProfile> UserSelectableQualityProfiles { get; set; }
         public DbSet<RequestQueue> RequestQueue { get; set; }
 
         public void Seed()
