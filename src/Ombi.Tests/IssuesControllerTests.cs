@@ -11,7 +11,9 @@ using Ombi.Controllers.V1;
 using Ombi.Core;
 using Ombi.Helpers;
 using Ombi.Models;
+using Ombi.Core.Settings;
 using Ombi.Notifications.Models;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
@@ -26,6 +28,7 @@ namespace Ombi.Tests
         private Mock<IRepository<Issues>> _issues;
         private Mock<IRepository<IssueComments>> _comments;
         private Mock<INotificationHelper> _notification;
+        private Mock<ISettingsService<IssueSettings>> _issueSettings;
         private Mock<Ombi.Core.Authentication.OmbiUserManager> _userManager;
         private IssuesController _subject;
 
@@ -36,6 +39,8 @@ namespace Ombi.Tests
             _issues = new Mock<IRepository<Issues>>();
             _comments = new Mock<IRepository<IssueComments>>();
             _notification = new Mock<INotificationHelper>();
+            _issueSettings = new Mock<ISettingsService<IssueSettings>>();
+            _issueSettings.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new IssueSettings { Enabled = true, EnableInProgress = true });
 
             var users = new List<OmbiUser>
             {
@@ -57,7 +62,7 @@ namespace Ombi.Tests
             };
             _userManager = MockHelper.MockUserManager(users);
 
-            _subject = new IssuesController(_categories.Object, _issues.Object, _comments.Object, _userManager.Object, _notification.Object);
+            _subject = new IssuesController(_categories.Object, _issues.Object, _comments.Object, _userManager.Object, _notification.Object, _issueSettings.Object);
             _subject.ControllerContext = new ControllerContext
             {
                 HttpContext = new DefaultHttpContext
@@ -95,7 +100,7 @@ namespace Ombi.Tests
 
             var result = await _subject.UpdateStatus(new IssueStateViewModel { IssueId = 10, Status = IssueStatus.InProgress });
 
-            Assert.That(result, Is.True);
+            Assert.That(result.Value, Is.True);
             _notification.Verify(x => x.Notify(It.Is<NotificationOptions>(n =>
                 n.NotificationType == NotificationType.IssueInProgress &&
                 n.UserId == "reporter-id" &&
@@ -103,6 +108,83 @@ namespace Ombi.Tests
                 n.Substitutes[NotificationSubstitues.Title] == "Issue title" &&
                 n.Substitutes[NotificationSubstitues.IssueStatus] == IssueStatus.InProgress.ToString()
             )), Times.Once);
+        }
+
+        private Issues SetupIssue(IssueStatus status)
+        {
+            var issue = new Issues
+            {
+                Id = 20,
+                Title = "Issue title",
+                Subject = "Issue subject",
+                Description = "Issue description",
+                RequestType = RequestType.Movie,
+                Status = status,
+                UserReportedId = "reporter-id",
+                UserReported = new OmbiUser { Id = "reporter-id", UserName = "reporter", Alias = "reporter", Email = "reporter@test.local" },
+                IssueCategory = new IssueCategory { Id = 1, Value = "Playback" }
+            };
+            _issues.Setup(x => x.GetAll()).Returns(new List<Issues> { issue }.AsQueryable().BuildMock());
+            _issues.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
+            _notification.Setup(x => x.Notify(It.IsAny<NotificationOptions>())).Returns(Task.CompletedTask);
+            return issue;
+        }
+
+        [Test]
+        public async Task UpdateStatus_IssueNotFound_ReturnsNotFound()
+        {
+            SetupIssue(IssueStatus.Pending);
+
+            var result = await _subject.UpdateStatus(new IssueStateViewModel { IssueId = 999, Status = IssueStatus.Resolved });
+
+            Assert.That(result.Result, Is.InstanceOf<NotFoundResult>());
+            _issues.Verify(x => x.SaveChangesAsync(), Times.Never);
+        }
+
+        [Test]
+        public async Task UpdateStatus_InProgressDisabled_RejectsInProgress()
+        {
+            var issue = SetupIssue(IssueStatus.Pending);
+            _issueSettings.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new IssueSettings { Enabled = true, EnableInProgress = false });
+
+            var result = await _subject.UpdateStatus(new IssueStateViewModel { IssueId = 20, Status = IssueStatus.InProgress });
+
+            Assert.That(result.Result, Is.InstanceOf<BadRequestObjectResult>());
+            Assert.That(issue.Status, Is.EqualTo(IssueStatus.Pending));
+            _issues.Verify(x => x.SaveChangesAsync(), Times.Never);
+            _notification.Verify(x => x.Notify(It.IsAny<NotificationOptions>()), Times.Never);
+        }
+
+        [TestCase(IssueStatus.Pending, IssueStatus.InProgress)]
+        [TestCase(IssueStatus.Pending, IssueStatus.Resolved)]
+        [TestCase(IssueStatus.InProgress, IssueStatus.Resolved)]
+        [TestCase(IssueStatus.InProgress, IssueStatus.Pending)]
+        [TestCase(IssueStatus.Resolved, IssueStatus.Pending)]
+        public async Task UpdateStatus_AllowedTransition_UpdatesStatus(IssueStatus from, IssueStatus to)
+        {
+            var issue = SetupIssue(from);
+
+            var result = await _subject.UpdateStatus(new IssueStateViewModel { IssueId = 20, Status = to });
+
+            Assert.That(result.Value, Is.True);
+            Assert.That(issue.Status, Is.EqualTo(to));
+            _issues.Verify(x => x.SaveChangesAsync(), Times.Once);
+        }
+
+        [TestCase(IssueStatus.Pending, IssueStatus.Deleted)]
+        [TestCase(IssueStatus.InProgress, IssueStatus.InProgress)]
+        [TestCase(IssueStatus.InProgress, IssueStatus.Deleted)]
+        [TestCase(IssueStatus.Resolved, IssueStatus.InProgress)]
+        [TestCase(IssueStatus.Resolved, IssueStatus.Resolved)]
+        public async Task UpdateStatus_TransitionNotInTable_IsRejected(IssueStatus from, IssueStatus to)
+        {
+            var issue = SetupIssue(from);
+
+            var result = await _subject.UpdateStatus(new IssueStateViewModel { IssueId = 20, Status = to });
+
+            Assert.That(result.Result, Is.InstanceOf<BadRequestObjectResult>());
+            Assert.That(issue.Status, Is.EqualTo(from));
+            _issues.Verify(x => x.SaveChangesAsync(), Times.Never);
         }
 
         [Test]
@@ -225,7 +307,7 @@ namespace Ombi.Tests
 
             var result = await _subject.UpdateStatus(new IssueStateViewModel { IssueId = 12, Status = IssueStatus.Pending });
 
-            Assert.That(result, Is.True);
+            Assert.That(result.Value, Is.True);
             _notification.Verify(x => x.Notify(It.IsAny<NotificationOptions>()), Times.Never);
         }
 
@@ -257,7 +339,7 @@ namespace Ombi.Tests
 
             var result = await _subject.UpdateStatus(new IssueStateViewModel { IssueId = 13, Status = IssueStatus.InProgress });
 
-            Assert.That(result, Is.True);
+            Assert.That(result.Value, Is.True);
             _notification.Verify(x => x.Notify(It.Is<NotificationOptions>(n =>
                 n.NotificationType == NotificationType.IssueInProgress &&
                 n.Substitutes[NotificationSubstitues.IssueUserAlias] == "reporter"
