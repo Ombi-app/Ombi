@@ -171,7 +171,24 @@ namespace Ombi.Tests
             _issues.Verify(x => x.SaveChangesAsync(), Times.Once);
         }
 
+        [TestCase(IssueStatus.Deleted)]
+        [TestCase((IssueStatus)99)]
+        public async Task UpdateStatus_UnsupportedStoredStatus_CanBeResetToPending(IssueStatus from)
+        {
+            var issue = SetupIssue(from);
+
+            var result = await _subject.UpdateStatus(new IssueStateViewModel { IssueId = 20, Status = IssueStatus.Pending });
+
+            Assert.That(result.Value, Is.True);
+            Assert.That(issue.Status, Is.EqualTo(IssueStatus.Pending));
+            _issues.Verify(x => x.SaveChangesAsync(), Times.Once);
+        }
+
         [TestCase(IssueStatus.Pending, IssueStatus.Deleted)]
+        [TestCase(IssueStatus.Pending, (IssueStatus)99)]
+        [TestCase(IssueStatus.Deleted, IssueStatus.Resolved)]
+        [TestCase(IssueStatus.Deleted, IssueStatus.InProgress)]
+        [TestCase((IssueStatus)99, IssueStatus.Resolved)]
         [TestCase(IssueStatus.InProgress, IssueStatus.InProgress)]
         [TestCase(IssueStatus.InProgress, IssueStatus.Deleted)]
         [TestCase(IssueStatus.Resolved, IssueStatus.InProgress)]

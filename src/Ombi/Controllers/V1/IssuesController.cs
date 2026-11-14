@@ -319,16 +319,23 @@ namespace Ombi.Controllers.V1
 
         /// <summary>
         /// Status changes <see cref="UpdateStatus"/> accepts. The issue screens offer Pending to In Progress or Resolved
-        /// and In Progress to Resolved; setting an issue back to Pending is kept as it was before this table existed.
+        /// and In Progress to Resolved. Setting an issue back to Pending is allowed from any stored status, including
+        /// Deleted and values outside <see cref="IssueStatus"/>, as it was before this table existed.
         /// Moving to In Progress is additionally refused when <see cref="IssueSettings.EnableInProgress"/> is off.
         /// </summary>
         private static readonly IReadOnlyDictionary<IssueStatus, IssueStatus[]> AllowedStatusTransitions =
             new Dictionary<IssueStatus, IssueStatus[]>
             {
-                [IssueStatus.Pending] = new[] { IssueStatus.Pending, IssueStatus.InProgress, IssueStatus.Resolved },
-                [IssueStatus.InProgress] = new[] { IssueStatus.Pending, IssueStatus.Resolved },
-                [IssueStatus.Resolved] = new[] { IssueStatus.Pending },
+                [IssueStatus.Pending] = new[] { IssueStatus.InProgress, IssueStatus.Resolved },
+                [IssueStatus.InProgress] = new[] { IssueStatus.Resolved },
             };
+
+        /// <summary>Targets of <see cref="AllowedStatusTransitions"/> that are reachable from any current status.</summary>
+        private static readonly IssueStatus[] StatusesReachableFromAny = { IssueStatus.Pending };
+
+        private static bool IsAllowedStatusTransition(IssueStatus from, IssueStatus to) =>
+            StatusesReachableFromAny.Contains(to)
+            || (AllowedStatusTransitions.TryGetValue(from, out var allowed) && allowed.Contains(to));
 
         [HttpPost("status")]
         public async Task<ActionResult<bool>> UpdateStatus([FromBody] IssueStateViewModel model)
@@ -342,7 +349,7 @@ namespace Ombi.Controllers.V1
                 return NotFound();
             }
 
-            if (!AllowedStatusTransitions.TryGetValue(issue.Status, out var allowed) || !allowed.Contains(model.Status))
+            if (!IsAllowedStatusTransition(issue.Status, model.Status))
             {
                 return BadRequest($"An issue cannot move from {issue.Status} to {model.Status}.");
             }
