@@ -9,9 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using Ombi.Attributes;
 using Ombi.Core;
 using Ombi.Core.Notifications;
+using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Models;
 using Ombi.Notifications.Models;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
@@ -25,13 +27,14 @@ namespace Ombi.Controllers.V1
     public class IssuesController : ControllerBase
     {
         public IssuesController(IRepository<IssueCategory> categories, IRepository<Issues> issues, IRepository<IssueComments> comments,
-            UserManager<OmbiUser> userManager, INotificationHelper notify)
+            UserManager<OmbiUser> userManager, INotificationHelper notify, ISettingsService<IssueSettings> issueSettings)
         {
             _categories = categories;
             _issues = issues;
             _issueComments = comments;
             _userManager = userManager;
             _notification = notify;
+            _issueSettings = issueSettings;
         }
 
         private readonly IRepository<IssueCategory> _categories;
@@ -39,6 +42,7 @@ namespace Ombi.Controllers.V1
         private readonly IRepository<IssueComments> _issueComments;
         private readonly UserManager<OmbiUser> _userManager;
         private readonly INotificationHelper _notification;
+        private readonly ISettingsService<IssueSettings> _issueSettings;
 
         /// <summary>
         /// Get's all categories
@@ -313,8 +317,28 @@ namespace Ombi.Controllers.V1
             return true;
         }
 
+        /// <summary>
+        /// Status changes <see cref="UpdateStatus"/> accepts. The issue screens offer Pending to In Progress or Resolved
+        /// and In Progress to Resolved. Setting an issue back to Pending is allowed from any stored status, including
+        /// Deleted and values outside <see cref="IssueStatus"/>, as it was before this table existed.
+        /// Moving to In Progress is additionally refused when <see cref="IssueSettings.EnableInProgress"/> is off.
+        /// </summary>
+        private static readonly IReadOnlyDictionary<IssueStatus, IssueStatus[]> AllowedStatusTransitions =
+            new Dictionary<IssueStatus, IssueStatus[]>
+            {
+                [IssueStatus.Pending] = new[] { IssueStatus.InProgress, IssueStatus.Resolved },
+                [IssueStatus.InProgress] = new[] { IssueStatus.Resolved },
+            };
+
+        /// <summary>Targets of <see cref="AllowedStatusTransitions"/> that are reachable from any current status.</summary>
+        private static readonly IssueStatus[] StatusesReachableFromAny = { IssueStatus.Pending };
+
+        private static bool IsAllowedStatusTransition(IssueStatus from, IssueStatus to) =>
+            StatusesReachableFromAny.Contains(to)
+            || (AllowedStatusTransitions.TryGetValue(from, out var allowed) && allowed.Contains(to));
+
         [HttpPost("status")]
-        public async Task<bool> UpdateStatus([FromBody] IssueStateViewModel model)
+        public async Task<ActionResult<bool>> UpdateStatus([FromBody] IssueStateViewModel model)
         {
             var username = User.Identity.Name.ToUpper();
             var user = await _userManager.Users.Where(x => username == x.NormalizedUserName)
@@ -322,7 +346,17 @@ namespace Ombi.Controllers.V1
             var issue = await _issues.GetAll().Include(x => x.UserReported).Include(x => x.IssueCategory).FirstOrDefaultAsync(x => x.Id == model.IssueId);
             if (issue == null)
             {
-                return false;
+                return NotFound();
+            }
+
+            if (!IsAllowedStatusTransition(issue.Status, model.Status))
+            {
+                return BadRequest($"An issue cannot move from {issue.Status} to {model.Status}.");
+            }
+
+            if (model.Status == IssueStatus.InProgress && !(await _issueSettings.GetSettingsAsync()).EnableInProgress)
+            {
+                return BadRequest("The In Progress status is disabled in the issue settings.");
             }
 
             issue.Status = model.Status;
